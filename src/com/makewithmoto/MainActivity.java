@@ -271,7 +271,7 @@ public class MainActivity extends BaseActivity implements
 		// Using transaction so the view blocks
 
 		if (evt.getAction() == "run") {
-			if (currentProjectApplicationIntent != null) {
+			if (currentProjectApplicationIntent != null) { 
 				finishActivity(projectRequestCode);
 				currentProjectApplicationIntent = null;
 			}
