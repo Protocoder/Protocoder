@@ -10,7 +10,6 @@ import org.json.JSONObject;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
-//import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.ComponentName;
 import android.content.Context;
@@ -32,7 +31,6 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.animation.DecelerateInterpolator;
-//import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,18 +41,15 @@ import com.makewithmoto.base.BaseActivity;
 import com.makewithmoto.base.BaseNotification;
 import com.makewithmoto.events.Events.LogEvent;
 import com.makewithmoto.events.Events.ProjectEvent;
-//import com.makewithmoto.events.Project;
 import com.makewithmoto.fragments.HelpFragment;
 import com.makewithmoto.fragments.NewProjectDialog;
 import com.makewithmoto.network.IWebSocketService;
 import com.makewithmoto.network.MyHTTPServer;
-//import com.makewithmoto.projectlist.ProjectManager;
 import com.makewithmoto.projectlist.ProjectsListFragment;
 import com.makewithmoto.utils.ALog;
 
 import de.greenrobot.event.EventBus;
 
-//@SuppressLint("NewApi")
 public class MainActivity extends BaseActivity implements
 		NewProjectDialog.NewProjectDialogListener {
 
@@ -81,6 +76,8 @@ public class MainActivity extends BaseActivity implements
 	private IWebSocketService wsServiceInterface;
 	private Boolean isConnectedToWebsockets = false;
 	private Intent wsIntent;
+	private BaseNotification baseNotification;
+	
 	private ServiceConnection conn = new ServiceConnection() {
 
 		@Override
@@ -125,7 +122,7 @@ public class MainActivity extends BaseActivity implements
 		actionBar.setBackgroundDrawable(new ColorDrawable(getResources()
 				.getColor(R.color.mwmgreen)));
 
-		BaseNotification baseNotification = new BaseNotification(this);
+		baseNotification = new BaseNotification(this);
 		baseNotification.show(MainActivity.class, R.drawable.logo, "http:/"
 				+ NetworkUtils.getLocalIpAddress().toString() + ":"
 				+ AppSettings.httpPort, "MWM Server Running");
@@ -185,11 +182,58 @@ public class MainActivity extends BaseActivity implements
 
 	}
 
+	
+	private void stopServices(){
+	
+		/*
+		try {
+			Log.d(TAG, "Stoping...................");
+			wsServiceInterface.stop();
+		} catch (RemoteException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		*/
+		
+		/*
+		if (isConnectedToWebsockets) {
+			unbindService(conn);
+		}
+		*/
+		
+		ViewGroup vg = (ViewGroup) findViewById(R.layout.activity_forfragments);
+		if (vg != null) {
+			vg.invalidate();
+			vg.removeAllViews();
+		}
+		
+		if(httpServer != null){
+		    httpServer.stop();
+		    httpServer = null;
+		}
+		
+		finish();
+		
+	}
+	
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Log.d(TAG, "Registering as an EventBus listener in MainActivity");
-		EventBus.getDefault().register(this);
+		
+		Intent receivedIntent = getIntent();
+		String receivedAction = receivedIntent.getAction();
+		
+		if(receivedAction == "STOP"){
+			Log.d(TAG, "Stoping Services!!!");
+			baseNotification.hide();
+			stopServices();
+		}
+		else{
+
+			Log.d(TAG, "Registering as an EventBus listener in MainActivity");
+			EventBus.getDefault().register(this);
+		}
+		
 	}
 
 	@Override
@@ -203,6 +247,7 @@ public class MainActivity extends BaseActivity implements
 	protected void onDestroy() {
 		super.onDestroy();
 		// TODO enable this at some point
+		
 		if (isConnectedToWebsockets) {
 			unbindService(conn);
 		}
@@ -211,8 +256,13 @@ public class MainActivity extends BaseActivity implements
 			vg.invalidate();
 			vg.removeAllViews();
 		}
-		httpServer.stop();
-		httpServer = null;
+		
+		if(httpServer != null){
+		    httpServer.stop();
+		    httpServer = null;
+		}
+		
+		System.exit(0);
 	}
 
 	// TODO call intent and kill it in an appropiate way

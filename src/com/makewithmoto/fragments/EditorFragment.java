@@ -28,7 +28,7 @@ public class EditorFragment extends BaseFragment {
 
 	// TODO change this dirty hack
 	private static final int MENU_SAVE = 10;
-	private static final int MENU_BACK = 11;
+	//private static final int MENU_BACK = 11;
 	private float currentSize;
 	EditText edit;
 	private View v;

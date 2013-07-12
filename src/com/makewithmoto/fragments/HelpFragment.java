@@ -14,7 +14,7 @@ import com.makewithmoto.utils.ALog;
 import com.makewithmoto.utils.FileIO;
 
 public class HelpFragment extends BaseWebviewFragment {
-	private View v;
+	//private View v;
 	private static final int MENU_CLOSE = 101;
 	
 	private final String TAG="ApplicationWebView";

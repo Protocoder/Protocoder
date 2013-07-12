@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.makewithmoto.MainActivity;
 import com.makewithmoto.events.Project;
-import com.makewithmoto.utils.FileIO;
 
 public class ProjectManager {
 
@@ -27,8 +26,8 @@ public class ProjectManager {
 	}
 
 	public Project addNewProject(Context c, String newProjectName, String fileName) {
-		String newTemplateCode = FileIO.readAssetFile(c, "assets/new.js");
-		String file = FileIO.writeStringToFile(newProjectName, newTemplateCode);
+	//	String newTemplateCode = FileIO.readAssetFile(c, "assets/new.js");
+	//	String file = FileIO.writeStringToFile(newProjectName, newTemplateCode);
 
 		Project newProject = new Project(newProjectName, fileName);
 		ProjectsListFragment projectsListFragment = ((MainActivity) c).getProjectListFragment();

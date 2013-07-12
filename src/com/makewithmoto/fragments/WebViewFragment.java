@@ -1,12 +1,10 @@
 package com.makewithmoto.fragments;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Picture;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -28,7 +26,7 @@ import com.makewithmoto.R;
 
 public class WebViewFragment extends BaseWebviewFragment {
 
-	private Context c;
+	//private Context c;
 
 	private WebView mWebView;
 

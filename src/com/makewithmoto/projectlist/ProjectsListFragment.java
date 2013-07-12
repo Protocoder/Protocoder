@@ -1,7 +1,6 @@
 package com.makewithmoto.projectlist;
 
 import java.io.File;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import android.annotation.SuppressLint;
