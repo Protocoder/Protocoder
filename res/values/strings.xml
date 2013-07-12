@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">MWM</string>
+    <string name="connect_message">Click to connect</string>
+    <string name="menu_settings">Settings</string>
+    <string name="BT_Home">Connect</string>
+    <string name="title_activity_launcher">LauncherActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="run">Run...</string>
+    <string name="edit">Edit...</string>
+    <string name="delete">Delete..</string>
+    <string name="title_activity_moldable">MoldableActivity</string>
+    <string name="add_shortcut">Add shortcut...</string>
+    <string name="share">Share code...</string>
+    <string name="send_to">Send to...</string>
+    <string name="beam">Beam</string>
+
+    
+   <!-- Beam -->
+    <string name="beaming_file">Beaming file using Android Beam™</string>
+    <string name="beaming_files">Beaming files using Android Beam™</string>
+    <string name="beaming_text">Beaming text using Android Beam™</string>
+    <string name="touch_devices">Touch the two devices to continue…</string>
+    <string name="file_sent">File is being beamed, press back to exit</string>
+    <string name="about_text">File Beam\n\nA quick application to send any file using Android Beam™\n\n© 2013\nMohammad Abu-Garbeyyeh</string>
+    <string name="nfc_not_available">Sorry, your device doesn\'t seem to have an NFC adapter</string>
+    <string name="nfc_turned_off">NFC is currently turned off in Settings, please enable it and try to share the file again</string>
+    <string name="detail_unknown_content">Unknown content</string>
+    <string name="detail_unknown_size">Unknown size</string>
+    <string name="detail_unknown_type">Unknown type</string>
+    <string name="content_description_image">Image depicting the type of the file that is being beamed</string>
+    <string name="multiple_files">Multiple files</string>
+    <string name="multiple_file_types">Multiple file types</string>
+   
+</resources>
