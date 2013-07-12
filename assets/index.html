@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html ng-app="makeWithMotoApp" class="ng-scope">
+  <head>
+    <title>MakeWithMoto</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="/assets/application.css">
+    <script src="/assets/vendor.js"></script>
+  </head>
+  <body>
+    <header>
+  <nav class="top-bar" id="menu">
+
+    <ul class="title-area">
+      <li class="name">
+        <h1><a href='/'>MakeWithMoto</a></h1>
+      </li>
+      <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+    <ul>
+
+    <section class="top-bar-section menu-icon">
+      <ul class="right">
+        <li class="divider"></li>
+        <li><a ng-href="#/instruments">Instruments</a></li>
+        <li class="divider"></li>
+        <li><a ng-href="#/builder">Builder</a></li>
+        <li class="divider"></li>
+        <li><a href="#/help">Help</a></li>
+      </ul>
+    </section>
+  </nav>
+</header>
+
+
+
+    <div id="stage" ng-view>
+</div>
+
+
+    <script src="/assets/application.js"></script>
+  </body>
+</html>
+
+
+

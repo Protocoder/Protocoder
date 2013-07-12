@@ -1,0 +1,36 @@
+API
+====
+ioio 
+	setPin(num, mode)
+	etc 
+	etc 
+	
+android
+	setFullScreen();
+	vibrate
+	takePicture 
+	startAccelerometer
+	startCompass 
+	startGyroscope
+	startBarometer
+	downloadFile(url)
+	playSound()
+	
+network
+	.connectBluetooth()
+	.listenBluetooth(callback)
+	.createOSCServer()
+	.listenOSCServer()
+	
+bluetooth
+	.sendString()
+	.close()
+	
+osc
+	.send()
+	.close()
+
+ui	
+	.playVideo()
+	.showImage()
+	
