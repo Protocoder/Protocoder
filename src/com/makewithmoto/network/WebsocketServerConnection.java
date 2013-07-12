@@ -1,39 +1,9 @@
 package com.makewithmoto.network;
 
-import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
-import org.java_websocket.WebSocket;
-import org.java_websocket.drafts.Draft;
-import org.java_websocket.framing.FrameBuilder;
-import org.java_websocket.framing.Framedata;
-import org.java_websocket.handshake.ClientHandshake;
-import org.java_websocket.server.WebSocketServer;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.util.Log;
-
-import com.makewithmoto.events.Events.LogEvent;
-import com.makewithmoto.events.Events.ProjectEvent;
-import com.makewithmoto.events.Project;
-import com.makewithmoto.projectlist.ProjectManager;
-import com.makewithmoto.utils.ALog;
-import com.makewithmoto.utils.FileIO;
-
-import de.greenrobot.event.EventBus;
-import de.greenrobot.event.EventBusException;
 
 public class WebsocketServerConnection implements ServiceConnection {
 	private static final String TAG = "WebsocketServerConnection";

@@ -30,14 +30,13 @@ OK - fix help animation
 Gopi:
 Add Motorola Copyright & License on top of each file
 
+If port 8080 is busy currently we dont get an error message..
+
 LauncherActivity:
 -----------------
 * Should we pick a new name for the app. Make with Moto is ok?
-* Is the Splash timer too long? currently its 2 seconds? I suppose u could touch the screen anytime to exit splash
-so this looks good actually!!!
 * Do you like the animation from splash to the main screen?
 * NFC supported? What are we doing with it?  
-* What is the purpose of BaseActivity
 * 		setFullScreen();
 		setHideHomeBar(); 
 		both these are defined in the BaseActivity Class, do they belong there or in some utilities
@@ -45,12 +44,16 @@ so this looks good actually!!!
 		
 * Is this app meant to run only on MAKR phones?	if not, we need to make sure we don't attempt to toggle gpio
   pins to power on the Serial line. Nothing happens but u get an error on the console.
-* Do we need to put the MemoryLogger inside a DEBUG condition. Well doesnt matter really
 
 
 MainActivity:
 -------------
-@SuppressLint("NewApi")  : What does this do..what happens without it?
+* MainActivity is extending BaseActivity...need to check what functionality does Base Activity provide..
+can it be reused?
+
+* check if ServiceConnection needs to be cleaned up while closing the app
+
+* Why have a dummy MainApp..why not just have the Base Application here
 
 
 

@@ -14,7 +14,8 @@ import com.makewithmoto.R;
 public class BaseNotification {
 
 	public static int NOTIFICATION_APP_RUNNING = 1;
-
+    public static String ACTION_STOP = "STOP";
+	
 	Context c;
 	NotificationManager mNotificationManager;
 
@@ -24,16 +25,15 @@ public class BaseNotification {
 		c = context;
 
 		mNotificationManager = (NotificationManager) c
-				.getSystemService(c.NOTIFICATION_SERVICE);
+				.getSystemService(Context.NOTIFICATION_SERVICE);
 
 	}
 
 	public void show(Class<?> cls, int icon, String text, String title) {
-		CharSequence tickerText = "MWM";
 
-		long when = System.currentTimeMillis();
 
 		Intent notificationIntent = new Intent(c, cls);
+		notificationIntent.setAction(ACTION_STOP);
 		PendingIntent contentIntent = PendingIntent.getActivity(c, 0,
 				notificationIntent, 0);
 		long[] vibrate = { 0, 100, 200, 300 };
@@ -46,15 +46,8 @@ public class BaseNotification {
 				.setProgress(0, 0, true)
 				.setVibrate(vibrate)
 				.setContentIntent(contentIntent)
-				//.setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
-				.addAction(R.drawable.ic_launcher, "Stop Server", null);
+				.addAction(R.drawable.ic_launcher, "Stop Server", contentIntent);
 			
-		// notification.defaults |= Notification.DEFAULT_LIGHTS;
-		// notification.ledARGB = Color.RED;
-		// notification.ledOffMS = 300;
-		// notification.ledOnMS = 300;
-
-		// notification.defaults |= Notification.DEFAULT_SOUND;
 
 		mNotificationManager.notify(NOTIFICATION_APP_RUNNING, mBuilder.build());
 
