@@ -1,18 +1,11 @@
 package com.makewithmoto.apprunner.api;
 
-import org.json.JSONObject;
-
 import android.os.RemoteException;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
 
-import com.makewithmoto.apprunner.MWMActivity;
-import com.makewithmoto.apprunner.events.Events.ProjectEvent;
 import com.makewithmoto.events.Events.LogEvent;
-import com.makewithmoto.utils.ALog;
-
-import de.greenrobot.event.EventBus;
 
 public class JLog  extends JInterface {
 	

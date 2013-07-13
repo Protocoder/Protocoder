@@ -1,7 +1,6 @@
 package com.makewithmoto.apprunner.fragments;
 
 import android.annotation.SuppressLint;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -27,9 +26,9 @@ import com.makewithmoto.utils.ALog;
 
 @SuppressLint("NewApi")
 public class MoldableFragment extends BaseFragment {
-	private static String TAG = "Moto";
-	private Point size = new Point();
-	private int screenWidth, screenHeight;
+//	private static String TAG = "Moto";
+//	private Point size = new Point();
+//	private int screenWidth, screenHeight;
 	private LinearLayout v;
 
 	@Override

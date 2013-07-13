@@ -33,9 +33,15 @@ public class BaseNotification {
 
 
 		Intent notificationIntent = new Intent(c, cls);
-		notificationIntent.setAction(ACTION_STOP);
 		PendingIntent contentIntent = PendingIntent.getActivity(c, 0,
 				notificationIntent, 0);
+		
+		Intent stopIntent = new Intent(c, cls);
+		stopIntent.setAction(ACTION_STOP);
+		PendingIntent pStop = PendingIntent.getActivity(c, 0,
+				stopIntent, 0);
+		
+		
 		long[] vibrate = { 0, 100, 200, 300 };
 
 		mBuilder = new NotificationCompat.Builder(c);
@@ -46,7 +52,7 @@ public class BaseNotification {
 				.setProgress(0, 0, true)
 				.setVibrate(vibrate)
 				.setContentIntent(contentIntent)
-				.addAction(R.drawable.ic_launcher, "Stop Server", contentIntent);
+				.addAction(R.drawable.ic_launcher, "Stop Server & Close App", pStop);
 			
 
 		mNotificationManager.notify(NOTIFICATION_APP_RUNNING, mBuilder.build());

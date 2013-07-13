@@ -262,6 +262,7 @@ public class MainActivity extends BaseActivity implements
 		    httpServer = null;
 		}
 		
+		baseNotification.hide();
 		System.exit(0);
 	}
 

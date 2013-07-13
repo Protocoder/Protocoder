@@ -4,8 +4,8 @@ import java.lang.ref.WeakReference;
 
 import android.support.v4.app.FragmentActivity;
 
-import com.makewithmoto.appruner.webrunner.ApplicationWebView;
 import com.makewithmoto.apprunner.MWMActivity;
+import com.makewithmoto.apprunner.webrunner.ApplicationWebView;
 
 public class JInterface {
 	

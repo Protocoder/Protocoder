@@ -1,7 +1,5 @@
 package com.makewithmoto.apprunner.api;
 
-import java.util.Timer;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -9,12 +7,12 @@ import android.os.RemoteException;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
 
-import com.makewithmoto.appruner.webrunner.WhatIsRunning;
 import com.makewithmoto.apprunner.MWMActivity;
 import com.makewithmoto.apprunner.sensors.AccelerometerManager;
 import com.makewithmoto.apprunner.sensors.AccelerometerManager.AccelerometerListener;
 import com.makewithmoto.apprunner.sensors.OrientationManager;
 import com.makewithmoto.apprunner.sensors.OrientationManager.OrientationListener;
+import com.makewithmoto.apprunner.webrunner.WhatIsRunning;
 
 public class JSensors extends JInterface {
 
