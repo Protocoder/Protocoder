@@ -26,18 +26,14 @@ import java.util.List;
 import org.java_websocket.util.Base64.InputStream;
 import org.json.JSONObject;
 
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.View;
 import android.webkit.JavascriptInterface;
 
 import com.makewithmoto.app.utils.Utils;
-import com.makewithmoto.appruner.webrunner.WhatIsRunning;
-import com.makewithmoto.apprunner.MWMActivity;
 import com.makewithmoto.apprunner.hardware.HardwareCallback;
 import com.makewithmoto.apprunner.hardware.IOIOBoard;
+import com.makewithmoto.apprunner.webrunner.WhatIsRunning;
 import com.makewithmoto.utils.ALog;
 
 public class JIoio extends JInterface implements HardwareCallback {

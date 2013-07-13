@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
-import android.speech.tts.TextToSpeech;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.WindowManager;
@@ -19,7 +18,7 @@ public class VoiceRecognitionActivity extends FragmentActivity {
 
 
 	static Context c;
-	private TextToSpeech mTts;
+//	private TextToSpeech mTts;
 
 	String textMsg;
 

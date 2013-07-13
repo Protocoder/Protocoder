@@ -1,4 +1,4 @@
-package com.makewithmoto.appruner.webrunner;
+package com.makewithmoto.apprunner.webrunner;
 
 import java.lang.ref.WeakReference;
 
