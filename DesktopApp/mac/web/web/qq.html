@@ -1,0 +1,166 @@
+<html>
+<head>
+<title>Hello World!</title>
+
+
+<style type="text/css">
+
+	body {
+		background: rgb(87, 132, 150);
+	}
+
+	h1 { 
+		font-family: sans-serif;
+		font-size: 8em;
+		color: rgba(255, 255, 255, 0.2);
+	}
+
+	button {
+		padding: 12px;
+		background: rgba(255, 255, 255, 0.5);
+		border: none;
+		font-weight: 800;
+		color: rgba(255, 255, 255, 0.7);
+		border-radius: 2px;
+	}
+
+	button:hover { 
+		background: rgba(255, 255, 255, 0.7);
+	}
+
+	button:click { 
+		background: rgba(255, 255, 255, 0.7);
+	}
+
+	
+
+</style>
+
+
+<script src="./javascripts/jquery-1.7.2.min.js" type="text/javascript" charset="utf-8"></script> 
+
+<script>
+var gui = require('nw.gui');
+var sys = require('sys')
+var exec = require('child_process').exec;
+
+onload = function() {
+	// Get the current window
+	win = gui.Window.get();
+	gui.Window.get().show();
+
+	// Listen to the minimize event
+  	win.on('minimize', function() {
+		console.log('Window is minimized');
+	});
+
+
+	var tray = new gui.Tray({ title: 'MWM', icon: 'img/icon.png' });
+
+	// Give it a menu
+	var menu = new gui.Menu();
+	menu.append(new gui.MenuItem({ type: 'checkbox', label: 'box1' }));
+	tray.menu = menu;
+	// Example of creating a menu
+	//var menu = gui.Menu({ title: 'Menu Title' });
+
+	
+
+	//install APK 
+	$("#device_apk_install").click(function() {
+		execScript("apk_install.sh");
+	});
+
+	//uninstall APK 
+	$("#device_apk_uninstall").click(function() {
+		console.log("lalalalala");
+		execScript("apk_uninstall.sh");
+	});
+
+	//USB
+	$("#device_use_usb").click(function() {
+		console.log("lalalalala");
+		execScript("launch_app.sh");
+		execScript("adb_usb.sh");
+	});
+
+	//Logcat
+	$("#device_logcat").click(function() {
+		execScript("adb_logcat.sh");
+	});
+
+
+
+
+}
+
+function execScript(cmd) { 
+	var execCmd = "sh ./scripts/" + cmd;
+	console.log(execCmd);
+	//var execCmd = "ls -la";
+	
+	exec(execCmd, function(error, stdout, stderr) {
+		sys.puts(stdout) 
+		console.log("output: " + stdout);
+		$("#t").text(stdout);
+	});
+	console.log("qq");
+}
+
+// Minimize the window
+//win.minimize();
+
+// Unlisten the minimize event
+//win.removeAllListeners('minimize');
+
+/*
+// Create a new window and get it
+var new_win = gui.Window.get(
+  window.open('https://github.com')
+);
+
+// And listen to new window's focus event
+new_win.on('focus', function() {
+  console.log('New window is focused');
+});
+
+
+
+// We can not create a clipboard, we have to receive the system clipboard
+var clipboard = gui.Clipboard.get();
+
+// Read from clipboard
+var text = clipboard.get('text');
+console.log(text);
+
+// Or write something
+clipboard.set('I love node-webkit :)', 'text');
+
+// And clear it!
+clipboard.clear();
+
+
+// Create a tray icon
+
+*/
+
+// Remove the tray
+//tray.remove();
+//tray = null;
+
+
+
+</script>
+
+</head>
+<body>
+<h1>mwm desktop app</h1>
+
+<button id = "device_apk_install"> Install APK </button>
+<button id = "device_apk_uninstall"> Uninstall APK </button>
+<button id = "device_use_usb"> Use USB </button>
+<button id = "device_logcat"> Logcat </button>
+
+<p id = "t"> </p>
+</body>
+</html>

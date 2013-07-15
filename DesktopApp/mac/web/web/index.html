@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us" class="no-js">
+
+<head>
+	
+	 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <meta name="author" content="Victor Diaz">
+	
+	<link rel="icon" 
+	      type="image/png" 
+	      href="../favicon.ico">
+	
+	
+		<script type="text/javascript">
+			window.requireNode = window.require;
+			window.require = undefined; 
+		</script>
+				
+				
+  	<script src="./javascripts/jquery-1.7.2.min.js" type="text/javascript" charset="utf-8"></script>
+	  <script src="./javascripts/jquery-ui-1.8.18.custom/js/jquery-ui-1.8.18.custom.min.js" type="text/javascript" charset="utf-8"></script>	
+    <script type="text/javascript" src="./javascripts/jquery.json-2.4.min.js"></script>
+    
+	
+  	<script src="./javascripts/src/ace.js" data-main="demo" type="text/javascript"></script>  
+  	<script src="./javascripts/src/theme-twilight.js" type="text/javascript" charset="utf-8"></script>
+  	<script src="./javascripts/src/theme-creative2.js" type="text/javascript" charset="utf-8"></script>
+  	<script src="./javascripts/src/mode-javascript.js" type="text/javascript" charset="utf-8"></script> 
+
+
+
+  	<!-- customjs -->
+    <script src="./javascripts/client2server.js" type="text/javascript"></script>
+    <script src="./javascripts/basic_functions.js" type="text/javascript"></script>
+    <script src="./javascripts/websocketEmulator.js" type="text/javascript"></script>
+
+  	<!-- CSS -->	
+      <link rel="stylesheet/less" href="./stylesheets/editor.less" type="text/css" charset="utf-8">
+  	  <script src="./javascripts/less.min.js"></script>  
+
+
+
+
+	<!-- Included JS Files -->
+	<link rel="stylesheet" href="./javascripts/jquery-ui-1.8.18.custom/css/ui-darkness/jquery-ui-1.8.18.custom.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+  
+	<title> Wanderlust </title>
+	
+	
+
+	
+	
+</head>
+
+
+<body>
+  <div id="header">
+    <div id="title">
+  	 <a href="/"><h1> #qq </h1>  </a>
+			
+			<div id="top-menu">
+			    <a href="#"id ="examples-button" class="button2 roundbutton" style="min-width:7em; margin-right:2em; float:left;"> <span syle="float:left">Examples </span>  <span class="ui-icon ui-icon-triangle-1-s"> </span> </a>
+			   <a href="#" id ="reset-button" class="button2 roundbutton"> <span syle="float:left">Reset</span>  <span class="ui-icon ui-icon-arrowreturnthick-1-s "> </span> </a>
+
+			</div>			
+			
+			</div>
+    <div id = "tips">
+  	</div>
+
+  </div>
+  
+
+  
+	<div id="content"> 
+		<!-- canvas -->  
+		<div id = "previewcontainer"> 
+			<div id = "canvascontainer"> 
+			<div id = "processing"> 
+			<iframe src='./html/canvas.html'> </iframe>
+			</div>
+		
+			</div> 
+			<div id = "processing_status"> 
+				<p id ="msg"> idle </p> 
+				<p id ="errorName"></p> 
+				<p id ="errorDescription"></p> 
+			</div>
+		
+			   <input type="checkbox" id="check" /><label for="check">On</label> I'm working with the camera
+
+  			<div id ="videocontainer">
+  				<video poster="./videos/camera/camera.png"> 
+  					<source src ="./videos/camera/output.mov" type='video/mov; '>
+  					<source src ="./videos/camera/output.webm" type='video/webm; '>
+  					<source src ="./videos/camera/output.ogv" type='video/ogg; '>
+  					<source src ="./videos/camera/output.mp4" type='video/mp4; '>
+  				</video>
+  				<div id="video-ctr-block">
+      			 <a href="#" id="play-ctr" class="video-ctr"/> </a>
+      			 <a href="#" id="pause-ctr" class="video-ctr"/> </a>
+      			 <a href="#" id="restart-ctr" class="video-ctr"/> </a>
+  			 </div>   				
+  			<p> This is just a small recording for testing purposes </p>
+      </div>
+			<noscript>
+				<p>JavaScript is required to view the contents of this page.</p>
+			</noscript> 
+
+
+		</div>
+
+
+
+		<!-- 
+		--	Editor de texto 
+		--
+		--
+		--
+		-->
+		<div id = "central_area"> 
+		
+			<div id = "toolbar">
+  			<a href="#" id = "playButton" class = "button2"> <span syle="float:left">Play</span>  <span class="ui-icon ui-icon-play"></span> </a>
+  		  <a href="#" id="sendButton" class="button2 "> Submit >> </a>	
+  			<a href="#" id="tipButton" class="button2 "> ? </a>
+  			<a href="#" id="previewButton" class="button2 "> Preview </a>
+
+  			<a href="#" id="saveButton" class="button2 "> Save </a>
+	
+			</div>
+			
+			<div id="editor-wrapper" >
+  			<div id = "editor"> </div> 
+			</div>
+			
+			
+			
+		</div > <!--/central area -->
+		
+		<div id = "rightinfo"> 
+
+
+		<div id = "cover_overlay"><img id = "cover" src="../images/cover-text.png"> </img>
+				<div id = "left_up"> </div>
+				<div id = "left_down"> </div>
+				<div id = "right_up"> </div>
+				<div id = "right_down"> </div>
+			</div>
+		<div id="miniform">   
+    <p > <h2>Project Info</h2>      
+      		<div style="clear:both">
+      		  <label for="title2">Sketch Title</label>
+      		  <input type="text" id="w_title2" name="title2" value="qq" class="" /> 
+          </div>    
+					<div style="clear:both">
+		      		  <label for="author2">Your Name</label>
+		      		  <input type="text" id="w_author2" name="author" value="qq" class="" /> 
+		      </div>        
+    			<div style="clear:both; margin-top:0.3em; margin-bottom:0.3em">
+				      	<label for="w_url2" >URL to Show (or @twitter name)</label>
+				      	<input type="text" id="w_web2" name="w_url2" value="qq" class="" style="clear:both; margin-top:0.3em; margin-bottom:0.3em"/> 
+				  </div>        
+			
+					<div style="clear:both">
+      		  <label for="mail2">Your mail</label>
+      		  <input type="text" id="w_email2" name="mail2" value="qq" class="" />	
+        </div>       		
+      <div style=" clear:both; font-size:0.9em; margin-top:0.5em;">
+      * Name, Title & URL will be shown together with your work (check preview). Email is only for us.
+      </div>
+        <div style="clear:both"> </div>
+        <a href="#" class="button2 roundbutton" id="update-name" > update </a> 
+		</p>
+		</div> <!-- mini form -->
+		<!-- <p> <strong> #codethequare is a project by Medialab Prado Madrid </strong> which aims to invite designers, programers, creative technologists and researchers to create generative content for the giant Mediafacade. 
+		</p>  -->
+		<div id = "gethelp"> 
+    <h2>Get Help</h2>   
+		<p> <strong> <a href="http://servidor.medialab-prado.es/~foros/punbb-1.4.1/viewforum.php?id=30">Check the forum if you have any question </a> </strong> 		</p>  			
+    <p> <strong> <a href="http://processingjs.org/reference/"> Processing.js Reference </a> </strong> 		</p>  			
+   	</div>
+
+</div> 
+</div> <!-- end content -->
+
+<!- submit block --->			
+			<div id = "submit_details-wrapper">
+  			<div id = "submit_details">
+        	<h1> Submit </h1>
+        
+          <div id="submit-block" style="float:right; clear:none;padding-top:1em">
+            	<div style="margin-bottom:1em;">
+            	 <div>
+            		<label for="mail">Your mail</label>
+            		<input type="text" id="w_email" name="mail" value="email" class="" />	
+              	</div>
+            	</div>	
+          		
+          		<div style="margin-bottom:1em;">
+            		<label for="user-name">Your name</label>
+            		<input type="text" id="w_author" name="user-name" value="author" class="" /> <br />
+          		</div> 
+              
+              <div>
+            		<label for="title">Sketch Title</label>
+            		<input type="text" id="w_title" name="title" value="title" class="" /> 
+              </div>
+              
+              <div>
+                <label for="comments">Description</label>
+            		<textarea id="w_description" name="comments" cols="22" rows="5">
+                  {{dbdata.description}}
+                </textarea>
+          		</div>
+          		               
+          		<div>
+            		<label for="w_web">Your twitter name / website</label>
+            		<input type="text" id="w_web" name="w_web" class="" value="web" /> 
+          		</div>          		
+        		</div>
+        		 <! --- fin bloque derecho---!>
+            
+            <div id="submit-snapshot" style="float:left; clear:none; padding-top:1em">                   
+              		<div ><img id = "cover-down" src="../images/cover-text.png"> </img></div>
+
+              		<h2> snapshot </h2>
+            </div>
+        
+        		<div id="send-buttons" > 
+          		<button type="button2" class = "roundbutton" id="submit_form" > Submit </button>
+          		<button type="button2" class = "roundbutton" id="cancel_form" > Cancel </button>        		
+        		</div > 
+
+        
+        </div>
+      </div>
+
+
+<div class = "backdrop" id = "makeitbigger"> 
+	
+	<p> Please resize horizontally this window</p>
+	<p>	If you are using a small resolution device beware that are not supported by the editor </p>
+	
+</div>	
+
+<div class = "backdrop" id = "previewProcessing"> <a href="#" class = "button2 roundbutton" id = "close_preview"> close preview</a> </div> 
+
+<div id="fileList" class="popup north">
+         
+
+  </div>
+
+<script src="./javascripts/mpl_editor.js" type="text/javascript"></script>
+</body>
+</html>

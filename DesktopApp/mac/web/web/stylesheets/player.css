@@ -1,0 +1,21 @@
+#canvascontainer{
+  position: absolute;
+  top:40px;
+  left:40px;
+}
+
+div#processing{
+margin:0px;
+border:0;
+background-color:black;
+}
+
+div#previewcontainer{
+background: transparent;
+margin-top:300px;
+} 
+
+div#header{
+  width:50%;
+  margin-left:50%;
+}

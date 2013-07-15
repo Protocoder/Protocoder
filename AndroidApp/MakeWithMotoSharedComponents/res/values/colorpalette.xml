@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources> 
+
+
+<color name="main">#FBF8D2</color> 
+<color name="maindark">#000000</color> 
+<color name="maingray">#888888</color> 
+<color name="transparent">#00FFFFFF</color> 
+<color name="text">#232120</color> 
+
+<!-- viewplayer --> 
+<color name="viewplayer_progress_total">#A4897b</color> 
+<color name="viewplayer_progress_played">#E30613</color> 
+<color name="viewplayer_progress_pause">#FBF8D2</color> 
+
+<!-- n1 --> 
+<color name="n1_texto_seleccionado">#FBF8C2</color> 
+<color name="n1_texto_no_seleccionado">#9E9F80</color> 
+<color name="n1_texto_ya_reproducido">#FBF8D2</color> 
+
+<color name="n1_linea_roja">#E30613</color> 
+
+<!-- timeline -->
+<color name="timeline_line">#754A16</color> 
+<color name="timeline_line_bg">#FBF8D2</color> 
+<color name="timeline_instrument_bg">#FFFDE9</color> 
+<color name="timeline_instrument_text_unlocked">#754A16</color> 
+<color name="timeline_instrument_text_locked">#DBB48E</color> 
+
+
+<!-- n2 --> 
+
+
+<!-- n3 -->
+
+
+</resources> 

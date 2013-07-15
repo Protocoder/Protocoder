@@ -1,0 +1,76 @@
+<!-- Nav -->
+<div class="row">
+<!-- Editor -->
+  <div class="large-7 columns">
+
+    <div class="row collapse">
+      <form class="custom">
+        <div class="large-8 small-8 columns">
+          <div ng-show="!creatingNewProject">
+            <select class="custom dropdown" 
+                ng-model="selected_project" ng-options="p.name for p in projects">
+              <option value="">-- choose existing project --</option>
+            </select>
+          </div>
+          <div ng-show="creatingNewProject">
+            <input type="text" ng-show="creatingNewProject" ng-model="newProjectName" placeholder="Name your project"></input>
+          </div>
+        </div>
+        <div class="large-4 small-4 columns button-bar">
+          <ul class="button-group" ng-show="!creatingNewProject">
+            <li><a ng-show="!creatingNewProject" ng-click="setCreatingNewProject()" class="small button">New</a></li>
+          </ul>
+          <ul class="button-group " ng-show="creatingNewProject">
+            <li><a ng-click="saveCreatingNewProject()" class="small button">Save</a></li>
+            <li><a ng-click="cancelCreatingNewProject()" class="small button alert">Cancel</a></li>
+          </ul>
+        </div>
+      </form>
+    </div>
+
+
+    <div id="ace">
+      <form ace="{mode: 'javascript', theme: 'textmate', onChange: editorChanged, keyCommands: {'Ctrl-Space': contentSuggest}}" ng-model="code">
+      </form>
+      <div ng-repeat="e in errors">{{e.description}}</div>
+      <button class="button success" ng-click="saveFile()">Save</button>
+      <button class="button success" ng-click="runProject()">Run</button>
+      <span ng-hide="isConnected" class="radius label alert">Error: disconnected. Retrying</span>
+    </div>
+
+  </div>
+
+  <div class="large-5 columns">
+
+    <div id="infobox">
+      <h3>Console</h3>
+      <tabs>
+        <pane title="Info">
+          <div class="logtail">
+            <span class="logline" ng-repeat="line in currentOutput.info"> > {{line}}</span>
+          </div>
+        </pane>
+        <pane title="Debug">
+          <div class="logtail">
+            <span class="logline" ng-repeat="line in currentOutput.debug"> > {{line}}</span>
+          </div>
+        </pane>
+      </tabs>
+    </div>
+    
+    <div id="docs" ng-controller="DocsController">
+      <h3>Documentation</h3>
+      <input id="searchText" type="search" placeholder="Search" ng-model="search" />
+      <div ng-show="bestMatch" ng-class="{open: focused}">
+        <h5>{{ bestMatch.name }}</h5>
+        <span ng-bind-html-unsafe=bestMatch.summary></span>
+        <p ng-bind-html-unsafe=bestMatch.desc></p>
+        <pre><code ng-bind-html-unsafe=bestMatch.usage></code></pre>
+      </div>
+      <p ng-show="!bestMatch">
+        Search through documentation
+      </p>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,11 @@
+Hoy 
+
+./adb 
+automatically install app using adb 
+forward ports 
+
+show made apps 
+link to tutorials 
+
+country mezclado con chino 
+abeguil wasper 

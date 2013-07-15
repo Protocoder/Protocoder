@@ -1,0 +1,27 @@
+TODO
+=====
+fix launch MWM from AppRunner
+fix launch script 
+fast startup 
+Ask Ari what is components in the ApplicationJavascriptInterface
+
+addFragment -> no need to add xml layout 
+alarmmanager 
+
+USB HOST 
+camera usb 
+
+skinnyapp/app/assets/js/android_side 
+
+OK - 4. react on project change 
+OK - fix help animation 
+
+2. editor problems -> fix 
+3. clean mess with fileIOs 
+1. fix plot 
+- fix home up 
+3. android beam -> fix 
+
+
+
+5. postales 

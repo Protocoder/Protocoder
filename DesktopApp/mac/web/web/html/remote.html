@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us" class="no-js">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title> HTML5 Pad </title>
+   <meta name="author" content="Victor Diaz Portfolio" /> 
+
+	<meta charset="utf-8" />
+	<!-- Set the viewport width to device width for mobile -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+	
+
+		
+	<link rel="stylesheet" href="./livecoding/stylesheets/web.css" type="text/css" media="screen, projection" /> 
+
+
+	<!-- Included JS Files -->
+	<script src="./javascripts/jquery.min.js"></script>
+	<script src="./javascripts/modernizr.foundation.js"></script>
+
+<!-- 
+	<link href="http://code.google.com/apis/maps/documentation/javascript/examples/default.css" rel="stylesheet" type="text/css" /> 
+
+	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&language=es&region=ES" ></script>
+-->
+
+    <style> 
+
+	  body { 
+		/*
+		-webkit-transform: rotate(0deg) scale(1);
+		-webkit-transition-property: all 2s ease-out;
+	  	*/
+		}  
+
+
+    </style> 
+
+
+
+
+</head>
+<body id = "" onload="">
+<p id = "logo"> html remote </p>
+<div id = "cursor" style="position:absolute; top: 12px; left: 12px; width:205px; height:205px; border: 25px solid rgba(0,0,0,0.8); background-color:#222"> 
+
+	<div id = "cursorcontrol" style="position:absolute; top: 12px; left: 12px; width:25px; height:25px; border: 1px solid #222; background-color:#00b"> 
+
+	</div> 
+
+	
+	
+</div> 
+
+
+<div class = "button" id = "button1" style="position:absolute; top: 12px; right: 107px; width:105px; height:150px;"> </div> 
+
+
+<div class = "button" id = "button2" style="position:absolute; top: 12px; right: 2px; width:105px; height:150px;"> </div> 
+
+
+<div id = "console" style="position:fixed; top: 2px; right:2px; background-color:rgba(0,0,0,0.8); color: #bbb; width:200px; height:55px; padding:5px"> </div>
+
+
+<div id = "rotateinfo" style="position:absolute; top: 0px; left:0px; background-color:rgba(0,0,0,0.8); color: #bbb; width:100px; height:100px; padding:0px; z-index:5"> 
+	<div id = "content"> 
+	<img src="qq"> </img>
+	<p> Rota el telefono para jugar! </p> 
+	</div>
+</div>
+
+<!--
+<div id="map_canvas" style="width:100%; height:100%; z-index:15"></div>
+
+
+--> 
+
+<script type="text/javascript"> 
+
+$(document).ready(function() {
+ 	
+	//var item = $("#source").appendTo("#destination");
+	var DEBUG = 2;  //0 nothing 1 console log 2 div logging 
+	var WIDTH; 
+	var HEIGHT; 
+	var gpsLatitude; 
+	var gpsLongitude; 
+	
+	function log(message) { 
+		switch (DEBUG) {  
+			case 1: 
+				$("#console").prepend('<div>' + message + '</div>'); 
+				break; 
+			case 2: 
+				console.log(message); 
+				break; 
+			} 
+	}
+	
+	function init() { 
+		resized(); 
+		
+		detectAndroid(); 
+		location(); 
+	
+	
+		//initializeMaps(); 
+	} 
+	
+	
+	
+	init(); 
+	
+	function detectAndroid() { 
+		
+		var ua = navigator.userAgent.toLowerCase();
+		var isAndroid = ua.indexOf("android") > -1; //&& ua.indexOf("mobile");
+		if(isAndroid) { 
+			//window.location = 'http://android.davidwalsh.name'; 
+			downloadApp = confirm("Si te descargas la App de Android podras disfrutar más del juego!"); 
+			if (downloadApp) window.location = 'market://details?id=net.sweetmonster.android.app.oscdroid'; 
+			log(downloadApp); 
+			
+		} 
+			
+	}
+	
+	function location() { 
+		
+		if (navigator.geolocation) {
+	  		navigator.geolocation.getCurrentPosition(function(position) {
+
+				gpsLatitude = position.coords.latitude; 
+				gpsLongitue = position.coords.longitude; 
+
+
+	  		}, 
+			function (error)
+			{
+				switch(error.code) 
+				{
+					case error.TIMEOUT:
+						alert ('Timeout');
+						break;
+					case error.POSITION_UNAVAILABLE:
+						alert ('Position unavailable');
+						break;
+					case error.PERMISSION_DENIED:
+						alert ('Permission denied');
+						break;
+					case error.UNKNOWN_ERROR:
+						alert ('Unknown error');
+						break;
+				}
+			}
+			); 
+
+		} 
+		
+	};
+	
+	function resized() { 
+		WIDTH = $(window).width(); 
+		HEIGHT = $(window).height(); 
+	
+		var orientation = WIDTH > HEIGHT ? 0 : 1; 
+		//log(orientation);
+
+		if(orientation == 1) {  
+			  $('#rotateinfo').show(); 
+		} else { 
+			$('#rotateinfo').hide(); 
+		} 
+	
+		$('#rotateinfo').css('width', WIDTH);
+		$('#rotateinfo').css('height', HEIGHT);
+		//log(WIDTH + " " + HEIGHT) 
+		
+		posY = HEIGHT / 2 - $("#cursor").height() / 2;
+		$("#cursor").css("top", posY+"px"); 
+		posY = HEIGHT / 2 - $(".button").height() / 2;
+		$(".button").css("top", posY+"px"); 
+		
+		//log( posY+"px" ); 
+		
+		
+	}
+	
+
+	
+	$(window).resize(function () { 
+	
+		resized();
+	}); 
+
+
+	$("#cursor").bind('touchmove', function(e) { 
+		
+
+	    	var touch = event.targetTouches[0];
+	    	// Place element where the finger is
+	    	//obj.style.left = touch.pageX + 'px';
+	    	//obj.style.top = touch.pageY + 'px';
+	 
+			var rxPos = (touch.pageX - this.offsetLeft); 
+			var ryPos = (touch.pageY - this.offsetTop);
+			w = $('#cursor').width(); 
+			h = $('#cursor').height();  
+			xs = rxPos - w / 2; //- $('#cursorcontrol').width() / 2; 
+			ys = ryPos - h / 2; // - $('#cursorcontrol').height() / 2; 
+			//$('#cursorcontrol').css('left', xs);
+			//$('#cursorcontrol').css('top', ys);
+			
+			
+			distance = Math.sqrt ( xs * xs + ys * ys );
+			log(distance); 
+			
+			if (distance < 150) {  
+			
+				$('#cursorcontrol').css("left", rxPos); 
+				$('#cursorcontrol').css("top", ryPos); 
+			
+				$("#console").html("<p><strong>X-Position: </strong>"+rxPos+" | <strong>Y-Position: </strong>"+ryPos+"</p>");
+
+			}
+	
+	}); /*.mouseout(function() {
+		$("#console").html("<p>Move mouse on the below blue div container! :)</p>");
+	}); */ 
+
+	function clickedEvent(e) { 
+		
+		$("#console").html("<p><strong>Clicked</strong> " + e.id);
+		
+	}
+
+	$("#button1").bind('touchstart', function(event) { 
+		clickedEvent(this); 
+	}).mouseout(function() {
+		$("#console").html("<p>Move mouse on the below blue div container! :)</p>");
+	}); 
+
+
+	$("#button2").bind('touchstart', function(event) { 
+		clickedEvent(this); 
+	}).mouseout(function() {
+		$("#console").html("<p>Move mouse on the below blue div container! :)</p>");
+	}); 
+
+
+	document.body.addEventListener('touchmove', function(event) {
+	  event.preventDefault();
+	}, false);
+
+
+    /* 
+	function initializeMaps() {
+		var latlng = new google.maps.LatLng(25.5, 2);
+		var myOptions = {
+			zoom: 2,
+			center: latlng,
+			mapTypeId: google.maps.MapTypeId.ROADMAP, 
+			disableDefaultUI: true
+		};
+		var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+	} 
+	
+	$('#map_canvas').hide(); 
+	*/ 
+
+	if (window.DeviceOrientationEvent) {
+	  console.log("DeviceOrientation is supported");
+	  window.addEventListener('deviceorientation', function(eventData) {
+	        var LR = eventData.gamma;
+	        var FB = eventData.beta;
+	        var DIR = eventData.alpha;
+	        deviceOrientationHandler(LR, FB, DIR);
+	    }, false);
+	} else {
+	    alert("Not supported on your device or browser.  Sorry.");
+	}
+
+	function deviceOrientationHandler(LR, FB, DIR) {
+	   //for webkit browser
+	  // document.getElementById("imgLogo").style.webkitTransform = "rotate("+ LR +"deg) rotate3d(1,0,0, "+ (FB*-1)+"deg)";
+		//log(LR);
+	   //for HTML5 standard-compliance
+	   //document.getElementById("imgLogo").style.transform = "rotate("+ LR +"deg) rotate3d(1,0,0, "+ (FB*-1)+"deg)";
+	} 
+	
+	//Read Accelerometer:
+	
+	if (window.DeviceMotionEvent==undefined) {
+	}
+	window.ondevicemotion = function(event) {
+	  ax = event.accelerationIncludingGravity.x
+	  ay = event.accelerationIncludingGravity.y
+	  az = event.accelerationIncludingGravity.z
+	  rotation = event.rotationRate; 
+		log(ax); 
+		log(rotation);
+	  if (rotation != null) {
+	    arAlpha = Math.round(rotation.alpha);
+	    arBeta = Math.round(rotation.beta);
+	    arGamma = Math.round(rotation.gamma);
+	  }
+	}
+
+
+
+	//Read Gyroscope:
+
+	window.ondeviceorientation = function(event) {
+	  alpha = Math.round(event.alpha);
+	  beta = Math.round(event.beta);
+	  gamma = Math.round(event.gamma);
+	}
+
+	/* 
+	if (navigator.connection.type==navigator.connection.WIFI) { 
+		log("wifi"); 
+	} 
+	*/ 
+	
+});  
+
+</script> 
+
+</body>
+</html>

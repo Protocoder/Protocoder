@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="bottom" >
+
+    <FrameLayout
+        android:id="@+id/f1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true" />
+
+    <LinearLayout
+        android:id="@+id/ip_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="@color/mwmmagenta"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:id="@+id/ip"
+            style="@android:style/TextAppearance.Medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/mwmgray"
+            android:gravity="center"
+            android:padding="10dp"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:textStyle="italic"
+            android:visibility="invisible" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/helpFragment"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/fragmentMoldable"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true" />
+
+    <FrameLayout
+        android:id="@+id/fragmentEditor"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true" />
+
+    <FrameLayout
+        android:id="@+id/fragmentLogOverlay"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true" />
+
+    <ProgressBar
+        android:id="@+id/loading_progress"
+        style="@android:style/Widget.ProgressBar.Large"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:visibility="gone" />
+
+</RelativeLayout>
