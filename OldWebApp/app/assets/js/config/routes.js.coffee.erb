@@ -1,0 +1,14 @@
+app.config ['$routeProvider', ($routeProvider) ->
+  $routeProvider.when('/',
+    templateUrl: "/assets/home.html"
+    controller: 'HomeController'
+  ).when('/help',
+    templateUrl: "/assets/help.html",
+    controller: 'HelpController'
+  ).when('/instruments', 
+    templateUrl: "/assets/instruments.html",
+    controller: 'InstrumentsController'
+  ).otherwise({
+    redirectTo: '/'
+  })
+]

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html ng-app="makeWithMotoApp" class="ng-scope">
+  <head>
+    <title>MakeWithMoto</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="/assets/application.css">
+    <script src="/assets/vendor.js"></script>
+  </head>
+  <body>
+    <%= erb :"shared/header" %>
+
+    <%= yield %>
+
+    <script src="/assets/application.js"></script>
+  </body>
+</html>
+
+
+

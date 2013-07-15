@@ -1,0 +1,2 @@
+default:
+  url: sqlite://db/development.db #postgres://user:password@host:port/database_name

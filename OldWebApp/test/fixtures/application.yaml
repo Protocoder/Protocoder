@@ -1,0 +1,4 @@
+- name: "Test project"
+  url: 'test/fixtures/test_project.js'
+- name: "Another test project"
+  url: 'test/fixtures/another_project.js'
