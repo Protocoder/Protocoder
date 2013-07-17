@@ -1,8 +1,5 @@
 package com.makewithmoto.apprunner.api;
 
-import com.makewithmoto.apprunner.events.Events.LogEvent;
-
-import android.os.RemoteException;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.webkit.JavascriptInterface;

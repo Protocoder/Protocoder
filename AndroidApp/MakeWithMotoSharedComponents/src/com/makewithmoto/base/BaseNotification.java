@@ -14,6 +14,7 @@ import android.support.v4.app.NotificationCompat.Builder;
 public class BaseNotification {
 
 	public static int NOTIFICATION_APP_RUNNING = 1;
+	public static String ACTION_STOP = "STOP";
 
 	Context c;
 	NotificationManager mNotificationManager;
@@ -40,6 +41,14 @@ public class BaseNotification {
 		Intent notificationIntent = new Intent(c, cls);
 		PendingIntent contentIntent = PendingIntent.getActivity(c, 0,
 				notificationIntent, 0);
+		
+		Intent stopIntent = new Intent(c, cls);
+		               stopIntent.setAction(ACTION_STOP);
+		               PendingIntent pStop = PendingIntent.getActivity(c, 0,
+		                               stopIntent, 0);
+		
+		
+		
 		long[] vibrate = { 0, 100, 200, 300 };
 
 		mBuilder = new NotificationCompat.Builder(c);
@@ -51,7 +60,7 @@ public class BaseNotification {
 				.setVibrate(vibrate)
 				.setContentIntent(contentIntent)
 				//.setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
-				.addAction(actionIcon, "Stop Server", null);
+				.addAction(actionIcon, "Stop Server", pStop);
 			
 		// notification.defaults |= Notification.DEFAULT_LIGHTS;
 		// notification.ledARGB = Color.RED;

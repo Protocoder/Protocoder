@@ -1,5 +1,6 @@
 package com.makewithmoto;
 
+import java.io.File;
 import java.util.List;
 
 import org.json.JSONException;
@@ -17,6 +18,7 @@ import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
@@ -39,6 +41,7 @@ import android.widget.Toast;
 
 import com.makewithmoto.animation.AnimUtils;
 import com.makewithmoto.app.utils.NetworkUtils;
+import com.makewithmoto.apprunner.AppRunnerActivity;
 import com.makewithmoto.base.AppSettings;
 import com.makewithmoto.base.BaseActivity;
 import com.makewithmoto.base.BaseNotification;
@@ -66,7 +69,9 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
     protected float servoVal;
     Handler handler;
 
-    MyHTTPServer httpServer;
+    MyHTTPServer httpServer; 
+    
+    BaseNotification baseNotification;
 
     public HelpFragment helpFragment;
     private ProjectsListFragment projectListFragment;
@@ -124,7 +129,7 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
         actionBar.setHomeButtonEnabled(true);
 
         //Show the notification
-        BaseNotification baseNotification = new BaseNotification(this);
+        baseNotification = new BaseNotification(this);
         baseNotification.show(MainActivity.class, R.drawable.ic_stat_logo, "http:/" + NetworkUtils.getLocalIpAddress().toString() + ":" + AppSettings.httpPort, "MWM Server Running", R.drawable.ic_navigation_cancel);
 
         //Create the IP text view
@@ -184,8 +189,19 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG, "Registering as an EventBus listener in MainActivity");
-        EventBus.getDefault().register(this);
+        Intent receivedIntent = getIntent();
+        String receivedAction = receivedIntent.getAction();
+                     
+        if(receivedAction == "STOP"){
+            Log.d(TAG, "Stoping Services!!!");
+            baseNotification.hide();
+            stopServices();
+        }
+        else{
+            Log.d(TAG, "Registering as an EventBus listener in MainActivity");
+            EventBus.getDefault().register(this);
+        }
+
     }
 
     /**
@@ -213,8 +229,48 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
             vg.invalidate();
             vg.removeAllViews();
         }
-        httpServer.stop();
-        httpServer = null;
+        
+        if(httpServer != null){
+            httpServer.stop();
+            httpServer = null;
+        }
+        
+        baseNotification.hide();
+        System.exit(0);
+    }
+    
+    
+    private void stopServices(){
+    	       
+    	               /*
+    	               try {
+    	                      Log.d(TAG, "Stoping...................");
+    	                       wsServiceInterface.stop();
+    	               } catch (RemoteException e1) {
+    	                       // TODO Auto-generated catch block
+    	                       e1.printStackTrace();
+    	               }
+    	               */
+    	               
+    	               /*
+    	               if (isConnectedToWebsockets) {
+    	                       unbindService(conn);
+    	               }
+    	               */
+    	               
+    	ViewGroup vg = (ViewGroup) findViewById(R.layout.activity_forfragments);
+    	if (vg != null) {
+    	   vg.invalidate();
+    	   vg.removeAllViews();
+    	}
+    	               
+    	if(httpServer != null){
+    	  httpServer.stop();
+    	  httpServer = null;
+    	}
+    	               
+    	finish();
+    	               
     }
 
     // TODO call intent and kill it in an appropiate way
@@ -227,12 +283,20 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
                 finishActivity(mProjectRequestCode);
                 currentProjectApplicationIntent = null;
             }
-            Log.d("ProjectEvent/MainActivity", evt.getProject().getName());
+            String baseDir = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + 
+    				AppSettings.appFolder + File.separator;
+            
+            Log.d("ProjectEvent/MainActivity", baseDir+ evt.getProject().getName() + File.separator + "script.js");
             projectListFragment.projectLaunch(evt.getProject().getName());
 
-            currentProjectApplicationIntent = new Intent("com.makewithmoto.apprunner.MWMActivity");
 
-            currentProjectApplicationIntent.putExtra("project_name", evt.getProject().getName());
+
+            try{
+        
+            currentProjectApplicationIntent = new Intent(MainActivity.this, AppRunnerActivity.class); 
+            String script = evt.getProject().getCode();
+            Log.d("MainActivity", script);
+            currentProjectApplicationIntent.putExtra("Script", script);
 
             // check if the apprunner is installed
             // TODO add handling
@@ -242,6 +306,9 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
             Log.d(TAG, "intent available " + list.size());
 
             startActivityForResult(currentProjectApplicationIntent, mProjectRequestCode);
+            }catch(Exception e){
+            	Log.d(TAG, "Error launching script");
+            }
         } else if (evt.getAction() == "save") {
             Log.d(TAG, "saving project " + evt.getProject().getName());
             projectListFragment.projectRefresh(evt.getProject().getName());

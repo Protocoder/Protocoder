@@ -2,13 +2,13 @@ package com.makewithmoto.apprunner.sensors;
 
 import java.util.Vector;
 
-import com.makewithmoto.appruner.webrunner.WhatIsRunningInterface;
-
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+
+import com.makewithmoto.appruner.webrunner.WhatIsRunningInterface;
 
 public class AccelerometerManager extends CustomSensorManager implements WhatIsRunningInterface {
 
