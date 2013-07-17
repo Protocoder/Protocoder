@@ -27,14 +27,13 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.util.Log;
 
+import com.makewithmoto.base.BaseMainApp;
 import com.makewithmoto.events.Events.LogEvent;
 import com.makewithmoto.events.Events.ProjectEvent;
-import com.makewithmoto.base.BaseMainApp;
 import com.makewithmoto.events.Project;
 import com.makewithmoto.utils.ALog;
 
 import de.greenrobot.event.EventBus;
-import de.greenrobot.event.EventBusException;
 
 public class CustomWebsocketServer extends WebSocketServer {
 	private static CustomWebsocketServer inst;
