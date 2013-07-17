@@ -112,7 +112,7 @@ public class AppRunnerActivity extends Activity {
 	        {
 	            contextFactory = new ScriptContextFactory();
 	            ContextFactory.initGlobal(contextFactory);
-	            Log.i("DroidScript", "Creating ContextFactory");
+	            Log.i("AppRunnerActivity", "Creating ContextFactory");
 	        }
 	        
 	        contextFactory.setActivity(this);
@@ -157,7 +157,7 @@ public class AppRunnerActivity extends Activity {
 	        }
 	        
 	        // Log the error message.
-	        Log.i("SimpleAppRunner", "JavaScript Error: " + message);
+	        Log.i("AppRunnerActivity", "JavaScript Error: " + message);
 	    }
 	
 	
@@ -168,10 +168,10 @@ public class AppRunnerActivity extends Activity {
 	  public static String preprocess(String code) throws Exception
 	    {
 	        return preprocessMultiLineStrings(
-	            extractCodeFromDroidScriptTags(code));
+	            extractCodeFromAppRunnerTags(code));
 	    }
 	        
-	    public static String extractCodeFromDroidScriptTags(String code) throws Exception
+	    public static String extractCodeFromAppRunnerTags(String code) throws Exception
 	    {
 	        String startDelimiter = "DROIDSCRIPT_BEGIN";
 	        String stopDelimiter = "DROIDSCRIPT_END";
@@ -185,7 +185,7 @@ public class AppRunnerActivity extends Activity {
 	        }
 	        
 	        // Find stop delimiter
-	        int stop = code.indexOf(stopDelimiter, start);
+	        int stop = code.indexOf(stopDelimiter, start); 
 	        if (-1 == stop) 
 	        { 
 	            // No delimiter found, return code untouched
@@ -290,9 +290,10 @@ public class AppRunnerActivity extends Activity {
         
         public Interpreter setActivity(Activity activity)
         {
-			ScriptAssetProvider provider = new ScriptAssetProvider(activity);
-			Require require = new Require(context, scope, provider, null, null, true);
-			require.install(scope);
+			//ScriptAssetProvider provider = new ScriptAssetProvider(activity);
+			//Require require = new Require(context, scope, provider, null, null, true);
+			//require.install(scope);
+        	
             // Set the global JavaScript variable Activity.
             ScriptableObject.putProperty(scope, "Activity", Context.javaToJS(activity, scope));
             return this;
@@ -320,14 +321,14 @@ public class AppRunnerActivity extends Activity {
             Object fun = scope.get(funName, scope);
             if (fun instanceof Function) 
             {
-                Log.i("DroidScript", "Calling JsFun " + funName);
+                Log.i("AppRunnerActivity", "Calling JsFun " + funName);
                 Function f = (Function) fun;
                 Object result = f.call(context, scope, scope, args);
                 return Context.toString(result); // Why did I use this?
             }
             else
             {
-                // Log.i("DroidScript", "Could not find JsFun " + funName);
+                // Log.i("AppRunnerActivity", "Could not find JsFun " + funName);
                 return null;
             }
         }
@@ -352,7 +353,7 @@ public class AppRunnerActivity extends Activity {
 	            }
 	            catch (Throwable e)
 	            {
-	                Log.i("DroidScript", "ContextFactory catched error: " + e);
+	                Log.i("AppRunnerActivity", "ContextFactory catched error: " + e);
 	                if (null != activity) { activity.reportError(e); }
 	                return e;
 	            }

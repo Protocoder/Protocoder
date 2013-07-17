@@ -24,7 +24,7 @@ import android.widget.GridView;
 
 import com.makewithmoto.MainActivity;
 import com.makewithmoto.R;
-import com.makewithmoto.apprunner.ScriptFileHandler;
+import com.makewithmoto.apprunner.AppRunnerActivity;
 import com.makewithmoto.base.BaseFragment;
 import com.makewithmoto.beam.BeamActivity;
 import com.makewithmoto.events.Events.ProjectEvent;
@@ -185,12 +185,17 @@ public class ProjectsListFragment extends BaseFragment {
             // create shortcut if requested
             ShortcutIconResource icon = Intent.ShortcutIconResource.fromContext(getActivity(), R.drawable.ic_script);
 
-            Intent shortcutIntent = new Intent("com.makewithmoto.apprunner.AppRunnerActivity");
-            shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+           
 
             try{
-                String script = ScriptFileHandler.create().readStringFromFileOrUrl(project.getName());
+            	
+
+            	 Intent shortcutIntent = new Intent(getActivity(),AppRunnerActivity.class);
+                 shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                 shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                     	
+            	
+                String script = project.getCode();
                 shortcutIntent.putExtra("Script", script);
 
                 final Intent putShortCutIntent = new Intent();
