@@ -2,6 +2,7 @@ package com.makewithmoto.apprunner;
 
 import java.lang.ref.WeakReference;
 
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;

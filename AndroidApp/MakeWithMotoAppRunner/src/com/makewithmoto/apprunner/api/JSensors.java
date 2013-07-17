@@ -1,7 +1,5 @@
 package com.makewithmoto.apprunner.api;
 
-import java.util.Timer;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 

@@ -75,6 +75,10 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        
+        <activity android:name="com.makewithmoto.apprunner.AppRunnerActivity"
+                  android:label="AppRunner Activity">
+        </activity>
 
         <service android:name="com.makewithmoto.network.WebSocketService" >
             <intent-filter>

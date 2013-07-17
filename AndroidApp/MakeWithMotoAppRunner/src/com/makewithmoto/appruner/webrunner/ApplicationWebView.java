@@ -3,7 +3,6 @@ package com.makewithmoto.appruner.webrunner;
 import java.lang.ref.WeakReference;
 
 import android.annotation.SuppressLint;
-
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -14,10 +13,6 @@ import android.webkit.WebViewClient;
 
 import com.makewithmoto.app.utils.Template;
 import com.makewithmoto.apprunner.MWMActivity;
-import com.makewithmoto.apprunner.api.JIoio;
-import com.makewithmoto.apprunner.api.JLog;
-import com.makewithmoto.apprunner.api.JNetwork;
-import com.makewithmoto.apprunner.api.JUI;
 import com.makewithmoto.events.Project;
 import com.makewithmoto.fragments.BaseWebviewFragment;
 import com.makewithmoto.utils.ALog;

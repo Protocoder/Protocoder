@@ -18,6 +18,7 @@ import com.makewithmoto.apprunner.R;
 import com.makewithmoto.base.BaseFragment;
 
 
+
 public class VideoPlayerFragment extends BaseFragment {
 
 	private View v;
