@@ -14,11 +14,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.makewithmoto.app.utils.Fonts;
-import com.makewithmoto.app.utils.TextUtils;
 import com.makewithmoto.base.BaseFragment;
 import com.makewithmoto.events.Project;
 import com.makewithmoto.sharedcomponents.R;
+import com.makewithmoto.utils.Fonts;
+import com.makewithmoto.utils.TextUtils;
 
 @SuppressLint("NewApi")
 public class EditorFragment extends BaseFragment {

@@ -30,6 +30,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 
 import com.makewithmoto.base.BaseMainApp;
+import com.makewithmoto.network.ALog;
 
 import android.app.Activity;
 import android.content.Context;
