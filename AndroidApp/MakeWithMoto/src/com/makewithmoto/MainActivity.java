@@ -1,5 +1,6 @@
 package com.makewithmoto;
 
+import java.io.File;
 import java.util.List;
 
 import org.json.JSONException;
@@ -19,6 +20,7 @@ import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
@@ -41,6 +43,7 @@ import android.widget.Toast;
 
 import com.makewithmoto.animation.AnimUtils;
 import com.makewithmoto.app.utils.NetworkUtils;
+import com.makewithmoto.apprunner.AppRunnerActivity;
 import com.makewithmoto.base.AppSettings;
 import com.makewithmoto.base.BaseActivity;
 import com.makewithmoto.base.BaseNotification;
@@ -303,12 +306,20 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
                 finishActivity(mProjectRequestCode);
                 currentProjectApplicationIntent = null;
             }
-            Log.d("ProjectEvent/MainActivity", evt.getProject().getName());
+            String baseDir = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + 
+    				AppSettings.appFolder + File.separator;
+            
+            Log.d("ProjectEvent/MainActivity", baseDir+ evt.getProject().getName() + File.separator + "script.js");
             projectListFragment.projectLaunch(evt.getProject().getName());
 
-            currentProjectApplicationIntent = new Intent("com.makewithmoto.apprunner.MWMActivity");
 
-            currentProjectApplicationIntent.putExtra("project_name", evt.getProject().getName());
+
+            try{
+        
+            currentProjectApplicationIntent = new Intent(MainActivity.this, AppRunnerActivity.class); 
+            String script = evt.getProject().getCode();
+            Log.d("MainActivity", script);
+            currentProjectApplicationIntent.putExtra("Script", script);
 
             // check if the apprunner is installed
             // TODO add handling
@@ -318,6 +329,10 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
             Log.d(TAG, "intent available " + list.size());
 
             startActivityForResult(currentProjectApplicationIntent, mProjectRequestCode);
+            }catch(Exception e){
+            	Log.d(TAG, "Error launching script");
+            }
+
         } else if (evt.getAction() == "save") {
             Log.d(TAG, "saving project " + evt.getProject().getName());
             projectListFragment.projectRefresh(evt.getProject().getName());

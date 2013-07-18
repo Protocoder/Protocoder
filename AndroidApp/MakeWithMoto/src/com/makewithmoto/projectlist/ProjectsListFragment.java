@@ -1,11 +1,8 @@
 package com.makewithmoto.projectlist;
 
 import java.io.File;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-import android.animation.AnimatorInflater;
-import android.animation.AnimatorSet;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -24,11 +21,11 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.makewithmoto.MainActivity;
 import com.makewithmoto.R;
+import com.makewithmoto.apprunner.AppRunnerActivity;
 import com.makewithmoto.base.BaseFragment;
 import com.makewithmoto.beam.BeamActivity;
 import com.makewithmoto.events.Events.ProjectEvent;
@@ -202,6 +199,8 @@ public class ProjectsListFragment extends BaseFragment {
                 String script = project.getCode();
                 shortcutIntent.putExtra("Script", script);
 
+                final Intent putShortCutIntent = new Intent();
+                
                 putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
                 putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, project.getName());
                 putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon); // can also be ignored too
