@@ -1,10 +1,3 @@
-var PUSH_CODE = "/push_code"; 
-var GET_CODE = "/get_code";
-var LIST_APPS = "/list_apps";
-var RUN_APP = "/run_app";
-var REMOVE_APP = "/remove_app";
-var EXECUTE_REMOTE = "/execute_remote_function";
-
 
 //listing apps in the future we might filter the listing
 function list_apps() { 
@@ -12,7 +5,7 @@ function list_apps() {
 	obj.cmd = "list_apps";
 	obj.filter = "all";
 	$.get("cmd="+JSON.stringify(obj), function(data) {
- 		alert('Load was performed. ' + data);
+		setProjects(JSON.parse(data));
 	});
 }
 
@@ -21,7 +14,7 @@ function push_code(id, code) {
 	var obj = {};
 	obj.cmd = "push_code";
 	obj.id = id;
-	obj.code = code;
+	obj.code = escape(code);
 	$.get("cmd="+JSON.stringify(obj), function(data) {
  		alert('Load was performed. ' + data);
 	});
@@ -33,7 +26,8 @@ function fetch_code(id) {
 	obj.cmd = "fetch_code";
 	obj.id = id;
 	$.get("cmd="+JSON.stringify(obj), function(data) {
- 		alert('Load was performed. ' + data);
+		var code = JSON.parse(data);
+		setCode(unescape(code.code));
 	});
 }
 

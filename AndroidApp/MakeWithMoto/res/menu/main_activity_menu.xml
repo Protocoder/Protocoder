@@ -13,5 +13,9 @@
         android:showAsAction="ifRoom"
         android:title="@string/menu_label_new">
     </item>
-
+    <item
+        android:id="@+id/menu_start_stop"
+        android:showAsAction="never"
+        android:title="@string/menu_label_stop_server">
+    </item>
 </menu>

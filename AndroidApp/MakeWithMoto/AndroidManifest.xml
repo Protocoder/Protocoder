@@ -60,8 +60,15 @@
             android:logo="@drawable/ic_action_logo" >
         </activity>
         <activity
+            android:name="com.makewithmoto.WelcomeActivity"
+            android:label="@string/activity_name"
+            android:logo="@drawable/ic_action_logo"
+            android:noHistory="true" >
+        </activity>
+        <activity
             android:name="com.makewithmoto.beam.BeamActivity"
-            android:label="@string/app_name" >
+            android:label="@string/beam"
+            android:logo="@drawable/ic_action_logo">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>

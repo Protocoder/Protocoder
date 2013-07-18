@@ -9,7 +9,7 @@ function testWebsockets() {
     //ws.send('Hello')  // Sends a message.
 
     //OK get projects
-    ws.send('{type:get_projects}');
+    //ws.send('{type:get_projects}');
 
     //get new code template 
     //ws.send('{type:get_new_code}');
@@ -106,20 +106,4 @@ function saveCode(name) {
 
   ws.send(JSON.stringify(json));
 
-}
-
-
-//set projects in project list 
-function setProjects(projects) { 
-
-  $(projects).each(function(k, project) {
-    console.log("-->", k, project); 
-   
-    console.log("binding -> " + "#project_list " + "#"+project.name);
-    $('<p id ="'+project.name+'">' + project.name + '</p>').click(function () {
-      getCodeFor(project.name);
-      currentProject = project;
-    }).appendTo("#project_list");
-  
-  });
 }

@@ -1,25 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/paper_bg"
-    android:orientation="vertical" >
+    android:background="@drawable/gradient" >
 
     <GridView
         android:id="@+id/gridview"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
+        android:layout_marginBottom="36dp"
+        android:layout_marginTop="10dp"
         android:animateLayoutChanges="true"
         android:background="@android:color/transparent"
         android:columnWidth="80dp"
         android:gravity="center"
-        android:listSelector="@drawable/script_selector"
         android:horizontalSpacing="5dp"
-        android:numColumns="auto_fit"
+        android:layoutAnimation="@anim/fav_grid_anim"
+        android:listSelector="@android:color/transparent"
+        android:numColumns="@integer/icons_per_row"
         android:padding="5dp"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="15dp"
-        android:layout_marginBottom="40dp"/>
+        android:verticalSpacing="5dp" />
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/empty_grid_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null"
+            android:src="@drawable/sadface" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/projects_zero"
+            android:textColor="@color/mwmgray"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+</FrameLayout>
