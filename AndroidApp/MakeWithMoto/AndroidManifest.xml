@@ -67,6 +67,12 @@
             android:noHistory="true" >
         </activity>
         <activity
+            android:name="com.makewithmoto.SetPreferenceActivity"
+            android:label="@string/settings_activity_name"
+            android:logo="@drawable/ic_action_logo"
+            android:noHistory="true" >
+        </activity>
+        <activity
             android:name="com.makewithmoto.beam.BeamActivity"
             android:label="@string/beam"
             android:logo="@drawable/ic_action_logo" >

@@ -75,6 +75,7 @@ public class BaseActivity extends FragmentActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(fragmentPosition, fragment, tag);
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
         if (addToBackStack) {
             ft.addToBackStack(null);
         }
@@ -87,6 +88,7 @@ public class BaseActivity extends FragmentActivity {
         //FIXME: Because we have no tagging system we need to use the int as a tag, which may cause collisions
         ft.add(fragmentPosition, fragment, String.valueOf(fragmentPosition));
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
         if (addToBackStack) {
             ft.addToBackStack(null);
         }
