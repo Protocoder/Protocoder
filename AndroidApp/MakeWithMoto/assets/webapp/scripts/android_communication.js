@@ -58,6 +58,16 @@ function remove_app(id) {
 	});
 }
 
+function get_documentation(id) {
+	var obj = {};
+	obj.cmd = "get_documentation";
+
+	$.get("cmd="+JSON.stringify(obj), function(data) { 
+		var doc = JSON.parse(data);
+		parse_help(doc.api);
+	});
+}
+
 
 //OK fetch_code("ioio_1");
 //OK list_apps();

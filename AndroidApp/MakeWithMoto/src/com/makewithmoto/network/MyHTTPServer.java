@@ -18,6 +18,10 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.util.Log;
 
+import com.makewithmoto.apidoc.APIManager;
+import com.makewithmoto.apprunner.api.JAndroid;
+import com.makewithmoto.apprunner.api.JInterface;
+import com.makewithmoto.apprunner.api.JUI;
 import com.makewithmoto.events.Events.ProjectEvent;
 import com.makewithmoto.events.Project;
 
@@ -179,8 +183,14 @@ public class MyHTTPServer extends NanoHTTPD {
 					Log.d(TAG, "--> remove app");
 				
 				//get help 
-				} else if (cmd.equals("get_help")) {
-					Log.d(TAG, "--> get help");
+				} else if (cmd.equals("get_documentation")) {
+					Log.d(TAG, "--> get documentation");
+					
+					//TODO do it automatically 
+					APIManager.getInstance().addClass(JAndroid.class); 
+					APIManager.getInstance().addClass(JInterface.class); 
+					APIManager.getInstance().addClass(JUI.class); 
+					data.put("api", APIManager.getInstance().getDocumentation());
 				}
 
 				res = new Response("200", MIME_TYPES.get("txt"), data.toString());
