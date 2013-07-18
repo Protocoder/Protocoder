@@ -313,7 +313,11 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
             Log.d(TAG, "saving project " + evt.getProject().getName());
             projectListFragment.projectRefresh(evt.getProject().getName());
 
+      
+        } else if (evt.getAction() == "new") {
+        	projectListFragment.addProject(evt.getProject().getName(), evt.getProject().getUrl());
         }
+
     }
 
     // MUST IMPLEMENT THIS
