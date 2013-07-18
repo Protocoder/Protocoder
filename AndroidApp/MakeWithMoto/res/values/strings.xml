@@ -26,6 +26,7 @@
     <string name="menu_label_about">About</string>
     <string name="menu_label_start_server">Start server</string>
     <string name="menu_label_stop_server">Stop server</string>
+    <string name="menu_label_settings">Settings</string>
 
     <!-- Beam -->
     <string name="beaming_file">Beaming file using Android Beam</string>
@@ -53,5 +54,11 @@
     <string name="welcome_title">Good to see you.</string>
     <string name="welcome_body">CODEwithMOTO makes is simple to create, edit and run projects from your Android device or computer at the same time. Just start the app and build from your mobile, or navigate to the displayed URL to edit via a web IDE.\n\nAre you in?</string>
     <string name="welcome_accept">I\'m so excited.</string>
+    
+    <!-- Settings screen -->
+    <string name="settings_activity_name">Settings</string>
+    <string name="setting_notifications_title">Notifications</string>
+    <string name="setting_show_notifications_title">Show notifications</string>
+    <string name="setting_show_notifications_body">Display a persistent notification when the server is running</string>
    
 </resources>

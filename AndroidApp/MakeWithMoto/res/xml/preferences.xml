@@ -1,0 +1,15 @@
+<PreferenceScreen
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+            android:title="@string/setting_notifications_title">
+
+        <CheckBoxPreference
+                android:key="@string/pref_curtain_notifications"
+                android:title="@string/setting_show_notifications_title"
+                android:checked="true"
+                android:summary="@string/setting_show_notifications_body" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
