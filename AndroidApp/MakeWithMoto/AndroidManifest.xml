@@ -94,11 +94,6 @@
             android:logo="@drawable/ic_action_logo" >
         </activity>
 
-        <service android:name="com.makewithmoto.network.WebSocketService" >
-            <intent-filter>
-                <action android:name="com.makewithmoto.network.IWebSocketService" />
-            </intent-filter>
-        </service>
     </application>
 
 </manifest>

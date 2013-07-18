@@ -3,27 +3,18 @@ package com.makewithmoto;
 import java.io.File;
 import java.util.List;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.IBinder;
-import android.os.RemoteException;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -32,9 +23,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.View.OnClickListener;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView.AdapterContextMenuInfo;
@@ -42,20 +33,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.makewithmoto.animation.AnimUtils;
-import com.makewithmoto.network.NetworkUtils;
 import com.makewithmoto.apprunner.AppRunnerActivity;
 import com.makewithmoto.base.AppSettings;
 import com.makewithmoto.base.BaseActivity;
 import com.makewithmoto.base.BaseNotification;
-import com.makewithmoto.events.Events.LogEvent;
 import com.makewithmoto.events.Events.ProjectEvent;
 import com.makewithmoto.events.Project;
 import com.makewithmoto.fragments.HelpFragment;
 import com.makewithmoto.fragments.NewProjectDialog;
 import com.makewithmoto.network.ALog;
-import com.makewithmoto.network.IWebSocketService;
 import com.makewithmoto.network.MyHTTPServer;
+import com.makewithmoto.network.NetworkUtils;
 import com.makewithmoto.projectlist.ProjectManager;
 import com.makewithmoto.projectlist.ProjectsListFragment;
 
@@ -86,39 +74,6 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
 
     private Intent currentProjectApplicationIntent;
 
-    private IWebSocketService wsServiceInterface;
-    private static Boolean isConnectedToWebsockets = false;
-    private Intent wsIntent;
-    private BroadcastReceiver mStopServerReceiver;
-    private ServiceConnection conn = new ServiceConnection() {
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            Log.d(TAG, "disconnected from websockets");
-            isConnectedToWebsockets = false;
-        }
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            isConnectedToWebsockets = true;
-            Log.d(TAG, "connected to websockets");
-            wsServiceInterface = IWebSocketService.Stub.asInterface((IBinder) service);
-            try {
-                Log.d(TAG, "Starting...................");
-                wsServiceInterface.start();
-            } catch (RemoteException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-            }
-            try {
-                wsServiceInterface.sendToSockets("Connected");
-            } catch (RemoteException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-    };
-
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -139,8 +94,8 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
         helpFragment = new HelpFragment();
         addFragment(helpFragment, R.id.helpFragment, false);
 
-        //Start the remote service connection
-        startConnections();
+        //Start the servers 
+        startServers();
 
         //Add animations
         ViewTreeObserver vto = mIpContainer.getViewTreeObserver();
@@ -182,8 +137,10 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
         Log.d(TAG, "Registering as an EventBus listener in MainActivity");
         EventBus.getDefault().register(this);
 
+        //TODO do something with the webserver 
         //Create broadcast receiver for if the user cancels from the curtain
-        mStopServerReceiver = new BroadcastReceiver() {
+        /*
+        BroadcastReceiver mStopServerReceiver = new BroadcastReceiver() {
 
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -193,6 +150,7 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
         IntentFilter filterSend = new IntentFilter();
         filterSend.addAction("com.makewithmoto.intent.action.STOP_SERVER");
         registerReceiver(mStopServerReceiver, filterSend);
+        */
     }
 
     /**
@@ -217,13 +175,13 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
             vg.removeAllViews();
         }
         killConnections();
-        unregisterReceiver(mStopServerReceiver);
+        //TODO add stop websocket
     }
 
     /**
      * Starts the remote service connection
      */
-    private void startConnections() {
+    private void startServers() {
 
         //Show the notification
         mNotification = new BaseNotification(this);
@@ -237,7 +195,12 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
         mIpContainer = (LinearLayout) findViewById(R.id.ip_container);
         updateStartStopActionbarItem();
 
+        //start webserver 
         httpServer = MyHTTPServer.getInstance(AppSettings.httpPort, getApplicationContext());
+        
+        //TODO add websocket
+
+        
         textIP.setText("Hack via your browser @ http:/" + NetworkUtils.getLocalIpAddress().toString() + ":" + AppSettings.httpPort);
         if (httpServer != null) {//If no instance of HTTPServer, we set the IP address view to gone.
             textIP.setVisibility(View.VISIBLE);
@@ -245,10 +208,7 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
             textIP.setVisibility(View.GONE);
         }
 
-        // Start the remote service connection
-        wsIntent = new Intent(IWebSocketService.class.getName());
-        this.bindService(wsIntent, conn, Context.BIND_AUTO_CREATE);
-        Log.d(TAG, "WebSocketService bound");
+
     }
 
     /**
@@ -256,10 +216,8 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
      */
     private void killConnections() {
         // TODO enable this at some point
-        if (isConnectedToWebsockets) {
-            unbindService(conn);
-            isConnectedToWebsockets = false;//FIXME: It seems the service is never truly disconnected
-        }
+    	//TODO add websocket
+
         if (httpServer != null) {
             httpServer.stop();
             httpServer = null;
@@ -275,10 +233,8 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
      */
     private void hardKillConnections() {
         // TODO enable this at some point
-        if (isConnectedToWebsockets) {
-            unbindService(conn);
-            isConnectedToWebsockets = false;
-        }
+    	//TODO add here websocket 
+
         if (httpServer != null) {
             httpServer.stop();
             httpServer = null;
@@ -290,7 +246,7 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
         textIP.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                startConnections();
+                startServers();
                 updateStartStopActionbarItem();
                 
             }
@@ -358,45 +314,6 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
 
     }
 
-    // MUST IMPLEMENT THIS
-    public void onEventAsync(LogEvent evt) {
-        Log.d(TAG, "LogEvent ---> onEventAsync " + evt.getMessage());
-        String msg = evt.getMessage();
-        JSONObject res = new JSONObject();
-        try {
-            res.put("type", "log_event");
-            res.put("tag", evt.getTag());
-            res.put("msg", msg);
-            try {
-                if (isConnectedToWebsockets) {
-                    wsServiceInterface.logToSockets(evt.getTag(), msg);
-                } else {
-                    Log.e(TAG, "Not connected to webSockets. Cannot send message: " + msg);
-                }
-            } catch (RemoteException e) {
-                Log.d(TAG, "ERROR SENDING TO SOCKETS");
-                e.printStackTrace();
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // Show source editor view
-    // Recommend deprecation...
-    private void showHelpView() {
-        showingHelp = true;
-        //textIP.setVisibility(View.INVISIBLE);
-        AnimUtils.showHelp(this);
-    }
-
-    // Recommend deprecation...
-    private void hideHelpView() {
-        AnimUtils.hideHelp(this);
-        showingHelp = false;
-        //textIP.setVisibility(View.VISIBLE);
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -438,7 +355,7 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
             if (httpServer != null) {
                 hardKillConnections();
             } else {
-                startConnections();
+                startServers();
             }
             updateStartStopActionbarItem();
             return true;
