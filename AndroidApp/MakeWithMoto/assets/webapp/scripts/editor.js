@@ -23,8 +23,8 @@ function initEditor() {
 	editor.commands.addCommand({
 	    name: 'save_command',
 	    bindKey: {
-	        win: 'Ctrl-S',
-	        mac: 'Ctrl-S',
+	        win: 'Ctrl-E',
+	        mac: 'Ctrl-E',
 	        sender: 'editor'
 	    },
 	    exec: function(env, args, request) {
