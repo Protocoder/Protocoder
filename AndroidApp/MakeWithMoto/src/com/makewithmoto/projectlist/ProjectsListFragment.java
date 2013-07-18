@@ -77,12 +77,13 @@ public class ProjectsListFragment extends BaseFragment {
 
                 ProjectAnimations.projectRefresh(v);
 
-                //HSHIEH: We'll always show the context menu because this behavior is hard to discover
-                //Project project = projects.get(position);
-                //ProjectEvent evt = new ProjectEvent(project, "run");
-                //EventBus.getDefault().post(evt);
-                
-                gridView.showContextMenuForChild(v);
+                Project project = projects.get(position);
+                ProjectEvent evt = new ProjectEvent(project, "run");
+                EventBus.getDefault().post(evt);
+                getActivity().overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
+
+                //Code this in if you want to show the context menu on single click
+                //gridView.showContextMenuForChild(v);
 
             }
         });
@@ -188,26 +189,24 @@ public class ProjectsListFragment extends BaseFragment {
             // create shortcut if requested
             ShortcutIconResource icon = Intent.ShortcutIconResource.fromContext(getActivity(), R.drawable.ic_script);
 
+            try {
 
-            try{
-
-                Intent shortcutIntent = new Intent(getActivity(),AppRunnerActivity.class);
-                 shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                 shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
+                Intent shortcutIntent = new Intent(getActivity(), AppRunnerActivity.class);
+                shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
                 String script = project.getCode();
                 shortcutIntent.putExtra("Script", script);
 
                 final Intent putShortCutIntent = new Intent();
-                
+
                 putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
                 putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, project.getName());
                 putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon); // can also be ignored too
                 putShortCutIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
                 getActivity().sendBroadcast(putShortCutIntent);
-            }catch(Exception e){
-               // TODO
+            } catch (Exception e) {
+                // TODO
             }
 
             //Show toast

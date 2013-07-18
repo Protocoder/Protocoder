@@ -23,8 +23,8 @@ function initEditor() {
 	editor.commands.addCommand({
 	    name: 'save_command',
 	    bindKey: {
-	        win: 'Ctrl-E',
-	        mac: 'Ctrl-E',
+	        win: 'Ctrl-S',
+	        mac: 'Ctrl-S',
 	        sender: 'editor'
 	    },
 	    exec: function(env, args, request) {
@@ -34,13 +34,14 @@ function initEditor() {
 
 	//save
 	editor.commands.addCommand({
-	    name: 'save_command',
+	    name: 'run_command',
 	    bindKey: {
 	        win: 'Ctrl-R',
 	        mac: 'Ctrl-R',
 	        sender: 'editor'
 	    },
 	    exec: function(env, args, request) {
+	    	push_code(currentProject.id, session.getValue());
 	    	run_app(currentProject.id);
 	    }
 	});
