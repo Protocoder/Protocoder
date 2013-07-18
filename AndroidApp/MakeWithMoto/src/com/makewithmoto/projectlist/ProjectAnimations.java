@@ -44,7 +44,7 @@ public class ProjectAnimations {
 
 	public static void projectLaunch(final View v) {
 	    AnimatorSet animSpin;
-        animSpin = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(), R.animator.flip_down);
+        animSpin = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(), R.animator.flip_up);
         animSpin.setTarget(v);
         animSpin.start();
 		/*GridView gL = (GridView) v.getParent(); 

@@ -16,7 +16,7 @@ function push_code(id, code) {
 	obj.id = id;
 	obj.code = escape(code);
 	$.get("cmd="+JSON.stringify(obj), function(data) {
- 		alert('Load was performed. ' + data);
+ 		//alert('Load was performed. ' + data);
 	});
 }
 
@@ -36,7 +36,7 @@ function run_app(id) {
 	obj.cmd = "run_app";
 	obj.id = id;
 	$.get("cmd="+JSON.stringify(obj), function(data) {
- 		alert('Load was performed. ' + data);
+ 		//alert('Load was performed. ' + data);
 	});
 }
 
