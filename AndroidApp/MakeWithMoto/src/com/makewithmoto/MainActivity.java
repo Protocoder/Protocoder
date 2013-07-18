@@ -13,8 +13,11 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
@@ -68,6 +71,7 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
     Handler handler;
     BaseNotification mNotification;
     Menu mMenu;
+    BroadcastReceiver mStopServerReceiver;
 
     MyHTTPServer httpServer;
 
@@ -144,8 +148,7 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
 
         //TODO do something with the webserver 
         //Create broadcast receiver for if the user cancels from the curtain
-        /*
-        BroadcastReceiver mStopServerReceiver = new BroadcastReceiver() {
+        mStopServerReceiver = new BroadcastReceiver() {
 
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -155,7 +158,6 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
         IntentFilter filterSend = new IntentFilter();
         filterSend.addAction("com.makewithmoto.intent.action.STOP_SERVER");
         registerReceiver(mStopServerReceiver, filterSend);
-        */
     }
 
     /**
@@ -166,6 +168,7 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
         super.onPause();
 
         EventBus.getDefault().unregister(this);
+        unregisterReceiver(mStopServerReceiver);
     }
 
     /**
@@ -189,9 +192,13 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
     private void startServers() {
 
         //Show the notification
-        mNotification = new BaseNotification(this);
-        mNotification.show(MainActivity.class, R.drawable.ic_stat_logo, "http:/" + NetworkUtils.getLocalIpAddress().toString() + ":" + AppSettings.httpPort, "MWM Server Running",
-                R.drawable.ic_navigation_cancel);
+        SharedPreferences prefs = getSharedPreferences("com.makewithmoto", MODE_PRIVATE);
+        boolean showNotification = prefs.getBoolean(getResources().getString(R.string.pref_curtain_notifications), true);
+        if (showNotification) {
+            mNotification = new BaseNotification(this);
+            mNotification.show(MainActivity.class, R.drawable.ic_stat_logo, "http:/" + NetworkUtils.getLocalIpAddress().toString() + ":" + AppSettings.httpPort, "MWM Server Running",
+                    R.drawable.ic_navigation_cancel);
+        }
 
         //Create the IP text view
         textIP = (TextView) findViewById(R.id.ip);
@@ -237,13 +244,13 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
 		});
         accelerometerManager.start();
         
+
         textIP.setText("Hack via your browser @ http:/" + NetworkUtils.getLocalIpAddress().toString() + ":" + AppSettings.httpPort);
         if (httpServer != null) {//If no instance of HTTPServer, we set the IP address view to gone.
             textIP.setVisibility(View.VISIBLE);
         } else {
             textIP.setVisibility(View.GONE);
         }
-
 
     }
 
@@ -252,13 +259,19 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
      */
     private void killConnections() {
         // TODO enable this at some point
-    	//TODO add websocket
+        //TODO add websocket
 
         if (httpServer != null) {
             httpServer.stop();
             httpServer = null;
         }
-        mNotification.hide();
+        //Hide the notification
+        SharedPreferences prefs = getSharedPreferences("com.makewithmoto", MODE_PRIVATE);
+        boolean showNotification = prefs.getBoolean(getResources().getString(R.string.pref_curtain_notifications), true);
+        if (showNotification) {
+            if (mNotification != null)
+                mNotification.hide();
+        }
         textIP.setText(getResources().getString(R.string.start_the_server));
         textIP.setOnClickListener(null);//Remove the old listener explicitly
         textIP.setBackgroundResource(0);
@@ -269,7 +282,7 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
      */
     private void hardKillConnections() {
         // TODO enable this at some point
-    	//TODO add here websocket 
+        //TODO add here websocket 
 
         if (httpServer != null) {
             httpServer.stop();
@@ -284,11 +297,17 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
             public void onClick(View v) {
                 startServers();
                 updateStartStopActionbarItem();
-                
+
             }
         });
 
-        mNotification.hide();
+        //Hide the notification
+        SharedPreferences prefs = getSharedPreferences("com.makewithmoto", MODE_PRIVATE);
+        boolean showNotification = prefs.getBoolean(getResources().getString(R.string.pref_curtain_notifications), true);
+        if (showNotification) {
+            if (mNotification != null)
+                mNotification.hide();
+        }
     }
 
     private void updateStartStopActionbarItem() {
@@ -313,31 +332,28 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
                 finishActivity(mProjectRequestCode);
                 currentProjectApplicationIntent = null;
             }
-            String baseDir = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + 
-    				AppSettings.appFolder + File.separator;
-            
-            Log.d("ProjectEvent/MainActivity", baseDir+ evt.getProject().getName() + File.separator + "script.js");
+            String baseDir = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + AppSettings.appFolder + File.separator;
+
+            Log.d("ProjectEvent/MainActivity", baseDir + evt.getProject().getName() + File.separator + "script.js");
             projectListFragment.projectLaunch(evt.getProject().getName());
 
+            try {
 
+                currentProjectApplicationIntent = new Intent(MainActivity.this, AppRunnerActivity.class);
+                String script = evt.getProject().getCode();
+                Log.d("MainActivity", script);
+                currentProjectApplicationIntent.putExtra("Script", script);
 
-            try{
-        
-            currentProjectApplicationIntent = new Intent(MainActivity.this, AppRunnerActivity.class); 
-            String script = evt.getProject().getCode();
-            Log.d("MainActivity", script);
-            currentProjectApplicationIntent.putExtra("Script", script);
+                // check if the apprunner is installed
+                // TODO add handling
+                final PackageManager mgr = this.getPackageManager();
+                List<ResolveInfo> list = mgr.queryIntentActivities(currentProjectApplicationIntent, PackageManager.MATCH_DEFAULT_ONLY);
 
-            // check if the apprunner is installed
-            // TODO add handling
-            final PackageManager mgr = this.getPackageManager();
-            List<ResolveInfo> list = mgr.queryIntentActivities(currentProjectApplicationIntent, PackageManager.MATCH_DEFAULT_ONLY);
+                Log.d(TAG, "intent available " + list.size());
 
-            Log.d(TAG, "intent available " + list.size());
-
-            startActivityForResult(currentProjectApplicationIntent, mProjectRequestCode);
-            }catch(Exception e){
-            	Log.d(TAG, "Error launching script");
+                startActivityForResult(currentProjectApplicationIntent, mProjectRequestCode);
+            } catch (Exception e) {
+                Log.d(TAG, "Error launching script");
             }
 
         } else if (evt.getAction() == "save") {
@@ -394,6 +410,11 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
                 startServers();
             }
             updateStartStopActionbarItem();
+            return true;
+        case R.id.menu_settings:
+            Intent preferencesIntent = new Intent(this, SetPreferenceActivity.class);
+            startActivity(preferencesIntent);
+            overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
             return true;
         default:
             return super.onOptionsItemSelected(item);
