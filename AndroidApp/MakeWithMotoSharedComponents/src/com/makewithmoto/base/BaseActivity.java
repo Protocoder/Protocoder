@@ -25,7 +25,7 @@ public class BaseActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        /*
         if (AppSettings.fullscreen) {
             setFullScreen();
         }
@@ -38,11 +38,12 @@ public class BaseActivity extends FragmentActivity {
             setScreenAlwaysOn();
         }
 
-        setVolume(100);
-        setBrightness(1f);
+        //setVolume(100);
+        //setBrightness(1f);
         // Utils.playSound("http://outside.mediawerf.net/8-Light_2.mp3");
         // playSound("http://outside.mediawerf.net/music.ogg");
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);*/
     }
 
     protected void setFullScreen() {
