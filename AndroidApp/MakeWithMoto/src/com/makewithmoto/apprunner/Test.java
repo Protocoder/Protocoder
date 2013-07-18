@@ -1,10 +1,13 @@
 package com.makewithmoto.apprunner;
 
+
+
 import android.app.Activity;
 import android.content.Context;
 import android.os.Vibrator;
 import android.util.Log;
 import android.widget.Toast;
+
 
 public class Test extends JInterface {
 
@@ -25,16 +28,6 @@ public class Test extends JInterface {
 			Toast.makeText(c.get(), msg, duration).show();			
 		}
 		
-		public void callback(String fn){
-			
-			try{
-				   c.get().interpreter.callJsFunction(fn,"");
-			}catch (Throwable e){
-
-			           // TODO
-			}
-			
-		}
 		
 		public void vibrate_and_callback(String duration, String fn){
 			vibrate(duration);

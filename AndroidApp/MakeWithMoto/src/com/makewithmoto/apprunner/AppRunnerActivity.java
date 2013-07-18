@@ -32,10 +32,16 @@ public class AppRunnerActivity extends Activity {
     static final String SCRIPT_PREFIX = "//Prepend text for all scripts \n" +
     		"var Test = Packages.com.makewithmoto.apprunner.Test; \n" +
     		"var test = Test(Activity);\n" +
+    		"var JAndroid = Packages.com.makewithmoto.apprunner.JAndroid; \n" +
+    		"var android = JAndroid(Activity);\n" +
+    		"var JUI = Packages.com.makewithmoto.apprunner.JUI; \n" +
+    		"var ui = JUI(Activity);\n" +
     		"// End of Prepend Section"+ "\n";
     
     
-    
+    static final String SCRIPT_POSTFIX = "//Appends text for all scripts \n" +
+    		"ui.postLayout(); \n" +
+    		"// End of Append Section"+ "\n";
     
     
 
