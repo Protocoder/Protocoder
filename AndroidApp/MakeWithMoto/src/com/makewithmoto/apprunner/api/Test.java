@@ -1,6 +1,8 @@
-package com.makewithmoto.apprunner;
+package com.makewithmoto.apprunner.api;
 
 
+
+import com.makewithmoto.apprunner.JInterface;
 
 import android.app.Activity;
 import android.content.Context;

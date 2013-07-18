@@ -1,4 +1,4 @@
-package com.makewithmoto.apprunner;
+package com.makewithmoto.apprunner.api;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import com.makewithmoto.apprunner.JInterface;
 
 
 public class JAndroid extends JInterface {

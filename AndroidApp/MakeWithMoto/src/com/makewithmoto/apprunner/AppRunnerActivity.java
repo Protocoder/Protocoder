@@ -34,8 +34,8 @@ public class AppRunnerActivity extends Activity {
     		"var test = Test(Activity);\n" +
     		"var JAndroid = Packages.com.makewithmoto.apprunner.JAndroid; \n" +
     		"var android = JAndroid(Activity);\n" +
-    		"var JUI = Packages.com.makewithmoto.apprunner.JUI; \n" +
-    		"var ui = JUI(Activity);\n" +
+    		//"var JUI = Packages.com.makewithmoto.apprunner.JUI; \n" +
+    		//"var ui = JUI(Activity);\n" +
     		"// End of Prepend Section"+ "\n";
     
     

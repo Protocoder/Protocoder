@@ -1,4 +1,4 @@
-package com.makewithmoto.apprunner;
+package com.makewithmoto.apprunner.api;
 
 import android.app.Activity;
 import android.view.View;
@@ -7,6 +7,8 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+
+import com.makewithmoto.apprunner.JInterface;
 
 
 public class JUI extends JInterface {
