@@ -14,7 +14,6 @@ import android.support.v4.app.NotificationCompat.Builder;
 public class BaseNotification {
 
 	public static int NOTIFICATION_APP_RUNNING = 1;
-	public static String ACTION_STOP = "STOP";
 
 	Context c;
 	NotificationManager mNotificationManager;
@@ -42,14 +41,9 @@ public class BaseNotification {
 		PendingIntent contentIntent = PendingIntent.getActivity(c, 0,
 				notificationIntent, 0);
 		
-		Intent stopIntent = new Intent(c, cls);
-		               stopIntent.setAction(ACTION_STOP);
-		               PendingIntent pStop = PendingIntent.getActivity(c, 0,
-		                               stopIntent, 0);
-		
-		
-		
-		long[] vibrate = { 0, 100, 200, 300 };
+		Intent stopServerIntent = new Intent();  
+		stopServerIntent.setAction("com.makewithmoto.intent.action.STOP_SERVER");
+		PendingIntent stopServerPendingIntent = PendingIntent.getBroadcast(c, 0, stopServerIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 		mBuilder = new NotificationCompat.Builder(c);
 		mBuilder.setContentTitle(title)
@@ -57,10 +51,9 @@ public class BaseNotification {
 				.setSmallIcon(icon)
 				.setOngoing(true)
 				.setProgress(0, 0, true)
-				.setVibrate(vibrate)
 				.setContentIntent(contentIntent)
 				//.setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
-				.addAction(actionIcon, "Stop Server", pStop);
+				.addAction(actionIcon, "Stop server", stopServerPendingIntent);
 			
 		// notification.defaults |= Notification.DEFAULT_LIGHTS;
 		// notification.ledARGB = Color.RED;

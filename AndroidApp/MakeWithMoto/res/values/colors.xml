@@ -6,7 +6,15 @@
     <color name="blue">#0000ff</color>
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
-    <color name="blacktransparent">#88000000</color>
+    <color name="blacktransparent">#EE000000</color>
+
+    <!-- makewithmoto palette -->
+    <color name="mwmgreen">#82C81F</color>
+    <color name="mwmgray">#3B3C40</color>
+    <color name="mwmblue">#287ED1</color>
+    <color name="mwmmagenta">#CD005B</color>
+    <color name="mwmorange">#FA871E</color>
+    <color name="mwmyellow">#E6AF21</color>
     
     <!-- Common drawable color values -->
     <drawable name="drawable_transparent">#00000000</drawable>
