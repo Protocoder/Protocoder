@@ -30,9 +30,9 @@ public class AppRunnerActivity extends Activity {
     Interpreter interpreter;
     String scriptFileName;
     static final String SCRIPT_PREFIX = "//Prepend text for all scripts \n" +
-    		"var Test = Packages.com.makewithmoto.apprunner.Test; \n" +
+    		"var Test = Packages.com.makewithmoto.apprunner.api.Test; \n" +
     		"var test = Test(Activity);\n" +
-    		"var JAndroid = Packages.com.makewithmoto.apprunner.JAndroid; \n" +
+    		"var JAndroid = Packages.com.makewithmoto.apprunner.api.JAndroid; \n" +
     		"var android = JAndroid(Activity);\n" +
     		//"var JUI = Packages.com.makewithmoto.apprunner.JUI; \n" +
     		//"var ui = JUI(Activity);\n" +
