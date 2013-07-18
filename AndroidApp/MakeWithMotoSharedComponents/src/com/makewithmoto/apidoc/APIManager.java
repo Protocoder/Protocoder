@@ -24,8 +24,9 @@ import com.google.gson.Gson;
 public class APIManager {
 
 	public static APIManager getInstance() {
-		if (instance == null)
+		if (instance == null) { 
 			instance = new APIManager();
+		} 
 		return instance;
 	}
 
