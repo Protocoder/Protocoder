@@ -25,10 +25,11 @@
     <uses-permission android:name="android.permission.NFC" />
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
     <uses-permission android:name="android.permission.NFC" />
-    <uses-permission android:name="android.permission.CAMERA"></uses-permission>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
-    
-    
+    <uses-permission android:name="android.permission.CAMERA" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" >
+    </uses-permission>
+
     <uses-feature android:name="android.hardware.camera" />
 
     <application
@@ -68,7 +69,7 @@
         <activity
             android:name="com.makewithmoto.beam.BeamActivity"
             android:label="@string/beam"
-            android:logo="@drawable/ic_action_logo">
+            android:logo="@drawable/ic_action_logo" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -87,9 +88,10 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        
-        <activity android:name="com.makewithmoto.apprunner.AppRunnerActivity"
-                  android:label="AppRunner Activity">
+        <activity
+            android:name="com.makewithmoto.apprunner.AppRunnerActivity"
+            android:label="@string/runner_name"
+            android:logo="@drawable/ic_action_logo" >
         </activity>
 
         <service android:name="com.makewithmoto.network.WebSocketService" >
