@@ -14,21 +14,29 @@ import com.makewithmoto.apprunner.JInterface;
 public class JUI extends JInterface {
 
 	LinearLayout mainLayout;
+	Boolean isMainLayoutSetup = false;
 
 
 		public JUI(Activity a) {
           super(a);
-          mainLayout = new LinearLayout(c.get());
-		  mainLayout.setOrientation(LinearLayout.VERTICAL);
-		  mainLayout.setLayoutParams(new LayoutParams(
-		        LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
-		  
-		  
-		  c.get().setContentView(mainLayout);  
+        
 		}
 
+		private void initializeLayout(){
+			if(!isMainLayoutSetup){
+			  mainLayout = new LinearLayout(c.get());
+			  mainLayout.setOrientation(LinearLayout.VERTICAL);
+			  mainLayout.setLayoutParams(new LayoutParams(
+			        LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+			  
+			  
+			  c.get().setContentView(mainLayout);
+			  isMainLayoutSetup = true;
+			}
+		}
 		
 		public void button(String label, int x, int y, int w, int h, final String fn){
+			initializeLayout();
 			
 			Button button = new Button(c.get());
 			RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(w, h);
