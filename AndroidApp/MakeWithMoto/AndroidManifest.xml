@@ -94,6 +94,8 @@
             android:logo="@drawable/ic_action_logo" >
         </activity>
 
+      
+
     </application>
 
 </manifest>

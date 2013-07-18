@@ -18,7 +18,7 @@ public class LightManager extends CustomSensorManager implements WhatIsRunningIn
 	
 
 	public LightManager(Context c) { 
-		super(); 
+		super(c);
 		
 		// register
 		sensor = sensormanager.getDefaultSensor(Sensor.TYPE_LIGHT);

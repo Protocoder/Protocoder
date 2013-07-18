@@ -19,7 +19,7 @@ public class GyroscopeManager extends CustomSensorManager implements WhatIsRunni
 
 
 	public GyroscopeManager(Context c) {
-		super(); 
+		super(c);
 		
 		// register
 		sensor = sensormanager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);

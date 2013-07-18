@@ -29,14 +29,14 @@
 <script src="./libs/d3.v3/d3.v3.js"></script>
 
 <!-- custom --> 
-<script src="./scripts/project.js" type="text/javascript" charset="utf-8"></script>
+<script src="./js/project.js" type="text/javascript" charset="utf-8"></script>
 
-<script src="./scripts/editor.js" type="text/javascript" charset="utf-8"></script>
-<script src="./scripts/help.js" type="text/javascript" charset="utf-8"></script>
+<script src="./js/editor.js" type="text/javascript" charset="utf-8"></script>
+<script src="./js/help.js" type="text/javascript" charset="utf-8"></script>
 
-<script src="./scripts/plots.js" type="text/javascript" charset="utf-8"></script>
-<script src="./scripts/android_communication.js" type="text/javascript" charset="utf-8"></script>
-<script src="./scripts/websockets.js" type="text/javascript" charset="utf-8"></script>
+<script src="./js/plots.js" type="text/javascript" charset="utf-8"></script>
+<script src="./js/android_communication.js" type="text/javascript" charset="utf-8"></script>
+<script src="./js/websockets.js" type="text/javascript" charset="utf-8"></script>
 
 
 
@@ -51,15 +51,20 @@ $(document).ready(function() {
 	plot1 = addPlot("random", 500, 100, 250, 100);
 
 	setInterval(function() { 
-		var val = Math.random() * 100;
-		plot1(val, ""); 
+		//var val = Math.random() * 100;
+		//plot1(val, ""); 
 	}, 100);
 
 	//websockets
 
-	//testWebsockets();
+	testWebsockets();
 	list_apps();
 	get_documentation();
+
+	setInterval(function() {
+		//get_camera();
+
+	}, 1000);
 
 
 });
