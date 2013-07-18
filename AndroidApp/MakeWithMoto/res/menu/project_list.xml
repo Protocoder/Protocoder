@@ -15,12 +15,9 @@
     <item android:id="@+id/menu_project_list_share_with"
           android:icon="@drawable/logo"
           android:title="@string/share" />
-    
     <item android:id="@+id/menu_project_list_beam"
           android:icon="@drawable/logo"
           android:title="@string/beam"
           android:menuCategory="system" 
-          />
-    
-    
+          /> 
 </menu>

@@ -16,6 +16,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 
 
 public class AppRunnerActivity extends Activity {
@@ -25,6 +29,21 @@ public class AppRunnerActivity extends Activity {
     
     Interpreter interpreter;
     String scriptFileName;
+    static final String SCRIPT_PREFIX = "//Prepend text for all scripts \n" +
+    		"var Test = Packages.com.makewithmoto.apprunner.Test; \n" +
+    		"var test = Test(Activity);\n" +
+    		"var JAndroid = Packages.com.makewithmoto.apprunner.JAndroid; \n" +
+    		"var android = JAndroid(Activity);\n" +
+    		"var JUI = Packages.com.makewithmoto.apprunner.JUI; \n" +
+    		"var ui = JUI(Activity);\n" +
+    		"// End of Prepend Section"+ "\n";
+    
+    
+    static final String SCRIPT_POSTFIX = "//Appends text for all scripts \n" +
+    		"ui.postLayout(); \n" +
+    		"// End of Append Section"+ "\n";
+    
+    
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +57,9 @@ public class AppRunnerActivity extends Activity {
 	        {
 	            String filenameOrUrl = intent.getStringExtra("ScriptName");
 	            String script = intent.getStringExtra("Script");
+	            script = SCRIPT_PREFIX + script;
+	            
+	            Log.i("AppRunnerActivity", script);
 				
 	            if (null != script) 
 	            {   
@@ -50,7 +72,94 @@ public class AppRunnerActivity extends Activity {
 		
 		
 	}
+	
+	@Override
+    public void onStart()
+    {
+        super.onStart();
+        callJsFunction("onStart");
+    }
 
+    @Override
+    public void onRestart()
+    {
+        super.onRestart();
+        callJsFunction("onRestart");
+    }
+    
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        callJsFunction("onResume");
+    }
+    
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        callJsFunction("onPause");
+    }
+    
+    @Override
+    public void onStop()
+    {
+        super.onStop();
+        callJsFunction("onStop");
+    }
+    
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+        callJsFunction("onDestroy");
+    }
+
+    @Override
+    public Object onRetainNonConfigurationInstance()
+    {
+        // TODO: We will need to somehow also allow JS to save
+        // data and rebuild the UI.
+        return interpreter;
+    }
+    
+    @Override
+    public void onCreateContextMenu(
+            ContextMenu menu, 
+            View view, 
+            ContextMenu.ContextMenuInfo info)
+    {
+        callJsFunction("onCreateContextMenu", menu, view, info);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item)
+    {
+        callJsFunction("onContextItemSelected", item);
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        callJsFunction("onCreateOptionsMenu", menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu)
+    {
+        callJsFunction("onPrepareOptionsMenu", menu);
+        return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+         callJsFunction("onOptionsItemSelected", item);
+         return true;
+    }
+    
 	
     public Object eval(final String code)
     {

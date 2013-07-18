@@ -3,6 +3,7 @@ package com.makewithmoto;
 import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
@@ -39,7 +40,14 @@ public class LauncherActivity extends BaseActivity {
         MemoryLogger.showMemoryStats("AFTER LAUNCHER BOOTSCREEN");
 
         //Prepare intent to exit the activity and move to the main one
-        intent = new Intent(this, MainActivity.class);
+        boolean firstLaunch; //If this is the first time the
+        SharedPreferences userDetails = getSharedPreferences("com.makewithmoto", MODE_PRIVATE);
+        firstLaunch = userDetails.getBoolean(getResources().getString(R.string.pref_is_first_launch), true);
+        if (firstLaunch){
+            intent = new Intent(this, WelcomeActivity.class);
+        } else {
+            intent = new Intent(this, MainActivity.class);
+        }
         intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         mExitRunnable = new Runnable() {
             public void run() {

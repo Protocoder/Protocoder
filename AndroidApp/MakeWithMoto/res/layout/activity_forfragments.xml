@@ -22,8 +22,8 @@
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="3dp"
-            android:background="@color/mwmmagenta"
+            android:layout_height="1dp"
+            android:background="#cccccc"
             android:contentDescription="@null" />
 
         <TextView
@@ -31,10 +31,10 @@
             style="@android:style/TextAppearance.Medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/mwmgray"
             android:gravity="center"
-            android:padding="10dp"
-            android:textColor="@color/white"
+            android:padding="15dp"
+            android:background="#ffffff"
+            android:textColor="#666666"
             android:textSize="14sp"
             android:textStyle="italic"
             android:visibility="invisible" />

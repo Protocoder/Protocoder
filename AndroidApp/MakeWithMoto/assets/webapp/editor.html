@@ -29,6 +29,8 @@
 <script src="./libs/d3.v3/d3.v3.js"></script>
 
 <!-- custom --> 
+<script src="./scripts/project.js" type="text/javascript" charset="utf-8"></script>
+
 <script src="./scripts/editor.js" type="text/javascript" charset="utf-8"></script>
 <script src="./scripts/help.js" type="text/javascript" charset="utf-8"></script>
 
@@ -55,8 +57,8 @@ $(document).ready(function() {
 
 	//websockets
 
-	testWebsockets();
-
+	//testWebsockets();
+	list_apps();
 
 	var docString = '{"apiClasses":[{"apiMethods":[{"name":"playSound"},{"name":"playVideo"},{"name":"sendSMS"},{"name":"toast"},{"description":"prueba","example":"lala","name":"vibrate"}],"name":"JAndroid"},{"apiMethods":[{"name":"addACheckbox"},{"name":"addAToggleButton"},{"name":"addButton"},{"name":"addPlot"},{"name":"addPlotValue"},{"name":"addSeekBar"},{"name":"addTextLabel"},{"name":"destroy"},{"name":"showToast"},{"name":"startTrackingTouches"}],"name":"JUI"}]}'
 
