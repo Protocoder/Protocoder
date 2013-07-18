@@ -34,6 +34,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.View.OnClickListener;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView.AdapterContextMenuInfo;
@@ -231,6 +232,8 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
 
         //Create the IP text view
         textIP = (TextView) findViewById(R.id.ip);
+        textIP.setOnClickListener(null);//Remove the old listener explicitly
+        textIP.setBackgroundResource(0);
         mIpContainer = (LinearLayout) findViewById(R.id.ip_container);
         updateStartStopActionbarItem();
 
@@ -263,6 +266,8 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
         }
         mNotification.hide();
         textIP.setText(getResources().getString(R.string.start_the_server));
+        textIP.setOnClickListener(null);//Remove the old listener explicitly
+        textIP.setBackgroundResource(0);
     }
 
     /**
@@ -280,6 +285,16 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
         }
         textIP.setText(getResources().getString(R.string.start_the_server));
         updateStartStopActionbarItem();
+        textIP.setOnClickListener(null);//Remove the old listener explicitly
+        textIP.setBackgroundResource(R.drawable.transparent_blue_button);
+        textIP.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startConnections();
+                updateStartStopActionbarItem();
+                
+            }
+        });
 
         mNotification.hide();
     }
