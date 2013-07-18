@@ -1,5 +1,6 @@
 package com.makewithmoto.sensors;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Criteria;
@@ -7,12 +8,14 @@ import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.provider.Settings;
 
 import com.makewithmoto.apprunner.logger.L;
 
+@TargetApi(Build.VERSION_CODES.GINGERBREAD)
 public class GPSManager extends CustomSensorManager {
 	
 	public interface GPSListener extends CustomSensorListener {
@@ -34,7 +37,7 @@ public class GPSManager extends CustomSensorManager {
 	private long mLastLocationMillis;
 
 	public GPSManager(Context c) {
-		super();
+		super(c);
 
 	}
 

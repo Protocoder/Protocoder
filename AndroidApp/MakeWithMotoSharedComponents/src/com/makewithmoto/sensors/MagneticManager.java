@@ -18,7 +18,7 @@ public class MagneticManager extends CustomSensorManager implements WhatIsRunnin
 	
 
 	public MagneticManager(Context c) { 
-		super(); 
+		super(c);
 		
 		// register
 		sensor = sensormanager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);

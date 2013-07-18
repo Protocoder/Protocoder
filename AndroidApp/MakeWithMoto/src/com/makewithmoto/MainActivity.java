@@ -1,7 +1,12 @@
 package com.makewithmoto;
 
 import java.io.File;
+import java.net.UnknownHostException;
 import java.util.List;
+
+import org.java_websocket.drafts.Draft_17;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
@@ -39,13 +44,15 @@ import com.makewithmoto.base.BaseActivity;
 import com.makewithmoto.base.BaseNotification;
 import com.makewithmoto.events.Events.ProjectEvent;
 import com.makewithmoto.events.Project;
-import com.makewithmoto.fragments.HelpFragment;
 import com.makewithmoto.fragments.NewProjectDialog;
 import com.makewithmoto.network.ALog;
+import com.makewithmoto.network.CustomWebsocketServer;
 import com.makewithmoto.network.MyHTTPServer;
 import com.makewithmoto.network.NetworkUtils;
 import com.makewithmoto.projectlist.ProjectManager;
 import com.makewithmoto.projectlist.ProjectsListFragment;
+import com.makewithmoto.sensors.AccelerometerManager;
+import com.makewithmoto.sensors.AccelerometerManager.AccelerometerListener;
 
 import de.greenrobot.event.EventBus;
 
@@ -64,7 +71,6 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
 
     MyHTTPServer httpServer;
 
-    public HelpFragment helpFragment;
     private ProjectsListFragment projectListFragment;
     private Boolean showingHelp = false;
 
@@ -74,13 +80,14 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
 
     private Intent currentProjectApplicationIntent;
 
+	private CustomWebsocketServer ws;
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         //Set the content view and get the context
-        //FIXME: Store Context field as mContext
         setContentView(R.layout.activity_forfragments);
         c = this;
 
@@ -91,8 +98,6 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
         //Instantiate fragments
         projectListFragment = new ProjectsListFragment();
         addFragment(projectListFragment, R.id.f1, false);
-        helpFragment = new HelpFragment();
-        addFragment(helpFragment, R.id.helpFragment, false);
 
         //Start the servers 
         startServers();
@@ -198,8 +203,39 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
         //start webserver 
         httpServer = MyHTTPServer.getInstance(AppSettings.httpPort, getApplicationContext());
         
-        //TODO add websocket
-
+        //websocket
+        try {
+			 ws = CustomWebsocketServer.getInstance(this, 8081, new Draft_17());
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+        AccelerometerManager accelerometerManager = new AccelerometerManager(this);
+        accelerometerManager.addListener(new AccelerometerListener() {
+			
+			@Override
+			public void onShake(float force) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onAccelerometerChanged(float x, float y, float z) {
+				
+				//Log.d(TAG, " " + x);
+				JSONObject obj = new JSONObject();
+				try {
+					obj.put("acc_x", x);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				ws.send(obj);
+				
+			}
+		});
+        accelerometerManager.start();
         
         textIP.setText("Hack via your browser @ http:/" + NetworkUtils.getLocalIpAddress().toString() + ":" + AppSettings.httpPort);
         if (httpServer != null) {//If no instance of HTTPServer, we set the IP address view to gone.
