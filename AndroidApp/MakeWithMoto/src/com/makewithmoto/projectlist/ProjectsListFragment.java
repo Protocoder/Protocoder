@@ -1,8 +1,11 @@
 package com.makewithmoto.projectlist;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -21,10 +24,11 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.makewithmoto.MainActivity;
 import com.makewithmoto.R;
-import com.makewithmoto.apprunner.AppRunnerActivity;
 import com.makewithmoto.base.BaseFragment;
 import com.makewithmoto.beam.BeamActivity;
 import com.makewithmoto.events.Events.ProjectEvent;
@@ -54,8 +58,10 @@ public class ProjectsListFragment extends BaseFragment {
         View v = inflater.inflate(R.layout.view_gridlayout, container, false);
         projects = new ArrayList<Project>();
 
+        //Get GridView and set adapter
         gridView = (GridView) v.findViewById(R.id.gridview);
         projectAdapter = new ProjectAdapter(getActivity(), projects);
+        gridView.setEmptyView(v.findViewById(R.id.empty_grid_view));//set the empty state
         gridView.setAdapter(projectAdapter);
 
         final ArrayList<Project> projects = Project.all();
@@ -74,12 +80,12 @@ public class ProjectsListFragment extends BaseFragment {
 
                 ProjectAnimations.projectRefresh(v);
 
-                //ALog.d("Clicked");
-                //Toast.makeText(getActivity(), "" + position, Toast.LENGTH_SHORT)
-                //		.show();
-                Project project = projects.get(position);
-                ProjectEvent evt = new ProjectEvent(project, "run");
-                EventBus.getDefault().post(evt);
+                //HSHIEH: We'll always show the context menu because this behavior is hard to discover
+                //Project project = projects.get(position);
+                //ProjectEvent evt = new ProjectEvent(project, "run");
+                //EventBus.getDefault().post(evt);
+                
+                gridView.showContextMenuForChild(v);
 
             }
         });
@@ -146,6 +152,7 @@ public class ProjectsListFragment extends BaseFragment {
             // m.applicationWebView.launchProject(project);
             ProjectEvent evt = new ProjectEvent(project, "run");
             EventBus.getDefault().post(evt);
+            getActivity().overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
             return true;
         case R.id.menu_project_list_edit:
             //FileIO.read(getActivity(), fileName)
@@ -164,7 +171,6 @@ public class ProjectsListFragment extends BaseFragment {
                     switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
                         // Yes button clicked
-
                         deleteProject(index);
                         break;
 
@@ -185,29 +191,22 @@ public class ProjectsListFragment extends BaseFragment {
             // create shortcut if requested
             ShortcutIconResource icon = Intent.ShortcutIconResource.fromContext(getActivity(), R.drawable.ic_script);
 
-           
+            Intent shortcutIntent = new Intent("com.makewithmoto.apprunner.MWMActivity");
+            shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-            try{
-            	
+            shortcutIntent.putExtra("project_name", project.getName());
 
-            	 Intent shortcutIntent = new Intent(getActivity(),AppRunnerActivity.class);
-                 shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                 shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                     	
-            	
-                String script = project.getCode();
-                shortcutIntent.putExtra("Script", script);
+            final Intent putShortCutIntent = new Intent();
 
-                final Intent putShortCutIntent = new Intent();
+            putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
+            putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, project.getName());
+            putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon); // can also be ignored too
+            putShortCutIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
+            getActivity().sendBroadcast(putShortCutIntent);
 
-                putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
-                putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, project.getName());
-                putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon); // can also be ignored too
-                putShortCutIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
-                getActivity().sendBroadcast(putShortCutIntent);
-            }catch(Exception e){
-            	// TODO
-            }
+            //Show toast
+            Toast.makeText(getActivity(), "Adding shortcut for " + project.getName(), Toast.LENGTH_SHORT).show();
 
             // getActivity().setResult(getActivity().RESULT_OK, intent);
 
@@ -230,6 +229,7 @@ public class ProjectsListFragment extends BaseFragment {
             beamIntent.setType("text/plain");
             startActivity(Intent.createChooser(beamIntent, getResources().getText(R.string.send_to)));
             startActivity(beamIntent);
+            getActivity().overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
 
             return true;
         default:
