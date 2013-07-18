@@ -57,5 +57,8 @@
     
     <!-- Settings screen -->
     <string name="settings_activity_name">Settings</string>
+    <string name="setting_notifications_title">Notifications</string>
+    <string name="setting_show_notifications_title">Show notifications</string>
+    <string name="setting_show_notifications_body">Display a persistent notification when the server is running</string>
    
 </resources>
