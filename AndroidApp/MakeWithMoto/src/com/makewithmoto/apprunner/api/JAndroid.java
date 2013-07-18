@@ -11,40 +11,41 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.makewithmoto.apprunner.JInterface;
-
+import com.makewithmoto.apidoc.APIAnnotation;
 
 public class JAndroid extends JInterface {
 
+	public JAndroid(Activity a) {
+		super(a);
+	}
 
+	@JavascriptInterface
+	@APIAnnotation(description = "makes the phone vibrate", example = "android.vibrate(500);")
+	public void vibrate(String duration) {
+		Log.d("TAG", "vibrate...");
+		Vibrator v = (Vibrator) c.get().getSystemService(
+				Context.VIBRATOR_SERVICE);
+		v.vibrate(Integer.parseInt(duration));
+	}
 
-		public JAndroid(Activity a) {
-          super(a);
-		}
+	@JavascriptInterface
+	@APIAnnotation(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
+	public void toast(String msg, int duration) {
+		Toast.makeText(c.get(), msg, duration).show();
+	}
 
-		@JavascriptInterface
-		public void vibrate(String duration) {
-			Log.d("TAG", "vibrate...");
-			Vibrator v = (Vibrator) c.get().getSystemService(Context.VIBRATOR_SERVICE);
-			v.vibrate(Integer.parseInt(duration));
-		}
 		
-		@JavascriptInterface
-		public void toast(String msg, int duration) { 
-			Toast.makeText(c.get(), msg, duration).show();			
-		}
-		
-		@JavascriptInterface
-		public void vibrate_and_callback(String duration, String fn){
+	@JavascriptInterface
+	public void vibrate_and_callback(String duration, String fn){
 			vibrate(duration);
 			callback(fn);
-		}
+	}
 
-		@JavascriptInterface
-		public void toast_and_callback(String msg, int duration, String fn){
+	@JavascriptInterface
+	public void toast_and_callback(String msg, int duration, String fn){
 			toast(msg, duration);
 			callback(fn);
-		}
+	}
 			
-		
+
 }

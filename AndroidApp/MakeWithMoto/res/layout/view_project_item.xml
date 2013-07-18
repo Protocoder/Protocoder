@@ -1,37 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_margin="5dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:background="@drawable/card_bg">
+        android:background="@drawable/card_bg"
+        android:gravity="center" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/customViewImage"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:gravity="left"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:id="@+id/customViewText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="5dp"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:lines="2"
+                android:maxLines="2"
+                android:text="Title"
+                android:textColor="#666666"
+                android:textSize="13sp" />
+        </LinearLayout>
 
         <ImageView
-            android:id="@+id/customViewImage"
-            android:layout_width="55dp"
-            android:layout_marginTop="5dp"
-            android:layout_height="55dp"
-            android:layout_gravity="center"
-            android:gravity="left"
-            android:scaleType="centerCrop" />
-
-        <TextView
-            android:id="@+id/customViewText"
-            android:textSize="13sp"
+            android:id="@+id/card_menu_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="5dp"
-            android:gravity="center"
-            android:maxLines="2"
-            android:lines="2"
-            android:textColor="#666666"
-            android:ellipsize="end"
-            android:text="Title" />
-    </LinearLayout>
+            android:layout_gravity="top|right"
+            android:gravity="right"
+            android:layout_marginRight="-5dp"
+            android:paddingLeft="10dp"
+            android:paddingBottom="10dp"
+            android:paddingTop="2dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_action_overflow" />
+    </FrameLayout>
 
 </merge>

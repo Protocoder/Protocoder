@@ -16,7 +16,7 @@ function push_code(id, code) {
 	obj.id = id;
 	obj.code = escape(code);
 	$.get("cmd="+JSON.stringify(obj), function(data) {
- 		alert('Load was performed. ' + data);
+ 		//alert('Load was performed. ' + data);
 	});
 }
 
@@ -36,7 +36,7 @@ function run_app(id) {
 	obj.cmd = "run_app";
 	obj.id = id;
 	$.get("cmd="+JSON.stringify(obj), function(data) {
- 		alert('Load was performed. ' + data);
+ 		//alert('Load was performed. ' + data);
 	});
 }
 
@@ -55,6 +55,16 @@ function remove_app(id) {
 	obj.remove_app = id;
 	$.get("cmd="+JSON.stringify(obj), function(data) {
  		alert('Load was performed. ' + data);
+	});
+}
+
+function get_documentation(id) {
+	var obj = {};
+	obj.cmd = "get_documentation";
+
+	$.get("cmd="+JSON.stringify(obj), function(data) { 
+		var doc = JSON.parse(data);
+		parse_help(doc.api);
 	});
 }
 

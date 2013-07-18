@@ -1,6 +1,6 @@
 
 
-function parseHelp(docString) {
+function parse_help(docString) {
 	console.log(docString);
 	var doc = JSON.parse(docString).apiClasses;
 

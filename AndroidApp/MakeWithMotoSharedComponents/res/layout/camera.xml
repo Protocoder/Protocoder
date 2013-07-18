@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <SurfaceView
+        android:id="@+id/CameraView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+    </SurfaceView>
+
+    <!--
+	<LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent">
+
+
+		<EditText
+			android:id="@+id/editText1"
+			android:layout_height="match_parent" 
+			android:background="@null" 
+			android:inputType="textMultiLine" 
+			android:imeOptions="actionSend|flagNoExtractUi"  
+			android:layout_width="match_parent"
+			android:layout_weight="1"
+			android:hint="type here qq"
+			android:gravity="top|left"
+			android:textColor="#FFFFFFFF"
+			android:textColorHighlight="#FF0000FF"
+			android:textSize="25sp" 
+			android:textStyle="bold" 
+			style="@style/qq"
+			> 
+			
+		</EditText> 
+	
+			
+		<LinearLayout
+			xmlns:android="http://schemas.android.com/apk/res/android"
+			android:orientation="vertical"
+			android:layout_height="fill_parent"
+			android:layout_width="wrap_content">
+				
+			<Button
+				android:background="@drawable/custom_button" 
+				android:text="Button"
+				android:id="@+id/button1"
+				android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1"/> 
+			
+			<Spinner
+				android:id="@+id/myspinner"
+				android:background="@drawable/custom_button" 
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent" android:layout_weight="1"/> 
+				
+		</LinearLayout> 
+		
+	</LinearLayout>
+    -->
+
+</RelativeLayout>
