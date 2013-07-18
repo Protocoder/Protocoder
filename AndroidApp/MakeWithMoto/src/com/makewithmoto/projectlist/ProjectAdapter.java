@@ -7,6 +7,7 @@ import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -53,6 +54,13 @@ public class ProjectAdapter extends BaseAdapter {
 			        customView.showContextMenu();
 			    }
 			});
+			imageView.setOnLongClickListener(new OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    customView.showContextMenu();
+                    return true;
+                }
+	        }); 
 			
 		} else {
 			customView = (ProjectItem) convertView;
