@@ -1,0 +1,1 @@
+ui.button("Button1", 500,400,100,100, function(){android.vibrate(500);});
