@@ -13,7 +13,7 @@ public class OrientationManager extends CustomSensorManager implements WhatIsRun
 	}
 
 	public OrientationManager(Context c) {
-		super();
+		super(c);
 		
 	
 		sensor = sensormanager.getDefaultSensor(Sensor.TYPE_ORIENTATION);

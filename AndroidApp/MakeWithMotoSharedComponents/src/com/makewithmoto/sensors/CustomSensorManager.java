@@ -27,7 +27,7 @@ public class CustomSensorManager {
 	SensorManager sensormanager;
 	SensorEventListener listener;
 
-	public CustomSensorManager() {
+	public CustomSensorManager(Context c) {
 		listeners = new Vector<CustomSensorListener>();
 		sensormanager = (SensorManager) c.getSystemService(Context.SENSOR_SERVICE);
 

@@ -60,6 +60,11 @@ function testWebsockets() {
       console.log(result.project);
     }
 
+    if (result.acc_x != null) {
+      plot1(result.acc_x, ""); 
+
+    }
+
   }
   ws.onclose = function() {
     disconnected();

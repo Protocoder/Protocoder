@@ -1,9 +1,9 @@
 package com.makewithmoto;
 
-import com.makewithmoto.base.BaseNotification;
-
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
@@ -12,8 +12,10 @@ import android.preference.TwoStatePreference;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
+import com.makewithmoto.base.BaseNotification;
+
+@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class PrefsFragment extends PreferenceFragment {
 
 	@Override

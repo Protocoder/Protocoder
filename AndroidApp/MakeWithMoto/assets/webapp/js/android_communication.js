@@ -69,6 +69,24 @@ function get_documentation(id) {
 }
 
 
+function get_camera() {
+	var url = "http://192.168.137.2:8080/takePic";
+
+	$.get(url, function(data) { 
+		
+		var img = $("<img />").attr('src', 'http://somedomain.com/image.jpg').load(function() {
+        if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth == 0) {
+            alert('broken image!');
+        } else {
+            $("#widgets").append(img);
+        }
+    });
+
+	});
+}
+
+
+
 //OK fetch_code("ioio_1");
 //OK list_apps();
 //OK run_app("ioio_1");
