@@ -25,6 +25,13 @@ import android.view.View;
 import com.makewithmoto.MainActivity;
 import com.makewithmoto.R;
 
+
+/**
+ * Original sourcecode from Droid Script : https://github.com/divineprog/droidscript
+ * Copyright (c) Mikael Kindborg 2010
+ * Source code license: MIT
+ */
+
 public class AppRunnerActivity extends Activity {
 
     static ScriptContextFactory contextFactory;    
