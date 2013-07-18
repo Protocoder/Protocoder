@@ -5,12 +5,12 @@ public class AppSettings {
 	// == APP SETTINGS ========== 
 	public static boolean debug = true;
 	public static boolean fullscreen = false;
-	public static boolean portrait = true;
-	public static boolean stayAwake = true;
+	public static boolean portrait = false;
+	public static boolean stayAwake = false;
 	public static boolean overrideHomeButtons = false;
 	public static boolean overrideVolumeButtons = false;
 	public static boolean hideHomeBar = false;
-	public static boolean screenAlwaysOn = true;
+	public static boolean screenAlwaysOn = false;
 	public static boolean closeWithBack = true;
 	
 	

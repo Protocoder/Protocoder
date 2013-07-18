@@ -42,11 +42,13 @@ import android.nfc.NfcEvent;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.Window;
 import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.makewithmoto.MainActivity;
 import com.makewithmoto.R;
 
 @SuppressLint("NewApi")
@@ -193,11 +195,10 @@ public class BeamActivity extends Activity implements
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		setTheme(android.R.style.Theme_Holo_Dialog);
+		//setTheme(android.R.style.Theme_Holo_Dialog);
 
 		super.onCreate(savedInstanceState);
 
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
 
 		setContentView(R.layout.activity_beam);
 
@@ -232,7 +233,11 @@ public class BeamActivity extends Activity implements
 				final Drawable icon = getImageForFile(fileUri, intent);
 				if (icon != null) {
 					ImageView imageView = (ImageView) findViewById(R.id.defaultIconView);
-					imageView.setImageDrawable(icon);
+					//imageView.setImageDrawable(icon);
+					imageView.setImageResource(R.drawable.hello_banner);
+				} else {
+				    ImageView imageView = (ImageView) findViewById(R.id.defaultIconView);
+				    imageView.setImageResource(R.drawable.hello_banner);
 				}
 
 				nfcAdapter.setBeamPushUris(new Uri[] { fileUri }, this);
@@ -297,7 +302,28 @@ public class BeamActivity extends Activity implements
 			nfcAdapter.setBeamPushUris(uriList, this);
 			nfcAdapter.setOnNdefPushCompleteCallback(this, this);
 		}
+		
+		//Enable up button
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 	}
+	
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+        case android.R.id.home:
+            // Up button pressed
+            Intent intentHome = new Intent(this, com.makewithmoto.MainActivity.class);
+            intentHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intentHome);
+            overridePendingTransition(R.anim.splash_slide_in_anim_reverse_set, R.anim.splash_slide_out_anim_reverse_set);
+            finish();
+            return true;
+        default:
+            return super.onOptionsItemSelected(item);
+        }
+
+    }
 
 	@Override
 	public void onNdefPushComplete(NfcEvent arg0) {

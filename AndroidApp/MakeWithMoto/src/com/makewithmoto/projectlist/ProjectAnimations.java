@@ -1,6 +1,10 @@
 package com.makewithmoto.projectlist;
 
+import com.makewithmoto.R;
+
 import android.animation.Animator;
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
 import android.animation.Animator.AnimatorListener;
 import android.annotation.SuppressLint;
 import android.view.View;
@@ -11,8 +15,12 @@ import android.widget.GridView;
 @SuppressLint("NewApi")
 public class ProjectAnimations {
 	
-	public static void projectRefresh(final View v) { 
-		
+	public static void projectRefresh(final View v) {
+	    AnimatorSet animFlip;
+        animFlip = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(), R.animator.flip_up);
+        animFlip.setTarget(v);
+        animFlip.start();
+		/*
 		v.animate().alpha(0).setDuration(200).setListener(new AnimatorListener() {
 			
 			@Override
@@ -31,11 +39,15 @@ public class ProjectAnimations {
 			@Override
 			public void onAnimationCancel(Animator animation) {
 			}
-		});
+		});*/
 	}
 
-	public static void projectLaunch(final View v) {	
-		GridView gL = (GridView) v.getParent(); 
+	public static void projectLaunch(final View v) {
+	    AnimatorSet animSpin;
+        animSpin = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(), R.animator.flip_down);
+        animSpin.setTarget(v);
+        animSpin.start();
+		/*GridView gL = (GridView) v.getParent(); 
 		final int x = (int) v.getX(); 
 		final int y = (int) v.getY(); 
 
@@ -64,7 +76,7 @@ public class ProjectAnimations {
 			public void onAnimationCancel(Animator animation) {
 				
 			}
-		});
+		});*/
 
 	}
 }
