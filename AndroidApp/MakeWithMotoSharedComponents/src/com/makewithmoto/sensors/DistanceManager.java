@@ -35,6 +35,7 @@ public class DistanceManager extends CustomSensorManager implements WhatIsRunnin
 	Sensor gyroscope;
 
 	public DistanceManager(Context c) {
+		super(c);
 		listeners = new Vector<GyroscopeListener>();
 
 		// register

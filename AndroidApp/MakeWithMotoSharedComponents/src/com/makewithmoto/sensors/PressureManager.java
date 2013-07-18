@@ -18,7 +18,7 @@ public class PressureManager extends CustomSensorManager implements WhatIsRunnin
 	
 
 	public PressureManager(Context c) { 
-		super(); 
+		super(c);
 		
 		// register
 		sensor = sensormanager.getDefaultSensor(Sensor.TYPE_PRESSURE);
