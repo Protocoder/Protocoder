@@ -42,8 +42,7 @@
             android:name="com.makewithmoto.LauncherActivity"
             android:icon="@drawable/ic_launcher"
             android:label="@string/activity_name"
-            android:logo="@drawable/ic_action_logo"
-            android:screenOrientation="portrait" >
+            android:logo="@drawable/ic_action_logo" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
