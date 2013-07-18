@@ -17,6 +17,7 @@ public class BaseNotification {
 
 	Context c;
 	NotificationManager mNotificationManager;
+	boolean mIsShowing = false;
 
 	private Builder mBuilder;
 
@@ -34,6 +35,7 @@ public class BaseNotification {
 	
 	public void show(Class<?> cls, int icon, String text, String title, int actionIcon) {
 		CharSequence tickerText = "MWM";
+		mIsShowing = true;
 
 		long when = System.currentTimeMillis();
 
@@ -67,8 +69,13 @@ public class BaseNotification {
 	}
 
 	public void hide() {
-		mNotificationManager.cancel(null, NOTIFICATION_APP_RUNNING);
+		if (mIsShowing) mNotificationManager.cancel(null, NOTIFICATION_APP_RUNNING);
+		mIsShowing = false;
+	}
 
+	public static void killAll(Context ctx){
+	    NotificationManager notifManager  = (NotificationManager) ctx.getSystemService(ctx.NOTIFICATION_SERVICE);
+	    notifManager.cancel(null, NOTIFICATION_APP_RUNNING);
 	}
 
 }
