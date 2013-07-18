@@ -75,7 +75,7 @@ public class BaseNotification {
 
 	public static void killAll(Context ctx){
 	    NotificationManager notifManager  = (NotificationManager) ctx.getSystemService(ctx.NOTIFICATION_SERVICE);
-	    notifManager.cancel(null, NOTIFICATION_APP_RUNNING);
+	    notifManager.cancelAll();
 	}
 
 }

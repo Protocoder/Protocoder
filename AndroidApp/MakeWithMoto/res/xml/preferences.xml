@@ -2,13 +2,13 @@
         xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
-            android:title="Notifications">
+            android:title="@string/setting_notifications_title">
 
         <CheckBoxPreference
                 android:key="@string/pref_curtain_notifications"
-                android:title="Show notifications"
+                android:title="@string/setting_show_notifications_title"
                 android:checked="true"
-                android:summary="Show a persistent notification when the server is running" />
+                android:summary="@string/setting_show_notifications_body" />
 
     </PreferenceCategory>
 

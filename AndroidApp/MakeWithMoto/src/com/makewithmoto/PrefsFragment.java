@@ -40,8 +40,10 @@ public class PrefsFragment extends PreferenceFragment {
                     prefs.edit().putBoolean(getActivity().getResources().getString(R.string.pref_curtain_notifications), isChecked).commit();
                     //if start
                     if (isChecked){
-                        Toast.makeText(getActivity(), "Changes will take effect next server start", Toast.LENGTH_SHORT).show();
+                        //Do nothing as the server will restart on resume of MainActivity.
+                        //If we don't have the server automatically restart, then this is a separate issue.
                     } else {
+                        //Kill all notifications
                         BaseNotification.killAll(getActivity());
                     }
                     return true;
