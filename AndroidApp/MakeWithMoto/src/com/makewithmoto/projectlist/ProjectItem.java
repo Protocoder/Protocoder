@@ -11,8 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.makewithmoto.R;
-import com.makewithmoto.app.utils.Fonts;
-import com.makewithmoto.app.utils.TextUtils;
 
 public class ProjectItem extends LinearLayout {
 

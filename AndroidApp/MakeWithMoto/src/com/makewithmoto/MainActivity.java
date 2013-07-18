@@ -42,7 +42,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.makewithmoto.animation.AnimUtils;
-import com.makewithmoto.app.utils.NetworkUtils;
+import com.makewithmoto.network.NetworkUtils;
 import com.makewithmoto.apprunner.AppRunnerActivity;
 import com.makewithmoto.base.AppSettings;
 import com.makewithmoto.base.BaseActivity;
@@ -52,11 +52,11 @@ import com.makewithmoto.events.Events.ProjectEvent;
 import com.makewithmoto.events.Project;
 import com.makewithmoto.fragments.HelpFragment;
 import com.makewithmoto.fragments.NewProjectDialog;
+import com.makewithmoto.network.ALog;
 import com.makewithmoto.network.IWebSocketService;
 import com.makewithmoto.network.MyHTTPServer;
 import com.makewithmoto.projectlist.ProjectManager;
 import com.makewithmoto.projectlist.ProjectsListFragment;
-import com.makewithmoto.utils.ALog;
 
 import de.greenrobot.event.EventBus;
 
@@ -340,6 +340,7 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
         } else if (evt.getAction() == "new") {
             projectListFragment.addProject(evt.getProject().getName(), evt.getProject().getUrl());
         }
+
     }
 
     // MUST IMPLEMENT THIS
