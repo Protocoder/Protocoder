@@ -196,6 +196,7 @@ public class WebSocketService extends Service {
 
 		@Override
 		public void onError(WebSocket conn, Exception ext) {
+			// TODO Auto-generated method stub
 			System.out.println("ERROR: ");
 			ext.printStackTrace();
 		}
@@ -222,17 +223,8 @@ public class WebSocketService extends Service {
 			conn.send(res.toString());
 		}
 		
-		// Handle the message
-		public enum MessageType {
-			log_event, create_new_project, get_new_code, get_code, get_projects, save_file, run_project, unknown;
-			public static MessageType fromString(String str) {
-				try {
-					return valueOf(str);
-				} catch (Exception e) {
-					return unknown;
-				}
-			}
-		}
+		
+
 
 		// Helpers
 		/**
@@ -267,12 +259,6 @@ public class WebSocketService extends Service {
 					newProjectObject.put("url", newProject.getUrl());
 					data.put("project", newProjectObject);
 					logToConnections("info", "Creating new project [" + newProjectName + "]");
-					
-					//tell the menu ui 
-					ProjectEvent evtNew = new ProjectEvent(newProject, newProjectName, "new");
-					Log.d(TAG, "new_project event: " + newProjectName);
-					EventBus.getDefault().post(evtNew);
-					
 					break;
 //				case get_new_code:
 //					String code = FileIO.readAssetFile(ctx, "assets/new.js");
@@ -384,12 +370,19 @@ public class WebSocketService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-
+//		try {
+//			EventBus.getDefault().register(this);
+//			Log.d(TAG, "onEventBus registered");
+//		} catch (EventBusException e) {
+//			Log.d(TAG, "Event bus exception");
+//			e.printStackTrace();
+//		}
 	}
 	
 	public void start(Intent in) {
 		Log.d(TAG, "START WITH INTENT: " + in.toString());
-
+		//startService(in);
+		//bindService(in, null, BIND_AUTO_CREATE);
 	}
 	
 	public void setContext(Context aCtx) {

@@ -1,16 +1,10 @@
 package com.makewithmoto.network;
 
+import android.util.Log;
+
 import com.makewithmoto.events.Events.LogEvent;
-import com.makewithmoto.network.IWebSocketService;
 
 import de.greenrobot.event.EventBus;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.IBinder;
-import android.os.RemoteException;
-import android.util.Log;
 
 public class ALog {
 	private static String TAG = "ALog";
