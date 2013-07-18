@@ -25,7 +25,10 @@
             android:layout_height="5dp"
             android:background="#77ffffff"
             android:contentDescription="@null" />
-
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#777777">
         <TextView
             android:id="@+id/ip"
             style="@android:style/TextAppearance.Medium"
@@ -33,11 +36,11 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="15dp"
-            android:background="#777777"
             android:textColor="#ffffff"
             android:textSize="14sp"
             android:textStyle="italic"
             android:visibility="invisible" />
+        </FrameLayout>
     </LinearLayout>
 
     <FrameLayout
