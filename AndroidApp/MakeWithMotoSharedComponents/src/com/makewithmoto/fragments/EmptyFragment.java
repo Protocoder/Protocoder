@@ -23,6 +23,7 @@ public class EmptyFragment extends BaseFragment {
 
 	}
 
+	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 

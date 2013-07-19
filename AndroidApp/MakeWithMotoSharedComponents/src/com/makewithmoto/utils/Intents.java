@@ -66,7 +66,8 @@ public class Intents {
     adb.setPositiveButton(android.R.string.yes, new Dialog.OnClickListener()
     {
       // Go to Market for Install or Update
-      public void onClick(DialogInterface dialog, int which)
+      @Override
+	public void onClick(DialogInterface dialog, int which)
       {
         Intent market_intent = new Intent(Intent.ACTION_VIEW, google_play_uri);
         c.startActivity(market_intent);
@@ -76,7 +77,8 @@ public class Intents {
     adb.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener()
     {
       // Nothing
-      public void onClick(DialogInterface dialog, int which)
+      @Override
+	public void onClick(DialogInterface dialog, int which)
       {
         dialog.cancel();
       }

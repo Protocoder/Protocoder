@@ -361,7 +361,7 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
             projectListFragment.projectRefresh(evt.getProject().getName());
 
         } else if (evt.getAction() == "new") {
-            projectListFragment.addProject(evt.getProject().getName(), evt.getProject().getUrl());
+            projectListFragment.addProject(evt.getProject().getName(), evt.getProject().getUrl()); 
         }
 
     }

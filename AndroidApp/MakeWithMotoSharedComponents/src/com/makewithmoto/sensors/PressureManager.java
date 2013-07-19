@@ -25,6 +25,7 @@ public class PressureManager extends CustomSensorManager implements WhatIsRunnin
 
 		listener = new SensorEventListener() {
 
+			@Override
 			public void onSensorChanged(SensorEvent event) { 
 				//listener
 				for (CustomSensorListener l : listeners) {
@@ -33,6 +34,7 @@ public class PressureManager extends CustomSensorManager implements WhatIsRunnin
 				
 			}
 
+			@Override
 			public void onAccuracyChanged(Sensor sensor, int accuracy) {
 				switch (accuracy) {
 				case SensorManager.SENSOR_STATUS_UNRELIABLE:
