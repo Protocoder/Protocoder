@@ -4,7 +4,6 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
@@ -45,7 +44,7 @@ public class ProjectAdapter extends BaseAdapter {
 									// attributes
 			customView = new ProjectItem(mContext.get()); 
 			customView.setImage(R.drawable.ic_script); 
-			Log.d("qq", "" + projects.get(position).getName());
+			//Log.d("qq", "" + projects.get(position).getName());
 			customView.setText(projects.get(position).getName()); 
 			ImageView imageView = (ImageView) customView.findViewById(R.id.card_menu_button);
 			imageView.setOnClickListener(new OnClickListener() {
