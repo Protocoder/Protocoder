@@ -1,13 +1,13 @@
 package com.makewithmoto.base;
 
-import com.makewithmoto.sharedcomponents.R;
-
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
+
+import com.makewithmoto.sharedcomponents.R;
 
 
 //TODO http://developer.android.com/training/notify-user/expanded.html 
@@ -25,7 +25,7 @@ public class BaseNotification {
 		c = context;
 
 		mNotificationManager = (NotificationManager) c
-				.getSystemService(c.NOTIFICATION_SERVICE);
+				.getSystemService(Context.NOTIFICATION_SERVICE);
 
 	}
 
@@ -74,7 +74,7 @@ public class BaseNotification {
 	}
 
 	public static void killAll(Context ctx){
-	    NotificationManager notifManager  = (NotificationManager) ctx.getSystemService(ctx.NOTIFICATION_SERVICE);
+	    NotificationManager notifManager  = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
 	    notifManager.cancelAll();
 	}
 

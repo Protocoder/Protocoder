@@ -36,7 +36,8 @@ public class PrefsFragment extends PreferenceFragment {
         final TwoStatePreference curtainPreference = (TwoStatePreference) findPreference(getString(R.string.pref_curtain_notifications));
         if (curtainPreference != null) {
             curtainPreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-                public boolean onPreferenceChange(Preference preference, Object o) {
+                @Override
+				public boolean onPreferenceChange(Preference preference, Object o) {
                     boolean isChecked = (Boolean) o;
                     SharedPreferences prefs = getActivity().getSharedPreferences("com.makewithmoto", Context.MODE_PRIVATE);
                     prefs.edit().putBoolean(getActivity().getResources().getString(R.string.pref_curtain_notifications), isChecked).commit();

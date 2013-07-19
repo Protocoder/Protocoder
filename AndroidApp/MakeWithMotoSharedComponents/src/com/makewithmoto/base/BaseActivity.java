@@ -2,7 +2,6 @@ package com.makewithmoto.base;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.media.AudioManager;
 import android.os.Bundle;
@@ -145,7 +144,8 @@ public class BaseActivity extends FragmentActivity {
     }
 
     // override volume buttons
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    @Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
 
         Log.d(TAG, "" + keyCode);
 

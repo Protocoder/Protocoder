@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -27,6 +28,7 @@ public class OverlayLogger extends BaseFragment {
 	CustomAdapter adapter;
 	ListView listview;
 
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 		super.onCreateView(inflater, container, savedInstanceState);
@@ -36,6 +38,7 @@ public class OverlayLogger extends BaseFragment {
 
 	}
 
+	@Override
 	@SuppressLint("NewApi")
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -51,7 +54,7 @@ public class OverlayLogger extends BaseFragment {
 
 		adapter = new CustomAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
 		listview.setAdapter(adapter);
-		listview.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+		listview.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
 		listview.setStackFromBottom(true);
 		listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 

@@ -73,7 +73,8 @@ public class ProjectsListFragment extends BaseFragment {
         registerForContextMenu(gridView);
 
         gridView.setOnItemClickListener(new OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, final View v, int position, long id) {
+            @Override
+			public void onItemClick(AdapterView<?> parent, final View v, int position, long id) {
 
                 ProjectAnimations.projectRefresh(v);
 

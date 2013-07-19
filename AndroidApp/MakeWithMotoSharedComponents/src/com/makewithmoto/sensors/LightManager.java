@@ -25,6 +25,7 @@ public class LightManager extends CustomSensorManager implements WhatIsRunningIn
 
 		listener = new SensorEventListener() {
 
+			@Override
 			public void onSensorChanged(SensorEvent event) { 
 				//listener
 				for (CustomSensorListener l : listeners) {
@@ -33,6 +34,7 @@ public class LightManager extends CustomSensorManager implements WhatIsRunningIn
 				
 			}
 
+			@Override
 			public void onAccuracyChanged(Sensor sensor, int accuracy) {
 				switch (accuracy) {
 				case SensorManager.SENSOR_STATUS_UNRELIABLE:

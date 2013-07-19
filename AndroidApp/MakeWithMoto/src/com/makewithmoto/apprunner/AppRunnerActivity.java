@@ -168,7 +168,8 @@ public class AppRunnerActivity extends Activity {
         final AtomicReference<Object> result = new AtomicReference<Object>(null);
 
         runOnUiThread(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 try {
                     result.set(interpreter.eval(code, sourceName));
                 } catch (Throwable e) {

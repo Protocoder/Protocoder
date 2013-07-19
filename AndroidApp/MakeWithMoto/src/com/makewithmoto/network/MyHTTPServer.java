@@ -91,6 +91,7 @@ public class MyHTTPServer extends NanoHTTPD {
 		}
 	}
 
+	@Override
 	public Response serve(String uri, String method, Properties header,
 			Properties parms, Properties files) {
 
@@ -235,7 +236,7 @@ public class MyHTTPServer extends NanoHTTPD {
 		// have the object build the directory structure, if needed.
 		AssetManager am = ctx.get().getAssets();
 		try {
-			InputStream fi = (InputStream) am.open(uri);
+			InputStream fi = am.open(uri);
 
 			// Get MIME type from file name extension, if possible
 			String mime = null;

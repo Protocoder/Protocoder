@@ -335,7 +335,7 @@ public class JIoio extends JInterface implements HardwareCallback {
 	@JavascriptInterface
 	public void readUart(final String name, final String callbackfn) {
 		Uart uart = (Uart) components.get(name);
-		InputStream in = (InputStream) uart.getInputStream();
+		InputStream in = uart.getInputStream();
 		StringBuilder sb = new StringBuilder();
 		String output;
 
@@ -368,7 +368,7 @@ public class JIoio extends JInterface implements HardwareCallback {
 	@JavascriptInterface
 	public void writeUart(String name, String toWrite, final String callbackfn) {
 		Uart uart = (Uart) components.get(name);
-		OutputStream out = (OutputStream) uart.getOutputStream();
+		OutputStream out = uart.getOutputStream();
 		Boolean successful = false;
 
 		try {

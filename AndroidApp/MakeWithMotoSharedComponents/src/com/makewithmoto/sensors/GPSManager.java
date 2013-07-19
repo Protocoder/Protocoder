@@ -42,6 +42,7 @@ public class GPSManager extends CustomSensorManager {
 	}
 
 	// gps
+	@Override
 	public void start() {
 		Criteria criteria = new Criteria();
 		criteria.setAccuracy(Criteria.ACCURACY_FINE);

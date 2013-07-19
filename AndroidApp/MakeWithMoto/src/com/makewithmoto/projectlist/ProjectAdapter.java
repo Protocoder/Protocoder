@@ -25,19 +25,23 @@ public class ProjectAdapter extends BaseAdapter {
 		this.projects = projects;
 	}
 
+	@Override
 	public int getCount() {
 		return projects.size();
 	}
 
+	@Override
 	public Object getItem(int position) {
 		return projects.get(position);
 	}
 
+	@Override
 	public long getItemId(int position) {
 		return position;
 	}
 
 	// create a new ImageView for each item referenced by the Adapter
+	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		final ProjectItem customView;
 		

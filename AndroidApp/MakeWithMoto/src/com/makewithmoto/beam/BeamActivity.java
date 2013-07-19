@@ -40,15 +40,13 @@ import android.nfc.NfcAdapter;
 import android.nfc.NfcAdapter.OnNdefPushCompleteCallback;
 import android.nfc.NfcEvent;
 import android.os.Bundle;
-import android.provider.MediaStore;
+import android.provider.MediaStore.MediaColumns;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.Window;
 import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.makewithmoto.MainActivity;
 import com.makewithmoto.R;
 
 @SuppressLint("NewApi")
@@ -93,7 +91,7 @@ public class BeamActivity extends Activity implements
 					uri, null, null, null, null);
 			if (cursor.moveToFirst()) {
 				int column_index = cursor
-						.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);// Instead
+						.getColumnIndexOrThrow(MediaColumns.DATA);// Instead
 																				// of
 																				// "MediaStore.Images.Media.DATA"
 																				// can
@@ -328,6 +326,7 @@ public class BeamActivity extends Activity implements
 	@Override
 	public void onNdefPushComplete(NfcEvent arg0) {
 		runOnUiThread(new Runnable() {
+			@Override
 			public void run() {
 				setStatus(getString(R.string.file_sent));
 			}

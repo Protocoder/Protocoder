@@ -22,6 +22,7 @@ public class HelpFragment extends BaseWebviewFragment {
 	
 	private final String TAG="ApplicationWebView";
 		
+	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		Log.i("HELPFRAGMENT", "Hereere-----");
@@ -34,12 +35,14 @@ public class HelpFragment extends BaseWebviewFragment {
 		//setVisible(false);
 	}
 	
+	@Override
 	public void loadViewFromFile(String filename) {
 		filename = "file://" + filename;
 		ALog.d(TAG, "loading " + filename);
 		getWebview().loadUrl(filename);
 	}
 	
+	@Override
 	public WebView getWebview() {
 		return webView;
 	}
@@ -54,6 +57,7 @@ public class HelpFragment extends BaseWebviewFragment {
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 	
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {

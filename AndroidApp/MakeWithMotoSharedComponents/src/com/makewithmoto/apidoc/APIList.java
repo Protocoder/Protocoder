@@ -117,7 +117,7 @@ public class APIList {
 
 		// get value
 		try {
-			value = (Float) attr.get(obj);
+			value = attr.get(obj);
 		} catch (IllegalArgumentException e1) {
 			e1.printStackTrace();
 		} catch (IllegalAccessException e1) {
