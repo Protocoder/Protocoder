@@ -232,7 +232,6 @@ public class ProjectsListFragment extends BaseFragment {
             //beamIntent.setAction(Intent.ACTION_SEND);
             beamIntent.putExtra(Intent.EXTRA_TEXT, project.getCode());
             beamIntent.setType("text/plain");
-            startActivity(Intent.createChooser(beamIntent, getResources().getText(R.string.send_to)));
             startActivity(beamIntent);
             getActivity().overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
 
@@ -262,11 +261,6 @@ public class ProjectsListFragment extends BaseFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-//		// Is this necessary??
-//		for (Project project : projects) {
-//			project = null;
-//		}
-//		projects = null;
     }
 
     public void projectRefresh(String projectName) {
