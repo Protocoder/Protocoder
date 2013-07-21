@@ -1,6 +1,5 @@
 package com.makewithmoto.hardware;
 
-import com.makewithmoto.hardware.HardwareCallback;
 
 public class HardwareBase {
 	protected HardwareCallback callback_;

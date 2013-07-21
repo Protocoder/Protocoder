@@ -13,8 +13,6 @@ import android.view.Window;
 import com.makewithmoto.base.BaseActivity;
 import com.makewithmoto.utils.MemoryLogger;
 
-import de.greenrobot.event.EventBus;
-
 public class LauncherActivity extends BaseActivity {
 
     private static final long SPLASH_SCREEN_DURATION = 3500;
@@ -50,7 +48,8 @@ public class LauncherActivity extends BaseActivity {
         }
         intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         mExitRunnable = new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 exitSplash();
             }
         };

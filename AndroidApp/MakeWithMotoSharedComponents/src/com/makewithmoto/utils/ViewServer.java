@@ -353,7 +353,8 @@ public class ViewServer implements Runnable {
     /**
      * Main server loop.
      */
-    public void run() {
+    @Override
+	public void run() {
         try {
             mServer = new ServerSocket(mPort, VIEW_SERVER_MAX_CONNECTIONS, InetAddress.getLocalHost());
         } catch (Exception e) {
@@ -437,36 +438,44 @@ public class ViewServer implements Runnable {
             mStream = stream;
         }
 
-        public void close() throws IOException {
+        @Override
+		public void close() throws IOException {
             // Don't close the stream
         }
 
-        public boolean equals(Object o) {
+        @Override
+		public boolean equals(Object o) {
             return mStream.equals(o);
         }
 
-        public void flush() throws IOException {
+        @Override
+		public void flush() throws IOException {
             mStream.flush();
         }
 
-        public int hashCode() {
+        @Override
+		public int hashCode() {
             return mStream.hashCode();
         }
 
-        public String toString() {
+        @Override
+		public String toString() {
             return mStream.toString();
         }
 
-        public void write(byte[] buffer, int offset, int count)
+        @Override
+		public void write(byte[] buffer, int offset, int count)
                 throws IOException {
             mStream.write(buffer, offset, count);
         }
 
-        public void write(byte[] buffer) throws IOException {
+        @Override
+		public void write(byte[] buffer) throws IOException {
             mStream.write(buffer);
         }
 
-        public void write(int oneByte) throws IOException {
+        @Override
+		public void write(int oneByte) throws IOException {
             mStream.write(oneByte);
         }
     }
@@ -532,7 +541,8 @@ public class ViewServer implements Runnable {
             mNeedFocusedWindowUpdate = false;
         }
 
-        public void run() {
+        @Override
+		public void run() {
             BufferedReader in = null;
             try {
                 in = new BufferedReader(new InputStreamReader(mClient.getInputStream()), 1024);
@@ -755,14 +765,16 @@ public class ViewServer implements Runnable {
             return result;
         }
 
-        public void windowsChanged() {
+        @Override
+		public void windowsChanged() {
             synchronized (mLock) {
                 mNeedWindowListUpdate = true;
                 mLock.notifyAll();
             }
         }
 
-        public void focusChanged() {
+        @Override
+		public void focusChanged() {
             synchronized (mLock) {
                 mNeedFocusedWindowUpdate = true;
                 mLock.notifyAll();

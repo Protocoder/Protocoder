@@ -1,14 +1,11 @@
 package com.makewithmoto.projectlist;
 
-import com.makewithmoto.R;
-
-import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
-import android.animation.Animator.AnimatorListener;
 import android.annotation.SuppressLint;
 import android.view.View;
-import android.widget.GridView;
+
+import com.makewithmoto.R;
 
 
 //CHECK http://developer.android.com/reference/android/view/animation/GridLayoutAnimationController.html

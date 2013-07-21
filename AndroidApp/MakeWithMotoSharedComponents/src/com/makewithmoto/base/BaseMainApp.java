@@ -2,11 +2,11 @@ package com.makewithmoto.base;
 
 import java.io.File;
 
-import com.makewithmoto.utils.FileIO;
-
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.os.Environment;
+
+import com.makewithmoto.utils.FileIO;
 
 public class BaseMainApp extends Application {
 

@@ -1,6 +1,5 @@
 package com.makewithmoto.network;
 
-import android.annotation.SuppressLint;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -23,6 +22,8 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
 import java.util.Vector;
+
+import android.annotation.SuppressLint;
 
 /**
  * A simple, tiny, nicely embeddable HTTP 1.0 server in Java
@@ -218,6 +219,7 @@ public class NanoHTTPD
 		myServerSocket = new ServerSocket( myTcpPort );
 		myThread = new Thread( new Runnable()
 			{
+				@Override
 				public void run()
 				{
 					try
@@ -302,6 +304,7 @@ public class NanoHTTPD
 			t.start();
 		}
 
+		@Override
 		public void run()
 		{
 			try
@@ -935,7 +938,7 @@ public class NanoHTTPD
 			String mime = null;
 			int dot = f.getCanonicalPath().lastIndexOf( '.' );
 			if ( dot >= 0 )
-				mime = (String)theMimeTypes.get( f.getCanonicalPath().substring( dot + 1 ).toLowerCase());
+				mime = theMimeTypes.get( f.getCanonicalPath().substring( dot + 1 ).toLowerCase());
 			if ( mime == null )
 				mime = MIME_DEFAULT_BINARY;
 

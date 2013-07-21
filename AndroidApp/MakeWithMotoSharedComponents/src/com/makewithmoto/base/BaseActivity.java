@@ -150,7 +150,8 @@ public class BaseActivity extends FragmentActivity {
     }
 
     // override volume buttons
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    @Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
 
         Log.d(TAG, "" + keyCode);
 

@@ -144,7 +144,8 @@ public class EditorFragment extends BaseFragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    public boolean onOptionsItemSelected(MenuItem item) {
+    @Override
+	public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
         case MENU_SAVE:
