@@ -44,6 +44,7 @@ public class DistanceManager extends CustomSensorManager implements WhatIsRunnin
 
 		gyroscopeListener = new SensorEventListener() {
 
+			@Override
 			public void onSensorChanged(SensorEvent event) { 
 				//listener
 				for (GyroscopeListener l : listeners) {
@@ -52,6 +53,7 @@ public class DistanceManager extends CustomSensorManager implements WhatIsRunnin
 				
 			}
 
+			@Override
 			public void onAccuracyChanged(Sensor sensor, int accuracy) {
 				switch (accuracy) {
 				case SensorManager.SENSOR_STATUS_UNRELIABLE:
@@ -69,15 +71,18 @@ public class DistanceManager extends CustomSensorManager implements WhatIsRunnin
 
 	}
 
+	@Override
 	public boolean isListening() {
 		return false;
 	}
 
+	@Override
 	public void start() {
 		running = true;
 		gyroscopeSupported = sensormanager.registerListener(gyroscopeListener, gyroscope, SensorManager.SENSOR_DELAY_GAME);
 	}
 
+	@Override
 	public void stop() {
 		running = false;
 		sensormanager.unregisterListener(gyroscopeListener);

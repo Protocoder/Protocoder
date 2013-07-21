@@ -2,7 +2,6 @@ package com.makewithmoto.utils;
 
 import java.io.IOException;
 import java.util.Locale;
-import java.util.UUID;
 
 import android.content.Context;
 import android.media.AudioManager;
@@ -88,7 +87,8 @@ public class SoundUtils {
 			
         	
         	    // Implements TextToSpeech.OnInitListener.
-        	    public void onInit(int status) {
+        	    @Override
+				public void onInit(int status) {
         	        // status can be either TextToSpeech.SUCCESS or TextToSpeech.ERROR.
         	        if (status == TextToSpeech.SUCCESS) {
         	            // Set preferred language to US english.

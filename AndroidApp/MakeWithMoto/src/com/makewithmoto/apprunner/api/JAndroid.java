@@ -4,11 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Vibrator;
 import android.util.Log;
-import android.view.ViewGroup.LayoutParams;
 import android.webkit.JavascriptInterface;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.makewithmoto.apidoc.APIAnnotation;

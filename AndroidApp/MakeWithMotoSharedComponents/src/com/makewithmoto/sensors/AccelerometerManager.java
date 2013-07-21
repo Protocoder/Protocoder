@@ -37,6 +37,7 @@ public class AccelerometerManager extends CustomSensorManager implements WhatIsR
 
 		listener = new SensorEventListener() {
 
+			@Override
 			public void onSensorChanged(SensorEvent event) { 
 				//listener
 				for (CustomSensorListener l : listeners) {
@@ -51,6 +52,7 @@ public class AccelerometerManager extends CustomSensorManager implements WhatIsR
 				
 			}
 
+			@Override
 			public void onAccuracyChanged(Sensor sensor, int accuracy) {
 				switch (accuracy) {
 				case SensorManager.SENSOR_STATUS_UNRELIABLE:

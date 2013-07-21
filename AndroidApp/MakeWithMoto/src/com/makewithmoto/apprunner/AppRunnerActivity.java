@@ -44,6 +44,8 @@ public class AppRunnerActivity extends Activity {
                                         "var android = JAndroid(Activity);\n" + 
                                         "var JUI = Packages.com.makewithmoto.apprunner.api.JUI; \n" +
                                         "var ui = JUI(Activity);\n" + 
+                                        "var JBrowser = Packages.com.makewithmoto.apprunner.api.JBrowser; \n" +
+                                        "var browser = JBrowser(Activity);\n" + 
                                         "// End of Prepend Section" + "\n";
 
     static final String SCRIPT_POSTFIX = "//Appends text for all scripts \n" + 
@@ -168,7 +170,8 @@ public class AppRunnerActivity extends Activity {
         final AtomicReference<Object> result = new AtomicReference<Object>(null);
 
         runOnUiThread(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 try {
                     result.set(interpreter.eval(code, sourceName));
                 } catch (Throwable e) {

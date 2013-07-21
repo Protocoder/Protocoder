@@ -47,6 +47,7 @@ public class VideoPlayerFragment extends BaseFragment {
 		
 	}	
 	
+	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		Log.d("mm", "onActivityCreated");
@@ -102,6 +103,7 @@ public class VideoPlayerFragment extends BaseFragment {
 		
 		mVideoView.setOnCompletionListener(new OnCompletionListener() {
 
+			@Override
 			public void onCompletion(MediaPlayer mp) {
 
 				//finish();

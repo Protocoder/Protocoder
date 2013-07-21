@@ -51,6 +51,7 @@ public class BaseWebviewFragment extends BaseFragment {
 		return webView;
 	}
 	
+	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
@@ -72,6 +73,7 @@ public class BaseWebviewFragment extends BaseFragment {
 		webView.addJavascriptInterface(new MyJavaScriptInterface(getActivity()), "android");
 
 		webView.setWebChromeClient(new WebChromeClient() {
+			@Override
 			public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
 				callback.invoke(origin, true, false);
 			}

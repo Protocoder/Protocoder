@@ -212,16 +212,19 @@ public class WebViewFragment extends BaseWebviewFragment {
 			}
 		}
 
+		@Override
 		public void onReceivedError(WebView view, int errorCode,
 				String description, String failingUrl) {
 			Log.d("", errorCode + " " + description);
 		}
 
+		@Override
 		public void onPageStarted(WebView view, String url, Bitmap favicon) {
 			Log.d("", "Loading web");
 
 		}
 
+		@Override
 		public void onPageFinished(WebView view, String url) {
 			Log.d("", "Loading web");
 
