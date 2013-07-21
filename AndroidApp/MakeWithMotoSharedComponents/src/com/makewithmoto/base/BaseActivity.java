@@ -2,7 +2,6 @@ package com.makewithmoto.base;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.media.AudioManager;
 import android.os.Bundle;
@@ -111,6 +110,12 @@ public class BaseActivity extends FragmentActivity {
         WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
         layoutParams.screenBrightness = f;
         getWindow().setAttributes(layoutParams);
+    }
+    
+    private float getCurrentBrightness(float f) {
+    	WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
+    	
+    	return layoutParams.screenBrightness; 
     }
 
     public void setVolume(int value) {

@@ -1,31 +1,40 @@
 
-
+//parse the help comming directly from the android and create a structure for it
 function parse_help(docString) {
 	console.log(docString);
 	var doc = JSON.parse(docString).apiClasses;
 
 	//iterate through classes 
-	for (var j in doc) {
+	$.each(doc, function(k, v) {
 	    //all
-	    console.log(doc[j]);
+	    console.log(v);
 
 	    //class
-	    var className = doc[j].name;
+	    var className = v.name;
 	    console.log(className);
 	    $("#help").append('<div id = "'+ className+'" class = "APIclass"> <h1>' + className + ' </h1></div>');
 
 	    //iterate through api methods 
-	    for (var k in doc[j].apiMethods) {
+	    $.each (v.apiMethods, function(m, n) {
 	        
-	        var method = doc[j].apiMethods[k];
+	        var method = n;
 	        $("#"+className).append('<div id ='+ method.name +' class = "APImethod"></div>');
 	        $("#"+method.name).append('<h2>'+ method.name +'</h2>');
 	        
-	        if (method.description != undefined) $("#"+method.name).append('<p> '+ method.description +' </p>');
-	        if (method.example != undefined) $("#"+method.name).append('<p> '+ method.example +' </p>');
+	        if (method.description != undefined) { 
+	        	$("#"+method.name).append('<p> '+ method.description +' </p>');
+	        }
+	        if (method.example != undefined){ 
+				$("#"+method.name).append('<p> '+ method.example +' </p>');
+	        	$('<button> '+ method.name +' </button>')
+	        		.click(function() {
+	        			console.log("qq" + method.name)
+	        		})
+	        		.appendTo("#"+method.name);
 
+	        }
 
 	        console.log(method.name, method.description, method.example);
-	    }
-	}
+	    });
+	});
 }

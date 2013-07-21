@@ -8,7 +8,7 @@ file upload
 file listing 
 
 
-
+close script app 
 add image widget 
 map widget 
 save / load text to sdcard 

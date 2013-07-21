@@ -26,9 +26,7 @@
 <script type="text/javascript" src="./libs/dat.gui.min.js"></script> 
 <script type="text/javascript" src="./libs/jquery-1.10.2.min.js"></script> 
 <script type="text/javascript" src="./libs/jquery-ui-1.10/js/jquery-ui-1.10.3.custom.js"></script>
-<!-- 
 <script src="./libs/d3.v3/d3.v3.js"></script>
---> 
 
 <!-- custom --> 
 <script src="./js/project.js" type="text/javascript" charset="utf-8"></script>
@@ -56,7 +54,7 @@ $(document).ready(function() {
 	initEditor();
 
 	//plot example
-	//plot1 = addPlot("random", 500, 100, 250, 100);
+	plot1 = addPlot("random", 500, 100, 250, 100);
 
 	setInterval(function() { 
 		//var val = Math.random() * 100;
@@ -65,9 +63,9 @@ $(document).ready(function() {
 
 	//websockets
 
-	//testWebsockets();
-	//list_apps();
-	//get_documentation();
+	testWebsockets();
+	list_apps();
+	get_documentation();
 
 	setInterval(function() {
 		//get_camera();
