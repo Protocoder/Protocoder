@@ -12,11 +12,16 @@ public class BaseMainApp extends Application {
 
 	public static SharedPreferences app_preferences;
 	public static String baseDir;
+	public static String projectsDir;
+	public static String examplesDir;
 	public static Application instance;
 
 	public BaseMainApp() {
 		baseDir = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + 
 				AppSettings.appFolder + File.separator;
+		
+		projectsDir = baseDir + File.separator + "projects";
+		examplesDir = baseDir + File.separator + "examples";
 		
 	}
 	

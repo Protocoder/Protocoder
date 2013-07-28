@@ -25,6 +25,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -47,13 +48,14 @@ import com.makewithmoto.base.BaseActivity;
 import com.makewithmoto.base.BaseNotification;
 import com.makewithmoto.events.Events.ProjectEvent;
 import com.makewithmoto.events.Project;
+import com.makewithmoto.events.ProjectManager;
 import com.makewithmoto.fragments.NewProjectDialog;
 import com.makewithmoto.network.ALog;
 import com.makewithmoto.network.CustomWebsocketServer;
 import com.makewithmoto.network.MyHTTPServer;
 import com.makewithmoto.network.NetworkUtils;
-import com.makewithmoto.projectlist.ProjectManager;
-import com.makewithmoto.projectlist.ProjectsListFragment;
+import com.makewithmoto.projectlist.ListFragmentExamples;
+import com.makewithmoto.projectlist.ListFragmentProjects;
 import com.makewithmoto.sensors.AccelerometerManager;
 import com.makewithmoto.sensors.AccelerometerManager.AccelerometerListener;
 
@@ -76,7 +78,13 @@ public class MainActivity extends BaseActivity implements
 
 	MyHTTPServer httpServer;
 
-	private ProjectsListFragment projectListFragment;
+    ProjectsPagerAdapter mProjectPagerAdapter;
+    ViewPager mViewPager;
+
+
+	private ListFragmentProjects projectListFragment;
+	private ListFragmentExamples exampleListFragment;
+
 	private Boolean showingHelp = false;
 
 	private TextView textIP;
@@ -87,6 +95,7 @@ public class MainActivity extends BaseActivity implements
 
 	private CustomWebsocketServer ws;
 
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -95,14 +104,26 @@ public class MainActivity extends BaseActivity implements
 		// Set the content view and get the context
 		setContentView(R.layout.activity_forfragments);
 		c = this;
-
+		
 		// Create the action bar programmatically
 		ActionBar actionBar = getActionBar();
 		actionBar.setHomeButtonEnabled(true);
 
 		// Instantiate fragments
-		projectListFragment = new ProjectsListFragment();
-		addFragment(projectListFragment, R.id.f1, false);
+		projectListFragment = new ListFragmentProjects();
+		exampleListFragment = new ListFragmentExamples();
+		//addFragment(projectListFragment, R.id.f1, false);
+
+		
+		mProjectPagerAdapter = new ProjectsPagerAdapter(getSupportFragmentManager());
+		mProjectPagerAdapter.setExamplesFragment(exampleListFragment);
+		mProjectPagerAdapter.setProjectsFragment(projectListFragment);
+       
+		// Set up the ViewPager, attaching the adapter.
+        mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager.setAdapter(mProjectPagerAdapter);
+        
+        
 
 		// Start the servers
 		startServers();
@@ -252,7 +273,7 @@ public class MainActivity extends BaseActivity implements
 
 			}
 		});
-		// accelerometerManager.start();
+		accelerometerManager.start();
 
 		final Handler handler = new Handler();
 		Runnable r = new Runnable() {
@@ -370,12 +391,12 @@ public class MainActivity extends BaseActivity implements
             String baseDir = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + AppSettings.appFolder + File.separator;
 
             Log.d("ProjectEvent/MainActivity", baseDir + evt.getProject().getName() + File.separator + "script.js");
-            projectListFragment.projectLaunch(evt.getProject().getName());
+
 
             try {
 
                 currentProjectApplicationIntent = new Intent(MainActivity.this, AppRunnerActivity.class);
-                String script = evt.getProject().getCode();
+                String script = ProjectManager.getInstance().getCode(evt.getProject());
                 Log.d("MainActivity", script);
                 currentProjectApplicationIntent.putExtra("Script", script);
 
@@ -396,7 +417,7 @@ public class MainActivity extends BaseActivity implements
             projectListFragment.projectRefresh(evt.getProject().getName());
 
         } else if (evt.getAction() == "new") {
-            projectListFragment.addProject(evt.getProject().getName(), evt.getProject().getUrl()); 
+            //projectListFragment.addProject(evt.getProject().getName(), evt.getProject().getUrl()); 
         }
 
     }
@@ -469,6 +490,10 @@ public class MainActivity extends BaseActivity implements
     public void onFinishEditDialog(String inputText) {
         Toast.makeText(this, "Creating " + inputText, Toast.LENGTH_SHORT).show();
         Project newProject = ProjectManager.getInstance().addNewProject(c, inputText, inputText);
+    
+        ListFragmentProjects projectsListFragment = ((MainActivity) c).getProjectListFragment();
+		//projectsListFragment.addProject(newProject.getName(), newProject.getUrl()); 
+	
     }
 
     /*
@@ -491,7 +516,7 @@ public class MainActivity extends BaseActivity implements
         return true;
     }
 
-    public ProjectsListFragment getProjectListFragment() {
+    public ListFragmentProjects getProjectListFragment() {
         return projectListFragment;
     }
 

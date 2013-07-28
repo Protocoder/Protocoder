@@ -21,25 +21,6 @@ public class JInterface {
 
 	}
 	
-	public void callback(String fn){
-		
-		try{
-			 //  c.get().interpreter.callJsFunction(fn,"");
-	    	 String f1 = fn;
-	    	 if(fn.contains("function")){
-	    		 f1 = "var fn = " + fn + "\n fn();";
-	    	 }
-
-	    	     c.get().eval(f1);
-
-		}catch (Throwable e){
-
-		           // TODO
-		}
-		
-	}
-	
-	
 	public void destroy() {
 	}
 

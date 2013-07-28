@@ -34,13 +34,11 @@ public class JAndroid extends JInterface {
 	@JavascriptInterface
 	public void vibrate_and_callback(String duration, String fn){
 			vibrate(duration);
-			callback(fn);
 	}
 
 	@JavascriptInterface
 	public void toast_and_callback(String msg, int duration, String fn){
 			toast(msg, duration);
-			callback(fn);
 	}
 			
 

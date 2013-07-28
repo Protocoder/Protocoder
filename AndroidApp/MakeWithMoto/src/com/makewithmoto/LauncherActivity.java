@@ -29,13 +29,13 @@ public class LauncherActivity extends BaseActivity {
         //setHideHomeBar();
 
         //Hide the actionbar programmatically
-        getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
-        getActionBar().hide();
+       // getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
+       // getActionBar().hide();
 
         //Take some memory logs
-        MemoryLogger.showMemoryStats("BEFORE LAUNCHER BOOTSCREEN");
+      //  MemoryLogger.showMemoryStats("BEFORE LAUNCHER BOOTSCREEN");
         setContentView(R.layout.activity_bootscreen);
-        MemoryLogger.showMemoryStats("AFTER LAUNCHER BOOTSCREEN");
+      //  MemoryLogger.showMemoryStats("AFTER LAUNCHER BOOTSCREEN");
 
         //Prepare intent to exit the activity and move to the main one
         boolean firstLaunch; //If this is the first time the

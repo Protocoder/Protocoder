@@ -23,14 +23,5 @@ public class Test extends JInterface {
 		Toast.makeText(c.get(), msg, duration).show();
 	}
 
-	public void vibrate_and_callback(String duration, String fn) {
-		vibrate(duration);
-		callback(fn);
-	}
-
-	public void toast_and_callback(String msg, int duration, String fn) {
-		toast(msg, duration);
-		callback(fn);
-	}
 
 }

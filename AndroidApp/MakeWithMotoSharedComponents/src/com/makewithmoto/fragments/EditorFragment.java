@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.makewithmoto.base.BaseFragment;
 import com.makewithmoto.events.Project;
+import com.makewithmoto.events.ProjectManager;
 import com.makewithmoto.sharedcomponents.R;
 import com.makewithmoto.utils.Fonts;
 import com.makewithmoto.utils.TextUtils;
@@ -76,9 +77,11 @@ public class EditorFragment extends BaseFragment {
         Bundle bundle = getArguments();
         if (bundle != null) {
             String projectName = bundle.getString("project_name", "");
+            String projectURL = bundle.getString("project_url", "");
+            int projectType = bundle.getInt("project_type", -1);
             Log.d("mm", projectName);
             if (projectName != "") {
-                loadProject(Project.get(projectName));
+                loadProject(ProjectManager.getInstance().get(projectName, projectType));
             }
         }
 
@@ -88,7 +91,7 @@ public class EditorFragment extends BaseFragment {
         return v;
     }
 
-    public static EditorFragment newInstance(Project project) {
+    public static EditorFragment newInstance(ProjectManager project) {
         EditorFragment myFragment = new EditorFragment();
 
         // Bundle args = new Bundle();
@@ -161,7 +164,7 @@ public class EditorFragment extends BaseFragment {
         currentProject = project;
         Log.d("qq", "" + project + " " + edit);
         if (project != null) {
-            edit.setText(project.getCode());
+            edit.setText(ProjectManager.getInstance().getCode(project));
         } else {
             edit.setText("Project loading failed");
         }
