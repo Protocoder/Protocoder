@@ -8,14 +8,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
-import android.view.Window;
 
 import com.makewithmoto.base.BaseActivity;
-import com.makewithmoto.utils.MemoryLogger;
 
 public class LauncherActivity extends BaseActivity {
 
-    private static final long SPLASH_SCREEN_DURATION = 3500;
+    private static final long SPLASH_SCREEN_DURATION = 1500;
     protected Handler mExitHandler = null;
     protected Runnable mExitRunnable = null;
     Intent intent = null;

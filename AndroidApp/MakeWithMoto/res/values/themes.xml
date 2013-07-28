@@ -6,7 +6,7 @@
     </style>
     
     
-    <style name="MWMLaunchTheme" parent="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen">
+    <style name="MWMLaunchTheme" parent="@android:style/Theme.Holo.Light.NoActionBar">
 
     </style>
     
