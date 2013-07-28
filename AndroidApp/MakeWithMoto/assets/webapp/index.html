@@ -3,6 +3,7 @@
 <html>
 <head>
     <title>Make with Moto</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta http-equiv="editor-type">
     <link href=
     "http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400italic,700|Open+Sans+Condensed:300,700"
@@ -22,23 +23,64 @@
     <script type="text/javascript" src="./libs/dat.gui.min.js"></script> 
     <script type="text/javascript" src="./libs/jquery-1.10.2.min.js"></script> 
     <script type="text/javascript" src="./libs/jquery-ui-1.10/js/jquery-ui-1.10.3.custom.js"></script>
-    <script src="./libs/d3.v3/d3.v3.js"></script>
+   <!-- 
+<script src="./libs/d3.v3/d3.v3.js"></script>
+--> 
 
-    <!-- custom --> 
-    <script src="./js/project.js" type="text/javascript" charset="utf-8"></script>
+ <!-- custom --> 
+<script src="./js/project.js" type="text/javascript" charset="utf-8"></script>
 
-    <script src="./js/editor.js" type="text/javascript" charset="utf-8"></script>
-    <script src="./js/help.js" type="text/javascript" charset="utf-8"></script>
+<script src="./js/editor.js" type="text/javascript" charset="utf-8"></script>
+<script src="./js/help.js" type="text/javascript" charset="utf-8"></script>
 
-    <script src="./js/plots.js" type="text/javascript" charset="utf-8"></script>
-    <script src="./js/android_communication.js" type="text/javascript" charset="utf-8"></script>
-    <script src="./js/websockets.js" type="text/javascript" charset="utf-8"></script>
+<script src="./js/plots.js" type="text/javascript" charset="utf-8"></script>
+<script src="./js/android_communication.js" type="text/javascript" charset="utf-8"></script>
+<script src="./js/websockets.js" type="text/javascript" charset="utf-8"></script>
 
-    <script src="js/config.js"></script>
+
+	
+<!-- Including the HTML5 Uploader plugin -->
+<script src="./libs/jquery.filedrop.js"></script>
+<!-- The main script file -->
+<script src="./js/script.js"></script>
     
+
+<script type="text/javascript">
+	
+//test 
+$(document).ready(function() {
+	//init editor
+	initEditor();
+
+	plot example
+	plot1 = addPlot("random", 500, 100, 250, 100);
+
+	setInterval(function() { 
+		//var val = Math.random() * 100;
+		//plot1(val, ""); 
+	}, 100);
+
+	//websockets
+
+	testWebsockets();
+	list_apps();
+	get_documentation();
+
+	setInterval(function() {
+		//get_camera();
+
+	}, 1000);
+
+
+});
+
+</script>
     
-	<script>
-    $(function () {
+	
+	
+	
+<script>	
+	$(function () {
                  // cache the sliding object in a var
                  var slideout = $('#editor');
                  var isslid = false;
@@ -69,37 +111,9 @@
                 });
 
 
-
-//test 
-$(document).ready(function() {
-    //init editor
-    //initEditor();
-
-    //plot example
-   // plot1 = addPlot("random", 500, 100, 250, 100);
-
-    setInterval(function() { 
-        var val = Math.random() * 100;
-    //    plot1(val, ""); 
-    }, 100);
-
-    //websockets
-
-    //testWebsockets();
-    //list_apps();
-    //get_documentation();
-
-    setInterval(function() {
-        get_camera();
-
-    }, 1000);
-
-
-});
-
     </script>
+    
     <noscript>
-   
 
     </noscript>
     <!--[if lte IE 9]><link rel="stylesheet" href="css/ie9.css" /><![endif]-->
@@ -119,10 +133,10 @@ Note: Set the body element's class to "left-sidebar" to position the sidebar on 
         <!-- EditorPanel -->
 
         <div id="editor">
-            <div id="editor-inner">
-                <!-- Post -->
+          <div id="editor-inner">
+              <!-- Post -->
 
-                <article class="article-item article-item-excerpt">
+              <article class="article-item article-item-excerpt">
                     <div class="info">
                         <span class="date">Edit</span> <!--
                                             Note: You can change the number of list items in "stats" to whatever you want.
@@ -130,45 +144,63 @@ Note: Set the body element's class to "left-sidebar" to position the sidebar on 
 
                         <ul class="stats">
                             <li>
-                                <a class="link-icon24 link-icon24-1" href=
+                                <a href=
                                 "#">New</a>
                             </li>
 
                             <li>
-                                <a class="link-icon24 link-icon24-2" href=
+                                <a href=
                                 "#">Copy</a>
                             </li>
 
                             <li>
-                                <a class="link-icon24 link-icon24-3" href=
-                                "#">Save</a>
+                                <a href=
+                                "#">Widgets</a>
                             </li>
 
                             <li>
                                 <a class="link-icon24 link-icon24-4" href=
-                                "#">List</a>
+                                "#">Projects</a>
                             </li>
 
                             <li>
-                                <div class="link-icon24" id=
-                                "click-me">
-                                    Shift
+                                <div class="clickme" id=
+                                "click-me"> |||
+                                     
                                 </div>
                             </li>
-                        </ul>
-                    </div>
+                        </ul> 
+                    <li>
+                                <div class="clickme" id=
+                                "click-me"> |||
+                                     
+                                </div> </li></div>
 
                     <div id="tabs">
                         Tab structure goes here
                     </div>
 
-                    <div id="editor">function foo(items) {
-                        var x = "All this is syntax highlighted";
-                        return x;
-                    }</div>
+                    <div id="mmeditor">function foo(items) {
+    var x = "All this is syntax highlighted";
+    return x;
+} </div>
 
 
                 </article>
+                
+
+
+    </div>
+            <div id = "project_list"> <h1> Project list </h1></div>
+<div id = "device_status"> </div>
+
+
+ where the widgets are added 
+<div id = "widgets"> </div>
+
+ where the autogenerated help will be placed 
+<div id = "help"> <h1> Autogenerated Help </h1></div>
+<div id = "connection"> </div> 
             </div>
         </div><!-- Sidebar -->
 
@@ -184,9 +216,9 @@ Note: Set the body element's class to "left-sidebar" to position the sidebar on 
 
             <!-- Nav -->
             <nav id="nav">
-                <ul>
+                
                     <li class="current_page_item">
-                        <a href="#">Editor</a>
+                        <a href="#">Sensors</a>
                     </li>
 
                     <li>
@@ -196,7 +228,7 @@ Note: Set the body element's class to "left-sidebar" to position the sidebar on 
                     <li>
                         <a href="#">Code reference</a>
                     </li>
-                </ul>
+                
             </nav>
 
 
@@ -221,19 +253,36 @@ Note: Set the body element's class to "left-sidebar" to position the sidebar on 
             </section>
         </div>
 
-<!-- 
-<div id = "project_list"> <h1> Project list </h1></div>
-<div id = "device_status"> </div>
 
 
- where the widgets are added 
-<div id = "widgets"> </div>
+   <div id = "overlay"> 
 
- where the autogenerated help will be placed 
-<div id = "help"> <h1> Autogenerated Help </h1></div>
-<div id = "connection"> </div> 
--->
+
+        <div id = "project_list"> <h1> Project list </h1></div>
+        <div id = "device_status"> </div>
+
+
+         where the widgets are added 
+        <div id = "widgets"> </div>
+
+         where the autogenerated help will be placed 
+        <div id = "help"> <h1> Autogenerated Help </h1></div>
+        <div id = "connection"> </div> 
+
+
+
+        <div id="dropbox">
+            <span class="message">Drop files here to upload. <br /><i>(they will only be visible to you)</i></span>
+        </div>
+
 
     </div>
+
 </body>
+
+<script>
+    //var editor = ace.edit("mmeditor");
+    //editor.setTheme("ace/theme/monokai");
+    //editor.getSession().setMode("ace/mode/javascript");
+</script>
 </html>

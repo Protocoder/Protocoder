@@ -63,7 +63,7 @@ function testWebsockets() {
     if (result.acc_x != null) {
       plot1(result.acc_x, ""); 
 
-    }
+    } 
 
   }
   ws.onclose = function() {

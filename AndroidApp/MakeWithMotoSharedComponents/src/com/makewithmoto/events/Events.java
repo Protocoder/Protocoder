@@ -27,7 +27,7 @@ public class Events {
 		}
 		public Project getProject() {
 			if (project == null) {
-				project = Project.get(getName());
+				project = ProjectManager.getInstance().get(getName(), ProjectManager.type);
 			}
 			return project; 
 		}

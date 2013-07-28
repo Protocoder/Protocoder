@@ -50,14 +50,6 @@ public class JUI extends JInterface {
 
 			mButton.setLayoutParams(params);
 			
-			
-			mButton.setOnClickListener(new OnClickListener()
-			{
-			     @Override
-			     public void onClick(View v) {
-			           callback(callbackfn);	
-			     }
-			});
 
 			mainLayout.addView(mButton);
 		}
@@ -70,7 +62,6 @@ public class JUI extends JInterface {
 		public void seekbar(String label, String to, String start,
 				final String callbackfn){
 			
-			//TODO
 			
 		}
 		

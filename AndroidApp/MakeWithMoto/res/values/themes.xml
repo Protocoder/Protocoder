@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="prototypr" parent="android:Theme.Holo.Light"></style>
-
     <style name="MWMTheme" parent="@android:style/Theme.Holo.Light.DarkActionBar">
         <item name="android:actionBarStyle">@style/MWMTheme.ActionBarStyle</item>
     </style>
+    
+    
+    <style name="MWMLaunchTheme" parent="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen">
+
+    </style>
+    
 
     <style name="MWMTheme.ActionBarStyle" parent="@android:style/Widget.Holo.Light.ActionBar">
         <item name="android:titleTextStyle">@style/MWMTheme.ActionBar.TitleTextStyle</item>

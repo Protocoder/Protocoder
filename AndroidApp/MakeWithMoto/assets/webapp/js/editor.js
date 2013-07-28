@@ -2,10 +2,10 @@ var editor;
 var session;
 
 function initEditor() { 
-	editor = ace.edit("editor");
+	editor = ace.edit("mmeditor");
 	session = editor.getSession();
 
-	editor.setTheme("ace/theme/monokai");
+	//editor.setTheme("ace/theme/monokai");
 	session.setMode("ace/mode/javascript");
 	//var EditSession = require("ace/edit_session").EditSession;
 	//var UndoManager = require("ace/undomanager").UndoManager;
@@ -25,7 +25,7 @@ function initEditor() {
 	    bindKey: {
 	        win: 'Ctrl-S',
 	        mac: 'Ctrl-S',
-	        sender: 'editor'
+	        sender: 'mmeditor'
 	    },
 	    exec: function(env, args, request) {
 	    	push_code(currentProject.id, session.getValue());
@@ -38,7 +38,7 @@ function initEditor() {
 	    bindKey: {
 	        win: 'Ctrl-R',
 	        mac: 'Ctrl-R',
-	        sender: 'editor'
+	        sender: 'mmeditor'
 	    },
 	    exec: function(env, args, request) {
 	    	push_code(currentProject.id, session.getValue());
@@ -52,7 +52,7 @@ function initEditor() {
 
 //set Code 
 function setCode(code) { 
-	var editor = ace.edit("editor"); 
+	var editor = ace.edit("mmeditor"); 
 	var session = editor.getSession(); 
 	session.setValue(code); 
 }

@@ -2,6 +2,7 @@ package com.makewithmoto.projectlist;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -9,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Intent.ShortcutIconResource;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -30,18 +32,21 @@ import com.makewithmoto.base.BaseFragment;
 import com.makewithmoto.beam.BeamActivity;
 import com.makewithmoto.events.Events.ProjectEvent;
 import com.makewithmoto.events.Project;
+import com.makewithmoto.events.ProjectManager;
 import com.makewithmoto.fragments.EditorFragment;
 
 import de.greenrobot.event.EventBus;
 
 @SuppressLint("NewApi")
-public class ProjectsListFragment extends BaseFragment {
+public class ListFragmentBase extends BaseFragment {
 
-    ArrayList<Project> projects;
-    private ProjectAdapter projectAdapter;
-    private GridView gridView;
-
-    public ProjectsListFragment() {
+    protected ArrayList<Project> projects;
+    protected ProjectAdapter projectAdapter;
+    protected GridView gridView;
+    int projectType;
+    
+    
+    public ListFragmentBase() {
     }
 
     @Override
@@ -53,21 +58,25 @@ public class ProjectsListFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.view_gridlayout, container, false);
-        projects = new ArrayList<Project>();
 
         //Get GridView and set adapter
         gridView = (GridView) v.findViewById(R.id.gridview);
-        projectAdapter = new ProjectAdapter(getActivity(), projects);
+        projects = ProjectManager.getInstance().list(projectType);
+        projectAdapter = new ProjectAdapter(getActivity(), projects, projectType);
         gridView.setEmptyView(v.findViewById(R.id.empty_grid_view));//set the empty state
         gridView.setAdapter(projectAdapter);
 
-        final ArrayList<Project> projects = Project.all();
 
-        // This could be more efficient.
-        for (Project project : projects) {
+        for (Iterator<Project> iterator = projects.iterator(); iterator.hasNext(); ) {
+            Project project = iterator.next();
+         
             String projectURL = project.getUrl();
             String projectName = project.getName();
-            addProject(projectName, projectURL);
+            
+           // Log.d("QQ", "" + this.getClass().getSimpleName() + " " + projectName);
+           // addProject(projectName, projectURL);
+       
+            notifyAddedProject();
         }
 
         registerForContextMenu(gridView);
@@ -75,10 +84,12 @@ public class ProjectsListFragment extends BaseFragment {
         gridView.setOnItemClickListener(new OnItemClickListener() {
             @Override
 			public void onItemClick(AdapterView<?> parent, final View v, int position, long id) {
+            	
 
                 ProjectAnimations.projectRefresh(v);
 
                 Project project = projects.get(position);
+                Log.d("BB", "onItemClickListener" + " " + position + " " + project.getName()); 
                 ProjectEvent evt = new ProjectEvent(project, "run");
                 EventBus.getDefault().post(evt);
                 getActivity().overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
@@ -115,8 +126,8 @@ public class ProjectsListFragment extends BaseFragment {
         projectAdapter.notifyDataSetChanged();
     }
 
-    public void addProject(String projectName, String projectURL) {
-        projects.add(new Project(projectName, projectURL));
+    public void notifyAddedProject() {
+  //      projects.add(new Project(projectName, projectURL));
 
         projectAdapter.notifyDataSetChanged();
         gridView.invalidateViews();
@@ -141,23 +152,39 @@ public class ProjectsListFragment extends BaseFragment {
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
+    	
+    	if (getUserVisibleHint()) {
+    	    // Handle menu events and return true
+    	} else
+    	    return false; // Pass the event to the next fragment
+    	
         AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
         final int index = info.position;
+        
         Project project = projects.get(index);
+        
+        Log.d("BB", "onContextItemSelected" + project.getName() + " " + info.position); 
+        //for (int i = 0; i < projects.size(); i++) {
+        //	Log.d("BB", projects.get(i).getName());
+        //
+        //}
 
         switch (item.getItemId()) {
 
         case R.id.menu_project_list_run:
-            // m.applicationWebView.launchProject(project);
             ProjectEvent evt = new ProjectEvent(project, "run");
             EventBus.getDefault().post(evt);
             getActivity().overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
             return true;
         case R.id.menu_project_list_edit:
-            //FileIO.read(getActivity(), fileName)
             EditorFragment editorFragment = new EditorFragment(); //.newInstance(project);
             Bundle bundle = new Bundle();
+                        
             bundle.putString("project_name", project.getName());
+            bundle.putString("project_url", project.getUrl());
+            bundle.putInt("project_type", projectType);
+			Log.d("UU", "" + project.getUrl() + " " + projectType + " " + project.getName());
+
             editorFragment.setArguments(bundle);
             ((MainActivity) getActivity()).addFragment(editorFragment, R.id.fragmentEditor, "editorFragment", true);
 
@@ -196,7 +223,7 @@ public class ProjectsListFragment extends BaseFragment {
                 shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-                String script = project.getCode();
+                String script = ProjectManager.getInstance().getCode(project);
                 shortcutIntent.putExtra("Script", script);
 
                 final Intent putShortCutIntent = new Intent();
@@ -213,15 +240,13 @@ public class ProjectsListFragment extends BaseFragment {
             //Show toast
             Toast.makeText(getActivity(), "Adding shortcut for " + project.getName(), Toast.LENGTH_SHORT).show();
 
-            // getActivity().setResult(getActivity().RESULT_OK, intent);
-
             return true;
 
         case R.id.menu_project_list_share_with:
 
             Intent sendIntent = new Intent();
             sendIntent.setAction(Intent.ACTION_SEND);
-            sendIntent.putExtra(Intent.EXTRA_TEXT, project.getCode());
+            sendIntent.putExtra(Intent.EXTRA_TEXT, ProjectManager.getInstance().getCode(project));
             sendIntent.setType("text/plain");
             startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
 
@@ -230,7 +255,7 @@ public class ProjectsListFragment extends BaseFragment {
 
             Intent beamIntent = new Intent(getActivity(), BeamActivity.class);
             //beamIntent.setAction(Intent.ACTION_SEND);
-            beamIntent.putExtra(Intent.EXTRA_TEXT, project.getCode());
+            beamIntent.putExtra(Intent.EXTRA_TEXT, ProjectManager.getInstance().getCode(project));
             beamIntent.setType("text/plain");
             startActivity(beamIntent);
             getActivity().overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
@@ -274,6 +299,14 @@ public class ProjectsListFragment extends BaseFragment {
         View v = gridView.findViewWithTag(projectName);
         ProjectAnimations.projectLaunch(v);
 
+    } 
+    
+
+    public void onEventMainThread(ProjectEvent evt) {
+        if (evt.getAction() == "run") {
+        	projectRefresh(evt.getProject().getName());
+        } 
+        
     }
 
 }

@@ -24,6 +24,8 @@ import com.makewithmoto.apprunner.api.JInterface;
 import com.makewithmoto.apprunner.api.JUI;
 import com.makewithmoto.events.Events.ProjectEvent;
 import com.makewithmoto.events.Project;
+import com.makewithmoto.events.ProjectManager;
+import com.makewithmoto.network.NanoHTTPD.Response;
 
 import de.greenrobot.event.EventBus;
 
@@ -118,6 +120,7 @@ public class MyHTTPServer extends NanoHTTPD {
 
 				Project foundProject;
 				String name, newCode;
+				int type;
 				
 				Log.d(TAG, "params " + obj.toString(2));
 
@@ -127,18 +130,19 @@ public class MyHTTPServer extends NanoHTTPD {
 				if (cmd.equals("fetch_code")) {
 					Log.d(TAG, "--> fetch code");
 					name = obj.getString("id");
-					foundProject = Project.get(name);
+					type = obj.getInt("type");
+					foundProject = ProjectManager.getInstance().get(name, type);
 					
-					data.put("code", foundProject.getCode());
+					data.put("code", ProjectManager.getInstance().getCode(foundProject));
 				
 				//list apps 
 				} else if (cmd.equals("list_apps")) {
 					Log.d(TAG, "--> list apps");
 
-					ArrayList<Project> projects = Project.all();
+					ArrayList<Project> projects = ProjectManager.getInstance().list(ProjectManager.PROJECT_USER_MADE);
 					JSONArray projectsArray = new JSONArray();
 					for (Project project : projects) {
-						projectsArray.put(project.to_json());
+						projectsArray.put(ProjectManager.getInstance().to_json(project));
 					}
 					data.put("projects", projectsArray);
 				
@@ -148,7 +152,7 @@ public class MyHTTPServer extends NanoHTTPD {
 
 					// Save and run
 					name = obj.getString("id");
-					foundProject = Project.get(name);
+					foundProject = ProjectManager.getInstance().get(name, ProjectManager.PROJECT_USER_MADE);
 					ProjectEvent evt = new ProjectEvent(foundProject, "run");
 					EventBus.getDefault().post(evt);
 					ALog.i("Running...");
@@ -158,9 +162,9 @@ public class MyHTTPServer extends NanoHTTPD {
 					Log.d(TAG, "--> push code");
 					name = obj.getString("id");
 					newCode = obj.getString("code");
-					foundProject = Project.get(name);
-					foundProject.writeNewCode(newCode);
-					data.put("project", foundProject.to_json());
+					foundProject = ProjectManager.getInstance().get(name, ProjectManager.PROJECT_USER_MADE);
+					ProjectManager.getInstance().writeNewCode(foundProject, newCode);
+					data.put("project", ProjectManager.getInstance().to_json(foundProject));
 					ALog.i("Saved");
 				
 				//create new app

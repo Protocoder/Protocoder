@@ -4,12 +4,28 @@
     android:layout_height="fill_parent"
     android:gravity="bottom" >
 
-    <FrameLayout
-        android:id="@+id/f1"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true" />
+    <android.support.v4.view.ViewPager
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <!--
+    This title strip will display the currently visible page title, as well as the page
+    titles for adjacent pages.
+        -->
+
+        <android.support.v4.view.PagerTitleStrip
+            android:id="@+id/pager_title_strip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:background="#33b5e5"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp"
+            android:textColor="#fff" />
+    </android.support.v4.view.ViewPager>
+
 
     <LinearLayout
         android:id="@+id/ip_container"
@@ -25,21 +41,23 @@
             android:layout_height="5dp"
             android:background="#77ffffff"
             android:contentDescription="@null" />
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#777777">
-        <TextView
-            android:id="@+id/ip"
-            style="@android:style/TextAppearance.Medium"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="15dp"
-            android:textColor="#ffffff"
-            android:textSize="14sp"
-            android:textStyle="italic"
-            android:visibility="invisible" />
+            android:background="#777777" >
+
+            <TextView
+                android:id="@+id/ip"
+                style="@android:style/TextAppearance.Medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="15dp"
+                android:textColor="#ffffff"
+                android:textSize="14sp"
+                android:textStyle="italic"
+                android:visibility="invisible" />
         </FrameLayout>
     </LinearLayout>
 
@@ -50,13 +68,6 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:visibility="gone" />
-
-    <FrameLayout
-        android:id="@+id/fragmentMoldable"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true" />
 
     <FrameLayout
         android:id="@+id/fragmentEditor"
@@ -72,12 +83,5 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true" />
 
-    <ProgressBar
-        android:id="@+id/loading_progress"
-        style="@android:style/Widget.ProgressBar.Large"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|center_horizontal"
-        android:visibility="gone" />
 
 </RelativeLayout>
