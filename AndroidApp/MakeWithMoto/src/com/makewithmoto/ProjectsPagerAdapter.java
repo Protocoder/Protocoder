@@ -6,52 +6,52 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 public class ProjectsPagerAdapter extends FragmentStatePagerAdapter {
 
-	private Fragment fragmentProjects;
-	private Fragment fragmentExamples;
+    private Fragment fragmentProjects;
+    private Fragment fragmentExamples;
 
-	public ProjectsPagerAdapter(FragmentManager fm) {
-		super(fm);
-	}
+    public ProjectsPagerAdapter(FragmentManager fm) {
+        super(fm);
+    }
 
-	@Override
-	public Fragment getItem(int i) {
+    @Override
+    public Fragment getItem(int i) {
 
-		Fragment f;
+        Fragment f;
 
-		if (i == 0) {
-			f = fragmentProjects;
-		} else {
-			f = fragmentExamples;
-		}
-		return f;
-		// return fragment;
-	}
+        if (i == 0) {
+            f = fragmentProjects;
+        } else {
+            f = fragmentExamples;
+        }
+        return f;
+        // return fragment;
+    }
 
-	@Override
-	public int getCount() {
-		// For this contrived example, we have a 100-object collection.
-		return 2;
-	}
+    @Override
+    public int getCount() {
+        // For this contrived example, we have a 100-object collection.
+        return 2;
+    }
 
-	@Override
-	public CharSequence getPageTitle(int position) {
-		String r; 
-		
-		if (position == 0) {
-			r = "Projects";
-		} else {
-			r = "Examples";
-		}
+    @Override
+    public CharSequence getPageTitle(int position) {
+        String r;
 
-		return r;
-	}
+        if (position == 0) {
+            r = "Projects";
+        } else {
+            r = "Examples";
+        }
 
-	public void setProjectsFragment(Fragment f) {
-		fragmentProjects = f;
+        return r;
+    }
 
-	}
+    public void setProjectsFragment(Fragment f) {
+        fragmentProjects = f;
 
-	public void setExamplesFragment(Fragment f) {
-		fragmentExamples = f;
-	}
+    }
+
+    public void setExamplesFragment(Fragment f) {
+        fragmentExamples = f;
+    }
 }
