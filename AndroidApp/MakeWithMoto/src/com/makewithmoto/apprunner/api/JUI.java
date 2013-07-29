@@ -50,6 +50,15 @@ public class JUI extends JInterface {
 
 			mButton.setLayoutParams(params);
 			
+			
+			mButton.setOnClickListener(new OnClickListener()
+			{
+			    @Override
+			    public void onClick(View v) {
+			        callback(callbackfn);        
+			    }
+			});
+			
 
 			mainLayout.addView(mButton);
 		}
