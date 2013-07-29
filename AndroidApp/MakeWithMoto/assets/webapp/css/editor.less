@@ -1,12 +1,16 @@
-#project_list {
+
+
+#project_list, #example_list {
 	position: absolute;
 	background-color: white;
-	bottom: 100px;
-	left: 100px;
-	width: 100px;
+	left: 50px;
+	width: 200px;
+	top: 100px;
 	font-family:'Open Sans Condensed', sans-serif;
 	padding: 5px;
 	border-radius: 3px;
+	overflow-y: scroll;
+	height: 500px;
 
 	p { 
 
@@ -15,6 +19,10 @@
 	p:hover { 
 		background: rgba(0, 0, 255, 0.2);
 	}
+} 
+
+#example_list { 
+	left:300px;
 }
 
 #connection { 
@@ -22,8 +30,8 @@
 	width:50px;
 	height: 50px;
 	background-color:rgba(255, 0, 0, 0.8); 
-	left:300px;
-	bottom:100px;
+	left: 50px;
+	top: 50px;
 	border-radius: 3px;
 }
 

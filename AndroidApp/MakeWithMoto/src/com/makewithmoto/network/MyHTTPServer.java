@@ -25,7 +25,6 @@ import com.makewithmoto.apprunner.api.JUI;
 import com.makewithmoto.events.Events.ProjectEvent;
 import com.makewithmoto.events.Project;
 import com.makewithmoto.events.ProjectManager;
-import com.makewithmoto.network.NanoHTTPD.Response;
 
 import de.greenrobot.event.EventBus;
 
@@ -35,6 +34,7 @@ import de.greenrobot.event.EventBus;
 public class MyHTTPServer extends NanoHTTPD {
 	public static final String TAG = "myHTTPServer";
 	private WeakReference<Context> ctx;
+	private String WEBAPP_DIR = "webapp/";
 
 	private static final Map<String, String> MIME_TYPES = new HashMap<String, String>() {
 		{
@@ -119,9 +119,10 @@ public class MyHTTPServer extends NanoHTTPD {
 				JSONObject obj = new JSONObject(params);
 
 				Project foundProject;
-				String name, newCode;
-				int type;
-				
+				String name, url, newCode;
+				String filter;
+				int projectType = -1; 
+
 				Log.d(TAG, "params " + obj.toString(2));
 
 				String cmd = obj.getString("cmd");
@@ -129,17 +130,25 @@ public class MyHTTPServer extends NanoHTTPD {
 				//fetch code 
 				if (cmd.equals("fetch_code")) {
 					Log.d(TAG, "--> fetch code");
-					name = obj.getString("id");
-					type = obj.getInt("type");
-					foundProject = ProjectManager.getInstance().get(name, type);
+					name = obj.getString("name");
+					url = obj.getString("url");	
 					
-					data.put("code", ProjectManager.getInstance().getCode(foundProject));
+					Project p = new Project(name, url);
+					Log.d("mumu", "------> " + url);
+					data.put("code", ProjectManager.getInstance().getCode(p));
 				
 				//list apps 
 				} else if (cmd.equals("list_apps")) {
 					Log.d(TAG, "--> list apps");
 
-					ArrayList<Project> projects = ProjectManager.getInstance().list(ProjectManager.PROJECT_USER_MADE);
+					filter = obj.getString("filter");
+					
+					if (filter.equals("user")) {
+						projectType = ProjectManager.PROJECT_USER_MADE; 
+					} else if (filter.equals("example")) { 
+						projectType = ProjectManager.PROJECT_EXAMPLE; 
+					}
+					ArrayList<Project> projects = ProjectManager.getInstance().list(projectType);
 					JSONArray projectsArray = new JSONArray();
 					for (Project project : projects) {
 						projectsArray.put(ProjectManager.getInstance().to_json(project));
@@ -151,18 +160,19 @@ public class MyHTTPServer extends NanoHTTPD {
 					Log.d(TAG, "--> run app");
 
 					// Save and run
-					name = obj.getString("id");
-					foundProject = ProjectManager.getInstance().get(name, ProjectManager.PROJECT_USER_MADE);
-					ProjectEvent evt = new ProjectEvent(foundProject, "run");
+					name = obj.getString("name");
+					url = obj.getString("url");
+					
+					ProjectEvent evt = new ProjectEvent(new Project(name, url), "run");
 					EventBus.getDefault().post(evt);
 					ALog.i("Running...");
 
 				//save_code
 				} else if (cmd.equals("push_code")) {
 					Log.d(TAG, "--> push code");
-					name = obj.getString("id");
+					url = obj.getString("id");
 					newCode = obj.getString("code");
-					foundProject = ProjectManager.getInstance().get(name, ProjectManager.PROJECT_USER_MADE);
+					foundProject = ProjectManager.getInstance().get(url, ProjectManager.PROJECT_USER_MADE);
 					ProjectManager.getInstance().writeNewCode(foundProject, newCode);
 					data.put("project", ProjectManager.getInstance().to_json(foundProject));
 					ALog.i("Saved");
@@ -240,7 +250,8 @@ public class MyHTTPServer extends NanoHTTPD {
 		// have the object build the directory structure, if needed.
 		AssetManager am = ctx.get().getAssets();
 		try {
-			InputStream fi = am.open(uri);
+			Log.d(TAG, WEBAPP_DIR  + uri);
+			InputStream fi = am.open(WEBAPP_DIR  + uri);
 
 			// Get MIME type from file name extension, if possible
 			String mime = null;

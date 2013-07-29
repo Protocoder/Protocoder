@@ -1,18 +1,26 @@
 var currentProject = {};
-currentProject.id = "ioio_1"; 
+currentProject.name = "";
+currentProject.url = ""; 
 
 //set projects in project list 
-function setProjects(data) { 
+function setProjectList(filter, data) { 
 	console.log(data.projects);
+
+	var div = "";
+	if (filter == "example") { 
+		div = "#example_list";
+	} else if (filter == "user") {
+		div = "#project_list";
+	}
 
   $(data.projects).each(function(k, project) {
     console.log("-->", k, project); 
    
-    console.log("binding -> " + "#project_list " + "#"+project.name);
+    console.log("binding -> " + div + " #"+project.name);
     $('<p id ="'+project.name+'">' + project.name + '</p>').click(function () {
-      fetch_code(project.name);
-      currentProject.id = project.name;
-    }).appendTo("#project_list");
+      fetch_code(project.name, project.url);
+      currentProject = project;
+    }).appendTo(div);
   
   });
 
