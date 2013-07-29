@@ -2,6 +2,10 @@ var editor;
 var session;
 
 function initEditor() { 
+
+	/* 
+	*	Editor 
+	*/ 
 	editor = ace.edit("mmeditor");
 	session = editor.getSession();
 
@@ -28,7 +32,7 @@ function initEditor() {
 	        sender: 'mmeditor'
 	    },
 	    exec: function(env, args, request) {
-	    	push_code(currentProject.id, session.getValue());
+	    	push_code(currentProject.url, session.getValue());
 	    }
 	});
 
@@ -41,10 +45,32 @@ function initEditor() {
 	        sender: 'mmeditor'
 	    },
 	    exec: function(env, args, request) {
-	    	push_code(currentProject.id, session.getValue());
-	    	run_app(currentProject.id);
+	    	push_code(currentProject.url, session.getValue());
+	    	run_app(currentProject.name, currentProject.url);
 	    }
 	});
+
+
+	/* 
+	* Binding UI 
+	*/
+	var overlayShow = false;
+
+	$("#overlay #toggle").click(function() { 
+		if (overlayShow) {
+			$("#overlay #container").fadeOut(500);
+		} else {
+			$("#overlay #container").fadeIn(500);
+		}
+
+		overlayShow ^= true;
+	});
+	$("#overlay #container #project_list").draggable();
+	$("#overlay #container #example_list").draggable();
+
+	$("#overlay #container #device_status").draggable();
+	$("#overlay #container #help").draggable();
+	$("#overlay #container #connection").draggable();
 
 
 }
