@@ -64,23 +64,37 @@ public class JUI extends JInterface {
 		}
 		
 		public void postLayout(){
+			// TODO: Do we even need this??
 			//  c.get().setContentView(mainLayout);  
 		}
 		
+		
+		
 		@JavascriptInterface
-		public void seekbar(String label, String to, String start,
+		public void seekbar(String label, String min, String max, String progress, boolean circular,
 				final String callbackfn){
 			
+			// Add a seekbar, circular flag to indicate if its a circular seekbar. If the slider position is changed,
+			// call the callback function
+			
 			
 		}
 		
 		@JavascriptInterface
-		public void addTextLabel(String label) {
+		public void addTextLabel(String label, int x, int y, int w, int h ) {
 			//TODO 
+			// Adds a text label to display text on screen
 		}
 		
+		public void input(String label, int x, int y, int w, int h, final String callbackfn){
+			
+			// Adds an edit box. on out of focus calls the callback fn
+			
+		}
+		
+		
 		@JavascriptInterface
-		public void addAToggleButton(final String label, final String callback) {
+		public void addAToggleButton(final String label, int x, int y, int w, int h, boolean initstate, final String callbackfn) {
 			/*
 			moldableFragment.get().addAToggleButton(label, new OnCheckedChangeListener() {
 
@@ -93,8 +107,42 @@ public class JUI extends JInterface {
 			});
 			*/
 			
-			//TODO
+			//TODO: Add a toggle button and set the initial state as initstate, if the button state changes, call the callbackfn
+			// 
 		} 
+		
+		public void checkbox(String label, int x, int y, int w, int h, boolean initstate, final String callbackfn){
+			
+			// Adds a checkbox and set the initial state as initstate. if the button state changes, call the callbackfn
+			
+		}
+		
+		
+		public void radiobutton(String label, int x, int y, int w, int h, boolean initstate,  final String callbackfn){
+			
+			// Adds a radio button and set the initial state as initstate. if the button state changes, call the callbackfn
+			
+		}
+		
+		
+		public void image(String label, int x, int y, int w, int h, String location){
+			
+			// Adds an image from a location on the device. Can we also add a url to load the image from the web?
+			
+		}
+		
+		public void imagebutton(String label, int x, int y, int w, int h, String location, final String callbackfn){
+			
+			// Adds an image button.. on click calls callbackfn 	
+			
+		}
+		
+       public void background(String label, int x, int y, int w, int h, boolean colimg, String color_location){
+			
+			// Sets the background image or color. colimg flag indicates if its color or an image
+			
+		}
+		
 		
 	//	PlotView plotView;
 	//	Plot plot;
