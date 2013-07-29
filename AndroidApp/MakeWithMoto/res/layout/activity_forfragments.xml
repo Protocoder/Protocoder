@@ -20,12 +20,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
-            android:background="#33b5e5"
-            android:paddingBottom="4dp"
-            android:paddingTop="4dp"
-            android:textColor="#fff" />
+            android:background="#aa287ED1"
+            android:padding="8dp"
+            android:textColor="#fff"
+            android:textStyle="bold" />
     </android.support.v4.view.ViewPager>
-
 
     <LinearLayout
         android:id="@+id/ip_container"
@@ -82,6 +81,5 @@
         android:layout_height="fill_parent"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true" />
-
 
 </RelativeLayout>
