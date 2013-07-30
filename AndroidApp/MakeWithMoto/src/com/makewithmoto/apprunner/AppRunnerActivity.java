@@ -46,6 +46,8 @@ public class AppRunnerActivity extends Activity {
                                         "var ui = JUI(Activity);\n" + 
                                         "var JBrowser = Packages.com.makewithmoto.apprunner.api.JBrowser; \n" +
                                         "var browser = JBrowser(Activity);\n" + 
+                                        "var JMakr = Packages.com.makewithmoto.apprunner.api.JMakr; \n" +
+                                        "var makr = JMakr(Activity);\n" + 
                                         "// End of Prepend Section" + "\n";
 
     static final String SCRIPT_POSTFIX = "//Appends text for all scripts \n" + 
