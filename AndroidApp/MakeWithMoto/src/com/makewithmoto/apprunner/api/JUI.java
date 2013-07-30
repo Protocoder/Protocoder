@@ -3,6 +3,7 @@ package com.makewithmoto.apprunner.api;
 import java.io.File;
 import java.io.InputStream;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,11 +30,13 @@ import android.widget.RadioButton;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.makewithmoto.apidoc.APIAnnotation;
 
+@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class JUI extends JInterface {
 
     FrameLayout mMainLayout;
@@ -44,39 +48,24 @@ public class JUI extends JInterface {
 
     private void initializeLayout() {
         if (!isMainLayoutSetup) {
+            //We need to let the view scroll, so we're creating a scroll view
             ScrollView sv = new ScrollView(c.get());
             sv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+
+            //Create the main layout. This is where all the items actually go
             mMainLayout = new FrameLayout(c.get());
             mMainLayout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
             sv.addView(mMainLayout);
 
+            //Set the content view
             c.get().setContentView(sv);
             isMainLayoutSetup = true;
         }
     }
 
-    //This method helps us optimize our bitmap sizes so we Android doesn't implode on itself
-    private static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
-        // Raw height and width of image
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        int inSampleSize = 1;
-
-        if (height > reqHeight || width > reqWidth) {
-
-            // Calculate ratios of height and width to requested height and width
-            final int heightRatio = Math.round((float) height / (float) reqHeight);
-            final int widthRatio = Math.round((float) width / (float) reqWidth);
-
-            // Choose the smallest ratio as inSampleSize value, this will guarantee
-            // a final image with both dimensions larger than or equal to the
-            // requested height and width.
-            inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
-        }
-
-        return inSampleSize;
-    }
-
+    /**
+     * This is what we use to actually position and size the views
+     */
     private void positionView(View v, int x, int y, int w, int h) {
         if (w == -1)
             w = LayoutParams.WRAP_CONTENT;
@@ -88,6 +77,15 @@ public class JUI extends JInterface {
         v.setLayoutParams(params);
     }
 
+    /**
+     * Adds a button to the view
+     * @param label
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     * @param callbackfn
+     */
     @JavascriptInterface
     @APIAnnotation(description = "Creates a button ", example = "ui.button(\"button\"); ")
     public void button(String label, int x, int y, int w, int h, final String callbackfn) {
@@ -102,6 +100,7 @@ public class JUI extends JInterface {
         b.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                //TODO Callback should capture the checked state
                 callback(callbackfn);
             }
         });
@@ -110,13 +109,16 @@ public class JUI extends JInterface {
         mMainLayout.addView(b);
     }
 
-    public void postLayout() {
-        // TODO: Do we even need this??
-        //  c.get().setContentView(mMainLayout);  
-    }
-
-    // @GOPI
-    //API CHANGES!! Max and progress are now an integers. Also, SeekBar doesn't take a min value.
+    /**
+     * Adds a seekbar with a callback function
+     * @param max
+     * @param progress
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     * @param callbackfn
+     */
     //We'll add in the circular view as a nice to have later once all the other widgets are handled.
     @JavascriptInterface
     public void seekbar(int max, int progress, int x, int y, int w, int h, final String callbackfn) {
@@ -138,12 +140,12 @@ public class JUI extends JInterface {
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                // @GOPI: Should we do something here? Any callback  
+                // @GOPI: Should we do something here? Any callback?
             }
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                //When the value changes, call the callback function.
+                //TODO Callback should capture the checked state
                 callback(callbackfn);
             }
         });
@@ -153,19 +155,29 @@ public class JUI extends JInterface {
 
     }
 
+    /**
+     * Adds a TextView. Note that the user doesn't specify font size
+     * @param label
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     */
     @JavascriptInterface
     public void label(String label, int x, int y, int w, int h) {
-
-        initializeLayout();
-        //Create the TextView
-        TextView tv = new TextView(c.get());
-        tv.setText(label);
-        positionView(tv, x, y, w, h);
-
-        //Add the view
-        mMainLayout.addView(tv);
+        int defaultTextSize = 16;
+        label(label, x, y, w, h, defaultTextSize);
     }
-    
+
+    /**
+     * Adds a label, allowing the user to specify font size
+     * @param label
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     * @param textSize
+     */
     @JavascriptInterface
     public void label(String label, int x, int y, int w, int h, int textSize) {
 
@@ -173,13 +185,22 @@ public class JUI extends JInterface {
         //Create the TextView
         TextView tv = new TextView(c.get());
         tv.setText(label);
-        tv.setTextSize((float)textSize);
+        tv.setTextSize((float) textSize);
         positionView(tv, x, y, w, h);
 
         //Add the view
         mMainLayout.addView(tv);
     }
 
+    /**
+     * Adds an EditText view
+     * @param label
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     * @param callbackfn
+     */
     public void input(String label, int x, int y, int w, int h, final String callbackfn) {
 
         initializeLayout();
@@ -202,6 +223,16 @@ public class JUI extends JInterface {
 
     }
 
+    /**
+     * Adds a toggle button
+     * @param label
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     * @param initstate
+     * @param callbackfn
+     */
     @JavascriptInterface
     public void toggleButton(final String label, int x, int y, int w, int h, boolean initstate, final String callbackfn) {
         /*
@@ -227,6 +258,7 @@ public class JUI extends JInterface {
         tb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                //TODO Callback should capture the checked state
                 callback(callbackfn);
             }
         });
@@ -235,6 +267,16 @@ public class JUI extends JInterface {
         mMainLayout.addView(tb);
     }
 
+    /**
+     * Adds a checkbox
+     * @param label
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     * @param initstate
+     * @param callbackfn
+     */
     public void checkbox(String label, int x, int y, int w, int h, boolean initstate, final String callbackfn) {
 
         initializeLayout();
@@ -247,7 +289,7 @@ public class JUI extends JInterface {
         //Add the click callback
         cb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                //FIXME: The callback function needs to take a param for isChecked
+                //TODO Callback should capture the checked state
                 callback(callbackfn);
             }
         });
@@ -257,6 +299,46 @@ public class JUI extends JInterface {
 
     }
 
+    /**
+     * Adds a switch
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     * @param initstate
+     * @param callbackfn
+     */
+    public void toggleswitch(int x, int y, int w, int h, boolean initstate, final String callbackfn) {
+
+        initializeLayout();
+        // Adds a switch. If the state changes, we'll call the callback function
+        Switch s = new Switch(c.get());
+        s.setChecked(initstate);
+        positionView(s, x, y, w, h);
+
+        //Add the click callback
+        s.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                //TODO Callback should capture the checked state
+                callback(callbackfn);
+            }
+        });
+
+        //Add the view
+        mMainLayout.addView(s);
+
+    }
+
+    /**
+     * Adds a radiobutton
+     * @param label
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     * @param initstate
+     * @param callbackfn
+     */
     public void radiobutton(String label, int x, int y, int w, int h, boolean initstate, final String callbackfn) {
 
         initializeLayout();
@@ -269,7 +351,7 @@ public class JUI extends JInterface {
         //Add the click callback
         rb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                //FIXME: The callback function needs to take a param for isChecked
+                //TODO Callback should capture the checked state
                 callback(callbackfn);
             }
         });
@@ -279,6 +361,14 @@ public class JUI extends JInterface {
 
     }
 
+    /**
+     * Adds an imageview
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     * @param imagePath
+     */
     public void image(int x, int y, int w, int h, String imagePath) {
 
         initializeLayout();
@@ -295,6 +385,14 @@ public class JUI extends JInterface {
 
     }
 
+    /**
+     * Adds an image from a URL
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     * @param address
+     */
     public void webimage(int x, int y, int w, int h, String address) {
 
         initializeLayout();
@@ -310,38 +408,38 @@ public class JUI extends JInterface {
 
     }
 
+    /**
+     * Adds an image button with the default background
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     * @param imagePath
+     * @param callbackfn
+     */
     public void imagebutton(int x, int y, int w, int h, String imagePath, final String callbackfn) {
-
-        initializeLayout();
-        // Create and position the image button
-        ImageButton ib = new ImageButton(c.get());
-        positionView(ib, x, y, w, h);
-
-        //Add image asynchronously
-        new SetImageTask(ib).execute(imagePath);
-
-        //Set on click behavior
-        ib.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                callback(callbackfn);
-            }
-        });
-
-        //Add the view
-        mMainLayout.addView(ib);
-
+        imagebutton(x, y, w, h, imagePath, false, callbackfn);
     }
-    
+
+    /**
+     * Adds an image with the option to hide the default background
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     * @param imagePath
+     * @param hideBackground
+     * @param callbackfn
+     */
     public void imagebutton(int x, int y, int w, int h, String imagePath, boolean hideBackground, final String callbackfn) {
 
         initializeLayout();
         // Create and position the image button
         ImageButton ib = new ImageButton(c.get());
         positionView(ib, x, y, w, h);
-        
+
         //Hide the background if desired
-        if (hideBackground){
+        if (hideBackground) {
             ib.setBackgroundResource(0);
         }
 
@@ -360,33 +458,47 @@ public class JUI extends JInterface {
         mMainLayout.addView(ib);
 
     }
-    
-    public void setPadding(int left, int top, int right, int bottom){
+
+    /**
+     * Set padding on the entire view
+     * @param left
+     * @param top
+     * @param right
+     * @param bottom
+     */
+    public void setPadding(int left, int top, int right, int bottom) {
         initializeLayout();
         mMainLayout.setPadding(left, top, right, bottom);
     }
 
+    /**
+     * Set background color for the main layout via int
+     * @param color
+     */
     public void backgroundColor(int color) {
         initializeLayout();
         mMainLayout.setBackgroundColor(color);
     }
 
+    /**
+     * The more common way to set background color, set bg color via RGB
+     * @param red
+     * @param green
+     * @param blue
+     */
     public void backgroundColor(int red, int green, int blue) {
         initializeLayout();
         mMainLayout.setBackgroundColor(Color.rgb(red, green, blue));
     }
 
+    /**
+     * Set a background image
+     * @param imagePath
+     */
     public void backgroundImage(String imagePath) {
         initializeLayout();
-        File imgFile = new File(imagePath);
-        if (imgFile.exists()) {
-            //Get the bitmap
-            Bitmap bmp = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-            //Convert the bitmap to BitmapDrawable
-            Drawable d = new BitmapDrawable(c.get().getResources(), bmp);
-            //Set the background
-            mMainLayout.setBackground(d);
-        }
+        //Add the bg image asynchronously
+        new SetBgImageTask(mMainLayout).execute(imagePath);
     }
 
     //	PlotView plotView;
@@ -416,8 +528,12 @@ public class JUI extends JInterface {
     @JavascriptInterface
     public void startTrackingTouches(String b) {
     }
-    
-    //We need to set the web image asynchronously 
+
+    /**
+     * This class lets us download an image asynchronously without blocking the UI thread
+     * @author ncbq76
+     *
+     */
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
 
@@ -442,8 +558,12 @@ public class JUI extends JInterface {
             bmImage.setImageBitmap(result);
         }
     }
-    
-    //We need to set the bitmap image asynchronously 
+
+    /**
+     * This class lets us set images from file asynchronously
+     * @author ncbq76
+     *
+     */
     private class SetImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
 
@@ -468,7 +588,38 @@ public class JUI extends JInterface {
             bmImage.setImageBitmap(result);
         }
     }
-    
-    
-    
+
+    /**
+     * This class lets us set the background asynchronously
+     * @author ncbq76
+     *
+     */
+    //We need to set the bitmap image asynchronously 
+    private class SetBgImageTask extends AsyncTask<String, Void, Bitmap> {
+        FrameLayout fl;
+
+        public SetBgImageTask(FrameLayout fl) {
+            this.fl = fl;
+        }
+
+        protected Bitmap doInBackground(String... paths) {
+            String imagePath = paths[0];
+            File imgFile = new File(imagePath);
+            if (imgFile.exists()) {
+                //Get the bitmap with appropriate options
+                final BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inPurgeable = true;
+                Bitmap bmp = BitmapFactory.decodeFile(imagePath, options);
+                return bmp;
+            }
+            return null;
+        }
+
+        @SuppressWarnings("deprecation")
+        protected void onPostExecute(Bitmap result) {
+            Drawable d = new BitmapDrawable(c.get().getResources(), result);
+            fl.setBackgroundDrawable(d);
+        }
+    }
+
 }
