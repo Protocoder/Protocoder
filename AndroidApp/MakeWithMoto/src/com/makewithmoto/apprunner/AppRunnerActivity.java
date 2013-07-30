@@ -35,7 +35,7 @@ import com.makewithmoto.R;
 public class AppRunnerActivity extends Activity {
 
     static ScriptContextFactory contextFactory;    
-    public Interpreter interpreter;
+    public Interpreter interpreter; 
 
     String scriptFileName;
     static final String SCRIPT_PREFIX = "//Prepend text for all scripts \n" + "var Test = Packages.com.makewithmoto.apprunner.api.Test; \n" + 
