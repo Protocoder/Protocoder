@@ -6,165 +6,191 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.webkit.JavascriptInterface;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.makewithmoto.apidoc.APIAnnotation;
 
-
 public class JUI extends JInterface {
 
-	LinearLayout mainLayout;
-	Boolean isMainLayoutSetup = false;
+    FrameLayout mMainLayout;
+    Boolean isMainLayoutSetup = false;
 
+    public JUI(Activity a) {
+        super(a);
+    }
 
-		public JUI(Activity a) {
-          super(a);
-        
-		}
+    private void initializeLayout() {
+        if (!isMainLayoutSetup) {
+            mMainLayout = new FrameLayout(c.get());
+            mMainLayout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
-		private void initializeLayout(){
-			if(!isMainLayoutSetup){
-			  mainLayout = new LinearLayout(c.get());
-			  mainLayout.setOrientation(LinearLayout.VERTICAL);
-			  mainLayout.setLayoutParams(new LayoutParams(
-			        LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
-			  
-			  
-			  c.get().setContentView(mainLayout);
-			  isMainLayoutSetup = true;
-			}
-		}
-		
+            c.get().setContentView(mMainLayout);
+            isMainLayoutSetup = true;
+        }
+    }
 
-		@JavascriptInterface
-		@APIAnnotation(description = "Creates a button ", example = "ui.button(\"button\"); ")
-		public void button(String label, int x, int y, int w, int h, final String callbackfn){
-			initializeLayout();
-			
-			Button mButton = new Button(c.get());
-			RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(w, h);
-			params.leftMargin = x;
-			params.topMargin = y;
-			mButton.setText(label);
+    private void positionView(View v, int x, int y) {
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        v.setLayoutParams(params);
+    }
 
-			mButton.setLayoutParams(params);
-			
-			
-			mButton.setOnClickListener(new OnClickListener()
-			{
-			    @Override
-			    public void onClick(View v) {
-			        callback(callbackfn);        
-			    }
-			});
-			
+    private void positionView(View v, int x, int y, int w, int h) {
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(w, h);
+        params.leftMargin = x;
+        params.topMargin = y;
+        v.setLayoutParams(params);
+    }
 
-			mainLayout.addView(mButton);
-		}
-		
-		public void postLayout(){
-			// TODO: Do we even need this??
-			//  c.get().setContentView(mainLayout);  
-		}
-		
-		
-		
-		@JavascriptInterface
-		public void seekbar(String label, String min, String max, String progress, boolean circular,
-				final String callbackfn){
-			
-			// Add a seekbar, circular flag to indicate if its a circular seekbar. If the slider position is changed,
-			// call the callback function
-			
-			
-		}
-		
-		@JavascriptInterface
-		public void addTextLabel(String label, int x, int y, int w, int h ) {
-			//TODO 
-			// Adds a text label to display text on screen
-		}
-		
-		public void input(String label, int x, int y, int w, int h, final String callbackfn){
-			
-			// Adds an edit box. on out of focus calls the callback fn
-			
-		}
-		
-		
-		@JavascriptInterface
-		public void addAToggleButton(final String label, int x, int y, int w, int h, boolean initstate, final String callbackfn) {
-			/*
-			moldableFragment.get().addAToggleButton(label, new OnCheckedChangeListener() {
+    @JavascriptInterface
+    @APIAnnotation(description = "Creates a button ", example = "ui.button(\"button\"); ")
+    public void button(String label, int x, int y, int w, int h, final String callbackfn) {
+        initializeLayout();
 
-				@Override
-				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-					Log.d("addAToggleButton", "is checked: " + isChecked);
-					applicationWebView.runJavascript("window['" + callback + "']('"
-							+ isChecked + "')");
-				}
-			});
-			*/
-			
-			//TODO: Add a toggle button and set the initial state as initstate, if the button state changes, call the callbackfn
-			// 
-		} 
-		
-		public void checkbox(String label, int x, int y, int w, int h, boolean initstate, final String callbackfn){
-			
-			// Adds a checkbox and set the initial state as initstate. if the button state changes, call the callbackfn
-			
-		}
-		
-		
-		public void radiobutton(String label, int x, int y, int w, int h, boolean initstate,  final String callbackfn){
-			
-			// Adds a radio button and set the initial state as initstate. if the button state changes, call the callbackfn
-			
-		}
-		
-		
-		public void image(String label, int x, int y, int w, int h, String location){
-			
-			// Adds an image from a location on the device. Can we also add a url to load the image from the web?
-			
-		}
-		
-		public void imagebutton(String label, int x, int y, int w, int h, String location, final String callbackfn){
-			
-			// Adds an image button.. on click calls callbackfn 	
-			
-		}
-		
-       public void background(String label, int x, int y, int w, int h, boolean colimg, String color_location){
-			
-			// Sets the background image or color. colimg flag indicates if its color or an image
-			
-		}
-		
-		
-	//	PlotView plotView;
-	//	Plot plot;
-		
-		@JavascriptInterface
-		public void addPlot(final String callback) {
-	//		plotView = moldableFragment.get().addPlot();
-	//		plot = plotView.new Plot(Color.RED);
-	//		plotView.addPlot(plot);
-		} 
+        //Create the button
+        Button b = new Button(c.get());
+        b.setText(label);
+        positionView(b, x, y, w, h);
 
-		@JavascriptInterface 
-		public void addPlotValue(float value) { 
-	//		plotView.setValue(plot, value);
-		}
+        //Set on click behavior
+        b.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callback(callbackfn);
+            }
+        });
 
-		@JavascriptInterface
-		public void showToast(final String text, final String duration) {
-	//		moldableFragment.get().showToast(text, duration);
-		}
+        //Add the view to the layout
+        mMainLayout.addView(b);
+    }
 
-		@JavascriptInterface
-		public void startTrackingTouches(String b) {
-		}
+    public void postLayout() {
+        // TODO: Do we even need this??
+        //  c.get().setContentView(mMainLayout);  
+    }
+
+    @JavascriptInterface
+    public void seekbar(String label, String min, String max, String progress, boolean circular, final String callbackfn) {
+
+        // Add a seekbar, circular flag to indicate if its a circular seekbar. If the slider position is changed,
+        // call the callback function
+
+    }
+
+    @JavascriptInterface
+    public void addTextLabel(String label, int x, int y, int w, int h) {
+        //TODO 
+        TextView tv = new TextView(c.get());
+        tv.setText(label);
+        positionView(tv, x, y, w, h);
+
+        mMainLayout.addView(tv);
+    }
+
+    public void input(String label, int x, int y, int w, int h, final String callbackfn) {
+
+        // Adds an edit box. on out of focus calls the callback fn
+
+    }
+
+    @JavascriptInterface
+    public void addAToggleButton(final String label, int x, int y, int w, int h, boolean initstate, final String callbackfn) {
+        /*
+        moldableFragment.get().addAToggleButton(label, new OnCheckedChangeListener() {
+
+        	@Override
+        	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        		Log.d("addAToggleButton", "is checked: " + isChecked);
+        		applicationWebView.runJavascript("window['" + callback + "']('"
+        				+ isChecked + "')");
+        	}
+        });
+        */
+
+        //TODO: Add a toggle button and set the initial state as initstate, if the button state changes, call the callbackfn
+        // 
+    }
+
+    public void checkbox(String label, int x, int y, int w, int h, boolean initstate, final String callbackfn) {
+
+        // Adds a checkbox and set the initial state as initstate. if the button state changes, call the callbackfn
+
+    }
+
+    public void radiobutton(String label, int x, int y, int w, int h, boolean initstate, final String callbackfn) {
+
+        //Create and add a radiobutton
+
+    }
+
+    public void image(String label, int x, int y, int w, int h, String location) {
+
+        // Create and position the image view
+        ImageView iv = new ImageButton(c.get());
+        iv.setContentDescription(label);
+        positionView(iv, x, y, w, h);
+
+        //Add the view
+        mMainLayout.addView(iv);
+
+    }
+
+    public void imagebutton(String label, int x, int y, int w, int h, String location, final String callbackfn) {
+
+        // Create and position the image button
+        ImageButton ib = new ImageButton(c.get());
+        ib.setContentDescription(label);
+        positionView(ib, x, y, w, h);
+
+        //TODO: Set the image file based on location
+
+        //Set on click behavior
+        ib.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callback(callbackfn);
+            }
+        });
+
+        //Add the view
+        mMainLayout.addView(ib);
+
+    }
+
+    public void background(String label, int x, int y, int w, int h, boolean colimg, String color_location) {
+        // Sets the background image or color. colimg flag indicates if its color or an image
+    }
+
+    //	PlotView plotView;
+    //	Plot plot;
+
+    @JavascriptInterface
+    public void addPlot(final String callback) {
+        //		plotView = moldableFragment.get().addPlot();
+        //		plot = plotView.new Plot(Color.RED);
+        //		plotView.addPlot(plot);
+    }
+
+    @JavascriptInterface
+    public void addPlotValue(float value) {
+        //		plotView.setValue(plot, value);
+    }
+
+    @JavascriptInterface
+    public void showToast(final String text, final String duration) {
+        if (duration.equalsIgnoreCase("long")) {//HSHIEH: Please use the correct string for duration. In my opinion it should either be "LONG" or "LENGTH_LONG"
+            Toast.makeText(c.get(), text, Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(c.get(), text, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @JavascriptInterface
+    public void startTrackingTouches(String b) {
+    }
 }
