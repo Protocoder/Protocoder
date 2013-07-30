@@ -1,7 +1,11 @@
 package com.makewithmoto.apprunner.api;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -12,6 +16,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
@@ -28,6 +34,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -47,10 +54,13 @@ public class JUI extends JInterface {
 
     private void initializeLayout() {
         if (!isMainLayoutSetup) {
+            ScrollView sv = new ScrollView(c.get());
+            sv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
             mMainLayout = new FrameLayout(c.get());
             mMainLayout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+            sv.addView(mMainLayout);
 
-            c.get().setContentView(mMainLayout);
+            c.get().setContentView(sv);
             isMainLayoutSetup = true;
         }
     }
@@ -121,6 +131,7 @@ public class JUI extends JInterface {
     @JavascriptInterface
     public void seekbar(int max, int progress, int x, int y, int w, int h, final String callbackfn) {
 
+        initializeLayout();
         //Create the position the view
         SeekBar sb = new SeekBar(c.get());
         sb.setMax(max);
@@ -153,8 +164,9 @@ public class JUI extends JInterface {
     }
 
     @JavascriptInterface
-    public void addTextLabel(String label, int x, int y, int w, int h) {
+    public void label(String label, int x, int y, int w, int h) {
 
+        initializeLayout();
         //Create the TextView
         TextView tv = new TextView(c.get());
         tv.setText(label);
@@ -163,9 +175,24 @@ public class JUI extends JInterface {
         //Add the view
         mMainLayout.addView(tv);
     }
+    
+    @JavascriptInterface
+    public void label(String label, int x, int y, int w, int h, int textSize) {
+
+        initializeLayout();
+        //Create the TextView
+        TextView tv = new TextView(c.get());
+        tv.setText(label);
+        tv.setTextSize((float)textSize);
+        positionView(tv, x, y, w, h);
+
+        //Add the view
+        mMainLayout.addView(tv);
+    }
 
     public void input(String label, int x, int y, int w, int h, final String callbackfn) {
 
+        initializeLayout();
         //Create view
         EditText et = new EditText(c.get());
         et.setHint(label);
@@ -199,6 +226,7 @@ public class JUI extends JInterface {
         });
         */
 
+        initializeLayout();
         //Create the view
         ToggleButton tb = new ToggleButton(c.get());
         tb.setChecked(initstate);
@@ -219,6 +247,7 @@ public class JUI extends JInterface {
 
     public void checkbox(String label, int x, int y, int w, int h, boolean initstate, final String callbackfn) {
 
+        initializeLayout();
         // Adds a checkbox and set the initial state as initstate. if the button state changes, call the callbackfn
         CheckBox cb = new CheckBox(c.get());
         cb.setChecked(initstate);
@@ -240,6 +269,7 @@ public class JUI extends JInterface {
 
     public void radiobutton(String label, int x, int y, int w, int h, boolean initstate, final String callbackfn) {
 
+        initializeLayout();
         //Create and position the radio button
         RadioButton rb = new RadioButton(c.get());
         rb.setChecked(initstate);
@@ -261,27 +291,13 @@ public class JUI extends JInterface {
 
     public void image(int x, int y, int w, int h, String imagePath) {
 
+        initializeLayout();
         // Create and position the image view
         final ImageView iv = new ImageView(c.get());
         positionView(iv, x, y, w, h);
 
         //Add the image from file
-        File imgFile = new File(imagePath);
-        if (imgFile.exists()) {
-            //Get the bitmap with appropriate options
-            final BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inPurgeable = true;
-            options.inJustDecodeBounds = true;
-            Bitmap bmp = BitmapFactory.decodeFile(imgFile.getAbsolutePath(), options);
-
-            //Get the inSampleSize
-            options.inSampleSize = calculateInSampleSize(options, iv.getWidth(), iv.getHeight());
-
-            //Decode bitmap with just the inSampleSize
-            options.inJustDecodeBounds = false;
-            //Set the bitmap to the ImageView
-            iv.setImageBitmap(bmp);
-        }
+        new SetImageTask(iv).execute(imagePath);
 
         //Add the view
         iv.setBackgroundColor(0x33b5e5);
@@ -291,27 +307,13 @@ public class JUI extends JInterface {
 
     public void webimage(int x, int y, int w, int h, String address) {
 
+        initializeLayout();
         // Create and position the image view
         final ImageView iv = new ImageView(c.get());
         positionView(iv, x, y, w, h);
 
-        //Get image from url
-        URL url;
-        try {
-            url = new URL(address);
-            final BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inPurgeable = true;
-            Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            //Get the inSampleSize
-            options.inSampleSize = calculateInSampleSize(options, iv.getWidth(), iv.getHeight());
-            //Decode bitmap with just the inSampleSize
-            options.inJustDecodeBounds = false;
-            iv.setImageBitmap(bmp);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        //Add image asynchronously
+        new DownloadImageTask(iv).execute(address);
 
         //Add the view
         mMainLayout.addView(iv);
@@ -320,24 +322,13 @@ public class JUI extends JInterface {
 
     public void imagebutton(int x, int y, int w, int h, String imagePath, final String callbackfn) {
 
+        initializeLayout();
         // Create and position the image button
         ImageButton ib = new ImageButton(c.get());
         positionView(ib, x, y, w, h);
 
-        //Add the image from file
-        File imgFile = new File(imagePath);
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inPurgeable = true;
-        options.inJustDecodeBounds = true;
-        Bitmap bmp = BitmapFactory.decodeFile(imgFile.getAbsolutePath(), options);
-
-        //Get the inSampleSize
-        options.inSampleSize = calculateInSampleSize(options, ib.getWidth(), ib.getHeight());
-
-        //Decode bitmap with just the inSampleSize
-        options.inJustDecodeBounds = false;
-        //Set the bitmap to the ImageView
-        ib.setImageBitmap(bmp);
+        //Add image asynchronously
+        new SetImageTask(ib).execute(imagePath);
 
         //Set on click behavior
         ib.setOnClickListener(new OnClickListener() {
@@ -351,16 +342,52 @@ public class JUI extends JInterface {
         mMainLayout.addView(ib);
 
     }
+    
+    public void imagebutton(int x, int y, int w, int h, String imagePath, boolean hideBackground, final String callbackfn) {
+
+        initializeLayout();
+        // Create and position the image button
+        ImageButton ib = new ImageButton(c.get());
+        positionView(ib, x, y, w, h);
+        
+        //Hide the background if desired
+        if (hideBackground){
+            ib.setBackgroundResource(0);
+        }
+
+        //Add image asynchronously
+        new SetImageTask(ib).execute(imagePath);
+
+        //Set on click behavior
+        ib.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callback(callbackfn);
+            }
+        });
+
+        //Add the view
+        mMainLayout.addView(ib);
+
+    }
+    
+    public void setPadding(int left, int top, int right, int bottom){
+        initializeLayout();
+        mMainLayout.setPadding(left, top, right, bottom);
+    }
 
     public void backgroundColor(int color) {
+        initializeLayout();
         mMainLayout.setBackgroundColor(color);
     }
 
     public void backgroundColor(int red, int green, int blue) {
+        initializeLayout();
         mMainLayout.setBackgroundColor(Color.rgb(red, green, blue));
     }
 
     public void backgroundImage(String imagePath) {
+        initializeLayout();
         File imgFile = new File(imagePath);
         if (imgFile.exists()) {
             //Get the bitmap
@@ -399,4 +426,59 @@ public class JUI extends JInterface {
     @JavascriptInterface
     public void startTrackingTouches(String b) {
     }
+    
+    //We need to set the web image asynchronously 
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap bmp = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                bmp = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return bmp;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+        }
+    }
+    
+    //We need to set the bitmap image asynchronously 
+    private class SetImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public SetImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... paths) {
+            String imagePath = paths[0];
+            File imgFile = new File(imagePath);
+            if (imgFile.exists()) {
+                //Get the bitmap with appropriate options
+                final BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inPurgeable = true;
+                Bitmap bmp = BitmapFactory.decodeFile(imagePath, options);
+                return bmp;
+            }
+            return null;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+        }
+    }
+    
+    
+    
 }
