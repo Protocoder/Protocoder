@@ -1,0 +1,11 @@
+ui.button("Button", 100,100,500,100, function(){android.vibrate(500);});
+ui.seekbar(150, 150, 100, 200, 500, 100, function(){android.vibrate(500);});
+ui.addTextLabel("I love ice cream", 100, 100, 500, 100);
+ui.input("Type something here", 100, 300, 500, 100, function(){android.vibrate(500);});
+ui.toggleButton("I'm toggleable", 100, 500, 500, 100, true, function(){android.vibrate(500);});
+ui.checkbox("Check me out bro", 100, 200, 500, 100, true, function(){android.vibrate(500);});
+ui.radiobutton("Why am I called a radio button", 0, 0, 500, 100, true, function(){android.vibrate(500);});
+ui.image(100, 100, 300, 300, "./makewithmotologo.png");
+ui.webimage(100, 100, 300, 300, "http://images.latinospost.com/data/images/full/22151/pokemon.jpg");
+ui.imagebutton(100, 100, 300, 300,"./makewithmotologo.png", function(){android.vibrate(500);});
+ui.backgroundColor(51, 181, 229);
