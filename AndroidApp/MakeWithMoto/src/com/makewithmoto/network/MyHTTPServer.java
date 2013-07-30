@@ -170,11 +170,14 @@ public class MyHTTPServer extends NanoHTTPD {
 				//save_code
 				} else if (cmd.equals("push_code")) {
 					Log.d(TAG, "--> push code");
-					url = obj.getString("id");
+					name = obj.getString("name");
+					url = obj.getString("url");
 					newCode = obj.getString("code");
-					foundProject = ProjectManager.getInstance().get(url, ProjectManager.PROJECT_USER_MADE);
-					ProjectManager.getInstance().writeNewCode(foundProject, newCode);
-					data.put("project", ProjectManager.getInstance().to_json(foundProject));
+					
+					
+					Project p = new Project(name, url);
+					ProjectManager.getInstance().writeNewCode(p, newCode);
+					data.put("project", ProjectManager.getInstance().to_json(p));
 					ALog.i("Saved");
 				
 				//create new app
