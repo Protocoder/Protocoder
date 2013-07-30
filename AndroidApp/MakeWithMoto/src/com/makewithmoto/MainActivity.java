@@ -269,7 +269,7 @@ public class MainActivity extends BaseActivity implements
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				ws.send(obj);
+				//ws.send(obj);
 
 			}
 		});
