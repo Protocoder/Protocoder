@@ -1,5 +1,7 @@
 package com.makewithmoto.base;
 
+import android.os.Build;
+
 public class AppSettings { 
 	
 	// == APP SETTINGS ========== 
@@ -13,6 +15,7 @@ public class AppSettings {
 	public static boolean screenAlwaysOn = false;
 	public static boolean closeWithBack = true;
 	
+	public static int CURRENT_VERSION = Build.VERSION_CODES.ICE_CREAM_SANDWICH;
 	
 	public static String appFolder = "makewithmoto";
 	public static String SERVER_ADDRESS = "";

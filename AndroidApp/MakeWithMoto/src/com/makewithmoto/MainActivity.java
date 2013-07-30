@@ -20,6 +20,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -155,7 +156,11 @@ public class MainActivity extends BaseActivity implements
 				setAnimation.play(alphaAnimator).with(shiftAnimator);
 				setAnimation.start();
 
-				obs.removeOnGlobalLayoutListener(this);
+				if (AppSettings.CURRENT_VERSION > Build.VERSION.SDK_INT) {
+					obs.removeOnGlobalLayoutListener(this);
+				} else { 
+					obs.removeGlobalOnLayoutListener(this);
+				}
 			}
 
 		});

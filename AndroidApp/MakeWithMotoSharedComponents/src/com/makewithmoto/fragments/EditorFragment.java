@@ -15,11 +15,14 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.makewithmoto.base.BaseFragment;
+import com.makewithmoto.events.Events.ProjectEvent;
 import com.makewithmoto.events.Project;
 import com.makewithmoto.events.ProjectManager;
 import com.makewithmoto.sharedcomponents.R;
 import com.makewithmoto.utils.Fonts;
 import com.makewithmoto.utils.TextUtils;
+
+import de.greenrobot.event.EventBus;
 
 @SuppressLint("NewApi")
 public class EditorFragment extends BaseFragment {
@@ -29,8 +32,9 @@ public class EditorFragment extends BaseFragment {
     }
 
     // TODO change this dirty hack
-    private static final int MENU_SAVE = 10;
-    private static final int MENU_BACK = 11;
+    private static final int MENU_RUN = 10;
+    private static final int MENU_SAVE = 11;
+    private static final int MENU_BACK = 12;
     private float currentSize;
     EditText edit;
     private View v;
@@ -143,6 +147,7 @@ public class EditorFragment extends BaseFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
+        menu.add(1, MENU_RUN, 0, "Run").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         menu.add(1, MENU_SAVE, 0, "Save").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -151,6 +156,9 @@ public class EditorFragment extends BaseFragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
+        case MENU_RUN:
+        	run();
+        	return true;
         case MENU_SAVE:
             save();
             return true;
@@ -162,12 +170,18 @@ public class EditorFragment extends BaseFragment {
 
     public void loadProject(Project project) {
         currentProject = project;
-        Log.d("qq", "" + project + " " + edit);
         if (project != null) {
             edit.setText(ProjectManager.getInstance().getCode(project));
         } else {
             edit.setText("Project loading failed");
         }
+    }
+    
+    public void run() {
+    
+		ProjectEvent evt = new ProjectEvent(new Project(currentProject.getName(), currentProject.getUrl()), "run");
+		EventBus.getDefault().post(evt);
+	
     }
 
     public void save() {

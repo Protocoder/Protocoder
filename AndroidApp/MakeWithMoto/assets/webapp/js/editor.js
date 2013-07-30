@@ -32,7 +32,8 @@ function initEditor() {
 	        sender: 'mmeditor'
 	    },
 	    exec: function(env, args, request) {
-	    	push_code(currentProject.url, session.getValue());
+	    	currentProject.code = session.getValue();
+	    	push_code(currentProject);
 	    }
 	});
 
