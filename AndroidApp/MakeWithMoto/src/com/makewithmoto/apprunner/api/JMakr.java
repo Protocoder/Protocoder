@@ -38,17 +38,17 @@ public class JMakr extends JInterface {
 	
 	@JavascriptInterface
 	@APIAnnotation(description = "makes the phone vibrate", example = "android.vibrate(500);")	
-	public void start(String fn) {
+	public void start() {
 		
 		try {
 			mSerialPort = getSerialPort();
 			mOutputStream = mSerialPort.getOutputStream();
 			mInputStream = mSerialPort.getInputStream();
 			
-			this.callbackfn = fn;
+		
 
 			/* Create a receiving thread */
-			mReadThread = new ReadThread(fn);
+			mReadThread = new ReadThread();
 			mReadThread.start();
 		} catch (SecurityException e) {
 			// DisplayError(R.string.error_security);
@@ -76,11 +76,6 @@ public class JMakr extends JInterface {
 	
 	private class ReadThread extends Thread {
 		
-		private String callbackfn;
-		
-		ReadThread(String fn){
-			this.callbackfn = fn; 
-		}
 
 		@Override
 		public void run() {
@@ -226,14 +221,14 @@ public class JMakr extends JInterface {
 	public void closeSerialPort() {
 		if (mSerialPort != null) {
 			mSerialPort.close();
-			mSerialPort = null;
+			mSerialPort = null; 
 		}
 	}
 		
 	
 	public void resume() {
 		if (isStarted ) { 
-			start(this.callbackfn);		
+			start();		
 		}
 	}
 	
