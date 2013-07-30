@@ -11,11 +11,12 @@ function list_apps(filter) {
 }
 
 //push the code
-function push_code(id, code) { 
+function push_code(project) { 
 	var obj = {};
 	obj.cmd = "push_code";
-	obj.id = id;
-	obj.code = escape(code);
+	obj.name = project.name;
+	obj.url = project.url;
+	obj.code = escape(project.code);
 	$.get("cmd="+JSON.stringify(obj), function(data) {
  		//alert('Load was performed. ' + data);
 	});
