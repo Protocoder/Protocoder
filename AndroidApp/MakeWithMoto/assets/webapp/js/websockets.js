@@ -1,8 +1,10 @@
+var remoteIP = 'localhost';
+
 var ws; 
 
 function testWebsockets() {
   // Write your code in the same way as for native WebSocket:
-  ws = new WebSocket('ws://localhost:8081');
+  ws = new WebSocket('ws://'+ remoteIP +':8081');
 
   ws.onopen = function() {
     connected();
@@ -61,7 +63,7 @@ function testWebsockets() {
     }
 
     if (result.acc_x != null) {
-      plot1(result.acc_x, ""); 
+      //plot1(result.acc_x, ""); 
 
     } 
 

@@ -1,11 +1,12 @@
 
 //listing apps in the future we might filter the listing
-function list_apps() { 
+function list_apps(filter) { 
 	var obj = {};
 	obj.cmd = "list_apps";
-	obj.filter = "all";
+	obj.filter = filter;
+
 	$.get("cmd="+JSON.stringify(obj), function(data) {
-		setProjects(JSON.parse(data));
+		setProjectList(filter, JSON.parse(data));
 	});
 }
 
@@ -21,20 +22,22 @@ function push_code(id, code) {
 }
 
 //fetch the code
-function fetch_code(id) { 
+function fetch_code(name, url) { 
 	var obj = {};
 	obj.cmd = "fetch_code";
-	obj.id = id;
+	obj.name = name;
+	obj.url = url;
 	$.get("cmd="+JSON.stringify(obj), function(data) {
 		var code = JSON.parse(data);
 		setCode(unescape(code.code));
 	});
 }
 
-function run_app(id) {
+function run_app(name, url) {
 	var obj = {};
 	obj.cmd = "run_app";
-	obj.id = id;
+	obj.name = name;
+	obj.url = url;
 	$.get("cmd="+JSON.stringify(obj), function(data) {
  		//alert('Load was performed. ' + data);
 	});
@@ -70,7 +73,7 @@ function get_documentation(id) {
 
 
 function get_camera() {
-	var url = "http://192.168.137.2:8080/takePic";
+	var url = 'http://'+localhost+':8080/takePic';
 
 	$.get(url, function(data) { 
 		
