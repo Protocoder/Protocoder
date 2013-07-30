@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.media.AudioManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.support.v4.app.Fragment;
@@ -53,8 +54,12 @@ public class BaseActivity extends FragmentActivity {
     }
 
     protected void setHideHomeBar() {
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-
+    	
+		if (Build.VERSION.SDK_INT > AppSettings.CURRENT_VERSION) {
+			getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+		} else { 
+			
+		}
     }
 
     public void setScreenAlwaysOn() {
