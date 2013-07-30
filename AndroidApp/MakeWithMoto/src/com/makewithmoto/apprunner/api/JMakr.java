@@ -30,6 +30,7 @@ public class JMakr extends JInterface {
 	private InputStream mInputStream;
 	private ReadThread mReadThread;
 	private String callbackfn;
+	private String receivedData;
 
 	public JMakr(Activity a) {
 		super(a);
@@ -78,7 +79,7 @@ public class JMakr extends JInterface {
 		private String callbackfn;
 		
 		ReadThread(String fn){
-			this.callbackfn = fn;
+			this.callbackfn = fn; 
 		}
 
 		@Override
@@ -96,8 +97,8 @@ public class JMakr extends JInterface {
 						c.get().runOnUiThread(new Runnable() {
 							public void run() {
 
-						//		receivedData = new String(buffer, 0, size);
-								callback(callbackfn);     //TODO: Can't currently pass data back in callbacks..need to investigate this
+								receivedData = new String(buffer, 0, size);
+								callback("OnSerialRead("+receivedData+");");    
 							}
 						});
 
