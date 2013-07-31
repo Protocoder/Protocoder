@@ -17,10 +17,10 @@ public class JBrowser extends JInterface {
 	@JavascriptInterface
 	@APIAnnotation(description = "displays an html page", example = "browser.loadData(\"<html><head></head><body><h1>Hello World!!</h1></body></html>\")")
 	public void loadData(String content) {
-		webview = new WebView(c.get());
+		webview = new WebView(a.get());
 	    webview.getSettings().setJavaScriptEnabled(true);
-	    webview.addJavascriptInterface(c.get(), "activity");
-	    c.get().setContentView(webview);    
+	    webview.addJavascriptInterface(a.get(), "activity");
+	    a.get().setContentView(webview);    
 	    
 	    
 	    webview.loadData(content, "text/html", "utf-8");	
@@ -29,10 +29,10 @@ public class JBrowser extends JInterface {
 	@JavascriptInterface
 	@APIAnnotation(description = "displays an html url", example = "browser.loadUrl(\"http://www.google.com\")")
 	public void loadUrl(String url) {
-		webview = new WebView(c.get());
+		webview = new WebView(a.get());
 	    webview.getSettings().setJavaScriptEnabled(true);
-	    webview.addJavascriptInterface(c.get(), "activity");
-	    c.get().setContentView(webview);    
+	    webview.addJavascriptInterface(a.get(), "activity");
+	    a.get().setContentView(webview);    
 	    
 	    
 	    webview.loadUrl(url);	

@@ -20,8 +20,8 @@ public class BaseMainApp extends Application {
 		baseDir = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + 
 				AppSettings.appFolder + File.separator;
 		
-		projectsDir = baseDir + File.separator + "projects";
-		examplesDir = baseDir + File.separator + "examples";
+		projectsDir = baseDir + "projects";
+		examplesDir = baseDir + "examples";
 		
 	}
 	
