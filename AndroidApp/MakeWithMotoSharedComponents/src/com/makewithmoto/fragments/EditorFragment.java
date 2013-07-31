@@ -157,6 +157,7 @@ public class EditorFragment extends BaseFragment {
         // Handle item selection
         switch (item.getItemId()) {
         case MENU_RUN:
+        	save();
         	run();
         	return true;
         case MENU_SAVE:
@@ -179,13 +180,13 @@ public class EditorFragment extends BaseFragment {
     
     public void run() {
     
-		ProjectEvent evt = new ProjectEvent(new Project(currentProject.getName(), currentProject.getUrl()), "run");
+		ProjectEvent evt = new ProjectEvent(currentProject, "run");
 		EventBus.getDefault().post(evt);
 	
     }
 
     public void save() {
-        com.makewithmoto.utils.FileIO.writeStringToFile(currentProject.getName(), getCode());
+    	ProjectManager.getInstance().writeNewCode(currentProject, getCode());
         Toast.makeText(getActivity(), "Saving " + currentProject.getName() + "...", Toast.LENGTH_SHORT).show();
 
     }

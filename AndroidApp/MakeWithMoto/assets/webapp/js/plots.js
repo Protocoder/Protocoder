@@ -1,3 +1,12 @@
+var addWidget = function(widget) { 
+
+  if (widget.type == "plot") { 
+    addPlot(widget.name, widget.x, widget.y, widget.w, widget.h);
+  }
+
+
+}
+
 
 var addPlot = function(element, posx, posy, w, h) {
   var _delay = 10;

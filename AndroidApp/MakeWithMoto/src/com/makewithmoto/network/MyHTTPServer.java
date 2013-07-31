@@ -133,7 +133,8 @@ public class MyHTTPServer extends NanoHTTPD {
 					name = obj.getString("name");
 					url = obj.getString("url");	
 					
-					Project p = new Project(name, url);
+					//TODO add type
+					Project p = new Project(name, url, -1);
 					Log.d("mumu", "------> " + url);
 					data.put("code", ProjectManager.getInstance().getCode(p));
 				
@@ -163,7 +164,8 @@ public class MyHTTPServer extends NanoHTTPD {
 					name = obj.getString("name");
 					url = obj.getString("url");
 					
-					ProjectEvent evt = new ProjectEvent(new Project(name, url), "run");
+					//TODO add type
+					ProjectEvent evt = new ProjectEvent(new Project(name, url, -1), "run");
 					EventBus.getDefault().post(evt);
 					ALog.i("Running...");
 
@@ -174,8 +176,8 @@ public class MyHTTPServer extends NanoHTTPD {
 					url = obj.getString("url");
 					newCode = obj.getString("code");
 					
-					
-					Project p = new Project(name, url);
+					//add type
+					Project p = new Project(name, url, -1);
 					ProjectManager.getInstance().writeNewCode(p, newCode);
 					data.put("project", ProjectManager.getInstance().to_json(p));
 					ALog.i("Saved");

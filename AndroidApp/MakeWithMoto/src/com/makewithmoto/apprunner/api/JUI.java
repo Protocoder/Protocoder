@@ -35,6 +35,10 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.makewithmoto.apidoc.APIAnnotation;
+import com.makewithmoto.apprunner.AppRunnerActivity;
+import com.makewithmoto.base.AppSettings;
+import com.makewithmoto.base.BaseMainApp;
+import com.makewithmoto.events.ProjectManager;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class JUI extends JInterface {
@@ -377,7 +381,7 @@ public class JUI extends JInterface {
         positionView(iv, x, y, w, h);
 
         //Add the image from file
-        new SetImageTask(iv).execute(imagePath);
+        new SetImageTask(iv).execute(((AppRunnerActivity) c.get()).getCurrentDir() + imagePath);
 
         //Add the view
         iv.setBackgroundColor(0x33b5e5);
