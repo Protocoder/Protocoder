@@ -18,6 +18,8 @@ import com.makewithmoto.apprunner.logger.L;
 @TargetApi(Build.VERSION_CODES.GINGERBREAD)
 public class GPSManager extends CustomSensorManager {
 	
+	LocationListener listener;
+	
 	public interface GPSListener extends CustomSensorListener {
 
 		public void onLocationChanged(double lat, double lon, double alt, float speed, float bearing);
@@ -52,7 +54,7 @@ public class GPSManager extends CustomSensorManager {
 		locationManager = (LocationManager) c.getSystemService(Context.LOCATION_SERVICE);
 		provider = locationManager.getBestProvider(criteria, false);
 
-		LocationListener listener = new LocationListener() {
+		listener = new LocationListener() {
 
 			@Override
 			public void onStatusChanged(String provider, int status, Bundle extras) {
@@ -113,6 +115,14 @@ public class GPSManager extends CustomSensorManager {
 		};
 
 		locationManager.requestLocationUpdates(provider, 100, 0.1f, listener);
+	}
+	
+	public Location getLocation(){
+	    return mLastLocation;
+	}
+	
+	public void stopGPS(){
+		locationManager.removeUpdates(listener);
 	}
 
 }

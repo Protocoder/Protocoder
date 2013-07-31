@@ -62,6 +62,7 @@ public class AppRunnerActivity extends BaseActivity {
     static final String SCRIPT_POSTFIX = "//Appends text for all scripts \n" + 
             "//ui.postLayout(); \n" + 
             "function onSensorPause(){sensor.stopAccelerometer();}" +
+            "function onSensorPause(){sensor.stopGPS();}" +
              "// End of Append Section" + "\n";
 
 	@Override
@@ -114,6 +115,7 @@ public class AppRunnerActivity extends BaseActivity {
 			String script = SCRIPT_PREFIX
 					+ ProjectManager.getInstance().getCode(currentProject) + SCRIPT_POSTFIX;
 
+			Log.d("AppRunnerActivity",script);
 			if (null != script) {
 				eval(script, projectName);
 			}
