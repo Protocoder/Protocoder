@@ -1,8 +1,5 @@
 var addWidget = function(widget) { 
-  console.log("adding");
   if (widget.type == "plot") { 
-      console.log("added");
-
     addPlot(widget.name, widget.x, widget.y, widget.w, widget.h);
   }
 
