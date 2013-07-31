@@ -3,9 +3,9 @@ package com.makewithmoto.projectlist;
 import com.makewithmoto.events.ProjectManager;
 
 
-public class ListFragmentProjects extends ListFragmentBase {
+public class ListFragmentUserProjects extends ListFragmentBase {
 
-	public ListFragmentProjects() {
+	public ListFragmentUserProjects() {
 		super();
 		projectType = ProjectManager.PROJECT_USER_MADE;
 	}

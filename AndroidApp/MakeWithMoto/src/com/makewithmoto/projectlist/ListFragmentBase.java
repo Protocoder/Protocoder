@@ -40,7 +40,7 @@ import de.greenrobot.event.EventBus;
 @SuppressLint("NewApi")
 public class ListFragmentBase extends BaseFragment {
 
-    protected ArrayList<Project> projects;
+    public ArrayList<Project> projects;
     protected ProjectAdapter projectAdapter;
     protected GridView gridView;
     int projectType;
@@ -73,7 +73,6 @@ public class ListFragmentBase extends BaseFragment {
             String projectURL = project.getUrl();
             String projectName = project.getName();
             
-           // Log.d("QQ", "" + this.getClass().getSimpleName() + " " + projectName);
            // addProject(projectName, projectURL);
        
             notifyAddedProject();
@@ -127,7 +126,6 @@ public class ListFragmentBase extends BaseFragment {
     }
 
     public void notifyAddedProject() {
-  //      projects.add(new Project(projectName, projectURL));
 
         projectAdapter.notifyDataSetChanged();
         gridView.invalidateViews();
