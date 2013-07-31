@@ -68,7 +68,7 @@ public class AppRunnerActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_apprunner);
+	//	setContentView(R.layout.activity_apprunner);    
 		
 		//testing camera 
 		/*
