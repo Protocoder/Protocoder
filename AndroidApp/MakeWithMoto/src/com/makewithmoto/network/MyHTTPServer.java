@@ -20,8 +20,15 @@ import android.util.Log;
 
 import com.makewithmoto.apidoc.APIManager;
 import com.makewithmoto.apprunner.api.JAndroid;
-import com.makewithmoto.apprunner.api.JInterface;
+import com.makewithmoto.apprunner.api.JBrowser;
+import com.makewithmoto.apprunner.api.JCamera;
+import com.makewithmoto.apprunner.api.JLog;
+import com.makewithmoto.apprunner.api.JMakr;
+import com.makewithmoto.apprunner.api.JSensors;
 import com.makewithmoto.apprunner.api.JUI;
+import com.makewithmoto.apprunner.api.JVideo;
+import com.makewithmoto.apprunner.api.JWebApp;
+import com.makewithmoto.apprunner.api.JWebAppPlot;
 import com.makewithmoto.events.Events.ProjectEvent;
 import com.makewithmoto.events.Project;
 import com.makewithmoto.events.ProjectManager;
@@ -208,8 +215,15 @@ public class MyHTTPServer extends NanoHTTPD {
 					
 					//TODO do it automatically 
 					APIManager.getInstance().addClass(JAndroid.class); 
-					APIManager.getInstance().addClass(JInterface.class); 
+					APIManager.getInstance().addClass(JBrowser.class); 
+					APIManager.getInstance().addClass(JCamera.class); 
+					APIManager.getInstance().addClass(JLog.class); 
+					APIManager.getInstance().addClass(JMakr.class); 
+					APIManager.getInstance().addClass(JSensors.class); 
 					APIManager.getInstance().addClass(JUI.class); 
+					APIManager.getInstance().addClass(JVideo.class); 
+					APIManager.getInstance().addClass(JWebApp.class); 
+					APIManager.getInstance().addClass(JWebAppPlot.class); 
 					data.put("api", APIManager.getInstance().getDocumentation());
 				}
 
