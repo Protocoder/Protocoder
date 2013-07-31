@@ -36,9 +36,8 @@ import android.widget.ToggleButton;
 
 import com.makewithmoto.apidoc.APIAnnotation;
 import com.makewithmoto.apprunner.AppRunnerActivity;
-import com.makewithmoto.base.AppSettings;
-import com.makewithmoto.base.BaseMainApp;
-import com.makewithmoto.events.ProjectManager;
+import com.makewithmoto.views.HoloCircleSeekBar;
+import com.makewithmoto.views.HoloCircleSeekBar.OnCircleSeekBarChangeListener;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class JUI extends JInterface {
@@ -114,6 +113,41 @@ public class JUI extends JInterface {
 
         //Add the view to the layout
         mMainLayout.addView(b);
+    }
+    
+    
+    /**
+     * Adds a circular seekbar or picker
+     * @param label
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     * @param callbackfn
+     */
+    @JavascriptInterface
+    public void picker(final String callbackfn){
+    	//initializeLayout();
+    	
+    	HoloCircleSeekBar pkr = new HoloCircleSeekBar(a.get());
+    	
+    	   //Add the change listener
+        pkr.setOnSeekBarChangeListener(new OnCircleSeekBarChangeListener() {
+        	
+
+            @Override
+            public void onProgressChanged(HoloCircleSeekBar seekBar,
+    				int progress, boolean fromUser) {
+             	
+                //TODO Callback should capture the checked state
+                callback(callbackfn, progress);
+            }
+        });
+        
+        
+        //Add the view
+        a.get().setContentView(pkr);
+    	
     }
 
     /**
