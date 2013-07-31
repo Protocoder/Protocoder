@@ -140,9 +140,11 @@ public class ProjectManager {
 	
 
 	public Project addNewProject(Context c, String newProjectName, String fileName, int type) {
-		String newTemplateCode = FileIO.readAssetFile(c, "assets/new.js");
+		String newTemplateCode = FileIO.readAssetFile(c, "templates/new.js");
+		
+		
 		if (newTemplateCode == null) newTemplateCode = "";
-		String file = FileIO.writeStringToFile(newProjectName, newTemplateCode);
+		String file = FileIO.writeStringToFile(BaseMainApp.projectsDir, newProjectName, newTemplateCode);
 
 		Project newProject = new Project(newProjectName, file, type);
 		

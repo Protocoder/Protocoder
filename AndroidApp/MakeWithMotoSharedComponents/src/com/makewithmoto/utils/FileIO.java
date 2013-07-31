@@ -143,10 +143,10 @@ public class FileIO {
     }
 
     // Write a string to a file
-    public static String writeStringToFile(String name, String code) {
+    public static String writeStringToFile(String url, String name, String code) {
         Log.d(TAG, "Writing string to file name: " + name + " code: " + code);
         String filename = name.replaceAll("[^a-zA-Z0-9-_\\. ]", "_");
-        String baseDir = BaseMainApp.baseDir + filename;
+        String baseDir = url + File.separator + filename;
         Log.d(TAG, "The base directory is:" + baseDir);
         File dir = new File(baseDir);
         dir.mkdirs();

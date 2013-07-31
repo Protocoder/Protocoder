@@ -56,7 +56,7 @@ import com.makewithmoto.network.CustomWebsocketServer;
 import com.makewithmoto.network.MyHTTPServer;
 import com.makewithmoto.network.NetworkUtils;
 import com.makewithmoto.projectlist.ListFragmentExamples;
-import com.makewithmoto.projectlist.ListFragmentProjects;
+import com.makewithmoto.projectlist.ListFragmentUserProjects;
 import com.makewithmoto.sensors.AccelerometerManager;
 import com.makewithmoto.sensors.AccelerometerManager.AccelerometerListener;
 
@@ -83,7 +83,7 @@ public class MainActivity extends BaseActivity implements
     ViewPager mViewPager;
 
 
-	private ListFragmentProjects projectListFragment;
+	private ListFragmentUserProjects userProjectListFragment;
 	private ListFragmentExamples exampleListFragment;
 
 	private Boolean showingHelp = false;
@@ -111,14 +111,14 @@ public class MainActivity extends BaseActivity implements
 		actionBar.setHomeButtonEnabled(true);
 
 		// Instantiate fragments
-		projectListFragment = new ListFragmentProjects();
+		userProjectListFragment = new ListFragmentUserProjects();
 		exampleListFragment = new ListFragmentExamples();
 		//addFragment(projectListFragment, R.id.f1, false);
 
 		
 		mProjectPagerAdapter = new ProjectsPagerAdapter(getSupportFragmentManager());
 		mProjectPagerAdapter.setExamplesFragment(exampleListFragment);
-		mProjectPagerAdapter.setProjectsFragment(projectListFragment);
+		mProjectPagerAdapter.setProjectsFragment(userProjectListFragment);
        
 		// Set up the ViewPager, attaching the adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -401,7 +401,6 @@ public class MainActivity extends BaseActivity implements
 
 
             try {
-
                 currentProjectApplicationIntent = new Intent(MainActivity.this, AppRunnerActivity.class);
                 String script = ProjectManager.getInstance().getCode(evt.getProject());
 
@@ -424,7 +423,7 @@ public class MainActivity extends BaseActivity implements
 
         } else if (evt.getAction() == "save") {
             Log.d(TAG, "saving project " + evt.getProject().getName());
-            projectListFragment.projectRefresh(evt.getProject().getName());
+            userProjectListFragment.projectRefresh(evt.getProject().getName());
 
         } else if (evt.getAction() == "new") {
             //projectListFragment.addProject(evt.getProject().getName(), evt.getProject().getUrl()); 
@@ -501,9 +500,8 @@ public class MainActivity extends BaseActivity implements
         Toast.makeText(this, "Creating " + inputText, Toast.LENGTH_SHORT).show();
         Project newProject = ProjectManager.getInstance().addNewProject(c, inputText, inputText, ProjectManager.PROJECT_USER_MADE);
     
-        ListFragmentProjects projectsListFragment = ((MainActivity) c).getProjectListFragment();
-		//projectsListFragment.addProject(newProject.getName(), newProject.getUrl()); 
-	
+        userProjectListFragment.projects.add(newProject);
+        userProjectListFragment.notifyAddedProject();
     }
 
     /*
@@ -524,10 +522,6 @@ public class MainActivity extends BaseActivity implements
             }
         }
         return true;
-    }
-
-    public ListFragmentProjects getProjectListFragment() {
-        return projectListFragment;
     }
 
 }
