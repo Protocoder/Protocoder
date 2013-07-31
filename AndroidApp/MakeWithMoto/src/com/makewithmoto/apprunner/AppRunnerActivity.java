@@ -24,393 +24,434 @@ import android.view.View;
 
 import com.makewithmoto.MainActivity;
 import com.makewithmoto.R;
-
+import com.makewithmoto.events.Project;
+import com.makewithmoto.events.ProjectManager;
 
 /**
- * Original sourcecode from Droid Script : https://github.com/divineprog/droidscript
- * Copyright (c) Mikael Kindborg 2010
+ * Original sourcecode from Droid Script :
+ * https://github.com/divineprog/droidscript Copyright (c) Mikael Kindborg 2010
  * Source code license: MIT
  */
 
 public class AppRunnerActivity extends Activity {
 
-    static ScriptContextFactory contextFactory;    
-    public Interpreter interpreter;
+	static ScriptContextFactory contextFactory;
+	public Interpreter interpreter;
 
-    String scriptFileName;
-    static final String SCRIPT_PREFIX = "//Prepend text for all scripts \n" + "var Test = Packages.com.makewithmoto.apprunner.api.Test; \n" + 
-                                        "var test = Test(Activity);\n" +
-                                        "var JAndroid = Packages.com.makewithmoto.apprunner.api.JAndroid; \n" + 
-                                        "var android = JAndroid(Activity);\n" + 
-                                        "var JUI = Packages.com.makewithmoto.apprunner.api.JUI; \n" +
-                                        "var ui = JUI(Activity);\n" + 
-                                        "var JBrowser = Packages.com.makewithmoto.apprunner.api.JBrowser; \n" +
-                                        "var browser = JBrowser(Activity);\n" + 
-                                        "var JMakr = Packages.com.makewithmoto.apprunner.api.JMakr; \n" +
-                                        "var makr = JMakr(Activity);\n" + 
-                                        "// End of Prepend Section" + "\n";
+	String scriptFileName;
+	private Project currentProject;
 
-    static final String SCRIPT_POSTFIX = "//Appends text for all scripts \n" + 
-                                         "ui.postLayout(); \n" + 
-    		                              "// End of Append Section" + "\n";
+	static final String SCRIPT_PREFIX = "//Prepend text for all scripts \n"
+			+ "var Test = Packages.com.makewithmoto.apprunner.api.Test; \n"
+			+ "var test = Test(Activity);\n"
+			+ "var JAndroid = Packages.com.makewithmoto.apprunner.api.JAndroid; \n"
+			+ "var android = JAndroid(Activity);\n"
+			+ "var JUI = Packages.com.makewithmoto.apprunner.api.JUI; \n"
+			+ "var ui = JUI(Activity);\n"
+			+ "var JBrowser = Packages.com.makewithmoto.apprunner.api.JBrowser; \n"
+			+ "var browser = JBrowser(Activity);\n"
+			+ "var JMakr = Packages.com.makewithmoto.apprunner.api.JMakr; \n"
+			+ "var makr = JMakr(Activity);\n"
+			+ "var JWebApp = Packages.com.makewithmoto.apprunner.api.JWebApp; \n"
+			+ "var webapp = JWebApp(Activity);\n" + "// End of Prepend Section"
+			+ "\n";
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+	static final String SCRIPT_POSTFIX = "//Appends text for all scripts \n"
+			+ "ui.postLayout(); \n" + "// End of Append Section" + "\n";
 
-        createInterpreter();
-        // Read in the script given in the intent.
-        Intent intent = getIntent();
-        if (null != intent) {
-            String filenameOrUrl = intent.getStringExtra("ScriptName");
-            String script = intent.getStringExtra("Script");
-            script = SCRIPT_PREFIX + script;
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-            Log.i("AppRunnerActivity", script);
+		String projectName = "";
 
-            if (null != script) {
-                eval(script, filenameOrUrl);
-            }
-        }
-        // Call the onCreate JavaScript function.
-        callJsFunction("onCreate", savedInstanceState);
+		createInterpreter();
+		// Read in the script given in the intent.
+		Intent intent = getIntent();
+		if (null != intent) {
 
-        //Set up the actionbar
-        ActionBar actionBar = getActionBar();
-        if(actionBar != null)
-            actionBar.setDisplayHomeAsUpEnabled(true);
-    }
+			projectName = intent.getStringExtra("projectName");
+			int projectType = intent.getIntExtra("projectType", -1);
+			currentProject = ProjectManager.getInstance().get(projectName,
+					projectType);
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        callJsFunction("onStart");
-    }
+			String script = SCRIPT_PREFIX
+					+ ProjectManager.getInstance().getCode(currentProject);
 
-    @Override
-    public void onRestart() {
-        super.onRestart();
-        callJsFunction("onRestart");
-    }
+			if (null != script) {
+				eval(script, projectName);
+			}
+		}
+		// Call the onCreate JavaScript function.
+		callJsFunction("onCreate", savedInstanceState);
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        callJsFunction("onResume");
-    }
+		// Set up the actionbar
+		ActionBar actionBar = getActionBar();
+		if (actionBar != null) {
+			actionBar.setDisplayHomeAsUpEnabled(true);
+			actionBar.setTitle(projectName);
+		}
+	}
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        callJsFunction("onPause");
-    }
+	@Override
+	public void onStart() {
+		super.onStart();
+		callJsFunction("onStart");
+	}
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        callJsFunction("onStop");
-    }
+	@Override
+	public void onRestart() {
+		super.onRestart();
+		callJsFunction("onRestart");
+	}
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        callJsFunction("onDestroy");
-    }
+	@Override
+	public void onResume() {
+		super.onResume();
+		callJsFunction("onResume");
+	}
 
-    @Override
-    public Object onRetainNonConfigurationInstance() {
-        // TODO: We will need to somehow also allow JS to save
-        // data and rebuild the UI.
-        return interpreter;
-    }
+	@Override
+	public void onPause() {
+		super.onPause();
+		callJsFunction("onPause");
+	}
 
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo info) {
-        callJsFunction("onCreateContextMenu", menu, view, info);
-    }
+	@Override
+	public void onStop() {
+		super.onStop();
+		callJsFunction("onStop");
+	}
 
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        callJsFunction("onContextItemSelected", item);
-        return true;
-    }
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		callJsFunction("onDestroy");
+	}
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        callJsFunction("onCreateOptionsMenu", menu);
-        return true;
-    }
+	@Override
+	public Object onRetainNonConfigurationInstance() {
+		// TODO: We will need to somehow also allow JS to save
+		// data and rebuild the UI.
+		return interpreter;
+	}
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        callJsFunction("onPrepareOptionsMenu", menu);
-        return true;
-    }
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View view,
+			ContextMenu.ContextMenuInfo info) {
+		callJsFunction("onCreateContextMenu", menu, view, info);
+	}
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        callJsFunction("onOptionsItemSelected", item);
-        switch (item.getItemId()) {
-        case android.R.id.home:
-            // Up button pressed
-            Intent intentHome = new Intent(this, MainActivity.class);
-            intentHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intentHome);
-            overridePendingTransition(R.anim.splash_slide_in_anim_reverse_set, R.anim.splash_slide_out_anim_reverse_set);
-            finish();
-            return true;
-        default:
-            return super.onOptionsItemSelected(item);
-        }
-    }
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		callJsFunction("onContextItemSelected", item);
+		return true;
+	}
 
-    public Object eval(final String code) {
-        return eval(code, "");
-    }
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		callJsFunction("onCreateOptionsMenu", menu);
+		return true;
+	}
 
-    public Object eval(final String code, final String sourceName) {
-        final AtomicReference<Object> result = new AtomicReference<Object>(null);
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		callJsFunction("onPrepareOptionsMenu", menu);
+		return true;
+	}
 
-        runOnUiThread(new Runnable() {
-            @Override
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		callJsFunction("onOptionsItemSelected", item);
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			// Up button pressed
+			Intent intentHome = new Intent(this, MainActivity.class);
+			intentHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intentHome);
+			overridePendingTransition(R.anim.splash_slide_in_anim_reverse_set,
+					R.anim.splash_slide_out_anim_reverse_set);
+			finish();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	public Object eval(final String code) {
+		return eval(code, "");
+	}
+
+	public Object eval(final String code, final String sourceName) {
+		final AtomicReference<Object> result = new AtomicReference<Object>(null);
+
+		runOnUiThread(new Runnable() {
+			@Override
 			public void run() {
-                try {
-                    result.set(interpreter.eval(code, sourceName));
-                } catch (Throwable e) {
-                    reportError(e);
-                    result.set(e);
-                }
-            }
-        });
-        while (null == result.get()) {
-            Thread.yield();
-        }
+				try {
+					result.set(interpreter.eval(code, sourceName));
+				} catch (Throwable e) {
+					reportError(e);
+					result.set(e);
+				}
+			}
+		});
+		while (null == result.get()) {
+			Thread.yield();
+		}
 
-        return result.get();
-    }
+		return result.get();
+	}
 
-    /**
-     * This works because method is called from the "onXXX" methods which are
-     * called in the UI-thread. Thus, no need to use run on UI-thread.
-     * TODO: Could be a problem if someone calls it from another class,
-     * make private for now.
-     */
-    private Object callJsFunction(String funName, Object... args) {
-        try {
-            return interpreter.callJsFunction(funName, args);
-        } catch (Throwable e) {
-            reportError(e);
-            return false;
-        }
-    }
+	/**
+	 * This works because method is called from the "onXXX" methods which are
+	 * called in the UI-thread. Thus, no need to use run on UI-thread. TODO:
+	 * Could be a problem if someone calls it from another class, make private
+	 * for now.
+	 */
+	private Object callJsFunction(String funName, Object... args) {
+		try {
+			return interpreter.callJsFunction(funName, args);
+		} catch (Throwable e) {
+			reportError(e);
+			return false;
+		}
+	}
 
-    protected void createInterpreter() {
-        // Initialize global context factory with our custom factory.
-        if (null == contextFactory) {
-            contextFactory = new ScriptContextFactory();
-            ContextFactory.initGlobal(contextFactory);
-            Log.i("AppRunnerActivity", "Creating ContextFactory");
-        }
+	protected void createInterpreter() {
+		// Initialize global context factory with our custom factory.
+		if (null == contextFactory) {
+			contextFactory = new ScriptContextFactory();
+			ContextFactory.initGlobal(contextFactory);
+			Log.i("AppRunnerActivity", "Creating ContextFactory");
+		}
 
-        contextFactory.setActivity(this);
+		contextFactory.setActivity(this);
 
-        if (null == interpreter) {
-            // Get the interpreter, if previously created.
-            Object obj = getLastNonConfigurationInstance();
-            if (null == obj) {
-                // Create interpreter.
-                interpreter = new Interpreter();
-            } else {
-                // Restore interpreter state.
-                interpreter = (Interpreter) obj;
-            }
-        }
+		if (null == interpreter) {
+			// Get the interpreter, if previously created.
+			Object obj = getLastNonConfigurationInstance();
+			if (null == obj) {
+				// Create interpreter.
+				interpreter = new Interpreter();
+			} else {
+				// Restore interpreter state.
+				interpreter = (Interpreter) obj;
+			}
+		}
 
-        interpreter.setActivity(this);
-    }
+		interpreter.setActivity(this);
+	}
 
-    public void reportError(Object e) {
-        // Create error message.
-        String message = "";
-        if (e instanceof RhinoException) {
-            RhinoException error = (RhinoException) e;
-            message = error.getMessage() + " " + error.lineNumber() + " (" + error.columnNumber() + "): " + (error.sourceName() != null ? " " + error.sourceName() : "")
-                    + (error.lineSource() != null ? " " + error.lineSource() : "") + "\n" + error.getScriptStackTrace();
-        } else {
-            message = e.toString();
-        }
+	public void reportError(Object e) {
+		// Create error message.
+		String message = "";
+		if (e instanceof RhinoException) {
+			RhinoException error = (RhinoException) e;
+			message = error.getMessage()
+					+ " "
+					+ error.lineNumber()
+					+ " ("
+					+ error.columnNumber()
+					+ "): "
+					+ (error.sourceName() != null ? " " + error.sourceName()
+							: "")
+					+ (error.lineSource() != null ? " " + error.lineSource()
+							: "") + "\n" + error.getScriptStackTrace();
+		} else {
+			message = e.toString();
+		}
 
-        // Log the error message.
-        Log.i("AppRunnerActivity", "JavaScript Error: " + message);
-    }
+		// Log the error message.
+		Log.i("AppRunnerActivity", "JavaScript Error: " + message);
+	}
 
-    public static String preprocess(String code) throws Exception {
-        return preprocessMultiLineStrings(extractCodeFromAppRunnerTags(code));
-    }
+	public static String preprocess(String code) throws Exception {
+		return preprocessMultiLineStrings(extractCodeFromAppRunnerTags(code));
+	}
 
-    public static String extractCodeFromAppRunnerTags(String code) throws Exception {
-        String startDelimiter = "DROIDSCRIPT_BEGIN";
-        String stopDelimiter = "DROIDSCRIPT_END";
+	public static String extractCodeFromAppRunnerTags(String code)
+			throws Exception {
+		String startDelimiter = "DROIDSCRIPT_BEGIN";
+		String stopDelimiter = "DROIDSCRIPT_END";
 
-        // Find start delimiter
-        int start = code.indexOf(startDelimiter, 0);
-        if (-1 == start) {
-            // No delimiter found, return code untouched
-            return code;
-        }
+		// Find start delimiter
+		int start = code.indexOf(startDelimiter, 0);
+		if (-1 == start) {
+			// No delimiter found, return code untouched
+			return code;
+		}
 
-        // Find stop delimiter
-        int stop = code.indexOf(stopDelimiter, start);
-        if (-1 == stop) {
-            // No delimiter found, return code untouched
-            return code;
-        }
+		// Find stop delimiter
+		int stop = code.indexOf(stopDelimiter, start);
+		if (-1 == stop) {
+			// No delimiter found, return code untouched
+			return code;
+		}
 
-        // Extract the code between start and stop.
-        String result = code.substring(start + startDelimiter.length(), stop);
+		// Extract the code between start and stop.
+		String result = code.substring(start + startDelimiter.length(), stop);
 
-        // Replace escaped characters with plain characters.
-        // TODO: Add more characters here
-        return result.replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"");
-    }
+		// Replace escaped characters with plain characters.
+		// TODO: Add more characters here
+		return result.replace("&lt;", "<").replace("&gt;", ">")
+				.replace("&quot;", "\"");
+	}
 
-    public static String preprocessMultiLineStrings(String code) throws Exception {
-        StringBuilder result = new StringBuilder(code.length() + 1000);
+	public static String preprocessMultiLineStrings(String code)
+			throws Exception {
+		StringBuilder result = new StringBuilder(code.length() + 1000);
 
-        String delimiter = "\"\"\"";
-        int lastStop = 0;
-        while (true) {
-            // Find next multiline delimiter
-            int start = code.indexOf(delimiter, lastStop);
-            if (-1 == start) {
-                // No delimiter found, append rest of the code 
-                // to result and break
-                result.append(code.substring(lastStop, code.length()));
-                break;
-            }
+		String delimiter = "\"\"\"";
+		int lastStop = 0;
+		while (true) {
+			// Find next multiline delimiter
+			int start = code.indexOf(delimiter, lastStop);
+			if (-1 == start) {
+				// No delimiter found, append rest of the code
+				// to result and break
+				result.append(code.substring(lastStop, code.length()));
+				break;
+			}
 
-            // Find terminating delimiter
-            int stop = code.indexOf(delimiter, start + delimiter.length());
-            if (-1 == stop) {
-                // This is an error, throw an exception with error message
-                throw new Exception("Multiline string not terminated");
-            }
+			// Find terminating delimiter
+			int stop = code.indexOf(delimiter, start + delimiter.length());
+			if (-1 == stop) {
+				// This is an error, throw an exception with error message
+				throw new Exception("Multiline string not terminated");
+			}
 
-            // Append the code from last stop up to the start delimiter
-            result.append(code.substring(lastStop, start));
+			// Append the code from last stop up to the start delimiter
+			result.append(code.substring(lastStop, start));
 
-            // Set new lastStop
-            lastStop = stop + delimiter.length();
+			// Set new lastStop
+			lastStop = stop + delimiter.length();
 
-            // Append multiline string converted to JavaScript code
-            result.append(convertMultiLineStringToJavaScript(code.substring(start + delimiter.length(), stop)));
-        }
+			// Append multiline string converted to JavaScript code
+			result.append(convertMultiLineStringToJavaScript(code.substring(
+					start + delimiter.length(), stop)));
+		}
 
-        return result.toString();
-    }
+		return result.toString();
+	}
 
-    public static String convertMultiLineStringToJavaScript(String s) {
-        StringBuilder result = new StringBuilder(s.length() + 1000);
+	public static String convertMultiLineStringToJavaScript(String s) {
+		StringBuilder result = new StringBuilder(s.length() + 1000);
 
-        char quote = '\"';
-        char newline = '\n';
-        String backslashquote = "\\\"";
-        String concat = "\\n\" + \n\"";
+		char quote = '\"';
+		char newline = '\n';
+		String backslashquote = "\\\"";
+		String concat = "\\n\" + \n\"";
 
-        result.append(quote);
+		result.append(quote);
 
-        for (int i = 0; i < s.length(); ++i) {
-            char c = s.charAt(i);
-            if (c == quote) {
-                result.append(backslashquote);
-            } else if (c == newline) {
-                result.append(concat);
-            } else {
-                result.append(c);
-            }
-            //Log.i("Multiline", result.toString());
-        }
+		for (int i = 0; i < s.length(); ++i) {
+			char c = s.charAt(i);
+			if (c == quote) {
+				result.append(backslashquote);
+			} else if (c == newline) {
+				result.append(concat);
+			} else {
+				result.append(c);
+			}
+			// Log.i("Multiline", result.toString());
+		}
 
-        result.append(quote);
+		result.append(quote);
 
-        return result.toString();
-    }
+		return result.toString();
+	}
 
-    public static class Interpreter {
-        Context context;
-        Scriptable scope;
-        Require require;
+	public static class Interpreter {
+		Context context;
+		Scriptable scope;
+		Require require;
 
-        public Interpreter() {
-            // Creates and enters a Context. The Context stores information
-            // about the execution environment of a script.
-            context = Context.enter();
-            context.setOptimizationLevel(-1);
+		public Interpreter() {
+			// Creates and enters a Context. The Context stores information
+			// about the execution environment of a script.
+			context = Context.enter();
+			context.setOptimizationLevel(-1);
 
-            // Initialize the standard objects (Object, Function, etc.)
-            // This must be done before scripts can be executed. Returns
-            // a scope object that we use in later calls.
-            scope = context.initStandardObjects();
-        }
+			// Initialize the standard objects (Object, Function, etc.)
+			// This must be done before scripts can be executed. Returns
+			// a scope object that we use in later calls.
+			scope = context.initStandardObjects();
+		}
 
-        public Interpreter setActivity(Activity activity) {
-            //ScriptAssetProvider provider = new ScriptAssetProvider(activity);
-            //Require require = new Require(context, scope, provider, null, null, true);
-            //require.install(scope);
+		public Interpreter setActivity(Activity activity) {
+			// ScriptAssetProvider provider = new ScriptAssetProvider(activity);
+			// Require require = new Require(context, scope, provider, null,
+			// null, true);
+			// require.install(scope);
 
-            // Set the global JavaScript variable Activity.
-            ScriptableObject.putProperty(scope, "Activity", Context.javaToJS(activity, scope));
-            return this;
-        }
+			// Set the global JavaScript variable Activity.
+			ScriptableObject.putProperty(scope, "Activity",
+					Context.javaToJS(activity, scope));
+			return this;
+		}
 
-        public Interpreter setErrorReporter(ErrorReporter reporter) {
-            context.setErrorReporter(reporter);
-            return this;
-        }
+		public Interpreter setErrorReporter(ErrorReporter reporter) {
+			context.setErrorReporter(reporter);
+			return this;
+		}
 
-        public void exit() {
-            Context.exit();
-        }
+		public void exit() {
+			Context.exit();
+		}
 
-        public Object eval(String code, String sourceName) throws Throwable {
-            String processedCode = preprocess(code);
-            return context.evaluateString(scope, processedCode, sourceName, 1, null);
-        }
+		public Object eval(String code, String sourceName) throws Throwable {
+			String processedCode = preprocess(code);
+			return context.evaluateString(scope, processedCode, sourceName, 1,
+					null);
+		}
 
-        public Object callJsFunction(String funName, Object... args) throws Throwable {
-            Object fun = scope.get(funName, scope);
-            if (fun instanceof Function) {
-                Log.i("AppRunnerActivity", "Calling JsFun " + funName);
-                Function f = (Function) fun;
-                Object result = f.call(context, scope, scope, args);
-                return Context.toString(result); // Why did I use this?
-            } else {
-                // Log.i("AppRunnerActivity", "Could not find JsFun " + funName);
-                return null;
-            }
-        }
-    }
+		public Object callJsFunction(String funName, Object... args)
+				throws Throwable {
+			Object fun = scope.get(funName, scope);
+			if (fun instanceof Function) {
+				Log.i("AppRunnerActivity", "Calling JsFun " + funName);
+				Function f = (Function) fun;
+				Object result = f.call(context, scope, scope, args);
+				return Context.toString(result); // Why did I use this?
+			} else {
+				// Log.i("AppRunnerActivity", "Could not find JsFun " +
+				// funName);
+				return null;
+			}
+		}
+	}
 
-    public static class ScriptContextFactory extends ContextFactory {
-        AppRunnerActivity activity;
+	public static class ScriptContextFactory extends ContextFactory {
+		AppRunnerActivity activity;
 
-        public ScriptContextFactory setActivity(AppRunnerActivity activity) {
-            this.activity = activity;
-            return this;
-        }
+		public ScriptContextFactory setActivity(AppRunnerActivity activity) {
+			this.activity = activity;
+			return this;
+		}
 
-        @Override
-        protected Object doTopCall(Callable callable, Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {
-            try {
-                return super.doTopCall(callable, cx, scope, thisObj, args);
-            } catch (Throwable e) {
-                Log.i("AppRunnerActivity", "ContextFactory catched error: " + e);
-                if (null != activity) {
-                    activity.reportError(e);
-                }
-                return e;
-            }
-        }
-    }
+		@Override
+		protected Object doTopCall(Callable callable, Context cx,
+				Scriptable scope, Scriptable thisObj, Object[] args) {
+			try {
+				return super.doTopCall(callable, cx, scope, thisObj, args);
+			} catch (Throwable e) {
+				Log.i("AppRunnerActivity", "ContextFactory catched error: " + e);
+				if (null != activity) {
+					activity.reportError(e);
+				}
+				return e;
+			}
+		}
+	}
 
+	public Project getCurrentProject() {
+		return currentProject;
+	} 
+	
+	public String getCurrentDir() { 
+		
+		return ProjectManager.getInstance().getProjectURL(currentProject);
+
+	}
 }

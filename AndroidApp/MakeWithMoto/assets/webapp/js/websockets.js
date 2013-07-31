@@ -67,6 +67,11 @@ function testWebsockets() {
 
     } 
 
+    if (result.widget != null) { 
+      addWidget(result.widget);
+
+    }
+
   }
   ws.onclose = function() {
     disconnected();

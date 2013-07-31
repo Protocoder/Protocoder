@@ -110,8 +110,6 @@ public class LauncherActivity extends BaseActivity {
 	@SuppressLint("NewApi")
 	private void exitSplash() {
 		finish();
-
-		Log.d("qq", Build.VERSION.SDK_INT + " " + AppSettings.CURRENT_VERSION);
 		
 		if (AppSettings.CURRENT_VERSION > Build.VERSION.SDK_INT) {
 			ActivityOptions options = ActivityOptions.makeCustomAnimation(this,
