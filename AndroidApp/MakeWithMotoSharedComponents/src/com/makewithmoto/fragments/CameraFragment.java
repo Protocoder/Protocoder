@@ -65,7 +65,7 @@ public class CameraFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		v = inflater.inflate(R.layout.camera, container, false);
+		v = inflater.inflate(R.layout.fragment_camera, container, false);
 		return v;
 	}
 
@@ -94,7 +94,7 @@ public class CameraFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				takePic();
+				//takePic();
 			}
 		});
 
@@ -254,7 +254,7 @@ public class CameraFragment extends Fragment {
 				} finally {
 				}
 
-				Log.d("qq", "onPictureTaken - jpeg");
+				Log.d(TAG, "onPictureTaken - jpeg");
 
 				camera.startPreview();
 				latch.countDown();
@@ -278,7 +278,7 @@ public class CameraFragment extends Fragment {
 
 	@TargetApi(Build.VERSION_CODES.GINGERBREAD)
 	public void onPictureTaken(byte[] data, Camera camera) {
-		Log.i("qq2", "photo taken");
+		Log.i(TAG, "photo taken");
 
 		_fileName = Utils.getCurrentTime() + ".jpg";
 		_path = _rootPath + _fileName;
@@ -319,7 +319,7 @@ public class CameraFragment extends Fragment {
 		// params.screenBrightness = 0;
 		// getWindow().setAttributes(params);
 
-		Log.i("qq2", "photo saved");
+		Log.i(TAG, "photo saved");
 
 		// this.finish();
 
