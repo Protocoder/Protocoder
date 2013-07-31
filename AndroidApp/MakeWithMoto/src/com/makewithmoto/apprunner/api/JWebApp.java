@@ -13,13 +13,10 @@ import com.makewithmoto.network.CustomWebsocketServer;
 
 public class JWebApp extends JInterface {
 
-	private Activity a;
 	String TAG = "JWebApp";
 
 	public JWebApp(Activity a) {
         super(a); 
-        this.a = a; 
-
 	}
 
 	@JavascriptInterface 
@@ -28,7 +25,7 @@ public class JWebApp extends JInterface {
 		Log.d(TAG, "added widget ");
 		
 		try {
-			CustomWebsocketServer.getInstance(a).send(obj);
+			CustomWebsocketServer.getInstance(a.get()).send(obj);
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

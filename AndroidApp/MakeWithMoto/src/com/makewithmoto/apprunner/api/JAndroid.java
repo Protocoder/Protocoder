@@ -19,7 +19,7 @@ public class JAndroid extends JInterface {
 	@APIAnnotation(description = "makes the phone vibrate", example = "android.vibrate(500);")
 	public void vibrate(String duration) {
 		Log.d("TAG", "vibrate...");
-		Vibrator v = (Vibrator) c.get().getSystemService(
+		Vibrator v = (Vibrator) a.get().getSystemService(
 				Context.VIBRATOR_SERVICE);
 		v.vibrate(Integer.parseInt(duration));
 	}
@@ -27,7 +27,7 @@ public class JAndroid extends JInterface {
 	@JavascriptInterface
 	@APIAnnotation(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
 	public void toast(String msg, int duration) {
-		Toast.makeText(c.get(), msg, duration).show();
+		Toast.makeText(a.get(), msg, duration).show();
 	}
 
 		

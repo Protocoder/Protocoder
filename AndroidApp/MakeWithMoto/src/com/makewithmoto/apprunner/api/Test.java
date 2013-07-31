@@ -14,13 +14,13 @@ public class Test extends JInterface {
 
 	public void vibrate(String duration) {
 		Log.d("TAG", "vibrate...");
-		Vibrator v = (Vibrator) c.get().getSystemService(
+		Vibrator v = (Vibrator) a.get().getSystemService(
 				Context.VIBRATOR_SERVICE);
 		v.vibrate(Integer.parseInt(duration));
 	}
 
 	public void toast(String msg, int duration) {
-		Toast.makeText(c.get(), msg, duration).show();
+		Toast.makeText(a.get(), msg, duration).show();
 	}
 
 

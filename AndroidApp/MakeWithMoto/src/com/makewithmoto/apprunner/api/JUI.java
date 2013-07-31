@@ -53,16 +53,16 @@ public class JUI extends JInterface {
     private void initializeLayout() {
         if (!isMainLayoutSetup) {
             //We need to let the view scroll, so we're creating a scroll view
-            ScrollView sv = new ScrollView(c.get());
+            ScrollView sv = new ScrollView(a.get());
             sv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
             //Create the main layout. This is where all the items actually go
-            mMainLayout = new FrameLayout(c.get());
+            mMainLayout = new FrameLayout(a.get());
             mMainLayout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
             sv.addView(mMainLayout);
 
             //Set the content view
-            c.get().setContentView(sv);
+            a.get().setContentView(sv);
             isMainLayoutSetup = true;
         }
     }
@@ -96,7 +96,7 @@ public class JUI extends JInterface {
         initializeLayout();
 
         //Create the button
-        Button b = new Button(c.get());
+        Button b = new Button(a.get());
         b.setText(label);
         positionView(b, x, y, w, h);
 
@@ -129,7 +129,7 @@ public class JUI extends JInterface {
 
         initializeLayout();
         //Create the position the view
-        SeekBar sb = new SeekBar(c.get());
+        SeekBar sb = new SeekBar(a.get());
         sb.setMax(max);
         sb.setProgress(progress);
         positionView(sb, x, y, w, h);
@@ -187,7 +187,7 @@ public class JUI extends JInterface {
 
         initializeLayout();
         //Create the TextView
-        TextView tv = new TextView(c.get());
+        TextView tv = new TextView(a.get());
         tv.setText(label);
         tv.setTextSize((float) textSize);
         positionView(tv, x, y, w, h);
@@ -209,7 +209,7 @@ public class JUI extends JInterface {
 
         initializeLayout();
         //Create view
-        EditText et = new EditText(c.get());
+        EditText et = new EditText(a.get());
         et.setHint(label);
         positionView(et, x, y, w, h);
 
@@ -253,7 +253,7 @@ public class JUI extends JInterface {
 
         initializeLayout();
         //Create the view
-        ToggleButton tb = new ToggleButton(c.get());
+        ToggleButton tb = new ToggleButton(a.get());
         tb.setChecked(initstate);
         tb.setText(label);
         positionView(tb, x, y, w, h);
@@ -285,7 +285,7 @@ public class JUI extends JInterface {
 
         initializeLayout();
         // Adds a checkbox and set the initial state as initstate. if the button state changes, call the callbackfn
-        CheckBox cb = new CheckBox(c.get());
+        CheckBox cb = new CheckBox(a.get());
         cb.setChecked(initstate);
         cb.setText(label);
         positionView(cb, x, y, w, h);
@@ -316,7 +316,7 @@ public class JUI extends JInterface {
 
         initializeLayout();
         // Adds a switch. If the state changes, we'll call the callback function
-        Switch s = new Switch(c.get());
+        Switch s = new Switch(a.get());
         s.setChecked(initstate);
         positionView(s, x, y, w, h);
 
@@ -347,7 +347,7 @@ public class JUI extends JInterface {
 
         initializeLayout();
         //Create and position the radio button
-        RadioButton rb = new RadioButton(c.get());
+        RadioButton rb = new RadioButton(a.get());
         rb.setChecked(initstate);
         rb.setText(label);
         positionView(rb, x, y, w, h);
@@ -377,11 +377,11 @@ public class JUI extends JInterface {
 
         initializeLayout();
         // Create and position the image view
-        final ImageView iv = new ImageView(c.get());
+        final ImageView iv = new ImageView(a.get());
         positionView(iv, x, y, w, h);
 
         //Add the image from file
-        new SetImageTask(iv).execute(((AppRunnerActivity) c.get()).getCurrentDir() + File.separator + imagePath);
+        new SetImageTask(iv).execute(((AppRunnerActivity) a.get()).getCurrentDir() + File.separator + imagePath);
 
         //Add the view
         iv.setBackgroundColor(0x33b5e5);
@@ -401,7 +401,7 @@ public class JUI extends JInterface {
 
         initializeLayout();
         // Create and position the image view
-        final ImageView iv = new ImageView(c.get());
+        final ImageView iv = new ImageView(a.get());
         positionView(iv, x, y, w, h);
 
         //Add image asynchronously
@@ -439,7 +439,7 @@ public class JUI extends JInterface {
 
         initializeLayout();
         // Create and position the image button
-        ImageButton ib = new ImageButton(c.get());
+        ImageButton ib = new ImageButton(a.get());
         positionView(ib, x, y, w, h);
 
         //Hide the background if desired
@@ -448,7 +448,7 @@ public class JUI extends JInterface {
         }
 
         //Add image asynchronously
-        new SetImageTask(ib).execute(((AppRunnerActivity) c.get()).getCurrentDir() + File.separator + imagePath);
+        new SetImageTask(ib).execute(((AppRunnerActivity) a.get()).getCurrentDir() + File.separator + imagePath);
 
         //Set on click behavior
         ib.setOnClickListener(new OnClickListener() {
@@ -502,7 +502,7 @@ public class JUI extends JInterface {
     public void backgroundImage(String imagePath) {
         initializeLayout();
         //Add the bg image asynchronously
-        new SetBgImageTask(mMainLayout).execute(((AppRunnerActivity) c.get()).getCurrentDir() + File.separator + imagePath);
+        new SetBgImageTask(mMainLayout).execute(((AppRunnerActivity) a.get()).getCurrentDir() + File.separator + imagePath);
 
     }
 
@@ -622,7 +622,7 @@ public class JUI extends JInterface {
 
         @SuppressWarnings("deprecation")
         protected void onPostExecute(Bitmap result) {
-            Drawable d = new BitmapDrawable(c.get().getResources(), result);
+            Drawable d = new BitmapDrawable(a.get().getResources(), result);
             fl.setBackgroundDrawable(d);
         }
     }
