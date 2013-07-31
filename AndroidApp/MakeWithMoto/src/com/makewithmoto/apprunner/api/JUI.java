@@ -381,7 +381,7 @@ public class JUI extends JInterface {
         positionView(iv, x, y, w, h);
 
         //Add the image from file
-        new SetImageTask(iv).execute(((AppRunnerActivity) c.get()).getCurrentDir() + imagePath);
+        new SetImageTask(iv).execute(((AppRunnerActivity) c.get()).getCurrentDir() + File.separator + imagePath);
 
         //Add the view
         iv.setBackgroundColor(0x33b5e5);
@@ -448,7 +448,7 @@ public class JUI extends JInterface {
         }
 
         //Add image asynchronously
-        new SetImageTask(ib).execute(imagePath);
+        new SetImageTask(ib).execute(((AppRunnerActivity) c.get()).getCurrentDir() + File.separator + imagePath);
 
         //Set on click behavior
         ib.setOnClickListener(new OnClickListener() {
@@ -502,7 +502,8 @@ public class JUI extends JInterface {
     public void backgroundImage(String imagePath) {
         initializeLayout();
         //Add the bg image asynchronously
-        new SetBgImageTask(mMainLayout).execute(imagePath);
+        new SetBgImageTask(mMainLayout).execute(((AppRunnerActivity) c.get()).getCurrentDir() + File.separator + imagePath);
+
     }
 
     //	PlotView plotView;

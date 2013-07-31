@@ -152,7 +152,7 @@ public class ProjectManager {
 	
 	//TODO fix this hack 
 	public String getProjectURL(Project p) {
-		String projectURL = p.getUrl().substring(0, p.getUrl().length() - 9);
+		String projectURL = p.getUrl();
 		
 		return projectURL; 
 		
