@@ -69,12 +69,12 @@ function testWebsockets() {
 
     console.log(result);
     if (result.type == "widget") { 
-          console.log("widget");
-
+      
       if (result.action == "add") { 
-                  console.log("add");
-
         addWidget(result.values);
+      } else if (result.action == "update") {
+        console.log(result.values.val);
+
       }
 
     }

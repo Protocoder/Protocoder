@@ -53,6 +53,7 @@ public class AppRunnerActivity extends FragmentActivity {
 			+ "var browser = JBrowser(Activity);\n"
 			+ "var JMakr = Packages.com.makewithmoto.apprunner.api.JMakr; \n"
 			+ "var makr = JMakr(Activity);\n"
+			+ "var JWebAppPlot = Packages.com.makewithmoto.apprunner.api.JWebAppPlot; \n"
 			+ "var JWebApp = Packages.com.makewithmoto.apprunner.api.JWebApp; \n"
 			+ "var webapp = JWebApp(Activity);\n" + "// End of Prepend Section"
 			+ "\n";
