@@ -56,7 +56,7 @@ import com.makewithmoto.network.CustomWebsocketServer;
 import com.makewithmoto.network.MyHTTPServer;
 import com.makewithmoto.network.NetworkUtils;
 import com.makewithmoto.projectlist.ListFragmentExamples;
-import com.makewithmoto.projectlist.ListFragmentProjects;
+import com.makewithmoto.projectlist.ListFragmentUserProjects;
 import com.makewithmoto.sensors.AccelerometerManager;
 import com.makewithmoto.sensors.AccelerometerManager.AccelerometerListener;
 
@@ -83,7 +83,7 @@ public class MainActivity extends BaseActivity implements
     ViewPager mViewPager;
 
 
-	private ListFragmentProjects projectListFragment;
+	private ListFragmentUserProjects userProjectListFragment;
 	private ListFragmentExamples exampleListFragment;
 
 	private Boolean showingHelp = false;
@@ -111,14 +111,14 @@ public class MainActivity extends BaseActivity implements
 		actionBar.setHomeButtonEnabled(true);
 
 		// Instantiate fragments
-		projectListFragment = new ListFragmentProjects();
+		userProjectListFragment = new ListFragmentUserProjects();
 		exampleListFragment = new ListFragmentExamples();
 		//addFragment(projectListFragment, R.id.f1, false);
 
 		
 		mProjectPagerAdapter = new ProjectsPagerAdapter(getSupportFragmentManager());
 		mProjectPagerAdapter.setExamplesFragment(exampleListFragment);
-		mProjectPagerAdapter.setProjectsFragment(projectListFragment);
+		mProjectPagerAdapter.setProjectsFragment(userProjectListFragment);
        
 		// Set up the ViewPager, attaching the adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -252,6 +252,8 @@ public class MainActivity extends BaseActivity implements
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		
 
 		AccelerometerManager accelerometerManager = new AccelerometerManager(
 				this);
@@ -279,6 +281,9 @@ public class MainActivity extends BaseActivity implements
 			}
 		});
 		accelerometerManager.start();
+		
+		
+		
 
 		final Handler handler = new Handler();
 		Runnable r = new Runnable() {
@@ -393,17 +398,16 @@ public class MainActivity extends BaseActivity implements
                 finishActivity(mProjectRequestCode);
                 currentProjectApplicationIntent = null;
             }
-            String baseDir = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + AppSettings.appFolder + File.separator;
-
-            Log.d("ProjectEvent/MainActivity", baseDir + evt.getProject().getName() + File.separator + "script.js");
 
 
             try {
-
                 currentProjectApplicationIntent = new Intent(MainActivity.this, AppRunnerActivity.class);
                 String script = ProjectManager.getInstance().getCode(evt.getProject());
-                Log.d("MainActivity", script);
-                currentProjectApplicationIntent.putExtra("Script", script);
+
+                Project p = evt.getProject();
+                
+                currentProjectApplicationIntent.putExtra("projectName", p.getName());
+                currentProjectApplicationIntent.putExtra("projectType", p.getType());
 
                 // check if the apprunner is installed
                 // TODO add handling
@@ -419,7 +423,7 @@ public class MainActivity extends BaseActivity implements
 
         } else if (evt.getAction() == "save") {
             Log.d(TAG, "saving project " + evt.getProject().getName());
-            projectListFragment.projectRefresh(evt.getProject().getName());
+            userProjectListFragment.projectRefresh(evt.getProject().getName());
 
         } else if (evt.getAction() == "new") {
             //projectListFragment.addProject(evt.getProject().getName(), evt.getProject().getUrl()); 
@@ -431,9 +435,7 @@ public class MainActivity extends BaseActivity implements
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_activity_menu, menu);
-        //menu.add(0, MENU_NEW_PROJECT, 0, "New").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        //menu.add(0, MENU_TOGGLE_HELP, 0, "Help").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
+   
         mMenu = menu;
         return super.onCreateOptionsMenu(menu);
     }
@@ -445,8 +447,6 @@ public class MainActivity extends BaseActivity implements
         switch (item.getItemId()) {
 
         case android.R.id.home:
-            //We've changed this from a fragment
-            //hideHelpView();
 
             return true;
         case R.id.menu_new:
@@ -457,12 +457,7 @@ public class MainActivity extends BaseActivity implements
             Intent aboutActivityIntent = new Intent(this, AboutActivity.class);
             startActivity(aboutActivityIntent);
             overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
-            //Using a fragment here makes it really difficult to handle Activity lifecycle in relation to TSB...
-            /*if (showingHelp) {
-                hideHelpView();
-            } else {
-                showHelpView();
-            }*/
+        
             return true;
         case R.id.menu_start_stop:
             if (httpServer != null) {
@@ -494,11 +489,10 @@ public class MainActivity extends BaseActivity implements
     @Override
     public void onFinishEditDialog(String inputText) {
         Toast.makeText(this, "Creating " + inputText, Toast.LENGTH_SHORT).show();
-        Project newProject = ProjectManager.getInstance().addNewProject(c, inputText, inputText);
+        Project newProject = ProjectManager.getInstance().addNewProject(c, inputText, inputText, ProjectManager.PROJECT_USER_MADE);
     
-        ListFragmentProjects projectsListFragment = ((MainActivity) c).getProjectListFragment();
-		//projectsListFragment.addProject(newProject.getName(), newProject.getUrl()); 
-	
+        userProjectListFragment.projects.add(newProject);
+        userProjectListFragment.notifyAddedProject();
     }
 
     /*
@@ -519,10 +513,6 @@ public class MainActivity extends BaseActivity implements
             }
         }
         return true;
-    }
-
-    public ListFragmentProjects getProjectListFragment() {
-        return projectListFragment;
     }
 
 }

@@ -67,6 +67,18 @@ function testWebsockets() {
 
     } 
 
+    console.log(result);
+    if (result.type == "widget") { 
+      
+      if (result.action == "add") { 
+        addWidget(result.values);
+      } else if (result.action == "update") {
+        console.log(result.values.val);
+
+      }
+
+    }
+
   }
   ws.onclose = function() {
     disconnected();
@@ -79,12 +91,14 @@ var reconnectionInterval;
 function connected() { 
   console.log('connected');
   clearInterval(reconnectionInterval); //removes the reconnection 
-  $("#connection").css("background-color","#00ff00");
+  $("#connection").addClass('card');
+  $("#connection").css("border-color","#00ff00");
 }
 
 function disconnected() { 
   console.log('disconnected');
-  $("#connection").css("background-color","#ff0000");
+  $("#connection").addClass('card');
+  $("#connection").css("border-color","#ff0000");
 
   //try to reconnect 
   reconnectionInterval = setTimeout(function() {

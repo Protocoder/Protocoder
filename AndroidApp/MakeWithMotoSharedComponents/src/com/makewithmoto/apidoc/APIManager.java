@@ -52,14 +52,14 @@ public class APIManager {
 			APIClass apiClass = new APIClass();
 			apiClass.name = c.getSimpleName();
 			// apiClass.description = ;
-			Log.d("qq1", "" + c.getName());
+			Log.d(TAG, "" + c.getName());
 
 			Method m[] = c.getDeclaredMethods();
 			for (int i = 0; i < m.length; i++) {
 
 				APIMethod apiMethod = new APIMethod();
-				Log.d("qq2", "" + m[i]);
-				Log.d("qq3", "" + m[i].getName());
+				Log.d(TAG, "" + m[i]);
+				Log.d(TAG, "" + m[i].getName());
 				apiMethod.name = m[i].getName();
 				//Log.d("qq", apiMethod.name);
 				
@@ -123,7 +123,7 @@ public class APIManager {
 								.description();
 						String example = ((APIAnnotation) annotation2)
 								.example();
-						Log.d("desc", desc);
+						Log.d(TAG, desc);
 					}
 				}
 

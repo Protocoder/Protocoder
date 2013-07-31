@@ -32,6 +32,13 @@ public class CustomWebsocketServer extends WebSocketServer {
 		}
 		return inst;
 	}
+	
+	// Singleton (one app view, different URLs)
+	public static CustomWebsocketServer getInstance(Context aCtx) throws UnknownHostException {
+		if (inst == null) {
+		}
+		return inst;
+	}
 
 	public CustomWebsocketServer(Context aCtx, int port, Draft d)
 			throws UnknownHostException {

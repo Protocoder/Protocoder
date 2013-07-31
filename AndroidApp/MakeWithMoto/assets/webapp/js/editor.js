@@ -59,9 +59,9 @@ function initEditor() {
 
 	$("#overlay #toggle").click(function() { 
 		if (overlayShow) {
-			$("#overlay #container").fadeOut(500);
+			$("#overlay #container").fadeOut(200);
 		} else {
-			$("#overlay #container").fadeIn(500);
+			$("#overlay #container").fadeIn(300);
 		}
 
 		overlayShow ^= true;

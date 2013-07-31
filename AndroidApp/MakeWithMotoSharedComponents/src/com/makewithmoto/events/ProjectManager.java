@@ -120,7 +120,7 @@ public class ProjectManager {
 			String projectURL = file.getAbsolutePath();
 			String projectName = file.getName();
 			Log.d("PROJECT", "Adding project named " + projectName);
-			projects.add(new Project(projectName, projectURL));
+			projects.add(new Project(projectName, projectURL, type));
 		}
 
 		return projects;
@@ -139,15 +139,25 @@ public class ProjectManager {
 	}
 	
 
-	public Project addNewProject(Context c, String newProjectName, String fileName) {
-		String newTemplateCode = FileIO.readAssetFile(c, "assets/new.js");
+	public Project addNewProject(Context c, String newProjectName, String fileName, int type) {
+		String newTemplateCode = FileIO.readAssetFile(c, "templates/new.js");
+		
+		
 		if (newTemplateCode == null) newTemplateCode = "";
-		String file = FileIO.writeStringToFile(newProjectName, newTemplateCode);
+		String file = FileIO.writeStringToFile(BaseMainApp.projectsDir, newProjectName, newTemplateCode);
 
-		Project newProject = new Project(newProjectName, file);
+		Project newProject = new Project(newProjectName, file, type);
 		
 		return newProject;
 
+	}
+	
+	//TODO fix this hack 
+	public String getProjectURL(Project p) {  
+		String projectURL = p.getUrl();
+		
+		return projectURL; 
+		
 	}
 	
 

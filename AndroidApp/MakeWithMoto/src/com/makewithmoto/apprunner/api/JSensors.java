@@ -1,8 +1,5 @@
 package com.makewithmoto.apprunner.api;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.util.Log;
 import android.webkit.JavascriptInterface;
 
@@ -27,9 +24,10 @@ public class JSensors extends JInterface {
 	}
 
 	@JavascriptInterface
+
 	public void startAccelerometer(final String callbackfn) {
 		if(!AccelerometerStarted){
-		    accelerometerManager = new AccelerometerManager(c.get());
+		    accelerometerManager = new AccelerometerManager(a.get());
 		    accelerometerListener = new AccelerometerListener() {
 
 			    @Override
@@ -62,7 +60,7 @@ public class JSensors extends JInterface {
 
 	@JavascriptInterface
 	public void startOrientation(final String callback) {
-		orientationManager = new OrientationManager(c.get());
+		orientationManager = new OrientationManager(a.get());
 
 		orientationListener = new OrientationListener() {
 
