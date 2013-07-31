@@ -4,7 +4,6 @@ import java.lang.ref.WeakReference;
 
 import android.app.Activity;
 
-import com.makewithmoto.apidoc.APIManager;
 import com.makewithmoto.apprunner.AppRunnerActivity;
 
 
@@ -17,8 +16,7 @@ public class JInterface {
 	public JInterface(Activity appActivity) {
 		super();
 		this.a = new WeakReference<AppRunnerActivity>((AppRunnerActivity) appActivity); 
-		APIManager.getInstance().addClass(this.getClass());
-
+		
 	}
 	
 	public void callback(String fn){

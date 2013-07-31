@@ -67,8 +67,15 @@ function testWebsockets() {
 
     } 
 
-    if (result.widget != null) { 
-      addWidget(result.widget);
+    console.log(result);
+    if (result.type == "widget") { 
+          console.log("widget");
+
+      if (result.action == "add") { 
+                  console.log("add");
+
+        addWidget(result.values);
+      }
 
     }
 
