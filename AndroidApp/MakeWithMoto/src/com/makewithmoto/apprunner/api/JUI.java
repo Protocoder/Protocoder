@@ -39,8 +39,11 @@ import com.makewithmoto.apidoc.APIAnnotation;
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class JUI extends JInterface {
 
+	final static int MAXVIEW = 20;
     FrameLayout mMainLayout;
     Boolean isMainLayoutSetup = false;
+    int viewCount = 0;
+    View viewArray[] = new View[MAXVIEW];
 
     public JUI(Activity a) {
         super(a);
@@ -164,9 +167,9 @@ public class JUI extends JInterface {
      * @param h
      */
     @JavascriptInterface
-    public void label(String label, int x, int y, int w, int h) {
+    public int label(String label, int x, int y, int w, int h) {
         int defaultTextSize = 16;
-        label(label, x, y, w, h, defaultTextSize);
+        return label(label, x, y, w, h, defaultTextSize);
     }
 
     /**
@@ -179,7 +182,7 @@ public class JUI extends JInterface {
      * @param textSize
      */
     @JavascriptInterface
-    public void label(String label, int x, int y, int w, int h, int textSize) {
+    public int label(String label, int x, int y, int w, int h, int textSize) {
 
         initializeLayout();
         //Create the TextView
@@ -190,8 +193,23 @@ public class JUI extends JInterface {
 
         //Add the view
         mMainLayout.addView(tv);
+        
+        viewArray[viewCount] = tv;
+        
+        viewCount += 1;
+        
+        return (viewCount-1);
     }
 
+    
+    @JavascriptInterface
+    public void labelSetText(int view, String text) {
+    	TextView tv = (TextView)viewArray[view];
+    	tv.setText(text);
+    }
+    
+      
+    
     /**
      * Adds an EditText view
      * @param label
@@ -235,18 +253,6 @@ public class JUI extends JInterface {
      */
     @JavascriptInterface
     public void toggleButton(final String label, int x, int y, int w, int h, boolean initstate, final String callbackfn) {
-        /*
-        moldableFragment.get().addAToggleButton(label, new OnCheckedChangeListener() {
-
-        	@Override
-        	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        		Log.d("addAToggleButton", "is checked: " + isChecked);
-        		applicationWebView.runJavascript("window['" + callback + "']('"
-        				+ isChecked + "')");
-        	}
-        });
-        */
-
         initializeLayout();
         //Create the view
         ToggleButton tb = new ToggleButton(c.get());
@@ -259,7 +265,7 @@ public class JUI extends JInterface {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 //TODO Callback should capture the checked state
-                callback(callbackfn);
+                callback(callbackfn, isChecked);
             }
         });
 

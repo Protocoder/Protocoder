@@ -19,48 +19,45 @@ public class JSensors extends JInterface {
 	private AccelerometerListener accelerometerListener;
 	private OrientationManager orientationManager;
 	private OrientationListener orientationListener;
+	private boolean AccelerometerStarted = false;
+
 
 	public JSensors(AppRunnerActivity mwmActivity) {
 		super(mwmActivity);
 	}
 
 	@JavascriptInterface
-	public void startAccelerometer(final String callback) {
-		accelerometerManager = new AccelerometerManager(c.get());
-		accelerometerListener = new AccelerometerListener() {
+	public void startAccelerometer(final String callbackfn) {
+		if(!AccelerometerStarted){
+		    accelerometerManager = new AccelerometerManager(c.get());
+		    accelerometerListener = new AccelerometerListener() {
 
-			@Override
-			public void onShake(float force) {
+			    @Override
+			    public void onShake(float force) {
 
-			}
+			    }
 
-			@Override
-			public void onAccelerometerChanged(float x, float y, float z) {
-				JSONObject res = new JSONObject();
-				try {
-					res.put("type", "sensor");
-					res.put("name", "accelerometer");
-					res.put("x", x);
-					res.put("y", y);
-					res.put("z", z);
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-			
-			}
-		};
-		accelerometerManager.addListener(accelerometerListener);
-		accelerometerManager.start();
-		WhatIsRunning.getInstance().add(accelerometerManager);
+			    @Override
+			    public void onAccelerometerChanged(float x, float y, float z) {
+				    	callback(callbackfn,x,y,z);	
+			    }
+		    };
+		    accelerometerManager.addListener(accelerometerListener);
+		    accelerometerManager.start();
+		    WhatIsRunning.getInstance().add(accelerometerManager);
+		    
+		    AccelerometerStarted = true;
+		}
 	}
 
 	@JavascriptInterface
-	public void stopAccelerometer(final String callback) {
+	public void stopAccelerometer() {
 		Log.d(TAG, "Called stopAccelerometer");
-		accelerometerManager.removeListener(accelerometerListener);
-		accelerometerManager.stop();
+		if(AccelerometerStarted){
+		    accelerometerManager.removeListener(accelerometerListener);
+		    accelerometerManager.stop();
+		    AccelerometerStarted = false;
+		}
 	}
 
 	@JavascriptInterface

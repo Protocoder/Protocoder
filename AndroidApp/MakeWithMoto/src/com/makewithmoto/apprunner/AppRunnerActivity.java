@@ -48,10 +48,13 @@ public class AppRunnerActivity extends Activity {
                                         "var browser = JBrowser(Activity);\n" + 
                                         "var JMakr = Packages.com.makewithmoto.apprunner.api.JMakr; \n" +
                                         "var makr = JMakr(Activity);\n" + 
+                                        "var JSensors = Packages.com.makewithmoto.apprunner.api.JSensors; \n" +
+                                        "var sensor = JSensors(Activity);\n" + 
                                         "// End of Prepend Section" + "\n";
 
     static final String SCRIPT_POSTFIX = "//Appends text for all scripts \n" + 
-                                         "ui.postLayout(); \n" + 
+                                         "//ui.postLayout(); \n" + 
+    		                             "function onSensorPause(){sensor.stopAccelerometer();}" +
     		                              "// End of Append Section" + "\n";
 
     @Override
@@ -64,7 +67,7 @@ public class AppRunnerActivity extends Activity {
         if (null != intent) {
             String filenameOrUrl = intent.getStringExtra("ScriptName");
             String script = intent.getStringExtra("Script");
-            script = SCRIPT_PREFIX + script;
+            script = SCRIPT_PREFIX + script + SCRIPT_POSTFIX;
 
             Log.i("AppRunnerActivity", script);
 
@@ -103,6 +106,7 @@ public class AppRunnerActivity extends Activity {
     public void onPause() {
         super.onPause();
         callJsFunction("onPause");
+        callJsFunction("onSensorPause");
     }
 
     @Override
