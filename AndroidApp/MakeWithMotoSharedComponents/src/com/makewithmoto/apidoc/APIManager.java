@@ -52,7 +52,7 @@ public class APIManager {
 			APIClass apiClass = new APIClass();
 			apiClass.name = c.getSimpleName();
 			// apiClass.description = ;
-			Log.d("qq1", "" + c.getName());
+			Log.d(TAG, "" + c.getName());
 
 			Method m[] = c.getDeclaredMethods();
 			for (int i = 0; i < m.length; i++) {

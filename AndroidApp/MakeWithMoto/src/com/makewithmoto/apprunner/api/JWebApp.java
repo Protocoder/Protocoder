@@ -2,6 +2,7 @@ package com.makewithmoto.apprunner.api;
 
 import java.net.UnknownHostException;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -21,29 +22,37 @@ public class JWebApp extends JInterface {
 
 	@JavascriptInterface 
     @APIAnnotation(description = "Creates a button ", example = "ui.button(\"button\"); ")
-	public void addWidget(JSONObject obj) { 
+	public void addWidget(String name, int x, int y, int w, int h) {
+		
+		JSONObject msg = new JSONObject(); 
+		try {
+			msg.put("type", "widget");
+			msg.put("action", "add");
+
+			JSONObject values = new JSONObject();
+			values.put("name", name);
+			values.put("type", "plot");
+			values.put("x", x);
+			values.put("y", y);
+			values.put("w", w);
+			values.put("h", h);
+			
+			msg.put("values", values);
+			
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+		
 		Log.d(TAG, "added widget ");
 		
 		try {
-			CustomWebsocketServer.getInstance(a.get()).send(obj);
+			CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
+			ws.send(msg);
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		/*
-		JSONObject obj = new JSONObject(); 
-		try {
-			obj.put("type", "plot");
-			obj.put("x", 100);
-			obj.put("y", 100);
-			obj.put("w", 100);
-			obj.put("h", 100);
-		} catch (JSONException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} 
-		*/
-		//ws.send(obj);
+	
+
 	}
 }
