@@ -11,12 +11,12 @@ import com.makewithmoto.apprunner.AppRunnerActivity;
 public class JInterface {
 	
 	protected static final String TAG = "JSInterface";
-	public WeakReference<AppRunnerActivity> c;
+	public WeakReference<AppRunnerActivity> a;
 	
 
 	public JInterface(Activity appActivity) {
 		super();
-		this.c = new WeakReference<AppRunnerActivity>((AppRunnerActivity) appActivity); 
+		this.a = new WeakReference<AppRunnerActivity>((AppRunnerActivity) appActivity); 
 		APIManager.getInstance().addClass(this.getClass());
 
 	}
@@ -30,7 +30,7 @@ public class JInterface {
 		           f1 = "var fn = " + fn + "\n fn();";
 		       }
 		
-		       c.get().eval(f1);
+		       a.get().eval(f1);
 		
 		   }catch (Throwable e){
 	

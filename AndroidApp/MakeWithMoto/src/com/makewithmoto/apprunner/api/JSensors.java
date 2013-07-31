@@ -26,7 +26,7 @@ public class JSensors extends JInterface {
 
 	@JavascriptInterface
 	public void startAccelerometer(final String callback) {
-		accelerometerManager = new AccelerometerManager(c.get());
+		accelerometerManager = new AccelerometerManager(a.get());
 		accelerometerListener = new AccelerometerListener() {
 
 			@Override
@@ -65,7 +65,7 @@ public class JSensors extends JInterface {
 
 	@JavascriptInterface
 	public void startOrientation(final String callback) {
-		orientationManager = new OrientationManager(c.get());
+		orientationManager = new OrientationManager(a.get());
 
 		orientationListener = new OrientationListener() {
 

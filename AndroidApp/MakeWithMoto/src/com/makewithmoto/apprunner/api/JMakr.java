@@ -63,7 +63,7 @@ public class JMakr extends JInterface {
 				}
 				
 				if(receivedData != ""){
-				    c.get().runOnUiThread(new Runnable() {
+				    a.get().runOnUiThread(new Runnable() {
 					    public void run() {
 
 							Log.d(TAG,"Got data: "+receivedData);

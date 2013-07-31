@@ -16,6 +16,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -33,7 +34,7 @@ import com.makewithmoto.events.ProjectManager;
  * Source code license: MIT
  */
 
-public class AppRunnerActivity extends Activity {
+public class AppRunnerActivity extends FragmentActivity {
 
 	static ScriptContextFactory contextFactory;
 	public Interpreter interpreter;
@@ -129,11 +130,17 @@ public class AppRunnerActivity extends Activity {
 		callJsFunction("onDestroy");
 	}
 
-	@Override
-	public Object onRetainNonConfigurationInstance() {
-		// TODO: We will need to somehow also allow JS to save
+	//@Override
+	//public Object onRetainNonConfigurationInstance() {
+	//	// TODO: We will need to somehow also allow JS to save
 		// data and rebuild the UI.
-		return interpreter;
+	//	return interpreter;
+	//}
+	
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+
+		super.onRestoreInstanceState(savedInstanceState);
 	}
 
 	@Override

@@ -435,9 +435,7 @@ public class MainActivity extends BaseActivity implements
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_activity_menu, menu);
-        //menu.add(0, MENU_NEW_PROJECT, 0, "New").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        //menu.add(0, MENU_TOGGLE_HELP, 0, "Help").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
+   
         mMenu = menu;
         return super.onCreateOptionsMenu(menu);
     }
@@ -449,8 +447,6 @@ public class MainActivity extends BaseActivity implements
         switch (item.getItemId()) {
 
         case android.R.id.home:
-            //We've changed this from a fragment
-            //hideHelpView();
 
             return true;
         case R.id.menu_new:
@@ -461,12 +457,7 @@ public class MainActivity extends BaseActivity implements
             Intent aboutActivityIntent = new Intent(this, AboutActivity.class);
             startActivity(aboutActivityIntent);
             overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
-            //Using a fragment here makes it really difficult to handle Activity lifecycle in relation to TSB...
-            /*if (showingHelp) {
-                hideHelpView();
-            } else {
-                showHelpView();
-            }*/
+        
             return true;
         case R.id.menu_start_stop:
             if (httpServer != null) {
