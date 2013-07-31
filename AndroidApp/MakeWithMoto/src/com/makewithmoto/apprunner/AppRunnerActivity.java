@@ -16,17 +16,22 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import com.makewithmoto.MainActivity;
 import com.makewithmoto.R;
+import com.makewithmoto.base.BaseActivity;
 import com.makewithmoto.events.Project;
 import com.makewithmoto.events.ProjectManager;
+import com.makewithmoto.fragments.CameraFragment;
 
 /**
  * Original sourcecode from Droid Script :
@@ -34,7 +39,7 @@ import com.makewithmoto.events.ProjectManager;
  * Source code license: MIT
  */
 
-public class AppRunnerActivity extends FragmentActivity {
+public class AppRunnerActivity extends BaseActivity {
 
 	static ScriptContextFactory contextFactory;
 	public Interpreter interpreter;
@@ -64,6 +69,37 @@ public class AppRunnerActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		setContentView(R.layout.activity_apprunner);
+		
+		//testing camera 
+		/*
+		RelativeLayout rl = (RelativeLayout) findViewById(R.id.app_runner_parent);
+
+		// Create the main layout. This is where all the items actually go
+		FrameLayout fl = new FrameLayout(this);
+		fl.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
+				LayoutParams.MATCH_PARENT));
+		fl.setId(12345);
+		rl.addView(fl);
+
+		CameraFragment cameraFragment = new CameraFragment();
+		Bundle bundle = new Bundle();
+		bundle.putInt("color", CameraFragment.MODE_COLOR_COLOR);
+		bundle.putInt("camera", CameraFragment.MODE_CAMERA_BACK);
+		cameraFragment.setArguments(bundle);
+
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		// FIXME: Because we have no tagging system we need to use the int as a
+		// tag, which may cause collisions
+		ft.add(fl.getId(), cameraFragment, String.valueOf(fl.getId()));
+		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+		ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+		if (true) {
+			ft.addToBackStack(null);
+		}
+		ft.commit();
+		*/
 
 		String projectName = "";
 
@@ -131,13 +167,13 @@ public class AppRunnerActivity extends FragmentActivity {
 		callJsFunction("onDestroy");
 	}
 
-	//@Override
-	//public Object onRetainNonConfigurationInstance() {
-	//	// TODO: We will need to somehow also allow JS to save
-		// data and rebuild the UI.
-	//	return interpreter;
-	//}
-	
+	// @Override
+	// public Object onRetainNonConfigurationInstance() {
+	// // TODO: We will need to somehow also allow JS to save
+	// data and rebuild the UI.
+	// return interpreter;
+	// }
+
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 
@@ -455,10 +491,10 @@ public class AppRunnerActivity extends FragmentActivity {
 
 	public Project getCurrentProject() {
 		return currentProject;
-	} 
-	
-	public String getCurrentDir() { 
-		
+	}
+
+	public String getCurrentDir() {
+
 		return ProjectManager.getInstance().getProjectURL(currentProject);
 
 	}
