@@ -91,12 +91,14 @@ var reconnectionInterval;
 function connected() { 
   console.log('connected');
   clearInterval(reconnectionInterval); //removes the reconnection 
-  $("#connection").css("background-color","#00ff00");
+  $("#connection").addClass('card');
+  $("#connection").css("border-color","#00ff00");
 }
 
 function disconnected() { 
   console.log('disconnected');
-  $("#connection").css("background-color","#ff0000");
+  $("#connection").addClass('card');
+  $("#connection").css("border-color","#ff0000");
 
   //try to reconnect 
   reconnectionInterval = setTimeout(function() {
