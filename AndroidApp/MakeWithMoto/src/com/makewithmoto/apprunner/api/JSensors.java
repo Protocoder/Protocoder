@@ -6,7 +6,6 @@ import android.webkit.JavascriptInterface;
 import com.makewithmoto.apprunner.AppRunnerActivity;
 import com.makewithmoto.sensors.AccelerometerManager;
 import com.makewithmoto.sensors.AccelerometerManager.AccelerometerListener;
-import com.makewithmoto.sensors.GPSManager.GPSListener;
 import com.makewithmoto.sensors.GPSManager;
 import com.makewithmoto.sensors.OrientationManager;
 import com.makewithmoto.sensors.OrientationManager.OrientationListener;
@@ -19,8 +18,8 @@ public class JSensors extends JInterface {
 	private OrientationManager orientationManager;
 	private OrientationListener orientationListener;
 	private boolean accelerometerStarted = false;
-	private GPSManager gpsManager;
-	private GPSListener gpsListener;
+	private GPSManager gps;
+//	private GPSListener gpsListener;
 	private boolean gpsStarted = false;
 
 	public JSensors(AppRunnerActivity mwmActivity) {
@@ -61,6 +60,7 @@ public class JSensors extends JInterface {
 		}
 	}
  
+/*
 	@JavascriptInterface
 	public void startGPS(final String callbackfn) {
 		if (!gpsStarted) {
@@ -116,86 +116,87 @@ public class JSensors extends JInterface {
 			gpsStarted = false;
 		}
 	}
-
-	// @JavascriptInterface
-	// public double getLatitude() {
-	//
-	// if(!gpsStarted){
-	// gpsStarted = true;
-	// gps = new GPSManager(a.get());
-	// }
-	//
-	//
-	// // check if GPS enabled
-	// if(gps.canGetLocation()){
-	// return gps.getLatitude();
-	// }else{
-	// // can't get location
-	// // GPS or Network is not enabled
-	// // Ask user to enable GPS/network in settings
-	// gps.showSettingsAlert();
-	// }
-	//
-	// return 0;
-	// }
-	//
-	// @JavascriptInterface
-	// public double getLongitude() {
-	//
-	// if(!gpsStarted){
-	// gpsStarted = true;
-	// gps = new GPSManager(a.get());
-	// }
-	//
-	//
-	// // check if GPS enabled
-	// if(gps.canGetLocation()){
-	// return gps.getLongitude();
-	// }else{
-	// // can't get location
-	// // GPS or Network is not enabled
-	// // Ask user to enable GPS/network in settings
-	// gps.showSettingsAlert();
-	// }
-	//
-	// return 0;
-	// }
-	//
-	//
-	// @JavascriptInterface
-	// public String getCity() {
-	//
-	// if(!gpsStarted){
-	// gpsStarted = true;
-	// gps = new GPSManager(a.get());
-	// }
-	//
-	//
-	// // check if GPS enabled
-	// if(gps.canGetLocation()){
-	// return gps.getCity();
-	// }else{
-	// // can't get location
-	// // GPS or Network is not enabled
-	// // Ask user to enable GPS/network in settings
-	// gps.showSettingsAlert();
-	// }
-	//
-	// return "";
-	// }
-	//
-	//
-	// @JavascriptInterface
-	// public void stopGPS() {
-	// if(gpsStarted){
-	// gps.stopUsingGPS();
-	// gpsStarted = false;
-	// }
-	// }
-	//
-	//
-	//
-	//
+*/
+	
+@JavascriptInterface
+public double getLatitude() {
+	
+	 if(!gpsStarted){
+	 gpsStarted = true;
+	 gps = new GPSManager(a.get());
+	 }
+	
+	
+	 // check if GPS enabled
+	 if(gps.canGetLocation()){
+	 return gps.getLatitude();
+	 }else{
+	 // can't get location
+	 // GPS or Network is not enabled
+	 // Ask user to enable GPS/network in settings
+	 gps.showSettingsAlert();
+	 }
+	
+	 return 0;
+	 }
+	
+// @JavascriptInterface
+public double getLongitude() {
+	
+	 if(!gpsStarted){
+	 gpsStarted = true;
+	 gps = new GPSManager(a.get());
+	 }
+	
+	
+	 // check if GPS enabled
+	 if(gps.canGetLocation()){
+	 return gps.getLongitude();
+	 }else{
+	 // can't get location
+	 // GPS or Network is not enabled
+	 // Ask user to enable GPS/network in settings
+	gps.showSettingsAlert();
+	}
+	
+	return 0;
+	}
+	
+	
+@JavascriptInterface
+public String getCity() {
+	
+	if(!gpsStarted){
+	 gpsStarted = true;
+	 gps = new GPSManager(a.get());
+	 }
+	
+	
+	// check if GPS enabled
+	if(gps.canGetLocation()){
+	return gps.getCity();
+	}else{
+	// can't get location
+	// GPS or Network is not enabled
+	// Ask user to enable GPS/network in settings
+	gps.showSettingsAlert();
+	}
+	
+    return "";
+	 }
+	
+	
+	@JavascriptInterface
+	public void stopGPS() {
+	  if(gpsStarted){
+	    gps.stopUsingGPS();
+	    gpsStarted = false;
+	  }
+	}
+	
+	
+	
+	
 
 	@JavascriptInterface
 	public void startOrientation(final String callback) {
@@ -222,7 +223,7 @@ public class JSensors extends JInterface {
 	}
 
 	@Override
-	public void destroy() {
+	public void destroy() { 
 
 	}
 
