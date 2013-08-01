@@ -177,15 +177,14 @@ public class JUI extends JInterface {
 	// We'll add in the circular view as a nice to have later once all the other
 	// widgets are handled.
 	@JavascriptInterface
-	public void seekbar(int max, int progress, int x, int y, int w, int h,
-			final String callbackfn) {
+	public void seekbar(int max, int progress, int x, int y, int w, final String callbackfn) {
 
 		initializeLayout();
 		// Create the position the view
 		SeekBar sb = new SeekBar(a.get());
 		sb.setMax(max);
 		sb.setProgress(progress);
-		positionView(sb, x, y, w, h);
+		positionView(sb, x, y, w, -1);//height must always wrap
 
 		// Add the change listener
 		sb.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
