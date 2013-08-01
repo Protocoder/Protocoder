@@ -81,7 +81,7 @@ var addPlot = function(element, posx, posy, w, h) {
 
   //move the plot 
   //$("#plot_container h1").text(plot_name);
-  $("#plot_container").css({left:posx, top:posy}); 
+  $("#widgets #" + element).css({left:posx, top:posy}); 
 
    
   return function(val, cb) {
