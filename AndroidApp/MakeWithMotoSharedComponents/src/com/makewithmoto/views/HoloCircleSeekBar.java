@@ -229,9 +229,9 @@ public class HoloCircleSeekBar extends View {
 
 	private void initAttributes(TypedArray a) {
 		mColorWheelStrokeWidth = a.getInteger(
-				R.styleable.HoloCircleSeekBar_wheel_size, 16);
+				R.styleable.HoloCircleSeekBar_wheel_size, 8);
 		mPointerRadius = a.getInteger(
-				R.styleable.HoloCircleSeekBar_pointer_size, 48);
+				R.styleable.HoloCircleSeekBar_pointer_size, 32);
 		max = a.getInteger(R.styleable.HoloCircleSeekBar_max, 100);
 
 		color_attr = a.getString(R.styleable.HoloCircleSeekBar_color);
@@ -267,11 +267,11 @@ public class HoloCircleSeekBar extends View {
 			try {
 				color = Color.parseColor(color_attr);
 			} catch (IllegalArgumentException e) {
-				color = Color.CYAN;
+				color = 0xff33b5e5;
 			}
 			color = Color.parseColor(color_attr);
 		} else {
-			color = Color.CYAN;
+			color = 0xff33b5e5;
 		}
 
 		if (wheel_color_attr != null) {
@@ -282,50 +282,50 @@ public class HoloCircleSeekBar extends View {
 			}
 
 		} else {
-			wheel_color = Color.DKGRAY;
+			wheel_color = 0xff33b5e5;
 		}
 		if (wheel_unactive_color_attr != null) {
 			try {
 				unactive_wheel_color = Color
 						.parseColor(wheel_unactive_color_attr);
 			} catch (IllegalArgumentException e) {
-				unactive_wheel_color = Color.CYAN;
+				unactive_wheel_color = Color.GRAY;
 			}
 
 		} else {
-			unactive_wheel_color = Color.CYAN;
+			unactive_wheel_color = Color.GRAY;
 		}
 
 		if (pointer_color_attr != null) {
 			try {
 				pointer_color = Color.parseColor(pointer_color_attr);
 			} catch (IllegalArgumentException e) {
-				pointer_color = Color.CYAN;
+				pointer_color = 0xff33b5e5;
 			}
 
 		} else {
-			pointer_color = Color.CYAN;
+			pointer_color = 0xff33b5e5;
 		}
 
 		if (pointer_halo_color_attr != null) {
 			try {
 				pointer_halo_color = Color.parseColor(pointer_halo_color_attr);
 			} catch (IllegalArgumentException e) {
-				pointer_halo_color = Color.CYAN;
+				pointer_halo_color = 0xff33b5e5;
 			}
 
 		} else {
-			pointer_halo_color = Color.DKGRAY;
+			pointer_halo_color = 0x5533b5e5;
 		}
 
 		if (text_color_attr != null) {
 			try {
 				text_color = Color.parseColor(text_color_attr);
 			} catch (IllegalArgumentException e) {
-				text_color = Color.CYAN;
+				text_color = Color.GRAY;
 			}
 		} else {
-			text_color = Color.CYAN;
+			text_color = Color.GRAY;
 		}
 
 	}

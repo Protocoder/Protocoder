@@ -82,6 +82,16 @@ public class JUI extends JInterface {
         params.topMargin = y;
         v.setLayoutParams(params);
     }
+    
+    /**
+     * This is what we use to actually position and size the views
+     */
+    private void positionView(View v, int x, int y) {
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        params.leftMargin = x;
+        params.topMargin = y;
+        v.setLayoutParams(params);
+    }
 
     /**
      * Adds a button to the view
@@ -118,7 +128,6 @@ public class JUI extends JInterface {
     
     /**
      * Adds a circular seekbar or picker
-     * @param label
      * @param x
      * @param y
      * @param w
@@ -126,15 +135,13 @@ public class JUI extends JInterface {
      * @param callbackfn
      */
     @JavascriptInterface
-    public void picker(final String callbackfn){
+    public void picker(int x, int y, final String callbackfn){
     	//initializeLayout();
     	
     	HoloCircleSeekBar pkr = new HoloCircleSeekBar(a.get());
     	
-    	   //Add the change listener
+    	//Add the change listener
         pkr.setOnSeekBarChangeListener(new OnCircleSeekBarChangeListener() {
-        	
-
             @Override
             public void onProgressChanged(HoloCircleSeekBar seekBar,
     				int progress, boolean fromUser) {
