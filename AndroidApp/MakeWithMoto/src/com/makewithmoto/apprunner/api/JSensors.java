@@ -1,22 +1,9 @@
 package com.makewithmoto.apprunner.api;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
-
-import android.content.Context;
-import android.location.Address;
-import android.location.Criteria;
-import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.Bundle;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
 
 import com.makewithmoto.apprunner.AppRunnerActivity;
-import com.makewithmoto.apprunner.logger.L;
 import com.makewithmoto.sensors.AccelerometerManager;
 import com.makewithmoto.sensors.AccelerometerManager.AccelerometerListener;
 import com.makewithmoto.sensors.GPSManager;
@@ -31,9 +18,8 @@ public class JSensors extends JInterface {
 	private OrientationManager orientationManager;
 	private OrientationListener orientationListener;
 	private boolean AccelerometerStarted = false;
-	private GPSManager gpsManager;
-	private LocationListener gpsListener;
-	private LocationManager locationManager;
+	private GPSManager gps;
+	private boolean gpsStarted=false;
 
 
 	public JSensors(AppRunnerActivity mwmActivity) {
@@ -78,69 +64,79 @@ public class JSensors extends JInterface {
 	
 	
 	@JavascriptInterface
-	public void startGPS(final String callbackfn) {
+	public double getLatitude() {
 		
-		
-	    gpsManager = new GPSManager(a.get());
+		if(!gpsStarted){
+			gpsStarted = true;
+	        gps = new GPSManager(a.get());   
+		}
 	    
-	    gpsManager.start();
 	    
-	    Criteria criteria = new Criteria();
-		criteria.setAccuracy(Criteria.ACCURACY_FINE);
-		criteria.setBearingAccuracy(Criteria.ACCURACY_FINE);
-		// criteria.setSpeedRequired(true);
-		String provider;
-		locationManager = (LocationManager) a.get().getSystemService(Context.LOCATION_SERVICE);
-		provider = locationManager.getBestProvider(criteria, false);
-	    
-	    gpsListener = new LocationListener() {
-	    	@Override
-			public void onStatusChanged(String provider, int status, Bundle extras) {
-				L.d(TAG, "the gps status is: " + status);
-			}
-
-			@Override
-			public void onProviderEnabled(String provider) {
-			}
-
-			@Override
-			public void onProviderDisabled(String provider) {
-			}
-
-			@Override
-			public void onLocationChanged(Location location) {
-				
-				Location l = gpsManager.getLocation();
-				
-				if(l != null){
-		            Geocoder gcd = new Geocoder(a.get(), Locale.getDefault());
-		            List<Address> addresses;
-		            try {
-		                addresses = gcd.getFromLocation(l.getLatitude(),
-		            	    	l.getLongitude(), 1);
-		                String gpsCity = addresses.get(0).getLocality();
-			            String lat = ""+l.getLatitude();
-			            String lng = ""+l.getLongitude();
-			        
-					    callback(callbackfn,lat,lng,gpsCity);
-		            } catch (IOException e) {
-		                e.printStackTrace();
-		            }
-				}
-				else{
-					//callback(callbackfn,"","","");
-				}
-			}
-	    	
-	    };
-	  
-	    locationManager.requestLocationUpdates(provider, 100, 0.1f, gpsListener);
+	 // check if GPS enabled     
+        if(gps.canGetLocation()){
+            return gps.getLatitude();
+          }else{
+            // can't get location
+            // GPS or Network is not enabled
+            // Ask user to enable GPS/network in settings
+            gps.showSettingsAlert(); 
+        }
+        
+        return 0;
 	}
+	    
+	@JavascriptInterface
+	public double getLongitude() {
+		
+		if(!gpsStarted){
+			gpsStarted = true;
+	        gps = new GPSManager(a.get());   
+		}
+	    
+	    
+	 // check if GPS enabled     
+        if(gps.canGetLocation()){
+            return gps.getLongitude();
+          }else{
+            // can't get location
+            // GPS or Network is not enabled
+            // Ask user to enable GPS/network in settings
+            gps.showSettingsAlert(); 
+        }
+        
+        return 0;
+	}
+	    	
+	
+	@JavascriptInterface
+	public String getCity() {
+		
+		if(!gpsStarted){
+			gpsStarted = true;
+	        gps = new GPSManager(a.get());   
+		}
+	    
+	    
+	 // check if GPS enabled     
+        if(gps.canGetLocation()){
+            return gps.getCity();
+          }else{
+            // can't get location
+            // GPS or Network is not enabled
+            // Ask user to enable GPS/network in settings
+            gps.showSettingsAlert(); 
+        }
+        
+        return "";
+	}
+	       
 	
 	@JavascriptInterface
 	public void stopGPS() {
-		locationManager.removeUpdates(gpsListener);
-		gpsManager.stopGPS(); 
+		if(gpsStarted){
+		    gps.stopUsingGPS(); 
+		    gpsStarted = false;
+		}
 	}
 	
 
