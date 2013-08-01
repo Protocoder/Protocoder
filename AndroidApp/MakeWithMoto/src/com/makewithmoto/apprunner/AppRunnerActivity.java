@@ -61,8 +61,9 @@ public class AppRunnerActivity extends BaseActivity {
 
     static final String SCRIPT_POSTFIX = "//Appends text for all scripts \n" + 
             "//ui.postLayout(); \n" + 
-            "function onSensorPause(){sensor.stopAccelerometer();}" +
-            "function onSensorPause(){sensor.stopGPS();}" +
+            "function onSensorPause(){sensor.stopAccelerometer(); \n" +
+            "                         sensor.stopGPS();}          \n" +
+            "function onAndroidPause(){android.stopAllTimers();}  \n" +
              "// End of Append Section" + "\n";
 
 	@Override
@@ -154,6 +155,7 @@ public class AppRunnerActivity extends BaseActivity {
 		super.onPause();
 		callJsFunction("onPause");
         callJsFunction("onSensorPause");
+        callJsFunction("onAndroidPause");
 	}
 
 	@Override
