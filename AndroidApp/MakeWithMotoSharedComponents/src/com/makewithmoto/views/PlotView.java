@@ -36,7 +36,7 @@ public class PlotView extends View {
 	private float mHeight;
 	private int mNumPoints;
 	private int mCurrentPosition = 0;
-	private int mDefinition;
+	private int mDefinition = 5;
 	private int mMinBoundary;
 	private int mMaxBoundary;
 	private boolean mReady = false;
@@ -48,7 +48,7 @@ public class PlotView extends View {
 
 	public PlotView(Context context) {
 		super(context);
-
+		init();
 	}
 
 	public void init() {

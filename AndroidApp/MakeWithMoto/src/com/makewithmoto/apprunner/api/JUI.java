@@ -609,7 +609,7 @@ public class JUI extends JInterface {
 	}
 
 	@JavascriptInterface
-	public void addPlotValue(float value) {
+	public void setPlotValue(float value) {
 		plotView.setValue(plot1, value);
 	}
 
