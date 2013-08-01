@@ -1,4 +1,4 @@
-//Works!!!            ui.button("B1", 500,400,500,100,"function foo(){ android.vibrate(500); }");
+           ui.button("B1", 500,400,500,100,"function foo(){ android.vibrate(500); }");
 //Works!!!            ui.button("B2", 500,400,500,100,function foo(){ android.vibrate(500); });
 //Does not work!!!    ui.button("B3", 500,400,500,100,"function { android.vibrate(500); }");
 //Does not work       ui.button("B4", 500,400,500,100,function { android.vibrate(500); });
