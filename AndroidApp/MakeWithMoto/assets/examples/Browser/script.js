@@ -17,4 +17,4 @@
         </body>
     </html>""";
     
-    browser.load(content);
+    browser.loadData(content);
