@@ -171,7 +171,7 @@ public class JUI extends JInterface {
         SeekBar sb = new SeekBar(a.get());
         sb.setMax(max);
         sb.setProgress(progress);
-        positionView(sb, x, y, w, h);
+        positionView(sb, x, y, w, -1);//height must always wrap
 
         //Add the change listener
         sb.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
