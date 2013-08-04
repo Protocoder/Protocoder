@@ -32,7 +32,7 @@ function initEditor() {
 	        sender: 'mmeditor'
 	    },
 	    exec: function(env, args, request) {
-	    	currentProject.code = session.getValue();
+	    	currentProject.code = escape(session.getValue());
 	    	push_code(currentProject);
 	    }
 	});
@@ -46,8 +46,11 @@ function initEditor() {
 	        sender: 'mmeditor'
 	    },
 	    exec: function(env, args, request) {
-	    	push_code(currentProject.url, session.getValue());
-	    	run_app(currentProject.name, currentProject.url);
+	    	console.log(currentProject);
+	    	console.log(currentProject.name, currentProject.type);
+	    	currentProject.code = escape(session.getValue());
+	    	push_code(currentProject);
+	    	run_app(currentProject);
 	    }
 	});
 
@@ -72,6 +75,8 @@ function initEditor() {
 	$("#overlay #container #device_status").draggable();
 	$("#overlay #container #help").draggable();
 	$("#overlay #container #connection").draggable();
+	$("#error_from_android").draggable();
+	$("#remote_log").draggable();
 
 
 }

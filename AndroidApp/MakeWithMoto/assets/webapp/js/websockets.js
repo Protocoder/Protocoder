@@ -64,8 +64,20 @@ function testWebsockets() {
 
     if (result.acc_x != null) {
       //plot1(result.acc_x, ""); 
-
     } 
+
+    if (result.type == "error") { 
+      currentError = result.values; 
+      console.log("error "  + currentError);
+      $("#error_from_android").text(currentError);
+    }
+
+
+    if (result.type == "remote_log") { 
+      log = result.values; 
+      $("#remote_log").append('<p>' + log + '</p>');
+    }
+    
 
     console.log(result);
     if (result.type == "widget") { 

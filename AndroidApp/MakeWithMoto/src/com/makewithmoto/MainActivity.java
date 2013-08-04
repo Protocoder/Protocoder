@@ -254,7 +254,7 @@ public class MainActivity extends BaseActivity implements
 		}
 		
 		
-
+		/*
 		AccelerometerManager accelerometerManager = new AccelerometerManager(
 				this);
 		accelerometerManager.addListener(new AccelerometerListener() {
@@ -281,7 +281,7 @@ public class MainActivity extends BaseActivity implements
 			}
 		});
 		accelerometerManager.start();
-		
+		*/
 		
 		
 
@@ -388,7 +388,6 @@ public class MainActivity extends BaseActivity implements
     }
 
     // TODO call intent and kill it in an appropiate way
-    // TODO kill the previous app if one is running
     public void onEventMainThread(ProjectEvent evt) {
         // Using transaction so the view blocks
         Log.d(TAG, "event -> " + evt.getAction());

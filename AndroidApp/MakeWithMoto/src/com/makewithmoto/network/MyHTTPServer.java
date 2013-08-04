@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.net.InetAddress;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +27,7 @@ import com.makewithmoto.apprunner.api.JLog;
 import com.makewithmoto.apprunner.api.JMakr;
 import com.makewithmoto.apprunner.api.JSensors;
 import com.makewithmoto.apprunner.api.JUI;
-import com.makewithmoto.apprunner.api.JVideo;
+import com.makewithmoto.apprunner.api.JMedia;
 import com.makewithmoto.apprunner.api.JWebApp;
 import com.makewithmoto.apprunner.api.JWebAppPlot;
 import com.makewithmoto.events.Events.ProjectEvent;
@@ -127,7 +128,7 @@ public class MyHTTPServer extends NanoHTTPD {
 
 				Project foundProject;
 				String name, url, newCode;
-				String filter;
+				String type;
 				int projectType = -1; 
 
 				Log.d(TAG, "params " + obj.toString(2));
@@ -149,13 +150,13 @@ public class MyHTTPServer extends NanoHTTPD {
 				} else if (cmd.equals("list_apps")) {
 					Log.d(TAG, "--> list apps");
 
-					filter = obj.getString("filter");
+					type = obj.getString("filter");
 					
-					if (filter.equals("user")) {
+					if (type.equals("user")) {
 						projectType = ProjectManager.PROJECT_USER_MADE; 
-					} else if (filter.equals("example")) { 
+					} else if (type.equals("example")) { 
 						projectType = ProjectManager.PROJECT_EXAMPLE; 
-					}
+					} 
 					ArrayList<Project> projects = ProjectManager.getInstance().list(projectType);
 					JSONArray projectsArray = new JSONArray();
 					for (Project project : projects) {
@@ -170,9 +171,17 @@ public class MyHTTPServer extends NanoHTTPD {
 					// Save and run
 					name = obj.getString("name");
 					url = obj.getString("url");
+
+					type = obj.getString("type");
+
+					if (type.equals("user")) {
+						projectType = ProjectManager.PROJECT_USER_MADE; 
+					} else if (type.equals("example")) { 
+						projectType = ProjectManager.PROJECT_EXAMPLE; 
+					} 
 					
-					//TODO add type
-					ProjectEvent evt = new ProjectEvent(new Project(name, url, -1), "run");
+
+					ProjectEvent evt = new ProjectEvent(new Project(name, url, projectType), "run");
 					EventBus.getDefault().post(evt);
 					ALog.i("Running...");
 
@@ -181,10 +190,19 @@ public class MyHTTPServer extends NanoHTTPD {
 					Log.d(TAG, "--> push code");
 					name = obj.getString("name");
 					url = obj.getString("url");
-					newCode = obj.getString("code");
+					newCode = URLDecoder.decode(obj.getString("code"), "UTF-8");
+					
+
+					type = obj.getString("type");
+					
+					if (type.equals("user")) {
+						projectType = ProjectManager.PROJECT_USER_MADE; 
+					} else if (type.equals("example")) { 
+						projectType = ProjectManager.PROJECT_EXAMPLE; 
+					} 
 					
 					//add type
-					Project p = new Project(name, url, -1);
+					Project p = new Project(name, url, projectType);
 					ProjectManager.getInstance().writeNewCode(p, newCode);
 					data.put("project", ProjectManager.getInstance().to_json(p));
 					ALog.i("Saved");
@@ -221,7 +239,7 @@ public class MyHTTPServer extends NanoHTTPD {
 					APIManager.getInstance().addClass(JMakr.class); 
 					APIManager.getInstance().addClass(JSensors.class); 
 					APIManager.getInstance().addClass(JUI.class); 
-					APIManager.getInstance().addClass(JVideo.class); 
+					APIManager.getInstance().addClass(JMedia.class); 
 					APIManager.getInstance().addClass(JWebApp.class); 
 					APIManager.getInstance().addClass(JWebAppPlot.class); 
 					data.put("api", APIManager.getInstance().getDocumentation());

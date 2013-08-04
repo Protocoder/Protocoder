@@ -7,14 +7,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-
 @Documented  
-@Target(ElementType.METHOD) 
+@Target(ElementType.FIELD) 
 @Retention(RetentionPolicy.RUNTIME) 
 @Inherited 
-public @interface APIAnnotation { 
+public @interface APIAnnotationField { 
 	
 	public String description() default ""; 
 	public String example() default ""; 	
-
+	
 } 

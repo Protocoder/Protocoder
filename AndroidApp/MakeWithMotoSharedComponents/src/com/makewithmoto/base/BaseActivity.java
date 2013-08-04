@@ -1,199 +1,241 @@
 package com.makewithmoto.base;
 
+import java.util.ArrayList;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Point;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.speech.RecognizerIntent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.makewithmoto.media.Audio;
+
 @SuppressLint("NewApi")
 public class BaseActivity extends FragmentActivity {
 
-    private static final String TAG = "BaseActivity";
+	private static final String TAG = "BaseActivity";
+	public int screenWidth;
+	public int screenHeight;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        /*
-        if (AppSettings.fullscreen) {
-            setFullScreen();
-        }
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		/*
+		 * if (AppSettings.fullscreen) { setFullScreen(); }
+		 * 
+		 * if (AppSettings.hideHomeBar) { setHideHomeBar(); }
+		 * 
+		 * if (AppSettings.screenAlwaysOn) { setScreenAlwaysOn(); }
+		 * 
+		 * //setVolume(100); //setBrightness(1f); //
+		 * Utils.playSound("http://outside.mediawerf.net/8-Light_2.mp3"); //
+		 * playSound("http://outside.mediawerf.net/music.ogg");
+		 * //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		 * //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		 */
+		
+		Display display = getWindowManager().getDefaultDisplay();
+		Point size = new Point();
+		display.getSize(size);
+				
+		screenWidth = size.x;
+		screenHeight = size.y;
+	}
 
-        if (AppSettings.hideHomeBar) {
-            setHideHomeBar();
-        }
+	public void setFullScreen() {
+		// activity in full screen
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		// requestWindowFeature(Window.FEATURE_ACTION_BAR);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+				WindowManager.LayoutParams.FLAG_FULLSCREEN);
+	}
 
-        if (AppSettings.screenAlwaysOn) {
-            setScreenAlwaysOn();
-        }
+	public void setHideHomeBar() {
 
-        //setVolume(100);
-        //setBrightness(1f);
-        // Utils.playSound("http://outside.mediawerf.net/8-Light_2.mp3");
-        // playSound("http://outside.mediawerf.net/music.ogg");
-        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);*/
-    }
-
-    protected void setFullScreen() {
-        // activity in full screen
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        // requestWindowFeature(Window.FEATURE_ACTION_BAR);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-    }
-
-    protected void setHideHomeBar() {
-    	
 		if (Build.VERSION.SDK_INT > AppSettings.CURRENT_VERSION) {
-			getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-		} else { 
-			
+			getWindow().getDecorView().setSystemUiVisibility(
+					View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+		} else {
+
 		}
-    }
+	}
 
-    public void setScreenAlwaysOn() {
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-    }
+	public void setScreenAlwaysOn() {
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+	}
 
-    public void changeFragment(int id, Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+	public void changeFragment(int id, Fragment fragment) {
+		FragmentManager fragmentManager = getSupportFragmentManager();
+		FragmentTransaction fragmentTransaction = fragmentManager
+				.beginTransaction();
 
-        fragmentTransaction.replace(id, fragment);
-        fragmentTransaction.commit();
-    }
+		fragmentTransaction.replace(id, fragment);
+		fragmentTransaction.commit();
+	}
 
-    public void addFragment(Fragment fragment, int fragmentPosition, String tag, boolean addToBackStack) {
+	public void addFragment(Fragment fragment, int fragmentPosition,
+			String tag, boolean addToBackStack) {
 
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(fragmentPosition, fragment, tag);
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-        if (addToBackStack) {
-            ft.addToBackStack(null);
-        }
-        ft.commit();
-    }
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.add(fragmentPosition, fragment, tag);
+		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+		ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+		if (addToBackStack) {
+			ft.addToBackStack(null);
+		}
+		ft.commit();
+	}
 
-    public void addFragment(Fragment fragment, int fragmentPosition, boolean addToBackStack) {
+	public void addFragment(Fragment fragment, int fragmentPosition,
+			boolean addToBackStack) {
 
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        //FIXME: Because we have no tagging system we need to use the int as a tag, which may cause collisions
-        ft.add(fragmentPosition, fragment, String.valueOf(fragmentPosition));
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-        if (addToBackStack) {
-            ft.addToBackStack(null);
-        }
-        ft.commit();
-    }
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		// FIXME: Because we have no tagging system we need to use the int as a
+		// tag, which may cause collisions
+		ft.add(fragmentPosition, fragment, String.valueOf(fragmentPosition));
+		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+		ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+		if (addToBackStack) {
+			ft.addToBackStack(null);
+		}
+		ft.commit();
+	}
 
-    public void removeFragment(Fragment fragment) {
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.remove(fragment);
-        ft.commit();
-    }
+	public void removeFragment(Fragment fragment) {
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.remove(fragment);
+		ft.commit();
+	}
 
-    public boolean isTablet(Context context) {
-        boolean xlarge = ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4);
-        boolean large = ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE);
-        return (xlarge || large);
-    }
+	public boolean isTablet(Context context) {
+		boolean xlarge = ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4);
+		boolean large = ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE);
+		return (xlarge || large);
+	}
 
-    private void setBrightness(float f) {
-        WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
-        layoutParams.screenBrightness = f;
-        getWindow().setAttributes(layoutParams);
-    }
-    
-    private float getCurrentBrightness(float f) {
-    	WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
-    	
-    	return layoutParams.screenBrightness; 
-    }
+	public void setBrightness(float f) {
+		WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
+		layoutParams.screenBrightness = f;
+		getWindow().setAttributes(layoutParams);
+	}
 
-    public void setVolume(int value) {
+	public float getCurrentBrightness() {
+		WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
 
-        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        value = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) * value / 100;
+		return layoutParams.screenBrightness;
+	}
 
-        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, value, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
+	public void setVolume(int value) {
 
-    }
+		AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+		value = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) * value
+				/ 100;
 
-    public void setWakeLock(boolean b) {
+		audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, value,
+				AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
 
-        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "My Tag");
+	}
 
-        if (b) {
-            wl.acquire();
-        } else {
-            wl.release();
-        }
+	public void setWakeLock(boolean b) {
 
-    }
+		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+		PowerManager.WakeLock wl = pm.newWakeLock(
+				PowerManager.PARTIAL_WAKE_LOCK, "My Tag");
 
-    // override home buttons
-    @Override
-    public void onAttachedToWindow() {
-        if (AppSettings.overrideHomeButtons) {
-            this.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD);
-            super.onAttachedToWindow();
-        }
-    }
+		if (b) {
+			wl.acquire();
+		} else {
+			wl.release();
+		}
 
-    // override volume buttons
-    @Override
+	}
+
+	// override home buttons
+	@Override
+	public void onAttachedToWindow() {
+		if (AppSettings.overrideHomeButtons) {
+			this.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD);
+			super.onAttachedToWindow();
+		}
+	}
+
+	/**
+	 * Handle the results from the recognition activity.
+	 */
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == Audio.VOICE_RECOGNITION_REQUEST_CODE
+				&& resultCode == RESULT_OK) {
+			// Fill the list view with the strings the recognizer thought it
+			// could have heard
+			ArrayList<String> matches = data
+					.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
+			for (String _string : matches) {
+				Log.d(TAG, "" + _string);
+			}
+
+		}
+
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	// override volume buttons
+	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 
-        Log.d(TAG, "" + keyCode);
+		Log.d(TAG, "" + keyCode);
 
-        if (AppSettings.overrideVolumeButtons && (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP)) {
+		if (AppSettings.overrideVolumeButtons
+				&& (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP)) {
 
-            return true;
-        }
+			return true;
+		}
 
-        if (keyCode == KeyEvent.KEYCODE_BACK && AppSettings.closeWithBack) {
-            finish();
-            return true;
-        }
+		if (keyCode == KeyEvent.KEYCODE_BACK && AppSettings.closeWithBack) {
+			finish();
+			return true;
+		}
 
-        return super.onKeyDown(keyCode, event);
-    }
+		return super.onKeyDown(keyCode, event);
+	}
 
-    public void superMegaForceKill() {
-        int pid = android.os.Process.myPid();
-        android.os.Process.killProcess(pid);
-    }
+	public void superMegaForceKill() {
+		int pid = android.os.Process.myPid();
+		android.os.Process.killProcess(pid);
+	}
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        System.gc();
-    }
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		System.gc();
+	}
 
-    @Override
-    protected void onResume() {
-        System.gc();
-        super.onResume();
-    }
+	@Override
+	protected void onResume() {
+		System.gc();
+		super.onResume();
+	}
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        System.gc();
-    }
+	@Override
+	protected void onPause() {
+		super.onPause();
+		System.gc();
+	}
 
 }

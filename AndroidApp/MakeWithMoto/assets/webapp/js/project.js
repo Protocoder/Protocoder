@@ -1,6 +1,7 @@
 var currentProject = {};
 currentProject.name = "";
 currentProject.url = ""; 
+currentProject.type = -1;
 
 //set projects in project list 
 function setProjectList(filter, data) { 
@@ -20,6 +21,7 @@ function setProjectList(filter, data) {
     $('<p id ="'+project.name+'">' + project.name + '</p>').click(function () {
       fetch_code(project.name, project.url);
       currentProject = project;
+      currentProject.type = filter;
     }).appendTo(div);
   
   });

@@ -67,10 +67,19 @@ $(document).ready(function() {
 
 	get_documentation();
 
-	setInterval(function() {
+	//setInterval(function() {
 		//get_camera();
 
-	}, 1000);
+	//}, 1000);
+    $('#run').click(function() { 
+        currentProject.code = escape(session.getValue());
+        run_app(currentProject);
+    });
+
+    $('#save').click(function() { 
+        currentProject.code = escape(session.getValue());
+        push_code(currentProject);
+    });
 
 
 });
@@ -146,7 +155,7 @@ Note: Set the body element's class to "left-sidebar" to position the sidebar on 
                         <ul class="stats">
                             <li>
                                 <a href=
-                                "#">Run</a>
+                                "#" id="run">Run</a>
                             </li>
 
 
@@ -157,7 +166,7 @@ Note: Set the body element's class to "left-sidebar" to position the sidebar on 
 
                             <li>
                                 <a href=
-                                "#">Save</a>
+                                "#" id = "save">Save</a>
                             </li>
 
                             <li>
@@ -254,11 +263,13 @@ Note: Set the body element's class to "left-sidebar" to position the sidebar on 
             <div id = "connection"><b>Connection Status</b></div> 
             <div id = "widgets"><b>Connection Status</b></div> 
 
-            <!-- 
+
             <div id="dropbox">
                 <span class="message">Drop files here to upload. <br /><i>(they will only be visible to you)</i></span>
             </div>
-            --> 
+            <div id = "error_from_android"></div> 
+            <div id = "remote_log"></div> 
+
 
         </div>
 

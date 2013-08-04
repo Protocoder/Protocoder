@@ -17,6 +17,7 @@ function push_code(project) {
 	obj.name = project.name;
 	obj.url = project.url;
 	obj.code = escape(project.code);
+	obj.type = project.type;
 	$.get("cmd="+JSON.stringify(obj), function(data) {
  		//alert('Load was performed. ' + data);
 	});
@@ -34,11 +35,12 @@ function fetch_code(name, url) {
 	});
 }
 
-function run_app(name, url) {
+function run_app(project) {
 	var obj = {};
 	obj.cmd = "run_app";
-	obj.name = name;
-	obj.url = url;
+	obj.name = project.name;
+	obj.url = project.url;
+	obj.type = project.type;
 	$.get("cmd="+JSON.stringify(obj), function(data) {
  		//alert('Load was performed. ' + data);
 	});
