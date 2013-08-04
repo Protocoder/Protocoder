@@ -22,6 +22,7 @@ import com.makewithmoto.utils.FileIO;
 public class ProjectManager {
 	public static final int PROJECT_USER_MADE = 0;
 	public static final int PROJECT_EXAMPLE = 1;
+	private static final String TAG = "ProjectManager";
 	public static int type;
 	
 	private static ProjectManager INSTANCE;
@@ -96,22 +97,24 @@ public class ProjectManager {
 		ArrayList<Project> projects = new ArrayList<Project>();
 		File dir = null;
 
+		Log.d(TAG, "project type" + type + " " + PROJECT_USER_MADE + " " + PROJECT_EXAMPLE);
+		
 		switch (type) {
 		case PROJECT_USER_MADE:
 			dir = new File(BaseMainApp.projectsDir);
+			if (!dir.exists()) dir.mkdir();
 
 			break;
 
 		case PROJECT_EXAMPLE:
 			dir = new File(BaseMainApp.examplesDir);
+			if (!dir.exists()) dir.mkdir();
 
 			break;
 		default:
 			break;
 		}
 
-		if (!dir.exists())
-			dir.mkdir();
 
 		File[] all_projects = dir.listFiles();
 
@@ -127,8 +130,8 @@ public class ProjectManager {
 	}
 
 	public Project get(String name, int type) {
+		Log.d(TAG, "looking for project types " + type);
 		ArrayList<Project> projects = list(type);
-
 		for (Project project : projects) {
 			if (name.equals(project.getName())) {
 				Log.d("UU", "" + name + " " + type + " " + project.getName());

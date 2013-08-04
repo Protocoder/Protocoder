@@ -141,7 +141,8 @@ public class PlotView extends View {
 				// canvas.save(Canvas.MATRIX_SAVE_FLAG);
 				mPaint.setStyle(Style.STROKE);
 				mPaint.setColor(p.color);
-
+				mPaint.setStyle(Paint.Style.FILL); 
+				
 				//Uncomment to try 
 				//canvas.drawText(
 				//		"hola " + mNumPoints + " " + p.plotValues.size() + " " + p.plotValues.get(p.plotValues.size() - 1), 100,
@@ -154,8 +155,9 @@ public class PlotView extends View {
 
 					y = CanvasUtils.map((float) p.plotValues.get(i),
 							(float) mMinBoundary, (float) mMaxBoundary, (float) mHeight, 0f);
-					canvas.drawPoint(x, y, mPaint);
-					//canvas.drawCircle(x, y, 5, mPaint);
+					//canvas.drawPoint(x, y, mPaint);
+					
+					canvas.drawCircle(x, y, 5, mPaint);
 
 					if (i < mNumPoints - 1) {
 						i++;

@@ -1,7 +1,12 @@
 package com.makewithmoto.apprunner;
 
+import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.java_websocket.drafts.Draft_17;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.mozilla.javascript.Callable;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContextFactory;
@@ -21,12 +26,18 @@ import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.makewithmoto.MainActivity;
 import com.makewithmoto.R;
 import com.makewithmoto.base.BaseActivity;
 import com.makewithmoto.events.Project;
 import com.makewithmoto.events.ProjectManager;
+import com.makewithmoto.events.Events.ProjectEvent;
+import com.makewithmoto.media.Audio;
+import com.makewithmoto.network.CustomWebsocketServer;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Original sourcecode from Droid Script :
@@ -40,6 +51,9 @@ public class AppRunnerActivity extends BaseActivity {
 
 	String scriptFileName;
 	private Project currentProject;
+	private ActionBar actionBar;
+	private CustomWebsocketServer ws;
+	private static final String TAG = "AppRunner";
 
 	static final String SCRIPT_PREFIX = "//Prepend text for all scripts \n"
 			+ "var Test = Packages.com.makewithmoto.apprunner.api.Test; \n"
@@ -54,52 +68,63 @@ public class AppRunnerActivity extends BaseActivity {
 			+ "var makr = JMakr(Activity);\n"
 			+ "var JWebAppPlot = Packages.com.makewithmoto.apprunner.api.JWebAppPlot; \n"
 			+ "var JWebApp = Packages.com.makewithmoto.apprunner.api.JWebApp; \n"
-			+ "var webapp = JWebApp(Activity);\n" 
-            + "var JSensors = Packages.com.makewithmoto.apprunner.api.JSensors; \n" 
-            + "var sensor = JSensors(Activity);\n" 
+			+ "var webapp = JWebApp(Activity);\n"
+			+ "var JMedia = Packages.com.makewithmoto.apprunner.api.JMedia; \n"
+			+ "var media = JMedia(Activity);\n"
+			+ "var JSensors = Packages.com.makewithmoto.apprunner.api.JSensors; \n"
+			+ "var sensors = JSensors(Activity);\n"
 			+ "// End of Prepend Section \n";
 
-    static final String SCRIPT_POSTFIX = "//Appends text for all scripts \n" + 
-            "//ui.postLayout(); \n" + 
-            "function onSensorPause(){sensor.stopAccelerometer(); \n" +
-            "                         sensor.stopGPS();}          \n" +
-            "function onAndroidPause(){android.stopAllTimers();}  \n" +
-             "// End of Append Section" + "\n";
+	static final String SCRIPT_POSTFIX = "//Appends text for all scripts \n"
+			+ "//ui.postLayout(); \n"
+			+ "function onSensorPause(){sensors.stopAccelerometer(); \n"
+			+ "                         sensors.stopGPS();}          \n"
+			+ "function onAndroidPause(){android.stopAllTimers();}  \n"
+			+ "// End of Append Section" + "\n";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-	//	setContentView(R.layout.activity_apprunner);    
-		
-		//testing camera 
-		/*
-		RelativeLayout rl = (RelativeLayout) findViewById(R.id.app_runner_parent);
+		// websocket
+		// TODO move this to onResume
 
-		// Create the main layout. This is where all the items actually go
-		FrameLayout fl = new FrameLayout(this);
-		fl.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
-				LayoutParams.MATCH_PARENT));
-		fl.setId(12345);
-		rl.addView(fl);
-
-		CameraFragment cameraFragment = new CameraFragment();
-		Bundle bundle = new Bundle();
-		bundle.putInt("color", CameraFragment.MODE_COLOR_COLOR);
-		bundle.putInt("camera", CameraFragment.MODE_CAMERA_BACK);
-		cameraFragment.setArguments(bundle);
-
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		// FIXME: Because we have no tagging system we need to use the int as a
-		// tag, which may cause collisions
-		ft.add(fl.getId(), cameraFragment, String.valueOf(fl.getId()));
-		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-		ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-		if (true) {
-			ft.addToBackStack(null);
+		try {
+			Log.d("pq", "starting websocket server");
+			ws = CustomWebsocketServer.getInstance(this);
+		} catch (UnknownHostException e) {
+			Log.d("pq", "cannot start websocket server");
+			e.printStackTrace();
 		}
-		ft.commit();
-		*/
+
+		// setContentView(R.layout.activity_apprunner);
+
+		// testing camera
+		/*
+		 * RelativeLayout rl = (RelativeLayout)
+		 * findViewById(R.id.app_runner_parent);
+		 * 
+		 * // Create the main layout. This is where all the items actually go
+		 * FrameLayout fl = new FrameLayout(this); fl.setLayoutParams(new
+		 * LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		 * fl.setId(12345); rl.addView(fl);
+		 * 
+		 * CameraFragment cameraFragment = new CameraFragment(); Bundle bundle =
+		 * new Bundle(); bundle.putInt("color",
+		 * CameraFragment.MODE_COLOR_COLOR); bundle.putInt("camera",
+		 * CameraFragment.MODE_CAMERA_BACK);
+		 * cameraFragment.setArguments(bundle);
+		 * 
+		 * FragmentTransaction ft =
+		 * getSupportFragmentManager().beginTransaction(); // FIXME: Because we
+		 * have no tagging system we need to use the int as a // tag, which may
+		 * cause collisions ft.add(fl.getId(), cameraFragment,
+		 * String.valueOf(fl.getId()));
+		 * ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+		 * ft.setCustomAnimations(android.R.anim.fade_in,
+		 * android.R.anim.fade_out); if (true) { ft.addToBackStack(null); }
+		 * ft.commit();
+		 */
 
 		String projectName = "";
 
@@ -109,27 +134,45 @@ public class AppRunnerActivity extends BaseActivity {
 		if (null != intent) {
 
 			projectName = intent.getStringExtra("projectName");
-			int projectType = intent.getIntExtra("projectType", -1);
+			int projectType = intent.getIntExtra("projectType",
+					ProjectManager.type);
+
 			currentProject = ProjectManager.getInstance().get(projectName,
 					projectType);
 
-			String script = SCRIPT_PREFIX
-					+ ProjectManager.getInstance().getCode(currentProject) + SCRIPT_POSTFIX;
+			// Set up the actionbar
+			actionBar = getActionBar();
+			if (actionBar != null) {
+				actionBar.setDisplayHomeAsUpEnabled(true);
+				actionBar.setTitle(projectName);
+			}
 
-			Log.d("AppRunnerActivity",script);
+			String script = SCRIPT_PREFIX
+					+ ProjectManager.getInstance().getCode(currentProject)
+					+ SCRIPT_POSTFIX;
+
+			Log.d("AppRunnerActivity", script);
 			if (null != script) {
 				eval(script, projectName);
 			}
 		}
+
 		// Call the onCreate JavaScript function.
 		callJsFunction("onCreate", savedInstanceState);
 
-		// Set up the actionbar
-		ActionBar actionBar = getActionBar();
-		if (actionBar != null) {
-			actionBar.setDisplayHomeAsUpEnabled(true);
-			actionBar.setTitle(projectName);
+	}
+
+	public void onEventMainThread(ProjectEvent evt) {
+		Log.d(TAG, "event -> " + evt.getAction());
+
+		if (evt.getAction() == "run") {
+			finish();
 		}
+	}
+
+	public void changeTitle(String title) {
+		Log.d(TAG, "change title to " + title);
+		getActionBar().setTitle(title);
 	}
 
 	@Override
@@ -147,15 +190,18 @@ public class AppRunnerActivity extends BaseActivity {
 	@Override
 	public void onResume() {
 		super.onResume();
+		EventBus.getDefault().register(this);
+
 		callJsFunction("onResume");
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
+
 		callJsFunction("onPause");
-        callJsFunction("onSensorPause");
-        callJsFunction("onAndroidPause");
+		callJsFunction("onSensorPause");
+		callJsFunction("onAndroidPause");
 	}
 
 	@Override
@@ -305,6 +351,19 @@ public class AppRunnerActivity extends BaseActivity {
 							: "")
 					+ (error.lineSource() != null ? " " + error.lineSource()
 							: "") + "\n" + error.getScriptStackTrace();
+
+			// TODO make this better!!
+			Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+			JSONObject obj = new JSONObject();
+			try {
+				obj.put("type", "error");
+				obj.put("values", message);
+				ws.send(obj);
+			} catch (JSONException er1) {
+				// TODO Auto-generated catch block
+				er1.printStackTrace();
+			}
+
 		} else {
 			message = e.toString();
 		}
