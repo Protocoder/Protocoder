@@ -19,12 +19,16 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.makewithmoto.MainActivity;
@@ -34,6 +38,7 @@ import com.makewithmoto.base.BaseActivity;
 import com.makewithmoto.events.Events.ProjectEvent;
 import com.makewithmoto.events.Project;
 import com.makewithmoto.events.ProjectManager;
+import com.makewithmoto.fragments.CameraFragment;
 import com.makewithmoto.network.CustomWebsocketServer;
 
 import de.greenrobot.event.EventBus;
@@ -99,35 +104,6 @@ public class AppRunnerActivity extends BaseActivity {
 			e.printStackTrace();
 		}
 
-		// setContentView(R.layout.activity_apprunner);
-
-		// testing camera
-		/*
-		 * RelativeLayout rl = (RelativeLayout)
-		 * findViewById(R.id.app_runner_parent);
-		 * 
-		 * // Create the main layout. This is where all the items actually go
-		 * FrameLayout fl = new FrameLayout(this); fl.setLayoutParams(new
-		 * LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-		 * fl.setId(12345); rl.addView(fl);
-		 * 
-		 * CameraFragment cameraFragment = new CameraFragment(); Bundle bundle =
-		 * new Bundle(); bundle.putInt("color",
-		 * CameraFragment.MODE_COLOR_COLOR); bundle.putInt("camera",
-		 * CameraFragment.MODE_CAMERA_BACK);
-		 * cameraFragment.setArguments(bundle);
-		 * 
-		 * FragmentTransaction ft =
-		 * getSupportFragmentManager().beginTransaction(); // FIXME: Because we
-		 * have no tagging system we need to use the int as a // tag, which may
-		 * cause collisions ft.add(fl.getId(), cameraFragment,
-		 * String.valueOf(fl.getId()));
-		 * ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-		 * ft.setCustomAnimations(android.R.anim.fade_in,
-		 * android.R.anim.fade_out); if (true) { ft.addToBackStack(null); }
-		 * ft.commit();
-		 */
-
 		String projectName = "";
 
 		createInterpreter();
@@ -142,8 +118,6 @@ public class AppRunnerActivity extends BaseActivity {
 			currentProject = ProjectManager.getInstance().get(projectName,
 					projectType);
 
-		
-
 			String script = SCRIPT_PREFIX
 					+ ProjectManager.getInstance().getCode(currentProject)
 					+ SCRIPT_POSTFIX;
@@ -152,13 +126,14 @@ public class AppRunnerActivity extends BaseActivity {
 			if (null != script) {
 				eval(script, projectName);
 			}
-			
+
 			// Set up the actionbar
 			actionBar = getActionBar();
 			if (actionBar != null) {
 				actionBar.setDisplayHomeAsUpEnabled(true);
 				actionBar.setTitle(projectName);
 			}
+
 		}
 
 		// Call the onCreate JavaScript function.
@@ -591,6 +566,6 @@ public class AppRunnerActivity extends BaseActivity {
 
 	public void addOnKeyListener(JAndroid.onKeyListener onKeyListener2) {
 		onKeyListener = onKeyListener2;
-		
+
 	}
 }
