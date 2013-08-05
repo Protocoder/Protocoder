@@ -48,6 +48,30 @@ public class JAndroid extends JInterface {
 				Context.VIBRATOR_SERVICE);
 		v.vibrate(Integer.parseInt(duration));
 	}
+	
+
+	
+	@JavascriptInterface
+	@APIAnnotation(description = "Set brightness", example = "ui.button(\"button\"); ")
+	public void setBrightness(float val) {
+		((AppRunnerActivity) a.get()).setBrightness(val);
+	}
+	
+	
+	
+	@JavascriptInterface
+	@APIAnnotation(description = "Change brightness", example = "ui.button(\"button\"); ")
+	public void getBrightness() {
+		((AppRunnerActivity) a.get()).getCurrentBrightness();
+	}
+	
+	
+	
+	@JavascriptInterface
+	@APIAnnotation(description = "Creates a button ", example = "ui.button(\"button\"); ")
+	public void screenAlwaysOn() {
+		((AppRunnerActivity) a.get()).setScreenAlwaysOn();
+	}
 
 	@JavascriptInterface
 	@APIAnnotation(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")

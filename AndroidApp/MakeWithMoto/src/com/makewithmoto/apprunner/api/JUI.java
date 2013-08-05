@@ -38,6 +38,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.makewithmoto.R;
 import com.makewithmoto.apidoc.APIAnnotation;
 import com.makewithmoto.apprunner.AppRunnerActivity;
 import com.makewithmoto.base.AppSettings;
@@ -67,6 +68,7 @@ public class JUI extends JInterface {
 	private ScrollView sv;
 	public int screenWidth;
 	public int screenHeight;
+	private int theme;
 
 	public JUI(Activity a) {
 		super(a);
@@ -137,6 +139,24 @@ public class JUI extends JInterface {
 	
 	
 	@JavascriptInterface
+	@APIAnnotation(description = "Uses a DARK / BLUE / NONE theme for some widgets", example = "ui.setTheme(\"DARK\"); ")
+	public void setTheme(String theme) {
+		if (theme.equals("DARK")) { 
+			this.theme = R.drawable.theme_rounded_rect_dark;
+		} else if (theme.equals("BLUE")) { 
+			this.theme = R.drawable.theme_rounded_rect_blue;
+		} else if (theme.equals("NONE")) { 
+			theme = null;
+		}
+		
+	}
+	
+	public void themeWidget(View v) { 
+		v.setBackgroundResource(theme);
+	}
+	
+	
+	@JavascriptInterface
 	@APIAnnotation(description = "Creates a button ", example = "ui.button(\"button\"); ")
 	public void title(String title) {
 		((AppRunnerActivity) a.get()).changeTitle(title);
@@ -155,28 +175,6 @@ public class JUI extends JInterface {
 		((AppRunnerActivity) a.get()).setHideHomeBar();
 	}
 	
-	
-	@JavascriptInterface
-	@APIAnnotation(description = "Creates a button ", example = "ui.button(\"button\"); ")
-	public void setBrightness(float val) {
-		((AppRunnerActivity) a.get()).setBrightness(val);
-	}
-	
-	
-	
-	@JavascriptInterface
-	@APIAnnotation(description = "Creates a button ", example = "ui.button(\"button\"); ")
-	public void getBrightness() {
-		((AppRunnerActivity) a.get()).getCurrentBrightness();
-	}
-	
-	
-	
-	@JavascriptInterface
-	@APIAnnotation(description = "Creates a button ", example = "ui.button(\"button\"); ")
-	public void screenAlwaysOn() {
-		((AppRunnerActivity) a.get()).setScreenAlwaysOn();
-	}
 	
 	
 	@JavascriptInterface
@@ -338,6 +336,7 @@ public class JUI extends JInterface {
 		positionView(tv, x, y, w, h);
 
 		// Add the view
+		themeWidget(tv);
 		addView(tv);
 
 		viewArray[viewCount] = tv;
@@ -382,6 +381,7 @@ public class JUI extends JInterface {
 		});
 
 		// Add the view
+		themeWidget(et);
 		addView(et);
 
 	}
@@ -453,6 +453,7 @@ public class JUI extends JInterface {
 		});
 
 		// Add the view
+		themeWidget(cb);
 		addView(cb);
 
 	}
@@ -521,6 +522,7 @@ public class JUI extends JInterface {
 		});
 
 		// Add the view
+		themeWidget(rb);
 		addView(rb);
 
 	}
