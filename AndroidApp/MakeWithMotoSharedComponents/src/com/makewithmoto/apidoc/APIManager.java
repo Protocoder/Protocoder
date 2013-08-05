@@ -24,9 +24,9 @@ import com.google.gson.Gson;
 public class APIManager {
 
 	public static APIManager getInstance() {
-		if (instance == null) { 
+		if (instance == null) {
 			instance = new APIManager();
-		} 
+		}
 		return instance;
 	}
 
@@ -61,24 +61,27 @@ public class APIManager {
 				Log.d(TAG, "" + m[i]);
 				Log.d(TAG, "" + m[i].getName());
 				apiMethod.name = m[i].getName();
-				//Log.d("qq", apiMethod.name);
-				
-				Annotation[] annotations = m[i].getDeclaredAnnotations();
 
-				// check if annotation exist and add apidocs
-				for (Annotation annotation2 : annotations) {
+				if (apiMethod.name.contains("$") == false) {
+					// Log.d("qq", apiMethod.name);
 
-					if (annotation2.annotationType().getSimpleName()
-							.equals(APIAnnotation.class.getSimpleName())) {
-						apiMethod.description = ((APIAnnotation) annotation2)
-								.description();
-						apiMethod.example = ((APIAnnotation) annotation2)
-								.example();
+					Annotation[] annotations = m[i].getDeclaredAnnotations();
 
+					// check if annotation exist and add apidocs
+					for (Annotation annotation2 : annotations) {
+
+						if (annotation2.annotationType().getSimpleName()
+								.equals(APIAnnotation.class.getSimpleName())) {
+							apiMethod.description = ((APIAnnotation) annotation2)
+									.description();
+							apiMethod.example = ((APIAnnotation) annotation2)
+									.example();
+
+						}
 					}
+
+					apiClass.apiMethods.add(apiMethod);
 				}
-				
-				apiClass.apiMethods.add(apiMethod);
 			}
 
 			doc.apiClasses.add(apiClass);
@@ -136,7 +139,7 @@ public class APIManager {
 	public String getDocumentation() {
 		Gson gson = new Gson();
 		String json = gson.toJson(doc);
-		
+
 		return json.toString();
 	}
 

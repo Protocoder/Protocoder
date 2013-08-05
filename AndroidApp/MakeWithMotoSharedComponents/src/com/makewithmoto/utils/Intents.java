@@ -164,6 +164,17 @@ public class Intents {
 		c.startActivity(intent);
 
 	}
+	
+	static public void sendEmail(Context c, String recipient, String subject,
+			String msg) {
+		Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+		intent.setType("plain/text");
+		intent.putExtra(android.content.Intent.EXTRA_EMAIL, recipient);
+		intent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
+		intent.putExtra(android.content.Intent.EXTRA_TEXT, msg);
+		c.startActivity(Intent.createChooser(intent, "Send mail..."));
+		
+	}
 
 	static public void sendEmail(Context c, String[] recipient, String subject,
 			String msg) {

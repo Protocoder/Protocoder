@@ -304,7 +304,7 @@ public class MainActivity extends BaseActivity implements
 				handler.postDelayed(this, 1000);
 			}
 		};
-		handler.postDelayed(r, 0);
+		//handler.postDelayed(r, 0);
 
 		textIP.setText("Hack via your browser @ http:/"
 				+ NetworkUtils.getLocalIpAddress().toString() + ":"
