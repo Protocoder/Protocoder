@@ -8,15 +8,26 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
 import com.makewithmoto.apidoc.APIAnnotation;
+import com.makewithmoto.apprunner.AppRunnerActivity;
 
 public class JAndroid extends JInterface {
 	
+	private static JAndroid inst;
 	private Handler  handler;
 	ArrayList<Runnable> rl = new ArrayList<Runnable>();
+
+	
+	// Singleton (one app view, different URLs)
+	public static JAndroid getInstance(Context aCtx) {
+		if (inst == null) {
+		}
+		return inst;
+	}
 
 	public JAndroid(Activity a) {
 		super(a);
@@ -38,19 +49,12 @@ public class JAndroid extends JInterface {
 		Toast.makeText(a.get(), msg, duration).show();
 	}
 
+	
+	public void onKeyPressed(final String fn) { 
+		//((AppRunnerActivity) a.get()).onKeyDown(keyCode, event)
 		
-	@JavascriptInterface
-	public void vibrate_and_callback(String duration, String fn){
-			vibrate(duration);
-			callback(fn);
 	}
-
-	@JavascriptInterface
-	public void toast_and_callback(String msg, int duration, String fn){
-			toast(msg, duration);
-			callback(fn);
-	}
-		
+	
 	@JavascriptInterface
 	public void timer(final int duration, final String fn){
 		
@@ -74,6 +78,11 @@ public class JAndroid extends JInterface {
 	            handler.removeCallbacks(ir.next());
 	            //handler.post(ir.next());
 	        }
+	}
+
+	public void onKeyDown(int keyCode, KeyEvent event) {
+
+		
 	}
 
 }

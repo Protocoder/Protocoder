@@ -23,6 +23,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +31,7 @@ import android.widget.Toast;
 
 import com.makewithmoto.MainActivity;
 import com.makewithmoto.R;
+import com.makewithmoto.apprunner.api.JAndroid;
 import com.makewithmoto.base.BaseActivity;
 import com.makewithmoto.events.Project;
 import com.makewithmoto.events.ProjectManager;
@@ -66,6 +68,8 @@ public class AppRunnerActivity extends BaseActivity {
 			+ "var browser = JBrowser(Activity);\n"
 			+ "var JMakr = Packages.com.makewithmoto.apprunner.api.JMakr; \n"
 			+ "var makr = JMakr(Activity);\n"
+			+ "var JIOIO = Packages.com.makewithmoto.apprunner.api.JIOIO; \n"
+			+ "var ioio = JIOIO(Activity);\n"
 			+ "var JWebAppPlot = Packages.com.makewithmoto.apprunner.api.JWebAppPlot; \n"
 			+ "var JWebApp = Packages.com.makewithmoto.apprunner.api.JWebApp; \n"
 			+ "var webapp = JWebApp(Activity);\n"
@@ -556,8 +560,26 @@ public class AppRunnerActivity extends BaseActivity {
 	}
 
 	public String getCurrentDir() {
-
 		return ProjectManager.getInstance().getProjectURL(currentProject);
 
+	}
+	
+	
+	/*
+	 * (non-Javadoc)
+	 * @see com.makewithmoto.base.BaseActivity#onKeyDown(int, android.view.KeyEvent)
+	 * 
+	 * key handling, it will pass it to the javascript interface
+	 */
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		JAndroid.getInstance(this).onKeyDown(keyCode, event);
+		
+		return super.onKeyDown(keyCode, event);
+	}
+	
+	@Override
+	public boolean onKeyUp(int keyCode, KeyEvent event) {
+		return super.onKeyUp(keyCode, event);
 	}
 }
