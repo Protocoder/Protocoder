@@ -20,7 +20,7 @@ ui.radiobutton("Why am I called a radio button", 0, 900, 500, 100, true, functio
 //Add an image
 ui.image(0, 1050, 300, 300, "makewithmotologo.png");
 //Add an image button with a background
-ui.imagebutton(400, 1050, 300, 300,"/sdcard/makewithmoto/projects/AllWidgets/makewithmotologo.png", false, function(){android.vibrate(500);});
+ui.imagebutton(400, 1050, 300, 300,"makewithmotologo.png", false, function(){android.vibrate(500);});
 //Add an image loaded from the web
 ui.webimage(0, 1400, 500, 500, "http://images.latinospost.com/data/images/full/22151/pokemon.jpg");
 //Add an image loaded from the web

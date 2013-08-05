@@ -35,6 +35,9 @@ public class JMakr extends JInterface {
             
             isStarted = true;
 		}
+		
+		
+		
 	}
 	
 	@JavascriptInterface
@@ -56,11 +59,13 @@ public class JMakr extends JInterface {
 		public void run() {
 			super.run();
 			while (!isInterrupted()) {
-				receivedData = "";
+				//receivedData = "";
 				
 				if(isStarted){
 				    receivedData = makr.readSerial();
 				}
+				
+				Log.d("MAKr", "" + receivedData);
 				
 				if(receivedData != ""){
 				    a.get().runOnUiThread(new Runnable() {
