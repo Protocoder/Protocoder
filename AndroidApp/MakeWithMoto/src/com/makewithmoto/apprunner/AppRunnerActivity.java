@@ -1,10 +1,8 @@
 package com.makewithmoto.apprunner;
 
-import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.java_websocket.drafts.Draft_17;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.mozilla.javascript.Callable;
@@ -33,10 +31,9 @@ import com.makewithmoto.MainActivity;
 import com.makewithmoto.R;
 import com.makewithmoto.apprunner.api.JAndroid;
 import com.makewithmoto.base.BaseActivity;
+import com.makewithmoto.events.Events.ProjectEvent;
 import com.makewithmoto.events.Project;
 import com.makewithmoto.events.ProjectManager;
-import com.makewithmoto.events.Events.ProjectEvent;
-import com.makewithmoto.media.Audio;
 import com.makewithmoto.network.CustomWebsocketServer;
 
 import de.greenrobot.event.EventBus;
@@ -55,6 +52,7 @@ public class AppRunnerActivity extends BaseActivity {
 	private Project currentProject;
 	private ActionBar actionBar;
 	private CustomWebsocketServer ws;
+	private JAndroid.onKeyListener onKeyListener;
 	private static final String TAG = "AppRunner";
 
 	static final String SCRIPT_PREFIX = "//Prepend text for all scripts \n"
@@ -563,23 +561,34 @@ public class AppRunnerActivity extends BaseActivity {
 		return ProjectManager.getInstance().getProjectURL(currentProject);
 
 	}
-	
-	
+
 	/*
 	 * (non-Javadoc)
-	 * @see com.makewithmoto.base.BaseActivity#onKeyDown(int, android.view.KeyEvent)
+	 * 
+	 * @see com.makewithmoto.base.BaseActivity#onKeyDown(int,
+	 * android.view.KeyEvent)
 	 * 
 	 * key handling, it will pass it to the javascript interface
 	 */
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		JAndroid.getInstance(this).onKeyDown(keyCode, event);
-		
+		if (onKeyListener != null) {
+			onKeyListener.onKeyDown(keyCode);
+		}
 		return super.onKeyDown(keyCode, event);
 	}
-	
+
 	@Override
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
+		if (onKeyListener != null) {
+			onKeyListener.onKeyUp(keyCode);
+		}
+
 		return super.onKeyUp(keyCode, event);
+	}
+
+	public void addOnKeyListener(JAndroid.onKeyListener onKeyListener2) {
+		onKeyListener = onKeyListener2;
+		
 	}
 }

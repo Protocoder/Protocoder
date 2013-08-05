@@ -8,30 +8,36 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
 import com.makewithmoto.apidoc.APIAnnotation;
 import com.makewithmoto.apprunner.AppRunnerActivity;
+import com.makewithmoto.utils.Intents;
 
 public class JAndroid extends JInterface {
-	
-	private static JAndroid inst;
-	private Handler  handler;
-	ArrayList<Runnable> rl = new ArrayList<Runnable>();
 
-	
-	// Singleton (one app view, different URLs)
-	public static JAndroid getInstance(Context aCtx) {
-		if (inst == null) {
-		}
-		return inst;
-	}
+	private Handler handler;
+	ArrayList<Runnable> rl = new ArrayList<Runnable>();
+	private String onKeyDownfn;
+	private String onKeyUpfn;
 
 	public JAndroid(Activity a) {
 		super(a);
 		handler = new Handler();
+
+		((AppRunnerActivity) a).addOnKeyListener(new onKeyListener() {
+
+			@Override
+			public void onKeyUp(int keyCode) {
+				callback(onKeyDownfn, keyCode);
+			}
+
+			@Override
+			public void onKeyDown(int keyCode) {
+				callback(onKeyUpfn, keyCode);
+			}
+		});
 	}
 
 	@JavascriptInterface
@@ -45,44 +51,87 @@ public class JAndroid extends JInterface {
 
 	@JavascriptInterface
 	@APIAnnotation(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
-	public void toast(String msg, int duration) {
+	public void openEmailApp(String recepient, String subject, String msg) {
+		Intents.sendEmail(a.get(), recepient, subject, msg);
+	}
+	
+	@JavascriptInterface
+	@APIAnnotation(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
+	public void openMapApp(double longitude, double latitude) {
+		Intents.openMap(a.get(), longitude, latitude);
+	}
+	
+	@JavascriptInterface
+	@APIAnnotation(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
+	public void openDial(String msg, int duration) {
 		Toast.makeText(a.get(), msg, duration).show();
 	}
-
 	
-	public void onKeyPressed(final String fn) { 
-		//((AppRunnerActivity) a.get()).onKeyDown(keyCode, event)
-		
+	@JavascriptInterface
+	@APIAnnotation(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
+	public void call(String number) {
+		Intents.call(a.get(), number);
 	}
 	
 	@JavascriptInterface
-	public void timer(final int duration, final String fn){
-		
+	@APIAnnotation(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
+	public void openWebApp(String url) {
+		Intents.openWeb(a.get(), url);
+	}
+	
+	@JavascriptInterface
+	@APIAnnotation(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
+	public void openWebSearch(String text) {
+		Intents.webSearch(a.get(), text);
+	}
+
+
+	@JavascriptInterface
+	@APIAnnotation(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
+	public void onKeyDown(final String fn) {
+		onKeyDownfn = fn;
+	}
+
+
+	@JavascriptInterface
+	@APIAnnotation(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
+	public void onKeyUp(final String fn) {
+		onKeyUpfn = fn;
+	}
+
+	@JavascriptInterface
+	@APIAnnotation(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
+	public void timer(final int duration, final String fn) {
+
 		Runnable task = new Runnable() {
-		    @Override
-		    public void run() {
-		    	//handler.postDelayed(this, duration);
-		    	callback(fn);
-		        handler.postDelayed(this, duration);
-		    }
+			@Override
+			public void run() {
+				// handler.postDelayed(this, duration);
+				callback(fn);
+				handler.postDelayed(this, duration);
+			}
 		};
-		
+
 		rl.add(task);
 	}
-	
-	
+
+
 	@JavascriptInterface
-	public void stopAllTimers(){
-		 Iterator<Runnable> ir = rl.iterator();
-	        while (ir.hasNext()) {
-	            handler.removeCallbacks(ir.next());
-	            //handler.post(ir.next());
-	        }
+	@APIAnnotation(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")	
+	public void stopAllTimers() {
+		Iterator<Runnable> ir = rl.iterator();
+		while (ir.hasNext()) {
+			handler.removeCallbacks(ir.next());
+			// handler.post(ir.next());
+		}
 	}
 
-	public void onKeyDown(int keyCode, KeyEvent event) {
+	public interface onKeyListener {
 
-		
+		public void onKeyDown(int keyCode);
+
+		public void onKeyUp(int keyCode);
+
 	}
 
 }
