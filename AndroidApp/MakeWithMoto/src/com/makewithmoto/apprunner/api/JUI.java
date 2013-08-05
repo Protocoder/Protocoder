@@ -8,7 +8,6 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -16,13 +15,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup.LayoutParams;
-import android.view.ViewTreeObserver;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.webkit.JavascriptInterface;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -43,9 +39,10 @@ import android.widget.ToggleButton;
 import com.makewithmoto.R;
 import com.makewithmoto.apidoc.APIAnnotation;
 import com.makewithmoto.apprunner.AppRunnerActivity;
-import com.makewithmoto.base.AppSettings;
 import com.makewithmoto.base.BaseActivity;
 import com.makewithmoto.fragments.CameraFragment;
+import com.makewithmoto.fragments.VideoPlayerFragment;
+import com.makewithmoto.fragments.VideoPlayerFragment.VideoListener;
 import com.makewithmoto.views.HoloCircleSeekBar;
 import com.makewithmoto.views.HoloCircleSeekBar.OnCircleSeekBarChangeListener;
 import com.makewithmoto.views.PlotView;
@@ -722,7 +719,6 @@ public class JUI extends JInterface {
 		// Add the view
 		positionView(fl, x, y, w, h);
 		addView(fl);
-		// Create and position the image button		
 
 		CameraFragment cameraFragment = new CameraFragment();
 		Bundle bundle = new Bundle();
@@ -742,10 +738,66 @@ public class JUI extends JInterface {
 		ft.addToBackStack(null);
 		ft.commit();
 	
-
-
 	}
 
+	/**
+	 * Adds an image with the option to hide the default background
+	 * 
+	 * @author victordiaz
+	 * 
+	 * @param x
+	 * @param y
+	 * @param w
+	 * @param h
+	 */
+	public void addVideoView(int x, int y, int w, int h) {
+
+		initializeLayout();
+
+		// Create the main layout. This is where all the items actually go
+		FrameLayout fl = new FrameLayout(a.get());
+		fl.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		fl.setId(12345678);
+		
+		// Add the view
+		positionView(fl, x, y, w, h);
+		addView(fl);
+
+		final VideoPlayerFragment fragment = new VideoPlayerFragment();
+		fragment.addListener(new VideoListener() {
+
+			@Override
+			public void onTimeUpdate(int ms, int totalDuration) {
+
+			}
+
+			@Override
+			public void onReady(boolean ready) {
+				fragment.loadResourceVideo("/raw/cityfireflies");
+				// fragment.setLoop(true);
+			}
+
+			@Override
+			public void onFinish(boolean finished) {
+
+			}
+		});
+
+		
+		FragmentTransaction ft = a.get().getSupportFragmentManager()
+				.beginTransaction(); // FIXME: Because we have no tagging
+										// system we need to use the int as
+										// a // tag, which may cause
+										// collisions
+		ft.add(fl.getId(), fragment, String.valueOf(fl.getId()));
+		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+		ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+		ft.addToBackStack(null);
+		ft.commit();
+	
+	}
+
+	
 
 
 	@JavascriptInterface
