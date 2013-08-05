@@ -142,12 +142,7 @@ public class AppRunnerActivity extends BaseActivity {
 			currentProject = ProjectManager.getInstance().get(projectName,
 					projectType);
 
-			// Set up the actionbar
-			actionBar = getActionBar();
-			if (actionBar != null) {
-				actionBar.setDisplayHomeAsUpEnabled(true);
-				actionBar.setTitle(projectName);
-			}
+		
 
 			String script = SCRIPT_PREFIX
 					+ ProjectManager.getInstance().getCode(currentProject)
@@ -156,6 +151,13 @@ public class AppRunnerActivity extends BaseActivity {
 			Log.d("AppRunnerActivity", script);
 			if (null != script) {
 				eval(script, projectName);
+			}
+			
+			// Set up the actionbar
+			actionBar = getActionBar();
+			if (actionBar != null) {
+				actionBar.setDisplayHomeAsUpEnabled(true);
+				actionBar.setTitle(projectName);
 			}
 		}
 
