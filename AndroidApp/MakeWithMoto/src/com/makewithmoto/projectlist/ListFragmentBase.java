@@ -287,11 +287,8 @@ public class ListFragmentBase extends BaseFragment {
     }
 
     public void projectRefresh(String projectName) {
-
         View v = gridView.findViewWithTag(projectName);
-        Log.d("mm", "found view " + v + " for project " + projectName);
         ProjectAnimations.projectRefresh(v);
-
     }
 
     public void projectLaunch(String projectName) {

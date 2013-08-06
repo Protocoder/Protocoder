@@ -59,12 +59,11 @@ function initEditor() {
 	* Binding UI 
 	*/
 	var overlayShow = false;
-
 	$("#overlay #toggle").click(function() { 
 		if (overlayShow) {
-			$("#overlay #container").fadeOut(200);
+			hideDashboard();
 		} else {
-			$("#overlay #container").fadeIn(300);
+			showDashboard();
 		}
 
 		overlayShow ^= true;
@@ -78,6 +77,15 @@ function initEditor() {
 	$("#error_from_android").draggable();
 	$("#remote_log").draggable();
 
+
+}
+
+function hideDashboard() { 
+	$("#overlay #container").fadeOut(200);
+} 
+
+function showDashboard() { 
+	$("#overlay #container").fadeIn(300);
 
 }
 

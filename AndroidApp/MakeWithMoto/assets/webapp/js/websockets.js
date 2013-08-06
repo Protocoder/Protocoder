@@ -1,4 +1,5 @@
 var remoteIP = 'localhost';
+var remotePlot;
 
 var ws; 
 
@@ -82,11 +83,22 @@ function testWebsockets() {
     console.log(result);
     if (result.type == "widget") { 
       
-      if (result.action == "add") { 
-        addWidget(result.values);
-      } else if (result.action == "update") {
-        console.log(result.values.val);
+      if (result.action == "showDashboard") { 
+        if (result.values.val == true) { 
+          showDashboard();
+          console.log("show dashboard");
 
+        } else {
+          hideDashboard();
+        }
+      } else if (result.action == "add") { 
+        console.log("adding widget");
+        remotePlot = addWidget(result.values);
+      } else if (result.action == "update") {
+        console.log("updating widget");
+
+        console.log(result.values.val);
+        remotePlot(result.values.val, "");
       }
 
     }
@@ -97,7 +109,6 @@ function testWebsockets() {
   }
 
 }
-
 var reconnectionInterval;
 
 function connected() { 
