@@ -1,6 +1,6 @@
 var addWidget = function(widget) { 
   if (widget.type == "plot") { 
-    addPlot(widget.name, widget.x, widget.y, widget.w, widget.h);
+    return addPlot(widget.name, widget.x, widget.y, widget.w, widget.h);
   }
 
 
