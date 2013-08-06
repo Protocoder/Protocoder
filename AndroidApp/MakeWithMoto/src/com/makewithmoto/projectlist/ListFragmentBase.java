@@ -85,7 +85,7 @@ public class ListFragmentBase extends BaseFragment {
 			public void onItemClick(AdapterView<?> parent, final View v, int position, long id) {
             	
 
-                ProjectAnimations.projectRefresh(v);
+                ProjectAnimations.projectLaunch(v);
 
                 Project project = projects.get(position);
                 Log.d("BB", "onItemClickListener" + " " + position + " " + project.getName()); 
@@ -289,6 +289,7 @@ public class ListFragmentBase extends BaseFragment {
     public void projectRefresh(String projectName) {
 
         View v = gridView.findViewWithTag(projectName);
+        Log.d("mm", "found view " + v + " for project " + projectName);
         ProjectAnimations.projectRefresh(v);
 
     }
