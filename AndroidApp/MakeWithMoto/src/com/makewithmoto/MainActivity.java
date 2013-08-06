@@ -79,9 +79,8 @@ public class MainActivity extends BaseActivity implements
 
 	MyHTTPServer httpServer;
 
-    ProjectsPagerAdapter mProjectPagerAdapter;
-    ViewPager mViewPager;
-
+	ProjectsPagerAdapter mProjectPagerAdapter;
+	ViewPager mViewPager;
 
 	private ListFragmentUserProjects userProjectListFragment;
 	private ListFragmentExamples exampleListFragment;
@@ -96,7 +95,6 @@ public class MainActivity extends BaseActivity implements
 
 	private CustomWebsocketServer ws;
 
-
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -105,7 +103,7 @@ public class MainActivity extends BaseActivity implements
 		// Set the content view and get the context
 		setContentView(R.layout.activity_forfragments);
 		c = this;
-		
+
 		// Create the action bar programmatically
 		ActionBar actionBar = getActionBar();
 		actionBar.setHomeButtonEnabled(true);
@@ -113,18 +111,16 @@ public class MainActivity extends BaseActivity implements
 		// Instantiate fragments
 		userProjectListFragment = new ListFragmentUserProjects();
 		exampleListFragment = new ListFragmentExamples();
-		//addFragment(projectListFragment, R.id.f1, false);
+		// addFragment(projectListFragment, R.id.f1, false);
 
-		
-		mProjectPagerAdapter = new ProjectsPagerAdapter(getSupportFragmentManager());
+		mProjectPagerAdapter = new ProjectsPagerAdapter(
+				getSupportFragmentManager());
 		mProjectPagerAdapter.setExamplesFragment(exampleListFragment);
 		mProjectPagerAdapter.setProjectsFragment(userProjectListFragment);
-       
+
 		// Set up the ViewPager, attaching the adapter.
-        mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setAdapter(mProjectPagerAdapter);
-        
-        
+		mViewPager = (ViewPager) findViewById(R.id.pager);
+		mViewPager.setAdapter(mProjectPagerAdapter);
 
 		// Start the servers
 		startServers();
@@ -158,7 +154,7 @@ public class MainActivity extends BaseActivity implements
 
 				if (AppSettings.CURRENT_VERSION > Build.VERSION.SDK_INT) {
 					obs.removeOnGlobalLayoutListener(this);
-				} else { 
+				} else {
 					obs.removeGlobalOnLayoutListener(this);
 				}
 			}
@@ -187,6 +183,7 @@ public class MainActivity extends BaseActivity implements
 		IntentFilter filterSend = new IntentFilter();
 		filterSend.addAction("com.makewithmoto.intent.action.STOP_SERVER");
 		registerReceiver(mStopServerReceiver, filterSend);
+		// startServers();
 	}
 
 	/**
@@ -242,8 +239,8 @@ public class MainActivity extends BaseActivity implements
 		updateStartStopActionbarItem();
 
 		// start webserver
-		httpServer = MyHTTPServer.getInstance(AppSettings.httpPort,
-				getApplicationContext());
+		httpServer = MyHTTPServer.getInstance(getApplicationContext(),
+				AppSettings.httpPort);
 
 		// websocket
 		try {
@@ -252,38 +249,25 @@ public class MainActivity extends BaseActivity implements
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
+
 		/*
-		AccelerometerManager accelerometerManager = new AccelerometerManager(
-				this);
-		accelerometerManager.addListener(new AccelerometerListener() {
-
-			@Override
-			public void onShake(float force) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void onAccelerometerChanged(float x, float y, float z) {
-
-				// Log.d(TAG, " " + x);
-				JSONObject obj = new JSONObject();
-				try {
-					obj.put("acc_x", x);
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				//ws.send(obj);
-
-			}
-		});
-		accelerometerManager.start();
-		*/
-		
-		
+		 * AccelerometerManager accelerometerManager = new AccelerometerManager(
+		 * this); accelerometerManager.addListener(new AccelerometerListener() {
+		 * 
+		 * @Override public void onShake(float force) { // TODO Auto-generated
+		 * method stub
+		 * 
+		 * }
+		 * 
+		 * @Override public void onAccelerometerChanged(float x, float y, float
+		 * z) {
+		 * 
+		 * // Log.d(TAG, " " + x); JSONObject obj = new JSONObject(); try {
+		 * obj.put("acc_x", x); } catch (JSONException e) { // TODO
+		 * Auto-generated catch block e.printStackTrace(); } //ws.send(obj);
+		 * 
+		 * } }); accelerometerManager.start();
+		 */
 
 		final Handler handler = new Handler();
 		Runnable r = new Runnable() {
@@ -304,7 +288,7 @@ public class MainActivity extends BaseActivity implements
 				handler.postDelayed(this, 1000);
 			}
 		};
-		//handler.postDelayed(r, 0);
+		// handler.postDelayed(r, 0);
 
 		textIP.setText("Hack via your browser @ http:/"
 				+ NetworkUtils.getLocalIpAddress().toString() + ":"
@@ -318,200 +302,226 @@ public class MainActivity extends BaseActivity implements
 
 	}
 
+	/**
+	 * Unbinds service and stops the http server
+	 */
+	private void killConnections() {
+		// TODO enable this at some point
+		// TODO add websocket
 
+		if (httpServer != null) {
+			httpServer.stop();
+			httpServer = null;
+		}
+		// Hide the notification
+		SharedPreferences prefs = getSharedPreferences("com.makewithmoto",
+				MODE_PRIVATE);
+		boolean showNotification = prefs.getBoolean(
+				getResources().getString(R.string.pref_curtain_notifications),
+				true);
+		if (showNotification) {
+			if (mNotification != null)
+				mNotification.hide();
+		}
+		textIP.setText(getResources().getString(R.string.start_the_server));
+		textIP.setOnClickListener(null);// Remove the old listener explicitly
+		textIP.setBackgroundResource(0);
+	}
 
-    /**
-     * Unbinds service and stops the http server
-     */
-    private void killConnections() {
-        // TODO enable this at some point
-        //TODO add websocket
+	/**
+	 * Explicitly kills connections, with UI impact
+	 */
+	private void hardKillConnections() {
+		// TODO enable this at some point
+		// TODO add here websocket
 
-        if (httpServer != null) {
-            httpServer.stop();
-            httpServer = null;
-        }
-        //Hide the notification
-        SharedPreferences prefs = getSharedPreferences("com.makewithmoto", MODE_PRIVATE);
-        boolean showNotification = prefs.getBoolean(getResources().getString(R.string.pref_curtain_notifications), true);
-        if (showNotification) {
-            if (mNotification != null)
-                mNotification.hide();
-        }
-        textIP.setText(getResources().getString(R.string.start_the_server));
-        textIP.setOnClickListener(null);//Remove the old listener explicitly
-        textIP.setBackgroundResource(0);
-    }
+		if (httpServer != null) {
+			httpServer.stop();
+			httpServer = null;
+		}
+		textIP.setText(getResources().getString(R.string.start_the_server));
+		updateStartStopActionbarItem();
+		textIP.setOnClickListener(null);// Remove the old listener explicitly
+		textIP.setBackgroundResource(R.drawable.transparent_blue_button);
+		textIP.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				startServers();
+				updateStartStopActionbarItem();
 
-    /**
-     * Explicitly kills connections, with UI impact
-     */
-    private void hardKillConnections() {
-        // TODO enable this at some point
-        //TODO add here websocket 
+			}
+		});
 
-        if (httpServer != null) {
-            httpServer.stop();
-            httpServer = null;
-        }
-        textIP.setText(getResources().getString(R.string.start_the_server));
-        updateStartStopActionbarItem();
-        textIP.setOnClickListener(null);//Remove the old listener explicitly
-        textIP.setBackgroundResource(R.drawable.transparent_blue_button);
-        textIP.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startServers();
-                updateStartStopActionbarItem();
+		// Hide the notification
+		SharedPreferences prefs = getSharedPreferences("com.makewithmoto",
+				MODE_PRIVATE);
+		boolean showNotification = prefs.getBoolean(
+				getResources().getString(R.string.pref_curtain_notifications),
+				true);
+		if (showNotification) {
+			if (mNotification != null)
+				mNotification.hide();
+		}
+	}
 
-            }
-        });
+	private void updateStartStopActionbarItem() {
+		if (mMenu != null) {
+			MenuItem stopServerAction = mMenu.findItem(R.id.menu_start_stop);
+			if (httpServer != null) {
+				stopServerAction.setTitle(getResources().getString(
+						R.string.menu_label_stop_server));
+			} else {
+				stopServerAction.setTitle(getResources().getString(
+						R.string.menu_label_start_server));
+			}
+		}
+	}
 
-        //Hide the notification
-        SharedPreferences prefs = getSharedPreferences("com.makewithmoto", MODE_PRIVATE);
-        boolean showNotification = prefs.getBoolean(getResources().getString(R.string.pref_curtain_notifications), true);
-        if (showNotification) {
-            if (mNotification != null)
-                mNotification.hide();
-        }
-    }
+	// TODO call intent and kill it in an appropiate way
+	public void onEventMainThread(ProjectEvent evt) {
+		// Using transaction so the view blocks
+		Log.d(TAG, "event -> " + evt.getAction());
 
-    private void updateStartStopActionbarItem() {
-        if (mMenu != null) {
-            MenuItem stopServerAction = mMenu.findItem(R.id.menu_start_stop);
-            if (httpServer != null) {
-                stopServerAction.setTitle(getResources().getString(R.string.menu_label_stop_server));
-            } else {
-                stopServerAction.setTitle(getResources().getString(R.string.menu_label_start_server));
-            }
-        }
-    }
+		if (evt.getAction() == "run") {
+			if (currentProjectApplicationIntent != null) {
+				finishActivity(mProjectRequestCode);
+				currentProjectApplicationIntent = null;
+			}
 
-    // TODO call intent and kill it in an appropiate way
-    public void onEventMainThread(ProjectEvent evt) {
-        // Using transaction so the view blocks
-        Log.d(TAG, "event -> " + evt.getAction());
+			try {
+				currentProjectApplicationIntent = new Intent(MainActivity.this,
+						AppRunnerActivity.class);
+				String script = ProjectManager.getInstance().getCode(
+						evt.getProject());
 
-        if (evt.getAction() == "run") {
-            if (currentProjectApplicationIntent != null) {
-                finishActivity(mProjectRequestCode);
-                currentProjectApplicationIntent = null;
-            }
+				Project p = evt.getProject();
 
+				currentProjectApplicationIntent.putExtra("projectName",
+						p.getName());
+				currentProjectApplicationIntent.putExtra("projectType",
+						p.getType());
 
-            try {
-                currentProjectApplicationIntent = new Intent(MainActivity.this, AppRunnerActivity.class);
-                String script = ProjectManager.getInstance().getCode(evt.getProject());
+				// check if the apprunner is installed
+				// TODO add handling
+				final PackageManager mgr = this.getPackageManager();
+				List<ResolveInfo> list = mgr.queryIntentActivities(
+						currentProjectApplicationIntent,
+						PackageManager.MATCH_DEFAULT_ONLY);
 
-                Project p = evt.getProject();
-                
-                currentProjectApplicationIntent.putExtra("projectName", p.getName());
-                currentProjectApplicationIntent.putExtra("projectType", p.getType());
+				Log.d(TAG, "intent available " + list.size());
 
-                // check if the apprunner is installed
-                // TODO add handling
-                final PackageManager mgr = this.getPackageManager();
-                List<ResolveInfo> list = mgr.queryIntentActivities(currentProjectApplicationIntent, PackageManager.MATCH_DEFAULT_ONLY);
+				startActivityForResult(currentProjectApplicationIntent,
+						mProjectRequestCode);
+			} catch (Exception e) {
+				Log.d(TAG, "Error launching script");
+			}
 
-                Log.d(TAG, "intent available " + list.size());
+		} else if (evt.getAction() == "save") {
+			Log.d(TAG, "saving project " + evt.getProject().getName());
 
-                startActivityForResult(currentProjectApplicationIntent, mProjectRequestCode);
-            } catch (Exception e) {
-                Log.d(TAG, "Error launching script");
-            }
+			if (evt.getProject().getType() == ProjectManager.PROJECT_EXAMPLE) {
+				exampleListFragment.projectRefresh(evt.getProject().getName());
+			} else if (evt.getProject().getType() == ProjectManager.PROJECT_USER_MADE) {
+				userProjectListFragment.projectRefresh(evt.getProject()
+						.getName());
+			}
 
-        } else if (evt.getAction() == "save") {
-            Log.d(TAG, "saving project " + evt.getProject().getName());
-            userProjectListFragment.projectRefresh(evt.getProject().getName());
+		} else if (evt.getAction() == "new") {
+			// projectListFragment.addProject(evt.getProject().getName(),
+			// evt.getProject().getUrl());
+		}
 
-        } else if (evt.getAction() == "new") {
-            //projectListFragment.addProject(evt.getProject().getName(), evt.getProject().getUrl()); 
-        }
+	}
 
-    }
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main_activity_menu, menu);
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_activity_menu, menu);
-   
-        mMenu = menu;
-        return super.onCreateOptionsMenu(menu);
-    }
+		mMenu = menu;
+		return super.onCreateOptionsMenu(menu);
+	}
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
+				.getMenuInfo();
 
-        switch (item.getItemId()) {
+		switch (item.getItemId()) {
 
-        case android.R.id.home:
+		case android.R.id.home:
 
-            return true;
-        case R.id.menu_new:
-            showEditDialog();
+			return true;
+		case R.id.menu_new:
+			showEditDialog();
 
-            return true;
-        case R.id.menu_help:
-            Intent aboutActivityIntent = new Intent(this, AboutActivity.class);
-            startActivity(aboutActivityIntent);
-            overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
-        
-            return true;
-        case R.id.menu_start_stop:
-            if (httpServer != null) {
-                hardKillConnections();
-            } else {
-                startServers();
-            }
-            updateStartStopActionbarItem();
-            return true;
-        case R.id.menu_settings:
-            Intent preferencesIntent = new Intent(this, SetPreferenceActivity.class);
-            startActivity(preferencesIntent);
-            overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
-            return true;
-        default:
-            return super.onOptionsItemSelected(item);
-        }
-    }
+			return true;
+		case R.id.menu_help:
+			Intent aboutActivityIntent = new Intent(this, AboutActivity.class);
+			startActivity(aboutActivityIntent);
+			overridePendingTransition(R.anim.splash_slide_in_anim_set,
+					R.anim.splash_slide_out_anim_set);
 
-    /*
-     * New project dialog
-     */
-    private void showEditDialog() {
-        FragmentManager fm = getSupportFragmentManager();
-        NewProjectDialog newProjectDialog = new NewProjectDialog();
-        newProjectDialog.show(fm, "fragment_edit_name");
-    }
+			return true;
+		case R.id.menu_start_stop:
+			if (httpServer != null) {
+				hardKillConnections();
+			} else {
+				startServers();
+			}
+			updateStartStopActionbarItem();
+			return true;
+		case R.id.menu_settings:
+			Intent preferencesIntent = new Intent(this,
+					SetPreferenceActivity.class);
+			startActivity(preferencesIntent);
+			overridePendingTransition(R.anim.splash_slide_in_anim_set,
+					R.anim.splash_slide_out_anim_set);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
 
-    @Override
-    public void onFinishEditDialog(String inputText) {
-        Toast.makeText(this, "Creating " + inputText, Toast.LENGTH_SHORT).show();
-        Project newProject = ProjectManager.getInstance().addNewProject(c, inputText, inputText, ProjectManager.PROJECT_USER_MADE);
-    
-        userProjectListFragment.projects.add(newProject);
-        userProjectListFragment.notifyAddedProject();
-    }
+	/*
+	 * New project dialog
+	 */
+	private void showEditDialog() {
+		FragmentManager fm = getSupportFragmentManager();
+		NewProjectDialog newProjectDialog = new NewProjectDialog();
+		newProjectDialog.show(fm, "fragment_edit_name");
+	}
 
-    /*
-     * Key management
-     */
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent evt) {
-        ALog.d("BACK BUTTON", "Back button was pressed");
-        if (keyCode == 4) {
-            Fragment fragment = getSupportFragmentManager().findFragmentByTag("editorFragment");
-            if (fragment != null && fragment.isVisible()) {
-                ALog.d("Removing editor");
-                removeFragment(fragment);
-                return true;
-            } else {
-                finish();
-                return true;
-            }
-        }
-        return true;
-    }
+	@Override
+	public void onFinishEditDialog(String inputText) {
+		Toast.makeText(this, "Creating " + inputText, Toast.LENGTH_SHORT)
+				.show();
+		Project newProject = ProjectManager.getInstance().addNewProject(c,
+				inputText, inputText, ProjectManager.PROJECT_USER_MADE);
+
+		userProjectListFragment.projects.add(newProject);
+		userProjectListFragment.notifyAddedProject();
+	}
+
+	/*
+	 * Key management
+	 */
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent evt) {
+		ALog.d("BACK BUTTON", "Back button was pressed");
+		if (keyCode == 4) {
+			Fragment fragment = getSupportFragmentManager().findFragmentByTag(
+					"editorFragment");
+			if (fragment != null && fragment.isVisible()) {
+				ALog.d("Removing editor");
+				removeFragment(fragment);
+				return true;
+			} else {
+				finish();
+				return true;
+			}
+		}
+		return true;
+	}
 
 }

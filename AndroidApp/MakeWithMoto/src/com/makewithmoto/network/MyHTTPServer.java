@@ -76,30 +76,34 @@ public class MyHTTPServer extends NanoHTTPD {
 
 	private static MyHTTPServer instance;
 
-	public static MyHTTPServer getInstance(int port, Context aCtx) {
+	public static MyHTTPServer getInstance(Context aCtx, int port) {
+		Log.d(TAG, "launching web server...");
 		if (instance == null)
 			try {
-				instance = new MyHTTPServer(port, aCtx);
+				Log.d(TAG, "ok...");
+				instance = new MyHTTPServer(aCtx, port);
 			} catch (IOException e) {
+				Log.d(TAG, "nop :(...");
 				e.printStackTrace();
 			}
 
 		return instance;
 	}
 
-	public MyHTTPServer(int port, Context aCtx) throws IOException {
+	public MyHTTPServer(Context aCtx, int port) throws IOException {
 		super(port);
 		ctx = new WeakReference<Context>(aCtx);
 		InetAddress ip = NetworkUtils.getLocalIpAddress();
 		if (ip == null) {
-			ALog.d(TAG,
+			Log.d(TAG,
 					"No IP found. Please connect to a newwork and try again");
 
-			throw (new IOException());
+		//	throw (new IOException());
 		} else {
-			ALog.d(TAG, "Launched server at http://" + ip.toString() + ":"
+			Log.d(TAG, "Launched server at http://" + ip.toString() + ":"
 					+ port);
 		}
+		//throw (new IOException());
 	}
 
 	@Override
@@ -206,6 +210,9 @@ public class MyHTTPServer extends NanoHTTPD {
 					Project p = new Project(name, url, projectType);
 					ProjectManager.getInstance().writeNewCode(p, newCode);
 					data.put("project", ProjectManager.getInstance().to_json(p));
+					ProjectEvent evt = new ProjectEvent(new Project(name, url, projectType), "save");
+					EventBus.getDefault().post(evt);
+
 					ALog.i("Saved");
 				
 				//create new app

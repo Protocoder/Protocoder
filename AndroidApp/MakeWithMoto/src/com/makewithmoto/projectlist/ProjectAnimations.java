@@ -1,5 +1,7 @@
 package com.makewithmoto.projectlist;
 
+import android.animation.Animator;
+import android.animation.Animator.AnimatorListener;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
 import android.annotation.SuppressLint;
@@ -13,12 +15,9 @@ import com.makewithmoto.R;
 public class ProjectAnimations {
 	
 	public static void projectRefresh(final View v) {
-	    AnimatorSet animFlip;
-        animFlip = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(), R.animator.flip_up);
-        animFlip.setTarget(v);
-        animFlip.start();
-		/*
-		v.animate().alpha(0).setDuration(200).setListener(new AnimatorListener() {
+	  
+
+		v.animate().alpha(0).setDuration(500).setListener(new AnimatorListener() {
 			
 			@Override
 			public void onAnimationStart(Animator animation) {						
@@ -36,7 +35,7 @@ public class ProjectAnimations {
 			@Override
 			public void onAnimationCancel(Animator animation) {
 			}
-		});*/
+		});
 	}
 
 	public static void projectLaunch(final View v) {
