@@ -49,7 +49,16 @@ public class JAndroid extends JInterface {
 		v.vibrate(Integer.parseInt(duration));
 	}
 	
-
+	
+	
+	@JavascriptInterface
+	@APIAnnotation(description = "Change brightness", example = "ui.button(\"button\"); ")
+	public void toast(String text, int duration) {
+		Toast.makeText(a.get(), text, duration).show();
+	}
+	
+	
+	
 	
 	@JavascriptInterface
 	@APIAnnotation(description = "Set brightness", example = "ui.button(\"button\"); ")

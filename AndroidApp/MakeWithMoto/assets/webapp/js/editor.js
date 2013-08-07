@@ -6,7 +6,7 @@ function initEditor() {
 	/* 
 	*	Editor 
 	*/ 
-	editor = ace.edit("mmeditor");
+	editor = ace.edit("editor");
 	session = editor.getSession();
 
 	//editor.setTheme("ace/theme/monokai");
@@ -92,7 +92,7 @@ function showDashboard() {
 
 //set Code 
 function setCode(code) { 
-	var editor = ace.edit("mmeditor"); 
+	var editor = ace.edit("editor"); 
 	var session = editor.getSession(); 
 	session.setValue(code); 
 }

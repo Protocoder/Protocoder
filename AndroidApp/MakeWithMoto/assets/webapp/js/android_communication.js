@@ -24,11 +24,11 @@ function push_code(project) {
 }
 
 //fetch the code
-function fetch_code(name, url) { 
+function fetch_code(pName, pType) { 
 	var obj = {};
 	obj.cmd = "fetch_code";
-	obj.name = name;
-	obj.url = url;
+	obj.name = pName;
+	obj.type = pType;
 	$.get("cmd="+JSON.stringify(obj), function(data) {
 		var code = JSON.parse(data);
 		setCode(unescape(code.code));
