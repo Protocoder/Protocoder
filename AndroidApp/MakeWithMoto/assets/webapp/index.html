@@ -6,13 +6,18 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 
     <meta http-equiv="editor-type">
-    <link href=
-    "http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400italic,700|Open+Sans+Condensed:300,700"
-    rel="stylesheet">
 
     <!-- styles -->
-    <link rel="stylesheet/less" type="text/less" href="./css/style.less" />
+    <link rel="stylesheet" href="./libs/w2ui-1.2/w2ui-1.2.css" type="text/css" charset="utf-8"/>
+
     <link rel="stylesheet/less" type="text/less" href="./css/editor.less" />
+    <link rel="stylesheet/less" type="text/less" href="./css/style2.less" />
+
+
+
+    <link rel="stylesheet/less" type="text/less" href="./css/style.less" />
+
+
     <link rel="stylesheet/less" type="text/less" href="./css/plots.less" />
     <link rel="stylesheet/less" type="text/less" href="./css/help.less" />
 
@@ -23,63 +28,195 @@
     <script type="text/javascript" src="./libs/dat.gui.min.js"></script> 
     <script type="text/javascript" src="./libs/jquery-1.10.2.min.js"></script> 
     <script type="text/javascript" src="./libs/jquery-ui-1.10/js/jquery-ui-1.10.3.custom.js"></script>
-   
     <script src="./libs/d3.v3/d3.v3.js"></script>
-
- <!-- custom --> 
-<script src="./js/project.js" type="text/javascript" charset="utf-8"></script>
-
-<script src="./js/editor.js" type="text/javascript" charset="utf-8"></script>
-<script src="./js/help.js" type="text/javascript" charset="utf-8"></script>
-
-<script src="./js/plots.js" type="text/javascript" charset="utf-8"></script>
-<script src="./js/android_communication.js" type="text/javascript" charset="utf-8"></script>
-<script src="./js/websockets.js" type="text/javascript" charset="utf-8"></script>
+    <!-- Including the HTML5 Uploader plugin -->
+    <script src="./libs/jquery.filedrop.js"></script>
+    <script src="./libs/w2ui-1.2/w2ui-1.2.js" type="text/javascript" charset="utf-8"></script>
 
 
-	
-<!-- Including the HTML5 Uploader plugin -->
-<script src="./libs/jquery.filedrop.js"></script>
-<!-- The main script file -->
-<script src="./js/upload.js"></script>
-    
+     <!-- custom --> 
+    <script src="./js/project.js" type="text/javascript" charset="utf-8"></script>
+    <script src="./js/editor.js" type="text/javascript" charset="utf-8"></script>
+    <script src="./js/help.js" type="text/javascript" charset="utf-8"></script>
+    <script src="./js/plots.js" type="text/javascript" charset="utf-8"></script>
+    <script src="./js/android_communication.js" type="text/javascript" charset="utf-8"></script>
+    <script src="./js/websockets.js" type="text/javascript" charset="utf-8"></script>
+
+    <!-- The main script file -->
+    <script src="./js/upload.js"></script>
+        
 
 <script type="text/javascript">
 	
 //test 
 $(document).ready(function() {
-	//init editor
-	initEditor();
+var pstyle = 'border: 0px solid #dfdfdf; padding: 0px;';
 
-	//plot example
-	plot1 = addPlot("random", 500, 100, 250, 100);
+$('#toolbar').w2toolbar({
+        name: 'toolbar',
+        items: [
+            { type: 'button',  id: 'project_new', caption: 'New Project', img: 'icon-page' },
+            { type: 'break',  id: 'break0' },
+            { type: 'button',  id: 'project_save', caption: 'Save', img: 'icon-page'},
+            
+            { type: 'menu',   id: 'list_projects', caption: 'Projects', img: 'icon-folder', items: [
+                { text: 'Item 1', icon: 'icon-page' }, 
+                { text: 'Item 2', icon: 'icon-page' }, 
+                { text: 'Item 3', value: 'Item Three', icon: 'icon-page' }
+            ]},
 
-	setInterval(function() { 
-		var val = Math.random() * 100;
-		plot1(val, ""); 
-	}, 100);
+            { type: 'menu',   id: 'list_examples', caption: 'Examples', img: 'icon-folder', items: [
+                { text: 'Item 1', icon: 'icon-page' }, 
+                { text: 'Item 2', icon: 'icon-page' }, 
+                { text: 'Item 3', value: 'Item Three', icon: 'icon-page' }
+            ]},
 
-	//websockets
+            
+            { type: 'break', id: 'break1' },
+            { type: 'button',  id: 'project_run',  caption: 'Run', img: 'icon-save', hint: 'Run project' },
 
-	testWebsockets();
-	list_apps("user");
-    list_apps("example");
+            { type: 'spacer' }
 
-	get_documentation();
+        ],
+        onClick: function (target, data) {
+            //this.owner.content('main', target);
+            //console.log(data);
+            
+            switch(target) { 
+            case 'project_new':
+                    window.alert("hola");
+                    break;
+            case 'project_run':
+                    currentProject.code = escape(session.getValue());
+                    run_app(currentProject);
+                    break;
+            case 'project_save':
+                    currentProject.code = escape(session.getValue());
+                    push_code(currentProject);
+                    break;
+           case 'list_projects':
+                if (data.subItem != 'undefined') { 
+                    fetch_code(data.subItem, target);
+                }
+                break;
+            case 'list_examples':
+                if (data.subItem != 'undefined') { 
+                    fetch_code(data.subItem, target);
+                }
+                break;
+            case 'dashboard':
+                    break;
+            default: break;
+        }
+        }
+            
+});
 
-	//setInterval(function() {
-		//get_camera();
+$('#layout').w2layout({
+    name: 'layout',
+    panels: [
+        { type: 'main', style: pstyle, content: 'main', tabs: {
+                active: 'tab1',
+                tabs: [
+                    { id: 'tab1', caption: 'Code' },
+                ],
+                onClick: function (target, data) {
+                
+                    //this.owner.content('main', target);
+                }
+            } },
+        { type: 'right', size: 400, style: pstyle, content: 'right', resizable: true }
 
-	//}, 1000);
-    $('#run').click(function() { 
-        currentProject.code = escape(session.getValue());
-        run_app(currentProject);
+    ]
+});
+
+
+$().w2layout({
+    name: 'layout2',
+    panels: [
+        { type: 'main', size: '70%', resizable: true, style: pstyle, content: '<div id = "reference_container"> <h1>REFERENCE</h1> <div id = "reference"> </div> </div>' },
+        { type: 'bottom', size: '30%', resizable: true, hidden: false, style: pstyle, content: 'bottom' }
+    ]
+});
+
+$('#grid').w2grid({ 
+    name: 'grid', 
+    url: '',
+    columns: [              
+        { field: 'file_name', caption: 'File Name', size: '70%' },
+        { field: 'file_size', caption: 'File Size', size: '30%' },
+    ]
+});
+
+w2ui['layout2'].content('bottom', w2ui['grid']);
+w2ui['layout'].content('right', w2ui['layout2']);
+
+w2ui['layout'].content('main', '<pre id="editor"></pre>');
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/twilight");
+    editor.getSession().setMode("ace/mode/javascript");
+
+function openPopup () {
+    $().w2form({
+        name: 'foo',
+        style: 'border: 0px; background-color: transparent;',
+        formHTML: 
+            '<div class="w2ui-page page-0">'+
+            '   <div class="w2ui-label"> Name:</div>'+
+            '   <div class="w2ui-field">'+
+            '       <input name="project_name" type="text" size="35"/>'+
+            '   </div>'+
+            '</div>'+
+            '<div class="w2ui-buttons">'+
+            '   <input type="button" value="Reset" name="reset">'+
+            '   <input type="button" value="Save" name="save">'+
+            '</div>',
+        fields: [
+            { name: 'project_name', type: 'text', required: true },
+        ],
+        record: { 
+            first_name  : ':)',
+        },
+        actions: {
+            "save": function () { this.validate(); },
+            "reset": function () { this.clear(); },
+        }
     });
-
-    $('#save').click(function() { 
-        currentProject.code = escape(session.getValue());
-        push_code(currentProject);
+    $().w2popup('open', {
+        title   : 'Create a new project',
+        body    : '<div id="form" style="width: 100%; height: 100%;"></div>',
+        style   : 'padding: 15px 0px 0px 0px',
+        width   : 400,
+        height  : 200, 
+        onOpen  : function () {
+            $('#w2ui-popup #form').w2render('foo');
+        }
     });
+}
+
+
+//openPopup();
+
+
+//editor 
+initEditor();
+
+testWebsockets();
+list_apps("user");
+list_apps("example");
+
+get_documentation();
+
+$('#run').click(function() { 
+    currentProject.code = escape(session.getValue());
+    run_app(currentProject);
+});
+
+$('#save').click(function() { 
+    currentProject.code = escape(session.getValue());
+    push_code(currentProject);
+});
+
 
 
 });
@@ -88,193 +225,39 @@ $(document).ready(function() {
     
 	
 	
-	
-<script>	
-	$(function () {
-                 // cache the sliding object in a var
-                 var slideout = $('#editor');
-                 var isslid = false;
-                // click-me not clickme
-                $('#click-me').click(function() {
 
-                    if(!isslid){
-                    slideout.animate({
-                    right: '0px'
-                    }, {
-                    queue: false,
-                    duration: 500
-                    });
-                    
-                    isslid = true;
-                    }
-                else{
-                    slideout.animate({
-                    right: '-300px'
-                    }, {
-                    queue: false,
-                    duration: 500
-                    });
-                
-                isslid = false;
-                    }
-                 });
-                });
+</head>
 
 
-    </script>
-    
-    <noscript>
 
-    </noscript>
-    <!--[if lte IE 9]><link rel="stylesheet" href="css/ie9.css" /><![endif]-->
-    <!--[if lte IE 8]><script src="js/html5shiv.js"></script><link rel="stylesheet" href="css/ie8.css" /><![endif]-->
-    <!--[if lte IE 7]><link rel="stylesheet" href="css/ie7.css" /><![endif]-->
-
-</head><!--
-Note: Set the body element's class to "left-sidebar" to position the sidebar on the left. Set it to "right-sidebar" to, you guessed it, position it on the right.
-    -->
-
-<body class="left-sidebar">
-    <div id="connectedheader">
-        XT926 is connected
-    </div><!-- Wrapper -->
-
-    <div id="wrapper">
-        <!-- EditorPanel -->
-
-        <div id="editor">
-          <div id="editor-inner">
-              <!-- Post -->
-
-              <article class="article-item article-item-excerpt">
-                    <div class="info">
-                        <span class="date">Edit</span> <!--
-                                            Note: You can change the number of list items in "stats" to whatever you want.
-                                        -->
-
-                        <ul class="stats">
-                            <li>
-                                <a href=
-                                "#" id="run">Run</a>
-                            </li>
+<body> 
+<div id = "container">
+<div id="toolbar" style="padding: 4px; border: 1px solid silver;"></div>
+<div id="layout" style="width: 100%; height: 100%;">
+</div>
+<div id="grid" style="width: 100%; height: 350px;"></div>
+</div>
 
 
-                            <li>
-                                <a href=
-                                "#">New</a>
-                            </li>
-
-                            <li>
-                                <a href=
-                                "#" id = "save">Save</a>
-                            </li>
-
-                            <li>
-                                <a class="link-icon24 link-icon24-4" href=
-                                "#">Projects</a>
-                            </li>
-
-                            <li>
-                                <div class="clickme" id=
-                                "click-me"> |||
-                                     
-                                </div>
-                            </li>
-                        </ul> 
-                    <li>
-                                <div class="clickme" id=
-                                "click-me"> |||
-                                     
-                                </div> </li></div>
-
-                    <div id="tabs" style="padding:10px">
-                        Tab structure goes here
-                    </div>
-
-                    <div id="mmeditor">function foo(items) {
-    var x = "All this is syntax highlighted";
-    return x;
-} </div>
 
 
-                </article>
-                
+<div id = "overlay"> 
+    <div id = "toggle">Dashboard</div>
+
+    <div id = "container">
+        <div id = "device_status"> </div>
+        <div id = "connection"><b>Connection Status</b></div> 
+
+        <div id="dropbox">
+            <span class="message">Drop files here to upload. <br /><i>(they will only be visible to you)</i></span>
+        </div>
+        <div id = "error_from_android"></div> 
+        <div id = "remote_log"></div> 
 
 
     </div>
 
-            </div>
-        </div><!-- Sidebar -->
-
-        <div id="sidebar">
-            <!-- Logo -->
-
-            <div id="logo">
-                <h1><img height="87" src="images/mwmlogo2.png" width="87"></h1>
-                <p style="color:#ffffff; font-family:'Open Sans Condensed', sans-serif;"><b>MAKEwithMOTO</b></p>
-            </div>
-
-
-            <!-- Nav -->
-            <nav id="nav">
-                
-                    <li class="current_page_item">
-                        <a href="#">Editor</a>
-                    </li>
-
-                    <li>
-                        <a href="#">Code reference</a>
-                    </li>
-                
-            </nav>
-
-
-            <!-- Search -->
-            <section class="is-search">
-                <form action="#" method="post">
-                    <input class="text" name="search" placeholder="Search"
-                    type="text">
-                </form>
-            </section>
-
-            <!-- Text -->
-            <section class="is-text-style1">
-                <div class="inner">
-                    <p>Join Us!<br>
-                      MAKEwithMOTO on <a href="https://plus.google.com/communities/101748633581544416258" target="_blank">Google+</a>&nbsp;or talk
-                     to us on&nbsp;<a href="http://www.twitter.com/makewithmoto"
-                     target="_blank">Twitter</a>.&nbsp;</p>
-
-
-                </div>
-            </section>
-        </div>
-
-
-
-   <div id = "overlay"> 
-        <div id = "toggle">Dashboard</div>
-
-        <div id = "container">
-            <div id = "project_list"> <h1> Project list </h1></div>
-            <div id = "example_list"> <h1> Example list </h1></div>
-            <div id = "device_status"> </div>
-            <<div id = "help"> <h1> Autogenerated Help </h1></div>
-            <div id = "connection"><b>Connection Status</b></div> 
-            <div id = "widgets"><b>Connection Status</b></div> 
-
-
-            <div id="dropbox">
-                <span class="message">Drop files here to upload. <br /><i>(they will only be visible to you)</i></span>
-            </div>
-            <div id = "error_from_android"></div> 
-            <div id = "remote_log"></div> 
-
-
-        </div>
-
-    </div>
-
+</div>
 
 
 

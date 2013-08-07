@@ -402,7 +402,7 @@ public class MainActivity extends BaseActivity implements
 						p.getType());
 
 				// check if the apprunner is installed
-				// TODO add handling
+				// TODO add handling 
 				final PackageManager mgr = this.getPackageManager();
 				List<ResolveInfo> list = mgr.queryIntentActivities(
 						currentProjectApplicationIntent,

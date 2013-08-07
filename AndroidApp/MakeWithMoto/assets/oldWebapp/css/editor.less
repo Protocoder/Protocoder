@@ -1,0 +1,210 @@
+
+
+#project_list, #example_list {
+	position: absolute;
+	background-color: white;
+    border-left: 0px;
+    border-right: 0px;
+    border-top: 0px;
+    border-color: #cecece;
+    border-bottom-width: 3px;
+    border-style: solid;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
+    -webkit-box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
+	left: 250px;
+	width: 200px;
+	top: 100px;
+	padding: 10px;
+	overflow-y: scroll;
+	height: 500px;
+	
+	h1 {
+	   	font-family:'Open Sans Condensed', sans-serif;
+	   	font-size:1.5em;
+		text-align:center;
+	} 
+
+	h2 {
+		font-weight: 200;
+		font-size:1.25em;
+	} 
+
+	p {
+	    font-size:1em;
+	    padding:5px;
+	    -o-transition:.25s;
+  		-ms-transition:.25s;
+  		-moz-transition:.25s;
+  		-webkit-transition:.25s;
+  		transition:.25s;
+	}
+
+	p:hover { 
+		background: rgba(40, 126, 209, 1.0);
+		color: #ffffff;
+	}
+} 
+
+#example_list { 
+	left:25px;
+	top:100px;
+}
+
+#connection { 
+	position:absolute; 
+	text-align:center;
+	padding: 3px 6px 3px 6px;
+	border-radius: 3px;
+	left:25px;
+	top:50px;
+}
+
+
+#error_from_android {
+	width: 300px;
+	height: 300px;
+	position: absolute;
+	background: rgba(255, 0, 0, 0.8);
+	bottom: 50px;
+	left: 300px;
+	padding: 12px;
+	color: white;
+}
+
+#remote_log { 
+	width: 300px;
+	height: 300px;
+	position: absolute;
+	background: rgba(0, 0, 255, 0.8);
+	bottom: 50px;
+	left: 500px;
+	padding: 12px;
+	color: white;
+}
+
+
+/*-------------------------
+	Dropbox Element
+--------------------------*/
+
+
+
+#dropbox{	
+	border-radius:3px;
+	position: relative;
+	margin:80px auto 90px;
+	min-height: 290px;
+	overflow: hidden;
+	padding-bottom: 40px;
+    width: 215px;
+    background-color: rgba(0, 0, 0, 0.5);
+	font-family:'Open Sans', sans-serif;
+	box-shadow:0 0 4px rgba(0,0,0,0.3) inset,0 -3px 2px rgba(0,0,0,0.1);
+}
+
+
+#dropbox .message{
+	font-size: 14px;
+    text-align: center;
+    padding-top:130px;
+    display: block;
+    color:#fff;
+}
+
+#dropbox .message i{
+	color:#ccc;
+	font-size:12px;
+	font-family:'Open Sans Condensed', sans-serif;
+}
+
+#dropbox:before{
+	border-radius:3px 3px 0 0;
+}
+
+
+
+/*-------------------------
+	Image Previews
+--------------------------*/
+
+
+
+#dropbox .preview{
+	width:215px;
+	height: 115px;
+	float:left;
+	margin: 55px 0 0 60px;
+	position: relative;
+	text-align: center;
+}
+
+#dropbox .preview img{
+	max-width: 140px;
+	max-height:80px;
+	border:3px solid #fff;
+	display: block;
+	
+	box-shadow:0 0 2px #000;
+}
+
+#dropbox .imageHolder{
+	display: inline-block;
+	position:relative;
+}
+
+#dropbox .uploaded{
+	position: absolute;
+	top:0;
+	left:0;
+	height:100%;
+	width:100%;
+	display: none;
+}
+
+#dropbox .preview.done .uploaded{
+	display: block;
+}
+
+
+
+/*-------------------------
+	Progress Bars
+--------------------------*/
+
+
+
+#dropbox .progressHolder{
+	position: absolute;
+	background-color:#252f38;
+	height:12px;
+	width:100%;
+	left:0;
+	bottom: 0;
+	
+	box-shadow:0 0 2px #000;
+}
+
+#dropbox .progress{
+	background-color:#2586d0;
+	position: absolute;
+	height:100%;
+	left:0;
+	width:0;
+	
+	box-shadow: 0 0 1px rgba(255, 255, 255, 0.4) inset;
+	
+	-moz-transition:0.25s;
+	-webkit-transition:0.25s;
+	-o-transition:0.25s;
+	transition:0.25s;
+}
+
+#dropbox .preview.done .progress{
+	width:100% !important;
+}
+

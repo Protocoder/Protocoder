@@ -9,19 +9,18 @@ function parse_help(docString) {
 	//iterate through classes 
 	$.each(doc, function(k, v) {
 	    //all
-	    console.log(v);
+	    //console.log(v);
 
 
 	    //class
 	    var className = v.name;
-	    console.log(className);
-	    $("#help").append('<div id = "'+ className+'" class = "APIclass"> <h1>' + className + ' </h1></div>');
-
+	   // console.log(className);
+	    $("#reference").append('<div id = "'+ className+'" class = "APIclass"> <h1>' + className + ' </h1></div>');
 
 	    //iterate through api methods 
 	    $.each (v.apiMethods, function(m, n) {
 
-	    	console.log(m, n);
+	    	//console.log(m, n);
 
 	        var method = n;
 	        $("#"+className).append('<div id ='+ method.name +' class = "APImethod"></div>');
@@ -40,9 +39,7 @@ function parse_help(docString) {
 
 	        }
 
-	        console.log(method.name, method.description, method.example);
-
-
+	       // console.log(method.name, method.description, method.example);
 	    });
 	});
 }

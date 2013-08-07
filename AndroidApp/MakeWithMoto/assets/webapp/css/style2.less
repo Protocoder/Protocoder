@@ -1,0 +1,127 @@
+body {
+	overflow-y: hidden;
+	overflow-x: hidden;
+	margin: 0px;
+}
+
+
+#overlay {
+	#container {
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 121;
+		width: 100%;
+		height: 100%;
+		display: none;
+		background-color: rgba(0, 0, 0, 0.6);
+		/* Safari 4-5, Chrome 1-9 */
+  		background: -webkit-gradient(radial, center center, 0, center center, 660, from(rgba(0, 0, 0, 0.4)), to(rgba(0, 0, 0, 0.9)));
+  		/* Safari 5.1+, Chrome 10+ */
+  		background: -webkit-radial-gradient(circle, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.9));
+  		/* Firefox 3.6+ */
+  		background: -moz-radial-gradient(circle, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.9));
+  		/* IE 10 */
+ 		 background: -ms-radial-gradient(circle, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.9));
+	}
+
+	#toggle {
+		position: absolute;
+		z-index: 122;
+		top: 0px;
+		right: 0px;
+		border-style:solid;
+    	border-width:1px;
+    	border-color:#0177AD;
+    	border-radius: 2px;
+    	background: #0086C3;
+    	color: white;
+    	padding:10px 10px 10px 10px;
+    	margin-top:4px;
+    	margin-right:10px;
+    	font-size:14px;
+    	-moz-user-select: -moz-none;
+   		-khtml-user-select: none;
+   		-webkit-user-select: none;
+   		-ms-user-select: none;
+   		user-select: none;
+	}
+
+	#toggle:hover {
+		border-color:#006b9c;
+    	background: #007cb4;
+	}
+	
+	#toggle:active {
+		border-color:#006b9c;
+    	background: #006a9b;
+	}
+}
+
+
+
+
+.w2ui-tabs .w2ui-tab {
+	padding: 10px 26px;
+	margin: 22px 7px -1px 0px; 
+}
+
+#toolbar {
+	padding: 0px;
+	background-color: #33B5E5;
+	box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 21px;
+}
+
+.w2ui-toolbar { 
+
+	table.w2ui-button {
+		padding: 12px;
+		border: 0px solid #aaaaaa;
+		background-color: rgba(255, 255, 255, 0);
+				border: 0px solid #aaaaaa;
+
+
+	}
+
+	table.w2ui-button.over{ 
+		border: 0px solid #aaaaaa;
+		background-color: rgba(255, 255, 255, 0.2);
+	}
+
+	table.w2ui-button.checked{ 
+		border: 0px solid #aaaaaa;
+		background-color: rgba(255, 255, 255, 0.2);
+	}
+
+	table.w2ui-button.down{ 
+		border: 0px solid #aaaaaa;
+		background-color: rgba(0, 0, 0, 0);
+	}
+
+	
+}
+
+.w2ui-tabs .w2ui-tab.active {
+	border: 0px solid #c0c0c0;
+	box-shadow: 1px 1px 8px #888888;
+}
+
+.w2ui-tabs .w2ui-tab {
+	border: 0px solid #c0c0c0;
+	background-color: rgba(0, 0, 0, 0.12);
+}
+
+
+#reference { 
+	h1 { 
+		text-align: center;
+		margin: 0px;
+		padding-top: 13px;
+		font-family: sans-serif;
+		color: rgba(190, 190, 190, 1);
+		font-weight: 100;
+	}
+
+
+
+}

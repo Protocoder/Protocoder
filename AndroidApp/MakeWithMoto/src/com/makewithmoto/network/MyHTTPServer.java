@@ -144,11 +144,17 @@ public class MyHTTPServer extends NanoHTTPD {
 				if (cmd.equals("fetch_code")) {
 					Log.d(TAG, "--> fetch code");
 					name = obj.getString("name");
-					url = obj.getString("url");	
+					type = obj.getString("type"); 
+					
+					if (type.equals("list_projects")) {
+						projectType = ProjectManager.PROJECT_USER_MADE; 
+					} else if (type.equals("list_examples")) { 
+						projectType = ProjectManager.PROJECT_EXAMPLE; 
+					} 
+					
+					Project p = ProjectManager.getInstance().get(name, projectType);
 					
 					//TODO add type
-					Project p = new Project(name, url, -1);
-					Log.d("mumu", "------> " + url);
 					data.put("code", ProjectManager.getInstance().getCode(p));
 				
 				//list apps 
