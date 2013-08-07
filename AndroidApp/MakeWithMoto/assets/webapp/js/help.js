@@ -15,7 +15,7 @@ function parse_help(docString) {
 	    //class
 	    var className = v.name;
 	   // console.log(className);
-	    $("#reference").append('<div id = "'+ className+'" class = "APIclass"> <h1>' + className + ' </h1></div>');
+	    $("#reference").append('<div id = "'+ className+'" class = "card APIclass"> <h1>' + className + ' </h1></div>');
 
 	    //iterate through api methods 
 	    $.each (v.apiMethods, function(m, n) {
@@ -27,10 +27,10 @@ function parse_help(docString) {
 	        $("#"+method.name).append('<h2>'+ method.name +'</h2>');
 	        
 	        if (method.description != undefined) { 
-	        	$("#"+method.name).append('<p> '+ method.description +' </p>');
+	        	$("#"+method.name).append('<p id = "description"> '+ method.description +' </p>');
 	        }
 	        if (method.example != undefined){ 
-				$("#"+method.name).append('<p> '+ method.example +' </p>');
+				$("#"+method.name).append('<p id = "example"> '+ method.example +' </p>');
 	        	$('<button> '+ method.name +' </button>')
 	        		.click(function() {
 	        			console.log("qq" + method.name)

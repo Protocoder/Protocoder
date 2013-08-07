@@ -41,7 +41,7 @@ var addPlot = function(element, posx, posy, w, h) {
       .y(function(d, i) { return y(d); });
  
 
-      $("#widgets").append('<div class ="plot_container" id = "' + element +'"><h1> '+ element +' </h1><div id = "plot"> </div></div>');
+      $("#overlay #container").append('<div class ="plot_container" id = "' + element +'"><h1> '+ element +' </h1><div id = "plot"> </div></div>');
       $("#"+element).draggable();
 
       // Setup the svg element
