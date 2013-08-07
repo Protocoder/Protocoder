@@ -181,42 +181,41 @@ public class MyHTTPServer extends NanoHTTPD {
 
 					// Save and run
 					name = obj.getString("name");
-					url = obj.getString("url");
-
 					type = obj.getString("type");
 
-					if (type.equals("user")) {
+					if (type.equals("list_projects")) {
 						projectType = ProjectManager.PROJECT_USER_MADE; 
-					} else if (type.equals("example")) { 
+					} else if (type.equals("list_examples")) { 
 						projectType = ProjectManager.PROJECT_EXAMPLE; 
 					} 
 					
 
-					ProjectEvent evt = new ProjectEvent(new Project(name, url, projectType), "run");
+					ProjectEvent evt = new ProjectEvent(ProjectManager.getInstance().get(name, projectType), "run");
 					EventBus.getDefault().post(evt);
 					ALog.i("Running...");
 
 				//save_code
 				} else if (cmd.equals("push_code")) {
-					Log.d(TAG, "--> push code");
-					name = obj.getString("name");
-					url = obj.getString("url");
-					newCode = URLDecoder.decode(obj.getString("code"), "UTF-8");
+					Log.d(TAG, "--> push code " +  method + " " + header);
+					Log.d(TAG, "---->" + parms.toString() + " " + files.toString());
+					Log.d(TAG, "" + parms.get("code"));
+					name = parms.get("name").toString();
+					newCode = parms.get("code").toString();
+					Log.d("ww", newCode);
+		
+					type = parms.get("type").toString();
 					
-
-					type = obj.getString("type");
-					
-					if (type.equals("user")) {
+					if (type.equals("list_projects")) {
 						projectType = ProjectManager.PROJECT_USER_MADE; 
-					} else if (type.equals("example")) { 
+					} else if (type.equals("list_examples")) { 
 						projectType = ProjectManager.PROJECT_EXAMPLE; 
 					} 
 					
 					//add type
-					Project p = new Project(name, url, projectType);
+					Project p = ProjectManager.getInstance().get(name, projectType);
 					ProjectManager.getInstance().writeNewCode(p, newCode);
 					data.put("project", ProjectManager.getInstance().to_json(p));
-					ProjectEvent evt = new ProjectEvent(new Project(name, url, projectType), "save");
+					ProjectEvent evt = new ProjectEvent(p, "save");
 					EventBus.getDefault().post(evt);
 
 					ALog.i("Saved");

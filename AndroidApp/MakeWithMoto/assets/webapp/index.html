@@ -87,11 +87,11 @@ $('#toolbar').w2toolbar({
                     window.alert("hola");
                     break;
             case 'project_run':
-                    currentProject.code = escape(session.getValue());
+                    currentProject.code = session.getValue();
                     run_app(currentProject);
                     break;
             case 'project_save':
-                    currentProject.code = escape(session.getValue());
+                    currentProject.code = session.getValue();
                     push_code(currentProject);
                     break;
            case 'list_projects':

@@ -14,13 +14,22 @@ function list_apps(filter) {
 function push_code(project) { 
 	var obj = {};
 	obj.cmd = "push_code";
-	obj.name = project.name;
-	obj.url = project.url;
-	obj.code = escape(project.code);
-	obj.type = project.type;
-	$.get("cmd="+JSON.stringify(obj), function(data) {
- 		//alert('Load was performed. ' + data);
+
+	var o = new Object(); 
+	o.name = project.name;
+	o.url = project.url;
+	o.code = project.code;
+	o.type = project.type;
+
+	$.ajax({
+		url:"cmd="+JSON.stringify(obj),
+		type: 'post',
+		data: o,
+		success: function(data) {
+			
+		}
 	});
+
 }
 
 //fetch the code
@@ -32,6 +41,8 @@ function fetch_code(pName, pType) {
 	$.get("cmd="+JSON.stringify(obj), function(data) {
 		var code = JSON.parse(data);
 		setCode(unescape(code.code));
+		currentProject.name = pName;
+		currentProject.type = pType;
 	});
 }
 
