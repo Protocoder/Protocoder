@@ -3,6 +3,8 @@ currentProject.name = "";
 currentProject.url = ""; 
 currentProject.type = -1;
 var currentObject; 
+var listExamples;
+var listProjects;
 
 //set projects in project list 
 function setProjectList(filter, data) { 
@@ -11,8 +13,10 @@ function setProjectList(filter, data) {
 	var div = "";
 	if (filter == "example") { 
 		div = "list_examples";
+    listExamples = data.projects;
 	} else if (filter == "user") {
 		div = "list_projects";
+    listProjects = data.projects;
 	} 
 
   var obj = new Object();
@@ -37,3 +41,13 @@ function setProjectList(filter, data) {
   w2ui['toolbar'].set(div, obj);
 
 };
+
+function getProject(list, name) { 
+  $.each(list, function(k, v) {
+    if (v.name == name) {
+      console.log(k,v); 
+      return v;
+    }
+  });
+
+}
