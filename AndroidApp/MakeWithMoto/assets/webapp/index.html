@@ -88,6 +88,7 @@ $('#toolbar').w2toolbar({
                     break;
             case 'project_run':
                     currentProject.code = session.getValue();
+                    push_code(currentProject);
                     run_app(currentProject);
                     break;
             case 'project_save':
@@ -152,9 +153,6 @@ w2ui['layout2'].content('bottom', w2ui['grid']);
 w2ui['layout'].content('right', w2ui['layout2']);
 
 w2ui['layout'].content('main', '<pre id="editor"></pre>');
-    var editor = ace.edit("editor");
-    editor.setTheme("ace/theme/twilight");
-    editor.getSession().setMode("ace/mode/javascript");
 
 function openPopup () {
     $().w2form({
@@ -262,10 +260,4 @@ $('#save').click(function() {
 
 
 </body>
-
-<script>
-    //var editor = ace.edit("mmeditor");
-    //editor.setTheme("ace/theme/monokai");
-    //editor.getSession().setMode("ace/mode/javascript");
-</script>
 </html>
