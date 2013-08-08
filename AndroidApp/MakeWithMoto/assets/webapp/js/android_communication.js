@@ -57,19 +57,21 @@ function run_app(project) {
 	});
 }
 
-function create_new_app(id) {
+function create_new_project(new_name) {
 	var obj = {};
-	obj.cmd = "create_new_app";
-	obj.remove_app = id;
+	obj.cmd = "create_new_project";
+	obj.name = new_name;
+	console.log(obj);
 	$.get("cmd="+JSON.stringify(obj), function(data) {
  		alert('Load was performed. ' + data);
+ 		list_apps("user");
 	});
 }
 function remove_app(id) {
 	var obj = {};
 	obj.cmd = "remove_app";
 
-	obj.remove_app = id;
+	obj.remove_app = name;
 	$.get("cmd="+JSON.stringify(obj), function(data) {
  		alert('Load was performed. ' + data);
 	});
