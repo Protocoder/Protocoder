@@ -221,21 +221,15 @@ public class MyHTTPServer extends NanoHTTPD {
 					ALog.i("Saved");
 				
 				//create new app
-				} else if (cmd.equals("create_new_app")) {
-					Log.d(TAG, "--> create new app");
+				} else if (cmd.equals("create_new_project")) {
+					Log.d(TAG, "--> create new project");
 
-					/*
-					String newProjectName = obj.getString("id");
-					String newTemplateCode = readAssetFile("assets/new.js");
-					String file = writeStringToFile(newProjectName, newTemplateCode);
+					name = obj.getString("name");
+					Project p = new Project(name, "", ProjectManager.PROJECT_USER_MADE);
+					ProjectEvent evt = new ProjectEvent(p, "new");
+					EventBus.getDefault().post(evt);
+
 					
-					Project newProject = new Project(newProjectName, file);
-					JSONObject newProjectObject = new JSONObject();
-					newProjectObject.put("name", newProject.getName());
-					newProjectObject.put("url", newProject.getUrl());
-					data.put("project", newProjectObject);
-					ALog.i("Creating new project [" + newProjectName + "]");
-					*/
 				//remove app
 				} else if (cmd.equals("remove_app")) {
 					Log.d(TAG, "--> remove app");

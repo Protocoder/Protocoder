@@ -427,8 +427,7 @@ public class MainActivity extends BaseActivity implements
 			}
 
 		} else if (evt.getAction() == "new") {
-			// projectListFragment.addProject(evt.getProject().getName(),
-			// evt.getProject().getUrl());
+			newProject(evt.getProject().getName());
 		}
 
 	}
@@ -496,11 +495,16 @@ public class MainActivity extends BaseActivity implements
 	public void onFinishEditDialog(String inputText) {
 		Toast.makeText(this, "Creating " + inputText, Toast.LENGTH_SHORT)
 				.show();
+	
+		newProject(inputText);
+	}
+	
+	public void newProject(String inputText) {
 		Project newProject = ProjectManager.getInstance().addNewProject(c,
 				inputText, inputText, ProjectManager.PROJECT_USER_MADE);
 
 		userProjectListFragment.projects.add(newProject);
-		userProjectListFragment.notifyAddedProject();
+		userProjectListFragment.notifyAddedProject();	
 	}
 
 	/*
