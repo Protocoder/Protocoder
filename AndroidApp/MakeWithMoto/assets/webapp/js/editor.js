@@ -19,7 +19,8 @@ function initEditor() {
     renderer.setPrintMarginColumn(-12);
 
     editor.renderer.setShowPrintMargin = null; 
-
+	editor.setTheme("ace/theme/chrome");
+	editor.setFontSize(15);
 	//------------------------------------------------- 
 	//keybinding 
 
@@ -90,8 +91,6 @@ function showDashboard() {
 
 //set Code 
 function setCode(code) { 
-	var editor = ace.edit("editor"); 
-	var session = editor.getSession(); 
 	session.setValue(code); 
 }
 
