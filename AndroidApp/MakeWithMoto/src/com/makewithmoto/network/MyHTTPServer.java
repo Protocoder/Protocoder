@@ -220,6 +220,27 @@ public class MyHTTPServer extends NanoHTTPD {
 
 					ALog.i("Saved");
 				
+				//list files in project 
+				} else if (cmd.equals("list_files_in_project")) {
+					Log.d(TAG, "--> create new project");
+					name = obj.getString("name");
+					type = obj.getString("type");
+
+					if (type.equals("list_projects")) {
+						projectType = ProjectManager.PROJECT_USER_MADE; 
+					} else if (type.equals("list_examples")) { 
+						projectType = ProjectManager.PROJECT_EXAMPLE; 
+					} 
+					
+					Project p = new Project(name, projectType);
+					JSONArray array = ProjectManager.getInstance().listFilesInProject(p);
+					data.put("files", array);
+					//ProjectEvent evt = new ProjectEvent(p, "new");
+					//EventBus.getDefault().post(evt);
+					
+					
+					//remove app
+				} else if (cmd.equals("remove_app")) {
 				//create new app
 				} else if (cmd.equals("create_new_project")) {
 					Log.d(TAG, "--> create new project");

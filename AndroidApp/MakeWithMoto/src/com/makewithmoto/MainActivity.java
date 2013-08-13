@@ -1,6 +1,5 @@
 package com.makewithmoto;
 
-import java.io.File;
 import java.net.UnknownHostException;
 import java.util.List;
 
@@ -22,7 +21,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
+import android.os.FileObserver;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -46,6 +45,7 @@ import android.widget.Toast;
 import com.makewithmoto.apprunner.AppRunnerActivity;
 import com.makewithmoto.base.AppSettings;
 import com.makewithmoto.base.BaseActivity;
+import com.makewithmoto.base.BaseMainApp;
 import com.makewithmoto.base.BaseNotification;
 import com.makewithmoto.events.Events.ProjectEvent;
 import com.makewithmoto.events.Project;
@@ -57,8 +57,6 @@ import com.makewithmoto.network.MyHTTPServer;
 import com.makewithmoto.network.NetworkUtils;
 import com.makewithmoto.projectlist.ListFragmentExamples;
 import com.makewithmoto.projectlist.ListFragmentUserProjects;
-import com.makewithmoto.sensors.AccelerometerManager;
-import com.makewithmoto.sensors.AccelerometerManager.AccelerometerListener;
 
 import de.greenrobot.event.EventBus;
 
@@ -94,6 +92,8 @@ public class MainActivity extends BaseActivity implements
 	private Intent currentProjectApplicationIntent;
 
 	private CustomWebsocketServer ws;
+
+	private FileObserver observer;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -160,6 +160,20 @@ public class MainActivity extends BaseActivity implements
 			}
 
 		});
+		
+		 observer = new FileObserver(BaseMainApp.projectsDir, FileObserver.CREATE | 
+	    			FileObserver.DELETE) { // set up a file observer to watch this directory on sd card
+
+		     @Override
+		     public void onEvent(int event, String file) {
+		         if(event == FileObserver.CREATE || event == FileObserver.DELETE){ // check if its a "create" and not equal to .probe because thats created every time camera is launched
+		        	 Log.d(TAG, "File created [" + BaseMainApp.projectsDir + file + "]");
+		        // 	Toast.makeText(getBaseContext(), file + " was saved!", Toast.LENGTH_LONG).show();
+		         }
+		     }
+		 };
+		 
+		 
 	}
 
 	/**
@@ -183,6 +197,7 @@ public class MainActivity extends BaseActivity implements
 		IntentFilter filterSend = new IntentFilter();
 		filterSend.addAction("com.makewithmoto.intent.action.STOP_SERVER");
 		registerReceiver(mStopServerReceiver, filterSend);
+		observer.startWatching();
 		// startServers();
 	}
 
@@ -195,6 +210,7 @@ public class MainActivity extends BaseActivity implements
 
 		EventBus.getDefault().unregister(this);
 		unregisterReceiver(mStopServerReceiver);
+		observer.stopWatching();
 	}
 
 	/**

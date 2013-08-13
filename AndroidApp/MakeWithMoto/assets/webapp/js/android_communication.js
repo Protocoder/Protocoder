@@ -46,6 +46,24 @@ function fetch_code(pName, pType) {
 	});
 }
 
+//fetch the code
+function list_files_in_project(pName, pType) { 
+	var obj = {};
+	obj.cmd = "list_files_in_project";
+	obj.name = pName;
+	obj.type = pType;
+	$.get("cmd="+JSON.stringify(obj), function(data) {
+		w2ui['grid'].clear();
+		console.log(data);
+	
+		$.each(JSON.parse(data).files, function(k, v) {
+			console.log(v); 
+			v.recid = k;
+			w2ui['grid'].add( v );
+		});
+	});
+} 
+
 function run_app(project) {
 	var obj = {};
 	obj.cmd = "run_app";

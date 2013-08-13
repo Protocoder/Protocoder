@@ -12,12 +12,7 @@
 
     <link rel="stylesheet/less" type="text/less" href="./css/editor.less" />
     <link rel="stylesheet/less" type="text/less" href="./css/style2.less" />
-
-
-
     <link rel="stylesheet/less" type="text/less" href="./css/style.less" />
-
-
     <link rel="stylesheet/less" type="text/less" href="./css/plots.less" />
     <link rel="stylesheet/less" type="text/less" href="./css/help.less" />
 
@@ -98,11 +93,14 @@ $('#toolbar').w2toolbar({
            case 'list_projects':
                 if (data.subItem != 'undefined') { 
                     fetch_code(data.subItem, target);
+                    list_files_in_project(data.subItem, target);
                 }
                 break;
             case 'list_examples':
                 if (data.subItem != 'undefined') { 
                     fetch_code(data.subItem, target);
+                    list_files_in_project(data.subItem, target);
+  
                 }
                 break;
             case 'dashboard':
@@ -126,6 +124,7 @@ $('#layout').w2layout({
                     //this.owner.content('main', target);
                 }
             } },
+        { type: 'bottom', size: 50, resizable: true, hidden: false, style: pstyle, content: 'bottom' },
         { type: 'right', size: 400, style: pstyle, content: 'right', resizable: true }
 
     ]
@@ -144,7 +143,7 @@ $('#grid').w2grid({
     name: 'grid', 
     url: '',
     columns: [              
-        { field: 'file_name', caption: 'File Name', size: '70%' },
+        { field: 'file_name', caption: 'File Name', size: '70%', editable: {type:'text'} },
         { field: 'file_size', caption: 'File Size', size: '30%' },
     ]
 });
