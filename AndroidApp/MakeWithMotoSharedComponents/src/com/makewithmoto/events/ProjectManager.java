@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,17 +25,16 @@ public class ProjectManager {
 	public static final int PROJECT_EXAMPLE = 1;
 	private static final String TAG = "ProjectManager";
 	public static int type;
-	
+
 	private static ProjectManager INSTANCE;
 
-    public static ProjectManager getInstance(){
+	public static ProjectManager getInstance() {
 		if (INSTANCE == null)
 			INSTANCE = new ProjectManager();
 
-        return INSTANCE;
-    }
-    
-    
+		return INSTANCE;
+	}
+
 	public String getCode(Project p) {
 		String out = null;
 		File f = new File(p.getUrl() + File.separator + "script.js");
@@ -97,24 +97,26 @@ public class ProjectManager {
 		ArrayList<Project> projects = new ArrayList<Project>();
 		File dir = null;
 
-		Log.d(TAG, "project type" + type + " " + PROJECT_USER_MADE + " " + PROJECT_EXAMPLE);
-		
+		Log.d(TAG, "project type" + type + " " + PROJECT_USER_MADE + " "
+				+ PROJECT_EXAMPLE);
+
 		switch (type) {
 		case PROJECT_USER_MADE:
 			dir = new File(BaseMainApp.projectsDir);
-			if (!dir.exists()) dir.mkdir();
+			if (!dir.exists())
+				dir.mkdir();
 
 			break;
 
 		case PROJECT_EXAMPLE:
 			dir = new File(BaseMainApp.examplesDir);
-			if (!dir.exists()) dir.mkdir();
+			if (!dir.exists())
+				dir.mkdir();
 
 			break;
 		default:
 			break;
 		}
-
 
 		File[] all_projects = dir.listFiles();
 
@@ -140,28 +142,53 @@ public class ProjectManager {
 		}
 		return null;
 	}
-	
 
-	public Project addNewProject(Context c, String newProjectName, String fileName, int type) {
+	public Project addNewProject(Context c, String newProjectName,
+			String fileName, int type) {
 		String newTemplateCode = FileIO.readAssetFile(c, "templates/new.js");
-		
-		
-		if (newTemplateCode == null) newTemplateCode = "";
-		String file = FileIO.writeStringToFile(BaseMainApp.projectsDir, newProjectName, newTemplateCode);
+
+		if (newTemplateCode == null)
+			newTemplateCode = "";
+		String file = FileIO.writeStringToFile(BaseMainApp.projectsDir,
+				newProjectName, newTemplateCode);
 
 		Project newProject = new Project(newProjectName, file, type);
-		
+
 		return newProject;
 
 	}
+
+	public JSONArray listFilesInProject(Project p) {
+
+		File f = new File(p.getUrl());
+		File file[] = f.listFiles();
+		Log.d("Files", "Size: " + file.length);
+
+		JSONArray array = new JSONArray();
+		for (int i = 0; i < file.length; i++) { 
+			
+			JSONObject jsonObject = new JSONObject();
+			try {
+				jsonObject.put("file_name", file[i].getName());
+				jsonObject.put("file_size", file[i].length() / 1024);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			
+			
+			array.put(jsonObject);
+			Log.d("Files", "FileName:" + file[i].getName());
+		}
 	
-	//TODO fix this hack 
-	public String getProjectURL(Project p) {  
-		String projectURL = p.getUrl();
-		
-		return projectURL; 
-		
+		return array;
 	}
-	
+
+	// TODO fix this hack
+	public String getProjectURL(Project p) {
+		String projectURL = p.getUrl();
+
+		return projectURL;
+
+	}
 
 }
