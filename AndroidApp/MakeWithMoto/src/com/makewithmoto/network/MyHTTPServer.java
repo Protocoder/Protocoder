@@ -341,4 +341,10 @@ public class MyHTTPServer extends NanoHTTPD {
 
 	}
 
+	public void close() { 
+		stop();
+		instance = null;
+		
+	}
+
 }

@@ -84,6 +84,7 @@ $('#toolbar').w2toolbar({
             case 'project_run':
                     currentProject.code = session.getValue();
                     push_code(currentProject);
+                    removeWidgets();
                     run_app(currentProject);
                     break;
             case 'project_save':
@@ -213,6 +214,8 @@ $('#save').click(function() {
     currentProject.code = escape(session.getValue());
     push_code(currentProject);
 });
+
+
 
 
 
