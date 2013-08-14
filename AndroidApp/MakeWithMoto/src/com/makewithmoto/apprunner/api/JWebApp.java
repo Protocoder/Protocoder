@@ -22,12 +22,26 @@ public class JWebApp extends JInterface {
 
 	@JavascriptInterface 
     @APIAnnotation(description = "Creates a button ", example = "ui.button(\"button\"); ")
-	public JWebAppPlot addWidget(String name, int x, int y, int w, int h) {
+	public JWebAppPlot addPlot(String name, int x, int y, int w, int h) {
 		
 		JWebAppPlot jWebAppPlot = new JWebAppPlot(a.get());
 		jWebAppPlot.add(name, x, y, w, h);
 		
 		return jWebAppPlot;
+	}
+	
+	
+	@JavascriptInterface 
+	@APIAnnotation(description = "Creates a button ", example = "ui.button(\"button\"); ")
+	public JWebAppButton addButton(String name, int x, int y, int w, int h, String callbackfn) {
+		Log.d(TAG, "callback " + callbackfn);
+		
+		JWebAppButton jWebAppButton = new JWebAppButton(a.get());
+		jWebAppButton.add(name, x, y, w, h);
+		
+		callback(callbackfn);
+		
+		return jWebAppButton;
 	}
 	
 	@JavascriptInterface 

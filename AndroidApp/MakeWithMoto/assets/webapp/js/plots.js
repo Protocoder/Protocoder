@@ -1,11 +1,30 @@
+var widgets = new Array();
+
 var addWidget = function(widget) { 
+  widgets.push(widget.name);
   if (widget.type == "plot") { 
     return addPlot(widget.name, widget.x, widget.y, widget.w, widget.h);
+  } else if (widget.type == "button") {
+    return addButton(widget.name, widget.x, widget.y, widget.w, widget.h);
   }
+}
 
+
+
+var removeWidgets = function() { 
+  $.each(widgets, function(k,v) {
+    $("#overlay #container").find("#"+v).remove();
+    widgets.pop(v); 
+  });
 
 }
 
+var addButton = function(element, posx, posy, w, h) {
+$('<button class ="widget" id = "' + element +'">'+ element +' </button>')
+        .appendTo("#overlay #container")
+        .css({"width": w+"px", "height":h+"px","top":posy+"px","left":posx+"px"});
+
+} 
 
 var addPlot = function(element, posx, posy, w, h) {
   var _delay = 10;
@@ -41,7 +60,7 @@ var addPlot = function(element, posx, posy, w, h) {
       .y(function(d, i) { return y(d); });
  
 
-      $("#overlay #container").append('<div class ="plot_container" id = "' + element +'"><h1> '+ element +' </h1><div id = "plot"> </div></div>');
+      $("#overlay #container").append('<div class ="plot_container widget" id = "' + element +'"><h1> '+ element +' </h1><div id = "plot"> </div></div>');
       $("#"+element).draggable();
 
       // Setup the svg element

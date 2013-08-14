@@ -147,6 +147,7 @@ public class MainActivity extends BaseActivity implements
 				shiftAnimator.setDuration(1200);
 				shiftAnimator.setInterpolator(new DecelerateInterpolator());
 
+				
 				final AnimatorSet setAnimation = new AnimatorSet();
 
 				setAnimation.play(alphaAnimator).with(shiftAnimator);
@@ -166,8 +167,11 @@ public class MainActivity extends BaseActivity implements
 
 		     @Override
 		     public void onEvent(int event, String file) {
-		         if(event == FileObserver.CREATE || event == FileObserver.DELETE){ // check if its a "create" and not equal to .probe because thats created every time camera is launched
-		        	 Log.d(TAG, "File created [" + BaseMainApp.projectsDir + file + "]");
+		         if((FileObserver.CREATE & event) != 0) {
+		        	 Log.d(TAG, "File created [" + BaseMainApp.projectsDir + "/" + file + "]");
+		        	 
+		         } else if ((FileObserver.DELETE & event) != 0){ // check if its a "create" and not equal to .probe because thats created every time camera is launched
+		        	 Log.d(TAG, "File deleted [" + BaseMainApp.projectsDir + "/" + file + "]");
 		        // 	Toast.makeText(getBaseContext(), file + " was saved!", Toast.LENGTH_LONG).show();
 		         }
 		     }
@@ -266,25 +270,7 @@ public class MainActivity extends BaseActivity implements
 			e.printStackTrace();
 		}
 
-		/*
-		 * AccelerometerManager accelerometerManager = new AccelerometerManager(
-		 * this); accelerometerManager.addListener(new AccelerometerListener() {
-		 * 
-		 * @Override public void onShake(float force) { // TODO Auto-generated
-		 * method stub
-		 * 
-		 * }
-		 * 
-		 * @Override public void onAccelerometerChanged(float x, float y, float
-		 * z) {
-		 * 
-		 * // Log.d(TAG, " " + x); JSONObject obj = new JSONObject(); try {
-		 * obj.put("acc_x", x); } catch (JSONException e) { // TODO
-		 * Auto-generated catch block e.printStackTrace(); } //ws.send(obj);
-		 * 
-		 * } }); accelerometerManager.start();
-		 */
-
+		
 		final Handler handler = new Handler();
 		Runnable r = new Runnable() {
 
@@ -326,7 +312,7 @@ public class MainActivity extends BaseActivity implements
 		// TODO add websocket
 
 		if (httpServer != null) {
-			httpServer.stop();
+			httpServer.close();
 			httpServer = null;
 		}
 		// Hide the notification

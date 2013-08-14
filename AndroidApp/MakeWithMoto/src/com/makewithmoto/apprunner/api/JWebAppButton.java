@@ -10,13 +10,13 @@ import android.util.Log;
 
 import com.makewithmoto.network.CustomWebsocketServer;
 
-public class JWebAppPlot extends JInterface {
+public class JWebAppButton extends JInterface {
 
 
-	private static final String TAG = "JWebAppPlot";
+	private static final String TAG = "JWebAppButton";
 	String name; 
 	
-	public JWebAppPlot(Activity a) {
+	public JWebAppButton(Activity a) {
 		super(a);
 	}
 	
@@ -30,7 +30,7 @@ public class JWebAppPlot extends JInterface {
 
 			JSONObject values = new JSONObject();
 			values.put("name", name);
-			values.put("type", "plot");
+			values.put("type", "button");
 			values.put("x", x);
 			values.put("y", y);
 			values.put("w", w);
@@ -53,7 +53,7 @@ public class JWebAppPlot extends JInterface {
 	}
 	
 	
-	public void update(float val) { 
+	public void update(boolean pressed) { 
 		JSONObject msg = new JSONObject();
 		try {
 			msg.put("type", "widget");
@@ -61,8 +61,8 @@ public class JWebAppPlot extends JInterface {
 
 			JSONObject values = new JSONObject();
 			values.put("name", name);
-			values.put("type", "plot");
-			values.put("val", val);
+			values.put("type", "button");
+			values.put("val", pressed);
 			msg.put("values", values);
 
 		} catch (JSONException e1) {

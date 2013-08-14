@@ -49,7 +49,9 @@ function initEditor() {
 	    exec: function(env, args, request) {
 	    	currentProject.code = session.getValue();
 	    	push_code(currentProject);
+	    	removeWidgets();
 	    	run_app(currentProject);
+
 	    }
 	});
 
@@ -76,6 +78,9 @@ function initEditor() {
 	$("#error_from_android").draggable();
 	$("#remote_log").draggable();
 
+	if (location.hash.indexOf("#dashboard") != -1) {
+		showDashboard();
+	}
 
 }
 
