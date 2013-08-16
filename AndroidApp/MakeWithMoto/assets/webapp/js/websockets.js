@@ -70,13 +70,15 @@ function testWebsockets() {
     if (result.type == "error") { 
       currentError = result.values; 
       console.log("error "  + currentError);
-      $("#error_from_android").text(currentError);
+      $("#console").text(currentError);
+   
+      w2ui['layout'].show('bottom', false);
     }
 
 
     if (result.type == "remote_log") { 
       log = result.values; 
-      $("#remote_log").append('<p>' + log + '</p>');
+      $("#console").append('<p>' + log + '</p>');
     }
     
 

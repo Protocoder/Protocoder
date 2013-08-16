@@ -81,7 +81,7 @@ function create_new_project(new_name) {
 	obj.name = new_name;
 	console.log(obj);
 	$.get("cmd="+JSON.stringify(obj), function(data) {
- 		alert('Load was performed. ' + data);
+ 		//alert('Load was performed. ' + data);
  		list_apps("user");
 	});
 }

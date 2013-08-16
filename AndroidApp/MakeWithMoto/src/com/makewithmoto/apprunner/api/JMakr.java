@@ -16,6 +16,7 @@ public class JMakr extends JInterface {
 	private String TAG = "JMakr";
 	
 	boolean isStarted = false;
+	private String callbackfn;
 
 	public JMakr(Activity a) {
 		super(a);
@@ -24,7 +25,7 @@ public class JMakr extends JInterface {
 	
 	@JavascriptInterface
 	@APIAnnotation(description = "initializes makr board", example = "makr.start();")	
-	public void start() {
+	public void start(final String callbackfn) {
 		
 		if(!isStarted){
 	         /* Create a receiving thread */
@@ -34,6 +35,7 @@ public class JMakr extends JInterface {
             makr.start();
             
             isStarted = true;
+            this.callbackfn = callbackfn;
 		}
 		
 		
@@ -72,7 +74,8 @@ public class JMakr extends JInterface {
 					    public void run() {
 
 							Log.d(TAG,"Got data: "+receivedData);
-						    callback("OnSerialRead("+receivedData+");");   
+						   // previous callback callback("OnSerialRead("+receivedData+");");   
+						    callback(callbackfn, receivedData);   
 					    }
 				    });	
 				}		

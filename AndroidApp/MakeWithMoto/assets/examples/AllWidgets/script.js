@@ -1,7 +1,5 @@
-ui.setTheme("BLUE");
+//ui.setTheme("BLUE");
 ui.fullscreen();
-ui.addCameraView(50, 50, 200, 200);
-ui.addVideoView(500, 100, 500, 500);
 //Set up the canvas with padding all around and a white background
 ui.setPadding(16, 16, 16, 16);
 ui.backgroundColor(255, 255, 255);

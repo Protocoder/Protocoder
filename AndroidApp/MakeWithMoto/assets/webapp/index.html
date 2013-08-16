@@ -55,15 +55,11 @@ $('#toolbar').w2toolbar({
             { type: 'button',  id: 'project_save', caption: 'Save', img: 'icon-page'},
             
             { type: 'menu',   id: 'list_projects', caption: 'Projects', img: 'icon-folder', items: [
-                { text: 'Item 1', icon: 'icon-page' }, 
-                { text: 'Item 2', icon: 'icon-page' }, 
-                { text: 'Item 3', value: 'Item Three', icon: 'icon-page' }
+          
             ]},
 
             { type: 'menu',   id: 'list_examples', caption: 'Examples', img: 'icon-folder', items: [
-                { text: 'Item 1', icon: 'icon-page' }, 
-                { text: 'Item 2', icon: 'icon-page' }, 
-                { text: 'Item 3', value: 'Item Three', icon: 'icon-page' }
+           
             ]},
 
             
@@ -125,7 +121,7 @@ $('#layout').w2layout({
                     //this.owner.content('main', target);
                 }
             } },
-        { type: 'bottom', size: 50, resizable: true, hidden: false, style: pstyle, content: 'bottom' },
+        { type: 'bottom', size: "100px", resizable: true, hidden: true, style: pstyle, content: '<div id = "console"></div>' },
         { type: 'right', size: 400, style: pstyle, content: 'right', resizable: true }
 
     ]
@@ -151,7 +147,6 @@ $('#grid').w2grid({
 
 w2ui['layout2'].content('bottom', w2ui['grid']);
 w2ui['layout'].content('right', w2ui['layout2']);
-
 w2ui['layout'].content('main', '<pre id="editor"></pre>');
 
 function openPopup () {
@@ -251,9 +246,6 @@ $('#save').click(function() {
         <div id="dropbox">
             <span class="message">Drop files here to upload. <br /><i>(they will only be visible to you)</i></span>
         </div>
-        <div id = "error_from_android"></div> 
-        <div id = "remote_log"></div> 
-
 
     </div>
 
