@@ -1,1 +1,1 @@
-    browser.loadUrl("http://google.com");
+browser.loadUrl("http://google.com");

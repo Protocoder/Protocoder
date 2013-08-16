@@ -429,6 +429,7 @@ public class MainActivity extends BaseActivity implements
 			}
 
 		} else if (evt.getAction() == "new") {
+			Log.d("qq", "creating new project " + evt.getProject().getName());
 			newProject(evt.getProject().getName());
 		}
 
