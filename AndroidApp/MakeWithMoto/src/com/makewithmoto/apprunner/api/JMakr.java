@@ -64,18 +64,20 @@ public class JMakr extends JInterface {
 				//receivedData = "";
 				
 				if(isStarted){
-				    receivedData = makr.readSerial();
+				    receivedData = makr.readSerial().trim();
 				}
 				
 				Log.d("MAKr", "" + receivedData);
 				
-				if(receivedData != ""){
+				if(receivedData != "") {
 				    a.get().runOnUiThread(new Runnable() {
 					    public void run() {
 
 							Log.d(TAG,"Got data: "+receivedData);
+							Log.d(TAG,"callback "+callbackfn);
+
 						   // previous callback callback("OnSerialRead("+receivedData+");");   
-						    callback(callbackfn, receivedData);   
+						    callback(callbackfn, "\"" +  receivedData + "\"");   
 					    }
 				    });	
 				}		

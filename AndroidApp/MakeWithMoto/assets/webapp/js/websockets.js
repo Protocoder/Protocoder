@@ -72,7 +72,7 @@ function testWebsockets() {
       console.log("error "  + currentError);
       $("#console").text(currentError);
    
-      w2ui['layout'].show('bottom', false);
+     // w2ui['layout'].show('bottom', false);
     }
 
 
@@ -89,7 +89,6 @@ function testWebsockets() {
         if (result.values.val == true) { 
           showDashboard();
           console.log("show dashboard");
-
         } else {
           hideDashboard();
         }
@@ -98,9 +97,11 @@ function testWebsockets() {
         remotePlot = addWidget(result.values);
       } else if (result.action == "update") {
         console.log("updating widget");
-
         console.log(result.values.val);
         remotePlot(result.values.val, "");
+      } else if (result.action == "setText") {
+        setText(result.values.name, result.values.val);
+
       }
 
     }
