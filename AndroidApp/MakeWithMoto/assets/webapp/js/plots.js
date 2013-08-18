@@ -1,13 +1,15 @@
 var widgets = new Array();
 
 var addWidget = function(widget) { 
-  widgets.push(widget.name);
   if (widget.type == "plot") { 
+    widgets.push(widget.name);
     return addPlot(widget.name, widget.x, widget.y, widget.w, widget.h);
   } else if (widget.type == "button") {
+    widgets.push(widget.name);
     return addButton(widget.name, widget.x, widget.y, widget.w, widget.h);
   } else if (widget.type == "label") { 
-    return addLabel(widget.name, widget.x, widget.y, widget.w, widget.h);
+    widgets.push("label_"+widget.id);
+    return addLabel(widget.id, widget.name, widget.x, widget.y, widget.w, widget.h);
   }
 }
 
@@ -15,17 +17,20 @@ var addWidget = function(widget) {
 
 var removeWidgets = function() { 
   $.each(widgets, function(k,v) {
-    $("#overlay #container").find("#"+v).remove();
+    $("#overlay #container " + "#"+v).remove();
     widgets.pop(v); 
   });
+
+
 
 }
 
 
-var addLabel = function(element, posx, posy, w, h) { 
-   $('<div class ="widget label" id = "label_' + element +'">'+ element +' </div>')
+var addLabel = function(element, name, posx, posy, w, h) { 
+   $('<div class ="widget label" id = "label_' + element +'">'+ name +' </div>')
           .appendTo("#overlay #container")
-          .css({"width": w+"px", "height":h+"px","top":posy+"px","left":posx+"px"});
+          .css({"width": w+"px", "height":h+"px","top":posy+"px","left":posx+"px"})
+          .draggable();
 }
 
 

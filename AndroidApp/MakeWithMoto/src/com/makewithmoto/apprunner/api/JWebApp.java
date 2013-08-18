@@ -47,10 +47,10 @@ public class JWebApp extends JInterface {
 	
 	@JavascriptInterface 
 	@APIAnnotation(description = "Creates a button ", example = "ui.button(\"button\"); ")
-	public JWebAppLabel addLabel(String name, int x, int y, int w, int h) {
+	public JWebAppLabel addLabel(String id, String name, int x, int y, int w, int h) {
 		
 		JWebAppLabel jWebAppLabel = new JWebAppLabel(a.get());
-		jWebAppLabel.add(name, x, y, w, h);
+		jWebAppLabel.add(id, name, x, y, w, h);
 				
 		return jWebAppLabel;
 	}

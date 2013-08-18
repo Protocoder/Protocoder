@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -15,6 +16,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
@@ -330,6 +332,10 @@ public class JUI extends JInterface {
 		TextView tv = new TextView(a.get());
 		tv.setText(label);
 		tv.setTextSize((float) textSize);
+		//tv.setTypeface(null, Typeface.BOLD);
+		//tv.setGravity(Gravity.CENTER_VERTICAL);
+		//tv.setPadding(2, 0, 0, 0);
+		//tv.setTextColor(a.get().getResources().getColor(R.color.theme_text_white));
 		positionView(tv, x, y, w, h);
 
 		// Add the view
