@@ -219,5 +219,53 @@ public class FileIO {
             out.write(buffer, 0, read);
         }
     }
+    
+    public static void copyFileOrDir(Context c, String path) {
+        AssetManager assetManager = c.getAssets();
+        String assets[] = null;
+        try {
+            assets = assetManager.list(path);
+            if (assets.length == 0) {
+                copyFile(c, path);
+            } else {
+                String fullPath = BaseMainApp.baseDir + "/" + path;
+                File dir = new File(fullPath);
+                if (!dir.exists())
+                    dir.mkdir();
+                for (int i = 0; i < assets.length; ++i) {
+                    copyFileOrDir(c, path + "/" + assets[i]);
+                }
+            }
+        } catch (IOException ex) {
+            Log.e("tag", "I/O Exception", ex);
+        }
+    }
+
+    private static void copyFile(Context c, String filename) {
+        AssetManager assetManager = c.getAssets();
+
+        InputStream in = null;
+        OutputStream out = null;
+        try {
+            in = assetManager.open(filename);
+            String newFileName = BaseMainApp.baseDir + filename;
+            out = new FileOutputStream(newFileName);
+
+            byte[] buffer = new byte[1024];
+            int read;
+            while ((read = in.read(buffer)) != -1) {
+                out.write(buffer, 0, read);
+            }
+            in.close();
+            in = null;
+            out.flush();
+            out.close();
+            out = null;
+        } catch (Exception e) {
+            Log.e("tag", e.getMessage());
+        }
+
+    }
+
 
 }

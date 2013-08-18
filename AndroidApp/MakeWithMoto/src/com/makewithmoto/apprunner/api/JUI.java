@@ -51,7 +51,7 @@ import com.makewithmoto.views.PlotView.Plot;
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class JUI extends JInterface {
 
-	final static int MAXVIEW = 20;
+	final static int MAXVIEW = 100;
 	FrameLayout mMainLayout;
 	Boolean isMainLayoutSetup = false;
 	int viewCount = 0;

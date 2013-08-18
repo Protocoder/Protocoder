@@ -6,6 +6,8 @@ var addWidget = function(widget) {
     return addPlot(widget.name, widget.x, widget.y, widget.w, widget.h);
   } else if (widget.type == "button") {
     return addButton(widget.name, widget.x, widget.y, widget.w, widget.h);
+  } else if (widget.type == "label") { 
+    return addLabel(widget.name, widget.x, widget.y, widget.w, widget.h);
   }
 }
 
@@ -19,12 +21,29 @@ var removeWidgets = function() {
 
 }
 
+
+var addLabel = function(element, posx, posy, w, h) { 
+   $('<div class ="widget label" id = "label_' + element +'">'+ element +' </div>')
+          .appendTo("#overlay #container")
+          .css({"width": w+"px", "height":h+"px","top":posy+"px","left":posx+"px"});
+}
+
+
+var setText = function(element, text) { 
+   $("#overlay #container #label_"+ element).text(text)
+}
+
+
 var addButton = function(element, posx, posy, w, h) {
-$('<button class ="widget" id = "' + element +'">'+ element +' </button>')
-        .appendTo("#overlay #container")
-        .css({"width": w+"px", "height":h+"px","top":posy+"px","left":posx+"px"});
+  $('<button class ="widget" id = "button_' + element +'">'+ element +' </button>')
+          .appendTo("#overlay #container")
+          .css({"width": w+"px", "height":h+"px","top":posy+"px","left":posx+"px"});
 
 } 
+
+var setBackgroundColor = function(r, g, b, a) { 
+  $("#overlay #container").css("background", "rgba("+r+","+g+","+b+","+a+")");
+}
 
 var addPlot = function(element, posx, posy, w, h) {
   var _delay = 10;

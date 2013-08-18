@@ -3,6 +3,7 @@ package com.makewithmoto.apprunner.api;
 import java.lang.ref.WeakReference;
 
 import android.app.Activity;
+import android.util.Log;
 
 import com.makewithmoto.apprunner.AppRunnerActivity;
 
@@ -38,7 +39,6 @@ public class JInterface {
 
 				f1 = f1 + ");";
 			}
-
 			a.get().eval(f1);
 
 		} catch (Throwable e) {

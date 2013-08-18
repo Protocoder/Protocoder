@@ -44,6 +44,48 @@ public class JWebApp extends JInterface {
 		return jWebAppButton;
 	}
 	
+	
+	@JavascriptInterface 
+	@APIAnnotation(description = "Creates a button ", example = "ui.button(\"button\"); ")
+	public JWebAppLabel addLabel(String name, int x, int y, int w, int h) {
+		
+		JWebAppLabel jWebAppLabel = new JWebAppLabel(a.get());
+		jWebAppLabel.add(name, x, y, w, h);
+				
+		return jWebAppLabel;
+	}
+	
+	
+	
+	@JavascriptInterface 
+	@APIAnnotation(description = "Creates a button ", example = "ui.button(\"button\"); ")
+	public void setBackgroundColor(int r, int g, int b, float alpha) {
+		JSONObject msg = new JSONObject();
+		try {
+			msg.put("type", "widget");
+			msg.put("action", "setBackgroundColor");
+			
+			JSONObject values = new JSONObject();
+			values.put("r", r);
+			values.put("g", g);
+			values.put("b", b);
+			values.put("alpha", alpha);
+			msg.put("values", values);
+			
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+		
+		try {
+			CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
+			ws.send(msg);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} 
+		
+		
+	}
+	
 	@JavascriptInterface 
 	@APIAnnotation(description = "Creates a button ", example = "ui.button(\"button\"); ")
 	public void showDashboard(boolean b) {
