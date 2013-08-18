@@ -100,7 +100,7 @@ function testWebsockets() {
         console.log(result.values.val);
         remotePlot(result.values.val, "");
       } else if (result.action == "setText") {
-        setText(result.values.name, result.values.val);
+        setText(result.values.id, result.values.val);
 
       }
 
