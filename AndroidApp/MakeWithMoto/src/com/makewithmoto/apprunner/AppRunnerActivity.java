@@ -19,16 +19,15 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.makewithmoto.MainActivity;
@@ -38,7 +37,6 @@ import com.makewithmoto.base.BaseActivity;
 import com.makewithmoto.events.Events.ProjectEvent;
 import com.makewithmoto.events.Project;
 import com.makewithmoto.events.ProjectManager;
-import com.makewithmoto.fragments.CameraFragment;
 import com.makewithmoto.network.CustomWebsocketServer;
 
 import de.greenrobot.event.EventBus;
@@ -80,6 +78,8 @@ public class AppRunnerActivity extends BaseActivity {
 			+ "var media = JMedia(Activity);\n"
 			+ "var JSensors = Packages.com.makewithmoto.apprunner.api.JSensors; \n"
 			+ "var sensors = JSensors(Activity);\n"
+			+ "var JConsole = Packages.com.makewithmoto.apprunner.api.JConsole; \n"
+			+ "var console = JConsole(Activity);\n"
 			+ "// End of Prepend Section \n";
 
 	static final String SCRIPT_POSTFIX = "//Appends text for all scripts \n"
@@ -93,6 +93,7 @@ public class AppRunnerActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		setContentView(R.layout.activity_apprunner);
 		// websocket
 		// TODO move this to onResume
 
@@ -331,8 +332,8 @@ public class AppRunnerActivity extends BaseActivity {
 					+ (error.lineSource() != null ? " " + error.lineSource()
 							: "") + "\n" + error.getScriptStackTrace();
 
-			// TODO make this better!!
-			Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+			showError(message);
+			
 			JSONObject obj = new JSONObject();
 			try {
 				obj.put("type", "error");
@@ -565,7 +566,14 @@ public class AppRunnerActivity extends BaseActivity {
 	}
 
 	public void addOnKeyListener(JAndroid.onKeyListener onKeyListener2) {
-		onKeyListener = onKeyListener2;
+			onKeyListener = onKeyListener2;
 
+	} 
+	
+	public void showError(String message) { 		
+		RelativeLayout rl = (RelativeLayout) findViewById(R.id.console);
+		rl.setVisibility(View.VISIBLE);
+		TextView t = (TextView) findViewById(R.id.console_content);
+		t.setText(message);
 	}
 }

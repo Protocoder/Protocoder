@@ -1,12 +1,15 @@
 //ui.setTheme("BLUE");
-ui.fullscreen();
+//ui.fullscreen();
 //Set up the canvas with padding all around and a white background
 ui.setPadding(16, 16, 16, 16);
 ui.backgroundColor(255, 255, 255);
 ui.backgroundImage("makewithmotologo.png");
 
 //Add a generic button
-ui.button("Button", 0, 0,500,100, function(){android.vibrate(500);});
+ui.button("Button", 0, 0,500,100, function(){
+	android.vibrate(500);
+);
+
 //Add a seekbar
 ui.seekbar(100, 50, 0, 150, 500, 100, function(){android.vibrate(500);});
 //Add a label with text size of 16
