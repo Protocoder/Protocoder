@@ -111,17 +111,7 @@ $('#toolbar').w2toolbar({
 $('#layout').w2layout({
     name: 'layout',
     panels: [
-        { type: 'main', style: pstyle, content: 'main', tabs: {
-                active: 'tab1',
-                tabs: [
-                    { id: 'tab1', caption: 'Code' },
-                ],
-                onClick: function (target, data) {
-                
-                    //this.owner.content('main', target);
-                }
-            } },
-        { type: 'bottom', size: "100px", resizable: true, hidden: false, style: pstyle, content: '<div id = "console"></div>' },
+        { type: 'main', style: pstyle, content: 'main' },
         { type: 'right', size: 400, style: pstyle, content: 'right', resizable: true }
 
     ]
@@ -129,7 +119,24 @@ $('#layout').w2layout({
 
 
 $().w2layout({
-    name: 'layout2',
+    name: 'code_editor',
+    panels: [
+       { type: 'main', style: pstyle, content: 'main', tabs: {
+            active: 'tab1',
+            tabs: [
+                { id: 'tab1', caption: 'Code' },
+            ],
+            onClick: function (target, data) {
+            
+                //this.owner.content('main', target);
+            }
+        } },
+        { type: 'bottom', size: "100px", resizable: true, hidden: false, style: pstyle, content: '<div id = "console"></div>' }
+    ]
+});
+
+$().w2layout({
+    name: 'right_bar',
     panels: [
         { type: 'main', size: '70%', resizable: true, style: pstyle, content: '<div id = "reference_container"> <h1>REFERENCE</h1> <div id = "reference"> </div> </div>' },
         { type: 'bottom', size: '30%', resizable: true, hidden: false, style: pstyle, content: 'bottom' }
@@ -145,9 +152,11 @@ $('#grid').w2grid({
     ]
 });
 
-w2ui['layout2'].content('bottom', w2ui['grid']);
-w2ui['layout'].content('right', w2ui['layout2']);
-w2ui['layout'].content('main', '<pre id="editor"></pre>');
+
+w2ui['right_bar'].content('bottom', w2ui['grid']);
+w2ui['layout'].content('main', w2ui['code_editor']);
+w2ui['layout'].content('right', w2ui['right_bar']);
+w2ui['code_editor'].content('main', '<pre id="editor"></pre>');
 
 function openPopup () {
     $().w2form({
