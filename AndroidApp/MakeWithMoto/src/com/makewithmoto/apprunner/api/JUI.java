@@ -31,6 +31,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -74,7 +75,7 @@ public class JUI extends JInterface {
 		
 		screenWidth = ((BaseActivity) a ).screenWidth; 
 		screenHeight = ((BaseActivity) a ).screenHeight; 
-	}
+	}	
 
 	private void initializeLayout() {
 		if (!isMainLayoutSetup) {
@@ -90,7 +91,8 @@ public class JUI extends JInterface {
 			sv.addView(mMainLayout);
 
 			// Set the content view
-			a.get().setContentView(sv);
+			RelativeLayout rl = (RelativeLayout) a.get().findViewById(R.id.user_ui);
+			rl.addView(sv);
 			isMainLayoutSetup = true;
 		}
 	}
