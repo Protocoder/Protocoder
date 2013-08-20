@@ -3,6 +3,8 @@ package com.makewithmoto.apprunner.api;
 import java.io.File;
 import java.io.InputStream;
 
+import processing.core.PApplet;
+
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -704,6 +706,44 @@ public class JUI extends JInterface {
 		// return p1;
 	}
 	
+	
+	/**
+	 * Adds an image with the option to hide the default background
+	 * 
+	 * @author victordiaz
+	 * 
+	 * @param x
+	 * @param y
+	 * @param w
+	 * @param h
+	 */
+	public PApplet addProcessing(int x, int y, int w, int h) {
+		
+		initializeLayout();
+		
+		// Create the main layout. This is where all the items actually go
+		FrameLayout fl = new FrameLayout(a.get());
+		fl.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		fl.setId(12);
+		
+		// Add the view
+		positionView(fl, x, y, w, h);
+		addView(fl);
+		
+		PApplet papplet = new PApplet();
+		
+		FragmentTransaction ft = a.get().getSupportFragmentManager()
+				.beginTransaction();  
+		ft.add(fl.getId(), papplet, String.valueOf(fl.getId()));
+		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+		ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+		ft.addToBackStack(null);
+		ft.commit();
+		
+		
+		return papplet;
+		
+	}
 
 	/**
 	 * Adds an image with the option to hide the default background
