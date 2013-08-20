@@ -123,6 +123,7 @@ $().w2layout({
     panels: [
        { type: 'main', style: pstyle, content: 'main', tabs: {
             active: 'tab1',
+            name: 'tabs',
             tabs: [
                 { id: 'tab1', caption: 'Code' },
             ],
@@ -191,7 +192,7 @@ function openPopup () {
         title   : 'Create a new project',
         body    : '<div id="form" style="width: 100%; height: 100%;"></div>',
         style   : 'padding: 15px 0px 0px 0px',
-        width   : 400,
+        width   : 400, 
         height  : 200, 
         onOpen  : function () {
             $('#w2ui-popup #form').w2render('foo');

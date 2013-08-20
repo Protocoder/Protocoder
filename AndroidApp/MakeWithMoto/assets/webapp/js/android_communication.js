@@ -29,8 +29,7 @@ function push_code(project) {
 			
 		}
 	});
-
-}
+} 
 
 //fetch the code
 function fetch_code(pName, pType) { 
@@ -43,6 +42,10 @@ function fetch_code(pName, pType) {
 		setCode(unescape(code.code));
 		currentProject.name = pName;
 		currentProject.type = pType;
+		document.title = pName;
+		var tabs = w2ui['code_editor'].get("main").tabs;
+		tabs.get("tab1").caption = pName;
+		tabs.refresh();
 	});
 }
 
@@ -85,6 +88,7 @@ function create_new_project(new_name) {
 	$.get("cmd="+JSON.stringify(obj), function(data) {
  		//alert('Load was performed. ' + data);
  		list_apps("user");
+ 		fetch_code(obj.name, "list_projects");
 	});
 }
 function remove_app(id) {

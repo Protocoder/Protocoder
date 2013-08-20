@@ -34,6 +34,7 @@ $(function(){
 		
 		// Called before each upload is started
 		beforeEach: function(file){
+			/*
 			if(!file.type.match(/^image\//)){
 				alert('Only images are allowed!');
 				
@@ -41,6 +42,7 @@ $(function(){
 				// file to be rejected
 				return false;
 			}
+			*/
 		},
 		
 		uploadStarted:function(i, file, len){
