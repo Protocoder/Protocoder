@@ -273,6 +273,7 @@ public class MyHTTPServer extends NanoHTTPD {
 					APIManager.getInstance().addClass(JMedia.class); 
 					APIManager.getInstance().addClass(JWebApp.class); 
 					APIManager.getInstance().addClass(JWebAppPlot.class); 
+					
 					data.put("api", APIManager.getInstance().getDocumentation());
 				}
 

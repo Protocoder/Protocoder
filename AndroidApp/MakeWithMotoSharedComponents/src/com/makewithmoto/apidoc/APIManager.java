@@ -9,6 +9,9 @@ import java.util.Map;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.thoughtworks.paranamer.AdaptiveParanamer;
+import com.thoughtworks.paranamer.CachingParanamer;
+import com.thoughtworks.paranamer.Paranamer;
 
 /*
  * Usage 
@@ -51,7 +54,6 @@ public class APIManager {
 			// api docs
 			APIClass apiClass = new APIClass();
 			apiClass.name = c.getSimpleName();
-			// apiClass.description = ;
 			Log.d(TAG, "" + c.getName());
 
 			Method m[] = c.getDeclaredMethods();
@@ -61,6 +63,18 @@ public class APIManager {
 				Log.d(TAG, "" + m[i]);
 				Log.d(TAG, "" + m[i].getName());
 				apiMethod.name = m[i].getName();
+				Paranamer paranamer = new AdaptiveParanamer();
+				String[] paramNames = paranamer.lookupParameterNames(m[i], false); // will return null if not found
+				  
+				
+				Class<?>[] param = m[i].getParameterTypes();
+				for (int j = 0; j < paramNames.length; j++) { 
+					apiMethod.parameters += /*param[j].toString() + " " + */ paramNames[j];
+				} 
+				apiMethod.returnType = m[i].getReturnType().toString();
+				
+				Log.d("qmqm", apiMethod.parameters + " " + apiMethod.returnType);
+				
 
 				if (apiMethod.name.contains("$") == false) {
 					// Log.d("qq", apiMethod.name);

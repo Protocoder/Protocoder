@@ -73,6 +73,8 @@ function run_app(project) {
 	$.get("cmd="+JSON.stringify(obj), function(data) {
  		//alert('Load was performed. ' + data);
 	});
+	$("#console").empty();
+
 }
 
 function create_new_project(new_name) {
