@@ -31,7 +31,7 @@ public class CustomWebsocketServer extends WebSocketServer {
 			inst.start();
 		}
 		return inst;
-	}
+	} 
 	
 	// Singleton (one app view, different URLs)
 	public static CustomWebsocketServer getInstance(Context aCtx) throws UnknownHostException {
