@@ -9,7 +9,7 @@ $(function(){
 		
 		maxfiles: 5,
     	maxfilesize: 2,
-		url: 'post_file.php',
+		url: './',
 		
 		uploadFinished:function(i,file,response){
 			$.data(file).addClass('done');

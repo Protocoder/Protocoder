@@ -31,9 +31,11 @@ import com.makewithmoto.apprunner.api.JSensors;
 import com.makewithmoto.apprunner.api.JUI;
 import com.makewithmoto.apprunner.api.JWebApp;
 import com.makewithmoto.apprunner.api.JWebAppPlot;
+import com.makewithmoto.base.BaseMainApp;
 import com.makewithmoto.events.Events.ProjectEvent;
 import com.makewithmoto.events.Project;
 import com.makewithmoto.events.ProjectManager;
+import com.makewithmoto.utils.FileIO;
 
 import de.greenrobot.event.EventBus;
 
@@ -114,7 +116,17 @@ public class MyHTTPServer extends NanoHTTPD {
 
 		try {
 
-			Log.d(TAG, "received String" + uri + " " + method);
+			Log.d(TAG, "received String" + uri + " " + method + " " + header + " " + " " + parms + " " + files);
+			
+			if (!files.isEmpty() ) { 
+				File src = new File(files.getProperty("pic").toString()); 
+				File dst = new File(BaseMainApp.baseDir + parms.getProperty("pic").toString());
+				Log.d(TAG, " " + src.toString() + " " + dst.toString());
+				
+				FileIO.copyFile(src, dst);
+				
+			} 
+			
 			JSONObject data = new JSONObject();
 
 			// splitting the string into command and parameters
@@ -125,7 +137,6 @@ public class MyHTTPServer extends NanoHTTPD {
 			if (m.length > 1) {
 				params = m[1];
 			}
-
 			Log.d(TAG, "cmd " + userCmd);
 
 			if (userCmd.contains("cmd")) {
