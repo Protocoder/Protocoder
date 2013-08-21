@@ -13,7 +13,7 @@
 .w2ui-reset * {
   color: default;
   font-family: 'Roboto', sans-serif;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: normal;
   line-height: 100%;
   -webkit-box-sizing: border-box;
@@ -134,8 +134,8 @@ select {
 }
 .w2ui-icon {
   background-repeat: no-repeat;
-  height: 32px;
-  width: 32px;
+  height: 16px;
+  width: 16px;
   overflow: hidden;
   margin: 2px 2px;
   display: inline-block;
@@ -1183,7 +1183,7 @@ select {
   cursor: default;
 }
 .w2ui-overlay .w2ui-select-field table {
-  font-size: 1em;
+  font-size: 11px;
   font-family: 'Roboto', sans-serif;
   border-spacing: 0px;
   border-collapse: border-collapse;
@@ -1325,7 +1325,7 @@ select {
   -o-user-select: none;
   user-select: none;
   cursor: move;
-  font-size: 1em;
+  font-size: 15xp;
   color: #555555;
   z-index: 1021;
 }
@@ -1712,8 +1712,8 @@ select {
   background-color: transparent;
 }
 .w2ui-toolbar table.w2ui-button .w2ui-tb-image {
-  width: 32px;
-  height: 32px;
+  width: 16px;
+  height: 16px;
   padding: 0px;
   margin: 1px 1px 1px 1px !important;
   border: 0px !important;
@@ -1725,6 +1725,7 @@ select {
 .w2ui-toolbar table.w2ui-button .w2ui-tb-caption {
   color: #000000;
   padding: 0px 4px 0px 2px;
+  font-family: font-family: 'Roboto Condensed', sans-serif;
 }
 .w2ui-toolbar table.w2ui-button .w2ui-tb-down {
   width: 12px;
@@ -1742,6 +1743,7 @@ select {
 .w2ui-toolbar table.w2ui-button.down {
   border: 0px solid #aaaaaa;
   background-color: #dddddd;
+  padding: 0px;
 }
 .w2ui-toolbar table.w2ui-button.down .w2ui-tb-caption {
   color: #666666;
@@ -1776,7 +1778,6 @@ select {
   background-color: #ffffff;
   padding: 5px 0px;
   cursor: default;
-  font-size: 2em;
 }
 .w2ui-overlay table.w2ui-toolbar-drop td:first-child {
   padding: 4px 0px 4px 6px;
