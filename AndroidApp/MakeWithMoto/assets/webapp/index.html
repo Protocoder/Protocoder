@@ -33,13 +33,9 @@
     <script src="./js/help.js" type="text/javascript" charset="utf-8"></script>
     <script src="./js/plots.js" type="text/javascript" charset="utf-8"></script>
     <script src="./js/android_communication.js" type="text/javascript" charset="utf-8"></script>
-    <script src="./js/upload.js" type="text/javascript" charset="utf-8"></script>
     <script src="./js/websockets.js" type="text/javascript" charset="utf-8"></script>
-    
-    <!-- font -->
-    <link href='http://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,latin-ext,cyrillic' rel='stylesheet' type='text/css'>
+    <script src="./js/upload.js" type="text/javascript" charset="utf-8"></script>
 
-        
 
 <script type="text/javascript">
 	
@@ -144,9 +140,14 @@ $().w2layout({
     ]
 });
 
+var gridRendered = false; 
 $('#grid').w2grid({ 
     name: 'grid', 
     url: '',
+    onRender: function() { 
+        gridRendered = true;
+      // $("#grid_grid_records").append('<div id = "dropbox"> </div>');
+    },
     columns: [              
         { field: 'file_name', caption: 'File Name', size: '70%', editable: {type:'text'} },
         { field: 'file_size', caption: 'File Size', size: '30%' },
@@ -221,9 +222,6 @@ $('#save').click(function() {
 });
 
 
-
-
-
 });
 
 </script>
@@ -252,10 +250,6 @@ $('#save').click(function() {
     <div id = "container">
         <div id = "device_status"> </div>
         <div id = "connection"><b>Connection Status</b></div> 
-
-        <div id="dropbox">
-            <span class="message">Drop files here to upload. <br /><i>(they will only be visible to you)</i></span>
-        </div>
 
     </div>
 

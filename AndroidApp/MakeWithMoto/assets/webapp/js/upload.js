@@ -1,22 +1,38 @@
-$(function(){
+function initUpload() {
 	
+	$("#grid_grid_records").append('<div id = "dropbox"> </div>');
+
 	var dropbox = $('#dropbox'),
 		message = $('.message', dropbox);
 	
+
 	dropbox.filedrop({
 		// The name of the $_FILES entry:
 		paramname:'pic',
 		
 		maxfiles: 1,
-    	maxfilesize: 5,
+    	maxfilesize: 15,
 		url: './?' + 'name=' + currentProject.name + '&fileType=' + currentProject.type,
 		
 		uploadFinished:function(i,file,response){
 			$.data(file).addClass('done');
-			alert("uploaded");
+			list_files_in_project(currentProject.name, currentProject.type);
 			// response is the JSON object that post_file.php returns
+			$('#dropbox').css("background-color", "rgba(0, 0, 0, 0.1);");
+
 		},
 		
+		dragEnter: function() { 
+			//$('#dropbox').css("background-color", "rgba(255, 0, 0, 0.5);");
+		},
+
+		dragOver: function() { 
+			$('#dropbox').css("background-color", "rgba(255, 0, 0, 0.5);");
+		}, 
+
+		dragLeave: function() { 
+			$('#dropbox').css("background-color", "rgba(0, 0, 0, 0.1);");
+		},
     	error: function(err, file) {
 			switch(err) {
 				case 'BrowserNotSupported':
@@ -102,4 +118,4 @@ $(function(){
 		message.html(msg);
 	}
 
-});
+};

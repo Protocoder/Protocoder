@@ -58,12 +58,15 @@ function list_files_in_project(pName, pType) {
 	$.get("cmd="+JSON.stringify(obj), function(data) {
 		w2ui['grid'].clear();
 		console.log(data);
-	
+
 		$.each(JSON.parse(data).files, function(k, v) {
 			console.log(v); 
 			v.recid = k;
 			w2ui['grid'].add( v );
 		});
+
+		initUpload();
+
 	});
 } 
 

@@ -218,9 +218,16 @@
 			
 			xhr.onload = function() { 
 			    if (xhr.responseText) {
+
+			    	console.log(xhr.responseText);
+					console.log(jQuery.parseJSON(xhr.responseText));
+
 				var now = new Date().getTime(),
 				    timeDiff = now - start_time,
 				    result = opts.uploadFinished(index, file, jQuery.parseJSON(xhr.responseText), timeDiff);
+					
+					console.log(result);
+
 					filesDone++;
 					if (filesDone == files_count - filesRejected) {
 						afterAll();
