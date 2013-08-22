@@ -9,18 +9,22 @@ function initEditor() {
 	editor = ace.edit("editor");
 	session = editor.getSession();
 
-	//editor.setTheme("ace/theme/monokai");
 	session.setMode("ace/mode/javascript");
 	//var EditSession = require("ace/edit_session").EditSession;
 	//var UndoManager = require("ace/undomanager").UndoManager;
+    
+	//editor.setTheme("ace/theme/chrome");
 
 	var renderer = editor.renderer;
-    session.setWrapLimitRange(40, 40);
-    renderer.setPrintMarginColumn(-12);
 
-    editor.renderer.setShowPrintMargin = null; 
-	editor.setTheme("ace/theme/chrome");
+	session.setWrapLimitRange(40, 40);
+
+	session.setWrapLimitRange(40, 40);
+    renderer.setShowPrintMargin = null; 
+
 	editor.setFontSize(15);
+	renderer.setPadding(8);
+
 	//------------------------------------------------- 
 	//keybinding 
 
@@ -49,7 +53,7 @@ function initEditor() {
 	    exec: function(env, args, request) {
 	    	currentProject.code = session.getValue();
 	    	push_code(currentProject);
-	    	removeWidgets();
+	    	removeWidgets();q
 	    	run_app(currentProject);
 
 	    }
