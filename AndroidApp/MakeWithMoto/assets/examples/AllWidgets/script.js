@@ -8,7 +8,7 @@ ui.backgroundImage("makewithmotologo.png");
 //Add a generic button
 ui.button("Button", 0, 0,500,100, function(){
 	android.vibrate(500);
-);
+});
 
 //Add a seekbar
 ui.seekbar(100, 50, 0, 150, 500, 100, function(){android.vibrate(500);});
