@@ -53,7 +53,7 @@ function initEditor() {
 	    exec: function(env, args, request) {
 	    	currentProject.code = session.getValue();
 	    	push_code(currentProject);
-	    	removeWidgets();q
+	    	removeWidgets();
 	    	run_app(currentProject);
 
 	    }
