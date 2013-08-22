@@ -73,6 +73,8 @@ function testWebsockets() {
       $("#console").empty();
       $("#console").append("<p> " + currentError + " </p>");
    
+      var objDiv = document.getElementById("console");
+      objDiv.scrollTop = objDiv.scrollHeight;
      // w2ui['layout'].show('bottom', false);
     }
 
@@ -80,6 +82,9 @@ function testWebsockets() {
     if (result.type == "console") { 
       var log = result.values.val; 
       $("#console").append('<p>' + log + '</p>');
+
+      var objDiv = document.getElementById("console");
+      objDiv.scrollTop = objDiv.scrollHeight;
     }
     
 
