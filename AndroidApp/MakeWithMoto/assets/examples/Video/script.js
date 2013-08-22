@@ -1,2 +1,2 @@
 //video example not ready yet! 
-ui.addCameraView(50, 50, 200, 200);
+ui.addVideoView(50, 50, 200, 200);

@@ -7,12 +7,13 @@ $(function(){
 		// The name of the $_FILES entry:
 		paramname:'pic',
 		
-		maxfiles: 5,
-    	maxfilesize: 2,
+		maxfiles: 1,
+    	maxfilesize: 5,
 		url: './',
 		
 		uploadFinished:function(i,file,response){
 			$.data(file).addClass('done');
+			alert("uploaded");
 			// response is the JSON object that post_file.php returns
 		},
 		
@@ -22,10 +23,10 @@ $(function(){
 					showMessage('Your browser does not support HTML5 file uploads!');
 					break;
 				case 'TooManyFiles':
-					alert('Too many files! Please select 5 at most! (configurable)');
+					alert('Too many files! Please select 1 file at most!');
 					break;
 				case 'FileTooLarge':
-					alert(file.name+' is too large! Please upload files up to 2mb (configurable).');
+					alert(file.name+' is too large! Please upload files up to 5mb.');
 					break;
 				default:
 					break;
