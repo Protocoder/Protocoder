@@ -1,4 +1,4 @@
-var currentProject = {};
+var currentProject = new Object();
 currentProject.name = "";
 currentProject.url = ""; 
 currentProject.type = -1;

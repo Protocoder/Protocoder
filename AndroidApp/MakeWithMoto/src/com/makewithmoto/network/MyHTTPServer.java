@@ -119,12 +119,31 @@ public class MyHTTPServer extends NanoHTTPD {
 			Log.d(TAG, "received String" + uri + " " + method + " " + header + " " + " " + parms + " " + files);
 			
 			if (!files.isEmpty() ) { 
+		
+				String name = parms.getProperty("name").toString();
+				String fileType = parms.getProperty("fileType").toString();
+				
+				int projectType = -1;
+				if (fileType.equals("list_projects")) {
+					projectType = ProjectManager.PROJECT_USER_MADE; 
+				} else if (fileType.equals("list_examples")) { 
+					projectType = ProjectManager.PROJECT_EXAMPLE; 
+				} 
+				
+				Project p = ProjectManager.getInstance().get(name, projectType); 
+				
 				File src = new File(files.getProperty("pic").toString()); 
-				File dst = new File(BaseMainApp.baseDir + parms.getProperty("pic").toString());
+				File dst = new File(p.getUrl() + "/" + parms.getProperty("pic").toString());
+				Log.d("qwqw", p.getUrl() + "/" + parms.getProperty("pic").toString());
 				Log.d(TAG, " " + src.toString() + " " + dst.toString());
 				
 				FileIO.copyFile(src, dst);
 				
+				JSONObject data = new JSONObject();
+				data.put("result", "OK");
+
+				return new Response("200", MIME_TYPES.get("txt"), data.toString());
+
 			} 
 			
 			JSONObject data = new JSONObject();
