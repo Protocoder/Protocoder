@@ -9,7 +9,7 @@ $(function(){
 		
 		maxfiles: 1,
     	maxfilesize: 5,
-		url: './',
+		url: './?' + 'name=' + currentProject.name + '&fileType=' + currentProject.type,
 		
 		uploadFinished:function(i,file,response){
 			$.data(file).addClass('done');
