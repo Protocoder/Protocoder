@@ -31,12 +31,15 @@ function parse_help(docString) {
 	        }
 	        if (method.example != undefined){ 
 				$("#"+method.name).append('<p id = "example"> '+ method.example +' </p>');
+	        	
+	        	/* 
 	        	$('<button> '+ method.name +' </button>')
 	        		.click(function() {
 	        			console.log("qq" + method.name)
 	        		})
 	        		.appendTo("#"+method.name);
-
+	        	*/
+	        	
 	        }
 
 	       // console.log(method.name, method.description, method.example);
