@@ -32,6 +32,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -618,6 +619,7 @@ public class JUI extends JInterface {
 		ImageButton ib = new ImageButton(a.get());
 		positionView(ib, x, y, w, h);
 
+		ib.setScaleType(ScaleType.FIT_XY);
 		// Hide the background if desired
 		if (hideBackground) {
 			ib.setBackgroundResource(0);
