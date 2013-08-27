@@ -3,7 +3,7 @@ package com.makewithmoto.apprunner.api;
 import android.app.Activity;
 import android.webkit.JavascriptInterface;
 
-import com.makewithmoto.apidoc.APIAnnotation;
+import com.makewithmoto.apidoc.annotation.APIMethod;
 
 public class JCamera extends JInterface {
 
@@ -11,8 +11,9 @@ public class JCamera extends JInterface {
 		super(a);
 	}
 
+	
 	@JavascriptInterface
-	@APIAnnotation(description = "", example = "camera.startCamera();")
+	@APIMethod(description = "", example = "camera.startCamera();")
 	public void startCamera(String file) {
 		
 

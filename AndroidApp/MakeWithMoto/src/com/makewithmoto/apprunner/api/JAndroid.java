@@ -11,7 +11,7 @@ import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
-import com.makewithmoto.apidoc.APIAnnotation;
+import com.makewithmoto.apidoc.annotation.APIMethod;
 import com.makewithmoto.apprunner.AppRunnerActivity;
 import com.makewithmoto.utils.Intents;
 
@@ -41,7 +41,7 @@ public class JAndroid extends JInterface {
 	}
 
 	@JavascriptInterface
-	@APIAnnotation(description = "makes the phone vibrate", example = "android.vibrate(500);")
+	@APIMethod(description = "makes the phone vibrate", example = "android.vibrate(500);")
 	public void vibrate(String duration) {
 		Log.d("TAG", "vibrate...");
 		Vibrator v = (Vibrator) a.get().getSystemService(
@@ -52,7 +52,7 @@ public class JAndroid extends JInterface {
 	
 	
 	@JavascriptInterface
-	@APIAnnotation(description = "Change brightness", example = "ui.button(\"button\"); ")
+	@APIMethod(description = "Change brightness", example = "ui.button(\"button\"); ")
 	public void toast(String text, int duration) {
 		Toast.makeText(a.get(), text, duration).show();
 	}
@@ -61,7 +61,7 @@ public class JAndroid extends JInterface {
 	
 	
 	@JavascriptInterface
-	@APIAnnotation(description = "Set brightness", example = "ui.button(\"button\"); ")
+	@APIMethod(description = "Set brightness", example = "ui.button(\"button\"); ")
 	public void setBrightness(float val) {
 		((AppRunnerActivity) a.get()).setBrightness(val);
 	}
@@ -69,7 +69,7 @@ public class JAndroid extends JInterface {
 	
 	
 	@JavascriptInterface
-	@APIAnnotation(description = "Change brightness", example = "ui.button(\"button\"); ")
+	@APIMethod(description = "Change brightness", example = "ui.button(\"button\"); ")
 	public void getBrightness() {
 		((AppRunnerActivity) a.get()).getCurrentBrightness();
 	}
@@ -77,63 +77,63 @@ public class JAndroid extends JInterface {
 	
 	
 	@JavascriptInterface
-	@APIAnnotation(description = "Creates a button ", example = "ui.button(\"button\"); ")
+	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
 	public void screenAlwaysOn() {
 		((AppRunnerActivity) a.get()).setScreenAlwaysOn();
 	}
 
 	@JavascriptInterface
-	@APIAnnotation(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
+	@APIMethod(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
 	public void openEmailApp(String recepient, String subject, String msg) {
 		Intents.sendEmail(a.get(), recepient, subject, msg);
 	}
 	
 	@JavascriptInterface
-	@APIAnnotation(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
+	@APIMethod(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
 	public void openMapApp(double longitude, double latitude) {
 		Intents.openMap(a.get(), longitude, latitude);
 	}
 	
 	@JavascriptInterface
-	@APIAnnotation(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
+	@APIMethod(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
 	public void openDial(String msg, int duration) {
 		Toast.makeText(a.get(), msg, duration).show();
 	}
 	
 	@JavascriptInterface
-	@APIAnnotation(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
+	@APIMethod(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
 	public void call(String number) {
 		Intents.call(a.get(), number);
 	}
 	
 	@JavascriptInterface
-	@APIAnnotation(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
+	@APIMethod(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
 	public void openWebApp(String url) {
 		Intents.openWeb(a.get(), url);
 	}
 	
 	@JavascriptInterface
-	@APIAnnotation(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
+	@APIMethod(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
 	public void openWebSearch(String text) {
 		Intents.webSearch(a.get(), text);
 	}
 
 
 	@JavascriptInterface
-	@APIAnnotation(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
+	@APIMethod(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
 	public void onKeyDown(final String fn) {
 		onKeyDownfn = fn;
 	}
 
 
 	@JavascriptInterface
-	@APIAnnotation(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
+	@APIMethod(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
 	public void onKeyUp(final String fn) {
 		onKeyUpfn = fn;
 	}
 
 	@JavascriptInterface
-	@APIAnnotation(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
+	@APIMethod(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
 	public void timer(final int duration, final String fn) {
 
 		Runnable task = new Runnable() {
@@ -150,7 +150,7 @@ public class JAndroid extends JInterface {
 
 
 	@JavascriptInterface
-	@APIAnnotation(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")	
+	@APIMethod(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")	
 	public void stopAllTimers() {
 		Iterator<Runnable> ir = rl.iterator();
 		while (ir.hasNext()) {

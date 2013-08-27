@@ -115,6 +115,8 @@ public class AppRunnerActivity extends BaseActivity {
 			projectName = intent.getStringExtra("projectName");
 			int projectType = intent.getIntExtra("projectType",
 					ProjectManager.type);
+			
+			Log.d("qq", projectName + " " + projectType);
 
 			currentProject = ProjectManager.getInstance().get(projectName,
 					projectType);

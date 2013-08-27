@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
 
-import com.makewithmoto.apidoc.APIAnnotation;
+import com.makewithmoto.apidoc.annotation.APIMethod;
 import com.makewithmoto.hardware.MAKRBoard;
 
 public class JMakr extends JInterface {
@@ -24,7 +24,7 @@ public class JMakr extends JInterface {
 	}
 	
 	@JavascriptInterface
-	@APIAnnotation(description = "initializes makr board", example = "makr.start();")	
+	@APIMethod(description = "initializes makr board", example = "makr.start();")	
 	public void start(final String callbackfn) {
 		
 		if(!isStarted){
@@ -43,7 +43,7 @@ public class JMakr extends JInterface {
 	}
 	
 	@JavascriptInterface
-	@APIAnnotation(description = "clean up and poweroff makr board", example = "makr.stop();")
+	@APIMethod(description = "clean up and poweroff makr board", example = "makr.stop();")
 	public void stop() {
 		if(isStarted){
 		    isStarted = false;
@@ -87,7 +87,7 @@ public class JMakr extends JInterface {
 	
 	
 	@JavascriptInterface
-	@APIAnnotation(description = "sends commands to makr board", example = "makr.writeSerial(\"LEDON\");")
+	@APIMethod(description = "sends commands to makr board", example = "makr.writeSerial(\"LEDON\");")
 	public void writeSerial(String cmd) {
 		if(isStarted){
 		    makr.writeSerial(cmd);
@@ -96,13 +96,13 @@ public class JMakr extends JInterface {
 
 	
 	@JavascriptInterface
-	@APIAnnotation(description = "resumes makr activity", example = "makr.resume();")
+	@APIMethod(description = "resumes makr activity", example = "makr.resume();")
 	public void resume() {
 		makr.resume();
 	}
 	
 	@JavascriptInterface
-	@APIAnnotation(description = "pause makr activity", example = "makr.pause();")
+	@APIMethod(description = "pause makr activity", example = "makr.pause();")
 	public void pause() {
 		makr.pause();
 	}

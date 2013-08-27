@@ -8,7 +8,7 @@ import java.util.Vector;
 
 import android.util.Log;
 
-public class APIList {
+public class APIManagerList {
 
 
 	class API { 
@@ -30,7 +30,7 @@ public class APIList {
 	String methodAnnotationName = "JavaScriptInterface"; 
 	private Vector<API> apis; 
 	
-	APIList() {
+	APIManagerList() {
 		methodAnnotationName = "JavaScriptInterface";
 
 		apis = new Vector<API>();

@@ -3,10 +3,10 @@ package com.makewithmoto.apidoc;
 import java.util.Vector;
 
 
-public class APIClass {
+public class APIManagerClass {
 	public String name;
 	public String description;
-	public Vector<APIMethod> apiMethods = new Vector<APIMethod>(); 
+	public Vector<APIManagerMethod> apiMethods = new Vector<APIManagerMethod>(); 
 	
 	
 

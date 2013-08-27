@@ -113,8 +113,8 @@ public class CameraFragment extends Fragment {
 
 			@Override
 			public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-				mCamera.stopPreview();
-				mCamera.release();
+				//mCamera.stopPreview();
+				//mCamera.release();
 				return true;
 			}
 

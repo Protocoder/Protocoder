@@ -9,7 +9,7 @@ import android.app.Activity;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
 
-import com.makewithmoto.apidoc.APIAnnotation;
+import com.makewithmoto.apidoc.annotation.APIMethod;
 import com.makewithmoto.network.CustomWebsocketServer;
 
 public class JWebApp extends JInterface {
@@ -21,7 +21,7 @@ public class JWebApp extends JInterface {
 	}
 
 	@JavascriptInterface 
-    @APIAnnotation(description = "Creates a button ", example = "ui.button(\"button\"); ")
+	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
 	public JWebAppPlot addPlot(String name, int x, int y, int w, int h) {
 		
 		JWebAppPlot jWebAppPlot = new JWebAppPlot(a.get());
@@ -32,7 +32,7 @@ public class JWebApp extends JInterface {
 	
 	
 	@JavascriptInterface 
-	@APIAnnotation(description = "Creates a button ", example = "ui.button(\"button\"); ")
+	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
 	public JWebAppButton addButton(String name, int x, int y, int w, int h, String callbackfn) {
 		Log.d(TAG, "callback " + callbackfn);
 		
@@ -46,7 +46,7 @@ public class JWebApp extends JInterface {
 	
 	
 	@JavascriptInterface 
-	@APIAnnotation(description = "Creates a button ", example = "ui.button(\"button\"); ")
+	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
 	public JWebAppLabel addLabel(String id, String name, int x, int y, int w, int h) {
 		
 		JWebAppLabel jWebAppLabel = new JWebAppLabel(a.get());
@@ -58,7 +58,7 @@ public class JWebApp extends JInterface {
 	
 	
 	@JavascriptInterface 
-	@APIAnnotation(description = "Creates a button ", example = "ui.button(\"button\"); ")
+	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
 	public void setBackgroundColor(int r, int g, int b, float alpha) {
 		JSONObject msg = new JSONObject();
 		try {
@@ -87,7 +87,7 @@ public class JWebApp extends JInterface {
 	}
 	
 	@JavascriptInterface 
-	@APIAnnotation(description = "Creates a button ", example = "ui.button(\"button\"); ")
+	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
 	public void showDashboard(boolean b) {
 		JSONObject msg = new JSONObject();
 		try {

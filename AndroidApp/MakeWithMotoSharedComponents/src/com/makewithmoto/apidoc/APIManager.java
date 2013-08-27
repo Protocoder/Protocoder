@@ -9,6 +9,7 @@ import java.util.Map;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.makewithmoto.apidoc.annotation.APIMethod;
 import com.thoughtworks.paranamer.AdaptiveParanamer;
 import com.thoughtworks.paranamer.CachingParanamer;
 import com.thoughtworks.paranamer.Paranamer;
@@ -37,7 +38,7 @@ public class APIManager {
 	private static APIManager instance;
 
 	HashMap<String, API> apis = new HashMap<String, API>();
-	APIDoc doc = new APIDoc();
+	APIManagerDoc doc = new APIManagerDoc();
 
 	public APIManager() {
 
@@ -52,16 +53,17 @@ public class APIManager {
 
 		try {
 			// api docs
-			APIClass apiClass = new APIClass();
+			APIManagerClass apiClass = new APIManagerClass();
 			apiClass.name = c.getSimpleName();
 			Log.d(TAG, "" + c.getName());
 
+			//getting all the methods 
 			Method m[] = c.getDeclaredMethods();
 			for (int i = 0; i < m.length; i++) {
 
-				APIMethod apiMethod = new APIMethod();
-				Log.d(TAG, "" + m[i]);
-				Log.d(TAG, "" + m[i].getName());
+				APIManagerMethod apiMethod = new APIManagerMethod();
+				//Log.d(TAG, "" + m[i]);
+				//Log.d(TAG, "" + m[i].getName());
 				apiMethod.name = m[i].getName();
 				Paranamer paranamer = new AdaptiveParanamer();
 				String[] paramNames = paranamer.lookupParameterNames(m[i], false); // will return null if not found
@@ -73,22 +75,22 @@ public class APIManager {
 				} 
 				apiMethod.returnType = m[i].getReturnType().toString();
 				
-				Log.d("qmqm", apiMethod.parameters + " " + apiMethod.returnType);
+				//Log.d("qmqm", apiMethod.parameters + " " + apiMethod.returnType);
 				
 
+				//get method information 
 				if (apiMethod.name.contains("$") == false) {
-					// Log.d("qq", apiMethod.name);
 
 					Annotation[] annotations = m[i].getDeclaredAnnotations();
-
+					
 					// check if annotation exist and add apidocs
 					for (Annotation annotation2 : annotations) {
 
 						if (annotation2.annotationType().getSimpleName()
-								.equals(APIAnnotation.class.getSimpleName())) {
-							apiMethod.description = ((APIAnnotation) annotation2)
+								.equals(APIMethod.class.getSimpleName())) {
+							apiMethod.description = ((APIMethod) annotation2)
 									.description();
-							apiMethod.example = ((APIAnnotation) annotation2)
+							apiMethod.example = ((APIMethod) annotation2)
 									.example();
 
 						}
@@ -132,13 +134,13 @@ public class APIManager {
 
 					Log.d(TAG, annotation2.toString() + " "
 							+ annotation2.annotationType().getSimpleName()
-							+ " " + APIAnnotation.class.getSimpleName());
+							+ " " + APIMethod.class.getSimpleName());
 
 					if (annotation2.annotationType().getSimpleName()
-							.equals(APIAnnotation.class.getSimpleName())) {
-						String desc = ((APIAnnotation) annotation2)
+							.equals(APIMethod.class.getSimpleName())) {
+						String desc = ((APIMethod) annotation2)
 								.description();
-						String example = ((APIAnnotation) annotation2)
+						String example = ((APIMethod) annotation2)
 								.example();
 						Log.d(TAG, desc);
 					}

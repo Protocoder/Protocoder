@@ -57,7 +57,6 @@ import com.makewithmoto.network.MyHTTPServer;
 import com.makewithmoto.network.NetworkUtils;
 import com.makewithmoto.projectlist.ListFragmentExamples;
 import com.makewithmoto.projectlist.ListFragmentUserProjects;
-import com.makewithmoto.utils.FileIO;
 
 import de.greenrobot.event.EventBus;
 
@@ -178,10 +177,7 @@ public class MainActivity extends BaseActivity implements
 		     }
 		 };
 		 
-		 
-
-		 FileIO.copyFileOrDir(c, "examples");
-		 
+		 		 
 	}
 
 	/**
