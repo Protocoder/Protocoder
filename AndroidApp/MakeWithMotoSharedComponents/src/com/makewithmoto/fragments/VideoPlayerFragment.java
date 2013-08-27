@@ -85,6 +85,12 @@ public class VideoPlayerFragment extends Fragment {
 		
 	}
 
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+
+		handler.removeCallbacks(r);
+	}
 	
 	public void loadExternalVideo(String videoFile) {
 		String path = Environment.getExternalStorageDirectory() + "/arprototype/video"; 

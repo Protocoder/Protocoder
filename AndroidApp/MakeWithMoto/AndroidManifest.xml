@@ -39,9 +39,9 @@
         <activity
             android:name="com.makewithmoto.LauncherActivity"
             android:icon="@drawable/ic_launcher"
-            android:theme="@style/MWMLaunchTheme"
             android:label="@string/activity_name"
-            android:logo="@drawable/ic_action_logo" >
+            android:logo="@drawable/ic_action_logo"
+            android:theme="@style/MWMLaunchTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -96,6 +96,21 @@
             android:name="com.makewithmoto.apprunner.AppRunnerActivity"
             android:label="@string/runner_name"
             android:logo="@drawable/ic_action_logo" >
+            <intent-filter>
+                <action android:name="android.intent.action.CREATE_SHORTCUT" />
+                <action android:name="com.makewithmoto.apprunner.MWMActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <!--
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="file" />
+                <data android:mimeType="*/*" />
+                <data android:pathPattern=".*\\.mwm" />
+                <data android:host="*" />
+                -->
+
+            </intent-filter>
         </activity>
     </application>
 

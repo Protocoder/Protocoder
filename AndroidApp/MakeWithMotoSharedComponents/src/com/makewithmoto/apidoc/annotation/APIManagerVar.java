@@ -1,4 +1,4 @@
-package com.makewithmoto.apidoc;
+package com.makewithmoto.apidoc.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -7,14 +7,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-
 @Documented  
-@Target(ElementType.METHOD) 
+@Target(ElementType.PARAMETER) 
 @Retention(RetentionPolicy.RUNTIME) 
 @Inherited 
-public @interface APIAnnotation { 
+public @interface APIManagerVar { 
 	
-	public String description() default ""; 
-	public String example() default ""; 	
-
 } 

@@ -40,6 +40,9 @@ import de.greenrobot.event.EventBus;
 @SuppressLint("NewApi")
 public class ListFragmentBase extends BaseFragment {
 
+    // icon for shortcuts
+    ShortcutIconResource icon;
+
     public ArrayList<Project> projects;
     protected ProjectAdapter projectAdapter;
     protected GridView gridView;
@@ -212,8 +215,6 @@ public class ListFragmentBase extends BaseFragment {
 
         case R.id.menu_project_list_add_shortcut:
 
-            // create shortcut if requested
-            ShortcutIconResource icon = Intent.ShortcutIconResource.fromContext(getActivity(), R.drawable.ic_script);
 
             try {
 
@@ -222,7 +223,8 @@ public class ListFragmentBase extends BaseFragment {
                 shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
                 String script = ProjectManager.getInstance().getCode(project);
-                shortcutIntent.putExtra("Script", script);
+                shortcutIntent.putExtra("projectName", project.getName());
+                shortcutIntent.putExtra("projectType", project.getType());
 
                 final Intent putShortCutIntent = new Intent();
 

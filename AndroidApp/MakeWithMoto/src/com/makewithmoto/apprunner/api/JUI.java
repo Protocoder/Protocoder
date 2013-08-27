@@ -4,13 +4,11 @@ import java.io.File;
 import java.io.InputStream;
 
 import processing.core.PApplet;
-
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -18,7 +16,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
@@ -43,7 +40,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.makewithmoto.R;
-import com.makewithmoto.apidoc.APIAnnotation;
+import com.makewithmoto.apidoc.annotation.APIMethod;
 import com.makewithmoto.apprunner.AppRunnerActivity;
 import com.makewithmoto.base.BaseActivity;
 import com.makewithmoto.fragments.CameraFragment;
@@ -143,7 +140,7 @@ public class JUI extends JInterface {
 	
 	
 	@JavascriptInterface
-	@APIAnnotation(description = "Uses a DARK / BLUE / NONE theme for some widgets", example = "ui.setTheme(\"DARK\"); ")
+	@APIMethod(description = "Uses a DARK / BLUE / NONE theme for some widgets", example = "ui.setTheme(\"DARK\"); ")
 	public void setTheme(String theme) {
 		if (theme.equals("DARK")) { 
 			this.theme = R.drawable.theme_rounded_rect_dark;
@@ -161,20 +158,20 @@ public class JUI extends JInterface {
 	
 	
 	@JavascriptInterface
-	@APIAnnotation(description = "Creates a button ", example = "ui.button(\"button\"); ")
+	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
 	public void title(String title) {
 		((AppRunnerActivity) a.get()).changeTitle(title);
 	}
 	
 	
 	@JavascriptInterface
-	@APIAnnotation(description = "Creates a button ", example = "ui.button(\"button\"); ")
+	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
 	public void fullscreen() {
 		((AppRunnerActivity) a.get()).setFullScreen();
 	}
 	
 	@JavascriptInterface
-	@APIAnnotation(description = "Creates a button ", example = "ui.button(\"button\"); ")
+	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
 	public void hideHomeBar() {
 		((AppRunnerActivity) a.get()).setHideHomeBar();
 	}
@@ -182,7 +179,7 @@ public class JUI extends JInterface {
 	
 	
 	@JavascriptInterface
-	@APIAnnotation(description = "Creates a button ", example = "ui.button(\"button\"); ")
+	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
 	public void setOrientation() {
 	//	((AppRunnerActivity) a.get()).setOr();
 	}
@@ -198,7 +195,7 @@ public class JUI extends JInterface {
 	 * @param callbackfn
 	 */
 	@JavascriptInterface
-	@APIAnnotation(description = "Creates a button ", example = "ui.button(\"button\"); ")
+	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
 	public void button(String label, int x, int y, int w, int h,
 			final String callbackfn) {
 		initializeLayout();

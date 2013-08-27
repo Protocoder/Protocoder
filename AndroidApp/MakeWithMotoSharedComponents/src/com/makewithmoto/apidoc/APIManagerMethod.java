@@ -1,6 +1,6 @@
 package com.makewithmoto.apidoc;
 
-class APIMethod {
+class APIManagerMethod {
 	public String name;
 	public String description;
 	public String example;

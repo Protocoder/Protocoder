@@ -5,7 +5,7 @@ import java.util.Locale;
 
 import android.webkit.JavascriptInterface;
 
-import com.makewithmoto.apidoc.APIAnnotation;
+import com.makewithmoto.apidoc.annotation.APIMethod;
 import com.makewithmoto.apprunner.AppRunnerActivity;
 import com.makewithmoto.media.Audio;
 
@@ -23,7 +23,7 @@ public class JMedia extends JInterface {
 	}	
 	
 	@JavascriptInterface
-	@APIAnnotation(description = "plays a sound", example = "media.playSound(fileName);")
+	@APIMethod(description = "plays a sound", example = "media.playSound(fileName);")
 	public void playSound(String url) {
 	
 		if (url.startsWith("http://") == false) {
@@ -34,7 +34,7 @@ public class JMedia extends JInterface {
 	
 	
 	@JavascriptInterface
-	@APIAnnotation(description = "text to speech", example = "media.textToSpeech('hello world');")
+	@APIMethod(description = "text to speech", example = "media.textToSpeech('hello world');")
 	public void textToSpeech(String text) {
 		Audio.speak(a.get(), text, Locale.getDefault());
 	}	

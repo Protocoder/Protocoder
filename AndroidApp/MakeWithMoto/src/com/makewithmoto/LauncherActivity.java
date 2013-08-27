@@ -1,6 +1,5 @@
 package com.makewithmoto;
 
-
 import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
 import android.content.Intent;
@@ -14,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.makewithmoto.base.AppSettings;
 import com.makewithmoto.base.BaseActivity;
+import com.makewithmoto.utils.FileIO;
 
 public class LauncherActivity extends BaseActivity {
 
@@ -63,6 +63,14 @@ public class LauncherActivity extends BaseActivity {
 		mExitHandler = new Handler();
 		mExitHandler.postDelayed(mExitRunnable, SPLASH_SCREEN_DURATION);
 
+		new Runnable() {
+
+			@Override
+			public void run() {
+				FileIO.copyFileOrDir(getApplicationContext(), "examples");
+
+			}
+		}.run();
 	}
 
 	/**
@@ -110,7 +118,7 @@ public class LauncherActivity extends BaseActivity {
 	@SuppressLint("NewApi")
 	private void exitSplash() {
 		finish();
-		
+
 		if (AppSettings.CURRENT_VERSION > Build.VERSION.SDK_INT) {
 			ActivityOptions options = ActivityOptions.makeCustomAnimation(this,
 					android.R.anim.fade_in, android.R.anim.fade_out);
