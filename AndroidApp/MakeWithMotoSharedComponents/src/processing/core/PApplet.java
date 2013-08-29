@@ -687,7 +687,7 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 	//Preferences.setNoInitialAnimation(getActivity(), true);
 		Log.d("rr", "-----> onDestroy");		
 	  exit();
-	  System.exit(0);
+	  //System.exit(0);
 		dispose();
 		if (PApplet.DEBUG) {
 			System.out.println("PApplet.onDestroy() called");
@@ -2706,9 +2706,10 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 
 	void exit2() {
 		try {
-			System.exit(0);
+			//System.exit(0);
 			// getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
 		} catch (SecurityException e) {
+			Log.d("proeccesing", e.toString());
 			// don't care about applet security exceptions
 		}
 	}

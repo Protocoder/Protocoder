@@ -1,0 +1,246 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<title>PImage \ Language (API) \ Processing 2+</title>
+		
+		<link rel="icon" href="img/favicon.ico" type="image/x-icon" />
+		<link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" />
+		
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="Author" content="Casey Reas &amp; Ben Fry" />
+		<meta name="Publisher" content="Processing" />
+
+		<meta name="Keywords" content="Processing, Processing, Interactive Media, Electronic Arts, Programming, Java, Ben Fry, Casey Reas" />
+		<meta name="Description" content="Processing is an electronic sketchbook for developing 
+				ideas. It is a context for learning fundamentals of computer programming 
+				within the context of the electronic arts." />
+		<meta name="Copyright" content="All contents copyright Ben Fry, Casey Reas,  MIT Media Laboratory" />
+
+		<!-- ======== change the style link back later ============= -->
+		<link href="css/style.css" rel="stylesheet" type="text/css" />
+	</head>
+	<body id="Langauge-en" onload="" >
+		
+		<!-- ==================================== PAGE ============================ --> 
+		<div id="container">
+
+	
+			<!-- ==================================== HEADER ============================ --> 
+			<div id="header">
+				<a href="http://processing.org/"><img src="img/processing.gif" alt="Processing" title="Processing.org" /></a>
+				<form name="search" method="get" action="http://www.google.com/search">
+				       <p><input type="hidden" name="as_sitesearch" value="processing.org" />
+				       <input type="text" name="as_q" value="" size="20" class="text" /> 
+				       <input type="submit" value="Search" /></p>
+				</form>
+			</div>  
+			<div id="navigation">
+					<div class="navBar" id="mainnav_noSub">
+	<a href="index.html" class='active'>Language</a>
+	(<a href="alpha.html" >A-Z</a>) \
+	<a href="libraries/index.html" >Libraries</a> \
+	<a href="tools/index.html">Tools</a> \
+	<a href="environment/index.html">Environment</a>
+</div>
+
+			</div>
+
+		
+			<a id="TOP" name="TOP"></a>
+			
+			<!-- ==================================== CONTENT - Headers ============================ -->
+			<div class="content">
+			
+			 <p class="ref-notice">This reference is for Processing 2.0+. If you have a previous version, use the reference included with your software. If you see any errors or have suggestions, <a href="http://code.google.com/p/processing/issues/list">please let us know</a>. If you prefer a more technical reference, visit the <a href="http://processing.googlecode.com/svn/trunk/processing/build/javadoc/core/index.html">Processing Javadoc</a>.</p>
+
+<table cellpadding="0" cellspacing="0" border="0" class="ref-item">
+	<tr class="name-row">
+		<th scope="row">Name</th>
+		<td><h3>PImage</h3></td>
+	</tr>
+
+	<tr class=""><th scope="row">Examples</th><td><div class="example"><img src="images/PImage.png" alt="example pic" /><pre class="margin">
+PImage img;
+
+void setup() {
+  img = loadImage("laDefense.jpg");
+}
+
+void draw() {
+  image(img, 0, 0);
+}
+</pre></div>
+</td></tr>
+
+
+		<tr class="">
+		<th scope="row">Description</th>
+		<td>
+Datatype for storing images. Processing can display <b>.gif</b>, <b>.jpg</b>, <b>.tga</b>, and <b>.png</b> images. Images may be displayed in 2D and 3D space. Before an image is used, it must be loaded with the <b>loadImage()</b> function. The <b>PImage</b> class contains fields for the <b>width</b> and <b>height</b> of the image, as well as an array called <b>pixels[]</b> that contains the values for every pixel in the image. The methods described below allow easy access to the image's pixels and alpha channel and simplify the process of compositing.<br/>
+<br/>
+Before using the <b>pixels[]</b> array, be sure to use the <b>loadPixels()</b> method on the image to make sure that the pixel data is properly loaded.<br/>
+<br/>
+To create a new image, use the <b>createImage()</b> function. Do not use the syntax <b>new PImage()</b>. 
+</td>
+	</tr>
+	<tr class="">
+		<th scope="row">JavaScript<br>
+Notes</th>
+		<td>
+Use a "@pjs preload" directive to preload images before your sketch starts. You can easily add one with the "Playback Settings" tool in the "JavaScript" menu.
+</td>
+	</tr>
+
+
+	<tr class=""><th scope="row">Fields</th><td><table cellpadding="0" cellspacing="0" border="0"><tr class="">
+
+	<th scope="row"><a href="PImage_pixels.html">pixels[]</a></th>
+	<td>Array containing the color of every pixel in the image</td>
+</tr>
+<tr class="">
+
+	<th scope="row"><a href="PImage_width.html">width</a></th>
+	<td>Image width</td>
+</tr>
+<tr class="">
+
+	<th scope="row"><a href="PImage_height.html">height</a></th>
+	<td>Image height</td>
+</tr></table></td></tr>
+
+	<tr class=""><th scope="row">Methods</th><td><table cellpadding="0" cellspacing="0" border="0"><tr class="">
+
+	<th scope="row"><a href="PImage_loadPixels_.html">loadPixels()</a></th>
+	<td>Loads the pixel data for the image into its pixels[] array</td>
+</tr>
+<tr class="">
+
+	<th scope="row"><a href="PImage_updatePixels_.html">updatePixels()</a></th>
+	<td>Updates the image with the data in its pixels[] array</td>
+</tr>
+<tr class="">
+
+	<th scope="row"><a href="PImage_resize_.html">resize()</a></th>
+	<td>Changes the size of an image to a new width and height</td>
+</tr>
+<tr class="">
+
+	<th scope="row"><a href="PImage_get_.html">get()</a></th>
+	<td>Reads the color of any pixel or grabs a rectangle of pixels</td>
+</tr>
+<tr class="">
+
+	<th scope="row"><a href="PImage_set_.html">set()</a></th>
+	<td>writes a color to any pixel or writes an image into another</td>
+</tr>
+<tr class="">
+
+	<th scope="row"><a href="PImage_mask_.html">mask()</a></th>
+	<td>Masks part of an image with another image as an alpha channel</td>
+</tr>
+<tr class="">
+
+	<th scope="row"><a href="PImage_filter_.html">filter()</a></th>
+	<td>Converts the image to grayscale or black and white</td>
+</tr>
+<tr class="">
+
+	<th scope="row"><a href="PImage_copy_.html">copy()</a></th>
+	<td>Copies the entire image</td>
+</tr>
+<tr class="">
+
+	<th scope="row"><a href="PImage_blend_.html">blend()</a></th>
+	<td>Copies a pixel or rectangle of pixels using different blending modes</td>
+</tr>
+<tr class="">
+
+	<th scope="row"><a href="PImage_save_.html">save()</a></th>
+	<td>Saves the image to a TIFF, TARGA, PNG, or JPEG file</td>
+</tr></table></td></tr>
+
+	<tr class=""><th scope="row">Constructor</th><td><pre>PImage()
+PImage(<kbd>width</kbd>, <kbd>height</kbd>)
+PImage(<kbd>width</kbd>, <kbd>height</kbd>, <kbd>format</kbd>)
+PImage(<kbd>img</kbd>)
+</pre></td></tr>
+	<tr class="">	<th scope="row">Parameters</th><td><table cellpadding="0" cellspacing="0" border="0"><tr class="">
+<th scope="row">width</th>
+<td>int: image width</td>
+</tr>
+<tr class="">
+<th scope="row">height</th>
+<td>int: image height</td>
+</tr>
+<tr class="">
+<th scope="row">format</th>
+<td>int: Either RGB, ARGB, ALPHA (grayscale alpha channel)</td>
+</tr>
+<tr class="">
+<th scope="row">img</th>
+<td>Image: assumes a MediaTracker has been used to fully download
+ the data and the img is valid</td>
+</tr></table></td>	</tr>
+	<tr class=""><th scope="row">Related</th><td><a href="loadImage_.html">loadImage()</a><br />
+<a href="imageMode_.html">imageMode()</a><br />
+<a href="createImage_.html">createImage()</a><br /></td></tr>
+</table>
+
+Updated on January 18, 2013 01:15:55pm PST<br /><br />
+
+<!-- Creative Commons License -->
+
+<div class="license">
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.0/"><img alt="Creative Commons License" border="0" src="http://creativecommons.org/images/public/somerights20.gif" /></a>
+</div>
+<!--
+
+<rdf:RDF xmlns="http://web.resource.org/cc/"
+ xmlns:dc="http://purl.org/dc/elements/1.1/"
+ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+<Work rdf:about="">
+   <dc:title>Processing.org Reference</dc:title>
+   <dc:date>2004</dc:date>
+   <dc:description>Reference for the Processing.org programming environment and language.</dc:description>
+   <dc:creator><Agent>
+      <dc:title>Casey Reas et al.</dc:title>
+   </Agent></dc:creator>
+   <dc:rights><Agent>
+      <dc:title>Casey Reas</dc:title>
+   </Agent></dc:rights>
+   <dc:type rdf:resource="http://purl.org/dc/dcmitype/Text" />
+   <license rdf:resource="http://creativecommons.org/licenses/by-nc-sa/2.0/" />
+</Work>
+
+<License rdf:about="http://creativecommons.org/licenses/by-nc-sa/2.0/">
+   <permits rdf:resource="http://web.resource.org/cc/Reproduction" />
+   <permits rdf:resource="http://web.resource.org/cc/Distribution" />
+   <requires rdf:resource="http://web.resource.org/cc/Notice" />
+   <requires rdf:resource="http://web.resource.org/cc/Attribution" />
+   <prohibits rdf:resource="http://web.resource.org/cc/CommercialUse" />
+   <permits rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
+   <requires rdf:resource="http://web.resource.org/cc/ShareAlike" />
+</License>
+
+</rdf:RDF>
+
+-->
+			
+			</div>
+
+			<!-- ==================================== FOOTER ============================ --> 
+  			<div id="footer">
+    			<div id="copyright">Processing is an open project intiated by <a href="http://benfry.com/">Ben Fry</a> and <a href="http://reas.com">Casey Reas</a>. It is developed by a <a href="about/people.html">small team of volunteers</a>. </div> 
+    			<div id="colophon">
+
+                    <a href="copyright.html">&copy; Info</a> \ 
+
+                    <span>Site hosted by <a href="http://www.mediatemple.net">Media Temple!</a></span>
+
+                </div>
+  			</div>
+  			
+		</div>
+	</body>
+
+</html>

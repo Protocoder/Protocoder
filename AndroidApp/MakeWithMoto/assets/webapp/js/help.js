@@ -15,7 +15,7 @@ function parse_help(docString) {
 	    //class
 	    var className = v.name;
 	   // console.log(className);
-	    $("#reference").append('<div id = "'+ className+'" class = "card APIclass"> <h1>' + className + ' </h1></div>');
+	    $("#reference").append('<div id = "'+ className+'" class = "card APIclass"> <h1>' + className + '</h1>  <div class = "methods"> </div>');
 
 	    //iterate through api methods 
 	    $.each (v.apiMethods, function(m, n) {
@@ -23,7 +23,7 @@ function parse_help(docString) {
 	    	//console.log(m, n);
 
 	        var method = n;
-	        $("#"+className).append('<div id ='+ method.name +' class = "APImethod"></div>');
+	        $("#"+className + " .methods").append('<div id ='+ method.name +' class = "APImethod"></div>');
 	        $("#"+method.name).append('<h2>'+ method.name +'</h2>');
 	        
 	        if (method.description != undefined) { 
@@ -44,5 +44,11 @@ function parse_help(docString) {
 
 	       // console.log(method.name, method.description, method.example);
 	    });
+	});
+
+	//foldable reference 
+	$('.card h1').click(function(e){
+		e.preventDefault();
+		$(this).closest('.card').find('.methods').not(':animated').slideToggle();
 	});
 }

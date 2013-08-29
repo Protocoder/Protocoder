@@ -36,7 +36,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.makewithmoto.sharedcomponents.R;
-import com.makewithmoto.utils.Utils;
+import com.makewithmoto.utils.TimeUtils;
 
 @TargetApi(Build.VERSION_CODES.GINGERBREAD)
 @SuppressLint("NewApi")
@@ -280,7 +280,7 @@ public class CameraFragment extends Fragment {
 	public void onPictureTaken(byte[] data, Camera camera) {
 		Log.i(TAG, "photo taken");
 
-		_fileName = Utils.getCurrentTime() + ".jpg";
+		_fileName = TimeUtils.getCurrentTime() + ".jpg";
 		_path = _rootPath + _fileName;
 
 		new File(_rootPath).mkdirs();

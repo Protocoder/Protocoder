@@ -63,14 +63,7 @@ public class LauncherActivity extends BaseActivity {
 		mExitHandler = new Handler();
 		mExitHandler.postDelayed(mExitRunnable, SPLASH_SCREEN_DURATION);
 
-		new Runnable() {
-
-			@Override
-			public void run() {
-				FileIO.copyFileOrDir(getApplicationContext(), "examples");
-
-			}
-		}.run();
+	
 	}
 
 	/**

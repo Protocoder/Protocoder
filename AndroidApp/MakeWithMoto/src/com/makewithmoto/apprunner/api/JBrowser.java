@@ -4,8 +4,8 @@ import android.app.Activity;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 
-import com.makewithmoto.apidoc.annotation.APIManagerVar;
 import com.makewithmoto.apidoc.annotation.APIMethod;
+import com.makewithmoto.apidoc.annotation.APIParam;
 
 
 
@@ -19,7 +19,7 @@ public class JBrowser extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "displays an html page", example = "browser.loadData(\"<html><head></head><body><h1>Hello World!!</h1></body></html>\")")
-	public void loadData(@APIManagerVar String content) {
+	public void loadData(@APIParam String content) {
 		webview = new WebView(a.get());
 	    webview.getSettings().setJavaScriptEnabled(true);
 	    webview.addJavascriptInterface(a.get(), "activity");

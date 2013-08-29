@@ -76,6 +76,8 @@ public class AppRunnerActivity extends BaseActivity {
 			+ "var webapp = JWebApp(Activity);\n"
 			+ "var JMedia = Packages.com.makewithmoto.apprunner.api.JMedia; \n"
 			+ "var media = JMedia(Activity);\n"
+			+ "var JNetwork = Packages.com.makewithmoto.apprunner.api.JNetwork; \n"
+			+ "var network = JNetwork(Activity);\n"
 			+ "var JSensors = Packages.com.makewithmoto.apprunner.api.JSensors; \n"
 			+ "var sensors = JSensors(Activity);\n"
 			+ "var JConsole = Packages.com.makewithmoto.apprunner.api.JConsole; \n"

@@ -1,0 +1,86 @@
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title> ProgramaLaPlaza </title>
+
+	<meta charset="utf-8" />
+	<!-- Set the viewport width to device width for mobile -->
+	<script src="/static/javascripts/jquery-1.7.2.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/static/javascripts/jquery-ui-1.8.18.custom/js/jquery-ui-1.8.18.custom.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/static/javascripts/jquery-ui-1.8.22.custom.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="/static/javascripts/modernizr-2.5.3.min.js" type="text/javascript" charset="utf-8"></script>
+
+	<!-- Included JS Files -->
+	<script src="/static/javascripts/jquery.imagesloaded.min.js"></script>
+	<!-- Included CSS-->
+	
+	
+    <link rel="stylesheet/less" href="/static/stylesheets/main.less" type="text/css" charset="utf-8">
+    <link rel="stylesheet/less" href="/static/stylesheets/gallery.less" type="text/css" charset="utf-8">
+   	<script src="/static/javascripts/less.min.js"></script>
+
+<script type="text/javascript">
+
+
+
+$(document).ready(function() {
+  $(".one-sketch").draggable();
+
+
+        $(".url-personal").each( function(index){
+            a=$(this).attr('href')
+            if(a.indexOf('@')==0){
+              b=a.slice(1,a.length)
+              b="http://twitter.com/"+b
+              a=$(this).attr('href',b)
+            }            
+          });
+})
+
+
+</script>
+
+</head>
+
+
+<body>
+  <div id="logo">
+      <a href="/">
+      <span>
+      #PROGRAMA<br/>LA<br/>PLAZA
+      
+      </span>
+      </a>
+      <br/>
+      <div style="font-size:0.7em">web2Facade</div>
+  
+    </div>
+  
+  <div id="wrapper">
+    <div id="intro">
+        <span>
+          Take a look into these scripts.
+					<br/> Some of them are examples you can use. 
+          <br/>Feel free to copy & paste
+        </span>
+    </div>
+    <div id="sketchlist" style="clear:both;">
+    {% for sketch in sketches %}
+        <a href="/sketch/view/{{sketch.read_id}}"> 
+          {% if sketch.snapshot == True %}          
+          <div class="one-sketch" style="background-image:url(/static/upload/{{sketch.read_id}}.png); background-position:0px 0px; background-size:cover;">
+          {% else %}
+          <div class="one-sketch" >
+          {% endif %}
+          <div class="title"> <span class="field">Title: </span> <span class="field-content"> {{ sketch.title }} </span> </div>
+          <div class="author"> <span class="field">by: </span> <span class="field-content"> {{ sketch.author }} </span> </div>
+          <div class="description"> <span class="field">Description: </span> <span class="field-content"> {{ sketch.description | truncate(300) }} </span> </div>
+        </a>
+        <div class="url"> <span class="field">URL: </span> <span class="field-content"> <a href="{{ sketch.web }}" class="url-personal" style="background-color:rgb(56, 56, 56); color:#999">  {{ sketch.web }} </a></span> </div>
+        
+      </div>
+    {% endfor %}
+    </div>    
+    </div>  
+  </div> 
+
+</body>

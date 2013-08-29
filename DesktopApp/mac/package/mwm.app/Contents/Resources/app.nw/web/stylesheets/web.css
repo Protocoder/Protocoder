@@ -1,0 +1,126 @@
+/*****************************************************************************/
+/*
+/* Common
+/*
+/*****************************************************************************/
+
+
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+    background-color: #fff;
+} 
+
+
+body {
+  background-color: #515664; 
+  background:url(/images/bg/concrete_wall.png); 
+  margin: 0px auto 0px auto; padding: 0px 0px 0px 0px; 
+
+
+  background-repeat: repeat; 
+  font: 13.34px helvetica, arial, clean, sans-serif;
+  font-size: small; 
+	
+} 
+
+#content {
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+	float: left;
+	text-align: center;
+	width: 100%;
+	top: 45%;
+	vertical-align: middle;
+	position: relative;
+} 
+
+
+#cursor { 
+	-moz-border-radius: 205px; 
+	-webkit-border-radius: 205px; 
+	-o-border-radius: 205px; 
+	border-radius: 205px;  
+	
+	border: 5px solid #00b; 
+	
+} 
+
+#cursorcontrol { 
+	-moz-border-radius: 25px; 
+	-webkit-border-radius: 25px; 
+	-o-border-radius: 25px; 
+	border-radius: 25px;    
+} 
+
+#logo { 
+    width: auto;
+    text-align: center;
+    vertical-align: middle;
+    height: 100%;
+    font-family: serif;
+    font-size: 2.8em;
+    color: rgba(0, 0, 0, 0.05);
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);    
+}
+
+.button { 
+	-moz-border-radius: 5px; 
+	-webkit-border-radius: 5px; 
+	-o-border-radius: 5px; 
+	border-radius: 5px; 
+	
+	-moz-box-shadow: 0px 1px 2px #222;
+	-webkit-box-shadow: 0px 1px 2px #222; 	
+	-o-box-shadow: 0px 1px 2px #222;
+	box-shadow: 5px 2px 12px #222;	
+	
+	background: rgba(0,255,0,0.8) url(/images/bg/concrete_wall.png); 
+    
+	border: 2px solid #222;
+} 
+
+.button:hover { 
+   	-moz-box-shadow: 0px 0px 0px #222;
+	-webkit-box-shadow: 0px 0px 0px #222; 	
+	-o-box-shadow: 0px 0px 0px #222;
+	box-shadow: 0px 0px 0px #222;
+} 
+
+.display { 
+    float:none;
+} 
+
+#canvascontainer { 
+   display: inline-block;
+}
+
+
+#content {
+	margin-left: 25px;
+	margin-right: 25px;
+	margin-top: 105px;
+	height: 425px;
+	width: 100%;
+}
+	
+#play {
+	
+	float: left;
+    position: absolute;
+    left: 864px;
+    top: 35px;
+
+    color: black;
+    z-index: 1111111;
+    border: 1px solid black;
+    padding: 8px;
+    padding-left: 12px;
+    padding-right: 12px;
+    font-weight: bold;
+}

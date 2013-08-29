@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<title>color() \ Language (API) \ Processing 2+</title>
+		
+		<link rel="icon" href="img/favicon.ico" type="image/x-icon" />
+		<link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" />
+		
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="Author" content="Casey Reas &amp; Ben Fry" />
+		<meta name="Publisher" content="Processing" />
+
+		<meta name="Keywords" content="Processing, Processing, Interactive Media, Electronic Arts, Programming, Java, Ben Fry, Casey Reas" />
+		<meta name="Description" content="Processing is an electronic sketchbook for developing 
+				ideas. It is a context for learning fundamentals of computer programming 
+				within the context of the electronic arts." />
+		<meta name="Copyright" content="All contents copyright Ben Fry, Casey Reas,  MIT Media Laboratory" />
+	
+		<link href="css/style.css" rel="stylesheet" type="text/css" />
+	</head>
+	<body id="Langauge-en" onload="" >
+		
+		<!-- ==================================== PAGE ============================ --> 
+		<div id="container">
+
+	
+			<!-- ==================================== HEADER ============================ --> 
+			<div id="header">
+				<a href="http://processing.org/"><img src="img/processing.gif" alt="Processing" title="Processing.org" /></a>
+				<form name="search" method="get" action="http://www.google.com/search">
+				       <p><input type="hidden" name="as_sitesearch" value="processing.org" />
+				       <input type="text" name="as_q" value="" size="20" class="text" /> 
+				       <input type="submit" value="Search" /></p>
+				</form>
+			</div> 
+			<div id="navigation">
+				<div class="navBar" id="mainnav_noSub">
+	<a href="index.html" class='active'>Language</a>
+	(<a href="alpha.html" >A-Z</a>) \
+	<a href="libraries/index.html" >Libraries</a> \
+	<a href="tools/index.html">Tools</a> \
+	<a href="environment/index.html">Environment</a>
+</div>
+
+			</div>
+
+		
+			<a id="TOP" name="TOP"></a>
+			
+			<!-- ==================================== CONTENT - Headers ============================ -->
+			<div class="content">
+			
+			 <p class="ref-notice">This reference is for Processing 2.0+. If you have a previous version, use the reference included with your software. If you see any errors or have suggestions, <a href="http://code.google.com/p/processing/issues/list">please let us know</a>. If you prefer a more technical reference, visit the <a href="http://processing.googlecode.com/svn/trunk/processing/build/javadoc/core/index.html">Processing Javadoc</a>.</p>
+
+<table cellpadding="0" cellspacing="0" border="0" class="ref-item">
+	
+
+	<tr class="name-row">
+		<th scope="row">Name</th>
+
+		<td><h3>color()</h3></td>
+	</tr>
+
+	<tr class="">
+	
+	<tr class=""><th scope="row">Examples</th><td><div class="example"><img src="images/color_0.png" alt="example pic" /><pre class="margin">
+color c = color(255, 204, 0);  // Define color 'c'
+fill(c);  // Use color variable 'c' as fill color
+noStroke();  // Don't draw a stroke around shapes
+rect(30, 20, 55, 55);  // Draw rectangle
+</pre></div>
+
+<div class="example"><img src="images/color_1.png" alt="example pic" /><pre class="margin">
+color c = color(255, 204, 0);  // Define color 'c'
+fill(c);  // Use color variable 'c' as fill color
+noStroke();  // Don't draw a stroke around shapes
+ellipse(25, 25, 80, 80);  // Draw left circle
+
+// Using only one value with color()
+// generates a grayscale value.
+c = color(65);  // Update 'c' with grayscale value
+fill(c);  // Use updated 'c' as fill color
+ellipse(75, 75, 80, 80);  // Draw right circle
+</pre></div>
+
+<div class="example"><img src="images/color_2.png" alt="example pic" /><pre class="margin">
+color c;  // Declare color 'c'
+noStroke();  // Don't draw a stroke around shapes
+
+// If no colorMode is specified, then the
+// default of RGB with scale of 0-255 is used.
+c = color(50, 55, 100);  // Create a color for 'c'
+fill(c);  // Use color variable 'c' as fill color
+rect(0, 10, 45, 80);  // Draw left rect
+
+colorMode(HSB, 100);  // Use HSB with scale of 0-100
+c = color(50, 55, 100);  // Update 'c' with new color
+fill(c);  // Use updated 'c' as fill color
+rect(55, 10, 45, 80);  // Draw right rect
+</pre></div>
+</td></tr>
+
+	
+		<tr class="">
+		<th scope="row">Description</th>
+		<td>
+Creates colors for storing in variables of the <b>color</b> datatype. The parameters are interpreted as RGB or HSB values depending on the current <b>colorMode()</b>. The default mode is RGB values from 0 to 255 and, therefore, the function call <b>color(255, 204, 0)</b> will return a bright yellow color (see the first example above).<br/>
+<br/>
+Note that if only one value is provided to <b>color()</b>, it will be interpreted as a grayscale value. Add a second value, and it will be used for alpha transparency. When three values are specified, they are interpreted as either RGB or HSB values. Adding a fourth value applies alpha transparency.<br/>
+<br/>
+More about how colors are stored can be found in the reference for the <a href="color_datatype.html">color</a> datatype.
+</td>
+	</tr>
+
+
+	<tr class=""><th scope="row">Syntax</th><td><pre>color(<kbd>gray</kbd>)
+color(<kbd>gray</kbd>, <kbd>alpha</kbd>)
+color(<kbd>v1</kbd>, <kbd>v2</kbd>, <kbd>v3</kbd>)
+color(<kbd>v1</kbd>, <kbd>v2</kbd>, <kbd>v3</kbd>, <kbd>alpha</kbd>)</pre></td></tr>
+
+	<tr class="">	<th scope="row">Parameters</th><td><table cellpadding="0" cellspacing="0" border="0"><tr class="">
+<th scope="row">gray</th>
+<td>int: number specifying value between white and black</td>
+</tr>
+<tr class="">
+<th scope="row">alpha</th>
+<td>float, or int: relative to current color range</td>
+</tr>
+<tr class="">
+<th scope="row">v1</th>
+<td>float, or int: red or hue values relative to the current color range</td>
+</tr>
+<tr class="">
+<th scope="row">v2</th>
+<td>float, or int: green or saturation values relative to the current color range</td>
+</tr>
+<tr class="">
+<th scope="row">v3</th>
+<td>float, or int: blue or brightness values relative to the current color range</td>
+</tr></table></td>	</tr>
+	<tr class=""><th scope="row">Returns</th><td>int</td></tr>
+	<tr class=""><th scope="row">Related</th><td><a href="colorMode_.html">colorMode()</a><br /></td></tr>
+</table>
+
+Updated on January 18, 2013 01:15:50pm PST<br /><br />
+
+<!-- Creative Commons License -->
+
+<div class="license">
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.0/"><img alt="Creative Commons License" border="0" src="http://creativecommons.org/images/public/somerights20.gif" /></a>
+</div>
+<!--
+
+<rdf:RDF xmlns="http://web.resource.org/cc/"
+ xmlns:dc="http://purl.org/dc/elements/1.1/"
+ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+<Work rdf:about="">
+   <dc:title>Processing.org Reference</dc:title>
+   <dc:date>2004</dc:date>
+   <dc:description>Reference for the Processing.org programming environment and language.</dc:description>
+   <dc:creator><Agent>
+      <dc:title>Casey Reas et al.</dc:title>
+   </Agent></dc:creator>
+   <dc:rights><Agent>
+      <dc:title>Casey Reas</dc:title>
+   </Agent></dc:rights>
+   <dc:type rdf:resource="http://purl.org/dc/dcmitype/Text" />
+   <license rdf:resource="http://creativecommons.org/licenses/by-nc-sa/2.0/" />
+</Work>
+
+<License rdf:about="http://creativecommons.org/licenses/by-nc-sa/2.0/">
+   <permits rdf:resource="http://web.resource.org/cc/Reproduction" />
+   <permits rdf:resource="http://web.resource.org/cc/Distribution" />
+   <requires rdf:resource="http://web.resource.org/cc/Notice" />
+   <requires rdf:resource="http://web.resource.org/cc/Attribution" />
+   <prohibits rdf:resource="http://web.resource.org/cc/CommercialUse" />
+   <permits rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
+   <requires rdf:resource="http://web.resource.org/cc/ShareAlike" />
+</License>
+
+</rdf:RDF>
+
+-->
+			
+			</div>
+
+			<!-- ==================================== FOOTER ============================ --> 
+  			<div id="footer">
+
+    			<div id="copyright">Processing is an open project intiated by <a href="http://benfry.com/">Ben Fry</a> and <a href="http://reas.com">Casey Reas</a>. It is developed by a <a href="http://processing.org/about/people/">small team of volunteers</a>.</div> 
+    			<div id="colophon">
+
+                    <a href="copyright.html">&copy; Info</a> \ 
+
+                    <span>Site hosted by <a href="http://www.mediatemple.net">Media Temple!</a></span>
+
+                </div>
+  			</div>
+  			
+		</div>
+	</body>
+</html>

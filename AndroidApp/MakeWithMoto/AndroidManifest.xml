@@ -95,7 +95,8 @@
         <activity
             android:name="com.makewithmoto.apprunner.AppRunnerActivity"
             android:label="@string/runner_name"
-            android:logo="@drawable/ic_action_logo" >
+            android:logo="@drawable/ic_action_logo"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
                 <action android:name="com.makewithmoto.apprunner.MWMActivity" />

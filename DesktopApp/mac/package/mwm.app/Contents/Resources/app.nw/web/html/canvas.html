@@ -1,0 +1,261 @@
+<html>
+<head>
+	<!-- Javascripts --> 
+	<script src="../javascripts/processing.js" type="text/javascript"></script>
+	<script type="javascript">function getProcessingSketchID () { return 'canvas'; }</script> 
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+
+	<style>
+	body { 
+		margin: 0px; 
+		padding: 0px; 
+	
+	} 
+	
+	#show_content {
+		width:250px;
+		height:500px;
+		padding: 0px;
+		margin: 0px;
+		position: relative;
+		overflow: hidden;
+	}
+	
+	.display, #overlay { 
+		position: absolute;
+		top: 0px;
+		left: 0px;
+		width: 250px;
+		height: 500px;
+		display: block;
+	} 
+
+	#overlay {
+		display: none;
+	}
+	
+	#tips {
+		width: 250px;
+		height: 100%; 
+		background: rgba(0, 0, 0, 0.5);
+		padding: 12px;
+	}
+	
+	
+	#artistinfo { 
+	    display: none;
+	    outline: 0px;
+	    float: left;
+	    margin-top: 0px;
+	    margin-left: 0px;
+	    border-top: 1px solid #BBB;
+	    margin-bottom: 0px;
+	    width: 192px;
+	    height: 42px;
+	    position: absolute;
+	    top: 115px;
+	    left: 0px; 
+	    color: #ddd; 
+	    background-color: rgba(0, 0, 0, 0.7);
+
+	} 
+
+	#artistinfo ul {
+	  margin: 2px;
+	  padding-top: 0px;
+	  padding-left: 5px;
+	  font-family: visitor1;
+	  font-size: 10px;
+	  list-style-type: none;
+	}
+
+	#linum0 {
+		color: rgb(230, 230, 230);
+		
+	} 
+	
+	#linum1 {
+		color: #b00;
+	} 
+	
+	#linum2 {
+		color: rgb(230, 230, 230);
+	}
+
+	@font-face { font-family: visitor1; src: url('../fonts/visitor1.ttf'); } 
+	@font-face { font-family: visitor2; src: url('../fonts/visitor2.ttf'); } 
+
+	
+	</style> 
+		
+	<script type="text/javascript">
+	//var $ = parent.$;	
+	var p;
+	
+	function changeSketch(source, frameCount) { 
+		try {
+			//p = null;
+			var c = document.getElementsByTagName("canvas")[0]; 
+			p = new Processing(c, source);
+			console.log("qq" + frameCount)
+			p.frameCount = frameCount;
+			window.parent.processingStatus(true);
+		} catch(e) {
+			//alert("error "+ e.name +"\n\n" + e.message);
+			window.parent.processingStatus(false, e.name, e.message,e);
+		}
+	}; 
+	
+	function getProcessing() {
+		
+		return p;
+	}
+	
+	var previewMode = false; 
+	
+	function showArtistInfo(status) {
+		var posShow = "115px";
+		var posHide = "157px";
+		
+		if (previewMode) {
+			posShow = "344px";
+			posHide = "470px";
+		}
+		
+		if (status) {
+			$("#artistinfo").css('display', 'block').animate({top: posShow}, 1000);
+		} else {
+			$("#artistinfo").css('display', 'block').animate({top: posHide}, 1000);
+		}
+	}
+	
+	function changeSketchTitle(sketchTitle) {
+				$("#linum0").text(sketchTitle);
+	}
+	
+	function changeAuthorName(authorName) {
+				$("#linum1").text(authorName);
+	}
+	
+	function changeAuthorURL(authorURL) {
+				$("#linum2").text(authorURL);
+	}
+	
+	
+	function drawOverlay() {
+		var newCanvas = document.getElementById('overlay'),
+		newContext = newCanvas.getContext('2d');
+
+		// Make sure you have enough room on your new canvas
+		newCanvas.width = 576;
+		newCanvas.height = 471;
+
+		with(newContext) {
+
+		    fillStyle = "#222";
+		    fill();
+		    //c.translate(10, 10);
+		    fillRect(0, 0, newCanvas.width, newCanvas.height);
+
+
+		    globalCompositeOperation = 'xor';
+		    globalAlpha = 1;
+
+		    fillStyle = "#222";
+		    fill(); 
+
+		    for (var j = 0; j < newCanvas.height; j = j + 5) {
+		   	 for(var i = 0; i < newCanvas.width; i = i + 5) {
+		    		//c.translate(10, 10); 
+						beginPath();
+						arc(i, j, 3, 0, 2 * Math.PI, false);
+						fill();
+						closePath();
+		    	}
+		    }
+
+		}
+
+		//context.drawImage(newCanvas, 0, 0);
+
+	}
+	
+	function preview() {
+		$("#show_content").find("#overlay").css({"width":"576px","height":"471px"});	
+		drawOverlay();
+		$("#show_content").css({"width":"576px","height":"471px"});
+		$("#show_content").find(".display").css({"width":"576px","height":"471px"});
+		//bordes 
+		$("#show_content").find("#right_up_one").css({"width":"108px","height":"48px"});
+		$("#show_content").find("#right_up_two").css({"width":"107px","height":"47px", "right":"108px"}); //(36 * 3) - 1
+		
+		$("#show_content").find("#left_up_one").css({"width":"108px","height":"48px"});
+		$("#show_content").find("#left_up_two").css({"width":"107px","height":"47px", "left":"108px"});
+			
+		$("#show_content").find("#right_down").css({"width":"108px","height":"47px", "top":"48px"});
+		$("#show_content").find("#left_down").css({"width":"108px","height":"47px", "top":"48px"});
+		$("#show_content").find("#artistinfo").css({"width":"576px","height":"126px", "top": "470px"});
+		$("#show_content").find("#artistinfo").find("ul").css({"font-size": "38px", "padding-top": "8px"});
+		
+		previewMode = true;
+	}
+	
+	function addExternalJS(url) {
+		
+		var script   = document.createElement("script");
+		script.type  = "text/javascript";
+		script.src   = "path/to/your/javascript.js";    // use this for linked script
+		script.text  = "alert('voila!');"               // use this for inline script
+		document.body.appendChild(script);
+		
+	}
+	
+	$(document).ready(function() {
+		//drawOverlay();
+
+		//tracking=window.parent.camera;
+		
+	});
+	
+	
+	</script>	
+</head>
+
+<body>
+	<div id = "show_content">
+			<canvas class = "display" data-processing-sources="../data/fachadaMedialabPradoPequenya.pde" width="250px" height="500px">
+				<p>Your browser does not support the canvas tag.</p>
+			</canvas>
+			
+			<canvas id = "overlay">
+				
+			</canvas> 
+			
+				  <div id="artistinfo"> 
+					<ul> 
+						<li id = ""><span id="linum0" class = "codenum">  </span> <span id="li0">  </span> </li>
+						<li id = ""><span id="linum1" class = "codenumselected">  </span> <span id="li1">  </span> </li>
+						<li id = ""><span id="linum2" class = "codenum">  </span> <span id="li2">  </span> </li>
+
+					</ul> 
+
+				  </div> 
+				
+				
+			<div id = "up"> </div>
+			<div id = "left_up_one"> </div>
+			<div id = "left_up_two"> </div>
+			
+			<div id = "left_down"> </div>
+			
+			<div id = "right_up_one"> </div>
+			<div id = "right_up_two"> </div>
+			
+			<div id = "right_down"> </div>
+			
+	</div> 
+			
+
+</body>
+
+</html>

@@ -1,0 +1,199 @@
+html {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+body {
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    font-family: Arial, Helvetica, sans-serif, Tahoma, Verdana, sans-serif;
+    font-size: 12px;
+    background: #515664;
+    color: white;
+} 
+
+h1 { 
+    position: absolute;
+    left: 33px;
+    font-size: 37px;
+    
+}
+
+#logo {
+    padding: 15px;
+    margin-left: 70px;
+}
+
+#editor {
+	position: absolute;
+	top: 126px;
+	left: 258px;
+	bottom: 0px;
+	right: 0px;
+	background: url("http://subtlepatterns.com/patterns/ricepaper2.png"); 
+	height: 425px;
+	margin-right: 25px;
+	border-right: 1px solid black; 
+	margin-left: 0px;
+	width: 482px; 
+	border-radius: 0px; 
+}
+
+#controls {
+    padding: 5px;
+}
+
+#controls td {
+    text-align: right;
+}
+
+#controls td + td {
+    text-align: left;
+} 
+
+
+iframe  {
+    width: 192px;
+    height: 168px;
+    margin: 14px;
+    border: 1px solid black;
+}
+
+
+canvas { 
+    display: block; 
+    outline: 0px; 
+    float: none;  
+    margin-top: 18px;
+    margin-left: 15px;
+    border: 1px solid #bbb;
+    /* width: 100%;
+    height:100%; */
+    margin-bottom: 55px; 
+} 
+
+
+
+#previewcontainter, #rightinfo { 
+	background: url("http://subtlepatterns.com/patterns/rubber_grip.png");
+	width: 222px; 
+	float: left;
+	height: 100%; 
+	border-radius: 0px; 
+}
+
+
+
+a { 
+    font-family: helvetica, arial, sans-serif;
+    font-size: 2em;  
+    color: #FB581E; 
+    width: 100%;
+} 
+
+a:link {text-decoration: none}
+a:visited {text-decoration: none;}
+a:active {text-decoration: none}
+a:hover {text-decoration: underline; color: red; }
+
+
+#infobox {
+    font-size: 12px;
+    font-family: courier; 
+    margin: 12px; 
+    background-color: rgba(255, 255, 255, 0.2);
+    margin: 8px;
+    border-radius: 0px;
+    padding: 5px;
+} 
+
+#rightinfo { 
+    
+    left: 752px; 
+    height: 425px;
+    position: absolute;
+    background: #555;
+     
+} 
+
+#rightinfo p { 
+    margin: 10px; 
+}
+
+
+#details {
+    font-size: 12px;
+    font-family: courier;
+    margin: 12px; 
+    background-color: 
+    rgba(0, 0, 0, 0.4);
+    margin: 8px;
+    border-radius: 0px;
+    padding: 5px;
+}
+
+
+footer {
+    position: absolute;
+    bottom: 0px;
+    background: rgba(0, 0, 0, 0.2);
+    width: 100%;
+    color: #BBB; 
+    font-family: helvetica, arial, sans-serif; 
+    font-weight: lighter;
+    font-size: 6px;
+    padding:8px;
+    padding-left:8px;
+    padding-right:8px;
+    
+    text-align: left; 
+} 
+
+summary {
+    margin-bottom: 12px;
+}
+
+
+
+label { 
+    margin: 8px;  
+    
+} 
+
+	#content {
+		margin-left: 25px;
+		margin-right: 25px;
+		margin-top: 105px;
+		height: 425px;
+		width: 100%;
+	}
+	
+	#play {
+		
+		float: left;
+	    position: absolute;
+	    left: 864px;
+	    top: 35px;
+
+	    color: black;
+	    z-index: 1111111;
+	    border: 1px solid black;
+	    padding: 8px;
+	    padding-left: 12px;
+	    padding-right: 12px;
+	    font-weight: bold;
+	}
+	
+	.ace_error { 
+	    display: none;
+	    
+	}
+	
+	.ace_gutter, .ace-tm {
+	    box-shadow: inset 0px 0 0px black !important;
+	    
+	}
