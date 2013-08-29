@@ -118,6 +118,7 @@ public class MyHTTPServer extends NanoHTTPD {
 
 			Log.d(TAG, "received String" + uri + " " + method + " " + header + " " + " " + parms + " " + files);
 			
+			//file upload 
 			if (!files.isEmpty() ) { 
 		
 				String name = parms.getProperty("name").toString();
@@ -146,6 +147,8 @@ public class MyHTTPServer extends NanoHTTPD {
 
 			} 
 			
+			
+			//webapi 
 			JSONObject data = new JSONObject();
 
 			// splitting the string into command and parameters
@@ -308,9 +311,14 @@ public class MyHTTPServer extends NanoHTTPD {
 				}
 
 				res = new Response("200", MIME_TYPES.get("txt"), data.toString());
+			
+			} else if (uri.contains("apps")) { 
+				String[] u = uri.split("/");
+				
+			//server webui 
 			} else {
 
-				res = sendFile(uri, method, header, parms, files);
+				res = sendWebAppFile(uri, method, header, parms, files);
 			}
 
 		} catch (Exception e) {
@@ -321,7 +329,7 @@ public class MyHTTPServer extends NanoHTTPD {
 		return res;
 	}
 
-	private Response sendFile(String uri, String method, Properties header,
+	private Response sendWebAppFile(String uri, String method, Properties header,
 			Properties parms, Properties files) {
 		Response res = null;
 

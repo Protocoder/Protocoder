@@ -10,7 +10,11 @@ var addWidget = function(widget) {
   } else if (widget.type == "label") { 
     widgets.push("label_"+widget.id);
     return addLabel(widget.id, widget.name, widget.x, widget.y, widget.w, widget.h);
+  } else if (widget.type == "image") { 
+    widgets.push("label_"+widget.id);
+    return addImage(widget.id, widget.url, widget.x, widget.y, widget.w, widget.h);
   }
+
 }
 
 
@@ -37,6 +41,19 @@ var addLabel = function(element, name, posx, posy, w, h) {
 var setText = function(element, text) { 
    $("#overlay #container #label_"+ element).text(text)
 }
+
+
+var addImage = function(element, url, posx, posy, w, h) { 
+  if (url.indexOf("http") == -1) { 
+    url = window.location.origin + "/apps/" + currentProject.type + "/" + currentProject.name + "/" + url;
+  } 
+
+   $('<img src = "'+url+'" class ="widget image" id = "label_' + element +'">'+ url +' </img>')
+          .appendTo("#overlay #container")
+          .css({"width": w+"px", "height":h+"px","top":posy+"px","left":posx+"px"})
+          .draggable();
+}
+
 
 
 var addButton = function(element, posx, posy, w, h) {

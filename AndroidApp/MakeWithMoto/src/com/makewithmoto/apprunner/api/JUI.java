@@ -46,6 +46,7 @@ import com.makewithmoto.base.BaseActivity;
 import com.makewithmoto.fragments.CameraFragment;
 import com.makewithmoto.fragments.VideoPlayerFragment;
 import com.makewithmoto.fragments.VideoPlayerFragment.VideoListener;
+import com.makewithmoto.utils.AndroidUtils;
 import com.makewithmoto.views.HoloCircleSeekBar;
 import com.makewithmoto.views.HoloCircleSeekBar.OnCircleSeekBarChangeListener;
 import com.makewithmoto.views.PlotView;
@@ -706,6 +707,8 @@ public class JUI extends JInterface {
 	}
 	
 	
+	//private PApplet papplet;
+
 	/**
 	 * Adds an image with the option to hide the default background
 	 * 
@@ -716,7 +719,7 @@ public class JUI extends JInterface {
 	 * @param w
 	 * @param h
 	 */
-	public PApplet addProcessing(int x, int y, int w, int h) {
+	public PApplet addProcessing(PApplet papplet, int x, int y, int w, int h) {
 		
 		initializeLayout();
 		
@@ -729,7 +732,8 @@ public class JUI extends JInterface {
 		positionView(fl, x, y, w, h);
 		addView(fl);
 		
-		PApplet papplet = new PApplet();
+		//papplet = new PApplet();
+		Log.d("processing", "" + papplet);
 		
 		FragmentTransaction ft = a.get().getSupportFragmentManager()
 				.beginTransaction();  
@@ -744,6 +748,7 @@ public class JUI extends JInterface {
 		
 	}
 
+	
 	/**
 	 * Adds an image with the option to hide the default background
 	 * 
@@ -788,7 +793,7 @@ public class JUI extends JInterface {
 	}
 
 	/**
-	 * Adds an image with the option to hide the default background
+	 * Adds a video 
 	 * 
 	 * @author victordiaz
 	 * 
@@ -797,7 +802,7 @@ public class JUI extends JInterface {
 	 * @param w
 	 * @param h
 	 */
-	public void addVideoView(int x, int y, int w, int h) {
+	public void addVideoView(final String videoFile, int x, int y, int w, int h) {
 
 		initializeLayout();
 
@@ -820,7 +825,9 @@ public class JUI extends JInterface {
 
 			@Override
 			public void onReady(boolean ready) {
-				fragment.loadResourceVideo("/raw/cityfireflies");
+				//fragment.loadResourceVideo("/raw/cityfireflies");
+				fragment.loadExternalVideo(((AppRunnerActivity) a.get())
+						.getCurrentDir() + File.separator + videoFile);
 				// fragment.setLoop(true);
 			}
 
@@ -844,7 +851,9 @@ public class JUI extends JInterface {
 	
 	}
 
-	
+	public void takeScreenshot(String imagePath) { 
+		AndroidUtils.takeScreenshot(((AppRunnerActivity) a.get()).getCurrentDir(), imagePath, mMainLayout);
+	}
 
 
 	@JavascriptInterface

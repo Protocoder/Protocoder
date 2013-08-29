@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.makewithmoto.base.BaseActivity;
+import com.makewithmoto.utils.FileIO;
 
 @SuppressLint("NewApi")
 public class WelcomeActivity extends BaseActivity {
@@ -26,6 +27,15 @@ public class WelcomeActivity extends BaseActivity {
         //Create the action bar programmatically
         ActionBar actionBar = getActionBar();
         actionBar.setTitle(R.string.welcome_activity_name);
+        
+    	new Runnable() {
+
+			@Override
+			public void run() {
+				FileIO.copyFileOrDir(getApplicationContext(), "examples");
+
+			}
+		}.run();
     }
 
     /**

@@ -11,6 +11,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.PARAMETER) 
 @Retention(RetentionPolicy.RUNTIME) 
 @Inherited 
-public @interface APIManagerVar { 
+public @interface APIParam { 
 	
 } 

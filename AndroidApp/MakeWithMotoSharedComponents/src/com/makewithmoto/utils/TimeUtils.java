@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.UUID;
 
-public class Utils {
+public class TimeUtils {
 	
 	public static String generateRandomString() {
 		String uuid = UUID.randomUUID().toString();

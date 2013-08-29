@@ -56,6 +56,17 @@ public class JWebApp extends JInterface {
 	}
 	
 	
+	@JavascriptInterface 
+	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
+	public JWebAppImage addImage(String id, String url, int x, int y, int w, int h) {
+		
+		JWebAppImage jWebAppImage = new JWebAppImage(a.get());
+		jWebAppImage.add(id, url, x, y, w, h);
+		
+		return jWebAppImage;
+	}
+	
+	
 	
 	@JavascriptInterface 
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
