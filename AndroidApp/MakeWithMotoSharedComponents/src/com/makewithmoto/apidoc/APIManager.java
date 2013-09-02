@@ -69,8 +69,8 @@ public class APIManager {
 				//String[] paramNames = paranamer.lookupParameterNames(m[i],
 				//		false); // will return null if not found
 
-				Class<?>[] param = m[i].getParameterTypes();
 
+				/*
 				Annotation[][] paramAnnotations = m[i].getParameterAnnotations();
 				for (Annotation[] ann : paramAnnotations) {
 					if (ann.length > 0) { 
@@ -84,14 +84,15 @@ public class APIManager {
 	 					}
 					}
 				}
+				*/
 
-				//for (int j = 0; j < paramNames.length; j++) {
-				//	apiMethod.parameters += /* param[j].toString() + " " + */paramNames[j];
-				//}
+				Class<?>[] param = m[i].getParameterTypes();
+				for (int j = 0; j < param.length; j++) {
+					apiMethod.parameters += " " + param[j].getSimpleName().toString();
+				}
 				apiMethod.returnType = m[i].getReturnType().toString();
 
-				// Log.d("qmqm", apiMethod.parameters + " " +
-				// apiMethod.returnType);
+				Log.d("qmqm", apiMethod.parameters + " " + apiMethod.returnType);
 
 				// get method information
 				if (apiMethod.name.contains("$") == false) {
@@ -170,6 +171,13 @@ public class APIManager {
 		String json = gson.toJson(doc);
 
 		return json.toString();
+	} 
+	
+	public void clear() { 
+		apis.clear();
+		doc = null;
+		apis = new HashMap<String, API>();
+		doc = new APIManagerDoc();
 	}
 
 	class API {
@@ -183,4 +191,5 @@ public class APIManager {
 		}
 	}
 
+	
 }

@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
@@ -21,6 +22,7 @@ public class JAndroid extends JInterface {
 	ArrayList<Runnable> rl = new ArrayList<Runnable>();
 	private String onKeyDownfn;
 	private String onKeyUpfn;
+	private String onNFCfn;
 
 	public JAndroid(Activity a) {
 		super(a);
@@ -38,6 +40,21 @@ public class JAndroid extends JInterface {
 				callback(onKeyUpfn, keyCode);
 			}
 		});
+		
+		
+		((AppRunnerActivity) a).addNFCListener(new onNFCListener() {
+
+			@Override
+			public void onNewTag(String id) {
+				callback(onNFCfn, "\"" +  id + "\"");
+				
+			}
+			
+
+
+		});
+		
+		
 	}
 
 	@JavascriptInterface
@@ -59,6 +76,24 @@ public class JAndroid extends JInterface {
 	
 	
 	
+	@JavascriptInterface
+	@APIMethod(description = "Change brightness", example = "ui.button(\"button\"); ")
+	public void smsSend(String number, String msg) { 
+		
+        SmsManager sm = SmsManager.getDefault(); 
+        sm.sendTextMessage(number, null, msg, null, null); 
+        
+	} 	
+	
+
+	@JavascriptInterface
+	@APIMethod(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
+	public void onSmsReceived(final String fn) {
+		//onSmsReceivedfn = fn;
+	}
+
+
+	
 	
 	@JavascriptInterface
 	@APIMethod(description = "Set brightness", example = "ui.button(\"button\"); ")
@@ -73,6 +108,7 @@ public class JAndroid extends JInterface {
 	public void getBrightness() {
 		((AppRunnerActivity) a.get()).getCurrentBrightness();
 	}
+	
 	
 	
 	
@@ -132,6 +168,17 @@ public class JAndroid extends JInterface {
 		onKeyUpfn = fn;
 	}
 
+	
+	
+	@JavascriptInterface
+	@APIMethod(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
+	public void onNFC(final String fn) {
+		((AppRunnerActivity) a.get()).initializeNFC();
+		
+		onNFCfn = fn;
+	}
+	
+	
 	@JavascriptInterface
 	@APIMethod(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
 	public void timer(final int duration, final String fn) {
@@ -160,11 +207,14 @@ public class JAndroid extends JInterface {
 	}
 
 	public interface onKeyListener {
-
 		public void onKeyDown(int keyCode);
-
 		public void onKeyUp(int keyCode);
-
 	}
 
+
+	public interface onNFCListener {
+		public void onNewTag(String id);
+	}
+
+	
 }

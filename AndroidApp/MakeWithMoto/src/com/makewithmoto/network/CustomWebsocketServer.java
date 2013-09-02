@@ -13,7 +13,10 @@ import org.java_websocket.server.WebSocketServer;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.makewithmoto.base.AppSettings;
+
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 
 public class CustomWebsocketServer extends WebSocketServer {
@@ -56,6 +59,8 @@ public class CustomWebsocketServer extends WebSocketServer {
 		counter++;
 		Log.d(TAG, "New websocket connection " + counter);
 		connections.add(aConn);
+		
+		
 	}
 
 	@Override
@@ -112,6 +117,39 @@ public class CustomWebsocketServer extends WebSocketServer {
 				return unknown;
 			}
 		}
+	}
+	
+	
+	
+	public void send(String type, String action, String ... values) { 
+		
+		//send device ip address 		
+		/*
+		JSONObject msg = new JSONObject();
+		try {
+			msg.put("type", "device");
+			msg.put("action", "info");
+
+			JSONObject values = new JSONObject();;
+			values.put("address_ip", NetworkUtils.getLocalIpAddress().toString());
+			values.put("address_port", AppSettings.httpPort);
+			values.put("device_name", android.os.Build.MANUFACTURER + android.os.Build.PRODUCT + " " + Build.MODEL);
+			msg.put("values", values);
+
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+
+		try {
+			CustomWebsocketServer ws = CustomWebsocketServer.getInstance(this);
+			ws.send(msg);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} 
+		*/
+		
+		
+		
 	}
 
 	// handle message from the webapp

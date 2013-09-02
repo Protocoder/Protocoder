@@ -12,13 +12,18 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.IntentFilter.MalformedMimeTypeException;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.nfc.NfcAdapter;
+import android.nfc.Tag;
+import android.nfc.tech.NfcF;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.FileObserver;
@@ -57,6 +62,7 @@ import com.makewithmoto.network.MyHTTPServer;
 import com.makewithmoto.network.NetworkUtils;
 import com.makewithmoto.projectlist.ListFragmentExamples;
 import com.makewithmoto.projectlist.ListFragmentUserProjects;
+import com.makewithmoto.utils.StrUtils;
 
 import de.greenrobot.event.EventBus;
 
@@ -147,7 +153,6 @@ public class MainActivity extends BaseActivity implements
 				shiftAnimator.setDuration(1200);
 				shiftAnimator.setInterpolator(new DecelerateInterpolator());
 
-				
 				final AnimatorSet setAnimation = new AnimatorSet();
 
 				setAnimation.play(alphaAnimator).with(shiftAnimator);
@@ -161,23 +166,41 @@ public class MainActivity extends BaseActivity implements
 			}
 
 		});
-		
-		 observer = new FileObserver(BaseMainApp.projectsDir, FileObserver.CREATE | 
-	    			FileObserver.DELETE) { // set up a file observer to watch this directory on sd card
 
-		     @Override
-		     public void onEvent(int event, String file) {
-		         if((FileObserver.CREATE & event) != 0) {
-		        	 Log.d(TAG, "File created [" + BaseMainApp.projectsDir + "/" + file + "]");
-		        	 
-		         } else if ((FileObserver.DELETE & event) != 0){ // check if its a "create" and not equal to .probe because thats created every time camera is launched
-		        	 Log.d(TAG, "File deleted [" + BaseMainApp.projectsDir + "/" + file + "]");
-		        // 	Toast.makeText(getBaseContext(), file + " was saved!", Toast.LENGTH_LONG).show();
-		         }
-		     }
-		 };
-		 
-		 		 
+		observer = new FileObserver(BaseMainApp.projectsDir,
+				FileObserver.CREATE | FileObserver.DELETE) { // set up a file
+																// observer to
+																// watch this
+																// directory on
+																// sd card
+
+			@Override
+			public void onEvent(int event, String file) {
+				if ((FileObserver.CREATE & event) != 0) {
+					Log.d(TAG, "File created [" + BaseMainApp.projectsDir + "/"
+							+ file + "]");
+
+				} else if ((FileObserver.DELETE & event) != 0) { // check if its
+																	// a
+																	// "create"
+																	// and not
+																	// equal to
+																	// .probe
+																	// because
+																	// thats
+																	// created
+																	// every
+																	// time
+																	// camera is
+																	// launched
+					Log.d(TAG, "File deleted [" + BaseMainApp.projectsDir + "/"
+							+ file + "]");
+					// Toast.makeText(getBaseContext(), file + " was saved!",
+					// Toast.LENGTH_LONG).show();
+				}
+			}
+		};
+
 	}
 
 	/**
@@ -264,13 +287,12 @@ public class MainActivity extends BaseActivity implements
 
 		// websocket
 		try {
-			ws = CustomWebsocketServer.getInstance(this, 8081, new Draft_17());
+			ws = CustomWebsocketServer.getInstance(this, AppSettings.websocketPort, new Draft_17());
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		
 		final Handler handler = new Handler();
 		Runnable r = new Runnable() {
 
@@ -404,7 +426,7 @@ public class MainActivity extends BaseActivity implements
 						p.getType());
 
 				// check if the apprunner is installed
-				// TODO add handling 
+				// TODO add handling
 				final PackageManager mgr = this.getPackageManager();
 				List<ResolveInfo> list = mgr.queryIntentActivities(
 						currentProjectApplicationIntent,
@@ -498,16 +520,16 @@ public class MainActivity extends BaseActivity implements
 	public void onFinishEditDialog(String inputText) {
 		Toast.makeText(this, "Creating " + inputText, Toast.LENGTH_SHORT)
 				.show();
-	
+
 		newProject(inputText);
 	}
-	
+
 	public void newProject(String inputText) {
 		Project newProject = ProjectManager.getInstance().addNewProject(c,
 				inputText, inputText, ProjectManager.PROJECT_USER_MADE);
 
 		userProjectListFragment.projects.add(newProject);
-		userProjectListFragment.notifyAddedProject();	
+		userProjectListFragment.notifyAddedProject();
 	}
 
 	/*
@@ -530,5 +552,7 @@ public class MainActivity extends BaseActivity implements
 		}
 		return true;
 	}
+	
+	
 
 }

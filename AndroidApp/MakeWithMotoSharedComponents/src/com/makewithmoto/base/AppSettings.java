@@ -19,7 +19,7 @@ public class AppSettings {
 	
 	public static String appFolder = "makewithmoto";
 	public static String SERVER_ADDRESS = "";
-	public static int websocketPort = 8081;
-	public static final int httpPort = 8080;	
+	public static int websocketPort = 8587;
+	public static final int httpPort = 8585;	
 	
 }
