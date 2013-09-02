@@ -11,7 +11,7 @@ var addWidget = function(widget) {
     widgets.push("label_"+widget.id);
     return addLabel(widget.id, widget.name, widget.x, widget.y, widget.w, widget.h);
   } else if (widget.type == "image") { 
-    widgets.push("label_"+widget.id);
+    widgets.push("image_"+widget.id);
     return addImage(widget.id, widget.url, widget.x, widget.y, widget.w, widget.h);
   }
 
@@ -48,7 +48,7 @@ var addImage = function(element, url, posx, posy, w, h) {
     url = window.location.origin + "/apps/" + currentProject.type + "/" + currentProject.name + "/" + url;
   } 
 
-   $('<img src = "'+url+'" class ="widget image" id = "label_' + element +'">'+ url +' </img>')
+   $('<img src = "'+url+'" class ="widget image" id = "image_' + element +'"/>')
           .appendTo("#overlay #container")
           .css({"width": w+"px", "height":h+"px","top":posy+"px","left":posx+"px"})
           .draggable();

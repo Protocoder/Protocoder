@@ -5,7 +5,7 @@ var ws;
 
 function testWebsockets() {
   // Write your code in the same way as for native WebSocket:
-  ws = new WebSocket('ws://'+ remoteIP +':8081');
+  ws = new WebSocket('ws://'+ remoteIP +':8587');
 
   ws.onopen = function() {
     connected();

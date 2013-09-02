@@ -13,9 +13,9 @@ function parse_help(docString) {
 
 
 	    //class
-	    var className = v.name;
+	    var className = v.name.substr(1, v.name.length).toLowerCase();
 	   // console.log(className);
-	    $("#reference").append('<div id = "'+ className+'" class = "card APIclass"> <h1>' + className + '</h1>  <div class = "methods"> </div>');
+	    $("#reference").append('<div id = "class_'+ className+'" class = "card APIclass"> <h1>' + className + '</h1>  <div class = "methods"> </div>');
 
 	    //iterate through api methods 
 	    $.each (v.apiMethods, function(m, n) {
@@ -23,14 +23,14 @@ function parse_help(docString) {
 	    	//console.log(m, n);
 
 	        var method = n;
-	        $("#"+className + " .methods").append('<div id ='+ method.name +' class = "APImethod"></div>');
-	        $("#"+method.name).append('<h2>'+ method.name +'</h2>');
+	        $("#class_"+className + " .methods").append('<div id ="method_'+ method.name +'" class = "APImethod"></div>');
+	        $("#method_"+method.name).append('<h2><i>'+ method.returnType + "</i> <strong>" + method.name + "</strong> <i>" + method.parameters + '</i></h2>');
 	        
 	        if (method.description != undefined) { 
-	        	$("#"+method.name).append('<p id = "description"> '+ method.description +' </p>');
+	        	$("#method_"+method.name).append('<p id = "description"> '+ "here goes description" /*method.description*/ +' </p>');
 	        }
 	        if (method.example != undefined){ 
-				$("#"+method.name).append('<p id = "example"> '+ method.example +' </p>');
+				$("#method_"+method.name).append('<p id = "example"> '+ "here goes example" /* method.example */ +' </p>');
 	        	
 	        	/* 
 	        	$('<button> '+ method.name +' </button>')

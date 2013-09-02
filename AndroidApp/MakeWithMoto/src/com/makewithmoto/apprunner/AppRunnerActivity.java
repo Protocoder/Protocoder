@@ -1,6 +1,7 @@
 package com.makewithmoto.apprunner;
 
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.json.JSONException;
@@ -17,15 +18,21 @@ import org.mozilla.javascript.commonjs.module.Require;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.IntentFilter.MalformedMimeTypeException;
+import android.nfc.NfcAdapter;
+import android.nfc.Tag;
+import android.nfc.tech.NfcF;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,11 +40,13 @@ import android.widget.Toast;
 import com.makewithmoto.MainActivity;
 import com.makewithmoto.R;
 import com.makewithmoto.apprunner.api.JAndroid;
+import com.makewithmoto.apprunner.api.JMedia;
 import com.makewithmoto.base.BaseActivity;
 import com.makewithmoto.events.Events.ProjectEvent;
 import com.makewithmoto.events.Project;
 import com.makewithmoto.events.ProjectManager;
 import com.makewithmoto.network.CustomWebsocketServer;
+import com.makewithmoto.utils.StrUtils;
 
 import de.greenrobot.event.EventBus;
 
@@ -56,7 +65,14 @@ public class AppRunnerActivity extends BaseActivity {
 	private ActionBar actionBar;
 	private CustomWebsocketServer ws;
 	private JAndroid.onKeyListener onKeyListener;
+	private JAndroid.onNFCListener onNFCListener;
+	private JMedia.onVoiceRecognitionListener onVoiceRecognitionListener;
+
 	private static final String TAG = "AppRunner";
+	
+	public static final int VOICE_RECOGNITION_REQUEST_CODE = 55;
+
+	
 
 	static final String SCRIPT_PREFIX = "//Prepend text for all scripts \n"
 			+ "var Test = Packages.com.makewithmoto.apprunner.api.Test; \n"
@@ -99,6 +115,8 @@ public class AppRunnerActivity extends BaseActivity {
 		// websocket
 		// TODO move this to onResume
 
+		initializeNFC(); 
+		
 		try {
 			Log.d("pq", "starting websocket server");
 			ws = CustomWebsocketServer.getInstance(this);
@@ -117,8 +135,8 @@ public class AppRunnerActivity extends BaseActivity {
 			projectName = intent.getStringExtra("projectName");
 			int projectType = intent.getIntExtra("projectType",
 					ProjectManager.type);
-			
-			Log.d("qq", projectName + " " + projectType);
+
+			Log.d(TAG, "launching " + projectName + " " + projectType);
 
 			currentProject = ProjectManager.getInstance().get(projectName,
 					projectType);
@@ -182,6 +200,7 @@ public class AppRunnerActivity extends BaseActivity {
 	@Override
 	public void onPause() {
 		super.onPause();
+		EventBus.getDefault().unregister(this);
 
 		callJsFunction("onPause");
 		callJsFunction("onSensorPause");
@@ -337,7 +356,7 @@ public class AppRunnerActivity extends BaseActivity {
 							: "") + "\n" + error.getScriptStackTrace();
 
 			showError(message);
-			
+
 			JSONObject obj = new JSONObject();
 			try {
 				obj.put("type", "error");
@@ -570,14 +589,112 @@ public class AppRunnerActivity extends BaseActivity {
 	}
 
 	public void addOnKeyListener(JAndroid.onKeyListener onKeyListener2) {
-			onKeyListener = onKeyListener2;
+		onKeyListener = onKeyListener2;
 
-	} 
-	
-	public void showError(String message) { 		
+	}
+
+	public void showError(String message) {
 		RelativeLayout rl = (RelativeLayout) findViewById(R.id.console);
 		rl.setVisibility(View.VISIBLE);
 		TextView t = (TextView) findViewById(R.id.console_content);
 		t.setText(message);
 	}
+	
+	
+
+	/*
+	 * NFC
+	 */
+
+	private NfcAdapter mAdapter;
+
+	private PendingIntent mPendingIntent;
+	private IntentFilter[] mFilters;
+	private String[][] mTechLists;
+
+	public void initializeNFC() {
+
+		// cuando esta en foreground
+		Log.d(TAG, "Starting NFC");
+		mAdapter = NfcAdapter.getDefaultAdapter(this);
+
+		// Create a generic PendingIntent that will be deliver to this activity.
+		// The NFC stack
+		// will fill in the intent with the details of the discovered tag before
+		// delivering to
+		// this activity.
+		mPendingIntent = PendingIntent.getActivity(this, 0, new Intent(this,
+				getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+
+		// Setup an intent filter for all MIME based dispatches
+		IntentFilter ndef = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
+		try {
+			ndef.addDataType("*/*");
+		} catch (MalformedMimeTypeException e) {
+			throw new RuntimeException("fail", e);
+		}
+		mFilters = new IntentFilter[] { ndef, };
+
+		// Setup a tech list for all NfcF tags
+		mTechLists = new String[][] { new String[] { NfcF.class.getName() } };
+
+	}
+  
+
+
+	@Override
+	public void onNewIntent(Intent intent) {
+		Log.d(TAG, "New intent " + intent);
+
+		if (intent.getAction() != null) {
+			Log.d(TAG, "Discovered tag with intent: " + intent);
+			// mText.setText("Discovered tag " + ++mCount + " with intent: " +
+			// intent);
+
+			Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+			// TechFilter t = new TechFilter();
+			byte[] tagId = intent.getByteArrayExtra(NfcAdapter.EXTRA_ID);
+			// NdefMessage[] msgs = (NdefMessage[]) intent
+			// .getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+
+			String nfcID = StrUtils.bytetostring(tag.getId());
+			Toast.makeText(this, "Tag detected: " + nfcID, Toast.LENGTH_LONG);
+
+		}
+
+	}
+
+	public void addNFCListener(JAndroid.onNFCListener onNFCListener2) {
+		onNFCListener = onNFCListener2;
+
+	}
+	
+	
+
+	  /**
+   * Handle the results from the recognition activity. 
+   */
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+      if (requestCode == VOICE_RECOGNITION_REQUEST_CODE && resultCode == RESULT_OK) {
+          // Fill the list view with the strings the recognizer thought it could have heard
+          ArrayList<String> matches = data.getStringArrayListExtra(
+                  RecognizerIntent.EXTRA_RESULTS);
+                
+          for (String _string : matches) {
+				Log.d(TAG, "" + _string); 
+	
+			} 
+          onVoiceRecognitionListener.onNewResult(matches.get(0));
+                      
+      } 
+      
+
+      super.onActivityResult(requestCode, resultCode, data);
+  } 
+  
+  public void addVoiceRecognitionListener(JMedia.onVoiceRecognitionListener onVoiceRecognitionListener2) { 
+	  
+	  onVoiceRecognitionListener = onVoiceRecognitionListener2;
+  }
 }

@@ -293,6 +293,7 @@ public class MyHTTPServer extends NanoHTTPD {
 					Log.d(TAG, "--> get documentation");
 					
 					//TODO do it automatically 
+					APIManager.getInstance().clear();
 					APIManager.getInstance().addClass(JAndroid.class); 
 					APIManager.getInstance().addClass(JBrowser.class); 
 					APIManager.getInstance().addClass(JCamera.class); 
