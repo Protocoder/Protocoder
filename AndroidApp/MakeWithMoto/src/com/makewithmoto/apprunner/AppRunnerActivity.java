@@ -22,6 +22,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentFilter.MalformedMimeTypeException;
+import android.media.AudioManager;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.NfcF;
@@ -112,9 +113,11 @@ public class AppRunnerActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_apprunner);
-		// websocket
-		// TODO move this to onResume
 
+		AudioManager audio = (AudioManager) getSystemService(this.AUDIO_SERVICE);
+		int currentVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
+		this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
+		
 		initializeNFC(); 
 		
 		try {

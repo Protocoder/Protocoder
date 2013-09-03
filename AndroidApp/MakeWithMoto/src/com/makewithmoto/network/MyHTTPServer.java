@@ -272,9 +272,6 @@ public class MyHTTPServer extends NanoHTTPD {
 					//EventBus.getDefault().post(evt);
 					
 					
-					//remove app
-				} else if (cmd.equals("remove_app")) {
-				//create new app
 				} else if (cmd.equals("create_new_project")) {
 					Log.d(TAG, "--> create new project");
 
@@ -282,6 +279,9 @@ public class MyHTTPServer extends NanoHTTPD {
 					Project p = new Project(name, "", ProjectManager.PROJECT_USER_MADE);
 					ProjectEvent evt = new ProjectEvent(p, "new");
 					EventBus.getDefault().post(evt);
+
+					Project newProject = ProjectManager.getInstance().addNewProject(ctx.get(),
+							name, name, ProjectManager.PROJECT_USER_MADE);
 
 					
 				//remove app
