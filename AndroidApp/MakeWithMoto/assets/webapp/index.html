@@ -184,9 +184,12 @@ function openPopup () {
         actions: {
             "save": function () { 
                 create_new_project( $("input#project_name").val() );
-                $().w2popup('close')
+                $().w2popup('close'); 
             },
-            "cancel": function () { this.clear(); },
+            "cancel": function () { 
+                this.clear();  
+                $().w2popup('close'); 
+            },
         }
     });
     $().w2popup('open', {
