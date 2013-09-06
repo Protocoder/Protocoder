@@ -95,10 +95,10 @@ public class IOIOBoard extends HardwareBase {
 	
 	public void stop() {
 		Log.d(TAG, "IOIOBoard stop called");
+		powerOff();
 		if (serviceIntent_ != null) {
 			activity_.stopService(serviceIntent_);
 		}
-		powerOff();
 	}
 
 

@@ -47,6 +47,7 @@ import com.makewithmoto.events.Events.ProjectEvent;
 import com.makewithmoto.events.Project;
 import com.makewithmoto.events.ProjectManager;
 import com.makewithmoto.network.CustomWebsocketServer;
+import com.makewithmoto.sensors.WhatIsRunning;
 import com.makewithmoto.utils.StrUtils;
 
 import de.greenrobot.event.EventBus;
@@ -218,6 +219,8 @@ public class AppRunnerActivity extends BaseActivity {
 	public void onDestroy() {
 		super.onDestroy();
 		callJsFunction("onDestroy");
+		WhatIsRunning.getInstance().stopAll();
+
 	}
 
 	// @Override
