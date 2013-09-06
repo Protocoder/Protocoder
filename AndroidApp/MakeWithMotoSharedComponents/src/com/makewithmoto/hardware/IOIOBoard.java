@@ -1,5 +1,8 @@
 package com.makewithmoto.hardware;
 
+import ioio.lib.api.IOIO;
+import ioio.lib.api.exception.ConnectionLostException;
+import ioio.lib.util.IOIOLooper;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -19,14 +22,15 @@ public class IOIOBoard extends HardwareBase {
 	private IOIOBoardService service_;
 	private Intent serviceIntent_;
 	private Boolean serviceBound = false;
-	//protected IOIO ioio;
+	protected IOIO ioio;
 
 		
 	private ServiceConnection connection_ = new ServiceConnection() {
 		
-		@Override
+		@Override 
 		public void onServiceDisconnected(ComponentName name) {
 			serviceBound = false;
+			Log.d(TAG, "onServiceDisconnected");
 		}
 		
 		@Override
@@ -36,6 +40,7 @@ public class IOIOBoard extends HardwareBase {
 			service_.setCallback(callback_);
 			service_.start(serviceIntent_);
 			serviceBound = true;
+			Log.d(TAG, "onServiceConnected");
 		}
 	};
 	
@@ -95,7 +100,7 @@ public class IOIOBoard extends HardwareBase {
 		}
 		powerOff();
 	}
-	
-	
+
+
 
 }

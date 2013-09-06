@@ -23,7 +23,6 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.NFC" />
     <uses-permission android:name="android.permission.SEND_SMS" />
-    
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -49,19 +48,16 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            
-            
         </activity>
         <activity
             android:name="com.makewithmoto.MainActivity"
             android:label="@string/activity_name"
             android:logo="@drawable/ic_action_logo" >
-            
-              <!-- Add a technology filter -->
-                <intent-filter>
-                    <action android:name="android.nfc.action.TECH_DISCOVERED" />
-                </intent-filter>
-            
+
+            <!-- Add a technology filter -->
+            <intent-filter>
+                <action android:name="android.nfc.action.TECH_DISCOVERED" />
+            </intent-filter>
         </activity>
         <activity
             android:name="com.makewithmoto.AboutActivity"
@@ -124,6 +120,8 @@
 
             </intent-filter>
         </activity>
+
+        <service android:name="com.makewithmoto.hardware.IOIOBoardService" />
     </application>
 
 </manifest>

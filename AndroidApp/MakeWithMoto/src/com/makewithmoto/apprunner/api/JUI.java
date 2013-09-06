@@ -688,22 +688,21 @@ public class JUI extends JInterface {
 
 	}
 
-	PlotView plotView;
-	Plot plot1;
+	//PlotView plotView;
+	//Plot plot1;
 
 	@JavascriptInterface
-	public void addPlot(int x, int y, int w, int h) {
+	public JPlotView addPlot(int x, int y, int w, int h, int min, int max) {
 		initializeLayout();
-		plotView = new PlotView(a.get());
-		plot1 = plotView.new Plot(Color.RED);
-		plotView.addPlot(plot1);
-
+		PlotView plotView = new PlotView(a.get());
 		positionView(plotView, x, y, w, h);
 
 		// Add the view
 		addView(plotView);
+		
+		JPlotView jPlotView = new JPlotView(a.get(), plotView, min, max);
 
-		// return p1;
+		return jPlotView;
 	}
 	
 	
@@ -856,10 +855,7 @@ public class JUI extends JInterface {
 	}
 
 
-	@JavascriptInterface
-	public void setPlotValue(float value) {
-		plotView.setValue(plot1, value);
-	}
+
 
 	@JavascriptInterface
 	public void startTrackingTouches(String b) {

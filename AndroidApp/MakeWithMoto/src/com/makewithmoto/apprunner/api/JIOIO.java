@@ -4,6 +4,7 @@ import ioio.lib.api.DigitalOutput;
 import ioio.lib.api.IOIO;
 import ioio.lib.api.exception.ConnectionLostException;
 import android.app.Activity;
+import android.util.Log;
 import android.webkit.JavascriptInterface;
 
 import com.makewithmoto.apidoc.annotation.APIMethod;
@@ -19,6 +20,10 @@ public class JIOIO extends JInterface implements HardwareCallback {
 
 	boolean isStarted = false;
 
+	private IOIO ioio;
+
+	private DigitalOutput led;
+
 	public JIOIO(Activity a) {
 		super(a);
 	}
@@ -32,7 +37,6 @@ public class JIOIO extends JInterface implements HardwareCallback {
 			board.powerOn();
 			WhatIsRunning.getInstance().add(board);
 
-			isStarted = true;
 		}
 	}
 
@@ -48,11 +52,21 @@ public class JIOIO extends JInterface implements HardwareCallback {
 
 	@JavascriptInterface
 	@APIMethod(description = "sends commands to makr board", example = "makr.writeSerial(\"LEDON\");")
-	public void prueba() throws ConnectionLostException {
-		//DigitalOutput led = ioio.openDigitalOutput(0, true); // start with the on board LED off
-		//led.write(true);
+	public void openDigitalOutput(int pinNum) throws ConnectionLostException {
+		led = ioio.openDigitalOutput(pinNum, true); // start with the on board LED off
+		led.write(true);
 
 	}
+	
+	
+	@JavascriptInterface
+	@APIMethod(description = "sends commands to makr board", example = "makr.writeSerial(\"LEDON\");")
+	public void setDigitalPin(int num, boolean status) throws ConnectionLostException {
+		led.write(status);
+		
+	}
+	
+	
 
 	@JavascriptInterface
 	@APIMethod(description = "resumes makr activity", example = "makr.resume();")
@@ -68,26 +82,27 @@ public class JIOIO extends JInterface implements HardwareCallback {
 
 	@Override
 	public void onConnect(Object obj) {
-		// TODO Auto-generated method stub
+		this.ioio = (IOIO) obj;
+		Log.d("qq", "Connected just fine... saved ioio connection");
+		isStarted = true;
+		this.a.get().runOnUiThread(new Runnable() {
 
+			@Override
+			public void run() {
+			}
+		});
 	}
 
 	@Override
-	public void setup() {
-		// TODO Auto-generated method stub
-
-	}
+	public void setup() {}
 
 	@Override
-	public void loop() {
-		// TODO Auto-generated method stub
-
-	}
+	public void loop() {}
 
 	@Override
 	public void onComplete() {
 		// TODO Auto-generated method stub
-
-	}
-
+		this.a.get().finish();
+	} 
+	
 }

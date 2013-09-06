@@ -69,7 +69,7 @@ public class JWebAppPlot extends JInterface {
 			e1.printStackTrace();
 		}
 
-		Log.d(TAG, "update");
+		//Log.d(TAG, "update");
 
 		try {
 			CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());

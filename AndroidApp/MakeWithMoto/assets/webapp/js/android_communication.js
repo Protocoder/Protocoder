@@ -5,7 +5,7 @@ function list_apps(filter) {
 	obj.cmd = "list_apps";
 	obj.filter = filter;
 
-	$.get("cmd="+JSON.stringify(obj), function(data) {
+	$.get(remoteIP + "cmd="+JSON.stringify(obj), function(data) {
 		setProjectList(filter, JSON.parse(data));
 	});
 }
@@ -22,7 +22,7 @@ function push_code(project) {
 	o.type = project.type;
 
 	$.ajax({
-		url:"cmd="+JSON.stringify(obj),
+		url:remoteIP + "cmd="+JSON.stringify(obj),
 		type: 'post',
 		data: o,
 		success: function(data) {
@@ -37,7 +37,7 @@ function fetch_code(pName, pType) {
 	obj.cmd = "fetch_code";
 	obj.name = pName;
 	obj.type = pType;
-	$.get("cmd="+JSON.stringify(obj), function(data) {
+	$.get(remoteIP + "cmd="+JSON.stringify(obj), function(data) {
 		var code = JSON.parse(data);
 		setCode(unescape(code.code));
 		currentProject.name = pName;
@@ -55,7 +55,7 @@ function list_files_in_project(pName, pType) {
 	obj.cmd = "list_files_in_project";
 	obj.name = pName;
 	obj.type = pType;
-	$.get("cmd="+JSON.stringify(obj), function(data) {
+	$.get(remoteIP + "cmd="+JSON.stringify(obj), function(data) {
 		w2ui['grid'].clear();
 		console.log(data);
 
@@ -76,7 +76,7 @@ function run_app(project) {
 	obj.name = project.name;
 	obj.url = project.url;
 	obj.type = project.type;
-	$.get("cmd="+JSON.stringify(obj), function(data) {
+	$.get(remoteIP + "cmd="+JSON.stringify(obj), function(data) {
  		//alert('Load was performed. ' + data);
 	});
 	$("#console").empty();
@@ -88,7 +88,7 @@ function create_new_project(new_name) {
 	obj.cmd = "create_new_project";
 	obj.name = new_name;
 	console.log(obj);
-	$.get("cmd="+JSON.stringify(obj), function(data) {
+	$.get(remoteIP + "cmd="+JSON.stringify(obj), function(data) {
  		//alert('Load was performed. ' + data);
  		list_apps("user");
  		fetch_code(obj.name, "list_projects");
@@ -99,7 +99,7 @@ function remove_app(id) {
 	obj.cmd = "remove_app";
 
 	obj.remove_app = name;
-	$.get("cmd="+JSON.stringify(obj), function(data) {
+	$.get(remoteIP + "cmd="+JSON.stringify(obj), function(data) {
  		alert('Load was performed. ' + data);
 	});
 }
@@ -108,7 +108,7 @@ function get_documentation(id) {
 	var obj = {};
 	obj.cmd = "get_documentation";
 
-	$.get("cmd="+JSON.stringify(obj), function(data) { 
+	$.get(remoteIP + "cmd="+JSON.stringify(obj), function(data) { 
 		var doc = JSON.parse(data);
 		parse_help(doc.api);
 	});
