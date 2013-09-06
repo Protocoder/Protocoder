@@ -191,6 +191,7 @@ public class JAndroid extends JInterface {
 				handler.postDelayed(this, duration);
 			}
 		};
+		handler.post(task);
 
 		rl.add(task);
 	}

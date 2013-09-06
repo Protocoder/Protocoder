@@ -1,6 +1,8 @@
 package com.makewithmoto.apprunner.api;
 
+import ioio.lib.api.DigitalOutput;
 import ioio.lib.api.IOIO;
+import ioio.lib.api.exception.ConnectionLostException;
 import android.app.Activity;
 import android.webkit.JavascriptInterface;
 
@@ -14,7 +16,6 @@ public class JIOIO extends JInterface implements HardwareCallback {
 	private String TAG = "JIOIO";
 
 	private IOIOBoard board;
-	protected IOIO ioio;
 
 	boolean isStarted = false;
 
@@ -47,11 +48,10 @@ public class JIOIO extends JInterface implements HardwareCallback {
 
 	@JavascriptInterface
 	@APIMethod(description = "sends commands to makr board", example = "makr.writeSerial(\"LEDON\");")
-	public void writeSerial(String cmd) {
-		if (isStarted) {
-			// makr.writeSerial(cmd);
+	public void prueba() throws ConnectionLostException {
+		//DigitalOutput led = ioio.openDigitalOutput(0, true); // start with the on board LED off
+		//led.write(true);
 
-		}
 	}
 
 	@JavascriptInterface

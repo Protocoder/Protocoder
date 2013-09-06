@@ -19,7 +19,7 @@ void setup() {
 void draw() { 
 
   background(0, 0, 0, 0); //transparent 
-  fill(0, 20);
+  fill(0, 10);
 
   for (int i = 0; i < width; i += 30) {
     for (int j = 0; j < height; j += 30) {
@@ -28,7 +28,7 @@ void draw() {
     }
   }
 
-  count = count + 0.1;
+  count = count + 0.05;
 }
 
 //just a little helper function
