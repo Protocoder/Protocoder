@@ -12,10 +12,16 @@ import com.makewithmoto.hardware.IOIOBoardService.IOIOServiceBinder;
 import com.makewithmoto.system.SysFs;
 
 public class IOIOBoard extends HardwareBase {
+	
+	private static String TAG = "IOIOBoard";
+
 	private Activity activity_;
 	private IOIOBoardService service_;
 	private Intent serviceIntent_;
 	private Boolean serviceBound = false;
+	//protected IOIO ioio;
+
+		
 	private ServiceConnection connection_ = new ServiceConnection() {
 		
 		@Override
@@ -38,7 +44,6 @@ public class IOIOBoard extends HardwareBase {
 		activity_ = activity;
 	}
 
-	private static String TAG = "IOIOBoard";
 	
 	/**
 	 * Start
@@ -91,31 +96,6 @@ public class IOIOBoard extends HardwareBase {
 		powerOff();
 	}
 	
-	/**
-	 * Erase the board
-	 * 
-	 * To perform an erase on the MAKR board(/system/xbin/makr_erase.sh):
-	 * 
-	 * GPIO=9
-	 * echo $GPIO   > /sys/class/gpio/export
-	 * echo out > /sys/class/gpio/gpio$GPIO/direction
-	 * echo 1   > /sys/class/gpio/gpio$GPIO/value
-	 * sleep 1
-	 * echo 0   > /sys/class/gpio/gpio$GPIO/value
-	 */
-	@Override
-	public void erase() {
-		String gpio = "9";
-		
-		SysFs.write("/sys/class/gpio/export", gpio);
-		SysFs.write("/sys/class/gpio/gpio"+ gpio + "/direction", "out");
-		SysFs.write("/sys/class/gpio/gpio" + gpio +"/value", "1");
-		
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		SysFs.write("/sys/class/gpio/gpio" + gpio +"/value", "0");
-	}
+	
+
 }

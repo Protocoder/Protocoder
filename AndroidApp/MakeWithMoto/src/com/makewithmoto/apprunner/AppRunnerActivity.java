@@ -76,8 +76,6 @@ public class AppRunnerActivity extends BaseActivity {
 	
 
 	static final String SCRIPT_PREFIX = "//Prepend text for all scripts \n"
-			+ "var Test = Packages.com.makewithmoto.apprunner.api.Test; \n"
-			+ "var test = Test(Activity);\n"
 			+ "var JAndroid = Packages.com.makewithmoto.apprunner.api.JAndroid; \n"
 			+ "var android = JAndroid(Activity);\n"
 			+ "var JUI = Packages.com.makewithmoto.apprunner.api.JUI; \n"

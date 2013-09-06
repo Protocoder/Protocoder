@@ -74,15 +74,29 @@ $('#toolbar').w2toolbar({
                     openPopup();
                     break;
             case 'project_run':
+                if (currentProject.name != 'undefined') { 
+
                     currentProject.code = session.getValue();
                     push_code(currentProject);
                     removeWidgets();
                     run_app(currentProject);
-                    break;
+                } else { 
+                    openPopup();
+                }
+                
+                break;
+                
             case 'project_save':
+                if (currentProject.length != 'undefined') { 
+
                     currentProject.code = session.getValue();
                     push_code(currentProject);
-                    break;
+                } else { 
+                    openPopup();
+                    
+                }
+
+                break;
            case 'list_projects':
                 if (data.subItem != 'undefined') { 
                     fetch_code(data.subItem, target);
@@ -214,15 +228,7 @@ list_apps("example");
 
 get_documentation();
 
-$('#run').click(function() { 
-    currentProject.code = escape(session.getValue());
-    run_app(currentProject);
-});
 
-$('#save').click(function() { 
-    currentProject.code = escape(session.getValue());
-    push_code(currentProject);
-});
 
 
 });
