@@ -6,13 +6,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.webkit.JavascriptInterface;
 
-import com.makewithmoto.events.Events.LogEvent;
 import com.makewithmoto.network.CustomWebsocketServer;
 
 public class JConsole  extends JInterface {
+	
+	String TAG = "JConsole";
 	
 	public JConsole(FragmentActivity mwmActivity) {
 		super(mwmActivity);
@@ -34,7 +34,7 @@ public class JConsole  extends JInterface {
 			e1.printStackTrace();
 		}
 
-		Log.d(TAG, "update");
+		//Log.d(TAG, "update");
 
 		try {
 			CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
