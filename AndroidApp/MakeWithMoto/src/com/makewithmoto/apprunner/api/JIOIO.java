@@ -57,7 +57,7 @@ public class JIOIO extends JInterface implements HardwareCallback {
 	@APIMethod(description = "sends commands to makr board", example = "makr.writeSerial(\"LEDON\");")
 	public DigitalOutput openDigitalOutput(int pinNum)
 			throws ConnectionLostException {
-		return ioio.openDigitalOutput(pinNum, true); // start with the on board
+		return ioio.openDigitalOutput(pinNum, false); // start with the on board
 														// LED off
 
 	}
