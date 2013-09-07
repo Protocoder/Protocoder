@@ -19,6 +19,7 @@ import org.mozilla.javascript.commonjs.module.Require;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentFilter.MalformedMimeTypeException;
@@ -69,12 +70,11 @@ public class AppRunnerActivity extends BaseActivity {
 	private JAndroid.onKeyListener onKeyListener;
 	private JAndroid.onNFCListener onNFCListener;
 	private JMedia.onVoiceRecognitionListener onVoiceRecognitionListener;
+	private BroadcastReceiver mIntentReceiver;
 
 	private static final String TAG = "AppRunner";
-	
-	public static final int VOICE_RECOGNITION_REQUEST_CODE = 55;
 
-	
+	public static final int VOICE_RECOGNITION_REQUEST_CODE = 55;
 
 	static final String SCRIPT_PREFIX = "//Prepend text for all scripts \n"
 			+ "var JAndroid = Packages.com.makewithmoto.apprunner.api.JAndroid; \n"
@@ -116,9 +116,9 @@ public class AppRunnerActivity extends BaseActivity {
 		AudioManager audio = (AudioManager) getSystemService(this.AUDIO_SERVICE);
 		int currentVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
 		this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
-		
-		initializeNFC(); 
-		
+
+		initializeNFC();
+
 		try {
 			Log.d("pq", "starting websocket server");
 			ws = CustomWebsocketServer.getInstance(this);
@@ -197,6 +197,28 @@ public class AppRunnerActivity extends BaseActivity {
 		EventBus.getDefault().register(this);
 		mAdapter.enableForegroundDispatch(this, mPendingIntent, null, null);
 
+		// sms receive
+
+		IntentFilter intentFilter = new IntentFilter("SmsMessage.intent.MAIN");
+		mIntentReceiver = new BroadcastReceiver() {
+		
+			@Override
+			public void onReceive(android.content.Context context, Intent intent) {
+				String msg = intent.getStringExtra("get_msg");
+				
+				// Process the sms format and extract body &amp; phoneNumber
+				msg = msg.replace("\n", "");
+				String body = msg.substring(msg.lastIndexOf(":") + 1,
+						msg.length());
+				String pNumber = msg.substring(0, msg.lastIndexOf(":"));
+				
+				// Add it to the list or do whatever you wish to
+
+				
+			}
+		};
+		this.registerReceiver(mIntentReceiver, intentFilter);
+
 		callJsFunction("onResume");
 	}
 
@@ -210,6 +232,8 @@ public class AppRunnerActivity extends BaseActivity {
 		callJsFunction("onAndroidPause");
 
 		mAdapter.disableForegroundDispatch(this);
+		this.unregisterReceiver(this.mIntentReceiver);
+
 	}
 
 	@Override
@@ -606,8 +630,6 @@ public class AppRunnerActivity extends BaseActivity {
 		TextView t = (TextView) findViewById(R.id.console_content);
 		t.setText(message);
 	}
-	
-	
 
 	/*
 	 * NFC
@@ -626,7 +648,8 @@ public class AppRunnerActivity extends BaseActivity {
 		mAdapter = NfcAdapter.getDefaultAdapter(this);
 
 		// Create a generic PendingIntent that will be deliver to this activity.
-		// The NFC stack  will fill in the intent with the details of the discovered tag before
+		// The NFC stack will fill in the intent with the details of the
+		// discovered tag before
 		// delivering to this activity.
 		mPendingIntent = PendingIntent.getActivity(this, 0, new Intent(this,
 				getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
@@ -644,8 +667,6 @@ public class AppRunnerActivity extends BaseActivity {
 		mTechLists = new String[][] { new String[] { NfcF.class.getName() } };
 
 	}
-  
-
 
 	@Override
 	public void onNewIntent(Intent intent) {
@@ -663,7 +684,8 @@ public class AppRunnerActivity extends BaseActivity {
 			// .getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
 
 			String nfcID = StrUtils.bytetostring(tag.getId());
-			//Toast.makeText(this, "Tag detected: " + nfcID, Toast.LENGTH_LONG).show();
+			// Toast.makeText(this, "Tag detected: " + nfcID,
+			// Toast.LENGTH_LONG).show();
 			onNFCListener.onNewTag(nfcID);
 
 		}
@@ -674,33 +696,33 @@ public class AppRunnerActivity extends BaseActivity {
 		onNFCListener = onNFCListener2;
 
 	}
-	
-	
 
-	  /**
-   * Handle the results from the recognition activity. 
-   */
-  @Override
-  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-      if (requestCode == VOICE_RECOGNITION_REQUEST_CODE && resultCode == RESULT_OK) {
-          // Fill the list view with the strings the recognizer thought it could have heard
-          ArrayList<String> matches = data.getStringArrayListExtra(
-                  RecognizerIntent.EXTRA_RESULTS);
-                
-          for (String _string : matches) {
-				Log.d(TAG, "" + _string); 
-	
-			} 
-          onVoiceRecognitionListener.onNewResult(matches.get(0));
-                      
-      } 
-      
+	/**
+	 * Handle the results from the recognition activity.
+	 */
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == VOICE_RECOGNITION_REQUEST_CODE
+				&& resultCode == RESULT_OK) {
+			// Fill the list view with the strings the recognizer thought it
+			// could have heard
+			ArrayList<String> matches = data
+					.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 
-      super.onActivityResult(requestCode, resultCode, data);
-  } 
-  
-  public void addVoiceRecognitionListener(JMedia.onVoiceRecognitionListener onVoiceRecognitionListener2) { 
-	  
-	  onVoiceRecognitionListener = onVoiceRecognitionListener2;
-  }
+			for (String _string : matches) {
+				Log.d(TAG, "" + _string);
+
+			}
+			onVoiceRecognitionListener.onNewResult(matches.get(0));
+
+		}
+
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	public void addVoiceRecognitionListener(
+			JMedia.onVoiceRecognitionListener onVoiceRecognitionListener2) {
+
+		onVoiceRecognitionListener = onVoiceRecognitionListener2;
+	}
 }

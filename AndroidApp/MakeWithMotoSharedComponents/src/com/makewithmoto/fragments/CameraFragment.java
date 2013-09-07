@@ -211,8 +211,8 @@ public class CameraFragment extends Fragment {
 	File file = null;
 	String fileName;
 
-	public String takePic() {
-		final CountDownLatch latch = new CountDownLatch(1);
+	public String takePic(final String path) {
+		//final CountDownLatch latch = new CountDownLatch(1);
 	
 
 		AudioManager mgr = (AudioManager) getActivity().getSystemService(
@@ -237,10 +237,11 @@ public class CameraFragment extends Fragment {
 				FileOutputStream outStream = null;
 				try { 
 
-					dir = new File(Environment.getExternalStorageDirectory() + "/dcim/multipic");
-					dir.mkdirs();
-					fileName = System.currentTimeMillis() + ".jpg";
-					file = new File(dir.getAbsolutePath() + File.separator + fileName);
+					//dir = new File(Environment.getExternalStorageDirectory() + "/dcim/multipic");
+					//dir.mkdirs();
+					//fileName = System.currentTimeMillis() + ".jpg";
+
+					file = new File(path);
 					
 					outStream = new FileOutputStream(file);
 					outStream.write(data);
@@ -257,19 +258,19 @@ public class CameraFragment extends Fragment {
 				Log.d(TAG, "onPictureTaken - jpeg");
 
 				camera.startPreview();
-				latch.countDown();
+				//latch.countDown();
 
 			}
 		});
 		
-
+		/*
 		try {
 			latch.await();
 		} catch (InterruptedException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+		*/
 
 
 		 return fileName;
