@@ -50,7 +50,6 @@ import com.makewithmoto.utils.AndroidUtils;
 import com.makewithmoto.views.HoloCircleSeekBar;
 import com.makewithmoto.views.HoloCircleSeekBar.OnCircleSeekBarChangeListener;
 import com.makewithmoto.views.PlotView;
-import com.makewithmoto.views.PlotView.Plot;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class JUI extends JInterface {
@@ -758,7 +757,7 @@ public class JUI extends JInterface {
 	 * @param w
 	 * @param h
 	 */
-	public void addCameraView(int x, int y, int w, int h) {
+	public JCamera addCameraView(int x, int y, int w, int h) {
 
 		initializeLayout();
 
@@ -788,6 +787,10 @@ public class JUI extends JInterface {
 		ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
 		ft.addToBackStack(null);
 		ft.commit();
+		
+		JCamera jcamera = new JCamera(a.get(), cameraFragment);
+		
+		return jcamera;
 	
 	}
 
