@@ -132,7 +132,7 @@ onload = function() {
 
 
 	function runApp(time) { 
-		execScript("launch_app.sh");
+		//execScript("launch_app.sh");
 		execScript("adb_usb.sh", function() { 
 			setTimeout(function() { 
 				window.location.assign("http://localhost:8585")

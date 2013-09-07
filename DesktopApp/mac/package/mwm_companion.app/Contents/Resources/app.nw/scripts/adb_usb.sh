@@ -2,6 +2,6 @@
 
 cd "$(dirname "$0")"
 
-./adb forward tcp:8080 tcp:8080
-./adb forward tcp:8081 tcp:8081
+./adb forward tcp:8585 tcp:8585
+./adb forward tcp:8587 tcp:8587
 

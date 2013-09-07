@@ -195,6 +195,7 @@ public class AppRunnerActivity extends BaseActivity {
 	public void onResume() {
 		super.onResume();
 		EventBus.getDefault().register(this);
+		mAdapter.enableForegroundDispatch(this, mPendingIntent, null, null);
 
 		callJsFunction("onResume");
 	}
@@ -207,6 +208,8 @@ public class AppRunnerActivity extends BaseActivity {
 		callJsFunction("onPause");
 		callJsFunction("onSensorPause");
 		callJsFunction("onAndroidPause");
+
+		mAdapter.disableForegroundDispatch(this);
 	}
 
 	@Override
@@ -623,10 +626,8 @@ public class AppRunnerActivity extends BaseActivity {
 		mAdapter = NfcAdapter.getDefaultAdapter(this);
 
 		// Create a generic PendingIntent that will be deliver to this activity.
-		// The NFC stack
-		// will fill in the intent with the details of the discovered tag before
-		// delivering to
-		// this activity.
+		// The NFC stack  will fill in the intent with the details of the discovered tag before
+		// delivering to this activity.
 		mPendingIntent = PendingIntent.getActivity(this, 0, new Intent(this,
 				getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 
@@ -662,7 +663,8 @@ public class AppRunnerActivity extends BaseActivity {
 			// .getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
 
 			String nfcID = StrUtils.bytetostring(tag.getId());
-			Toast.makeText(this, "Tag detected: " + nfcID, Toast.LENGTH_LONG);
+			//Toast.makeText(this, "Tag detected: " + nfcID, Toast.LENGTH_LONG).show();
+			onNFCListener.onNewTag(nfcID);
 
 		}
 

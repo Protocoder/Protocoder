@@ -5,10 +5,10 @@ cd "$(dirname "$0")"
 DEVICES=$(./adb devices | tail -n +2 | awk '{print $1}')
 [[ -z "$DEVICES" ]] || echo "DEVICES!"
 
-./adb forward tcp:8080 tcp:8080
-./adb forward tcp:8081 tcp:8081
+./adb forward tcp:8585 tcp:8585
+./adb forward tcp:8587 tcp:8587
 
-URL="http://localhost:8080"
+URL="http://localhost:8585"
 
 [[ -x $BROWSER ]] && exec "$BROWSER" "$URL"
 

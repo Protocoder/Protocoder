@@ -7,7 +7,7 @@
   "keywords": [ "Make With Moto", "" ],
   "window": {
     "icon": "link.png",
-    "toolbar": true,
+    "toolbar": false,
     "width": 800,
     "height": 600,
     "position": "mouse",
