@@ -21,7 +21,7 @@ public class JWebAppButton extends JInterface {
 	}
 	
 
-	public void add(String name, int x, int y, int w, int h) { 
+	public void add(String id, String name, int x, int y, int w, int h) { 
 		this.name = name;
 		JSONObject msg = new JSONObject();
 		try {
@@ -29,6 +29,7 @@ public class JWebAppButton extends JInterface {
 			msg.put("action", "add");
 
 			JSONObject values = new JSONObject();
+			values.put("id", id);
 			values.put("name", name);
 			values.put("type", "button");
 			values.put("x", x);

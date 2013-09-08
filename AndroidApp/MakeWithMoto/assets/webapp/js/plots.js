@@ -6,7 +6,7 @@ var addWidget = function(widget) {
     return addPlot(widget.name, widget.x, widget.y, widget.w, widget.h);
   } else if (widget.type == "button") {
     widgets.push(widget.name);
-    return addButton(widget.name, widget.x, widget.y, widget.w, widget.h);
+    return addButton(widget.id, widget.name, widget.x, widget.y, widget.w, widget.h);
   } else if (widget.type == "label") { 
     widgets.push("label_"+widget.id);
     return addLabel(widget.id, widget.name, widget.x, widget.y, widget.w, widget.h);
@@ -56,10 +56,14 @@ var addImage = function(element, url, posx, posy, w, h) {
 
 
 
-var addButton = function(element, posx, posy, w, h) {
-  $('<button class ="widget" id = "button_' + element +'">'+ element +' </button>')
+var addButton = function(element, name, posx, posy, w, h) {
+  $('<button class ="widget" id = "button_' + element +'">'+ name +' </button>')
           .appendTo("#overlay #container")
-          .css({"width": w+"px", "height":h+"px","top":posy+"px","left":posx+"px"});
+          .css({"width": w+"px", "height":h+"px","top":posy+"px","left":posx+"px"})
+          .click(function() {
+
+            ws.send('{type:button, id:'+ element +'}');
+          });
 
 } 
 

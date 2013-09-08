@@ -1,5 +1,7 @@
 package com.makewithmoto;
 
+import java.io.File;
+
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.Intent;
@@ -10,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.makewithmoto.base.BaseActivity;
+import com.makewithmoto.base.BaseMainApp;
 import com.makewithmoto.utils.FileIO;
 
 @SuppressLint("NewApi")
@@ -32,8 +35,9 @@ public class WelcomeActivity extends BaseActivity {
 
 			@Override
 			public void run() {
+				File dir = new File(BaseMainApp.baseDir + "/" + "examples");
+				FileIO.deleteDir(dir);
 				FileIO.copyFileOrDir(getApplicationContext(), "examples");
-
 			}
 		}.run();
     }

@@ -1,5 +1,5 @@
 /*
-*	New project by ....... 
+*	Executes a task repeatedly 
 *
 */
 

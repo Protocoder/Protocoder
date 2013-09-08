@@ -11,6 +11,7 @@ import android.webkit.JavascriptInterface;
 
 import com.makewithmoto.apidoc.annotation.APIMethod;
 import com.makewithmoto.network.CustomWebsocketServer;
+import com.makewithmoto.network.CustomWebsocketServer.WebSocketListener;
 
 public class JWebApp extends JInterface {
 
@@ -33,14 +34,21 @@ public class JWebApp extends JInterface {
 	
 	@JavascriptInterface 
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
-	public JWebAppButton addButton(String name, int x, int y, int w, int h, String callbackfn) {
+	public JWebAppButton addButton(String id, String name, int x, int y, int w, int h, final String callbackfn) throws UnknownHostException {
 		Log.d(TAG, "callback " + callbackfn);
 		
 		JWebAppButton jWebAppButton = new JWebAppButton(a.get());
-		jWebAppButton.add(name, x, y, w, h);
+		jWebAppButton.add(id, name, x, y, w, h);
 		
-		callback(callbackfn);
+		CustomWebsocketServer.getInstance(a.get()).addListener(id, new WebSocketListener() {
+			
+			@Override
+			public void onUpdated(JSONObject jsonObject) {
+				callback(callbackfn);
+			}
+		});
 		
+
 		return jWebAppButton;
 	}
 	

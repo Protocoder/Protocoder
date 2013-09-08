@@ -1,6 +1,6 @@
 /*
-*	New project by ....... 
-*
+*	Shows a popup when the nfc tag id matches 
+*	the detectedNFCId 
 */
 
 //replace your nfc tag id 
