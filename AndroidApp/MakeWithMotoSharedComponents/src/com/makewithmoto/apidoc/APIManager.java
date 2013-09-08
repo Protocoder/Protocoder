@@ -65,34 +65,36 @@ public class APIManager {
 				// Log.d(TAG, "" + m[i]);
 				// Log.d(TAG, "" + m[i].getName());
 				apiMethod.name = m[i].getName();
-				//Paranamer paranamer = new AdaptiveParanamer();
-				//String[] paramNames = paranamer.lookupParameterNames(m[i],
-				//		false); // will return null if not found
-
+				// Paranamer paranamer = new AdaptiveParanamer();
+				// String[] paramNames = paranamer.lookupParameterNames(m[i],
+				// false); // will return null if not found
 
 				/*
-				Annotation[][] paramAnnotations = m[i].getParameterAnnotations();
-				for (Annotation[] ann : paramAnnotations) {
-					if (ann.length > 0) { 
-	 					Log.d("mm", "" + ann.toString());
-	 					
-	 					for (Annotation a: ann) { 
-	 						Log.d("mm", "" + a.toString() + " " + a.getClass().toString() + " " + a.annotationType().toString() + " " + a.getClass().getSimpleName());
-	 						if (a.annotationType().getSimpleName().equals(APIParam.class.getSimpleName())) {
-	 							Log.d("mm", "" + ((APIParam) a ).toString());
-	 						}
-	 					}
-					}
-				}
-				*/
+				 * Annotation[][] paramAnnotations =
+				 * m[i].getParameterAnnotations(); for (Annotation[] ann :
+				 * paramAnnotations) { if (ann.length > 0) { Log.d("mm", "" +
+				 * ann.toString());
+				 * 
+				 * for (Annotation a: ann) { Log.d("mm", "" + a.toString() + " "
+				 * + a.getClass().toString() + " " +
+				 * a.annotationType().toString() + " " +
+				 * a.getClass().getSimpleName()); if
+				 * (a.annotationType().getSimpleName
+				 * ().equals(APIParam.class.getSimpleName())) { Log.d("mm", "" +
+				 * ((APIParam) a ).toString()); } } } }
+				 */
 
 				Class<?>[] param = m[i].getParameterTypes();
+				apiMethod.parameters = "";
 				for (int j = 0; j < param.length; j++) {
-					apiMethod.parameters += " " + param[j].getSimpleName().toString();
+					String p = param[j].getSimpleName().toString();
+					if (p != null || p != "") {
+						apiMethod.parameters += " " + p;
+					}
 				}
 				apiMethod.returnType = m[i].getReturnType().toString();
 
-				Log.d("qmqm", apiMethod.parameters + " " + apiMethod.returnType);
+				//Log.d("qmqm", apiMethod.parameters + " " + apiMethod.returnType);
 
 				// get method information
 				if (apiMethod.name.contains("$") == false) {
@@ -171,9 +173,9 @@ public class APIManager {
 		String json = gson.toJson(doc);
 
 		return json.toString();
-	} 
-	
-	public void clear() { 
+	}
+
+	public void clear() {
 		apis.clear();
 		doc = null;
 		apis = new HashMap<String, API>();
@@ -191,5 +193,4 @@ public class APIManager {
 		}
 	}
 
-	
 }

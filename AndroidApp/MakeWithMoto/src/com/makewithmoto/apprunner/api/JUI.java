@@ -229,8 +229,8 @@ public class JUI extends JInterface {
 	 * @param callbackfn
 	 */
 	@JavascriptInterface
-	public void picker(final String callbackfn) {
-		// initializeLayout();
+	public void circularSeekbar(int x, int y, int w, int h, final String callbackfn) {
+		initializeLayout();
 
 		HoloCircleSeekBar pkr = new HoloCircleSeekBar(a.get());
 
@@ -247,8 +247,8 @@ public class JUI extends JInterface {
 		});
 
 		// Add the view
-		a.get().setContentView(pkr);
-
+		positionView(pkr, x, y, w, h);// height must always wrap
+		addView(pkr);
 	}
 
 	/**

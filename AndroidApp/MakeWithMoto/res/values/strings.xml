@@ -53,7 +53,7 @@
     <string name="welcome_activity_name">MAKEwithMOTO</string>
     <string name="welcome_title">Good to see you.</string>
     <string name="welcome_body">MAKEwithMOTO makes is simple to create, edit and run projects from your Android device or computer at the same time. Just start the app and build from your mobile, or navigate to the displayed URL to edit via a web IDE.\n\nAre you in?</string>
-    <string name="welcome_accept">I\'m so excited.</string>
+    <string name="welcome_accept">Let\'s go.</string>
     
     <!-- Settings screen -->
     <string name="settings_activity_name">Settings</string>

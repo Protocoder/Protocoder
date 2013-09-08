@@ -4,7 +4,9 @@ import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Vector;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.drafts.Draft;
@@ -13,10 +15,7 @@ import org.java_websocket.server.WebSocketServer;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.makewithmoto.base.AppSettings;
-
 import android.content.Context;
-import android.os.Build;
 import android.util.Log;
 
 public class CustomWebsocketServer extends WebSocketServer {
@@ -25,11 +24,21 @@ public class CustomWebsocketServer extends WebSocketServer {
 	private static final String TAG = "WebSocketServer";
 	private static Context ctx;
 	private List<WebSocket> connections = new ArrayList<WebSocket>();
+	private static HashMap<String, WebSocketListener> listeners; 
 
+
+	public interface WebSocketListener {
+
+		public void onUpdated(JSONObject jsonObject); 
+		
+	}
+
+	
 	// Singleton (one app view, different URLs)
 	public static CustomWebsocketServer getInstance(Context aCtx, int port,
 			Draft d) throws UnknownHostException {
 		if (inst == null) {
+			listeners = new HashMap<String, WebSocketListener>();
 			inst = new CustomWebsocketServer(aCtx, port, d);
 			inst.start();
 		}
@@ -109,7 +118,7 @@ public class CustomWebsocketServer extends WebSocketServer {
 	 * Message from webapp
 	 */
 	public enum MessageType {
-		random_info, unknown;
+		random_info, unknown, button;
 		public static MessageType fromString(String str) {
 			try {
 				return valueOf(str);
@@ -119,7 +128,14 @@ public class CustomWebsocketServer extends WebSocketServer {
 		}
 	}
 	
+	public void addListener(String name, WebSocketListener l) { 
+		listeners.put(name, l);
+		
+	}
 	
+	public void removeAllListeners() { 
+		listeners.clear();
+	}
 	
 	public void send(String type, String action, String ... values) { 
 		
@@ -167,6 +183,11 @@ public class CustomWebsocketServer extends WebSocketServer {
 
 			break;
 
+		case button:
+			//Log.d("qq", msg.toString(2));
+			WebSocketListener l = listeners.get(msg.get("id"));
+			l.onUpdated(data);
+			
 		default:
 			break;
 		}
