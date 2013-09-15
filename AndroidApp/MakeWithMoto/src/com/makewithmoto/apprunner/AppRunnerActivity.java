@@ -37,7 +37,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.makewithmoto.MainActivity;
 import com.makewithmoto.R;
@@ -88,8 +87,8 @@ public class AppRunnerActivity extends BaseActivity {
 			+ "var JIOIO = Packages.com.makewithmoto.apprunner.api.JIOIO; \n"
 			+ "var ioio = JIOIO(Activity);\n"
 			+ "var JWebAppPlot = Packages.com.makewithmoto.apprunner.api.JWebAppPlot; \n"
-			+ "var JWebApp = Packages.com.makewithmoto.apprunner.api.JWebApp; \n"
-			+ "var webapp = JWebApp(Activity);\n"
+			+ "var JDashboard = Packages.com.makewithmoto.apprunner.api.JDashboard; \n"
+			+ "var dashboard = JDashboard(Activity);\n"
 			+ "var JMedia = Packages.com.makewithmoto.apprunner.api.JMedia; \n"
 			+ "var media = JMedia(Activity);\n"
 			+ "var JNetwork = Packages.com.makewithmoto.apprunner.api.JNetwork; \n"
@@ -101,10 +100,7 @@ public class AppRunnerActivity extends BaseActivity {
 			+ "// End of Prepend Section \n";
 
 	static final String SCRIPT_POSTFIX = "//Appends text for all scripts \n"
-			+ "//ui.postLayout(); \n"
-			+ "function onSensorPause(){sensors.stopAccelerometer(); \n"
-			+ "                         sensors.stopGPS();}          \n"
-			+ "function onAndroidPause(){android.stopAllTimers();}  \n"
+			+ "function onAndroidPause(){ }  \n"
 			+ "// End of Append Section" + "\n";
 
 	@Override
@@ -120,10 +116,10 @@ public class AppRunnerActivity extends BaseActivity {
 		initializeNFC();
 
 		try {
-			Log.d("pq", "starting websocket server");
+			Log.d(TAG, "starting websocket server");
 			ws = CustomWebsocketServer.getInstance(this);
 		} catch (UnknownHostException e) {
-			Log.d("pq", "cannot start websocket server");
+			Log.d(TAG, "cannot start websocket server");
 			e.printStackTrace();
 		}
 
@@ -151,6 +147,8 @@ public class AppRunnerActivity extends BaseActivity {
 			if (null != script) {
 				eval(script, projectName);
 			}
+			
+			eval("android.vibrate(5225);");
 
 			// Set up the actionbar
 			actionBar = getActionBar();
@@ -228,7 +226,6 @@ public class AppRunnerActivity extends BaseActivity {
 		EventBus.getDefault().unregister(this);
 
 		callJsFunction("onPause");
-		callJsFunction("onSensorPause");
 		callJsFunction("onAndroidPause");
 
 		mAdapter.disableForegroundDispatch(this);

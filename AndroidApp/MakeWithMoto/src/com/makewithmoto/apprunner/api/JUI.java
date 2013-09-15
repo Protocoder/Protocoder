@@ -265,7 +265,7 @@ public class JUI extends JInterface {
 	// We'll add in the circular view as a nice to have later once all the other
 	// widgets are handled.
 	@JavascriptInterface
-	public void seekbar(int max, int progress, int x, int y, int w, int h,
+	public void seekbar(int x, int y, int w, int h, int max, int progress,
 			final String callbackfn) {
 
 		initializeLayout();
@@ -292,7 +292,7 @@ public class JUI extends JInterface {
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
 				// TODO Callback should capture the checked state
-				callback(callbackfn);
+				callback(callbackfn, progress);
 			}
 		});
 
@@ -487,7 +487,7 @@ public class JUI extends JInterface {
 			public void onCheckedChanged(CompoundButton buttonView,
 					boolean isChecked) {
 				// TODO Callback should capture the checked state
-				callback(callbackfn);
+				callback(callbackfn, isChecked);
 			}
 		});
 
@@ -804,7 +804,7 @@ public class JUI extends JInterface {
 	 * @param w
 	 * @param h
 	 */
-	public void addVideoView(final String videoFile, int x, int y, int w, int h) {
+	public JVideo addVideoView(final String videoFile, int x, int y, int w, int h) {
 
 		initializeLayout();
 
@@ -850,6 +850,10 @@ public class JUI extends JInterface {
 		ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
 		ft.addToBackStack(null);
 		ft.commit();
+		
+		JVideo jvideo = new JVideo(a.get(), fragment);
+
+		return jvideo;
 	
 	}
 

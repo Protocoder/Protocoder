@@ -18,7 +18,7 @@
     <string name="share">Share code</string>
     <string name="send_to">Send to...</string>
     <string name="beam">NFC Share</string>
-    <string name="projects_zero">Projects Zero\nPress the + to get started.</string>
+    <string name="projects_zero">\nPress + to get started or slide to the right to check the examples</string>
     <string name="start_the_server">Start the server to edit via web-IDE</string>
 
     <!-- Menu items -->
