@@ -13,11 +13,11 @@ import com.makewithmoto.apidoc.annotation.APIMethod;
 import com.makewithmoto.network.CustomWebsocketServer;
 import com.makewithmoto.network.CustomWebsocketServer.WebSocketListener;
 
-public class JWebApp extends JInterface {
+public class JDashboard extends JInterface {
 
-	String TAG = "JWebApp";
+	String TAG = "JDashboard";
 
-	public JWebApp(Activity a) {
+	public JDashboard(Activity a) {
         super(a); 
 	}
 
@@ -107,7 +107,7 @@ public class JWebApp extends JInterface {
 	
 	@JavascriptInterface 
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
-	public void showDashboard(boolean b) {
+	public void show(boolean b) {
 		JSONObject msg = new JSONObject();
 		try {
 			msg.put("type", "widget");

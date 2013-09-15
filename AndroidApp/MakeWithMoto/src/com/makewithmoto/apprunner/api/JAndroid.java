@@ -186,13 +186,30 @@ public class JAndroid extends JInterface {
 		Runnable task = new Runnable() {
 			@Override
 			public void run() {
-				// handler.postDelayed(this, duration);
 				callback(fn);
 				handler.postDelayed(this, duration);
 			}
 		};
 		handler.post(task);
 
+		rl.add(task);
+	}
+	
+	@JavascriptInterface
+	@APIMethod(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
+	public void delay(final int duration, final String fn) {
+		
+		Runnable task = new Runnable() {
+			@Override
+			public void run() {
+				// handler.postDelayed(this, duration);
+				callback(fn);
+				handler.removeCallbacks(this);
+				rl.remove(this);
+			}
+		};
+		handler.postDelayed(task, duration);
+		
 		rl.add(task);
 	}
 

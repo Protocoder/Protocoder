@@ -38,7 +38,7 @@ public class ProjectsPagerAdapter extends FragmentStatePagerAdapter {
         String r;
 
         if (position == 0) {
-            r = "Projects";
+            r = "My Projects";
         } else {
             r = "Examples";
         }

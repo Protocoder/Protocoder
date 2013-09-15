@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.concurrent.CountDownLatch;
+import java.util.Vector;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -18,11 +18,12 @@ import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.hardware.Camera.PictureCallback;
 import android.media.AudioManager;
+import android.media.CamcorderProfile;
+import android.media.MediaRecorder;
 import android.media.SoundPool;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -61,10 +62,22 @@ public class CameraFragment extends Fragment {
 	private String _path;
 	private View v;
 
+	private Vector<CameraListener> listeners;
+
+	public interface CameraListener {
+
+		public void onPicTaken();
+
+		public void onVideoRecorded();
+
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
+		listeners = new Vector<CameraListener>();
+		
 		v = inflater.inflate(R.layout.fragment_camera, container, false);
 		return v;
 	}
@@ -94,7 +107,7 @@ public class CameraFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				//takePic();
+				// takePic();
 			}
 		});
 
@@ -113,8 +126,8 @@ public class CameraFragment extends Fragment {
 
 			@Override
 			public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-				//mCamera.stopPreview();
-				//mCamera.release();
+				// mCamera.stopPreview();
+				// mCamera.release();
 				return true;
 			}
 
@@ -206,48 +219,47 @@ public class CameraFragment extends Fragment {
 
 		stopCamera();
 	}
-	
+
 	File dir = null;
 	File file = null;
 	String fileName;
 
 	public String takePic(final String path) {
-		//final CountDownLatch latch = new CountDownLatch(1);
-	
+		// final CountDownLatch latch = new CountDownLatch(1);
 
 		AudioManager mgr = (AudioManager) getActivity().getSystemService(
 				Context.AUDIO_SERVICE);
 		mgr.setStreamMute(AudioManager.STREAM_SYSTEM, true);
 
-		SoundPool soundPool = new SoundPool(1, AudioManager.STREAM_NOTIFICATION, 0);
-		//final int shutterSound = soundPool.load(this, R.raw.camera_click, 0);
+		SoundPool soundPool = new SoundPool(1,
+				AudioManager.STREAM_NOTIFICATION, 0);
+		// final int shutterSound = soundPool.load(this, R.raw.camera_click, 0);
 
 		mCamera.takePicture(null, null, new PictureCallback() {
 
 			@Override
 			public void onPictureTaken(byte[] data, Camera camera) {
-				
+
 				Bitmap bitmapPicture = BitmapFactory.decodeByteArray(data, 0,
 						data.length);
 
-				//soundPool.play(shutterSound, 1f, 1f, 0, 0, 1);
-				
-				
-				
-				FileOutputStream outStream = null;
-				try { 
+				// soundPool.play(shutterSound, 1f, 1f, 0, 0, 1);
 
-					//dir = new File(Environment.getExternalStorageDirectory() + "/dcim/multipic");
-					//dir.mkdirs();
-					//fileName = System.currentTimeMillis() + ".jpg";
+				FileOutputStream outStream = null;
+				try {
 
 					file = new File(path);
-					
+
 					outStream = new FileOutputStream(file);
 					outStream.write(data);
 					outStream.flush();
 					outStream.close();
-					Log.d("qq", "onPictureTaken - wrote bytes: " + data.length);
+					Log.d(TAG, "onPictureTaken - wrote bytes: " + data.length);
+
+					for (CameraListener l : listeners) {
+						l.onPicTaken();
+					}
+
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
@@ -258,23 +270,71 @@ public class CameraFragment extends Fragment {
 				Log.d(TAG, "onPictureTaken - jpeg");
 
 				camera.startPreview();
-				//latch.countDown();
+				// latch.countDown();
 
 			}
 		});
-		
+
 		/*
+		 * try { latch.await(); } catch (InterruptedException e1) { // TODO
+		 * Auto-generated catch block e1.printStackTrace(); }
+		 */
+
+		return fileName;
+
+	}
+
+	private MediaRecorder recorder;
+	private boolean recording = false;
+
+	public void recordVideo(String file) {
+
+		Camera.Parameters parameters = mCamera.getParameters();
+		parameters.setColorEffect(Camera.Parameters.EFFECT_MONO);
+		mCamera.setParameters(parameters);
+
+		recorder = new MediaRecorder();
+
+		recorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
+		recorder.setVideoSource(MediaRecorder.VideoSource.DEFAULT);
+
+		CamcorderProfile cpHigh = CamcorderProfile
+				.get(CamcorderProfile.QUALITY_HIGH);
+		recorder.setProfile(cpHigh);
+		recorder.setOutputFile(file + ".mp4");
+		recorder.setMaxDuration(5000 * 1000); // 50 seconds
+		recorder.setMaxFileSize(5000 * 1000000); // Approximately 5 megabytes
+
+		// CamcorderProfile camcorderProfile =
+		// CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH);
+		// recorder.setProfile(camcorderProfile);
+
+		//recorder.setPreviewDisplay(mTextureView.getSurfaceTexture());
+		// recorder.setPreviewDisplay(holder.getSurface());
+
 		try {
-			latch.await();
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			recorder.prepare();
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+			// finish();
+		} catch (IOException e) {
+			e.printStackTrace();
+			// finish();
 		}
-		*/
 
+		if (recording) {
+			recorder.stop();
+			recorder.release();
+			recording = false;
+			Log.d(TAG, "Recording Stopped");
+			// Let's initRecorder so we can record again
+			//prepareRecorder();
+		} else {
+			recording = true;
+			recorder.start();
+			Log.d(TAG, "Recording Started");
+		}
 
-		 return fileName;
-		
 	}
 
 	@TargetApi(Build.VERSION_CODES.GINGERBREAD)
@@ -335,6 +395,14 @@ public class CameraFragment extends Fragment {
 				return i;
 		}
 		return -1; // No front-facing camera found
+	}
+
+	public void addListener(CameraListener listener) {
+		listeners.add(listener);
+	}
+
+	public void removeListener(CameraListener listener) {
+		listeners.remove(listener);
 	}
 
 }

@@ -29,7 +29,7 @@ import com.makewithmoto.apprunner.api.JMakr;
 import com.makewithmoto.apprunner.api.JMedia;
 import com.makewithmoto.apprunner.api.JSensors;
 import com.makewithmoto.apprunner.api.JUI;
-import com.makewithmoto.apprunner.api.JWebApp;
+import com.makewithmoto.apprunner.api.JDashboard;
 import com.makewithmoto.apprunner.api.JWebAppPlot;
 import com.makewithmoto.base.BaseMainApp;
 import com.makewithmoto.events.Events.ProjectEvent;
@@ -305,7 +305,7 @@ public class MyHTTPServer extends NanoHTTPD {
 					APIManager.getInstance().addClass(JSensors.class); 
 					APIManager.getInstance().addClass(JUI.class); 
 					APIManager.getInstance().addClass(JMedia.class); 
-					APIManager.getInstance().addClass(JWebApp.class); 
+					APIManager.getInstance().addClass(JDashboard.class); 
 					APIManager.getInstance().addClass(JWebAppPlot.class); 
 					
 					data.put("api", APIManager.getInstance().getDocumentation());
