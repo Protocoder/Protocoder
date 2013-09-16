@@ -10,7 +10,7 @@ function initUpload() {
 		// The name of the $_FILES entry:
 		paramname:'pic',
 		
-		maxfiles: 1,
+		maxfiles: 10,
     	maxfilesize: 15,
 		url: './?' + 'name=' + currentProject.name + '&fileType=' + currentProject.type,
 		

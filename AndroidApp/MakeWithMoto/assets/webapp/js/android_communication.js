@@ -31,6 +31,29 @@ function push_code(project) {
 	});
 } 
 
+
+
+function executeCode(code) { 
+	var obj = {};
+	obj.cmd = "execute_code";
+
+	var o = new Object();
+	o.code = code;
+	o.codeToSend = code;  
+
+
+	$.ajax({
+		url:remoteIP + "cmd="+JSON.stringify(obj),
+		type: 'post',
+		data: o,
+		success: function(data) {
+			
+		}
+	});
+
+	//console.log(JSON.stringify(obj));
+}
+
 //fetch the code
 function fetch_code(pName, pType) { 
 	var obj = {};
@@ -82,6 +105,7 @@ function run_app(project) {
 	$("#console").empty();
 
 }
+
 
 function create_new_project(new_name) {
 	var obj = {};

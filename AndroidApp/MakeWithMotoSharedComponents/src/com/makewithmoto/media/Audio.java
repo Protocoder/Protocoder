@@ -51,10 +51,10 @@ public class Audio {
 			@Override
 			public void onCompletion(MediaPlayer mp) {
 				Log.d(TAG, "completed");
+				mMediaPlayer.reset();
 			}
 		});
 
-		// mMediaPlayer.reset();
 		try {
 
 			mMediaPlayer.setDataSource(url);

@@ -13,7 +13,10 @@ var addWidget = function(widget) {
   } else if (widget.type == "image") { 
     widgets.push("image_"+widget.id);
     return addImage(widget.id, widget.url, widget.x, widget.y, widget.w, widget.h);
-  }
+  } else if (widget.type == "html") { 
+    widgets.push("html"+widget.id);
+    return addHTML(widget.id, widget.html); 
+  } 
 
 }
 
@@ -27,6 +30,13 @@ var removeWidgets = function() {
 
 
 
+}
+
+var addHTML = function(element, html) { 
+   $('<div class ="widget chtml" id = "html_' + element +'">'+ html +' </div>')
+          .appendTo("#overlay #container");
+          //.css({"width": w+"px", "height":h+"px","top":posy+"px","left":posx+"px"})
+          //.draggable();
 }
 
 

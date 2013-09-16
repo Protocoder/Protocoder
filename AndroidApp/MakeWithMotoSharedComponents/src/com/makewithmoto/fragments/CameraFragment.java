@@ -301,7 +301,7 @@ public class CameraFragment extends Fragment {
 		CamcorderProfile cpHigh = CamcorderProfile
 				.get(CamcorderProfile.QUALITY_HIGH);
 		recorder.setProfile(cpHigh);
-		recorder.setOutputFile(file + ".mp4");
+		recorder.setOutputFile(file);
 		recorder.setMaxDuration(5000 * 1000); // 50 seconds
 		recorder.setMaxFileSize(5000 * 1000000); // Approximately 5 megabytes
 

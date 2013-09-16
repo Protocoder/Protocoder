@@ -34,6 +34,18 @@ public class JDashboard extends JInterface {
 	
 	@JavascriptInterface 
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
+	public JWebAppHTML addHTML(String id, String html) throws UnknownHostException {
+		
+		JWebAppHTML jWebAppHTML = new JWebAppHTML(a.get());
+		jWebAppHTML.add(id, html);
+		
+		
+		return jWebAppHTML;
+	}
+	
+	
+	@JavascriptInterface 
+	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
 	public JWebAppButton addButton(String id, String name, int x, int y, int w, int h, final String callbackfn) throws UnknownHostException {
 		Log.d(TAG, "callback " + callbackfn);
 		
