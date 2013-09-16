@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.net.InetAddress;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,16 +22,16 @@ import com.makewithmoto.apidoc.APIManager;
 import com.makewithmoto.apprunner.api.JAndroid;
 import com.makewithmoto.apprunner.api.JBrowser;
 import com.makewithmoto.apprunner.api.JCamera;
-import com.makewithmoto.apprunner.api.JIOIO;
 import com.makewithmoto.apprunner.api.JConsole;
+import com.makewithmoto.apprunner.api.JDashboard;
+import com.makewithmoto.apprunner.api.JIOIO;
 import com.makewithmoto.apprunner.api.JMakr;
 import com.makewithmoto.apprunner.api.JMedia;
 import com.makewithmoto.apprunner.api.JSensors;
 import com.makewithmoto.apprunner.api.JUI;
-import com.makewithmoto.apprunner.api.JDashboard;
 import com.makewithmoto.apprunner.api.JWebAppPlot;
-import com.makewithmoto.base.BaseMainApp;
 import com.makewithmoto.events.Events.ProjectEvent;
+import com.makewithmoto.events.Events;
 import com.makewithmoto.events.Project;
 import com.makewithmoto.events.ProjectManager;
 import com.makewithmoto.utils.FileIO;
@@ -226,6 +225,17 @@ public class MyHTTPServer extends NanoHTTPD {
 					ProjectEvent evt = new ProjectEvent(ProjectManager.getInstance().get(name, projectType), "run");
 					EventBus.getDefault().post(evt);
 					ALog.i("Running...");
+					
+					//run app
+				} else if (cmd.equals("execute_code")) {
+					Log.d(TAG, "--> execute code");
+					
+					// Save and run
+					String code = parms.get("codeToSend").toString();
+					
+					Events.ExecuteCodeEvent evt = new Events.ExecuteCodeEvent(code);
+					EventBus.getDefault().post(evt);
+					ALog.i("Execute...");
 
 				//save_code
 				} else if (cmd.equals("push_code")) {

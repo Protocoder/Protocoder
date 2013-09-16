@@ -43,6 +43,7 @@ import com.makewithmoto.R;
 import com.makewithmoto.apprunner.api.JAndroid;
 import com.makewithmoto.apprunner.api.JMedia;
 import com.makewithmoto.base.BaseActivity;
+import com.makewithmoto.events.Events;
 import com.makewithmoto.events.Events.ProjectEvent;
 import com.makewithmoto.events.Project;
 import com.makewithmoto.events.ProjectManager;
@@ -147,9 +148,7 @@ public class AppRunnerActivity extends BaseActivity {
 			if (null != script) {
 				eval(script, projectName);
 			}
-			
-			eval("android.vibrate(5225);");
-
+		
 			// Set up the actionbar
 			actionBar = getActionBar();
 			if (actionBar != null) {
@@ -170,6 +169,14 @@ public class AppRunnerActivity extends BaseActivity {
 		if (evt.getAction() == "run") {
 			finish();
 		}
+	}
+	
+	public void onEventMainThread(Events.ExecuteCodeEvent evt) { 
+		Log.d(TAG, "event -> " + evt.getCode());
+		
+		eval(evt.getCode());
+
+		
 	}
 
 	public void changeTitle(String title) {
@@ -309,6 +316,7 @@ public class AppRunnerActivity extends BaseActivity {
 	public Object eval(final String code, final String sourceName) {
 		final AtomicReference<Object> result = new AtomicReference<Object>(null);
 
+    
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {

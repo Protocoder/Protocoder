@@ -10,9 +10,22 @@ function initEditor() {
 	session = editor.getSession();
 
 	session.setMode("ace/mode/javascript");
-	//var EditSession = require("ace/edit_session").EditSession;
-	//var UndoManager = require("ace/undomanager").UndoManager;
-    
+
+	ace.require("ace/lib/fixoldbrowsers");
+	var config = ace.require("ace/config");
+	ace.require("ace/edit_session");
+	ace.require("ace/undomanager");
+   	ace.require("ace/marker");
+   	ace.require("ace/range");
+ 
+
+	var dom = ace.require("ace/lib/dom");
+	var net = ace.require("ace/lib/net");
+	var lang = ace.require("ace/lib/lang");
+	var useragent = ace.require("ace/lib/useragent");
+
+	var event = ace.require("ace/lib/event");
+	var theme = ace.require("ace/theme/textmate");
 	//editor.setTheme("ace/theme/chrome");
 
 	var renderer = editor.renderer;
@@ -59,6 +72,99 @@ function initEditor() {
 	    }
 	});
 
+	editor.commands.addCommand({
+    name: "showKeyboardShortcuts",
+    bindKey: {win: "Ctrl-Alt-h", mac: "Command-Alt-h"},
+    exec: function(editor) {
+        config.loadModule("ace/ext/keybinding_menu", function(module) {
+            module.init(editor);
+            editor.showKeyboardShortcuts()
+        })
+    }
+	});
+
+ 
+	editor.commands.addCommand({
+    name: "snippet",
+    bindKey: {win: "Alt-C", mac: "Command-Alt-C"},
+    exec: function(editor, needle) {
+        if (typeof needle == "object") {
+            editor.cmdLine.setValue("snippet ", 1);
+            editor.cmdLine.focus();
+            return;
+        }
+        var s = snippetManager.getSnippetByName(needle, editor);
+        if (s)
+            snippetManager.insertSnippet(editor, s.content);
+    },
+    readOnly: true
+	});
+
+	 
+	editor.commands.addCommand({
+    name: "increaseFontSize",
+    bindKey: "Ctrl-+",
+    exec: function(editor) {
+        var size = parseInt(editor.getFontSize(), 10) || 12;
+        editor.setFontSize(size + 1);
+    }
+	});
+
+	 
+	editor.commands.addCommand({
+    name: "decreaseFontSize",
+    bindKey: "Ctrl+-",
+    exec: function(editor) {
+        var size = parseInt(editor.getFontSize(), 10) || 12;
+        editor.setFontSize(Math.max(size - 1 || 1));
+    }
+	});
+
+	//save
+	editor.commands.addCommand({
+	    name: '',
+	    bindKey: {
+	        win: 'Ctrl-Q',
+	        mac: 'Ctrl-Q',
+	        sender: 'mmeditor'
+	    },
+	    exec: function(env, args, request) {
+
+			var range = editor.getSelection().getRange(); 
+	    	var selectedText = session.getTextRange(range); 
+
+	    	//get the code selected or the whole row 
+	    	if (selectedText.length > 0) { 
+	    		executeCode(selectedText);
+	    		highlight(range);
+
+	    	} else { 
+	    		var cursorPosition = editor.getCursorPosition();
+	    		var numLine = cursorPosition['row'];
+
+	    		currentLine = session.getDocument().$lines[numLine]; 
+	    		var range_line = new Range(numLine, 0, numLine, currentLine.length);
+			
+
+	    		if (currentLine.length > 0) { 
+	    			console.log("the text is " + currentLine);
+	    			executeCode(currentLine);
+	    			highlight(range_line);
+	    		}
+
+	    	}
+	    }
+	});
+
+var Range = ace.require('ace/range').Range;
+
+function highlight(range) { 
+	var marker = session.addMarker( range, "ace_active-line", "fullLine" );
+
+	setTimeout(function() { 
+		session.removeMarker(marker);
+	}, 1000); 
+}
 
 	/* 
 	* Binding UI 
@@ -94,7 +200,10 @@ function hideDashboard() {
 
 function showDashboard() { 
 	$("#overlay #container").fadeIn(300);
+}
 
+function showErrors() { 
+	editor.session.setAnnotations([{row:1 ,column: 0, text: "message",type:"error"}]); 
 }
 
 

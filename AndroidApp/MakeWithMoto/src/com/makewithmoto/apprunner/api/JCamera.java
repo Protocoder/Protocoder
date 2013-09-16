@@ -30,7 +30,6 @@ public class JCamera extends JInterface {
 			
 			@Override
 			public void onVideoRecorded() {
-				// TODO Auto-generated method stub
 				
 			}
 			
@@ -40,6 +39,33 @@ public class JCamera extends JInterface {
 				cameraFragment.removeListener(this);
 			}
 		});
+	}	
+	
+	@JavascriptInterface
+	@APIMethod(description = "", example = "camera.takePicture();")
+	public void recordVideo(String file) {
+		cameraFragment.recordVideo(((AppRunnerActivity) a.get()).getCurrentDir() + File.separator + file);
+	}	
+	
+	
+	
+	@JavascriptInterface
+	@APIMethod(description = "", example = "camera.takePicture();")
+	public void stopRecordingVideo(final String callbackfn) {
+//		cameraFragment.recordVideo(((AppRunnerActivity) a.get()).getCurrentDir() + File.separator + file);
+//		cameraFragment.addListener(new CameraListener() {
+//			
+//			@Override
+//			public void onVideoRecorded() {
+//				callback(callbackfn);
+//				cameraFragment.removeListener(this);
+//				
+//			}
+//			
+//			@Override
+//			public void onPicTaken() {
+//			}
+//		});
 	}	
 	
 	
