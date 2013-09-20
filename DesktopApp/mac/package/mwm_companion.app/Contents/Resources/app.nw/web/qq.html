@@ -181,6 +181,10 @@ onload = function() {
 	});
 
 
+	execScript("adb_wait_for_device.sh", function() { 
+			console.log("running app");
+			runApp(0);
+	});
 
 
 }
@@ -248,6 +252,7 @@ clipboard.clear();
 </head>
 <body>
 
+<!-- 
 	<div id="canvascontainer">
 		<canvas id="game" data-processing-sources="./sketch/main.pde" width="100%" height="100%">
 		<p>Your browser does not support the canvas tag.</p>
@@ -260,13 +265,15 @@ clipboard.clear();
 
 <img id = "logo" src = "./images/hello_banner.png"> </div>
 </div> 
+--> 
+
 
 <!-- 
 <button id = "device_apk_install"> Install APK </button>
 --> 
-
+<!-- 
 <button id = "go"> Go </button>
-
+--> 
 
 <!--
 <button id = "device_use_usb"> Use USB </button>

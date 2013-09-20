@@ -21,7 +21,7 @@ public class JWebAppLabel extends JInterface {
 	}
 	
 
-	public void add(String id, String name, int x, int y, int w, int h) { 
+	public void add(String id, String name, int x, int y, int size, String color) { 
 		this.id = id;
 		JSONObject msg = new JSONObject();
 		try {
@@ -34,8 +34,8 @@ public class JWebAppLabel extends JInterface {
 			values.put("type", "label");
 			values.put("x", x);
 			values.put("y", y);
-			values.put("w", w);
-			values.put("h", h);
+			values.put("size", size);
+			values.put("color", color);
 
 			msg.put("values", values);
 

@@ -24,7 +24,7 @@ public class CustomWebsocketServer extends WebSocketServer {
 	private static final String TAG = "WebSocketServer";
 	private static Context ctx;
 	private List<WebSocket> connections = new ArrayList<WebSocket>();
-	private static HashMap<String, WebSocketListener> listeners; 
+	private static HashMap<String, WebSocketListener> listeners =  new HashMap<String, WebSocketListener>();; 
 
 
 	public interface WebSocketListener {
@@ -38,7 +38,6 @@ public class CustomWebsocketServer extends WebSocketServer {
 	public static CustomWebsocketServer getInstance(Context aCtx, int port,
 			Draft d) throws UnknownHostException {
 		if (inst == null) {
-			listeners = new HashMap<String, WebSocketListener>();
 			inst = new CustomWebsocketServer(aCtx, port, d);
 			inst.start();
 		}
@@ -184,8 +183,12 @@ public class CustomWebsocketServer extends WebSocketServer {
 			break;
 
 		case button:
-			//Log.d("qq", msg.toString(2));
+			Log.d("qq", msg.toString(2) + " " + listeners);
 			WebSocketListener l = listeners.get(msg.get("id"));
+			
+			//Log.d("qq1","" + listeners);
+			//Log.d("qq2", "" + msg.get("id"));
+			//Log.d("qq3", "" + l);
 			l.onUpdated(data);
 			
 		default:

@@ -8,8 +8,8 @@
   "window": {
     "icon": "link.png",
     "toolbar": false,
-    "width": 800,
-    "height": 600,
+    "width": 960,
+    "height": 720,
     "position": "mouse",
     "min_width": 400,
     "min_height": 200,

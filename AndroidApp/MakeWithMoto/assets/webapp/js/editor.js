@@ -159,11 +159,11 @@ function initEditor() {
 var Range = ace.require('ace/range').Range;
 
 function highlight(range) { 
-	var marker = session.addMarker( range, "ace_active-line", "fullLine" );
+	var marker = session.addMarker( range, "run_code", "fullLine" );
 
 	setTimeout(function() { 
 		session.removeMarker(marker);
-	}, 1000); 
+	}, 500); 
 }
 
 	/* 

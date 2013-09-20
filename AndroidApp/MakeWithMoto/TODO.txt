@@ -1,20 +1,2 @@
 TODO
 ===== 
-
-UI -> load propertly 
-UI -> add examples view 
-
-
-
-call methods javascript from java 
-execute help examples 
-battery test 
-file upload 
-file listing 
-
-
-close script app 
-add image widget 
-map widget 
-save / load text to sdcard 
-save / load image 

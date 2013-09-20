@@ -7,6 +7,9 @@
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="blacktransparent">#BB000000</color>
+    <color name="transparent">#00000000</color>
+
+    
 
     <!-- makewithmoto palette -->
     <color name="mwmgreen">#82C81F</color>

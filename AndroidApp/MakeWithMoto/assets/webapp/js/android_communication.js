@@ -69,6 +69,8 @@ function fetch_code(pName, pType) {
 		var tabs = w2ui['code_editor'].get("main").tabs;
 		tabs.get("tab1").caption = pName;
 		tabs.refresh();
+
+		list_files_in_project(pName, pType);
 	});
 }
 
@@ -80,13 +82,15 @@ function list_files_in_project(pName, pType) {
 	obj.type = pType;
 	$.get(remoteIP + "cmd="+JSON.stringify(obj), function(data) {
 		w2ui['grid'].clear();
-		console.log(data);
+		//console.log(data);
 
 		$.each(JSON.parse(data).files, function(k, v) {
-			console.log(v); 
+			//console.log(v); 
 			v.recid = k;
 			w2ui['grid'].add( v );
 		});
+
+		console.log(currentProject);
 
 		initUpload();
 

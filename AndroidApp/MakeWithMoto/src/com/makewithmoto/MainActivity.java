@@ -1,6 +1,10 @@
 package com.makewithmoto;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.Enumeration;
 import java.util.List;
 
 import org.java_websocket.drafts.Draft_17;
@@ -12,18 +16,15 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.IntentFilter.MalformedMimeTypeException;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.nfc.NfcAdapter;
-import android.nfc.Tag;
-import android.nfc.tech.NfcF;
+import android.net.DhcpInfo;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.FileObserver;
@@ -31,6 +32,7 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.text.format.Formatter;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -62,7 +64,6 @@ import com.makewithmoto.network.MyHTTPServer;
 import com.makewithmoto.network.NetworkUtils;
 import com.makewithmoto.projectlist.ListFragmentExamples;
 import com.makewithmoto.projectlist.ListFragmentUserProjects;
-import com.makewithmoto.utils.StrUtils;
 
 import de.greenrobot.event.EventBus;
 
@@ -70,7 +71,7 @@ import de.greenrobot.event.EventBus;
 public class MainActivity extends BaseActivity implements
 		NewProjectDialog.NewProjectDialogListener {
 
-	private static final String TAG = "FragmentHolder";
+	private static final String TAG = "MainActivity";
 
 	Context c;
 	private int mProjectRequestCode = 1;
@@ -131,72 +132,71 @@ public class MainActivity extends BaseActivity implements
 		// Start the servers
 		startServers();
 
-		// Add animations
-		ViewTreeObserver vto = mIpContainer.getViewTreeObserver();
-		vto.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+		/*
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction(WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION);
+		registerReceiver(new BroadcastReceiver() {
+
 			@Override
-			public void onGlobalLayout() {
-				ViewTreeObserver obs = mIpContainer.getViewTreeObserver();
-
-				textIPHeight = mIpContainer.getHeight();
-				mIpContainer.setTranslationY(textIPHeight);
-
-				// FIXME: This animation should be done with an xml file
-				mIpContainer.setAlpha(0);
-				ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(
-						mIpContainer, View.ALPHA, 1); //
-				alphaAnimator.setDuration(1200); //
-
-				final ObjectAnimator shiftAnimator = ObjectAnimator.ofFloat(
-						mIpContainer, View.TRANSLATION_Y, 0); // shiftAnimator.setRepeatCount(1);
-				shiftAnimator.setRepeatMode(ValueAnimator.REVERSE);
-				shiftAnimator.setDuration(1200);
-				shiftAnimator.setInterpolator(new DecelerateInterpolator());
-
-				final AnimatorSet setAnimation = new AnimatorSet();
-
-				setAnimation.play(alphaAnimator).with(shiftAnimator);
-				setAnimation.start();
-
-				if (AppSettings.CURRENT_VERSION > Build.VERSION.SDK_INT) {
-					obs.removeOnGlobalLayoutListener(this);
-				} else {
-					obs.removeGlobalOnLayoutListener(this);
+			public void onReceive(Context context, Intent intent) {
+				final String action = intent.getAction();
+				if (action.equals(WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION)) {
+					if (intent.getBooleanExtra(
+							WifiManager.EXTRA_SUPPLICANT_CONNECTED, false)) {
+						Log.d(TAG, "wifi connection on");
+					} else {
+						Log.d(TAG, "wifi connection lost");
+					}
 				}
-			}
 
-		});
+			}
+		}, intentFilter);
+		*/
+		
+		//get wifi ip 
+		/*
+		final WifiManager manager = (WifiManager) super.getSystemService(WIFI_SERVICE);
+		final DhcpInfo dhcp = manager.getDhcpInfo();
+		final String address = Formatter.formatIpAddress(dhcp.gateway);
+		
+		  StringBuilder IFCONFIG=new StringBuilder();
+		    try {
+		        for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
+		            NetworkInterface intf = en.nextElement();
+		            for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
+		                InetAddress inetAddress = enumIpAddr.nextElement();
+		                if (!inetAddress.isLoopbackAddress() && !inetAddress.isLinkLocalAddress() && inetAddress.isSiteLocalAddress()) {
+		                IFCONFIG.append(inetAddress.getHostAddress().toString()+"\n");
+		                }
+
+		            }
+		        }
+		    } catch (SocketException ex) {
+		        Log.e("LOG_TAG", ex.toString());
+		    }
+		    Log.d(TAG, "ifconfig " + IFCONFIG.toString());
+		
+		Log.d(TAG, "hotspot address is " + address);
+	*/
 
 		observer = new FileObserver(BaseMainApp.projectsDir,
-				FileObserver.CREATE | FileObserver.DELETE) { // set up a file
-																// observer to
-																// watch this
-																// directory on
-																// sd card
+		// set up a file observer to
+		// watch this directory on sd card
+				FileObserver.CREATE | FileObserver.DELETE) {
 
 			@Override
 			public void onEvent(int event, String file) {
 				if ((FileObserver.CREATE & event) != 0) {
 					Log.d(TAG, "File created [" + BaseMainApp.projectsDir + "/"
 							+ file + "]");
-
-				} else if ((FileObserver.DELETE & event) != 0) { // check if its
-																	// a
-																	// "create"
-																	// and not
-																	// equal to
-																	// .probe
-																	// because
-																	// thats
-																	// created
-																	// every
-																	// time
-																	// camera is
-																	// launched
+					
+					// check if its a "create"  and not
+					// equal to probe  because thats created
+					// every time  camera is  launched
+				} else if ((FileObserver.DELETE & event) != 0) { 
 					Log.d(TAG, "File deleted [" + BaseMainApp.projectsDir + "/"
 							+ file + "]");
-					// Toast.makeText(getBaseContext(), file + " was saved!",
-					// Toast.LENGTH_LONG).show();
+		
 				}
 			}
 		};
@@ -259,6 +259,19 @@ public class MainActivity extends BaseActivity implements
 	 * Starts the remote service connection
 	 */
 	private void startServers() {
+		// Create the IP text view
+		textIP = (TextView) findViewById(R.id.ip);
+		textIP.setOnClickListener(null);// Remove the old listener explicitly
+		textIP.setBackgroundResource(0);
+		mIpContainer = (LinearLayout) findViewById(R.id.ip_container);
+		updateStartStopActionbarItem();
+
+		// check connection
+		if (NetworkUtils.isNetworkAvailable(c) != true) {
+			Log.d(TAG, "There is no connection");
+			textIP.setText("Connect to a network if you want to code via your computer");
+			return;
+		}
 
 		// Show the notification
 		SharedPreferences prefs = getSharedPreferences("com.makewithmoto",
@@ -269,17 +282,11 @@ public class MainActivity extends BaseActivity implements
 		if (showNotification) {
 			mNotification = new BaseNotification(this);
 			mNotification.show(MainActivity.class, R.drawable.ic_stat_logo,
-					"http:/" + NetworkUtils.getLocalIpAddress().toString()
-							+ ":" + AppSettings.httpPort, "MWM Server Running",
+					"http:/" + NetworkUtils.getLocalIpAddress(this) + ":"
+							+ AppSettings.httpPort, "MWM Server Running",
 					R.drawable.ic_navigation_cancel);
 		}
 
-		// Create the IP text view
-		textIP = (TextView) findViewById(R.id.ip);
-		textIP.setOnClickListener(null);// Remove the old listener explicitly
-		textIP.setBackgroundResource(0);
-		mIpContainer = (LinearLayout) findViewById(R.id.ip_container);
-		updateStartStopActionbarItem();
 
 		// start webserver
 		httpServer = MyHTTPServer.getInstance(getApplicationContext(),
@@ -287,7 +294,8 @@ public class MainActivity extends BaseActivity implements
 
 		// websocket
 		try {
-			ws = CustomWebsocketServer.getInstance(this, AppSettings.websocketPort, new Draft_17());
+			ws = CustomWebsocketServer.getInstance(this,
+					AppSettings.websocketPort, new Draft_17());
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -314,8 +322,8 @@ public class MainActivity extends BaseActivity implements
 		};
 		// handler.postDelayed(r, 0);
 
-		textIP.setText("Hack via your browser @ http:/"
-				+ NetworkUtils.getLocalIpAddress().toString() + ":"
+		textIP.setText("Hack via your browser @ http://"
+				+ NetworkUtils.getLocalIpAddress(this) + ":"
 				+ AppSettings.httpPort);
 		if (httpServer != null) {// If no instance of HTTPServer, we set the IP
 									// address view to gone.
@@ -324,6 +332,41 @@ public class MainActivity extends BaseActivity implements
 			textIP.setVisibility(View.GONE);
 		}
 
+		// Add animations
+		ViewTreeObserver vto = mIpContainer.getViewTreeObserver();
+		vto.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+			@Override
+			public void onGlobalLayout() {
+				ViewTreeObserver obs = mIpContainer.getViewTreeObserver();
+
+				textIPHeight = mIpContainer.getHeight();
+				mIpContainer.setTranslationY(textIPHeight);
+
+				// FIXME: This animation should be done with an xml file
+				mIpContainer.setAlpha(0);
+				ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(
+						mIpContainer, View.ALPHA, 1); //
+				alphaAnimator.setDuration(1200); //
+
+				final ObjectAnimator shiftAnimator = ObjectAnimator.ofFloat(
+						mIpContainer, View.TRANSLATION_Y, 0); // shiftAnimator.setRepeatCount(1);
+				shiftAnimator.setRepeatMode(ValueAnimator.REVERSE);
+				shiftAnimator.setDuration(1200);
+				shiftAnimator.setInterpolator(new DecelerateInterpolator());
+
+				final AnimatorSet setAnimation = new AnimatorSet();
+
+				setAnimation.play(alphaAnimator).with(shiftAnimator);
+				setAnimation.start();
+
+				if (AppSettings.CURRENT_VERSION > Build.VERSION.SDK_INT) {
+					obs.removeOnGlobalLayoutListener(this);
+				} else {
+					obs.removeGlobalOnLayoutListener(this);
+				}
+			}
+
+		});
 	}
 
 	/**
@@ -552,7 +595,5 @@ public class MainActivity extends BaseActivity implements
 		}
 		return true;
 	}
-	
-	
 
 }
