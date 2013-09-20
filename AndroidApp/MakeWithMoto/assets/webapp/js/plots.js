@@ -9,17 +9,16 @@ var addWidget = function(widget) {
     return addButton(widget.id, widget.name, widget.x, widget.y, widget.w, widget.h);
   } else if (widget.type == "label") { 
     widgets.push("label_"+widget.id);
-    return addLabel(widget.id, widget.name, widget.x, widget.y, widget.w, widget.h);
+    return addLabel(widget.id, widget.name, widget.x, widget.y, widget.size, widget.color);
   } else if (widget.type == "image") { 
     widgets.push("image_"+widget.id);
     return addImage(widget.id, widget.url, widget.x, widget.y, widget.w, widget.h);
   } else if (widget.type == "html") { 
     widgets.push("html"+widget.id);
-    return addHTML(widget.id, widget.html); 
+    return addHTML(widget.id, widget.html, widget.x, widget.y); 
   } 
 
 }
-
 
 
 var removeWidgets = function() { 
@@ -28,22 +27,24 @@ var removeWidgets = function() {
     widgets.pop(v); 
   });
 
-
-
+  //remove everything
+  $("#overlay #container").empty();
 }
 
-var addHTML = function(element, html) { 
+var addHTML = function(element, html, posx, posy) { 
    $('<div class ="widget chtml" id = "html_' + element +'">'+ html +' </div>')
-          .appendTo("#overlay #container");
+          .appendTo("#overlay #container")
+          .css({"top":posy+"px","left":posx+"px"});
+
           //.css({"width": w+"px", "height":h+"px","top":posy+"px","left":posx+"px"})
           //.draggable();
 }
 
 
-var addLabel = function(element, name, posx, posy, w, h) { 
+var addLabel = function(element, name, posx, posy, size, color) { 
    $('<div class ="widget label" id = "label_' + element +'">'+ name +' </div>')
           .appendTo("#overlay #container")
-          .css({"width": w+"px", "height":h+"px","top":posy+"px","left":posx+"px"})
+          .css({"font-size": size+"px", "color":color, "top":posy+"px","left":posx+"px"})
           .draggable();
 }
 
@@ -84,6 +85,9 @@ var setBackgroundColor = function(r, g, b, a) {
 var addPlot = function(element, posx, posy, w, h) {
   var _delay = 10;
   var _n = 40;
+  var minVal; 
+  var maxVal;
+  var newPlot = true;
 
   var n = _n || 40,
       delay = _delay || 500,
@@ -164,12 +168,21 @@ var addPlot = function(element, posx, posy, w, h) {
  
     // push a new data point onto the back
     if (val) {
+
+      if (newPlot) {
+        minVal = val; maxVal = val;
+        newPlot = false;
+      }
+
       data.push(val);
+      if (val < minVal) minVal = val;
+      else maxVal = val;
   
       x.domain([0, n - 1]);
       // x.domain(d3.extent(data, function(d) { return x(d); }));
       y.domain([d3.min(data, function(d) { return d; }), d3.max(data, function(d) { return d; })]);
- 
+      //y.domain([minVal, maxVal]);
+
       // redraw the line, and slide it to the left
       path
           .attr("d", line)

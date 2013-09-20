@@ -21,7 +21,7 @@ public class JWebAppHTML extends JInterface {
 	}
 	
 
-	public void add(String id, String html) { 
+	public void add(String id, String html, int posx, int posy) { 
 		this.id = id;
 		JSONObject msg = new JSONObject();
 		try {
@@ -31,7 +31,9 @@ public class JWebAppHTML extends JInterface {
 			JSONObject values = new JSONObject();
 			values.put("id", id);
 			values.put("type", "html");
-			msg.put("html", html);
+			values.put("x", posx);
+			values.put("y", posy);
+			values.put("html", html);
 
 			msg.put("values", values);
 

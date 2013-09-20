@@ -34,10 +34,10 @@ public class JDashboard extends JInterface {
 	
 	@JavascriptInterface 
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
-	public JWebAppHTML addHTML(String id, String html) throws UnknownHostException {
+	public JWebAppHTML addHTML(String id, String html, int posx, int posy) throws UnknownHostException {
 		
 		JWebAppHTML jWebAppHTML = new JWebAppHTML(a.get());
-		jWebAppHTML.add(id, html);
+		jWebAppHTML.add(id, html, posx, posy);
 		
 		
 		return jWebAppHTML;
@@ -67,10 +67,10 @@ public class JDashboard extends JInterface {
 	
 	@JavascriptInterface 
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
-	public JWebAppLabel addLabel(String id, String name, int x, int y, int w, int h) {
+	public JWebAppLabel addLabel(String id, String name, int x, int y, int size, String color) {
 		
 		JWebAppLabel jWebAppLabel = new JWebAppLabel(a.get());
-		jWebAppLabel.add(id, name, x, y, w, h);
+		jWebAppLabel.add(id, name, x, y, size, color);
 				
 		return jWebAppLabel;
 	}

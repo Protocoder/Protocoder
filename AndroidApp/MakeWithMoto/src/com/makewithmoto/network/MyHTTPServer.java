@@ -94,7 +94,7 @@ public class MyHTTPServer extends NanoHTTPD {
 	public MyHTTPServer(Context aCtx, int port) throws IOException {
 		super(port);
 		ctx = new WeakReference<Context>(aCtx);
-		InetAddress ip = NetworkUtils.getLocalIpAddress();
+		String ip = NetworkUtils.getLocalIpAddress(aCtx);
 		if (ip == null) {
 			Log.d(TAG,
 					"No IP found. Please connect to a newwork and try again");

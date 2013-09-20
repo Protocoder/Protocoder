@@ -3,7 +3,6 @@ package com.makewithmoto.apprunner.api;
 import java.io.File;
 import java.io.InputStream;
 
-import processing.core.PApplet;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -716,7 +715,7 @@ public class JUI extends JInterface {
 	 * @param y
 	 * @param w
 	 * @param h
-	 */
+	 
 	public PApplet addProcessing(PApplet papplet, int x, int y, int w, int h) {
 		
 		initializeLayout();
@@ -745,7 +744,7 @@ public class JUI extends JInterface {
 		return papplet;
 		
 	}
-
+	*/
 	
 	/**
 	 * Adds an image with the option to hide the default background

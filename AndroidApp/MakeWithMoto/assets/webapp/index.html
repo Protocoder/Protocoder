@@ -101,14 +101,11 @@ $('#toolbar').w2toolbar({
            case 'list_projects':
                 if (data.subItem != 'undefined') { 
                     fetch_code(data.subItem, target);
-                    list_files_in_project(data.subItem, target);
                 }
                 break;
             case 'list_examples':
                 if (data.subItem != 'undefined') { 
-                    fetch_code(data.subItem, target);
-                    list_files_in_project(data.subItem, target);
-  
+                    fetch_code(data.subItem, target);  
                 }
                 break;
             case 'dashboard':

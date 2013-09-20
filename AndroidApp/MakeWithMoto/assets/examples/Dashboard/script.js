@@ -21,7 +21,7 @@ ui.toggleButton("Show Hide dashboard", 0, 200, 500, 100,false, function(b){
 });
 
 //labels need an unique id in order to be identified in the dashboard
-var label = dashboard.addLabel("id1", "default_value", 100, 100, 200, 100);
+var label = dashboard.addLabel("id1", "default_value", 100, 100, 12, "#0000FF");
 
 //change the label text 
 ui.button("hola", 0, 300, 500, 100, function(){
@@ -37,3 +37,6 @@ var webbutton = dashboard.addButton("id2", "hola", 400, 100, 100, 100, function(
     android.toast("hola", 200);
     android.vibrate(500);
 });
+
+//add custom html
+dashboard.addHTML("id_custom_html", "<a href = 'http://www.slashdot.com' style='font-size:50px'> This is a link to Slashdot! </a>", 100, 200);
