@@ -6,8 +6,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.support.v4.app.FragmentActivity;
-import android.webkit.JavascriptInterface;
 
+import com.makewithmoto.apidoc.annotation.JavascriptInterface;
 import com.makewithmoto.network.CustomWebsocketServer;
 
 public class JConsole  extends JInterface {

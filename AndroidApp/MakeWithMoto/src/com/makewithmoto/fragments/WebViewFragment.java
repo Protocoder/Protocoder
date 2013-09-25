@@ -77,7 +77,7 @@ public class WebViewFragment extends BaseWebviewFragment {
 		// webSettings.setSupportZoom(true);
 		// webSettings.setDefaultZoom(ZoomDensity.CLOSE);
 		// webSettings.setDefaultFontSize(35);
-		webSettings.setPluginsEnabled(true);
+		//webSettings.setPluginsEnabled(true);
 		webSettings.setRenderPriority(RenderPriority.HIGH);
 		webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
 		// webSettings.setDomStorageEnabled(true); // localStorage

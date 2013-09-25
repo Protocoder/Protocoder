@@ -39,8 +39,8 @@ public class PlotView extends View {
 	private int mNumPoints;
 	private int mCurrentPosition = 0;
 	private int mDefinition = 5;
-	private int mMinBoundary;
-	private int mMaxBoundary;
+	private float mMinBoundary;
+	private float mMaxBoundary;
 	private boolean mReady = false;
 
 	public PlotView(Context context, AttributeSet attributeSet) {
@@ -204,7 +204,7 @@ public class PlotView extends View {
 
 	}
 
-	public void setLimits(int min, int max) {
+	public void setLimits(float min, float max) {
 		mMinBoundary = min;
 		mMaxBoundary = max;
 	} 

@@ -7,6 +7,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -19,7 +20,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup.LayoutParams;
-import android.webkit.JavascriptInterface;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -40,6 +40,7 @@ import android.widget.ToggleButton;
 
 import com.makewithmoto.R;
 import com.makewithmoto.apidoc.annotation.APIMethod;
+import com.makewithmoto.apidoc.annotation.JavascriptInterface;
 import com.makewithmoto.apprunner.AppRunnerActivity;
 import com.makewithmoto.base.BaseActivity;
 import com.makewithmoto.fragments.CameraFragment;
@@ -48,6 +49,7 @@ import com.makewithmoto.fragments.VideoPlayerFragment.VideoListener;
 import com.makewithmoto.utils.AndroidUtils;
 import com.makewithmoto.views.HoloCircleSeekBar;
 import com.makewithmoto.views.HoloCircleSeekBar.OnCircleSeekBarChangeListener;
+import com.makewithmoto.views.MySurfaceView;
 import com.makewithmoto.views.PlotView;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -701,6 +703,19 @@ public class JUI extends JInterface {
 		JPlotView jPlotView = new JPlotView(a.get(), plotView, min, max);
 
 		return jPlotView;
+	}
+	
+	
+	@JavascriptInterface
+	public Canvas addCanvas(int x, int y, int w, int h) {
+		initializeLayout();
+
+		MySurfaceView canvas = new MySurfaceView(a.get());
+		positionView(canvas, x, y, w, h);
+		// Add the view
+		addView(canvas);
+				
+		return canvas.getCanvas();
 	}
 	
 	

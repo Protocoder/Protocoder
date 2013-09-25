@@ -2,9 +2,9 @@ package com.makewithmoto.apprunner.api;
 
 import android.app.Activity;
 import android.util.Log;
-import android.webkit.JavascriptInterface;
 
 import com.makewithmoto.apidoc.annotation.APIMethod;
+import com.makewithmoto.apidoc.annotation.JavascriptInterface;
 import com.makewithmoto.hardware.MAKRBoard;
 
 public class JMakr extends JInterface {

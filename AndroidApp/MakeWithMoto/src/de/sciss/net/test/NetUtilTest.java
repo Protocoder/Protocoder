@@ -44,9 +44,9 @@ import de.sciss.net.OSCClient;
 import de.sciss.net.OSCListener;
 import de.sciss.net.OSCMessage;
 import de.sciss.net.OSCReceiver;
+import de.sciss.net.OSCServer;
 import de.sciss.net.OSCTransmitter;
 //import de.sciss.net.OSCPacketCodec;
-import de.sciss.net.OSCServer;
 
 /**
  *	Some static test run methods.

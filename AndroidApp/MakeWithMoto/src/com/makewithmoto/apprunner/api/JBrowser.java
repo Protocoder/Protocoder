@@ -1,11 +1,11 @@
 package com.makewithmoto.apprunner.api;
 
 import android.app.Activity;
-import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 
 import com.makewithmoto.apidoc.annotation.APIMethod;
 import com.makewithmoto.apidoc.annotation.APIParam;
+import com.makewithmoto.apidoc.annotation.JavascriptInterface;
 
 
 

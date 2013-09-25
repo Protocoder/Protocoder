@@ -9,11 +9,12 @@ import android.os.Handler;
 import android.os.Vibrator;
 import android.telephony.SmsManager;
 import android.util.Log;
-import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
 import com.makewithmoto.apidoc.annotation.APIMethod;
+import com.makewithmoto.apidoc.annotation.JavascriptInterface;
 import com.makewithmoto.apprunner.AppRunnerActivity;
+import com.makewithmoto.sensors.WhatIsRunning;
 import com.makewithmoto.utils.Intents;
 
 public class JAndroid extends JInterface {
@@ -22,10 +23,11 @@ public class JAndroid extends JInterface {
 	ArrayList<Runnable> rl = new ArrayList<Runnable>();
 	private String onKeyDownfn;
 	private String onKeyUpfn;
-	private String onNFCfn;
 
 	public JAndroid(Activity a) {
 		super(a);
+		WhatIsRunning.getInstance().add(this);
+
 		handler = new Handler();
 
 		((AppRunnerActivity) a).addOnKeyListener(new onKeyListener() {
@@ -40,20 +42,6 @@ public class JAndroid extends JInterface {
 				callback(onKeyUpfn, keyCode);
 			}
 		});
-		
-		
-		((AppRunnerActivity) a).addNFCListener(new onNFCListener() {
-
-			@Override
-			public void onNewTag(String id) {
-				callback(onNFCfn, "\"" +  id + "\"");
-				
-			}
-			
-
-
-		});
-		
 		
 	}
 
@@ -170,18 +158,10 @@ public class JAndroid extends JInterface {
 
 	
 	
-	@JavascriptInterface
-	@APIMethod(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
-	public void onNFC(final String fn) {
-		((AppRunnerActivity) a.get()).initializeNFC();
-		
-		onNFCfn = fn;
-	}
-	
 	
 	@JavascriptInterface
 	@APIMethod(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
-	public void timer(final int duration, final String fn) {
+	public void loop(final int duration, final String fn) {
 
 		Runnable task = new Runnable() {
 			@Override
@@ -223,6 +203,10 @@ public class JAndroid extends JInterface {
 			// handler.post(ir.next());
 		}
 	}
+	
+	public void stop() { 
+		stopAllTimers();		
+	}
 
 	public interface onKeyListener {
 		public void onKeyDown(int keyCode);
@@ -230,9 +214,6 @@ public class JAndroid extends JInterface {
 	}
 
 
-	public interface onNFCListener {
-		public void onNewTag(String id);
-	}
 
 	
 }

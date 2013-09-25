@@ -3,9 +3,9 @@ package com.makewithmoto.apprunner.api;
 import java.io.File;
 
 import android.app.Activity;
-import android.webkit.JavascriptInterface;
 
 import com.makewithmoto.apidoc.annotation.APIMethod;
+import com.makewithmoto.apidoc.annotation.JavascriptInterface;
 import com.makewithmoto.apprunner.AppRunnerActivity;
 import com.makewithmoto.fragments.CameraFragment;
 import com.makewithmoto.fragments.CameraFragment.CameraListener;

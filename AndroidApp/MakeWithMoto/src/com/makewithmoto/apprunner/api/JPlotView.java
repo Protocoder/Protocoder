@@ -15,7 +15,7 @@ public class JPlotView extends JInterface {
 	private Plot plot;
 	private PlotView plotView; 
 	
-	public JPlotView(Activity a, PlotView plotView, int min, int max) {
+	public JPlotView(Activity a, PlotView plotView, float min, float max) {
 		super(a);
 		this.plotView = plotView;
 		plot = plotView.new Plot(Color.RED);
@@ -24,6 +24,9 @@ public class JPlotView extends JInterface {
 
 	}
 	
+	public void setLimits(float min, float max) { 
+		plotView.setLimits(min, max);		
+	}
 	
 	public void update(float value) { 
 		plotView.setValue(plot, value);

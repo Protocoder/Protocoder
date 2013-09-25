@@ -132,53 +132,6 @@ public class MainActivity extends BaseActivity implements
 		// Start the servers
 		startServers();
 
-		/*
-		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction(WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION);
-		registerReceiver(new BroadcastReceiver() {
-
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				final String action = intent.getAction();
-				if (action.equals(WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION)) {
-					if (intent.getBooleanExtra(
-							WifiManager.EXTRA_SUPPLICANT_CONNECTED, false)) {
-						Log.d(TAG, "wifi connection on");
-					} else {
-						Log.d(TAG, "wifi connection lost");
-					}
-				}
-
-			}
-		}, intentFilter);
-		*/
-		
-		//get wifi ip 
-		/*
-		final WifiManager manager = (WifiManager) super.getSystemService(WIFI_SERVICE);
-		final DhcpInfo dhcp = manager.getDhcpInfo();
-		final String address = Formatter.formatIpAddress(dhcp.gateway);
-		
-		  StringBuilder IFCONFIG=new StringBuilder();
-		    try {
-		        for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
-		            NetworkInterface intf = en.nextElement();
-		            for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
-		                InetAddress inetAddress = enumIpAddr.nextElement();
-		                if (!inetAddress.isLoopbackAddress() && !inetAddress.isLinkLocalAddress() && inetAddress.isSiteLocalAddress()) {
-		                IFCONFIG.append(inetAddress.getHostAddress().toString()+"\n");
-		                }
-
-		            }
-		        }
-		    } catch (SocketException ex) {
-		        Log.e("LOG_TAG", ex.toString());
-		    }
-		    Log.d(TAG, "ifconfig " + IFCONFIG.toString());
-		
-		Log.d(TAG, "hotspot address is " + address);
-	*/
-
 		observer = new FileObserver(BaseMainApp.projectsDir,
 		// set up a file observer to
 		// watch this directory on sd card
@@ -189,14 +142,14 @@ public class MainActivity extends BaseActivity implements
 				if ((FileObserver.CREATE & event) != 0) {
 					Log.d(TAG, "File created [" + BaseMainApp.projectsDir + "/"
 							+ file + "]");
-					
-					// check if its a "create"  and not
-					// equal to probe  because thats created
-					// every time  camera is  launched
-				} else if ((FileObserver.DELETE & event) != 0) { 
+
+					// check if its a "create" and not
+					// equal to probe because thats created
+					// every time camera is launched
+				} else if ((FileObserver.DELETE & event) != 0) {
 					Log.d(TAG, "File deleted [" + BaseMainApp.projectsDir + "/"
 							+ file + "]");
-		
+
 				}
 			}
 		};
@@ -258,7 +211,24 @@ public class MainActivity extends BaseActivity implements
 	/**
 	 * Starts the remote service connection
 	 */
-	private void startServers() {
+	private int startServers() {
+
+		/*
+		 * IntentFilter intentFilter = new IntentFilter();
+		 * intentFilter.addAction
+		 * (WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION);
+		 * registerReceiver(new BroadcastReceiver() {
+		 * 
+		 * @Override public void onReceive(Context context, Intent intent) {
+		 * final String action = intent.getAction(); if
+		 * (action.equals(WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION)) { if
+		 * (intent.getBooleanExtra( WifiManager.EXTRA_SUPPLICANT_CONNECTED,
+		 * false)) { Log.d(TAG, "wifi connection on"); } else { Log.d(TAG,
+		 * "wifi connection lost"); } }
+		 * 
+		 * } }, intentFilter);
+		 */
+
 		// Create the IP text view
 		textIP = (TextView) findViewById(R.id.ip);
 		textIP.setOnClickListener(null);// Remove the old listener explicitly
@@ -266,13 +236,17 @@ public class MainActivity extends BaseActivity implements
 		mIpContainer = (LinearLayout) findViewById(R.id.ip_container);
 		updateStartStopActionbarItem();
 
-		// check connection
+		// check if wifi connection is available
 		if (NetworkUtils.isNetworkAvailable(c) != true) {
 			Log.d(TAG, "There is no connection");
-			textIP.setText("Connect to a network if you want to code via your computer");
-			return;
+			// textIP.setText("Connect to a network if you want to code via your computer");
+			hardKillConnections();
+			return -1;
+		} else {
+
 		}
 
+		Log.d(TAG, "There is connection");
 		// Show the notification
 		SharedPreferences prefs = getSharedPreferences("com.makewithmoto",
 				MODE_PRIVATE);
@@ -282,11 +256,10 @@ public class MainActivity extends BaseActivity implements
 		if (showNotification) {
 			mNotification = new BaseNotification(this);
 			mNotification.show(MainActivity.class, R.drawable.ic_stat_logo,
-					"http:/" + NetworkUtils.getLocalIpAddress(this) + ":"
-							+ AppSettings.httpPort, "MWM Server Running",
+					"http://" + NetworkUtils.getLocalIpAddress(this) + ":"
+							+ AppSettings.httpPort, "protocoder Running",
 					R.drawable.ic_navigation_cancel);
 		}
-
 
 		// start webserver
 		httpServer = MyHTTPServer.getInstance(getApplicationContext(),
@@ -322,9 +295,15 @@ public class MainActivity extends BaseActivity implements
 		};
 		// handler.postDelayed(r, 0);
 
-		textIP.setText("Hack via your browser @ http://"
-				+ NetworkUtils.getLocalIpAddress(this) + ":"
-				+ AppSettings.httpPort);
+		// check if there is a WIFI connection or we can connect via USB
+		if (NetworkUtils.getLocalIpAddress(this) == null) {
+			textIP.setText("No WIFI, still you can hack via USB using the companion app");
+		} else {
+			textIP.setText("Hack via your browser @ http://"
+					+ NetworkUtils.getLocalIpAddress(this) + ":"
+					+ AppSettings.httpPort);
+		}
+
 		if (httpServer != null) {// If no instance of HTTPServer, we set the IP
 									// address view to gone.
 			textIP.setVisibility(View.VISIBLE);
@@ -367,6 +346,8 @@ public class MainActivity extends BaseActivity implements
 			}
 
 		});
+
+		return 1;
 	}
 
 	/**
@@ -415,7 +396,6 @@ public class MainActivity extends BaseActivity implements
 			public void onClick(View v) {
 				startServers();
 				updateStartStopActionbarItem();
-
 			}
 		});
 

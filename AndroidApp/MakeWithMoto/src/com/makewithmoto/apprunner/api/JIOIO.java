@@ -8,9 +8,9 @@ import ioio.lib.api.PwmOutput;
 import ioio.lib.api.exception.ConnectionLostException;
 import android.app.Activity;
 import android.util.Log;
-import android.webkit.JavascriptInterface;
 
 import com.makewithmoto.apidoc.annotation.APIMethod;
+import com.makewithmoto.apidoc.annotation.JavascriptInterface;
 import com.makewithmoto.hardware.HardwareCallback;
 import com.makewithmoto.hardware.IOIOBoard;
 import com.makewithmoto.sensors.WhatIsRunning;
