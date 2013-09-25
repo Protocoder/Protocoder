@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name">Voice-O-Rama</string>
+	<string name="left_label">Sine wave in left channel</string>
+	<string name="right_label">Sine wave in right channel</string>
+	<string name="mic_label">Patch mic to both channels</string>
+	<string name="default_msg">Enter message to Pure Data</string>
+	<string name="pref_button_text">Preferences</string>
+	<string name="about_title">About Voice-O-Rama</string>
+	<string name="about_msg">Thick Goth Sound at your Fingertips!</string>
+</resources>
