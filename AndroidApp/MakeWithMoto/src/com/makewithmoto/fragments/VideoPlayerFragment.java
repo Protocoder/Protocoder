@@ -61,7 +61,7 @@ public class VideoPlayerFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				fl.animate().scaleX(0.5f).scaleY(0.5f).setDuration(5000);
+			//	fl.animate().scaleX(0.5f).scaleY(0.5f).setDuration(5000);
 			}
 		});
 		Log.d("mm", "onCreateView");

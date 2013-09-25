@@ -1,16 +1,13 @@
 package com.makewithmoto.fragments;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Vibrator;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.GeolocationPermissions;
-import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -70,7 +67,6 @@ public class BaseWebviewFragment extends BaseFragment {
 		settings.setJavaScriptCanOpenWindowsAutomatically(true);
 
 		settings.setLightTouchEnabled(true);
-		webView.addJavascriptInterface(new MyJavaScriptInterface(getActivity()), "android");
 
 		webView.setWebChromeClient(new WebChromeClient() {
 			@Override
@@ -86,21 +82,6 @@ public class BaseWebviewFragment extends BaseFragment {
 		}
 	}
 
-	public class MyJavaScriptInterface {
-		Context mContext;
-
-		MyJavaScriptInterface(Context c) {
-			mContext = c;
-		}
-
-		@JavascriptInterface
-		public void vibrate() {
-			Vibrator v = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
-			v.vibrate(1000);
-		}
-
-
-	}
 
 	public void setPage(String Url) {
 		webView.loadUrl(Url);

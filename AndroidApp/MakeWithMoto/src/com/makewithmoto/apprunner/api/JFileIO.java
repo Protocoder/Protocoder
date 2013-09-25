@@ -1,9 +1,9 @@
 package com.makewithmoto.apprunner.api;
 
 import android.app.Activity;
-import android.webkit.JavascriptInterface;
 
 import com.makewithmoto.apidoc.annotation.APIMethod;
+import com.makewithmoto.apidoc.annotation.JavascriptInterface;
 
 public class JFileIO extends JInterface {
 

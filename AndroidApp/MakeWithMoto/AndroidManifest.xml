@@ -126,7 +126,8 @@
         </activity>
 
         <service android:name="com.makewithmoto.hardware.IOIOBoardService" />
-
+        <service android:name="org.puredata.android.service.PdService" />
+        
         <receiver android:name="com.makewithmoto.services.SmsReceiver" >
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />

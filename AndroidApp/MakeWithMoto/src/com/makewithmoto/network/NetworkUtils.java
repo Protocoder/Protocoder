@@ -2,14 +2,18 @@ package com.makewithmoto.network;
 
 import java.math.BigInteger;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.nio.ByteOrder;
+import java.util.Enumeration;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.DhcpInfo;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
+import android.text.format.Formatter;
 import android.util.Log;
 
 public class NetworkUtils {
@@ -42,6 +46,34 @@ public class NetworkUtils {
 		}
 
 		return InetAddress.getByAddress(quads);
+	}
+
+	public static void getGatewayIpAddress(Context c) { 
+		//get wifi ip 
+		
+		final WifiManager manager = (WifiManager) c.getSystemService(c.WIFI_SERVICE);
+		final DhcpInfo dhcp = manager.getDhcpInfo();
+		final String address = Formatter.formatIpAddress(dhcp.gateway);
+		
+		  StringBuilder IFCONFIG=new StringBuilder();
+		    try {
+		        for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
+		            NetworkInterface intf = en.nextElement();
+		            for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
+		                InetAddress inetAddress = enumIpAddr.nextElement();
+		                if (!inetAddress.isLoopbackAddress() && !inetAddress.isLinkLocalAddress() && inetAddress.isSiteLocalAddress()) {
+		                IFCONFIG.append(inetAddress.getHostAddress().toString()+"\n");
+		                }
+
+		            }
+		        }
+		    } catch (SocketException ex) {
+		        Log.e("LOG_TAG", ex.toString());
+		    }
+		    Log.d(TAG, "ifconfig " + IFCONFIG.toString());
+		
+		Log.d(TAG, "hotspot address is " + address);
+
 	}
 
 	// Get the local IP address

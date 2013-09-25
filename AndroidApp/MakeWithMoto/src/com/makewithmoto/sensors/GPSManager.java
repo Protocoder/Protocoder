@@ -224,7 +224,24 @@ public class GPSManager {
         alertDialog.show();
     }
  
-    
+    public double getDistance(double startLatitude, double startLongitude, double endLatitude, double endLongitude) { 
+    	float[] results = null;
+		//Location.distanceBetween(startLatitude, startLongitude, endLatitude, endLongitude, results);
+
+		Location locationA = new Location("point A");
+
+		locationA.setLatitude(startLatitude);
+		locationA.setLongitude(startLongitude);
+
+		Location locationB = new Location("point B");
+
+		locationB.setLatitude(endLatitude);
+		locationB.setLongitude(endLongitude);
+
+		float distance = locationA.distanceTo(locationB);
+		
+		return distance;
+    }
  
 
 	public void stop() {

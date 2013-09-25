@@ -8,7 +8,8 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:layout_marginBottom="12dp" >
 
         <!--
     This title strip will display the currently visible page title, as well as the page
@@ -44,7 +45,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#777777" >
+            android:background="#FF777777" >
 
             <TextView
                 android:id="@+id/ip"
@@ -56,7 +57,7 @@
                 android:textColor="#ffffff"
                 android:textSize="14sp"
                 android:textStyle="italic"
-                android:visibility="invisible" />
+                android:visibility="visible" />
         </FrameLayout>
     </LinearLayout>
 

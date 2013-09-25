@@ -23,6 +23,7 @@ import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentFilter.MalformedMimeTypeException;
+import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
@@ -42,11 +43,13 @@ import com.makewithmoto.MainActivity;
 import com.makewithmoto.R;
 import com.makewithmoto.apprunner.api.JAndroid;
 import com.makewithmoto.apprunner.api.JMedia;
+import com.makewithmoto.apprunner.api.JSensors;
 import com.makewithmoto.base.BaseActivity;
 import com.makewithmoto.events.Events;
 import com.makewithmoto.events.Events.ProjectEvent;
 import com.makewithmoto.events.Project;
 import com.makewithmoto.events.ProjectManager;
+import com.makewithmoto.media.AudioService;
 import com.makewithmoto.network.CustomWebsocketServer;
 import com.makewithmoto.sensors.WhatIsRunning;
 import com.makewithmoto.utils.StrUtils;
@@ -68,7 +71,7 @@ public class AppRunnerActivity extends BaseActivity {
 	private ActionBar actionBar;
 	private CustomWebsocketServer ws;
 	private JAndroid.onKeyListener onKeyListener;
-	private JAndroid.onNFCListener onNFCListener;
+	private JSensors.onNFCListener onNFCListener;
 	private JMedia.onVoiceRecognitionListener onVoiceRecognitionListener;
 	private BroadcastReceiver mIntentReceiver;
 
@@ -77,6 +80,7 @@ public class AppRunnerActivity extends BaseActivity {
 	public static final int VOICE_RECOGNITION_REQUEST_CODE = 55;
 
 	static final String SCRIPT_PREFIX = "//Prepend text for all scripts \n"
+			+ "var window = this; \n"
 			+ "var JAndroid = Packages.com.makewithmoto.apprunner.api.JAndroid; \n"
 			+ "var android = JAndroid(Activity);\n"
 			+ "var JUI = Packages.com.makewithmoto.apprunner.api.JUI; \n"
@@ -101,8 +105,8 @@ public class AppRunnerActivity extends BaseActivity {
 			+ "// End of Prepend Section \n";
 
 	static final String SCRIPT_POSTFIX = "//Appends text for all scripts \n"
-			+ "function onAndroidPause(){ }  \n"
-			+ "// End of Append Section" + "\n";
+			+ "function onAndroidPause(){ }  \n" + "// End of Append Section"
+			+ "\n";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -148,7 +152,7 @@ public class AppRunnerActivity extends BaseActivity {
 			if (null != script) {
 				eval(script, projectName);
 			}
-		
+
 			// Set up the actionbar
 			actionBar = getActionBar();
 			if (actionBar != null) {
@@ -170,13 +174,12 @@ public class AppRunnerActivity extends BaseActivity {
 			finish();
 		}
 	}
-	
-	public void onEventMainThread(Events.ExecuteCodeEvent evt) { 
+
+	public void onEventMainThread(Events.ExecuteCodeEvent evt) {
 		Log.d(TAG, "event -> " + evt.getCode());
-		
+
 		eval(evt.getCode());
 
-		
 	}
 
 	public void changeTitle(String title) {
@@ -200,26 +203,27 @@ public class AppRunnerActivity extends BaseActivity {
 	public void onResume() {
 		super.onResume();
 		EventBus.getDefault().register(this);
-		mAdapter.enableForegroundDispatch(this, mPendingIntent, null, null);
 
+		if (nfcSupported) {
+			mAdapter.enableForegroundDispatch(this, mPendingIntent, null, null);
+		}
 		// sms receive
 
 		IntentFilter intentFilter = new IntentFilter("SmsMessage.intent.MAIN");
 		mIntentReceiver = new BroadcastReceiver() {
-		
+
 			@Override
 			public void onReceive(android.content.Context context, Intent intent) {
 				String msg = intent.getStringExtra("get_msg");
-				
+
 				// Process the sms format and extract body &amp; phoneNumber
 				msg = msg.replace("\n", "");
 				String body = msg.substring(msg.lastIndexOf(":") + 1,
 						msg.length());
 				String pNumber = msg.substring(0, msg.lastIndexOf(":"));
-				
+
 				// Add it to the list or do whatever you wish to
 
-				
 			}
 		};
 		this.registerReceiver(mIntentReceiver, intentFilter);
@@ -235,9 +239,10 @@ public class AppRunnerActivity extends BaseActivity {
 		callJsFunction("onPause");
 		callJsFunction("onAndroidPause");
 
-		mAdapter.disableForegroundDispatch(this);
+		if (nfcSupported) {
+			mAdapter.disableForegroundDispatch(this);
+		}
 		this.unregisterReceiver(this.mIntentReceiver);
-
 	}
 
 	@Override
@@ -316,7 +321,6 @@ public class AppRunnerActivity extends BaseActivity {
 	public Object eval(final String code, final String sourceName) {
 		final AtomicReference<Object> result = new AtomicReference<Object>(null);
 
-    
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -645,8 +649,15 @@ public class AppRunnerActivity extends BaseActivity {
 	private PendingIntent mPendingIntent;
 	private IntentFilter[] mFilters;
 	private String[][] mTechLists;
+	private boolean nfcSupported;
 
 	public void initializeNFC() {
+
+		PackageManager pm = getPackageManager();
+		nfcSupported = pm.hasSystemFeature(PackageManager.FEATURE_NFC);
+
+		if (nfcSupported == false)
+			return;
 
 		// cuando esta en foreground
 		Log.d(TAG, "Starting NFC");
@@ -697,7 +708,7 @@ public class AppRunnerActivity extends BaseActivity {
 
 	}
 
-	public void addNFCListener(JAndroid.onNFCListener onNFCListener2) {
+	public void addNFCListener(JSensors.onNFCListener onNFCListener2) {
 		onNFCListener = onNFCListener2;
 
 	}
