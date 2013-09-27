@@ -120,10 +120,12 @@ $('#layout').w2layout({
     name: 'layout',
     panels: [
         { type: 'main', style: pstyle, content: 'main' },
-        { type: 'right', size: 400, style: pstyle, content: 'right', resizable: true }
+        { type: 'right', size: 300, style: pstyle, content: 'right', resizable: true, hidden: false}
 
     ]
 });
+
+//w2ui['layout'].hide('right', false);
 
 
 $().w2layout({
@@ -140,7 +142,7 @@ $().w2layout({
                 //this.owner.content('main', target);
             }
         } },
-        { type: 'bottom', size: "100px", resizable: true, hidden: false, style: pstyle, content: '<div id = "console"></div>' }
+        { type: 'bottom', size: "100px", resizable: true, hidden: false, style: pstyle, content: '<div id = "console_wrapper"> <div id = "console"></div> </div>' }
     ]
 });
 

@@ -7,7 +7,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -49,7 +48,7 @@ import com.makewithmoto.fragments.VideoPlayerFragment.VideoListener;
 import com.makewithmoto.utils.AndroidUtils;
 import com.makewithmoto.views.HoloCircleSeekBar;
 import com.makewithmoto.views.HoloCircleSeekBar.OnCircleSeekBarChangeListener;
-import com.makewithmoto.views.MySurfaceView;
+import com.makewithmoto.views.MyView;
 import com.makewithmoto.views.PlotView;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -707,15 +706,15 @@ public class JUI extends JInterface {
 	
 	
 	@JavascriptInterface
-	public Canvas addCanvas(int x, int y, int w, int h) {
+	public MyView addCanvas(int x, int y, int w, int h) {
 		initializeLayout();
 
-		MySurfaceView canvas = new MySurfaceView(a.get());
-		positionView(canvas, x, y, w, h);
+		MyView sv = new MyView(a.get(), w, h);
+		positionView(sv, x, y, w, h);
 		// Add the view
-		addView(canvas);
-				
-		return canvas.getCanvas();
+		addView(sv);
+		
+		return sv;
 	}
 	
 	

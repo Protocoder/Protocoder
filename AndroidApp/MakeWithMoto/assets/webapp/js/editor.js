@@ -30,12 +30,10 @@ function initEditor() {
 
 	var renderer = editor.renderer;
 
-	session.setWrapLimitRange(40, 40);
-
-	session.setWrapLimitRange(40, 40);
+	session.setWrapLimitRange(null, null);
     renderer.setShowPrintMargin = null; 
 
-	editor.setFontSize(15);
+	editor.setFontSize(14);
 	renderer.setPadding(8);
 
 	//------------------------------------------------- 
