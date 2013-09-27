@@ -1,10 +1,6 @@
 package com.makewithmoto;
 
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.Enumeration;
 import java.util.List;
 
 import org.java_websocket.drafts.Draft_17;
@@ -23,8 +19,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.net.DhcpInfo;
-import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.FileObserver;
@@ -32,7 +26,6 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.text.format.Formatter;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
