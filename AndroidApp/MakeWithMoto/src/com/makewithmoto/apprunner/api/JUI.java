@@ -48,7 +48,7 @@ import com.makewithmoto.fragments.VideoPlayerFragment.VideoListener;
 import com.makewithmoto.utils.AndroidUtils;
 import com.makewithmoto.views.HoloCircleSeekBar;
 import com.makewithmoto.views.HoloCircleSeekBar.OnCircleSeekBarChangeListener;
-import com.makewithmoto.views.MyView;
+import com.makewithmoto.views.CanvasView;
 import com.makewithmoto.views.PlotView;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -706,10 +706,10 @@ public class JUI extends JInterface {
 	
 	
 	@JavascriptInterface
-	public MyView addCanvas(int x, int y, int w, int h) {
+	public CanvasView addCanvas(int x, int y, int w, int h) {
 		initializeLayout();
 
-		MyView sv = new MyView(a.get(), w, h);
+		CanvasView sv = new CanvasView(a.get(), w, h);
 		positionView(sv, x, y, w, h);
 		// Add the view
 		addView(sv);
