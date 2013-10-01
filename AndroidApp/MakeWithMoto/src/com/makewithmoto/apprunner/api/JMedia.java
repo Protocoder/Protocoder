@@ -8,12 +8,14 @@ import org.json.JSONArray;
 import org.puredata.android.service.PdService;
 import org.puredata.android.utils.PdUiDispatcher;
 import org.puredata.core.PdBase;
-import org.puredata.core.PdListener;
 import org.puredata.core.PdReceiver;
 import org.puredata.core.utils.PdDispatcher;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaRecorder;
 import android.speech.RecognizerIntent;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
@@ -22,6 +24,7 @@ import android.util.Log;
 import com.makewithmoto.apidoc.annotation.APIMethod;
 import com.makewithmoto.apidoc.annotation.JavascriptInterface;
 import com.makewithmoto.apprunner.AppRunnerActivity;
+import com.makewithmoto.apprunner.AppRunnerSettings;
 import com.makewithmoto.media.Audio;
 import com.makewithmoto.media.AudioService;
 import com.makewithmoto.sensors.WhatIsRunning;
@@ -59,7 +62,7 @@ public class JMedia extends JInterface {
 	public void playSound(String url) {
 
 		if (url.startsWith("http://") == false) {
-			url = ((AppRunnerActivity) a.get()).getCurrentDir()
+			url = AppRunnerSettings.get().project.getUrl() 
 					+ File.separator + url;
 		}
 		Audio.playSound(url, 100);
@@ -68,8 +71,7 @@ public class JMedia extends JInterface {
 	@JavascriptInterface
 	@APIMethod(description = "plays a sound", example = "media.playSound(fileName);")
 	public JPureData initPDPatch(String fileName, final String callbackfn) {
-		String filePath = ((AppRunnerActivity) a.get()).getCurrentDir()
-				+ File.separator + fileName;
+		String filePath = AppRunnerSettings.get().project.getUrl() + File.separator + fileName;
 
 		PdReceiver receiver = new PdReceiver() {
 
@@ -120,22 +122,20 @@ public class JMedia extends JInterface {
 				a.get().unbindService(AudioService.pdConnection);
 			}
 		};
-		
 
 		// create and install the dispatcher
-		 PdDispatcher dispatcher = new PdUiDispatcher() {
-			 
-			  @Override
-			  public void print(String s) {
-			    Log.i("Pd print", s);
-			  }
-			  
-		 };
+		PdDispatcher dispatcher = new PdUiDispatcher() {
 
+			@Override
+			public void print(String s) {
+				Log.i("Pd print", s);
+			}
+
+		};
 
 		PdBase.setReceiver(dispatcher);
 
-		//PdBase.setReceiver(receiver);
+		// PdBase.setReceiver(receiver);
 		PdBase.subscribe("android");
 		// start pure data sound engine
 		AudioService.file = filePath;
@@ -146,7 +146,7 @@ public class JMedia extends JInterface {
 				(a.get()).BIND_AUTO_CREATE);
 		initSystemServices();
 		WhatIsRunning.getInstance().add(AudioService.pdConnection);
-	
+
 		return new JPureData();
 	}
 
@@ -165,6 +165,53 @@ public class JMedia extends JInterface {
 				}
 			}
 		}, PhoneStateListener.LISTEN_CALL_STATE);
+	}
+
+	@JavascriptInterface
+	@APIMethod(description = "text to speech", example = "media.textToSpeech('hello world');")
+	public void recordAudio(String fileName, boolean showProgress) {
+		final MediaRecorder recorder = new MediaRecorder();
+		// ContentValues values = new ContentValues(3);
+		// values.put(MediaStore.MediaColumns.TITLE, fileName);
+		recorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
+		recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+		recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+
+		recorder.setOutputFile(AppRunnerSettings.get().project.getUrl()
+				+ File.separator + fileName);
+		try {
+			recorder.prepare();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		final ProgressDialog mProgressDialog = new ProgressDialog(a.get());
+		mProgressDialog.setTitle("Record!");
+		mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		mProgressDialog.setButton("Stop recording",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						mProgressDialog.dismiss();
+						recorder.stop();
+						recorder.reset();
+						recorder.release();
+					}
+				});
+
+		mProgressDialog
+				.setOnCancelListener(new DialogInterface.OnCancelListener() {
+					public void onCancel(DialogInterface p1) {
+						recorder.stop();
+						recorder.reset();
+						recorder.release();
+					}
+				});
+
+		recorder.start();
+
+		if (showProgress == true) {
+			mProgressDialog.show();
+		}
 	}
 
 	@JavascriptInterface

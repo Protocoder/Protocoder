@@ -5,6 +5,8 @@
 *
 */
 
+var remoteIP = "localhost"; //window.location.hostname; //'localhost';
+
 
 //listing apps in the future we might filter the listing
 function list_apps(filter) { 
@@ -172,7 +174,6 @@ function get_camera() {
 *
 */
 
-var remoteIP = window.location.hostname; //'localhost';
 var remotePlot;
 
 var ws; 

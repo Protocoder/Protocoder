@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.webkit.WebView;
 
 import com.makewithmoto.apprunner.AppRunnerActivity;
+import com.makewithmoto.apprunner.AppRunnerSettings;
 
 /*
  * http://stackoverflow.com/questions/13257990/android-webview-inside-scrollview-scrolls-only-scrollview
@@ -39,7 +40,7 @@ public class CustomWebView extends WebView {
     }
     
     public void loadHTMLFile(String fileName) { 
-    	String path = ((AppRunnerActivity) a.get()).getCurrentDir() + File.separator + fileName;
+    	String path = AppRunnerSettings.get().project.getUrl()   + File.separator + fileName;
     	loadUrl("file://"+path);
     }
     

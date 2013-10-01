@@ -85,13 +85,15 @@ public class AppRunnerActivity extends BaseActivity {
 			+ "var android = JAndroid(Activity);\n"
 			+ "var JUI = Packages.com.makewithmoto.apprunner.api.JUI; \n"
 			+ "var ui = JUI(Activity);\n"
+			+ "var JFileIO = Packages.com.makewithmoto.apprunner.api.JFileIO; \n"
+			+ "var fileIO = JFileIO(Activity);\n"
+			+ "var JDashboard = Packages.com.makewithmoto.apprunner.api.JDashboard; \n"
+			+ "var dashboard = JDashboard(Activity);\n"
 			+ "var JMakr = Packages.com.makewithmoto.apprunner.api.JMakr; \n"
 			+ "var makr = JMakr(Activity);\n"
 			+ "var JIOIO = Packages.com.makewithmoto.apprunner.api.JIOIO; \n"
 			+ "var ioio = JIOIO(Activity);\n"
 			+ "var JWebAppPlot = Packages.com.makewithmoto.apprunner.api.JWebAppPlot; \n"
-			+ "var JDashboard = Packages.com.makewithmoto.apprunner.api.JDashboard; \n"
-			+ "var dashboard = JDashboard(Activity);\n"
 			+ "var JMedia = Packages.com.makewithmoto.apprunner.api.JMedia; \n"
 			+ "var media = JMedia(Activity);\n"
 			+ "var JNetwork = Packages.com.makewithmoto.apprunner.api.JNetwork; \n"
@@ -142,6 +144,18 @@ public class AppRunnerActivity extends BaseActivity {
 			currentProject = ProjectManager.getInstance().get(projectName,
 					projectType);
 
+			
+//			public Project getCurrentProject() {
+//				return currentProject;
+//			}
+//
+//			public String getCurrentDir() {
+//				return ProjectManager.getInstance().getProjectURL(currentProject);
+//
+//			}
+			
+			AppRunnerSettings.get().project = currentProject;		
+			
 			String script = SCRIPT_PREFIX
 					+ ProjectManager.getInstance().getCode(currentProject)
 					+ SCRIPT_POSTFIX;
@@ -621,14 +635,6 @@ public class AppRunnerActivity extends BaseActivity {
 		}
 	}
 
-	public Project getCurrentProject() {
-		return currentProject;
-	}
-
-	public String getCurrentDir() {
-		return ProjectManager.getInstance().getProjectURL(currentProject);
-
-	}
 
 	/*
 	 * (non-Javadoc)

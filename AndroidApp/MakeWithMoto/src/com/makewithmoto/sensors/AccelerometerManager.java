@@ -49,7 +49,6 @@ public class AccelerometerManager extends CustomSensorManager implements WhatIsR
 				
 					((AccelerometerListener)l).onShake(force);
 				}
-				
 			}
 
 			@Override
