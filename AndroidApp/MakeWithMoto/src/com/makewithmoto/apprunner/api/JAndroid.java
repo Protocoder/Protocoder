@@ -120,8 +120,8 @@ public class JAndroid extends JInterface {
 	
 	@JavascriptInterface
 	@APIMethod(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
-	public void openDial(String msg, int duration) {
-		Toast.makeText(a.get(), msg, duration).show();
+	public void openDial() {
+		Intents.openDial(a.get());
 	}
 	
 	@JavascriptInterface
