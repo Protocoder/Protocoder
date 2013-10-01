@@ -253,7 +253,32 @@ body {
 }
 
 
+#projects { 
 
+	display: none;
+	position: absolute;
+	top: -25px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.498039);
+	float: left;
+	z-index: 122;
+
+	#container { 
+		
+		.project_list {
+			width: 300px;
+			height: 600px;
+			float: left;
+			padding: 12px;
+			border-right: 1px solid rgba(255, 255, 255, 0.2);
+		}
+
+
+	}
+
+}
 
 #overlay {
 	#container {
@@ -630,4 +655,12 @@ body {
     width: 100% !important;
     left: 0 !important;
     z-index: 5 !important;
+}
+
+.app_running { 
+	background-color: rgba(255, 82, 82, 0.54);
+}
+
+.app_connected { 
+	background-color: rgba(82, 255, 241, 0.54);
 }

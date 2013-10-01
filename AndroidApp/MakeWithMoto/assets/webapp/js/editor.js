@@ -1,11 +1,13 @@
+/*
+*	Editor
+*
+*/
+
+
 var editor; 
 var session;
 
 function initEditor() { 
-
-	/* 
-	*	Editor 
-	*/ 
 	editor = ace.edit("editor");
 	session = editor.getSession();
 
@@ -23,7 +25,7 @@ function initEditor() {
 	var net = ace.require("ace/lib/net");
 	var lang = ace.require("ace/lib/lang");
 	var useragent = ace.require("ace/lib/useragent");
-
+	var Range = ace.require('ace/range').Range;
 	var event = ace.require("ace/lib/event");
 	var theme = ace.require("ace/theme/textmate");
 	//editor.setTheme("ace/theme/chrome");
@@ -33,6 +35,7 @@ function initEditor() {
 	session.setWrapLimitRange(null, null);
     renderer.setShowPrintMargin = null; 
 
+	editor.setPrintMarginColumn(false);
 	editor.setFontSize(14);
 	renderer.setPadding(8);
 
@@ -154,7 +157,10 @@ function initEditor() {
 	    }
 	});
 
-var Range = ace.require('ace/range').Range;
+
+
+}
+
 
 function highlight(range) { 
 	var marker = session.addMarker( range, "run_code", "fullLine" );
@@ -164,41 +170,6 @@ function highlight(range) {
 	}, 500); 
 }
 
-	/* 
-	* Binding UI 
-	*/
-	var overlayShow = false;
-	$("#overlay #toggle").click(function() { 
-		if (overlayShow) {
-			hideDashboard();
-		} else {
-			showDashboard();
-		}
-
-		overlayShow ^= true;
-	});
-	$("#overlay #container #project_list").draggable();
-	$("#overlay #container #example_list").draggable();
-
-	$("#overlay #container #device_status").draggable();
-	$("#overlay #container #help").draggable();
-	$("#overlay #container #connection").draggable();
-	$("#error_from_android").draggable();
-	$("#remote_log").draggable();
-
-	if (location.hash.indexOf("#dashboard") != -1) {
-		showDashboard();
-	}
-
-}
-
-function hideDashboard() { 
-	$("#overlay #container").fadeOut(200);
-} 
-
-function showDashboard() { 
-	$("#overlay #container").fadeIn(300);
-}
 
 function showErrors() { 
 	editor.session.setAnnotations([{row:1 ,column: 0, text: "message",type:"error"}]); 

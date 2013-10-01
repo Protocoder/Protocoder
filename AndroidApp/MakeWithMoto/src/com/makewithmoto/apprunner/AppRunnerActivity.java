@@ -85,8 +85,6 @@ public class AppRunnerActivity extends BaseActivity {
 			+ "var android = JAndroid(Activity);\n"
 			+ "var JUI = Packages.com.makewithmoto.apprunner.api.JUI; \n"
 			+ "var ui = JUI(Activity);\n"
-			+ "var JBrowser = Packages.com.makewithmoto.apprunner.api.JBrowser; \n"
-			+ "var browser = JBrowser(Activity);\n"
 			+ "var JMakr = Packages.com.makewithmoto.apprunner.api.JMakr; \n"
 			+ "var makr = JMakr(Activity);\n"
 			+ "var JIOIO = Packages.com.makewithmoto.apprunner.api.JIOIO; \n"
@@ -164,7 +162,35 @@ public class AppRunnerActivity extends BaseActivity {
 
 		// Call the onCreate JavaScript function.
 		callJsFunction("onCreate", savedInstanceState);
+		
+		//send ready to the ide 
+		ready(true);
 
+	}
+	
+	public void ready(boolean r) { 
+		
+		JSONObject msg = new JSONObject();
+		try {
+			msg.put("type", "ide");
+			msg.put("action", "conf");
+
+			JSONObject values = new JSONObject();;
+			values.put("ready", r);
+			msg.put("values", values);
+
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+
+		//Log.d(TAG, "update");
+
+		try {
+			CustomWebsocketServer ws = CustomWebsocketServer.getInstance(this);
+			ws.send(msg);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} 
 	}
 
 	public void onEventMainThread(ProjectEvent evt) {
@@ -243,6 +269,7 @@ public class AppRunnerActivity extends BaseActivity {
 			mAdapter.disableForegroundDispatch(this);
 		}
 		this.unregisterReceiver(this.mIntentReceiver);
+		ready(false);
 	}
 
 	@Override

@@ -3,7 +3,6 @@ package com.makewithmoto.apprunner.api;
 import java.lang.ref.WeakReference;
 
 import android.app.Activity;
-import android.util.Log;
 
 import com.makewithmoto.apprunner.AppRunnerActivity;
 
