@@ -20,11 +20,9 @@ function parse_help(docString) {
 	    //iterate through api methods 
 	    $.each (v.apiMethods, function(m, n) {
 
-	    	//console.log(m, n);
-
 	        var method = n;
 	        $("#class_"+className + " .methods").append('<div id ="method_'+ method.name +'" class = "APImethod"></div>');
-	        $("#method_"+method.name).append('<h2><i>'+ method.returnType + "</i> <strong>" + method.name + "</strong> <i>" + method.parameters + '</i></h2>');
+	        $("#method_"+method.name).append('<h2><i>'+  method.returnType + " </i><strong>" + className + "." + method.name + "</strong><i>(" + method.parameters + ' )</i></h2>');
 	        
 	        if (method.description != undefined) { 
 	        	$("#method_"+method.name).append('<p id = "description"> '+ "here goes description" /*method.description*/ +' </p>');
@@ -41,6 +39,8 @@ function parse_help(docString) {
 	        	*/
 	        	
 	        }
+
+	        $("#class_" + className).find(".methods").not(':animated').slideToggle()
 
 	       // console.log(method.name, method.description, method.example);
 	    });

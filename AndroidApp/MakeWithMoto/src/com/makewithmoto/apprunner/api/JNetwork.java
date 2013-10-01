@@ -106,11 +106,11 @@ public class JNetwork extends JInterface {
 		});
 		
 		return socketIOClient;
-	}
-
+	} 
+	
 	@JavascriptInterface
 	@APIMethod(description = "initializes makr board", example = "makr.start();")
-	public void httpRequest(String url, String callbackfn) {
+	public void getRequest(String url, final String callbackfn) {
 		class RequestTask extends AsyncTask<String, String, String> {
 
 			@Override
@@ -131,6 +131,7 @@ public class JNetwork extends JInterface {
 						response.getEntity().getContent().close();
 						throw new IOException(statusLine.getReasonPhrase());
 					}
+					callback(callbackfn, statusLine.getStatusCode());
 				} catch (ClientProtocolException e) {
 					// TODO Handle problems..
 				} catch (IOException e) {

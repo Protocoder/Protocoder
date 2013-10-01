@@ -92,7 +92,7 @@ public class MyHTTPServer extends NanoHTTPD {
 			}
 
 		return instance;
-	}
+	} 
 
 	public MyHTTPServer(Context aCtx, int port) throws IOException {
 		super(port);

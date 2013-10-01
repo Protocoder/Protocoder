@@ -44,6 +44,7 @@ import com.makewithmoto.R;
 import com.makewithmoto.apidoc.annotation.APIMethod;
 import com.makewithmoto.apidoc.annotation.JavascriptInterface;
 import com.makewithmoto.apprunner.AppRunnerActivity;
+import com.makewithmoto.apprunner.AppRunnerSettings;
 import com.makewithmoto.base.BaseActivity;
 import com.makewithmoto.fragments.CameraFragment;
 import com.makewithmoto.fragments.VideoPlayerFragment;
@@ -124,9 +125,9 @@ public class JUI extends JInterface {
 		 * vto.addOnGlobalLayoutListener(globalLayoutListener);
 		 */
 	}
-	
-	public void removeAll() { 
-		mMainLayout.removeAllViews();		
+
+	public void removeAll() {
+		mMainLayout.removeAllViews();
 	}
 
 	/**
@@ -229,8 +230,7 @@ public class JUI extends JInterface {
 	 * @param callbackfn
 	 */
 	@JavascriptInterface
-	public void addKnob (int x, int y, int w, int h,
-			final String callbackfn) {
+	public void addKnob(int x, int y, int w, int h, final String callbackfn) {
 		initializeLayout();
 
 		HoloCircleSeekBar pkr = new HoloCircleSeekBar(a.get());
@@ -550,8 +550,8 @@ public class JUI extends JInterface {
 		positionView(iv, x, y, w, h);
 
 		// Add the image from file
-		new SetImageTask(iv).execute(((AppRunnerActivity) a.get())
-				.getCurrentDir() + File.separator + imagePath);
+		new SetImageTask(iv).execute(AppRunnerSettings.get().project.getUrl()
+				+ File.separator + imagePath);
 
 		// Add the view
 		iv.setBackgroundColor(0x33b5e5);
@@ -624,8 +624,8 @@ public class JUI extends JInterface {
 		}
 
 		// Add image asynchronously
-		new SetImageTask(ib).execute(((AppRunnerActivity) a.get())
-				.getCurrentDir() + File.separator + imagePath);
+		new SetImageTask(ib).execute(AppRunnerSettings.get().project.getUrl()
+				+ File.separator + imagePath);
 
 		// Set on click behavior
 		ib.setOnClickListener(new OnClickListener() {
@@ -683,8 +683,8 @@ public class JUI extends JInterface {
 	public void backgroundImage(String imagePath) {
 		initializeLayout();
 		// Add the bg image asynchronously
-		new SetBgImageTask(mMainLayout).execute(((AppRunnerActivity) a.get())
-				.getCurrentDir() + File.separator + imagePath);
+		new SetBgImageTask(mMainLayout).execute(AppRunnerSettings.get().project
+				.getUrl() + File.separator + imagePath);
 
 	}
 
@@ -769,7 +769,6 @@ public class JUI extends JInterface {
 		webView.clearCache(false);
 		webView.setBackgroundColor(0x00000000);
 
-
 		webView.requestFocus(View.FOCUS_DOWN);
 		webView.setOnTouchListener(new View.OnTouchListener() {
 			@Override
@@ -785,8 +784,6 @@ public class JUI extends JInterface {
 				return false;
 			}
 		});
-
-
 
 		webView.addJavascriptInterface(a.get(), "activity");
 		positionView(webView, x, y, w, h);
@@ -808,7 +805,8 @@ public class JUI extends JInterface {
 	 * @param w
 	 * @param h
 	 */
-	public JCamera addCameraView(int type, /*int filter,*/ int x, int y, int w, int h) {
+	public JCamera addCameraView(int type, /* int filter, */int x, int y,
+			int w, int h) {
 
 		initializeLayout();
 
@@ -824,17 +822,17 @@ public class JUI extends JInterface {
 
 		CameraFragment cameraFragment = new CameraFragment();
 		Bundle bundle = new Bundle();
-		if (type == 1) { 
-			bundle.putInt("camera", CameraFragment.MODE_CAMERA_FRONT);			
-		} else { 
-			bundle.putInt("camera", CameraFragment.MODE_CAMERA_BACK);			
+		if (type == 1) {
+			bundle.putInt("camera", CameraFragment.MODE_CAMERA_FRONT);
+		} else {
+			bundle.putInt("camera", CameraFragment.MODE_CAMERA_BACK);
 		}
-		
-		//if (filter == 1) { 
-		//	bundle.putInt("color", CameraFragment.MODE_COLOR_BW);
-		//} else { 
-		//	bundle.putInt("color", CameraFragment.MODE_COLOR_COLOR);
-		//}
+
+		// if (filter == 1) {
+		// bundle.putInt("color", CameraFragment.MODE_COLOR_BW);
+		// } else {
+		// bundle.putInt("color", CameraFragment.MODE_COLOR_COLOR);
+		// }
 		cameraFragment.setArguments(bundle);
 
 		FragmentTransaction ft = a.get().getSupportFragmentManager()
@@ -890,8 +888,8 @@ public class JUI extends JInterface {
 			@Override
 			public void onReady(boolean ready) {
 				// fragment.loadResourceVideo("/raw/cityfireflies");
-				fragment.loadExternalVideo(((AppRunnerActivity) a.get())
-						.getCurrentDir() + File.separator + videoFile);
+				fragment.loadExternalVideo(AppRunnerSettings.get().project
+						.getUrl() + File.separator + videoFile);
 				// fragment.setLoop(true);
 			}
 
@@ -919,9 +917,8 @@ public class JUI extends JInterface {
 	}
 
 	public void takeScreenshot(String imagePath) {
-		AndroidUtils.takeScreenshot(
-				((AppRunnerActivity) a.get()).getCurrentDir(), imagePath,
-				mMainLayout);
+		AndroidUtils.takeScreenshot(AppRunnerSettings.get().project.getUrl(),
+				imagePath, mMainLayout);
 	}
 
 	@JavascriptInterface

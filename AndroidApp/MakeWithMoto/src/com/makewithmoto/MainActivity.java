@@ -248,10 +248,12 @@ public class MainActivity extends BaseActivity implements
 				true);
 		if (showNotification) {
 			mNotification = new BaseNotification(this);
+			/*
 			mNotification.show(MainActivity.class, R.drawable.ic_stat_logo,
 					"http://" + NetworkUtils.getLocalIpAddress(this) + ":"
 							+ AppSettings.httpPort, "protocoder Running",
 					R.drawable.ic_navigation_cancel);
+					*/
 		}
 
 		// start webserver

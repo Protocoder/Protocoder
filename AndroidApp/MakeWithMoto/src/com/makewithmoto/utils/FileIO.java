@@ -1,18 +1,3 @@
-/*
- * Copyright 2010 Facebook, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 package com.makewithmoto.utils;
 
@@ -28,22 +13,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.nio.channels.FileChannel;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.util.Log;
 
+import com.makewithmoto.apprunner.AppRunnerSettings;
 import com.makewithmoto.base.BaseMainApp;
 import com.makewithmoto.network.ALog;
 
-/**
- * Helpers for doing basic file IO.
- * 
- * @author yariv
- * 
- */
+
 public class FileIO {
 
 	private static final String TAG = "FILEIO";
@@ -155,7 +141,7 @@ public class FileIO {
 		Log.d(TAG, "The base directory is:" + baseDir);
 		File dir = new File(baseDir);
 		dir.mkdirs();
-		File f = new File(dir.getAbsoluteFile() + File.separator + "script.js");
+		File f = new File(dir.getAbsoluteFile() + File.separator + "main.js");
 
 		try {
 			if (!f.exists()) {
@@ -308,6 +294,7 @@ public class FileIO {
 		Log.d(TAG, "deleting directory done" + name);
 	}
 
+	
 	public static void deleteDir(File dir) {
 		Log.d("DeleteRecursive", "DELETEPREVIOUS TOP" + dir.getPath());
 		if (dir.isDirectory()) {
@@ -329,4 +316,188 @@ public class FileIO {
 		}
 		dir.delete();
 	}
+	
+	/*
+	 * Method borrowed from Processing PApplet.java
+	 */
+	public static void saveStrings(String filename, String strings[]) {
+		saveStrings(saveFile(filename), strings);
+	}
+	
+	/*
+	 * Method borrowed from Processing PApplet.java
+	 */
+	public static File saveFile(String where) {
+		return new File(AppRunnerSettings.get().project.getUrl() + File.separator + where);
+	}
+	
+	/*
+	 * Method borrowed from Processing PApplet.java
+	 */
+	static public void saveStrings(File file, String strings[]) {
+		try {
+			String location = file.getAbsolutePath();
+			createPath(location);
+			OutputStream output = new FileOutputStream(location);
+			if (file.getName().toLowerCase().endsWith(".gz")) {
+				output = new GZIPOutputStream(output);
+			}
+			saveStrings(output, strings);
+			output.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/*
+	 * Method borrowed from Processing PApplet.java
+	 */
+	static public void saveStrings(OutputStream output, String strings[]) {
+		try {
+			OutputStreamWriter osw = new OutputStreamWriter(output, "UTF-8");
+			PrintWriter writer = new PrintWriter(osw);
+			for (int i = 0; i < strings.length; i++) {
+				writer.println(strings[i]);
+			}
+			writer.flush();
+		} catch (UnsupportedEncodingException e) {
+		} // will not happen
+	} 
+	
+
+	/*
+	 * Method borrowed from Processing PApplet.java
+	 */
+	public static String[] loadStrings(String filename) {
+		InputStream is = createInput(AppRunnerSettings.get().project.getUrl() + File.separator + filename);
+		if (is != null)
+			return loadStrings(is);
+
+		System.err.println("The file \"" + filename + "\" " + "is missing or inaccessible, make sure "
+				+ "the URL is valid or that the file has been " + "added to your sketch and is readable.");
+		return null;
+	}
+
+	/*
+	 * Method borrowed from Processing PApplet.java
+	 */
+	static public String[] loadStrings(InputStream input) {
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
+
+			String lines[] = new String[100];
+			int lineCount = 0;
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				if (lineCount == lines.length) {
+					String temp[] = new String[lineCount << 1];
+					System.arraycopy(lines, 0, temp, 0, lineCount);
+					lines = temp;
+				}
+				lines[lineCount++] = line;
+			}
+			reader.close();
+
+			if (lineCount == lines.length) {
+				return lines;
+			}
+
+			// resize array to appropriate amount for these lines
+			String output[] = new String[lineCount];
+			System.arraycopy(lines, 0, output, 0, lineCount);
+			return output;
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			// throw new RuntimeException("Error inside loadStrings()");
+		}
+		return null;
+	}
+	
+	/*
+	 * Method borrowed from Processing PApplet.java
+	 */
+	public static InputStream createInput(String filename) {
+		InputStream input = createInputRaw(filename);
+	
+		return input;
+	}
+
+	/*
+	 * Method borrowed from Processing PApplet.java
+	 */
+	public static InputStream createInputRaw(String filename) {
+		// Additional considerations for Android version:
+		// http://developer.android.com/guide/topics/resources/resources-i18n.html
+		InputStream stream = null;
+
+		if (filename == null)
+			return null;
+
+		if (filename.length() == 0) {
+			// an error will be called by the parent function
+			// System.err.println("The filename passed to openStream() was empty.");
+			return null;
+		}
+
+		// Maybe this is an absolute path, didja ever think of that?
+		File absFile = new File(filename);
+		if (absFile.exists()) {
+			try {
+				stream = new FileInputStream(absFile);
+				if (stream != null) {
+					return stream;
+				}
+			} catch (FileNotFoundException fnfe) {
+				// fnfe.printStackTrace();
+			}
+		}
+		
+		return null;
+	}
+
+	/*
+	 * Method borrowed from Processing PApplet.java
+	 */
+	static public InputStream createInput(File file) {
+		if (file == null) {
+			throw new IllegalArgumentException("File passed to createInput() was null");
+		}
+		try {
+			InputStream input = new FileInputStream(file);
+			if (file.getName().toLowerCase().endsWith(".gz")) {
+				return new GZIPInputStream(input);
+			}
+			return input;
+
+		} catch (IOException e) {
+			System.err.println("Could not createInput() for " + file);
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	/**
+	 * Takes a path and creates any in-between folders if they don't already
+	 * exist. Useful when trying to save to a subfolder that may not actually
+	 * exist.
+	 */
+	static public void createPath(String path) {
+		createPath(new File(path));
+	}
+
+	static public void createPath(File file) {
+		try {
+			String parent = file.getParent();
+			if (parent != null) {
+				File unit = new File(parent);
+				if (!unit.exists())
+					unit.mkdirs();
+			}
+		} catch (SecurityException se) {
+			System.err.println("You don't have permissions to create " + file.getAbsolutePath());
+		}
+	}
+
 }

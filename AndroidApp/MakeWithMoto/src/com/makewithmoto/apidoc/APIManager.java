@@ -92,7 +92,7 @@ public class APIManager {
 						apiMethod.parameters += " " + p;
 					}
 				}
-				apiMethod.returnType = m[i].getReturnType().toString();
+				apiMethod.returnType = m[i].getReturnType().getSimpleName().toString();
 
 				//Log.d("qmqm", apiMethod.parameters + " " + apiMethod.returnType);
 

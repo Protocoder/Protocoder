@@ -17,7 +17,7 @@ public class AppSettings {
 	
 	public static int CURRENT_VERSION = Build.VERSION_CODES.ICE_CREAM_SANDWICH;
 	
-	public static String appFolder = "makewithmoto";
+	public static String appFolder = "protocoder";
 	public static String SERVER_ADDRESS = "";
 	public static int websocketPort = 8587;
 	public static final int httpPort = 8585;	

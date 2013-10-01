@@ -15,9 +15,16 @@ function initUI() {
 	          
 	            ]},
 
+	            { type: 'menu',   id: 'list_examples', caption: 'Examples', img: 'icon-folder', items: [
+	          
+	            ]},
+
+
+	            /*
 	            { type: 'button',   id: 'reference', caption: 'Reference', img: 'icon-folder', items: [
 	           
 	            ]},
+	            */
 
 	            
 	            { type: 'break', id: 'break1' },
@@ -86,7 +93,7 @@ function initUI() {
 	    name: 'layout',
 	    panels: [
 	        { type: 'main', style: pstyle, content: 'main' },
-	        { type: 'right', size: 300, style: pstyle, content: 'right', resizable: true, hidden: true}
+	        { type: 'right', size: 300, style: pstyle, content: 'right', resizable: true, hidden: false}
 
 	    ]
 	});
@@ -115,7 +122,7 @@ function initUI() {
 	$().w2layout({
 	    name: 'right_bar',
 	    panels: [
-	        { type: 'main', size: '70%', resizable: true, style: pstyle, content: '<div id = "reference_container" style="background:#dfdfdf"> <div id = "reference"><h1 style="color:#777777; font-size:1.25em; font-style:normal; font-weight:500; text-shadow: 2px 2px #eeeeee; vertical-align:middle;">REFERENCE</h1></div> </div>' },
+	        { type: 'main', size: '70%', resizable: true, style: pstyle, content: '<div id = "reference_container" style="background:#dfdfdf"> <div id = "reference"><h1 style="color:#777777; font-size:1.25em; margin-bottom: 24px; font-style:normal; font-weight:500; text-shadow: 2px 2px #eeeeee; vertical-align:middle;">REFERENCE</h1></div> </div>' },
 	        { type: 'bottom', size: '30%', resizable: true, hidden: false, style: pstyle, content: 'bottom' }
 	    ]
 	});
@@ -204,35 +211,35 @@ function initUI() {
 	    }
 	});
 
-}
 
-/* 
-* Binding UI 
-*/
-var overlayShow = false;
-$("#overlay #toggle").click(function() { 
-	if (overlayShow) {
-		hideDashboard();
-	} else {
+	/* 
+	* Binding UI 
+	*/
+	var overlayShow = false;
+	$("#overlay #toggle").click(function() { 
+		if (overlayShow) {
+			hideDashboard();
+		} else {
+			showDashboard();
+		}
+
+		overlayShow ^= true;
+	});
+	$("#overlay #container #project_list").draggable();
+	$("#overlay #container #example_list").draggable();
+
+	$("#overlay #container #device_status").draggable();
+	$("#overlay #container #help").draggable();
+	$("#overlay #container #connection").draggable();
+	$("#error_from_android").draggable();
+	$("#remote_log").draggable();
+
+	if (location.hash.indexOf("#dashboard") != -1) {
 		showDashboard();
 	}
-
-	overlayShow ^= true;
-});
-$("#overlay #container #project_list").draggable();
-$("#overlay #container #example_list").draggable();
-
-$("#overlay #container #device_status").draggable();
-$("#overlay #container #help").draggable();
-$("#overlay #container #connection").draggable();
-$("#error_from_android").draggable();
-$("#remote_log").draggable();
-
-if (location.hash.indexOf("#dashboard") != -1) {
-	showDashboard();
+	
 }
 
-	
 function hideDashboard() { 
 	$("#overlay #container").fadeOut(200);
 } 
@@ -240,3 +247,5 @@ function hideDashboard() {
 function showDashboard() { 
 	$("#overlay #container").fadeIn(300);
 }
+
+
