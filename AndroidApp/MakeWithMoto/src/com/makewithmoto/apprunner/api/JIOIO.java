@@ -44,6 +44,10 @@ public class JIOIO extends JInterface implements HardwareCallback {
 
 		}
 	}
+	
+	public IOIO get() { 
+		return ioio;	
+	}
 
 	@JavascriptInterface
 	@APIMethod(description = "clean up and poweroff makr board", example = "makr.stop();")

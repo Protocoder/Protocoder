@@ -15,10 +15,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup.LayoutParams;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -46,21 +49,22 @@ import com.makewithmoto.fragments.CameraFragment;
 import com.makewithmoto.fragments.VideoPlayerFragment;
 import com.makewithmoto.fragments.VideoPlayerFragment.VideoListener;
 import com.makewithmoto.utils.AndroidUtils;
+import com.makewithmoto.views.CanvasView;
+import com.makewithmoto.views.CustomWebView;
 import com.makewithmoto.views.HoloCircleSeekBar;
 import com.makewithmoto.views.HoloCircleSeekBar.OnCircleSeekBarChangeListener;
-import com.makewithmoto.views.CanvasView;
 import com.makewithmoto.views.PlotView;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class JUI extends JInterface {
 
-	final static int MAXVIEW = 100;
+	final static int MAXVIEW = 1000;
 	FrameLayout mMainLayout;
 	Boolean isMainLayoutSetup = false;
 	int viewCount = 0;
 	View viewArray[] = new View[MAXVIEW];
 
-	//TODO add variable support 
+	// TODO add variable support
 	// @APIAnnotationField(description = "Creates a button ", example =
 	// "ui.button(\"button\"); ")
 	public int canvasWidth;
@@ -72,10 +76,10 @@ public class JUI extends JInterface {
 
 	public JUI(Activity a) {
 		super(a);
-		
-		screenWidth = ((BaseActivity) a ).screenWidth; 
-		screenHeight = ((BaseActivity) a ).screenHeight; 
-	}	
+
+		screenWidth = ((BaseActivity) a).screenWidth;
+		screenHeight = ((BaseActivity) a).screenHeight;
+	}
 
 	private void initializeLayout() {
 		if (!isMainLayoutSetup) {
@@ -91,7 +95,8 @@ public class JUI extends JInterface {
 			sv.addView(mMainLayout);
 
 			// Set the content view
-			RelativeLayout rl = (RelativeLayout) a.get().findViewById(R.id.user_ui);
+			RelativeLayout rl = (RelativeLayout) a.get().findViewById(
+					R.id.user_ui);
 			rl.addView(sv);
 			isMainLayoutSetup = true;
 		}
@@ -99,28 +104,29 @@ public class JUI extends JInterface {
 
 	private void addView(View v) {
 		mMainLayout.addView(v);
-/*
-		final ViewTreeObserver vto = sv.getViewTreeObserver();
-		OnGlobalLayoutListener globalLayoutListener = new OnGlobalLayoutListener() {
-
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onGlobalLayout() {
-				final ViewTreeObserver obs = sv.getViewTreeObserver();
-
-				canvasWidth = mMainLayout.getWidth();
-				canvasHeight = mMainLayout.getHeight();
-				// observer.removeGlobalOnLayoutListener(this);
-
-				if (AppSettings.CURRENT_VERSION > Build.VERSION.SDK_INT) {
-					obs.removeOnGlobalLayoutListener(this);
-				} else {
-					obs.removeGlobalOnLayoutListener(this);
-				}
-			}
-		};
-		vto.addOnGlobalLayoutListener(globalLayoutListener);
-*/
+		/*
+		 * final ViewTreeObserver vto = sv.getViewTreeObserver();
+		 * OnGlobalLayoutListener globalLayoutListener = new
+		 * OnGlobalLayoutListener() {
+		 * 
+		 * @SuppressWarnings("deprecation")
+		 * 
+		 * @Override public void onGlobalLayout() { final ViewTreeObserver obs =
+		 * sv.getViewTreeObserver();
+		 * 
+		 * canvasWidth = mMainLayout.getWidth(); canvasHeight =
+		 * mMainLayout.getHeight(); //
+		 * observer.removeGlobalOnLayoutListener(this);
+		 * 
+		 * if (AppSettings.CURRENT_VERSION > Build.VERSION.SDK_INT) {
+		 * obs.removeOnGlobalLayoutListener(this); } else {
+		 * obs.removeGlobalOnLayoutListener(this); } } };
+		 * vto.addOnGlobalLayoutListener(globalLayoutListener);
+		 */
+	}
+	
+	public void removeAll() { 
+		mMainLayout.removeAllViews();		
 	}
 
 	/**
@@ -137,51 +143,45 @@ public class JUI extends JInterface {
 		v.setLayoutParams(params);
 	}
 
-	
-	
 	@JavascriptInterface
 	@APIMethod(description = "Uses a DARK / BLUE / NONE theme for some widgets", example = "ui.setTheme(\"DARK\"); ")
 	public void setTheme(String theme) {
-		if (theme.equals("DARK")) { 
+		if (theme.equals("DARK")) {
 			this.theme = R.drawable.theme_rounded_rect_dark;
-		} else if (theme.equals("BLUE")) { 
+		} else if (theme.equals("BLUE")) {
 			this.theme = R.drawable.theme_rounded_rect_blue;
-		} else if (theme.equals("NONE")) { 
+		} else if (theme.equals("NONE")) {
 			theme = null;
 		}
-		
+
 	}
-	
-	public void themeWidget(View v) { 
+
+	public void themeWidget(View v) {
 		v.setBackgroundResource(theme);
 	}
-	
-	
+
 	@JavascriptInterface
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
-	public void title(String title) {
+	public void setTitle(String title) {
 		((AppRunnerActivity) a.get()).changeTitle(title);
 	}
-	
-	
+
 	@JavascriptInterface
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
-	public void fullscreen() {
+	public void setFullscreen() {
 		((AppRunnerActivity) a.get()).setFullScreen();
 	}
-	
+
 	@JavascriptInterface
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
 	public void hideHomeBar() {
 		((AppRunnerActivity) a.get()).setHideHomeBar();
 	}
-	
-	
-	
+
 	@JavascriptInterface
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
 	public void setOrientation() {
-	//	((AppRunnerActivity) a.get()).setOr();
+		// ((AppRunnerActivity) a.get()).setOr();
 	}
 
 	/**
@@ -196,7 +196,7 @@ public class JUI extends JInterface {
 	 */
 	@JavascriptInterface
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
-	public void button(String label, int x, int y, int w, int h,
+	public void addButton(String label, int x, int y, int w, int h,
 			final String callbackfn) {
 		initializeLayout();
 
@@ -229,7 +229,8 @@ public class JUI extends JInterface {
 	 * @param callbackfn
 	 */
 	@JavascriptInterface
-	public void circularSeekbar(int x, int y, int w, int h, final String callbackfn) {
+	public void addKnob (int x, int y, int w, int h,
+			final String callbackfn) {
 		initializeLayout();
 
 		HoloCircleSeekBar pkr = new HoloCircleSeekBar(a.get());
@@ -265,7 +266,7 @@ public class JUI extends JInterface {
 	// We'll add in the circular view as a nice to have later once all the other
 	// widgets are handled.
 	@JavascriptInterface
-	public void seekbar(int x, int y, int w, int h, int max, int progress,
+	public void addSlider(int x, int y, int w, int h, int max, int progress,
 			final String callbackfn) {
 
 		initializeLayout();
@@ -311,9 +312,9 @@ public class JUI extends JInterface {
 	 * @param h
 	 */
 	@JavascriptInterface
-	public int label(String label, int x, int y, int w, int h) {
+	public int addLabel(String label, int x, int y, int w, int h) {
 		int defaultTextSize = 16;
-		return label(label, x, y, w, h, defaultTextSize);
+		return addLabel(label, x, y, w, h, defaultTextSize);
 	}
 
 	/**
@@ -327,17 +328,17 @@ public class JUI extends JInterface {
 	 * @param textSize
 	 */
 	@JavascriptInterface
-	public int label(String label, int x, int y, int w, int h, int textSize) {
+	public int addLabel(String label, int x, int y, int w, int h, int textSize) {
 
 		initializeLayout();
 		// Create the TextView
 		TextView tv = new TextView(a.get());
 		tv.setText(label);
 		tv.setTextSize((float) textSize);
-		//tv.setTypeface(null, Typeface.BOLD);
-		//tv.setGravity(Gravity.CENTER_VERTICAL);
-		//tv.setPadding(2, 0, 0, 0);
-		//tv.setTextColor(a.get().getResources().getColor(R.color.theme_text_white));
+		// tv.setTypeface(null, Typeface.BOLD);
+		// tv.setGravity(Gravity.CENTER_VERTICAL);
+		// tv.setPadding(2, 0, 0, 0);
+		// tv.setTextColor(a.get().getResources().getColor(R.color.theme_text_white));
 		positionView(tv, x, y, w, h);
 
 		// Add the view
@@ -367,7 +368,7 @@ public class JUI extends JInterface {
 	 * @param h
 	 * @param callbackfn
 	 */
-	public void input(String label, int x, int y, int w, int h,
+	public void addInput(String label, int x, int y, int w, int h,
 			final String callbackfn) {
 
 		initializeLayout();
@@ -403,7 +404,7 @@ public class JUI extends JInterface {
 	 * @param callbackfn
 	 */
 	@JavascriptInterface
-	public void toggleButton(final String label, int x, int y, int w, int h,
+	public void addToggle(final String label, int x, int y, int w, int h,
 			boolean initstate, final String callbackfn) {
 		initializeLayout();
 		// Create the view
@@ -437,7 +438,7 @@ public class JUI extends JInterface {
 	 * @param initstate
 	 * @param callbackfn
 	 */
-	public void checkbox(String label, int x, int y, int w, int h,
+	public void addCheckbox(String label, int x, int y, int w, int h,
 			boolean initstate, final String callbackfn) {
 
 		initializeLayout();
@@ -473,7 +474,7 @@ public class JUI extends JInterface {
 	 * @param initstate
 	 * @param callbackfn
 	 */
-	public void toggleswitch(int x, int y, int w, int h, boolean initstate,
+	public void addSwitch(int x, int y, int w, int h, boolean initstate,
 			final String callbackfn) {
 
 		initializeLayout();
@@ -507,7 +508,7 @@ public class JUI extends JInterface {
 	 * @param initstate
 	 * @param callbackfn
 	 */
-	public void radiobutton(String label, int x, int y, int w, int h,
+	public void addRadioButton(String label, int x, int y, int w, int h,
 			boolean initstate, final String callbackfn) {
 
 		initializeLayout();
@@ -541,7 +542,7 @@ public class JUI extends JInterface {
 	 * @param h
 	 * @param imagePath
 	 */
-	public void image(int x, int y, int w, int h, String imagePath) {
+	public void addImage(int x, int y, int w, int h, String imagePath) {
 
 		initializeLayout();
 		// Create and position the image view
@@ -567,7 +568,7 @@ public class JUI extends JInterface {
 	 * @param h
 	 * @param address
 	 */
-	public void webimage(int x, int y, int w, int h, String address) {
+	public void addWebImage(int x, int y, int w, int h, String address) {
 
 		initializeLayout();
 		// Create and position the image view
@@ -592,9 +593,9 @@ public class JUI extends JInterface {
 	 * @param imagePath
 	 * @param callbackfn
 	 */
-	public void imagebutton(int x, int y, int w, int h, String imagePath,
+	public void addImageButton(int x, int y, int w, int h, String imagePath,
 			final String callbackfn) {
-		imagebutton(x, y, w, h, imagePath, false, callbackfn);
+		addImageButton(x, y, w, h, imagePath, false, callbackfn);
 	}
 
 	/**
@@ -608,7 +609,7 @@ public class JUI extends JInterface {
 	 * @param hideBackground
 	 * @param callbackfn
 	 */
-	public void imagebutton(int x, int y, int w, int h, String imagePath,
+	public void addImageButton(int x, int y, int w, int h, String imagePath,
 			boolean hideBackground, final String callbackfn) {
 
 		initializeLayout();
@@ -687,8 +688,8 @@ public class JUI extends JInterface {
 
 	}
 
-	//PlotView plotView;
-	//Plot plot1;
+	// PlotView plotView;
+	// Plot plot1;
 
 	@JavascriptInterface
 	public JPlotView addPlot(int x, int y, int w, int h, int min, int max) {
@@ -698,13 +699,12 @@ public class JUI extends JInterface {
 
 		// Add the view
 		addView(plotView);
-		
+
 		JPlotView jPlotView = new JPlotView(a.get(), plotView, min, max);
 
 		return jPlotView;
 	}
-	
-	
+
 	@JavascriptInterface
 	public CanvasView addCanvas(int x, int y, int w, int h) {
 		initializeLayout();
@@ -713,12 +713,11 @@ public class JUI extends JInterface {
 		positionView(sv, x, y, w, h);
 		// Add the view
 		addView(sv);
-		
+
 		return sv;
 	}
-	
-	
-	//private PApplet papplet;
+
+	// private PApplet papplet;
 
 	/**
 	 * Adds an image with the option to hide the default background
@@ -729,37 +728,76 @@ public class JUI extends JInterface {
 	 * @param y
 	 * @param w
 	 * @param h
-	 
-	public PApplet addProcessing(PApplet papplet, int x, int y, int w, int h) {
-		
+	 * 
+	 *            public PApplet addProcessing(PApplet papplet, int x, int y,
+	 *            int w, int h) {
+	 * 
+	 *            initializeLayout();
+	 * 
+	 *            // Create the main layout. This is where all the items
+	 *            actually go FrameLayout fl = new FrameLayout(a.get());
+	 *            fl.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
+	 *            LayoutParams.MATCH_PARENT)); fl.setId(12);
+	 * 
+	 *            // Add the view positionView(fl, x, y, w, h); addView(fl);
+	 * 
+	 *            //papplet = new PApplet(); Log.d("processing", "" + papplet);
+	 * 
+	 *            FragmentTransaction ft = a.get().getSupportFragmentManager()
+	 *            .beginTransaction(); ft.add(fl.getId(), papplet,
+	 *            String.valueOf(fl.getId()));
+	 *            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+	 *            ft.setCustomAnimations(android.R.anim.fade_in,
+	 *            android.R.anim.fade_out); ft.addToBackStack(null);
+	 *            ft.commit();
+	 * 
+	 * 
+	 *            return papplet;
+	 * 
+	 *            }
+	 */
+
+	public WebView addWebView(int x, int y, int w, int h) {
 		initializeLayout();
-		
-		// Create the main layout. This is where all the items actually go
-		FrameLayout fl = new FrameLayout(a.get());
-		fl.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-		fl.setId(12);
-		
-		// Add the view
-		positionView(fl, x, y, w, h);
-		addView(fl);
-		
-		//papplet = new PApplet();
-		Log.d("processing", "" + papplet);
-		
-		FragmentTransaction ft = a.get().getSupportFragmentManager()
-				.beginTransaction();  
-		ft.add(fl.getId(), papplet, String.valueOf(fl.getId()));
-		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-		ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-		ft.addToBackStack(null);
-		ft.commit();
-		
-		
-		return papplet;
-		
+		WebView webView = new CustomWebView(a.get());
+		WebSettings webSettings = webView.getSettings();
+		webSettings.setJavaScriptEnabled(true);
+		webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+		webView.setFocusable(true);
+		webView.setFocusableInTouchMode(true);
+
+		webView.clearCache(false);
+		webView.setBackgroundColor(0x00000000);
+
+
+		webView.requestFocus(View.FOCUS_DOWN);
+		webView.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				switch (event.getAction()) {
+				case MotionEvent.ACTION_DOWN:
+				case MotionEvent.ACTION_UP:
+					if (!v.hasFocus()) {
+						v.requestFocus();
+					}
+					break;
+				}
+				return false;
+			}
+		});
+
+
+
+		webView.addJavascriptInterface(a.get(), "activity");
+		positionView(webView, x, y, w, h);
+
+		addView(webView);
+		// webview.loadData(content, "text/html", "utf-8");
+
+		return webView;
+
 	}
-	*/
-	
+
 	/**
 	 * Adds an image with the option to hide the default background
 	 * 
@@ -770,24 +808,33 @@ public class JUI extends JInterface {
 	 * @param w
 	 * @param h
 	 */
-	public JCamera addCameraView(int x, int y, int w, int h) {
+	public JCamera addCameraView(int type, /*int filter,*/ int x, int y, int w, int h) {
 
 		initializeLayout();
 
 		// Create the main layout. This is where all the items actually go
 		FrameLayout fl = new FrameLayout(a.get());
-		fl.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		fl.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
+				LayoutParams.MATCH_PARENT));
 		fl.setId(12345);
-		
+
 		// Add the view
 		positionView(fl, x, y, w, h);
 		addView(fl);
 
 		CameraFragment cameraFragment = new CameraFragment();
 		Bundle bundle = new Bundle();
-		bundle.putInt("color", CameraFragment.MODE_COLOR_COLOR);
-		bundle.putInt("camera", CameraFragment.MODE_CAMERA_BACK);
-
+		if (type == 1) { 
+			bundle.putInt("camera", CameraFragment.MODE_CAMERA_FRONT);			
+		} else { 
+			bundle.putInt("camera", CameraFragment.MODE_CAMERA_BACK);			
+		}
+		
+		//if (filter == 1) { 
+		//	bundle.putInt("color", CameraFragment.MODE_COLOR_BW);
+		//} else { 
+		//	bundle.putInt("color", CameraFragment.MODE_COLOR_COLOR);
+		//}
 		cameraFragment.setArguments(bundle);
 
 		FragmentTransaction ft = a.get().getSupportFragmentManager()
@@ -800,15 +847,15 @@ public class JUI extends JInterface {
 		ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
 		ft.addToBackStack(null);
 		ft.commit();
-		
+
 		JCamera jcamera = new JCamera(a.get(), cameraFragment);
-		
+
 		return jcamera;
-	
+
 	}
 
 	/**
-	 * Adds a video 
+	 * Adds a video
 	 * 
 	 * @author victordiaz
 	 * 
@@ -817,15 +864,17 @@ public class JUI extends JInterface {
 	 * @param w
 	 * @param h
 	 */
-	public JVideo addVideoView(final String videoFile, int x, int y, int w, int h) {
+	public JVideo addVideoView(final String videoFile, int x, int y, int w,
+			int h) {
 
 		initializeLayout();
 
 		// Create the main layout. This is where all the items actually go
 		FrameLayout fl = new FrameLayout(a.get());
-		fl.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		fl.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
+				LayoutParams.MATCH_PARENT));
 		fl.setId(12345678);
-		
+
 		// Add the view
 		positionView(fl, x, y, w, h);
 		addView(fl);
@@ -840,7 +889,7 @@ public class JUI extends JInterface {
 
 			@Override
 			public void onReady(boolean ready) {
-				//fragment.loadResourceVideo("/raw/cityfireflies");
+				// fragment.loadResourceVideo("/raw/cityfireflies");
 				fragment.loadExternalVideo(((AppRunnerActivity) a.get())
 						.getCurrentDir() + File.separator + videoFile);
 				// fragment.setLoop(true);
@@ -852,7 +901,6 @@ public class JUI extends JInterface {
 			}
 		});
 
-		
 		FragmentTransaction ft = a.get().getSupportFragmentManager()
 				.beginTransaction(); // FIXME: Because we have no tagging
 										// system we need to use the int as
@@ -863,19 +911,18 @@ public class JUI extends JInterface {
 		ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
 		ft.addToBackStack(null);
 		ft.commit();
-		
+
 		JVideo jvideo = new JVideo(a.get(), fragment);
 
 		return jvideo;
-	
+
 	}
 
-	public void takeScreenshot(String imagePath) { 
-		AndroidUtils.takeScreenshot(((AppRunnerActivity) a.get()).getCurrentDir(), imagePath, mMainLayout);
+	public void takeScreenshot(String imagePath) {
+		AndroidUtils.takeScreenshot(
+				((AppRunnerActivity) a.get()).getCurrentDir(), imagePath,
+				mMainLayout);
 	}
-
-
-
 
 	@JavascriptInterface
 	public void startTrackingTouches(String b) {

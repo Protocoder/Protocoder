@@ -86,6 +86,23 @@ function testWebsockets() {
       var objDiv = document.getElementById("console");
       objDiv.scrollTop = objDiv.scrollHeight;
     }
+
+    if (result.type == 'ide') { 
+      var ready = result.values.ready; 
+
+
+      if (ready) { 
+        $("#tb_toolbar_item_project_run").addClass("app_running");
+        $("#tb_toolbar_item_project_run").removeClass("app_connected");
+
+        $("#tb_toolbar_item_project_run").find(".w2ui-tb-caption").text("close");
+      } else { 
+        $("#tb_toolbar_item_project_run").addClass("app_connected");
+        $("#tb_toolbar_item_project_run").removeClass("app_running");
+        $("#tb_toolbar_item_project_run").find(".w2ui-tb-caption").text("run");
+      }
+
+    }
     
 
     console.log(result);
@@ -125,12 +142,20 @@ function connected() {
   clearInterval(reconnectionInterval); //removes the reconnection 
   $("#connection").addClass('card');
   $("#connection").css("border-color","#00ff00");
+  $("#tb_toolbar_item_project_run").addClass("app_connected");
+
 }
 
 function disconnected() { 
   console.log('disconnected');
+  $("#tb_toolbar_item_project_run").removeClass("app_connected");
+  $("#tb_toolbar_item_project_run").removeClass("app_running");
+
   $("#connection").addClass('card');
   $("#connection").css("border-color","#ff0000");
+  $("#tb_toolbar_item_project_run").removeClass("app_running");
+  $("#tb_toolbar_item_project_run").removeClass("app_connected");
+
 
   //try to reconnect 
   reconnectionInterval = setTimeout(function() {

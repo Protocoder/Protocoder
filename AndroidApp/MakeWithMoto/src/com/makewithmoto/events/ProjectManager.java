@@ -37,7 +37,7 @@ public class ProjectManager {
 
 	public String getCode(Project p) {
 		String out = null;
-		File f = new File(p.getUrl() + File.separator + "script.js");
+		File f = new File(p.getUrl() + File.separator + "main.js");
 		try {
 			InputStream in = new FileInputStream(f);
 			ByteArrayOutputStream buf = new ByteArrayOutputStream();
@@ -60,7 +60,7 @@ public class ProjectManager {
 	}
 
 	public void writeNewCode(Project p, String code) {
-		writeNewFile(p.getUrl() + File.separator + "script.js", code);
+		writeNewFile(p.getUrl() + File.separator + "main.js", code);
 	}
 
 	public void writeNewFile(String file, String code) {

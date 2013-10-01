@@ -19,6 +19,7 @@
         android:singleLine="false"
         android:textColor="#FFFFFFFF"
         android:textColorHighlight="#550000FF"
+        android:selectAllOnFocus="false"
         android:textSize="14sp"
         android:textStyle="bold" >
     </EditText>
