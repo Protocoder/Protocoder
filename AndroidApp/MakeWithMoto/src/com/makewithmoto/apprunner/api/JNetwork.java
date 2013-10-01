@@ -63,7 +63,7 @@ public class JNetwork extends JInterface {
 	public OSC.Client connectOSC(String uri) { 
 		OSC osc = new OSC();
 		Client client = osc.new Client();
-		
+
 		return client;
 	}
 	
@@ -131,11 +131,11 @@ public class JNetwork extends JInterface {
 						response.getEntity().getContent().close();
 						throw new IOException(statusLine.getReasonPhrase());
 					}
-					callback(callbackfn, statusLine.getStatusCode());
+					callback(callbackfn, statusLine.getStatusCode(),  "\"" + responseString + "\"");
 				} catch (ClientProtocolException e) {
-					// TODO Handle problems..
+
 				} catch (IOException e) {
-					// TODO Handle problems..
+
 				}
 				return responseString;
 			}

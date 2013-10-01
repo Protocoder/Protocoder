@@ -187,7 +187,7 @@ public class Intents {
 
 	}
 
-	public static void dial(Context c) {
+	public static void openDial(Context c) {
 		Intent intent = new Intent(Intent.ACTION_DIAL);
 		c.startActivity(intent);
 	}
