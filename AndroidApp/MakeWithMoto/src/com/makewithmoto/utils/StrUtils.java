@@ -1,12 +1,15 @@
 package com.makewithmoto.utils;
 
-import java.util.UUID;
+import org.apache.commons.lang3.RandomStringUtils;
 
 public class StrUtils {
 
 	public static String generateRandomString() {
-		String uuid = UUID.randomUUID().toString().replaceAll("-", "");
-		return uuid;
+		//String uuid = UUID.randomUUID().toString().replaceAll("-", "");
+		
+		String id = RandomStringUtils.random(8);
+		
+		return id;
 	}
 	
 	
