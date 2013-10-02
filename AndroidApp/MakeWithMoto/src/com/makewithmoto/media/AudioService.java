@@ -1,28 +1,9 @@
 package com.makewithmoto.media;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.puredata.android.io.AudioParameters;
-import org.puredata.android.service.PdService;
-import org.puredata.android.utils.PdUiDispatcher;
-import org.puredata.core.PdBase;
-import org.puredata.core.PdListener;
-import org.puredata.core.utils.IoUtils;
-
-import android.content.ComponentName;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.Environment;
-import android.os.IBinder;
-import android.util.Log;
-
-import com.makewithmoto.R;
-import com.makewithmoto.apprunner.AppRunnerActivity;
-import com.makewithmoto.apprunner.logger.L;
 
 public class AudioService {
 
+	/*
 	public static PdService pdService = null;
 	public static String file;
 
@@ -124,4 +105,5 @@ public class AudioService {
 		PdBase.openPatch(file);
 	}
 
+	*/
 }
