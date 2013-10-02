@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">ProtoCoderLicenses</string>
+    <string name="licenses">Licenses</string>
+    <string name="action_settings">Settings</string>
+    <string name="license_title_websockets">Android Websockets</string>
+    <string name="license_title_netutil">NetUtil</string>
+    <string name="license_title_libpd">libpd</string>
+    <string name="license_title_commons_lang">Commons Lang</string>
+    <string name="license_title_commons_net">Commons Net</string>
+    <string name="license_title_eventbus">EventBus</string>
+    <string name="license_title_gson">Google GSON</string>
+    <string name="license_title_ioio">ioio</string>
+    <string name="license_title_rhino">Mozilla Rhino</string>
+    <string name="license_title_nano">Nano HTTPD</string>
+
+</resources>
