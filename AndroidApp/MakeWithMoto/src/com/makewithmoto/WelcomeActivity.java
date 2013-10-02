@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.makewithmoto.R;
 import com.makewithmoto.base.BaseActivity;
 import com.makewithmoto.base.BaseMainApp;
 import com.makewithmoto.utils.FileIO;
