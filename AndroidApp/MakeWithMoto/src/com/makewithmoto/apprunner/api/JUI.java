@@ -57,8 +57,8 @@ import com.makewithmoto.utils.AndroidUtils;
 import com.makewithmoto.views.CanvasView;
 import com.makewithmoto.views.CustomWebView;
 import com.makewithmoto.views.HoloCircleSeekBar;
-import com.makewithmoto.views.HoloCircleSeekBar.OnCircleSeekBarChangeListener;
 import com.makewithmoto.views.PlotView;
+import com.makewithmoto.views.HoloCircleSeekBar.OnCircleSeekBarChangeListener;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class JUI extends JInterface {

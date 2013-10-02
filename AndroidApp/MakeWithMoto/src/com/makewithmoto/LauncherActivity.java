@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
 
+import com.makewithmoto.R;
 import com.makewithmoto.base.AppSettings;
 import com.makewithmoto.base.BaseActivity;
 import com.makewithmoto.utils.FileIO;

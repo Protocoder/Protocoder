@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.makewithmoto.R;
 import com.makewithmoto.base.BaseNotification;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
