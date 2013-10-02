@@ -1,24 +1,13 @@
 package com.makewithmoto.apprunner.api;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.Locale;
 
-import org.json.JSONArray;
-import org.puredata.android.service.PdService;
-import org.puredata.android.utils.PdUiDispatcher;
-import org.puredata.core.PdBase;
-import org.puredata.core.PdReceiver;
-import org.puredata.core.utils.PdDispatcher;
-
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaRecorder;
 import android.speech.RecognizerIntent;
-import android.telephony.PhoneStateListener;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.makewithmoto.apidoc.annotation.APIMethod;
@@ -26,8 +15,6 @@ import com.makewithmoto.apidoc.annotation.JavascriptInterface;
 import com.makewithmoto.apprunner.AppRunnerActivity;
 import com.makewithmoto.apprunner.AppRunnerSettings;
 import com.makewithmoto.media.Audio;
-import com.makewithmoto.media.AudioService;
-import com.makewithmoto.sensors.WhatIsRunning;
 
 public class JMedia extends JInterface {
 
@@ -68,6 +55,7 @@ public class JMedia extends JInterface {
 		Audio.playSound(url, 100);
 	}
 
+	/*
 	@JavascriptInterface
 	@APIMethod(description = "plays a sound", example = "media.playSound(fileName);")
 	public JPureData initPDPatch(String fileName, final String callbackfn) {
@@ -149,6 +137,7 @@ public class JMedia extends JInterface {
 
 		return new JPureData();
 	}
+	
 
 	private void initSystemServices() {
 		TelephonyManager telephonyManager = (TelephonyManager) a.get()
@@ -166,6 +155,7 @@ public class JMedia extends JInterface {
 			}
 		}, PhoneStateListener.LISTEN_CALL_STATE);
 	}
+	*/
 
 	@JavascriptInterface
 	@APIMethod(description = "text to speech", example = "media.textToSpeech('hello world');")

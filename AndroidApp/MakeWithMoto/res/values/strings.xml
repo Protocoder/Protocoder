@@ -64,5 +64,18 @@
     <string name="setting_notifications_title">Notifications</string>
     <string name="setting_show_notifications_title">Show notifications</string>
     <string name="setting_show_notifications_body">Display a persistent notification when the server is running</string>
+    
+    <string name="licenses">Licenses</string>
+    <string name="license_title_websockets">Android Websockets</string>
+    <string name="license_title_netutil">NetUtil</string>
+    <string name="license_title_libpd">libpd</string>
+    <string name="license_title_commons_lang">Commons Lang</string>
+    <string name="license_title_commons_net">Commons Net</string>
+    <string name="license_title_eventbus">EventBus</string>
+    <string name="license_title_gson">Google GSON</string>
+    <string name="license_title_ioio">ioio</string>
+    <string name="license_title_rhino">Mozilla Rhino</string>
+    <string name="license_title_nano">Nano HTTPD</string>
+    
 
 </resources>
