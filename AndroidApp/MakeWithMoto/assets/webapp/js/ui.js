@@ -5,7 +5,9 @@ function initUI() {
 	$('#toolbar').w2toolbar({
 	        name: 'toolbar',
 	        items: [
+	        	/*
 	            { type: 'button',  id: 'logo', caption: '', img: 'icon-page' },
+				*/ 
 
 	            { type: 'button',  id: 'project_new', caption: 'New Project', img: 'icon-page' },
 	            { type: 'break',  id: 'break0' },
@@ -32,9 +34,11 @@ function initUI() {
 
 	            { type: 'break', id: 'break1' },
 
+	            /*
 	            { type: 'button',   id: 'settings', caption: 'Settings', img: 'icon-folder', items: [
 	           
 	            ]},
+	            */
 
 	            { type: 'spacer' }
 
