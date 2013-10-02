@@ -12,6 +12,7 @@ import com.makewithmoto.apidoc.annotation.APIMethod;
 import com.makewithmoto.apidoc.annotation.JavascriptInterface;
 import com.makewithmoto.network.CustomWebsocketServer;
 import com.makewithmoto.network.CustomWebsocketServer.WebSocketListener;
+import com.makewithmoto.utils.StrUtils;
 
 public class JDashboard extends JInterface {
 
@@ -26,7 +27,7 @@ public class JDashboard extends JInterface {
 	public JWebAppPlot addPlot(String name, int x, int y, int w, int h) {
 		
 		JWebAppPlot jWebAppPlot = new JWebAppPlot(a.get());
-		jWebAppPlot.add(name, x, y, w, h);
+		jWebAppPlot.add(StrUtils.generateRandomString(), name, x, y, w, h);
 		
 		return jWebAppPlot;
 	}
@@ -34,10 +35,10 @@ public class JDashboard extends JInterface {
 	
 	@JavascriptInterface 
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
-	public JWebAppHTML addHTML(String id, String html, int posx, int posy) throws UnknownHostException {
+	public JWebAppHTML addHTML(String html, int posx, int posy) throws UnknownHostException {
 		
 		JWebAppHTML jWebAppHTML = new JWebAppHTML(a.get());
-		jWebAppHTML.add(id, html, posx, posy);
+		jWebAppHTML.add(StrUtils.generateRandomString(), html, posx, posy);
 		
 		
 		return jWebAppHTML;
@@ -46,9 +47,10 @@ public class JDashboard extends JInterface {
 	
 	@JavascriptInterface 
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
-	public JWebAppButton addButton(String id, String name, int x, int y, int w, int h, final String callbackfn) throws UnknownHostException {
+	public JWebAppButton addButton(String name, int x, int y, int w, int h, final String callbackfn) throws UnknownHostException {
 		Log.d(TAG, "callback " + callbackfn);
 		
+		String id = StrUtils.generateRandomString();
 		JWebAppButton jWebAppButton = new JWebAppButton(a.get());
 		jWebAppButton.add(id, name, x, y, w, h);
 		
@@ -67,8 +69,9 @@ public class JDashboard extends JInterface {
 	
 	@JavascriptInterface 
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
-	public JWebAppLabel addLabel(String id, String name, int x, int y, int size, String color) {
-		
+	public JWebAppLabel addLabel(String name, int x, int y, int size, String color) {
+		String id = StrUtils.generateRandomString();
+
 		JWebAppLabel jWebAppLabel = new JWebAppLabel(a.get());
 		jWebAppLabel.add(id, name, x, y, size, color);
 				
@@ -78,8 +81,9 @@ public class JDashboard extends JInterface {
 	
 	@JavascriptInterface 
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
-	public JWebAppImage addImage(String id, String url, int x, int y, int w, int h) {
-		
+	public JWebAppImage addImage(String url, int x, int y, int w, int h) {
+		String id = StrUtils.generateRandomString();
+
 		JWebAppImage jWebAppImage = new JWebAppImage(a.get());
 		jWebAppImage.add(id, url, x, y, w, h);
 		

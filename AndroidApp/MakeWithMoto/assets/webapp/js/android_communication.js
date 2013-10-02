@@ -174,9 +174,8 @@ function get_camera() {
 *
 */
 
-var remotePlot;
-
 var ws; 
+var widgetsFn = new Object();
 
 function initWebsockets() {
   // Write your code in the same way as for native WebSocket:
@@ -274,11 +273,11 @@ function initWebsockets() {
         }
       } else if (result.action == "add") { 
         console.log("adding widget");
-        remotePlot = addWidget(result.values);
+        widgetsFn[result.values.id] = addWidget(result.values);
       } else if (result.action == "update") {
         console.log("updating widget");
         console.log(result.values.val);
-        remotePlot(result.values.val, "");
+        widgetsFn[result.values.id](result.values.val, "");
       } else if (result.action == "setText") {
         setText(result.values.id, result.values.val);
 
@@ -317,7 +316,7 @@ function disconnected() {
   //try to reconnect 
   reconnectionInterval = setTimeout(function() {
     console.log("trying to reconnect");
-    testWebsockets();
+    initWebsockets();
   }, 1000);
 }
 

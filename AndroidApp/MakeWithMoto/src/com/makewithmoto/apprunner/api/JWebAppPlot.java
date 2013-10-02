@@ -14,21 +14,22 @@ public class JWebAppPlot extends JInterface {
 
 
 	private static final String TAG = "JWebAppPlot";
-	String name; 
+	String id; 
 	
 	public JWebAppPlot(Activity a) {
 		super(a);
 	}
 	
 
-	public void add(String name, int x, int y, int w, int h) { 
-		this.name = name;
+	public void add(String id, String name, int x, int y, int w, int h) { 
+		this.id = id;
 		JSONObject msg = new JSONObject();
 		try {
 			msg.put("type", "widget");
 			msg.put("action", "add");
 
 			JSONObject values = new JSONObject();
+			values.put("id", id);
 			values.put("name", name);
 			values.put("type", "plot");
 			values.put("x", x);
@@ -60,7 +61,7 @@ public class JWebAppPlot extends JInterface {
 			msg.put("action", "update");
 
 			JSONObject values = new JSONObject();
-			values.put("name", name);
+			values.put("id", id);
 			values.put("type", "plot");
 			values.put("val", val);
 			msg.put("values", values);

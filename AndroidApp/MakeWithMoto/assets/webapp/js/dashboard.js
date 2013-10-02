@@ -9,7 +9,7 @@ var widgets = new Array();
 var addWidget = function(widget) { 
   if (widget.type == "plot") { 
     widgets.push(widget.name);
-    return addPlot(widget.name, widget.x, widget.y, widget.w, widget.h);
+    return addPlot(widget.id, widget.name, widget.x, widget.y, widget.w, widget.h);
   } else if (widget.type == "button") {
     widgets.push(widget.name);
     return addButton(widget.id, widget.name, widget.x, widget.y, widget.w, widget.h);
@@ -88,7 +88,7 @@ var setBackgroundColor = function(r, g, b, a) {
   $("#overlay #container").css("background", "rgba("+r+","+g+","+b+","+a+")");
 }
 
-var addPlot = function(element, posx, posy, w, h) {
+var addPlot = function(element, name, posx, posy, w, h) {
   var _delay = 10;
   var _n = 40;
   var minVal; 
@@ -125,7 +125,7 @@ var addPlot = function(element, posx, posy, w, h) {
       .y(function(d, i) { return y(d); });
  
 
-      $("#overlay #container").append('<div class ="plot_container widget" id = "' + element +'"><h1> '+ element +' </h1><div id = "plot"> </div></div>');
+      $("#overlay #container").append('<div class ="plot_container widget" id = "' + element +'"><h1> '+ name +' </h1><div id = "plot"> </div></div>');
       $("#"+element).draggable();
 
       // Setup the svg element
