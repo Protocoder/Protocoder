@@ -21,9 +21,9 @@ ui.addToggle("Turn accelerometer on/off", 0, 200, 500, 100, false, function(on){
         sensors.startAccelerometer(
          function(x,y,z){
             //update labels 
-            ui.labelSetText(xLabel, "X : "+x);
-            ui.labelSetText(yLabel, "Y : "+y);
-            ui.labelSetText(zLabel, "Z : "+z);
+            xLabel.setText("X : "+x);
+            yLabel.setText("Y : "+y);
+            zLabel.setText("Z : "+z);
 
             //update plot with the x value
             plot.update(x);

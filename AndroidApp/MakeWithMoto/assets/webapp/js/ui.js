@@ -123,7 +123,22 @@ function initUI() {
 	    name: 'right_bar',
 	    panels: [
 	        { type: 'main', size: '70%', resizable: true, style: pstyle, content: '<div id = "reference_container" style="background:#dfdfdf"> <div id = "reference"><h1 style="color:#777777; font-size:1.25em; margin-bottom: 24px; font-style:normal; font-weight:500; text-shadow: 2px 2px #eeeeee; vertical-align:middle;">REFERENCE</h1></div> </div>' },
-	        { type: 'bottom', size: '30%', resizable: true, hidden: false, style: pstyle, content: 'bottom' }
+	        { type: 'bottom', size: '30%', resizable: true, hidden: false, style: pstyle, content: 'bottom', 
+	      	/* TODO add toolbar */ 
+	        /*
+	        	toolbar: {
+				items: [
+					{ type: 'button',  id: 'upload',  caption: 'Upload', img: 'icon-save', hint: 'Hint for item 5' },
+					{ type: 'button',  id: 'rename',  caption: 'Rename', img: 'icon-save', hint: 'Hint for item 5' },
+					{ type: 'button',  id: 'delete',  caption: 'Delete', img: 'icon-save', hint: 'Hint for item 5' }
+
+				],
+				onClick: function (target, data) {
+					this.owner.content('main', target);
+				}
+			}
+			*/
+		}
 	    ]
 	});
 
@@ -136,7 +151,7 @@ function initUI() {
 	      // $("#grid_grid_records").append('<div id = "dropbox"> </div>');
 	    },
 	    columns: [              
-	        { field: 'file_name', caption: 'File Name', size: '70%', editable: {type:'text'} },
+	        { field: 'file_name', caption: 'File Name', size: '70%' },
 	        { field: 'file_size', caption: 'File Size', size: '30%' },
 	    ]
 	});

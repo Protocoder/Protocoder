@@ -9,7 +9,7 @@ var plot = ui.addPlot(0, 500, ui.screenWidth, 250, -12, 12);
 var plot2 = ui.addPlot(0, 800, ui.screenWidth, 250, -12, 12); 
 
 //add webplot 
-var webPlot = dashboard.addPlot("x_axys", 400, 100, 250, 100);
+var webPlot = dashboard.addPlot("acceleromer x", 400, 100, 250, 100);
 
 
 //start button, when press add plots and start accelerometer 

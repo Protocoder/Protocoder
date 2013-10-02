@@ -54,16 +54,6 @@ public class JAndroid extends JInterface {
 		v.vibrate(Integer.parseInt(duration));
 	}
 	
-	
-	
-	@JavascriptInterface
-	@APIMethod(description = "Change brightness", example = "ui.button(\"button\"); ")
-	public void toast(String text, int duration) {
-		Toast.makeText(a.get(), text, duration).show();
-	}
-	
-	
-	
 	@JavascriptInterface
 	@APIMethod(description = "Change brightness", example = "ui.button(\"button\"); ")
 	public void smsSend(String number, String msg) { 
@@ -194,8 +184,6 @@ public class JAndroid extends JInterface {
 	}
 
 
-	@JavascriptInterface
-	@APIMethod(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")	
 	public void stopAllTimers() {
 		Iterator<Runnable> ir = rl.iterator();
 		while (ir.hasNext()) {

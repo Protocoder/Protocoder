@@ -1,8 +1,0 @@
-# load rake tasks
-Dir["./lib/src/**/*.rb"].sort.each {|ext| load ext }
-Dir["./lib/tasks/**/*.rake"].sort.each { |ext| load ext }
-
-require './config/boot.rb'
-#require 'sinatra/asset_pipeline/task.rb'
-
-Sinatra::AssetPipeline::Task.define! App

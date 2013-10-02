@@ -5,6 +5,8 @@ import java.io.InputStream;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -14,6 +16,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.text.InputType;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -38,6 +41,7 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.makewithmoto.R;
@@ -184,6 +188,16 @@ public class JUI extends JInterface {
 	public void setOrientation() {
 		// ((AppRunnerActivity) a.get()).setOr();
 	}
+	
+	
+	
+	@JavascriptInterface
+	@APIMethod(description = "Change brightness", example = "ui.button(\"button\"); ")
+	public void toast(String text, int duration) {
+		Toast.makeText(a.get(), text, duration).show();
+	}
+	
+	
 
 	/**
 	 * Adds a button to the view
@@ -197,7 +211,7 @@ public class JUI extends JInterface {
 	 */
 	@JavascriptInterface
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
-	public void addButton(String label, int x, int y, int w, int h,
+	public Button addButton(String label, int x, int y, int w, int h,
 			final String callbackfn) {
 		initializeLayout();
 
@@ -205,7 +219,7 @@ public class JUI extends JInterface {
 		Button b = new Button(a.get());
 		b.setText(label);
 		positionView(b, x, y, w, h);
-
+	
 		// Set on click behavior
 		b.setOnClickListener(new OnClickListener() {
 			@Override
@@ -217,6 +231,8 @@ public class JUI extends JInterface {
 
 		// Add the view to the layout
 		mMainLayout.addView(b);
+		
+		return b;
 	}
 
 	/**
@@ -230,7 +246,7 @@ public class JUI extends JInterface {
 	 * @param callbackfn
 	 */
 	@JavascriptInterface
-	public void addKnob(int x, int y, int w, int h, final String callbackfn) {
+	public HoloCircleSeekBar addKnob(int x, int y, int w, int h, final String callbackfn) {
 		initializeLayout();
 
 		HoloCircleSeekBar pkr = new HoloCircleSeekBar(a.get());
@@ -250,6 +266,8 @@ public class JUI extends JInterface {
 		// Add the view
 		positionView(pkr, x, y, w, h);// height must always wrap
 		addView(pkr);
+		
+		return pkr;
 	}
 
 	/**
@@ -266,7 +284,7 @@ public class JUI extends JInterface {
 	// We'll add in the circular view as a nice to have later once all the other
 	// widgets are handled.
 	@JavascriptInterface
-	public void addSlider(int x, int y, int w, int h, int max, int progress,
+	public SeekBar addSlider(int x, int y, int w, int h, int max, int progress,
 			final String callbackfn) {
 
 		initializeLayout();
@@ -299,6 +317,8 @@ public class JUI extends JInterface {
 
 		// Add the view
 		addView(sb);
+		
+		return sb;
 
 	}
 
@@ -312,7 +332,7 @@ public class JUI extends JInterface {
 	 * @param h
 	 */
 	@JavascriptInterface
-	public int addLabel(String label, int x, int y, int w, int h) {
+	public TextView addLabel(String label, int x, int y, int w, int h) {
 		int defaultTextSize = 16;
 		return addLabel(label, x, y, w, h, defaultTextSize);
 	}
@@ -328,7 +348,7 @@ public class JUI extends JInterface {
 	 * @param textSize
 	 */
 	@JavascriptInterface
-	public int addLabel(String label, int x, int y, int w, int h, int textSize) {
+	public TextView addLabel(String label, int x, int y, int w, int h, int textSize) {
 
 		initializeLayout();
 		// Create the TextView
@@ -340,7 +360,7 @@ public class JUI extends JInterface {
 		// tv.setPadding(2, 0, 0, 0);
 		// tv.setTextColor(a.get().getResources().getColor(R.color.theme_text_white));
 		positionView(tv, x, y, w, h);
-
+		
 		// Add the view
 		themeWidget(tv);
 		addView(tv);
@@ -348,15 +368,17 @@ public class JUI extends JInterface {
 		viewArray[viewCount] = tv;
 
 		viewCount += 1;
-
-		return (viewCount - 1);
+		
+		return tv;
 	}
 
+	/*
 	@JavascriptInterface
 	public void labelSetText(int view, String text) {
 		TextView tv = (TextView) viewArray[view];
 		tv.setText(text);
 	}
+	*/
 
 	/**
 	 * Adds an EditText view
@@ -368,7 +390,7 @@ public class JUI extends JInterface {
 	 * @param h
 	 * @param callbackfn
 	 */
-	public void addInput(String label, int x, int y, int w, int h,
+	public EditText addInput(String label, int x, int y, int w, int h,
 			final String callbackfn) {
 
 		initializeLayout();
@@ -388,7 +410,9 @@ public class JUI extends JInterface {
 
 		// Add the view
 		themeWidget(et);
-		addView(et);
+		addView(et); 
+		
+		return et;
 
 	}
 
@@ -404,7 +428,7 @@ public class JUI extends JInterface {
 	 * @param callbackfn
 	 */
 	@JavascriptInterface
-	public void addToggle(final String label, int x, int y, int w, int h,
+	public ToggleButton addToggle(final String label, int x, int y, int w, int h,
 			boolean initstate, final String callbackfn) {
 		initializeLayout();
 		// Create the view
@@ -425,6 +449,8 @@ public class JUI extends JInterface {
 
 		// Add the view
 		addView(tb);
+		
+		return tb;
 	}
 
 	/**
@@ -438,7 +464,7 @@ public class JUI extends JInterface {
 	 * @param initstate
 	 * @param callbackfn
 	 */
-	public void addCheckbox(String label, int x, int y, int w, int h,
+	public CheckBox addCheckbox(String label, int x, int y, int w, int h,
 			boolean initstate, final String callbackfn) {
 
 		initializeLayout();
@@ -461,6 +487,8 @@ public class JUI extends JInterface {
 		// Add the view
 		themeWidget(cb);
 		addView(cb);
+		
+		return cb;
 
 	}
 
@@ -474,7 +502,7 @@ public class JUI extends JInterface {
 	 * @param initstate
 	 * @param callbackfn
 	 */
-	public void addSwitch(int x, int y, int w, int h, boolean initstate,
+	public Switch addSwitch(int x, int y, int w, int h, boolean initstate,
 			final String callbackfn) {
 
 		initializeLayout();
@@ -495,6 +523,7 @@ public class JUI extends JInterface {
 		// Add the view
 		addView(s);
 
+		return s;
 	}
 
 	/**
@@ -508,7 +537,7 @@ public class JUI extends JInterface {
 	 * @param initstate
 	 * @param callbackfn
 	 */
-	public void addRadioButton(String label, int x, int y, int w, int h,
+	public RadioButton addRadioButton(String label, int x, int y, int w, int h,
 			boolean initstate, final String callbackfn) {
 
 		initializeLayout();
@@ -531,6 +560,7 @@ public class JUI extends JInterface {
 		themeWidget(rb);
 		addView(rb);
 
+		return rb;
 	}
 
 	/**
@@ -542,7 +572,7 @@ public class JUI extends JInterface {
 	 * @param h
 	 * @param imagePath
 	 */
-	public void addImage(int x, int y, int w, int h, String imagePath) {
+	public ImageView addImage(int x, int y, int w, int h, String imagePath) {
 
 		initializeLayout();
 		// Create and position the image view
@@ -556,6 +586,8 @@ public class JUI extends JInterface {
 		// Add the view
 		iv.setBackgroundColor(0x33b5e5);
 		addView(iv);
+		
+		return iv;
 
 	}
 
@@ -567,8 +599,9 @@ public class JUI extends JInterface {
 	 * @param w
 	 * @param h
 	 * @param address
+	 * @return 
 	 */
-	public void addWebImage(int x, int y, int w, int h, String address) {
+	public ImageView addWebImage(int x, int y, int w, int h, String address) {
 
 		initializeLayout();
 		// Create and position the image view
@@ -581,6 +614,7 @@ public class JUI extends JInterface {
 		// Add the view
 		addView(iv);
 
+		return iv;
 	}
 
 	/**
@@ -609,7 +643,7 @@ public class JUI extends JInterface {
 	 * @param hideBackground
 	 * @param callbackfn
 	 */
-	public void addImageButton(int x, int y, int w, int h, String imagePath,
+	public ImageButton addImageButton(int x, int y, int w, int h, String imagePath,
 			boolean hideBackground, final String callbackfn) {
 
 		initializeLayout();
@@ -637,6 +671,8 @@ public class JUI extends JInterface {
 
 		// Add the view
 		addView(ib);
+		
+		return ib;
 
 	}
 
@@ -768,7 +804,7 @@ public class JUI extends JInterface {
 
 		webView.clearCache(false);
 		webView.setBackgroundColor(0x00000000);
-
+		
 		webView.requestFocus(View.FOCUS_DOWN);
 		webView.setOnTouchListener(new View.OnTouchListener() {
 			@Override
@@ -852,6 +888,71 @@ public class JUI extends JInterface {
 
 	}
 
+	
+	/**
+	 * yesnoDialog
+	 * 
+	 * @author victordiaz
+	 * 
+	 * @param msg
+	 */
+	public void yesnoDialog(String title, final String callbackfn) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(a.get());
+		builder.setTitle(title);
+
+		// Set up the buttons
+		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() { 
+		    @Override
+		    public void onClick(DialogInterface dialog, int which) {
+		       callback(callbackfn, true);
+		    }
+		});
+		builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+		    @Override
+		    public void onClick(DialogInterface dialog, int which) {
+		        dialog.cancel();
+		        callback(callbackfn, false);
+		    }
+		});
+
+		builder.show();
+	}
+	
+	/**
+	 * inputDialog
+	 * 
+	 * @author victordiaz
+	 * 
+	 * @param title
+	 */
+	public void inputDialog(String title, final String callbackfn) { 
+		AlertDialog.Builder builder = new AlertDialog.Builder(a.get());
+		builder.setTitle(title);
+
+		// Set up the input
+		final EditText input = new EditText(a.get());
+		// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+		input.setInputType(InputType.TYPE_CLASS_TEXT);
+		builder.setView(input);
+
+		// Set up the buttons
+		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() { 
+		    @Override
+		    public void onClick(DialogInterface dialog, int which) {
+		       String text = input.getText().toString();
+		       callback(callbackfn, text);
+		    }
+		});
+		builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+		    @Override
+		    public void onClick(DialogInterface dialog, int which) {
+		        dialog.cancel();
+		    }
+		});
+
+		builder.show();
+	}
+	
 	/**
 	 * Adds a video
 	 * 

@@ -9,7 +9,7 @@ ui.addButton("START", 50,150,500,100, function() {
 	//when the makr board sends data back we will 
 	//show it in the dataLabel
     makr.start(function(data) {
-		ui.labelSetText(dataLabel, "Data : "+ data);
+		dataLabel.setText("Data : "+ data);
 	});
 });
 

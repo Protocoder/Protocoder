@@ -1,7 +1,13 @@
 package com.makewithmoto.utils;
 
+import java.util.UUID;
+
 public class StrUtils {
 
+	public static String generateRandomString() {
+		String uuid = UUID.randomUUID().toString().replaceAll("-", "");
+		return uuid;
+	}
 	
 	
 	public static String bytetostring(byte[] b) {

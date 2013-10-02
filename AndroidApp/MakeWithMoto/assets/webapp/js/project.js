@@ -1,3 +1,8 @@
+/*
+*
+*
+*/
+
 var currentProject = new Object();
 currentProject.name = "";
 currentProject.url = ""; 

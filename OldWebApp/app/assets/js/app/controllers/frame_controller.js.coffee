@@ -1,1 +1,0 @@
-app.controller 'FrameController', ($scope) ->
