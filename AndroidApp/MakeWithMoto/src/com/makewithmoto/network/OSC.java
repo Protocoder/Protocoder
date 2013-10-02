@@ -46,14 +46,13 @@ public class OSC {
 	protected static final String TAG = "OSC";
 
 	public interface OSCServerListener {
-		
-		public void onMessage(OSCMessage msg); 
-		
+
+		public void onMessage(OSCMessage msg);
+
 	}
-	
 
 	public class Server {
-		
+
 		// OSC server
 		OSCReceiver rcv;
 		OSCTransmitter trns;
@@ -61,11 +60,10 @@ public class OSC {
 		int n = 0;
 
 		SocketAddress inPort = null;
-		
+
 		Vector<OSCServerListener> listeners = new Vector<OSCServerListener>();
 
-
-		public void start(String port, final String callbackfn) {
+		public void start(String port) {
 
 			rcv = null;
 			dch = null;
@@ -83,12 +81,8 @@ public class OSC {
 					public void messageReceived(OSCMessage msg,
 							SocketAddress sender, long time) {
 
-						Log.d(TAG,
-								"msg rcv " + msg.getName() + " "
-										+ msg.getArgCount());
-						// msg.getArg(n);
 						for (OSCServerListener l : listeners) {
-							((OSCServerListener)l).onMessage(msg);
+							((OSCServerListener) l).onMessage(msg);
 						}
 
 					}
@@ -110,7 +104,7 @@ public class OSC {
 			}
 			rcv.dispose();
 		}
-		
+
 		public void addListener(OSCServerListener listener) {
 			listeners.add(listener);
 		}
@@ -118,7 +112,6 @@ public class OSC {
 		public void removeListener(OSCServerListener listener) {
 			listeners.remove(listener);
 		}
-
 
 	}
 
@@ -130,12 +123,16 @@ public class OSC {
 		OSCTransmitter trns2;
 		boolean oscConnected = false;
 
+		public Client(String address, int port) {
+			connectOSC(address, port);
+		}
 
 		public void connectOSC(String address, int port) {
 
 			Log.d(TAG, "connecting to " + address + " in " + port);
 			try {
-				addr2 = new InetSocketAddress(InetAddress.getByName(address), port);
+				addr2 = new InetSocketAddress(InetAddress.getByName(address),
+						port);
 				dch2 = DatagramChannel.open();
 				dch2.socket().bind(null);
 				trns2 = OSCTransmitter.newUsing(dch2);
@@ -154,9 +151,8 @@ public class OSC {
 		public boolean isOSCConnected() {
 			return oscConnected;
 		}
-		
 
-		public void sendOSC(final String msg, final String content) {
+		public void send(final String msg, final Object[] o) {
 
 			if (oscConnected == true) {
 				// send
@@ -165,11 +161,14 @@ public class OSC {
 
 					@Override
 					public void run() {
-						Object[] o = new Object[1];
-						o[0] = content;
+						//Object[] o = new Object[1];
+						//o[0] = content;
+						Log.d(TAG, "sending");
 						try {
+							Log.d(TAG, "sent");
 							trns2.send(new OSCMessage(msg, o), addr2);
 						} catch (IOException e) {
+							Log.d(TAG, "not sent");
 							e.printStackTrace();
 						}
 
@@ -190,6 +189,5 @@ public class OSC {
 
 		}
 	}
-	
-	
+
 }

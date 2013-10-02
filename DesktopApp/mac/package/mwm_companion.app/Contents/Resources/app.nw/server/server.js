@@ -1,5 +1,4 @@
-
-
+/*
 var http = require('http');
 var io = require('socket.io');
 var fs = require('fs');
@@ -114,7 +113,7 @@ websocket_server.sockets.on('connection', function (socket) {
   }); 
     
 });
-
+*/
 
 /*
 oscServer.on("message", function (msg, rinfo) {

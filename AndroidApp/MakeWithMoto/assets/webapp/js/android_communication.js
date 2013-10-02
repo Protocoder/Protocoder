@@ -5,7 +5,7 @@
 *
 */
 
-var remoteIP = "localhost"; //window.location.hostname; //'localhost';
+var remoteIP = window.location.hostname; //'localhost';
 
 
 //listing apps in the future we might filter the listing

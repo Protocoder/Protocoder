@@ -140,7 +140,7 @@ public class JIOIO extends JInterface implements HardwareCallback {
 	public void onConnect(Object obj) {
 		this.ioio = (IOIO) obj;
 		Log.d(TAG, "MOIO Connected");
-		callback(moiocallbackfn); 
+		callback(moiocallbackfn, ioio); 
 		
 		isStarted = true;
 		this.a.get().runOnUiThread(new Runnable() {

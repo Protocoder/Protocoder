@@ -34,7 +34,7 @@ public class StrUtils {
 	public static String generateRandomString() {
 		//String uuid = UUID.randomUUID().toString().replaceAll("-", "");
 		
-		String id = RandomStringUtils.random(8);
+		String id = RandomStringUtils.randomAlphanumeric(8);
 		
 		return id;
 	}
