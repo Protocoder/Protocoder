@@ -1,6 +1,9 @@
 package com.makewithmoto;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
@@ -10,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.makewithmoto.R;
 import com.makewithmoto.base.BaseActivity;
@@ -31,7 +35,11 @@ public class WelcomeActivity extends BaseActivity {
         //Create the action bar programmatically
         ActionBar actionBar = getActionBar();
         actionBar.setTitle(R.string.welcome_activity_name);
-        
+
+        //Set copyright
+        TextView copyright = (TextView)findViewById(R.id.copyright);
+        copyright.setText(readFile(R.raw.copyright_notice));
+
     	new Runnable() {
 
 			@Override
@@ -96,5 +104,28 @@ public class WelcomeActivity extends BaseActivity {
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
     }
+    
+	/**
+	 * Returns a string from a txt file resource
+	 * 
+	 * @return
+	 */
+	private String readFile(int resource) {
+		InputStream inputStream = getResources().openRawResource(resource);
+		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+		int i;
+		try {
+			i = inputStream.read();
+			while (i != -1) {
+				byteArrayOutputStream.write(i);
+				i = inputStream.read();
+			}
+			inputStream.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return byteArrayOutputStream.toString();
+	}
 
 }

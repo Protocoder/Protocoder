@@ -2,6 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:scrollbars="none"
     android:background="@drawable/gradient" >
 
     <LinearLayout
@@ -66,6 +67,18 @@
             android:onClick="onAcceptClick"
             android:text="@string/welcome_accept"
             android:textColor="#ffffff" />
+
+        <TextView
+            android:id="@+id/copyright"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:text="@string/copyright_notice"
+            android:textColor="@color/mwmgray"
+            android:textSize="10dp" />
     </LinearLayout>
 
 </ScrollView>
