@@ -184,7 +184,8 @@ public class PlotView extends View {
 
 					y = CanvasUtils.map((float) p.plotValues.get(i),
 							(float) mMinBoundary, (float) mMaxBoundary, (float) mHeight, 0f);
-					Log.d(TAG, mMinBoundary + " " + mMaxBoundary + " " + y);
+					
+					//Log.d(TAG, mMinBoundary + " " + mMaxBoundary + " " + y);
 					//canvas.drawPoint(x, y, mPaint);
 					
 					canvas.drawCircle(x, y, 2, mPaint);

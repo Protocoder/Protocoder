@@ -97,6 +97,7 @@ public class AppRunnerActivity extends BaseActivity {
 	private ActionBar actionBar;
 	private CustomWebsocketServer ws;
 	private JAndroid.onKeyListener onKeyListener;
+	private JAndroid.onSmsReceivedListener onSmsReceivedListener;
 	private JSensors.onNFCListener onNFCListener;
 	private JMedia.onVoiceRecognitionListener onVoiceRecognitionListener;
 	private BroadcastReceiver mIntentReceiver;
@@ -170,18 +171,18 @@ public class AppRunnerActivity extends BaseActivity {
 			currentProject = ProjectManager.getInstance().get(projectName,
 					projectType);
 
-			
-//			public Project getCurrentProject() {
-//				return currentProject;
-//			}
-//
-//			public String getCurrentDir() {
-//				return ProjectManager.getInstance().getProjectURL(currentProject);
-//
-//			}
-			
-			AppRunnerSettings.get().project = currentProject;		
-			
+			// public Project getCurrentProject() {
+			// return currentProject;
+			// }
+			//
+			// public String getCurrentDir() {
+			// return
+			// ProjectManager.getInstance().getProjectURL(currentProject);
+			//
+			// }
+
+			AppRunnerSettings.get().project = currentProject;
+
 			String script = SCRIPT_PREFIX
 					+ ProjectManager.getInstance().getCode(currentProject)
 					+ SCRIPT_POSTFIX;
@@ -202,20 +203,21 @@ public class AppRunnerActivity extends BaseActivity {
 
 		// Call the onCreate JavaScript function.
 		callJsFunction("onCreate", savedInstanceState);
-		
-		//send ready to the ide 
+
+		// send ready to the ide
 		ready(true);
 
 	}
-	
-	public void ready(boolean r) { 
-		
+
+	public void ready(boolean r) {
+
 		JSONObject msg = new JSONObject();
 		try {
 			msg.put("type", "ide");
 			msg.put("action", "conf");
 
-			JSONObject values = new JSONObject();;
+			JSONObject values = new JSONObject();
+			;
 			values.put("ready", r);
 			msg.put("values", values);
 
@@ -223,14 +225,14 @@ public class AppRunnerActivity extends BaseActivity {
 			e1.printStackTrace();
 		}
 
-		//Log.d(TAG, "update");
+		// Log.d(TAG, "update");
 
 		try {
 			CustomWebsocketServer ws = CustomWebsocketServer.getInstance(this);
 			ws.send(msg);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
-		} 
+		}
 	}
 
 	public void onEventMainThread(ProjectEvent evt) {
@@ -288,6 +290,9 @@ public class AppRunnerActivity extends BaseActivity {
 						msg.length());
 				String pNumber = msg.substring(0, msg.lastIndexOf(":"));
 
+				if (onSmsReceivedListener != null) {
+					onSmsReceivedListener.onSmsReceived(pNumber, body);
+				}
 				// Add it to the list or do whatever you wish to
 
 			}
@@ -661,7 +666,6 @@ public class AppRunnerActivity extends BaseActivity {
 		}
 	}
 
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -689,6 +693,12 @@ public class AppRunnerActivity extends BaseActivity {
 
 	public void addOnKeyListener(JAndroid.onKeyListener onKeyListener2) {
 		onKeyListener = onKeyListener2;
+
+	}
+
+	public void addOnSmsReceivedListener(
+			JAndroid.onSmsReceivedListener onSmsReceivedListener2) {
+		onSmsReceivedListener = onSmsReceivedListener2;
 
 	}
 

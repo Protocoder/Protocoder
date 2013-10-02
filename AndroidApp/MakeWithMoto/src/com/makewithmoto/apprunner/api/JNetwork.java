@@ -59,8 +59,6 @@ public class JNetwork extends JInterface {
 
 	private String TAG = "JNetwork";
 
-	private String callbackfn;
-
 	public JNetwork(Activity a) {
 		super(a);
 
@@ -76,20 +74,28 @@ public class JNetwork extends JInterface {
 
 			@Override
 			public void onMessage(OSCMessage msg) {
-				//callback(callbackfn, "\"" + msg.getName() + "\"");	
-				callback(callbackfn, msg);	
+				Log.d(TAG, "message received " + msg);
+				
+				JSONArray jsonArray = new JSONArray();
+				for (int i = 0; i < msg.getArgCount(); i++) { 
+					jsonArray.put(msg.getArg(i));
+				}
+				
+				callback(callbackfn, msg.getName(), jsonArray);	
 			}		
 
 		});
+		
+		server.start(port);
 
 		return server;
 	}
 	
 	@JavascriptInterface
 	@APIMethod(description = "initializes makr board", example = "makr.start();")
-	public OSC.Client connectOSC(String uri) { 
+	public OSC.Client connectOSC(String address, int port) { 
 		OSC osc = new OSC();
-		Client client = osc.new Client();
+		Client client = osc.new Client(address, port);
 
 		return client;
 	}

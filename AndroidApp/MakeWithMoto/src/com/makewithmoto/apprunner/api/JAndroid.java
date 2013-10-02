@@ -49,6 +49,8 @@ public class JAndroid extends JInterface {
 	ArrayList<Runnable> rl = new ArrayList<Runnable>();
 	private String onKeyDownfn;
 	private String onKeyUpfn;
+	private String onSmsReceivedfn;
+
 
 	public JAndroid(Activity a) {
 		super(a);
@@ -68,6 +70,19 @@ public class JAndroid extends JInterface {
 				callback(onKeyUpfn, keyCode);
 			}
 		});
+
+		
+		((AppRunnerActivity) a).addOnSmsReceivedListener(new onSmsReceivedListener() {
+			
+			@Override
+			public void onSmsReceived(String number, String msg) {
+				callback(onSmsReceivedfn, number, "\"" + msg + "\"");				
+			}
+		});
+
+	
+
+		
 		
 	}
 
@@ -93,7 +108,7 @@ public class JAndroid extends JInterface {
 	@JavascriptInterface
 	@APIMethod(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
 	public void onSmsReceived(final String fn) {
-		//onSmsReceivedfn = fn;
+		onSmsReceivedfn = fn;
 	}
 
 
@@ -228,6 +243,11 @@ public class JAndroid extends JInterface {
 	}
 
 
+	public interface onSmsReceivedListener {
+		public void onSmsReceived(String number, String msg);
+	}
+	
+	
 
 	
 }
