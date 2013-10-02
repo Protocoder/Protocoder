@@ -1,10 +1,9 @@
 package com.makewithmoto.apprunner.api;
 
-import org.puredata.core.PdBase;
 
 public class JPureData {
 
-
+/*
 	public void sendMessage(String message, String value) {
 		if (value.isEmpty()) {
 			PdBase.sendBang(message);
@@ -23,5 +22,6 @@ public class JPureData {
 		PdBase.sendFloat(name, value); 
 
 	}
+	*/
 
 }
