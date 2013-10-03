@@ -1,0 +1,7 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/Cred" android:title="Credits"></item>
+    <item android:id="@+id/Options" android:title="Settings"></item>
+    <item android:id="@+id/Disconnect" android:title="Disconnect" android:visible="false"></item>
+    <item android:id="@+id/Exit" android:title="Exit"></item>
+
+</menu>
