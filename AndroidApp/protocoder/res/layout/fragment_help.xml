@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragmentHelp"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/blacktransparent"
+    android:orientation="vertical" >
+
+    <EditText
+        android:id="@+id/editText1"
+        style="@style/qq"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="top|left"
+        android:hint="Help text"
+        android:imeOptions="actionSend|flagNoExtractUi"
+        android:inputType="textMultiLine|textFilter|textNoSuggestions"
+        android:singleLine="false"
+        android:textColor="#FFFFFFFF"
+        android:textColorHighlight="#FF0000FF"
+        android:textSize="14sp"
+        android:textStyle="bold" >
+    </EditText>
+
+</RelativeLayout>
