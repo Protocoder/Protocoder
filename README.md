@@ -9,6 +9,7 @@ During the roadtrip we hacked together with university students and hackerspaces
 Install the app in your Android device and access the web IDE from your computer. 
 Code in javascript using the protocoder framework. No needs to write dozends of lines to access sensors or write an UI, simple to use, fast to code.
 
+```
 //how to get sensor data
 sensors.startAccelerometer(function(x, y, z)) { 
 	console.log(x + " " + " " + y + " " + z); 
@@ -19,7 +20,7 @@ android.sendSMS(number, "text");
 
 //play a video
 ui.addVideoView("fileName", 0, 0, 500, 200);
-
+```
 
 It uses a webserver and a websockets server inside the project to do some of the magic and has support of most android hardware functionality, networking using OSC and websockets and audio synthesis and processing using Pure Data. 
 
