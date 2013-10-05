@@ -13,7 +13,9 @@ function initUI() {
 	            { type: 'break',  id: 'break0' },
 	            { type: 'button',  id: 'project_save', caption: 'Save', img: 'icon-save'},
 	            
-	            { type: 'button',   id: 'list_projects', caption: 'Projects', img: 'icon-folder'},
+	            { type: 'menu',   id: 'list_projects', caption: 'Projects', img: 'icon-folder'}, items: [
+	          
+	            ]},
 
 	            { type: 'menu',   id: 'list_examples', caption: 'Examples', img: 'icon-folder', items: [
 	          
@@ -75,9 +77,9 @@ function initUI() {
 
 	                break;
 	           case 'list_projects':
-	                //if (data.subItem != 'undefined') { 
-	                //    fetch_code(data.subItem, target);
-	                //}
+	                if (data.subItem != 'undefined') { 
+	                    fetch_code(data.subItem, target);
+	                }
 
 	             
 	             //$("").w2overlay('This is an overlay.<br>Can be multi line HTML.');
