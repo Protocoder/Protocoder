@@ -30,6 +30,7 @@ package com.makewithmoto.apprunner.api;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -38,6 +39,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -46,6 +48,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.codebutler.android_websockets.SocketIOClient;
+import com.codebutler.android_websockets.WebSocketClient;
 import com.makewithmoto.apidoc.annotation.APIMethod;
 import com.makewithmoto.apidoc.annotation.JavascriptInterface;
 import com.makewithmoto.network.OSC;
@@ -99,6 +102,41 @@ public class JNetwork extends JInterface {
 
 		return client;
 	}
+	
+	@JavascriptInterface
+	@APIMethod(description = "initializes makr board", example = "makr.start();")
+	public SocketIOClient connectWebsocket(String uri, final String callbackfn) {
+	
+		try {
+			org.java_websocket.client.WebSocketClient webSocketClient = new org.java_websocket.client.WebSocketClient(new URI(uri)) {
+				
+				@Override
+				public void onOpen(ServerHandshake arg0) {					
+					callback(callbackfn, "open", arg0);					
+				}
+				
+				@Override
+				public void onMessage(String arg0) {
+					callback(callbackfn, "message", arg0);					
+				}
+				
+				@Override
+				public void onError(Exception arg0) {
+					callback(callbackfn, "error");					
+				}
+				
+				@Override
+				public void onClose(int arg0, String arg1, boolean arg2) {
+					callback(callbackfn, "close");					
+				}
+			};
+		} catch (URISyntaxException e) {
+			callback(callbackfn, "error " + e.toString());
+			e.printStackTrace();
+		}
+		return null; 
+	} 
+	
 	
 	@JavascriptInterface
 	@APIMethod(description = "initializes makr board", example = "makr.start();")
