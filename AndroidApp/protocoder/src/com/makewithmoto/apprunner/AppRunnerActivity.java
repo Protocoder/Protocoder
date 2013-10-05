@@ -106,6 +106,19 @@ public class AppRunnerActivity extends BaseActivity {
 
 	public static final int VOICE_RECOGNITION_REQUEST_CODE = 55;
 
+	public String addInterface(Class c) { 
+		String pkg = "Packages." + c.getName().toString();
+		String clsName = c.getSimpleName();
+		
+		String c1 = "var " + clsName + " = " + pkg + "; \n";
+		String c2 = "var " + clsName.substring(1).toLowerCase() + "(Activity);";
+		
+		String prefix = c1 + c2; 
+		
+		return prefix;
+	}
+	
+	
 	static final String SCRIPT_PREFIX = "//Prepend text for all scripts \n"
 			+ "var window = this; \n"
 			+ "var JAndroid = Packages.com.makewithmoto.apprunner.api.JAndroid; \n"
@@ -171,15 +184,6 @@ public class AppRunnerActivity extends BaseActivity {
 			currentProject = ProjectManager.getInstance().get(projectName,
 					projectType);
 
-			// public Project getCurrentProject() {
-			// return currentProject;
-			// }
-			//
-			// public String getCurrentDir() {
-			// return
-			// ProjectManager.getInstance().getProjectURL(currentProject);
-			//
-			// }
 
 			AppRunnerSettings.get().project = currentProject;
 

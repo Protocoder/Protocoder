@@ -61,6 +61,18 @@ public class ProjectManager {
 
 		return INSTANCE;
 	}
+	
+	public void install(final Context c) { 
+    	new Runnable() {
+
+			@Override
+			public void run() {
+				File dir = new File(BaseMainApp.baseDir + "/" + "examples");
+				FileIO.deleteDir(dir);
+				FileIO.copyFileOrDir(c.getApplicationContext(), "examples");
+			}
+		}.run();
+	}
 
 	public String getCode(Project p) {
 		String out = null;

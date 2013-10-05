@@ -1,25 +1,24 @@
-<PreferenceScreen
-        xmlns:android="http://schemas.android.com/apk/res/android">
-    
-    <PreferenceCategory
-            android:title="@string/setting_about">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-        <Preference
-                android:key="button"
-                android:title= "@string/setting_opensource_title"
-                android:summary="@string/setting_opensource_description" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory
-            android:title="@string/setting_notifications_title">
-
+    <PreferenceCategory android:title="@string/setting_notifications_title" >
         <CheckBoxPreference
-                android:key="@string/pref_curtain_notifications"
-                android:title="@string/setting_show_notifications_title"
-                android:checked="true"
-                android:summary="@string/setting_show_notifications_body" />
-
+            android:checked="true"
+            android:key="@string/pref_curtain_notifications"
+            android:summary="@string/setting_show_notifications_body"
+            android:title="@string/setting_show_notifications_title" />
+    
+        <Preference
+            android:key="reinstall_examples"
+            android:summary="@string/setting_reinstall_description"
+            android:title="@string/setting_reinstall_title" />
+    
+    </PreferenceCategory>
+    
+    <PreferenceCategory android:title="@string/setting_about" >
+        <Preference
+            android:key="licenses_detail"
+            android:summary="@string/setting_opensource_description"
+            android:title="@string/setting_opensource_title" />
     </PreferenceCategory>
 
 </PreferenceScreen>

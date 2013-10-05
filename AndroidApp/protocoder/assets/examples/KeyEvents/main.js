@@ -1,3 +1,3 @@
 android.onKeyDown(function(key) {
-    android.toast("pressed key " +  key, 1000);
+    ui.toast("pressed key " +  key, 1000);
 });

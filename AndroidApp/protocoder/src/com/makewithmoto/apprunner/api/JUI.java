@@ -136,6 +136,7 @@ public class JUI extends JInterface {
 
 	private void addView(View v) {
 		mMainLayout.addView(v);
+
 		/*
 		 * final ViewTreeObserver vto = sv.getViewTreeObserver();
 		 * OnGlobalLayoutListener globalLayoutListener = new

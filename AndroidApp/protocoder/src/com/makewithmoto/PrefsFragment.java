@@ -28,7 +28,9 @@
 package com.makewithmoto;
 
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -42,6 +44,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.makewithmoto.base.BaseNotification;
+import com.makewithmoto.events.ProjectManager;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class PrefsFragment extends PreferenceFragment {
@@ -61,11 +64,45 @@ public class PrefsFragment extends PreferenceFragment {
 		View view = super.onCreateView(inflater, container, savedInstanceState);
 		view.setBackgroundResource(R.drawable.gradient);
 
-		Preference button = (Preference) findPreference("button");
+		Preference button = (Preference) findPreference("licenses_detail");
 		button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference arg0) {
 				startActivity(new Intent(getActivity(), LicenseActivity.class));
+				return true;
+			}
+		});
+
+		Preference button2 = (Preference) findPreference("reinstall_examples");
+		button2.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference arg0) {
+
+				new AlertDialog.Builder(getActivity())
+						.setMessage(
+								"Do you really want to reinstall the examples?")
+						.setCancelable(false)
+						.setPositiveButton("Yes",
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int which) {
+										// Perform Your Task Here--When Yes Is
+										// Pressed.
+										ProjectManager.getInstance().install(
+												getActivity());
+										dialog.cancel();
+									}
+								})
+						.setNegativeButton("No",
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int which) {
+										// Perform Your Task Here--When No is
+										// pressed
+										dialog.cancel();
+									}
+								}).show();
+
 				return true;
 			}
 		});

@@ -46,6 +46,7 @@ import android.widget.TextView;
 import com.makewithmoto.R;
 import com.makewithmoto.base.BaseActivity;
 import com.makewithmoto.base.BaseMainApp;
+import com.makewithmoto.events.ProjectManager;
 import com.makewithmoto.utils.FileIO;
 
 @SuppressLint("NewApi")
@@ -68,15 +69,7 @@ public class WelcomeActivity extends BaseActivity {
         TextView copyright = (TextView)findViewById(R.id.copyright);
         copyright.setText(readFile(R.raw.copyright_notice));
 
-    	new Runnable() {
-
-			@Override
-			public void run() {
-				File dir = new File(BaseMainApp.baseDir + "/" + "examples");
-				FileIO.deleteDir(dir);
-				FileIO.copyFileOrDir(getApplicationContext(), "examples");
-			}
-		}.run();
+        ProjectManager.getInstance().install(this);
     }
 
     /**
