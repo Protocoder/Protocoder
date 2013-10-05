@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Vector;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.drafts.Draft;
