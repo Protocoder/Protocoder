@@ -53,6 +53,8 @@ import com.makewithmoto.R;
 public class BeamActivity extends Activity implements
 		OnNdefPushCompleteCallback {
 
+	private String TAG = "BEAM";
+
 	public static long getFileSize(String pathToFile) {
 		File f = new File(pathToFile);
 		return f.length();
@@ -82,6 +84,7 @@ public class BeamActivity extends Activity implements
 	public static String getHumanReadableFileSize(String pathToFile) {
 		return humanReadableByteCount(getFileSize(pathToFile), true);
 	}
+
 
 	public String getFileNameByUri(Uri uri) {
 		String fileName = uri.toString(); // default fileName
@@ -129,67 +132,6 @@ public class BeamActivity extends Activity implements
 		return record;
 	}
 
-	public Drawable getImageForFile(Uri fileUri, Intent intent) {
-		final Intent iconIntent = new Intent(Intent.ACTION_VIEW);
-		iconIntent.setData(fileUri);
-		iconIntent.setType(intent.getType());
-
-		getPackageManager();
-		final List<ResolveInfo> matches = getPackageManager()
-				.queryIntentActivities(iconIntent,
-						PackageManager.MATCH_DEFAULT_ONLY);
-		for (ResolveInfo match : matches) {
-			final Drawable icon = match.loadIcon(getPackageManager());
-			return icon;
-		}
-
-		return null;
-	}
-
-	private void setNfcNotAvailable() {
-		TextView sizeView = (TextView) findViewById(R.id.fileSizeTextView);
-		sizeView.setVisibility(0);
-
-		TextView view = (TextView) findViewById(R.id.fileNameTextView);
-		view.setVisibility(0);
-
-		TextView contentTypeView = (TextView) findViewById(R.id.contentTypeTextView);
-		contentTypeView.setVisibility(0);
-
-		setStatus(getString(R.string.nfc_not_available));
-	}
-
-	private void setStatus(String text) {
-		TextView statusView = (TextView) findViewById(R.id.statusTextView);
-		statusView.setText(text);
-	}
-
-	private void setFileSizeText(String fileSizeText) {
-		TextView sizeView = (TextView) findViewById(R.id.fileSizeTextView);
-		sizeView.setText(fileSizeText);
-	}
-
-	private void setFileNameText(String fileNameText) {
-		TextView view = (TextView) findViewById(R.id.fileNameTextView);
-		view.setText(fileNameText);
-	}
-
-	private void setContentTypeText(String contentTypeText) {
-		TextView contentTypeView = (TextView) findViewById(R.id.contentTypeTextView);
-		contentTypeView.setText(contentTypeText);
-	}
-
-	private void setTextForAllFields(String sizeText, String fileNameText,
-			String contentTypeText) {
-		setFileSizeText(sizeText);
-		setFileNameText(fileNameText);
-		setContentTypeText(contentTypeText);
-	}
-
-	private void setBeamingText(String text) {
-		TextView beamingView = (TextView) findViewById(R.id.beamingFileTextView);
-		beamingView.setText(text);
-	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -204,61 +146,36 @@ public class BeamActivity extends Activity implements
 		Bundle extras = intent.getExtras();
 		String action = intent.getAction();
 
-		System.out.println(extras.keySet());
+		Log.d(TAG, "keyset " + extras.keySet().toString());
 
 		NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
-		if (nfcAdapter == null) {
-			setNfcNotAvailable();
-			return; // NFC not available on this device
-		} else {
-			if (!nfcAdapter.isEnabled()) {
-				setStatus(getString(R.string.nfc_turned_off));
-			}
-		}
-
+		
 		// if this is from the share menu
 		if (Intent.ACTION_SEND.equals(action)) {
-			if (extras.containsKey(Intent.EXTRA_STREAM)) {
-				Uri fileUri = (Uri) intent
-						.getParcelableExtra(Intent.EXTRA_STREAM);
+			
 
-				Log.d("FileBeam", fileUri.toString());
-
-				setTextForAllFields(
-						getHumanReadableFileSize(fileUri.getPath()),
-						getFileNameByUri(fileUri), intent.getType());
-
-				final Drawable icon = getImageForFile(fileUri, intent);
-				if (icon != null) {
-					ImageView imageView = (ImageView) findViewById(R.id.defaultIconView);
-					//imageView.setImageDrawable(icon);
-					imageView.setImageResource(R.drawable.hello_banner);
-				} else {
-				    ImageView imageView = (ImageView) findViewById(R.id.defaultIconView);
-				    imageView.setImageResource(R.drawable.hello_banner);
-				}
-
-				nfcAdapter.setBeamPushUris(new Uri[] { fileUri }, this);
-				nfcAdapter.setOnNdefPushCompleteCallback(this, this);
-			} else {
 				String text = (String) extras
 						.getCharSequence(Intent.EXTRA_TEXT);
 				NdefMessage message;
 
-				setTextForAllFields("", text, "plain/text");
-				setBeamingText(getString(R.string.beaming_text));
+				Log.d(TAG, "beaming " + text); 
 
+				NdefRecord.createApplicationRecord("com.makewithmoto.beam");
+				
 				try {
 					@SuppressWarnings("unused")
 					URL url = new URL(text);
-
+					
 					NdefRecord uriRecord = new NdefRecord(
 							NdefRecord.TNF_ABSOLUTE_URI, text.getBytes(Charset
 									.forName("US-ASCII")), new byte[0],
 							new byte[0]);
+					Log.d(TAG, "OK beaming " + text); 
 
 					message = new NdefMessage(uriRecord);
 				} catch (MalformedURLException e) {
+					Log.d(TAG, "bad format " + e.toString()); 
+
 					NdefRecord record = createTextRecord(text,
 							Locale.getDefault(), true);
 					message = new NdefMessage(record);
@@ -267,42 +184,8 @@ public class BeamActivity extends Activity implements
 				nfcAdapter.setNdefPushMessage(message, this);
 				nfcAdapter.setOnNdefPushCompleteCallback(this, this);
 			}
-		} else if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
-			setBeamingText(getString(R.string.beaming_files));
-			ArrayList<Uri> fileUris = intent
-					.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
-
-			long size = 0;
-			for (Uri uri : fileUris) {
-				Log.d("FileBeam", uri.toString());
-				size = size + getFileSize(uri.getPath());
-			}
-
-			Uri[] uriList = fileUris.toArray(new Uri[0]);
-
-			String fileNameText;
-			String fileSizeText;
-			String fileTypeText;
-
-			if (uriList.length == 1) {
-				Uri fileUri = uriList[0];
-				fileNameText = getFileNameByUri(fileUri);
-				fileSizeText = getHumanReadableFileSize(fileUri.getPath());
-				fileTypeText = getMimeType(fileUri.getPath());
-			} else {
-				fileNameText = getString(R.string.multiple_files);
-				fileSizeText = humanReadableByteCount(size, true);
-				fileTypeText = getString(R.string.multiple_file_types);
-			}
-
-			setTextForAllFields(fileSizeText, fileNameText, fileTypeText);
-
-			nfcAdapter.setBeamPushUris(uriList, this);
-			nfcAdapter.setOnNdefPushCompleteCallback(this, this);
-		}
 		
-		//Enable up button
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+		
 	}
 	
     @Override
@@ -328,7 +211,7 @@ public class BeamActivity extends Activity implements
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				setStatus(getString(R.string.file_sent));
+				Log.d(TAG, "completed");
 			}
 		});
 	}

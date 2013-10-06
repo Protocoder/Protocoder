@@ -31,8 +31,9 @@
     <uses-permission android:name="android.permisssion.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.RECORD_VIDEO" />
-	<uses-permission android:name="android.permission.CALL_PHONE"></uses-permission> 
-    
+    <uses-permission android:name="android.permission.CALL_PHONE" >
+    </uses-permission>
+
     <uses-feature android:name="android.hardware.camera" />
 
     <application
@@ -52,6 +53,11 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="application/com.makewithmoto.beam" />
             </intent-filter>
         </activity>
         <activity
@@ -133,9 +139,8 @@
         </activity>
 
         <service android:name="com.makewithmoto.hardware.IOIOBoardService" />
-
         <service android:name="org.puredata.android.service.PdService" />
-        
+
         <receiver android:name="com.makewithmoto.services.SmsReceiver" >
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />

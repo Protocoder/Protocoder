@@ -284,6 +284,7 @@ public class ListFragmentBase extends BaseFragment {
             //beamIntent.setAction(Intent.ACTION_SEND);
             beamIntent.putExtra(Intent.EXTRA_TEXT, ProjectManager.getInstance().getCode(project));
             beamIntent.setType("text/plain");
+            beamIntent.setAction(Intent.ACTION_SEND);
             startActivity(beamIntent);
             getActivity().overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
 

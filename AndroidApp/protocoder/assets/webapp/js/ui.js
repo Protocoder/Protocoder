@@ -13,7 +13,7 @@ function initUI() {
 	            { type: 'break',  id: 'break0' },
 	            { type: 'button',  id: 'project_save', caption: 'Save', img: 'icon-save'},
 	            
-	            { type: 'menu',   id: 'list_projects', caption: 'Projects', img: 'icon-folder'}, items: [
+	            { type: 'menu',   id: 'list_projects', caption: 'Projects', img: 'icon-folder', items: [
 	          
 	            ]},
 
