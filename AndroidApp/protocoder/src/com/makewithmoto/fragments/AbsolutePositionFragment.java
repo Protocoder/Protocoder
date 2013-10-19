@@ -53,8 +53,6 @@ public class AbsolutePositionFragment extends BaseFragment {
 	    v.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.MATCH_PARENT)); 
 	    //ac.setContentView(mainLayout); 
 		
-
-
 	}
 	
 

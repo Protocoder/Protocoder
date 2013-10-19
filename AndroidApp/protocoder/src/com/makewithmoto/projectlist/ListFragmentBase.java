@@ -100,7 +100,7 @@ public class ListFragmentBase extends BaseFragment {
         for (Iterator<Project> iterator = projects.iterator(); iterator.hasNext(); ) {
             Project project = iterator.next();
          
-            String projectURL = project.getUrl();
+            String projectURL = project.getFolder();
             String projectName = project.getName();
             
            // addProject(projectName, projectURL);
@@ -134,7 +134,7 @@ public class ListFragmentBase extends BaseFragment {
 
     protected void deleteProject(int position) {
 
-        File dir = new File(projects.get(position).getUrl());
+        File dir = new File(projects.get(position).getFolder());
 
         if (dir.isDirectory()) {
             String[] children = dir.list();
@@ -190,12 +190,6 @@ public class ListFragmentBase extends BaseFragment {
         final int index = info.position;
         
         Project project = projects.get(index);
-        
-        Log.d("BB", "onContextItemSelected" + project.getName() + " " + info.position); 
-        //for (int i = 0; i < projects.size(); i++) {
-        //	Log.d("BB", projects.get(i).getName());
-        //
-        //}
 
         switch (item.getItemId()) {
 
@@ -209,11 +203,11 @@ public class ListFragmentBase extends BaseFragment {
             Bundle bundle = new Bundle();
                         
             bundle.putString("project_name", project.getName());
-            bundle.putString("project_url", project.getUrl());
+            bundle.putString("project_url", project.getFolder());
             bundle.putInt("project_type", projectType);
-			Log.d("UU", "" + project.getUrl() + " " + projectType + " " + project.getName());
+			Log.d("UU", "" + project.getFolder() + " " + projectType + " " + project.getName());
 
-            editorFragment.setArguments(bundle);
+			editorFragment.setArguments(bundle);
             ((MainActivity) getActivity()).addFragment(editorFragment, R.id.fragmentEditor, "editorFragment", true);
 
             return true;

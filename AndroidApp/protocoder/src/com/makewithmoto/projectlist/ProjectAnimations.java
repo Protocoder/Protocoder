@@ -70,6 +70,7 @@ public class ProjectAnimations {
         animSpin = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(), R.animator.flip_up);
         animSpin.setTarget(v);
         animSpin.start();
+        
 		/*GridView gL = (GridView) v.getParent(); 
 		final int x = (int) v.getX(); 
 		final int y = (int) v.getY(); 

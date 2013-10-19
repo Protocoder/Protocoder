@@ -22,17 +22,12 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
@@ -44,8 +39,6 @@ import android.provider.MediaStore.MediaColumns;
 import android.util.Log;
 import android.view.MenuItem;
 import android.webkit.MimeTypeMap;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.makewithmoto.R;
 

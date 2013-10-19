@@ -34,14 +34,12 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
 
-import com.makewithmoto.R;
 import com.makewithmoto.base.AppSettings;
 import com.makewithmoto.base.BaseActivity;
-import com.makewithmoto.utils.FileIO;
+import com.makewithmoto.utils.StrUtils;
 
 public class LauncherActivity extends BaseActivity {
 
@@ -54,28 +52,20 @@ public class LauncherActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		// HSHIEH: This is making the status bar disappear and hence a jump on
-		// the next screen
-		// setFullScreen();
-		// setHideHomeBar();
-
-		// Hide the actionbar programmatically
-		// getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
-		// getActionBar().hide();
-
-		// Take some memory logs
-		// MemoryLogger.showMemoryStats("BEFORE LAUNCHER BOOTSCREEN");
+		//setTheme(android.R.style.Theme_NoDisplay);
 		setContentView(R.layout.activity_bootscreen);
-		// MemoryLogger.showMemoryStats("AFTER LAUNCHER BOOTSCREEN");
-
+		
 		// Prepare intent to exit the activity and move to the main one
 		boolean firstLaunch; // If this is the first time the
 		SharedPreferences userDetails = getSharedPreferences(
 				"com.makewithmoto", MODE_PRIVATE);
 		firstLaunch = userDetails.getBoolean(
 				getResources().getString(R.string.pref_is_first_launch), true);
+		
+		
 		if (firstLaunch) {
 			intent = new Intent(this, WelcomeActivity.class);
+			userDetails.edit().putString("device_id", StrUtils.generateRandomString());
 		} else {
 			intent = new Intent(this, MainActivity.class);
 		}

@@ -29,7 +29,6 @@
 package com.makewithmoto;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -43,11 +42,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.makewithmoto.R;
 import com.makewithmoto.base.BaseActivity;
-import com.makewithmoto.base.BaseMainApp;
 import com.makewithmoto.events.ProjectManager;
-import com.makewithmoto.utils.FileIO;
 
 @SuppressLint("NewApi")
 public class WelcomeActivity extends BaseActivity {

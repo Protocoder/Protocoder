@@ -156,7 +156,6 @@ function initUI() {
 	    url: '',
 	    onRender: function() { 
 	        gridRendered = true;
-	      // $("#grid_grid_records").append('<div id = "dropbox"> </div>');
 	    },
 	    columns: [              
 	        { field: 'file_name', caption: 'File Name', size: '70%' },
@@ -261,6 +260,39 @@ function initUI() {
 		showDashboard();
 	}
 	
+	setTimeout(function() { 
+	    $("#grid_grid_records").on('dragenter', function(e) {
+	        console.log(e.target);
+
+	        if (dropboxEnabled == false) {
+	            initUpload();
+	            e.preventDefault();
+	            e.stopPropagation();
+	        }
+	    });
+
+	    $("#grid_grid_records").on('dragover', function(e) {
+	            e.preventDefault();
+	            e.stopPropagation();
+	    });
+
+	      $("#grid_grid_records").on('drop', function(e) {
+	            e.preventDefault();
+	            e.stopPropagation();
+	    });
+
+	    
+
+	     $("#grid_grid_records").on('dragend', function(e) {
+	        console.log(e.target); 
+	        dropboxEnabled = false;
+	      	$("#dropbox").remove();
+	        //initUpload();
+	        e.preventDefault();
+	        e.stopPropagation();
+	    });
+ 	}, 2000);
+
 }
 
 function hideDashboard() { 

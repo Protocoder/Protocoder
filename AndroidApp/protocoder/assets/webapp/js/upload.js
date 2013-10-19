@@ -1,5 +1,8 @@
+var dropboxEnabled = false;
+
 function initUpload() {
-	
+	dropboxEnabled = true;
+
 	if (currentProject.name != "undefined") { 
 		$("#grid_grid_records").append('<div id = "dropbox"> </div>');
 
@@ -40,7 +43,7 @@ function initUpload() {
 						showMessage('Your browser does not support HTML5 file uploads!');
 						break;
 					case 'TooManyFiles':
-						alert('Too many files! Please select 1 file at most!');
+						alert('Too many files! Please select 10 file at most!');
 						break;
 					case 'FileTooLarge':
 						alert(file.name+' is too large! Please upload files up to 5mb.');

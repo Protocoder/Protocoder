@@ -163,11 +163,11 @@ public class CameraFragment extends Fragment {
 					int width, int height) {
 
 				if (modeCamera == MODE_CAMERA_FRONT) {
-					int index = getFrontCameraId();
-					Log.d(TAG, "" + index);
-					if (index == -1)
+					int cameraId = getFrontCameraId();
+					Log.d(TAG, "" + cameraId);
+					if (cameraId == -1)
 						Log.d(TAG, "there is no camera");
-					mCamera = Camera.open(index);
+					mCamera = Camera.open(cameraId);
 				} else {
 					mCamera = Camera.open();
 				}
@@ -187,6 +187,8 @@ public class CameraFragment extends Fragment {
 						mCamera.setDisplayOrientation(90);
 						// For Android Version 2.0 and above
 						parameters.setRotation(90);
+					} else if (modeCamera == MODE_CAMERA_FRONT) {
+							
 					}
 					mCamera.setParameters(parameters);
 
@@ -431,5 +433,5 @@ public class CameraFragment extends Fragment {
 	public void removeListener(CameraListener listener) {
 		listeners.remove(listener);
 	}
-
+	
 }

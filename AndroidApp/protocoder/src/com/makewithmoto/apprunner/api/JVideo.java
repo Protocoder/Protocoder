@@ -31,10 +31,12 @@ import android.app.Activity;
 
 import com.makewithmoto.apidoc.annotation.APIMethod;
 import com.makewithmoto.apidoc.annotation.JavascriptInterface;
+import com.makewithmoto.apprunner.api.widgets.JViewInterface;
+import com.makewithmoto.base.AppSettings;
 import com.makewithmoto.fragments.VideoPlayerFragment;
 import com.makewithmoto.fragments.VideoPlayerFragment.VideoListener;
 
-public class JVideo extends JInterface {
+public class JVideo extends JInterface implements JViewInterface {
 
 	private VideoPlayerFragment videoFragment;
 
@@ -45,27 +47,27 @@ public class JVideo extends JInterface {
 		this.videoFragment = videoFragment;
 	}
 
-	
+
 	@JavascriptInterface
-	@APIMethod(description = "", example = "camera.takePicture();")
+	@APIMethod(description = "", example = "")
 	public void play() {
 		videoFragment.play();
 	}	
 
 	@JavascriptInterface
-	@APIMethod(description = "", example = "camera.takePicture();")
+	@APIMethod(description = "", example = "")
 	public void seekTo(int ms) {
 		videoFragment.seekTo(ms);
 	}	
-	
+
 	@JavascriptInterface
-	@APIMethod(description = "", example = "camera.takePicture();")
+	@APIMethod(description = "", example = "")
 	public void pause() {
 		videoFragment.pause();
 	}	
-	
+
 	@JavascriptInterface
-	@APIMethod(description = "", example = "camera.takePicture();")
+	@APIMethod(description = "", example = "")
 	public void stop() {
 		videoFragment.stop();
 	}	
@@ -117,8 +119,19 @@ public class JVideo extends JInterface {
 	@APIMethod(description = "", example = "camera.takePicture();")
 	public int getCurrentPosition() {
 		return videoFragment.getCurrentPosition();
-	}	
+	}
+
 	
+	@Override
+	public void move(float x, float y) { 
+		videoFragment.getView().animate().x(x).setDuration(AppSettings.animSpeed);
+		videoFragment.getView().animate().y(y).setDuration(AppSettings.animSpeed);
+
+	} 
 	
+	@Override
+	public void rotate(float deg) { 
+		videoFragment.getView().animate().rotation(deg).setDuration(AppSettings.animSpeed);
+	}
 	
 }

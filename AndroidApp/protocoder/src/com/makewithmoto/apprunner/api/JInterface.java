@@ -65,7 +65,7 @@ public class JInterface {
 
 				f1 = f1 + ");";
 			}
-			a.get().eval(f1);
+			a.get().interp.eval(f1);
 
 		} catch (Throwable e) {
 

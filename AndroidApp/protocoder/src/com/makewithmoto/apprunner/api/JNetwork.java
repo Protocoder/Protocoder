@@ -68,119 +68,133 @@ public class JNetwork extends JInterface {
 	}
 
 	@JavascriptInterface
-	@APIMethod(description = "initializes makr board", example = "makr.start();")
-	public OSC.Server startOSCServer(String port, final String callbackfn) { 
+	@APIMethod(description = "", example = "")
+	public OSC.Server startOSCServer(String port, final String callbackfn) {
 		OSC osc = new OSC();
 		Server server = osc.new Server();
-		
+
 		server.addListener(new OSCServerListener() {
 
 			@Override
 			public void onMessage(OSCMessage msg) {
 				Log.d(TAG, "message received " + msg);
-				
+
 				JSONArray jsonArray = new JSONArray();
-				for (int i = 0; i < msg.getArgCount(); i++) { 
+				for (int i = 0; i < msg.getArgCount(); i++) {
 					jsonArray.put(msg.getArg(i));
 				}
-				
-				callback(callbackfn, msg.getName(), jsonArray);	
-			}		
+
+				callback(callbackfn, msg.getName(), jsonArray);
+			}
 
 		});
-		
+
 		server.start(port);
 
 		return server;
 	}
-	
+
 	@JavascriptInterface
-	@APIMethod(description = "initializes makr board", example = "makr.start();")
-	public OSC.Client connectOSC(String address, int port) { 
+	@APIMethod(description = "", example = "")
+	public OSC.Client connectOSC(String address, int port) {
 		OSC osc = new OSC();
 		Client client = osc.new Client(address, port);
 
 		return client;
 	}
 	
+
+//	@JavascriptInterface
+//	@APIMethod(description = "", example = "")
+//	public  org.java_websocket.server.WebSocketServer startWebsocketServer(String uri, final String callbackfn) {
+//		org.java_websocket.server.WebSocketServer websocketServer = new org.java_websocket.server.WebSocketServer();
+//		
+//		return websocketServer;
+//		
+//	}
+
 	@JavascriptInterface
-	@APIMethod(description = "initializes makr board", example = "makr.start();")
-	public SocketIOClient connectWebsocket(String uri, final String callbackfn) {
-	
+	@APIMethod(description = "", example = "")
+	public org.java_websocket.client.WebSocketClient connectWebsocket(
+			String uri, final String callbackfn) {
+
+		org.java_websocket.client.WebSocketClient webSocketClient = null;
 		try {
-			org.java_websocket.client.WebSocketClient webSocketClient = new org.java_websocket.client.WebSocketClient(new URI(uri)) {
-				
+			webSocketClient = new org.java_websocket.client.WebSocketClient(
+					new URI(uri)) {
+
 				@Override
-				public void onOpen(ServerHandshake arg0) {					
-					callback(callbackfn, "open", arg0);					
+				public void onOpen(ServerHandshake arg0) {
+					callback(callbackfn, "open", arg0);
 				}
-				
+
 				@Override
 				public void onMessage(String arg0) {
-					callback(callbackfn, "message", arg0);					
+					callback(callbackfn, "message", arg0);
 				}
-				
+
 				@Override
 				public void onError(Exception arg0) {
-					callback(callbackfn, "error");					
+					callback(callbackfn, "error");
 				}
-				
+
 				@Override
 				public void onClose(int arg0, String arg1, boolean arg2) {
-					callback(callbackfn, "close");					
+					callback(callbackfn, "close");
 				}
 			};
 		} catch (URISyntaxException e) {
 			callback(callbackfn, "error " + e.toString());
 			e.printStackTrace();
 		}
-		return null; 
-	} 
-	
-	
+		return webSocketClient;
+	}
+
+
 	@JavascriptInterface
-	@APIMethod(description = "initializes makr board", example = "makr.start();")
-	public SocketIOClient connectSocketIO(String uri, final String callbackfn) { 
-		SocketIOClient socketIOClient = new SocketIOClient(URI.create(uri), new SocketIOClient.Handler() {
-			
-			@Override
-			public void onMessage(String message) {
-				
-			}
-			
-			@Override
-			public void onJSON(JSONObject json) {
-				
-			}
-			
-			@Override
-			public void onError(Exception error) {
-				callback(callbackfn, "error");
-			}
-			
-			@Override
-			public void onDisconnect(int code, String reason) {
-				callback(callbackfn, "disconnect", reason);				
-			}
-			
-			@Override
-			public void onConnect() {
-				callback(callbackfn, "connected");
-				
-			}
-			
-			@Override
-			public void on(String event, JSONArray arguments) {
-				callback(callbackfn, "onmessage", event, arguments);
-				
-			}
-		});
-		
+	@APIMethod(description = "", example = "")
+	public SocketIOClient connectSocketIO(String uri, final String callbackfn) {
+		SocketIOClient socketIOClient = new SocketIOClient(URI.create(uri),
+				new SocketIOClient.Handler() {
+
+					@Override
+					public void onMessage(String message) {
+
+					}
+
+					@Override
+					public void onJSON(JSONObject json) {
+
+					}
+
+					@Override
+					public void onError(Exception error) {
+						callback(callbackfn, "error");
+					}
+
+					@Override
+					public void onDisconnect(int code, String reason) {
+						callback(callbackfn, "disconnect", reason);
+					}
+
+					@Override
+					public void onConnect() {
+						callback(callbackfn, "connected");
+
+					}
+
+					@Override
+					public void on(String event, JSONArray arguments) {
+						callback(callbackfn, "onmessage", event, arguments);
+
+					}
+				});
+
 		return socketIOClient;
-	} 
-	
+	}
+
 	@JavascriptInterface
-	@APIMethod(description = "initializes makr board", example = "makr.start();")
+	@APIMethod(description = "", example = "")
 	public void getRequest(String url, final String callbackfn) {
 		class RequestTask extends AsyncTask<String, String, String> {
 
@@ -202,7 +216,8 @@ public class JNetwork extends JInterface {
 						response.getEntity().getContent().close();
 						throw new IOException(statusLine.getReasonPhrase());
 					}
-					callback(callbackfn, statusLine.getStatusCode(),  "\"" + responseString + "\"");
+					callback(callbackfn, statusLine.getStatusCode(), "\""
+							+ responseString + "\"");
 				} catch (ClientProtocolException e) {
 
 				} catch (IOException e) {
@@ -217,12 +232,9 @@ public class JNetwork extends JInterface {
 				// Do anything with response..
 			}
 		}
-		
+
 		Log.d(TAG, "" + new RequestTask().execute(url));
 		callback(callbackfn);
 	}
-
-	// previous callback callback("OnSerialRead("+receivedData+");");
-	// callback(callbackfn, "\"" + receivedData + "\"");
 
 }

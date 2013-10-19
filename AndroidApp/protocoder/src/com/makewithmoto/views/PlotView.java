@@ -69,6 +69,7 @@ public class PlotView extends View {
 	private float mMinBoundary;
 	private float mMaxBoundary;
 	private boolean mReady = false;
+	private float thickness = 2;
 
 	public PlotView(Context context, AttributeSet attributeSet) {
 		super(context, attributeSet);
@@ -188,7 +189,7 @@ public class PlotView extends View {
 					//Log.d(TAG, mMinBoundary + " " + mMaxBoundary + " " + y);
 					//canvas.drawPoint(x, y, mPaint);
 					
-					canvas.drawCircle(x, y, 2, mPaint);
+					canvas.drawCircle(x, y, thickness , mPaint);
 
 					if (i < mNumPoints - 1) {
 						i++;
@@ -267,6 +268,11 @@ public class PlotView extends View {
 			}
 		}
 
+	}
+
+	public void setThickness(float r) {
+		thickness = r;
+		
 	}
 
 }

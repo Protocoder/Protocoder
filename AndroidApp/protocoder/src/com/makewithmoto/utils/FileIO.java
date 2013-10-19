@@ -355,7 +355,7 @@ public class FileIO {
 	 * Method borrowed from Processing PApplet.java
 	 */
 	public static File saveFile(String where) {
-		return new File(AppRunnerSettings.get().project.getUrl() + File.separator + where);
+		return new File(AppRunnerSettings.get().project.getFolder() + File.separator + where);
 	}
 	
 	/*
@@ -397,7 +397,7 @@ public class FileIO {
 	 * Method borrowed from Processing PApplet.java
 	 */
 	public static String[] loadStrings(String filename) {
-		InputStream is = createInput(AppRunnerSettings.get().project.getUrl() + File.separator + filename);
+		InputStream is = createInput(AppRunnerSettings.get().project.getFolder() + File.separator + filename);
 		if (is != null)
 			return loadStrings(is);
 

@@ -108,6 +108,12 @@ public class ProjectAdapter extends BaseAdapter {
 		}
 		customView.setTag(projects.get(position).getName());
 
+		if (getCount() - 1 == position) {
+			customView.setPadding(0, 0, 0, 100);
+		} else {
+			customView.setPadding(0, 0, 0, 0);
+		}
+
 		return customView;
 	}
 

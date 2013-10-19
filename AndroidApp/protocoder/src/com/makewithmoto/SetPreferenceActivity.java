@@ -27,24 +27,25 @@
 
 package com.makewithmoto;
 
-import com.makewithmoto.R;
-
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
 
-public class SetPreferenceActivity extends Activity {
+import com.makewithmoto.base.BaseActivity;
 
-    @Override
+public class SetPreferenceActivity extends BaseActivity {
+
+    @SuppressLint("NewApi")
+	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         getFragmentManager().beginTransaction().replace(android.R.id.content, new PrefsFragment()).commit();
-
+        
         // If a preference needs to be default true, we need this hack to make sure it is hard set
         // This is to work around the Android bug: http://code.google.com/p/android/issues/detail?id=6641
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);

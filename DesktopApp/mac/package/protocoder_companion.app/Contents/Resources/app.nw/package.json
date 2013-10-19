@@ -1,0 +1,27 @@
+{
+  "main": "./web/qq.html",
+	"title": "Protocoder",
+  "name": "Protocoder",
+  "description": "Protocoder",
+  "version": "0.7.0",
+  "keywords": [ "Protocoder", "" ],
+  "window": {
+    "icon": "link.png",
+    "toolbar": false,
+    "width": 960,
+    "height": 720,
+    "position": "mouse",
+    "min_width": 400,
+    "min_height": 200,
+    //"max_width": 800,
+    //"max_height": 600,
+		"resizable": true,
+		"fullscreen": false, 
+		"frame": true,
+		"kiosk": false, 
+		"show": false
+  },
+  "webkit": {
+    "plugin": true
+  }
+}

@@ -103,7 +103,6 @@ public class GPSManager {
 		locationManager = (LocationManager) c
 				.getSystemService(Context.LOCATION_SERVICE);
 		
-		Log.d(TAG, "qq " + locationManager); 
 		
 		if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) == false) { 
 			Log.d(TAG, "GPS not enabled");

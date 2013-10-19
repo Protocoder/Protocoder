@@ -46,6 +46,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.FileObserver;
@@ -69,7 +70,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.makewithmoto.R;
 import com.makewithmoto.apprunner.AppRunnerActivity;
 import com.makewithmoto.base.AppSettings;
 import com.makewithmoto.base.BaseActivity;
@@ -154,13 +154,14 @@ public class MainActivity extends BaseActivity implements
 		startServers();
 
 		observer = new FileObserver(BaseMainApp.projectsDir,
-		// set up a file observer to
+		// set up a file obs`erver to
 		// watch this directory on sd card
 				FileObserver.CREATE | FileObserver.DELETE) {
 
 			@Override
 			public void onEvent(int event, String file) {
 				if ((FileObserver.CREATE & event) != 0) {
+					
 					Log.d(TAG, "File created [" + BaseMainApp.projectsDir + "/"
 							+ file + "]");
 
@@ -175,6 +176,10 @@ public class MainActivity extends BaseActivity implements
 			}
 		};
 
+		registerReceiver(new ConnectivityChangeReceiver(), new IntentFilter(
+				ConnectivityManager.CONNECTIVITY_ACTION));
+
+		
 	}
 
 	/**
@@ -195,6 +200,8 @@ public class MainActivity extends BaseActivity implements
 				hardKillConnections();
 			}
 		};
+		
+		startServers();
 		IntentFilter filterSend = new IntentFilter();
 		filterSend.addAction("com.makewithmoto.intent.action.STOP_SERVER");
 		registerReceiver(mStopServerReceiver, filterSend);
@@ -277,11 +284,11 @@ public class MainActivity extends BaseActivity implements
 		if (showNotification) {
 			mNotification = new BaseNotification(this);
 			/*
-			mNotification.show(MainActivity.class, R.drawable.ic_stat_logo,
-					"http://" + NetworkUtils.getLocalIpAddress(this) + ":"
-							+ AppSettings.httpPort, "protocoder Running",
-					R.drawable.ic_navigation_cancel);
-					*/
+			 * mNotification.show(MainActivity.class, R.drawable.ic_stat_logo,
+			 * "http://" + NetworkUtils.getLocalIpAddress(this) + ":" +
+			 * AppSettings.httpPort, "protocoder Running",
+			 * R.drawable.ic_navigation_cancel);
+			 */
 		}
 
 		// start webserver
@@ -435,6 +442,7 @@ public class MainActivity extends BaseActivity implements
 	}
 
 	private void updateStartStopActionbarItem() {
+		getActionBar().show();
 		if (mMenu != null) {
 			MenuItem stopServerAction = mMenu.findItem(R.id.menu_start_stop);
 			if (httpServer != null) {
@@ -472,13 +480,12 @@ public class MainActivity extends BaseActivity implements
 						p.getType());
 
 				// check if the apprunner is installed
-				// TODO add handling
-				final PackageManager mgr = this.getPackageManager();
-				List<ResolveInfo> list = mgr.queryIntentActivities(
-						currentProjectApplicationIntent,
-						PackageManager.MATCH_DEFAULT_ONLY);
+				//final PackageManager mgr = this.getPackageManager();
+				//List<ResolveInfo> list = mgr.queryIntentActivities(
+				//		currentProjectApplicationIntent,
+				//		PackageManager.MATCH_DEFAULT_ONLY);
 
-				Log.d(TAG, "intent available " + list.size());
+				//Log.d(TAG, "intent available " + list.size());
 
 				startActivityForResult(currentProjectApplicationIntent,
 						mProjectRequestCode);
@@ -599,4 +606,46 @@ public class MainActivity extends BaseActivity implements
 		return true;
 	}
 
+	@Override
+	public boolean dispatchKeyEvent(KeyEvent event) {
+
+		if (event.getAction() == KeyEvent.ACTION_DOWN && event.isCtrlPressed()) {
+
+			int keyCode = event.getKeyCode();
+			switch (keyCode) {
+			case KeyEvent.KEYCODE_R:
+				Log.d(TAG, "run app");
+				break;
+
+			default:
+				break;
+			}
+		}
+
+		return super.dispatchKeyEvent(event);
+	}
+
+	// check if connection has changed
+	public class ConnectivityChangeReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			debugIntent(intent, "grokkingandroid");
+			startServers();
+		}
+
+		private void debugIntent(Intent intent, String tag) {
+			Log.v(tag, "action: " + intent.getAction());
+			Log.v(tag, "component: " + intent.getComponent());
+			Bundle extras = intent.getExtras();
+			if (extras != null) {
+				for (String key : extras.keySet()) {
+					Log.v(tag, "key [" + key + "]: " + extras.get(key));
+				}
+			} else {
+				Log.v(tag, "no extras");
+			}
+		}
+
+	}
 }

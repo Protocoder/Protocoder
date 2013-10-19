@@ -34,10 +34,12 @@ import android.app.Activity;
 import com.makewithmoto.apidoc.annotation.APIMethod;
 import com.makewithmoto.apidoc.annotation.JavascriptInterface;
 import com.makewithmoto.apprunner.AppRunnerSettings;
+import com.makewithmoto.apprunner.api.widgets.JViewInterface;
+import com.makewithmoto.base.AppSettings;
 import com.makewithmoto.fragments.CameraFragment;
 import com.makewithmoto.fragments.CameraFragment.CameraListener;
 
-public class JCamera extends JInterface {
+public class JCamera extends JInterface implements JViewInterface {
 
 	private CameraFragment cameraFragment;
 
@@ -52,7 +54,7 @@ public class JCamera extends JInterface {
 	@JavascriptInterface
 	@APIMethod(description = "", example = "camera.takePicture();")
 	public void takePicture(String file, final String callbackfn) {
-		cameraFragment.takePic(AppRunnerSettings.get().project.getUrl() + File.separator + file);
+		cameraFragment.takePic(AppRunnerSettings.get().project.getFolder() + File.separator + file);
 		cameraFragment.addListener(new CameraListener() {
 			
 			@Override
@@ -67,17 +69,17 @@ public class JCamera extends JInterface {
 			}
 		});
 	}	
-	
+
 	@JavascriptInterface
-	@APIMethod(description = "", example = "camera.takePicture();")
+	@APIMethod(description = "", example = "")
 	public void recordVideo(String file) {
-		cameraFragment.recordVideo(AppRunnerSettings.get().project.getUrl() + File.separator + file);
+		cameraFragment.recordVideo(AppRunnerSettings.get().project.getFolder() + File.separator + file);
 	}	
 	
 	
-	
+
 	@JavascriptInterface
-	@APIMethod(description = "", example = "camera.takePicture();")
+	@APIMethod(description = "", example = "")
 	public void stopRecordingVideo(final String callbackfn) {
 //		cameraFragment.recordVideo(((AppRunnerActivity) a.get()).getCurrentDir() + File.separator + file);
 //		cameraFragment.addListener(new CameraListener() {
@@ -93,8 +95,21 @@ public class JCamera extends JInterface {
 //			public void onPicTaken() {
 //			}
 //		});
-	}	
+	}
+
 	
+	@Override
+	public void move(float x, float y) { 
+		cameraFragment.getView().animate().x(x).setDuration(AppSettings.animSpeed);
+		cameraFragment.getView().animate().y(y).setDuration(AppSettings.animSpeed);
+
+	} 
+	
+	@Override
+	public void rotate(float deg) { 
+		cameraFragment.getView().animate().rotation(deg).setDuration(AppSettings.animSpeed);
+	}
+
 	
 	
 	

@@ -69,18 +69,20 @@ function fetch_code(pName, pType) {
 	obj.cmd = "fetch_code";
 	obj.name = pName;
 	obj.type = pType;
-	$.get(remoteIP + "cmd="+JSON.stringify(obj), function(data) {
-		var code = JSON.parse(data);
-		setCode(unescape(code.code));
-		currentProject.name = pName;
-		currentProject.type = pType;
-		document.title = " protocoder | " + pName;
-		var tabs = w2ui['code_editor'].get("main").tabs;
-		tabs.get("tab1").caption = pName;
-		tabs.refresh();
+  try {
+  	$.get(remoteIP + "cmd="+JSON.stringify(obj), function(data) {
+  		var code = JSON.parse(data);
+  		setCode(unescape(code.code));
+  		currentProject.name = pName;
+  		currentProject.type = pType;
+  		document.title = " protocoder | " + pName;
+  		var tabs = w2ui['code_editor'].get("main").tabs;
+  		tabs.get("tab1").caption = pName;
+  		tabs.refresh();
 
-		list_files_in_project(pName, pType);
-	});
+  		list_files_in_project(pName, pType);
+  	});
+  } catch (e) {} 
 }
 
 //fetch the code
@@ -89,21 +91,22 @@ function list_files_in_project(pName, pType) {
 	obj.cmd = "list_files_in_project";
 	obj.name = pName;
 	obj.type = pType;
-	$.get(remoteIP + "cmd="+JSON.stringify(obj), function(data) {
-		w2ui['grid'].clear();
-		//console.log(data);
 
-		$.each(JSON.parse(data).files, function(k, v) {
-			//console.log(v); 
-			v.recid = k;
-			w2ui['grid'].add( v );
-		});
+  try {
+  	$.get(remoteIP + "cmd="+JSON.stringify(obj), function(data) {
+  		w2ui['grid'].clear();
+  		//console.log(data);
 
-		console.log(currentProject);
+  		$.each(JSON.parse(data).files, function(k, v) {
+  			//console.log(v); 
+  			v.recid = k;
+  			w2ui['grid'].add( v );
+  		});
 
-		initUpload();
+  		initUpload();
 
-	});
+  	});
+  } catch (e) {};
 } 
 
 function run_app(project) {
@@ -244,18 +247,19 @@ function initWebsockets() {
     }
 
     if (result.type == 'ide') { 
-      var ready = result.values.ready; 
+      if (result.action == "ready") {
+        if (result.values.ready) { 
+          $("#tb_toolbar_item_project_run").addClass("app_running");
+          $("#tb_toolbar_item_project_run").removeClass("app_connected");
 
-
-      if (ready) { 
-        $("#tb_toolbar_item_project_run").addClass("app_running");
-        $("#tb_toolbar_item_project_run").removeClass("app_connected");
-
-        $("#tb_toolbar_item_project_run").find(".w2ui-tb-caption").text("close");
-      } else { 
-        $("#tb_toolbar_item_project_run").addClass("app_connected");
-        $("#tb_toolbar_item_project_run").removeClass("app_running");
-        $("#tb_toolbar_item_project_run").find(".w2ui-tb-caption").text("run");
+          $("#tb_toolbar_item_project_run").find(".w2ui-tb-caption").text("close");
+        } else {
+          $("#tb_toolbar_item_project_run").addClass("app_connected");
+          $("#tb_toolbar_item_project_run").removeClass("app_running");
+          $("#tb_toolbar_item_project_run").find(".w2ui-tb-caption").text("run");
+        }
+      } else if (result.action == "new_files_in_project") { 
+        list_files_in_project(currentProject.name, currentProject.type);
       }
 
     }
@@ -280,7 +284,8 @@ function initWebsockets() {
         widgetsFn[result.values.id](result.values.val, "");
       } else if (result.action == "setText") {
         setText(result.values.id, result.values.val);
-
+      } else if (result.action == "changeImage") { 
+        changeImage(result.values.id, result.values.url);
       }
 
     }

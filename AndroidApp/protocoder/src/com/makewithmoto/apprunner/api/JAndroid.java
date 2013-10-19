@@ -32,12 +32,16 @@ import java.util.Iterator;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.telephony.SmsManager;
 import android.util.Log;
 
 import com.makewithmoto.apidoc.annotation.APIMethod;
+import com.makewithmoto.apidoc.annotation.APIRequires;
+import com.makewithmoto.apidoc.annotation.APIVersion;
 import com.makewithmoto.apidoc.annotation.JavascriptInterface;
 import com.makewithmoto.apprunner.AppRunnerActivity;
 import com.makewithmoto.sensors.WhatIsRunning;
@@ -50,7 +54,6 @@ public class JAndroid extends JInterface {
 	private String onKeyDownfn;
 	private String onKeyUpfn;
 	private String onSmsReceivedfn;
-
 
 	public JAndroid(Activity a) {
 		super(a);
@@ -71,19 +74,39 @@ public class JAndroid extends JInterface {
 			}
 		});
 
-		
-		((AppRunnerActivity) a).addOnSmsReceivedListener(new onSmsReceivedListener() {
-			
-			@Override
-			public void onSmsReceived(String number, String msg) {
-				callback(onSmsReceivedfn, number, "\"" + msg + "\"");				
-			}
-		});
+		((AppRunnerActivity) a)
+				.addOnSmsReceivedListener(new onSmsReceivedListener() {
 
-	
+					@Override
+					public void onSmsReceived(String number, String msg) {
+						callback(onSmsReceivedfn, number, "\"" + msg + "\"");
+					}
+				});
 
-		
-		
+	}
+
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	@APIVersion(minLevel = "2")
+	@APIRequires("android.permission.INTERNET")
+	public void launchScript(String name, int type) {
+		Intent intent = new Intent(a.get(), AppRunnerActivity.class);
+		intent.putExtra("projectName", name);
+		intent.putExtra("projectType", type);
+		a.get().startActivity(intent);
+	}
+
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	public void returnResult(String data) {
+
+		Bundle conData = new Bundle();
+		conData.putString("param_result", data);
+		Intent intent = new Intent();
+		intent.putExtras(conData);
+		a.get().setResult(a.get().RESULT_OK, intent);
+		a.get().finish();
+
 	}
 
 	@JavascriptInterface
@@ -94,122 +117,134 @@ public class JAndroid extends JInterface {
 				Context.VIBRATOR_SERVICE);
 		v.vibrate(Integer.parseInt(duration));
 	}
-	
-	@JavascriptInterface
-	@APIMethod(description = "Change brightness", example = "ui.button(\"button\"); ")
-	public void smsSend(String number, String msg) { 
-		
-        SmsManager sm = SmsManager.getDefault(); 
-        sm.sendTextMessage(number, null, msg, null, null); 
-        
-	} 	
-	
 
 	@JavascriptInterface
-	@APIMethod(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
+	@APIMethod(description = "Change brightness", example = "")
+	public void smsSend(String number, String msg) {
+
+		SmsManager sm = SmsManager.getDefault();
+		sm.sendTextMessage(number, null, msg, null, null);
+
+	}
+
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
 	public void onSmsReceived(final String fn) {
 		onSmsReceivedfn = fn;
 	}
 
-
-	
-	
 	@JavascriptInterface
-	@APIMethod(description = "Set brightness", example = "ui.button(\"button\"); ")
+	@APIMethod(description = "Set brightness", example = "")
 	public void setBrightness(float val) {
 		((AppRunnerActivity) a.get()).setBrightness(val);
 	}
-	
-	
-	
+
 	@JavascriptInterface
-	@APIMethod(description = "Change brightness", example = "ui.button(\"button\"); ")
+	@APIMethod(description = "Change brightness", example = "")
 	public void getBrightness() {
 		((AppRunnerActivity) a.get()).getCurrentBrightness();
 	}
-	
-	
-	
-	
+
 	@JavascriptInterface
-	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
+	@APIMethod(description = "", example = "")
 	public void screenAlwaysOn() {
 		((AppRunnerActivity) a.get()).setScreenAlwaysOn();
 	}
 
 	@JavascriptInterface
-	@APIMethod(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
+	@APIMethod(description = "", example = "")
 	public void openEmailApp(String recepient, String subject, String msg) {
 		Intents.sendEmail(a.get(), recepient, subject, msg);
 	}
-	
+
 	@JavascriptInterface
-	@APIMethod(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
+	@APIMethod(description = "", example = "")
 	public void openMapApp(double longitude, double latitude) {
 		Intents.openMap(a.get(), longitude, latitude);
 	}
-	
+
 	@JavascriptInterface
-	@APIMethod(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
+	@APIMethod(description = "", example = "")
 	public void openDial() {
 		Intents.openDial(a.get());
 	}
-	
+
 	@JavascriptInterface
-	@APIMethod(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
+	@APIMethod(description = "", example = "")
 	public void call(String number) {
 		Intents.call(a.get(), number);
 	}
-	
+
 	@JavascriptInterface
-	@APIMethod(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
+	@APIMethod(description = "", example = "")
 	public void openWebApp(String url) {
 		Intents.openWeb(a.get(), url);
 	}
-	
+
 	@JavascriptInterface
-	@APIMethod(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
+	@APIMethod(description = "", example = "")
 	public void openWebSearch(String text) {
 		Intents.webSearch(a.get(), text);
 	}
 
-
 	@JavascriptInterface
-	@APIMethod(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
+	@APIMethod(description = "", example = "")
 	public void onKeyDown(final String fn) {
 		onKeyDownfn = fn;
 	}
 
-
 	@JavascriptInterface
-	@APIMethod(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
+	@APIMethod(description = "", example = "")
 	public void onKeyUp(final String fn) {
 		onKeyUpfn = fn;
 	}
 
-	
-	
-	
 	@JavascriptInterface
-	@APIMethod(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
-	public void loop(final int duration, final String fn) {
+	@APIMethod(description = "", example = "")
+	public void showConsole(boolean visible) {
+		((AppRunnerActivity) a.get()).showConsole(visible);
 
-		Runnable task = new Runnable() {
-			@Override
-			public void run() {
-				callback(fn);
-				handler.postDelayed(this, duration);
-			}
-		};
-		handler.post(task);
-
-		rl.add(task);
 	}
-	
+
 	@JavascriptInterface
-	@APIMethod(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
+	@APIMethod(description = "", example = "")
+	public void showEditor(boolean visible) {
+		((AppRunnerActivity) a.get()).showEditor(visible);
+
+	}
+
+	public class Looper {
+		Runnable task;
+
+		Looper(final int duration, final String callbackfn) {
+			task = new Runnable() {
+				@Override
+				public void run() {
+					callback(callbackfn);
+					handler.postDelayed(this, duration);
+				}
+			};
+			handler.post(task);
+
+			rl.add(task);
+		}
+
+		public void stop() {
+			handler.removeCallbacks(task);
+		}
+	}
+
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	public Looper loop(final int duration, final String callbackkfn) {
+
+		return new Looper(duration, callbackkfn);
+	}
+
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
 	public void delay(final int duration, final String fn) {
-		
+
 		Runnable task = new Runnable() {
 			@Override
 			public void run() {
@@ -220,10 +255,9 @@ public class JAndroid extends JInterface {
 			}
 		};
 		handler.postDelayed(task, duration);
-		
+
 		rl.add(task);
 	}
-
 
 	public void stopAllTimers() {
 		Iterator<Runnable> ir = rl.iterator();
@@ -232,22 +266,19 @@ public class JAndroid extends JInterface {
 			// handler.post(ir.next());
 		}
 	}
-	
-	public void stop() { 
-		stopAllTimers();		
+
+	public void stop() {
+		stopAllTimers();
 	}
 
 	public interface onKeyListener {
 		public void onKeyDown(int keyCode);
+
 		public void onKeyUp(int keyCode);
 	}
-
 
 	public interface onSmsReceivedListener {
 		public void onSmsReceived(String number, String msg);
 	}
-	
-	
 
-	
 }
