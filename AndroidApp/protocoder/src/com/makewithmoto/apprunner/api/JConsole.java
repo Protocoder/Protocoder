@@ -34,6 +34,7 @@ import org.json.JSONObject;
 
 import android.support.v4.app.FragmentActivity;
 
+import com.makewithmoto.apidoc.annotation.APIMethod;
 import com.makewithmoto.apidoc.annotation.JavascriptInterface;
 import com.makewithmoto.network.CustomWebsocketServer;
 
@@ -43,10 +44,10 @@ public class JConsole  extends JInterface {
 	
 	public JConsole(FragmentActivity mwmActivity) {
 		super(mwmActivity);
-		//EventBus.getDefault().register(this);
 	}
 
 	@JavascriptInterface
+	@APIMethod(description = "", example = "")
 	public void log(String output) {
 		JSONObject msg = new JSONObject();
 		try {

@@ -31,6 +31,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,16 +56,34 @@ import com.makewithmoto.apprunner.api.JIOIO;
 import com.makewithmoto.apprunner.api.JMakr;
 import com.makewithmoto.apprunner.api.JMedia;
 import com.makewithmoto.apprunner.api.JNetwork;
-import com.makewithmoto.apprunner.api.JPlotView;
 import com.makewithmoto.apprunner.api.JPureData;
 import com.makewithmoto.apprunner.api.JSensors;
 import com.makewithmoto.apprunner.api.JUI;
 import com.makewithmoto.apprunner.api.JVideo;
-import com.makewithmoto.apprunner.api.JWebAppPlot;
+import com.makewithmoto.apprunner.api.dashbwidgets.JWebAppButton;
+import com.makewithmoto.apprunner.api.dashbwidgets.JWebAppHTML;
+import com.makewithmoto.apprunner.api.dashbwidgets.JWebAppImage;
+import com.makewithmoto.apprunner.api.dashbwidgets.JWebAppLabel;
+import com.makewithmoto.apprunner.api.dashbwidgets.JWebAppPlot;
+import com.makewithmoto.apprunner.api.widgets.JButton;
+import com.makewithmoto.apprunner.api.widgets.JCanvasView;
+import com.makewithmoto.apprunner.api.widgets.JCheckBox;
+import com.makewithmoto.apprunner.api.widgets.JEditText;
+import com.makewithmoto.apprunner.api.widgets.JImageButton;
+import com.makewithmoto.apprunner.api.widgets.JImageView;
+import com.makewithmoto.apprunner.api.widgets.JPlotView;
+import com.makewithmoto.apprunner.api.widgets.JRadioButton;
+import com.makewithmoto.apprunner.api.widgets.JSeekBar;
+import com.makewithmoto.apprunner.api.widgets.JSwitch;
+import com.makewithmoto.apprunner.api.widgets.JTextView;
+import com.makewithmoto.apprunner.api.widgets.JToggleButton;
+import com.makewithmoto.apprunner.api.widgets.JViewInterface;
+import com.makewithmoto.apprunner.api.widgets.JWebView;
+import com.makewithmoto.base.AppSettings;
 import com.makewithmoto.events.Events;
-import com.makewithmoto.events.Events.ProjectEvent;
 import com.makewithmoto.events.Project;
 import com.makewithmoto.events.ProjectManager;
+import com.makewithmoto.events.Events.ProjectEvent;
 import com.makewithmoto.utils.FileIO;
 
 import de.greenrobot.event.EventBus;
@@ -75,6 +95,7 @@ public class MyHTTPServer extends NanoHTTPD {
 	public static final String TAG = "myHTTPServer";
 	private WeakReference<Context> ctx;
 	private String WEBAPP_DIR = "webapp/";
+	String projectURLPrefix = "/apps";
 
 	private static final Map<String, String> MIME_TYPES = new HashMap<String, String>() {
 		{
@@ -119,22 +140,18 @@ public class MyHTTPServer extends NanoHTTPD {
 			}
 
 		return instance;
-	} 
+	}
 
 	public MyHTTPServer(Context aCtx, int port) throws IOException {
 		super(port);
 		ctx = new WeakReference<Context>(aCtx);
 		String ip = NetworkUtils.getLocalIpAddress(aCtx);
 		if (ip == null) {
-			Log.d(TAG,
-					"No IP found. Please connect to a newwork and try again");
-
-		//	throw (new IOException());
+			Log.d(TAG, "No IP found. Please connect to a newwork and try again");
 		} else {
 			Log.d(TAG, "Launched server at http://" + ip.toString() + ":"
 					+ port);
 		}
-		//throw (new IOException());
 	}
 
 	@Override
@@ -145,39 +162,61 @@ public class MyHTTPServer extends NanoHTTPD {
 
 		try {
 
-			Log.d(TAG, "received String" + uri + " " + method + " " + header + " " + " " + parms + " " + files);
+			Log.d(TAG, "received String" + uri + " " + method + " " + header
+					+ " " + " " + parms + " " + files);
+
+			if (uri.startsWith(projectURLPrefix)) {
+
+				// checking if we are inside the directory so we sandbox the app
+				// TODO its pretty hack so this deserves coding it again
+				Project p = ProjectManager.getInstance().getCurrentProject();
 			
-			//file upload 
-			if (!files.isEmpty() ) { 
-		
+				String projectFolder = "/" + p.getTypeString() + "/" + p.getName();
+				Log.d("qq", "project folder is " + projectFolder);
+				if (uri.replace(projectURLPrefix, "").contains(projectFolder)) {
+					Log.d("qq", "inside project");
+					return serveFile(uri.substring( uri.lastIndexOf('/')+1, uri.length()), header,
+							new File(p.getFolder()), false);
+				} else {
+					Log.d("qq", "outside project");
+					new Response(HTTP_NOTFOUND, MIME_HTML, "resource not found");
+				}
+
+			}
+
+			// file upload
+			if (!files.isEmpty()) {
+
 				String name = parms.getProperty("name").toString();
 				String fileType = parms.getProperty("fileType").toString();
-				
+
 				int projectType = -1;
 				if (fileType.equals("list_projects")) {
-					projectType = ProjectManager.PROJECT_USER_MADE; 
-				} else if (fileType.equals("list_examples")) { 
-					projectType = ProjectManager.PROJECT_EXAMPLE; 
-				} 
-				
-				Project p = ProjectManager.getInstance().get(name, projectType); 
-				
-				File src = new File(files.getProperty("pic").toString()); 
-				File dst = new File(p.getUrl() + "/" + parms.getProperty("pic").toString());
-				Log.d("qwqw", p.getUrl() + "/" + parms.getProperty("pic").toString());
+					projectType = ProjectManager.PROJECT_USER_MADE;
+				} else if (fileType.equals("list_examples")) {
+					projectType = ProjectManager.PROJECT_EXAMPLE;
+				}
+
+				Project p = ProjectManager.getInstance().get(name, projectType);
+
+				File src = new File(files.getProperty("pic").toString());
+				File dst = new File(p.getFolder() + "/"
+						+ parms.getProperty("pic").toString());
+				Log.d("qwqw", p.getFolder() + "/"
+						+ parms.getProperty("pic").toString());
 				Log.d(TAG, " " + src.toString() + " " + dst.toString());
-				
+
 				FileIO.copyFile(src, dst);
-				
+
 				JSONObject data = new JSONObject();
 				data.put("result", "OK");
 
-				return new Response("200", MIME_TYPES.get("txt"), data.toString());
+				return new Response("200", MIME_TYPES.get("txt"),
+						data.toString());
 
-			} 
-			
-			
-			//webapi 
+			}
+
+			// webapi
 			JSONObject data = new JSONObject();
 
 			// splitting the string into command and parameters
@@ -196,48 +235,51 @@ public class MyHTTPServer extends NanoHTTPD {
 				Project foundProject;
 				String name, url, newCode;
 				String type;
-				int projectType = -1; 
+				int projectType = -1;
 
 				Log.d(TAG, "params " + obj.toString(2));
 
 				String cmd = obj.getString("cmd");
-				
-				//fetch code 
+
+				// fetch code
 				if (cmd.equals("fetch_code")) {
 					Log.d(TAG, "--> fetch code");
 					name = obj.getString("name");
-					type = obj.getString("type"); 
-					
+					type = obj.getString("type");
+
 					if (type.equals("list_projects")) {
-						projectType = ProjectManager.PROJECT_USER_MADE; 
-					} else if (type.equals("list_examples")) { 
-						projectType = ProjectManager.PROJECT_EXAMPLE; 
-					} 
-					
-					Project p = ProjectManager.getInstance().get(name, projectType);
-					
-					//TODO add type
+						projectType = ProjectManager.PROJECT_USER_MADE;
+					} else if (type.equals("list_examples")) {
+						projectType = ProjectManager.PROJECT_EXAMPLE;
+					}
+
+					Project p = ProjectManager.getInstance().get(name,
+							projectType);
+
+					// TODO add type
 					data.put("code", ProjectManager.getInstance().getCode(p));
-				
-				//list apps 
+
+					// list apps
 				} else if (cmd.equals("list_apps")) {
 					Log.d(TAG, "--> list apps");
 
 					type = obj.getString("filter");
-					
+
 					if (type.equals("user")) {
-						projectType = ProjectManager.PROJECT_USER_MADE; 
-					} else if (type.equals("example")) { 
-						projectType = ProjectManager.PROJECT_EXAMPLE; 
-					} 
-					ArrayList<Project> projects = ProjectManager.getInstance().list(projectType);
+						projectType = ProjectManager.PROJECT_USER_MADE;
+					} else if (type.equals("example")) {
+						projectType = ProjectManager.PROJECT_EXAMPLE;
+					}
+					ArrayList<Project> projects = ProjectManager.getInstance()
+							.list(projectType);
 					JSONArray projectsArray = new JSONArray();
 					for (Project project : projects) {
-						projectsArray.put(ProjectManager.getInstance().to_json(project));
+						projectsArray.put(ProjectManager.getInstance().to_json(
+								project));
 					}
 					data.put("projects", projectsArray);
-				
-				//run app
+
+					// run app
 				} else if (cmd.equals("run_app")) {
 					Log.d(TAG, "--> run app");
 
@@ -246,119 +288,142 @@ public class MyHTTPServer extends NanoHTTPD {
 					type = obj.getString("type");
 
 					if (type.equals("list_projects")) {
-						projectType = ProjectManager.PROJECT_USER_MADE; 
-					} else if (type.equals("list_examples")) { 
-						projectType = ProjectManager.PROJECT_EXAMPLE; 
-					} 
-					
+						projectType = ProjectManager.PROJECT_USER_MADE;
+					} else if (type.equals("list_examples")) {
+						projectType = ProjectManager.PROJECT_EXAMPLE;
+					}
 
-					ProjectEvent evt = new ProjectEvent(ProjectManager.getInstance().get(name, projectType), "run");
+					ProjectEvent evt = new ProjectEvent(ProjectManager
+							.getInstance().get(name, projectType), "run");
 					EventBus.getDefault().post(evt);
 					ALog.i("Running...");
-					
-					//run app
+
+					// run app
 				} else if (cmd.equals("execute_code")) {
 					Log.d(TAG, "--> execute code");
-					
+
 					// Save and run
 					String code = parms.get("codeToSend").toString();
-					
-					Events.ExecuteCodeEvent evt = new Events.ExecuteCodeEvent(code);
+
+					Events.ExecuteCodeEvent evt = new Events.ExecuteCodeEvent(
+							code);
 					EventBus.getDefault().post(evt);
 					ALog.i("Execute...");
 
-				//save_code
+					// save_code
 				} else if (cmd.equals("push_code")) {
-					Log.d(TAG, "--> push code " +  method + " " + header);
-					Log.d(TAG, "---->" + parms.toString() + " " + files.toString());
+					Log.d(TAG, "--> push code " + method + " " + header);
+					Log.d(TAG,
+							"---->" + parms.toString() + " " + files.toString());
 					Log.d(TAG, "" + parms.get("code"));
 					name = parms.get("name").toString();
 					newCode = parms.get("code").toString();
 					Log.d("ww", newCode);
-		
+
 					type = parms.get("type").toString();
-					
+
 					if (type.equals("list_projects")) {
-						projectType = ProjectManager.PROJECT_USER_MADE; 
-					} else if (type.equals("list_examples")) { 
-						projectType = ProjectManager.PROJECT_EXAMPLE; 
-					} 
-					
-					//add type
-					Project p = ProjectManager.getInstance().get(name, projectType);
+						projectType = ProjectManager.PROJECT_USER_MADE;
+					} else if (type.equals("list_examples")) {
+						projectType = ProjectManager.PROJECT_EXAMPLE;
+					}
+
+					// add type
+					Project p = ProjectManager.getInstance().get(name,
+							projectType);
 					ProjectManager.getInstance().writeNewCode(p, newCode);
 					data.put("project", ProjectManager.getInstance().to_json(p));
 					ProjectEvent evt = new ProjectEvent(p, "save");
 					EventBus.getDefault().post(evt);
 
 					ALog.i("Saved");
-				
-				//list files in project 
+
+					// list files in project
 				} else if (cmd.equals("list_files_in_project")) {
 					Log.d(TAG, "--> create new project");
 					name = obj.getString("name");
 					type = obj.getString("type");
 
 					if (type.equals("list_projects")) {
-						projectType = ProjectManager.PROJECT_USER_MADE; 
-					} else if (type.equals("list_examples")) { 
-						projectType = ProjectManager.PROJECT_EXAMPLE; 
-					} 
-					
+						projectType = ProjectManager.PROJECT_USER_MADE;
+					} else if (type.equals("list_examples")) {
+						projectType = ProjectManager.PROJECT_EXAMPLE;
+					}
+
 					Project p = new Project(name, projectType);
-					JSONArray array = ProjectManager.getInstance().listFilesInProject(p);
+					JSONArray array = ProjectManager.getInstance()
+							.listFilesInProject(p);
 					data.put("files", array);
-					//ProjectEvent evt = new ProjectEvent(p, "new");
-					//EventBus.getDefault().post(evt);
-					
-					
+					// ProjectEvent evt = new ProjectEvent(p, "new");
+					// EventBus.getDefault().post(evt);
+
 				} else if (cmd.equals("create_new_project")) {
 					Log.d(TAG, "--> create new project");
 
 					name = obj.getString("name");
-					Project p = new Project(name, "", ProjectManager.PROJECT_USER_MADE);
+					Project p = new Project(name, "",
+							ProjectManager.PROJECT_USER_MADE);
 					ProjectEvent evt = new ProjectEvent(p, "new");
 					EventBus.getDefault().post(evt);
 
-					Project newProject = ProjectManager.getInstance().addNewProject(ctx.get(),
-							name, name, ProjectManager.PROJECT_USER_MADE);
+					Project newProject = ProjectManager.getInstance()
+							.addNewProject(ctx.get(), name, name,
+									ProjectManager.PROJECT_USER_MADE);
 
-					
-				//remove app
+					// remove app
 				} else if (cmd.equals("remove_app")) {
 					Log.d(TAG, "--> remove app");
-				
-				//get help 
+
+					// get help
 				} else if (cmd.equals("get_documentation")) {
 					Log.d(TAG, "--> get documentation");
-					
-					//TODO do it automatically 
+
+					// TODO do it automatically
 					APIManager.getInstance().clear();
-					APIManager.getInstance().addClass(JAndroid.class); 
-					APIManager.getInstance().addClass(JCamera.class); 
-					APIManager.getInstance().addClass(JConsole.class); 
-					APIManager.getInstance().addClass(JDashboard.class); 
-					APIManager.getInstance().addClass(JFileIO.class); 
-					APIManager.getInstance().addClass(JIOIO.class); 
-					APIManager.getInstance().addClass(JMakr.class); 
-					APIManager.getInstance().addClass(JMedia.class); 
-					APIManager.getInstance().addClass(JNetwork.class); 
-					APIManager.getInstance().addClass(JPlotView.class); 
-					APIManager.getInstance().addClass(JPureData.class); 
-					APIManager.getInstance().addClass(JSensors.class); 
-					APIManager.getInstance().addClass(JUI.class); 
-					APIManager.getInstance().addClass(JVideo.class); 
-					APIManager.getInstance().addClass(JWebAppPlot.class); 
+					APIManager.getInstance().addClass(JAndroid.class);
+					APIManager.getInstance().addClass(JCamera.class);
+					APIManager.getInstance().addClass(JConsole.class);
+					APIManager.getInstance().addClass(JDashboard.class);
+					APIManager.getInstance().addClass(JFileIO.class);
+					APIManager.getInstance().addClass(JIOIO.class);
+					APIManager.getInstance().addClass(JMakr.class);
+					APIManager.getInstance().addClass(JMedia.class);
+					APIManager.getInstance().addClass(JNetwork.class);
+					APIManager.getInstance().addClass(JPureData.class);
+					APIManager.getInstance().addClass(JSensors.class);
+					APIManager.getInstance().addClass(JUI.class);
+					APIManager.getInstance().addClass(JVideo.class);
 					
+					APIManager.getInstance().addClass(JCheckBox.class);
+					APIManager.getInstance().addClass(JTextView.class);
+					APIManager.getInstance().addClass(JWebAppButton.class);
+					APIManager.getInstance().addClass(JWebAppHTML.class);
+					APIManager.getInstance().addClass(JWebAppImage.class);
+					APIManager.getInstance().addClass(JWebAppLabel.class);
+					APIManager.getInstance().addClass(JWebAppPlot.class);
+
+					APIManager.getInstance().addClass(JButton.class);
+					APIManager.getInstance().addClass(JCanvasView.class);
+					APIManager.getInstance().addClass(JEditText.class);
+					APIManager.getInstance().addClass(JImageButton.class);
+					APIManager.getInstance().addClass(JImageView.class);
+					APIManager.getInstance().addClass(JPlotView.class);
+					APIManager.getInstance().addClass(JRadioButton.class);
+					APIManager.getInstance().addClass(JSeekBar.class);
+					APIManager.getInstance().addClass(JSwitch.class);
+					APIManager.getInstance().addClass(JToggleButton.class);
+					APIManager.getInstance().addClass(JWebView.class);
+
 					data.put("api", APIManager.getInstance().getDocumentation());
 				}
 
-				res = new Response("200", MIME_TYPES.get("txt"), data.toString());
-			
-			} else if (uri.contains("apps")) { 
+				res = new Response("200", MIME_TYPES.get("txt"),
+						data.toString());
+
+			} else if (uri.contains("apps")) {
 				String[] u = uri.split("/");
-				
-			//server webui 
+
+				// server webui
 			} else {
 
 				res = sendWebAppFile(uri, method, header, parms, files);
@@ -372,8 +437,43 @@ public class MyHTTPServer extends NanoHTTPD {
 		return res;
 	}
 
-	private Response sendWebAppFile(String uri, String method, Properties header,
-			Properties parms, Properties files) {
+	private Response sendProjectFile(String uri, String method,
+			Properties header, Properties parms, Properties files) {
+
+		Response res = null;
+
+		// Clean up uri
+		uri = uri.trim().replace(File.separatorChar, '/');
+		Log.d(TAG, uri);
+
+		// have the object build the directory structure, if needed.
+		AssetManager am = ctx.get().getAssets();
+		try {
+			Log.d(TAG, WEBAPP_DIR + uri);
+			InputStream fi = am.open(WEBAPP_DIR + uri);
+
+			// Get MIME type from file name extension, if possible
+			String mime = null;
+			int dot = uri.lastIndexOf('.');
+			if (dot >= 0)
+				mime = MIME_TYPES.get(uri.substring(dot + 1).toLowerCase());
+			if (mime == null)
+				mime = NanoHTTPD.MIME_DEFAULT_BINARY;
+
+			res = new Response(HTTP_OK, mime, fi);
+		} catch (IOException e) {
+			e.printStackTrace();
+			ALog.d(TAG, e.getStackTrace().toString());
+			res = new Response(HTTP_INTERNALERROR, "text/html", "ERROR: "
+					+ e.getMessage());
+		}
+
+		return res;
+
+	}
+
+	private Response sendWebAppFile(String uri, String method,
+			Properties header, Properties parms, Properties files) {
 		Response res = null;
 
 		Log.d(TAG, "" + method + " '" + uri + " " + /* header + */" " + parms);
@@ -400,8 +500,8 @@ public class MyHTTPServer extends NanoHTTPD {
 		// have the object build the directory structure, if needed.
 		AssetManager am = ctx.get().getAssets();
 		try {
-			Log.d(TAG, WEBAPP_DIR  + uri);
-			InputStream fi = am.open(WEBAPP_DIR  + uri);
+			Log.d(TAG, WEBAPP_DIR + uri);
+			InputStream fi = am.open(WEBAPP_DIR + uri);
 
 			// Get MIME type from file name extension, if possible
 			String mime = null;
@@ -423,10 +523,10 @@ public class MyHTTPServer extends NanoHTTPD {
 
 	}
 
-	public void close() { 
+	public void close() {
 		stop();
 		instance = null;
-		
+
 	}
 
 }

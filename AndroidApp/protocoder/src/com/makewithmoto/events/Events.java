@@ -53,7 +53,7 @@ public class Events {
 		}
 
 		public String getFile() {
-			return project.getUrl();
+			return project.getFolder();
 		}
 
 		public String getName() {

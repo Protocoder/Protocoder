@@ -52,6 +52,8 @@ public class ProjectManager {
 	public static final int PROJECT_EXAMPLE = 1;
 	private static final String TAG = "ProjectManager";
 	public static int type;
+	private Project currentProject;
+	String mainFileStr = "main.js";
 
 	private static ProjectManager INSTANCE;
 
@@ -61,22 +63,23 @@ public class ProjectManager {
 
 		return INSTANCE;
 	}
+
 	
 	public void install(final Context c) { 
     	new Runnable() {
 
 			@Override
 			public void run() {
-				File dir = new File(BaseMainApp.baseDir + "/" + "examples");
+				File dir = new File(BaseMainApp.baseDir + "/" + BaseMainApp.typeExampleStr);
 				FileIO.deleteDir(dir);
-				FileIO.copyFileOrDir(c.getApplicationContext(), "examples");
+				FileIO.copyFileOrDir(c.getApplicationContext(), BaseMainApp.typeExampleStr);
 			}
 		}.run();
 	}
 
 	public String getCode(Project p) {
 		String out = null;
-		File f = new File(p.getUrl() + File.separator + "main.js");
+		File f = new File(p.getFolder() + File.separator + mainFileStr);
 		try {
 			InputStream in = new FileInputStream(f);
 			ByteArrayOutputStream buf = new ByteArrayOutputStream();
@@ -99,7 +102,7 @@ public class ProjectManager {
 	}
 
 	public void writeNewCode(Project p, String code) {
-		writeNewFile(p.getUrl() + File.separator + "main.js", code);
+		writeNewFile(p.getFolder() + File.separator + mainFileStr, code);
 	}
 
 	public void writeNewFile(String file, String code) {
@@ -125,7 +128,7 @@ public class ProjectManager {
 		JSONObject json = new JSONObject();
 		try {
 			json.put("name", p.getName());
-			json.put("url", p.getUrl());
+			json.put("url", p.getFolder());
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -176,6 +179,7 @@ public class ProjectManager {
 		for (Project project : projects) {
 			if (name.equals(project.getName())) {
 				Log.d("UU", "" + name + " " + type + " " + project.getName());
+				setCurrentProject(project);
 				return project;
 			}
 		}
@@ -199,7 +203,7 @@ public class ProjectManager {
 
 	public JSONArray listFilesInProject(Project p) {
 
-		File f = new File(p.getUrl());
+		File f = new File(p.getFolder());
 		File file[] = f.listFiles();
 		Log.d("Files", "Size: " + file.length);
 
@@ -224,10 +228,20 @@ public class ProjectManager {
 
 	// TODO fix this hack
 	public String getProjectURL(Project p) {
-		String projectURL = p.getUrl();
+		String projectURL = p.getFolder();
 
 		return projectURL;
 
+	}
+	
+	public void setCurrentProject(Project project) { 
+		currentProject = project;
+		
+	}
+
+	public Project getCurrentProject() {
+
+		return currentProject;
 	}
 
 }

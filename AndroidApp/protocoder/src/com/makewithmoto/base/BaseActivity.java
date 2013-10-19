@@ -29,6 +29,7 @@ package com.makewithmoto.base;
 
 import java.util.ArrayList;
 
+import android.R;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -62,24 +63,26 @@ public class BaseActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		/*
-		 * if (AppSettings.fullscreen) { setFullScreen(); }
-		 * 
-		 * if (AppSettings.hideHomeBar) { setHideHomeBar(); }
-		 * 
-		 * if (AppSettings.screenAlwaysOn) { setScreenAlwaysOn(); }
-		 * 
-		 * //setVolume(100); //setBrightness(1f); //
-		 * Utils.playSound("http://outside.mediawerf.net/8-Light_2.mp3"); //
-		 * playSound("http://outside.mediawerf.net/music.ogg");
-		 * //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		 * //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-		 */
-		
+
+		// if (AppSettings.fullscreen) {
+		// setFullScreen();
+		// }
+		//
+		// if (AppSettings.hideHomeBar) {
+		// setHideHomeBar();
+		// }
+		//
+		// if (AppSettings.screenAlwaysOn) {
+		// setScreenAlwaysOn();
+		// }
+		//
+		// setVolume(100);
+		// setBrightness(1f);
+
 		Display display = getWindowManager().getDefaultDisplay();
 		Point size = new Point();
 		display.getSize(size);
-				
+
 		screenWidth = size.x;
 		screenHeight = size.y;
 	}
@@ -92,13 +95,23 @@ public class BaseActivity extends FragmentActivity {
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 	}
 
-	public void setHideHomeBar() {
+	public void showHomeBar(boolean b) {
 
-		if (Build.VERSION.SDK_INT > AppSettings.CURRENT_VERSION) {
-			getWindow().getDecorView().setSystemUiVisibility(
-					View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+		if (b == true) {
+			if (Build.VERSION.SDK_INT > AppSettings.CURRENT_VERSION) {
+				getWindow().getDecorView().setSystemUiVisibility(
+						View.SYSTEM_UI_FLAG_VISIBLE);
+			} else {
+				
+			}
+
 		} else {
+			if (Build.VERSION.SDK_INT > AppSettings.CURRENT_VERSION) {
+				getWindow().getDecorView().setSystemUiVisibility(
+						View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+			} else {
 
+			}
 		}
 	}
 
@@ -119,9 +132,9 @@ public class BaseActivity extends FragmentActivity {
 			String tag, boolean addToBackStack) {
 
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
 		ft.add(fragmentPosition, fragment, tag);
-		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-		ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+		//ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 		if (addToBackStack) {
 			ft.addToBackStack(null);
 		}
@@ -134,9 +147,9 @@ public class BaseActivity extends FragmentActivity {
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		// FIXME: Because we have no tagging system we need to use the int as a
 		// tag, which may cause collisions
+		ft.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
 		ft.add(fragmentPosition, fragment, String.valueOf(fragmentPosition));
-		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-		ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+//		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 		if (addToBackStack) {
 			ft.addToBackStack(null);
 		}
@@ -145,6 +158,7 @@ public class BaseActivity extends FragmentActivity {
 
 	public void removeFragment(Fragment fragment) {
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
 		ft.remove(fragment);
 		ft.commit();
 	}

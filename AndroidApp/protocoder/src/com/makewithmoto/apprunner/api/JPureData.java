@@ -27,10 +27,17 @@
 
 package com.makewithmoto.apprunner.api;
 
+import org.puredata.core.PdBase;
+
+import com.makewithmoto.apidoc.annotation.APIMethod;
+import com.makewithmoto.apidoc.annotation.JavascriptInterface;
+
 
 public class JPureData {
 
-	/*
+
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
 	public void sendMessage(String message, String value) {
 		if (value.isEmpty()) {
 			PdBase.sendBang(message);
@@ -41,15 +48,32 @@ public class JPureData {
 		}
 	}
 	
+
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
 	public void sendBang(String name) {
 		PdBase.sendBang(name);
 	}
 
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
 	public void sendFloat(String name, int value) {
 		PdBase.sendFloat(name, value); 
-
 	}
 	
-	*/
+	
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	public void sendNoteOn(int channel, int pitch, int velocity) {
+		PdBase.sendNoteOn(channel, pitch, velocity); 
+	}
+	
+	
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	public void sendFloat(int port, int value) {
+		PdBase.sendMidiByte(port, value); 
+	}
+	
 	
 }

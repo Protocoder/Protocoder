@@ -51,6 +51,7 @@ import java.util.TimeZone;
 import java.util.Vector;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 
 /**
  * A simple, tiny, nicely embeddable HTTP 1.0 server in Java
@@ -879,7 +880,8 @@ public class NanoHTTPD
 			return new Response( HTTP_FORBIDDEN, MIME_PLAINTEXT,
 								 "FORBIDDEN: Won't serve ../ for security reasons." );
 
-		File f = new File( homeDir, uri );
+		File f = new File( homeDir, uri ); 
+		Log.d("qq", f.getAbsolutePath());
 		if ( !f.exists())
 			return new Response( HTTP_NOTFOUND, MIME_PLAINTEXT,
 								 "Error 404, file not found." );

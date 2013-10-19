@@ -34,10 +34,13 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -49,62 +52,67 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
 import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
-import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.makewithmoto.R;
 import com.makewithmoto.apidoc.annotation.APIMethod;
 import com.makewithmoto.apidoc.annotation.JavascriptInterface;
 import com.makewithmoto.apprunner.AppRunnerActivity;
 import com.makewithmoto.apprunner.AppRunnerSettings;
+import com.makewithmoto.apprunner.api.widgets.JButton;
+import com.makewithmoto.apprunner.api.widgets.JCanvasView;
+import com.makewithmoto.apprunner.api.widgets.JCheckBox;
+import com.makewithmoto.apprunner.api.widgets.JEditText;
+import com.makewithmoto.apprunner.api.widgets.JImageButton;
+import com.makewithmoto.apprunner.api.widgets.JImageView;
+import com.makewithmoto.apprunner.api.widgets.JPlotView;
+import com.makewithmoto.apprunner.api.widgets.JRadioButton;
+import com.makewithmoto.apprunner.api.widgets.JSeekBar;
+import com.makewithmoto.apprunner.api.widgets.JSwitch;
+import com.makewithmoto.apprunner.api.widgets.JTextView;
+import com.makewithmoto.apprunner.api.widgets.JToggleButton;
+import com.makewithmoto.apprunner.api.widgets.JWebView;
 import com.makewithmoto.base.BaseActivity;
 import com.makewithmoto.fragments.CameraFragment;
 import com.makewithmoto.fragments.VideoPlayerFragment;
 import com.makewithmoto.fragments.VideoPlayerFragment.VideoListener;
 import com.makewithmoto.utils.AndroidUtils;
-import com.makewithmoto.views.CanvasView;
-import com.makewithmoto.views.CustomWebView;
 import com.makewithmoto.views.HoloCircleSeekBar;
-import com.makewithmoto.views.PlotView;
 import com.makewithmoto.views.HoloCircleSeekBar.OnCircleSeekBarChangeListener;
+import com.makewithmoto.views.PlotView;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class JUI extends JInterface {
 
+	String TAG = "JUI";
 	final static int MAXVIEW = 1000;
 	FrameLayout mMainLayout;
 	Boolean isMainLayoutSetup = false;
 	int viewCount = 0;
 	View viewArray[] = new View[MAXVIEW];
 
-	// TODO add variable support
-	// @APIAnnotationField(description = "Creates a button ", example =
-	// "ui.button(\"button\"); ")
 	public int canvasWidth;
 	public int canvasHeight;
 	private ScrollView sv;
 	public int screenWidth;
 	public int screenHeight;
 	private int theme;
+	private RelativeLayout bgRelativeLayout;
+	private ImageView bgImageView;
 
 	public JUI(Activity a) {
 		super(a);
@@ -117,8 +125,10 @@ public class JUI extends JInterface {
 		if (!isMainLayoutSetup) {
 			// We need to let the view scroll, so we're creating a scroll view
 			sv = new ScrollView(a.get());
+
 			sv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
 					LayoutParams.MATCH_PARENT));
+			sv.setFillViewport(true);
 
 			// Create the main layout. This is where all the items actually go
 			mMainLayout = new FrameLayout(a.get());
@@ -127,14 +137,22 @@ public class JUI extends JInterface {
 			sv.addView(mMainLayout);
 
 			// Set the content view
-			RelativeLayout rl = (RelativeLayout) a.get().findViewById(
+			bgRelativeLayout = (RelativeLayout) a.get().findViewById(
 					R.id.user_ui);
-			rl.addView(sv);
+			bgImageView = (ImageView) a.get().findViewById(R.id.bg);
+			bgRelativeLayout.addView(sv);
 			isMainLayoutSetup = true;
 		}
 	}
 
-	private void addView(View v) {
+	private void addView(View v, int x, int y, int w, int h) {
+		positionView(v, x, y, w, h);
+
+		v.setAlpha(0);
+		v.setRotationX(-30);
+		viewArray[viewCount++] = v;
+		v.animate().alpha(1).rotationX(0).setDuration(500)
+				.setStartDelay((long) (100 * (1 + viewCount)));
 		mMainLayout.addView(v);
 
 		/*
@@ -196,36 +214,72 @@ public class JUI extends JInterface {
 	@JavascriptInterface
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
 	public void setTitle(String title) {
-		((AppRunnerActivity) a.get()).changeTitle(title);
+		((AppRunnerActivity) a.get()).actionBar.setTitle(title);
 	}
 
 	@JavascriptInterface
-	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
-	public void setFullscreen() {
-		((AppRunnerActivity) a.get()).setFullScreen();
+	@APIMethod(description = " ", example = "")
+	public void setSubtitle(String title) {
+		((AppRunnerActivity) a.get()).actionBar.setSubtitle(title);
 	}
 
 	@JavascriptInterface
-	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
-	public void hideHomeBar() {
-		((AppRunnerActivity) a.get()).setHideHomeBar();
+	@APIMethod(description = "", example = "")
+	public void showTitleBar(Boolean b) {
+		if (b)
+			((AppRunnerActivity) a.get()).actionBar.show();
+		else {
+			((AppRunnerActivity) a.get()).actionBar.hide();
+		}
 	}
 
 	@JavascriptInterface
-	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
-	public void setOrientation() {
-		// ((AppRunnerActivity) a.get()).setOr();
-	}
-	
+	@APIMethod(description = "", example = "")
+	public void setTitleBgColor(int r, int g, int b) {
+		ColorDrawable d = new ColorDrawable();
+		int c = Color.rgb(r, g, b);
+		d.setColor(c);
+		((AppRunnerActivity) a.get()).actionBar.setBackgroundDrawable(d);
+	} 
 	
 	
 	@JavascriptInterface
-	@APIMethod(description = "Change brightness", example = "ui.button(\"button\"); ")
+	@APIMethod(description = "", example = "")
+	public void setTitleTextColor(int r, int g, int b) {
+		ColorDrawable d = new ColorDrawable();
+		int c = Color.rgb(r, g, b);
+		d.setColor(c);
+		int titleId = Resources.getSystem().getIdentifier("action_bar_title", "id", "android");
+		TextView yourTextView = (TextView)a.get().findViewById(titleId);
+		yourTextView.setTextColor(c);
+	} 
+	
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	public void setTitleImage(String imagePath) {
+		Bitmap myBitmap = BitmapFactory.decodeFile(AppRunnerSettings.get().project.getFolder() + imagePath);
+		Drawable icon = new BitmapDrawable(a.get().getResources(), myBitmap);
+
+		((AppRunnerActivity) a.get()).actionBar.setIcon(icon);
+	}
+
+//	@JavascriptInterface
+//	@APIMethod(description = "", example = "")
+//	public void showHomeBar(boolean b) {
+//		((AppRunnerActivity) a.get()).showHomeBar(b);
+//	}
+//
+//	@JavascriptInterface
+//	@APIMethod(description = "", example = "")
+//	public void setOrientation() {
+//		// ((AppRunnerActivity) a.get()).setOr();
+//	}
+
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
 	public void toast(String text, int duration) {
 		Toast.makeText(a.get(), text, duration).show();
 	}
-	
-	
 
 	/**
 	 * Adds a button to the view
@@ -239,15 +293,14 @@ public class JUI extends JInterface {
 	 */
 	@JavascriptInterface
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
-	public Button addButton(String label, int x, int y, int w, int h,
+	public JButton addButton(String label, int x, int y, int w, int h,
 			final String callbackfn) {
 		initializeLayout();
 
 		// Create the button
-		Button b = new Button(a.get());
+		JButton b = new JButton(a.get());
 		b.setText(label);
-		positionView(b, x, y, w, h);
-	
+
 		// Set on click behavior
 		b.setOnClickListener(new OnClickListener() {
 			@Override
@@ -258,8 +311,8 @@ public class JUI extends JInterface {
 		});
 
 		// Add the view to the layout
-		mMainLayout.addView(b);
-		
+		addView(b, x, y, w, h);
+
 		return b;
 	}
 
@@ -274,7 +327,8 @@ public class JUI extends JInterface {
 	 * @param callbackfn
 	 */
 	@JavascriptInterface
-	public HoloCircleSeekBar addKnob(int x, int y, int w, int h, final String callbackfn) {
+	public HoloCircleSeekBar addKnob(int x, int y, int w, int h,
+			final String callbackfn) {
 		initializeLayout();
 
 		HoloCircleSeekBar pkr = new HoloCircleSeekBar(a.get());
@@ -292,9 +346,8 @@ public class JUI extends JInterface {
 		});
 
 		// Add the view
-		positionView(pkr, x, y, w, h);// height must always wrap
-		addView(pkr);
-		
+		addView(pkr, x, y, w, h);
+
 		return pkr;
 	}
 
@@ -312,15 +365,14 @@ public class JUI extends JInterface {
 	// We'll add in the circular view as a nice to have later once all the other
 	// widgets are handled.
 	@JavascriptInterface
-	public SeekBar addSlider(int x, int y, int w, int h, int max, int progress,
-			final String callbackfn) {
+	public JSeekBar addSlider(int x, int y, int w, int h, int max,
+			int progress, final String callbackfn) {
 
 		initializeLayout();
 		// Create the position the view
-		SeekBar sb = new SeekBar(a.get());
+		JSeekBar sb = new JSeekBar(a.get());
 		sb.setMax(max);
 		sb.setProgress(progress);
-		positionView(sb, x, y, w, -1);// height must always wrap
 
 		// Add the change listener
 		sb.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
@@ -344,8 +396,8 @@ public class JUI extends JInterface {
 		});
 
 		// Add the view
-		addView(sb);
-		
+		addView(sb, x, y, w, -1);
+
 		return sb;
 
 	}
@@ -360,7 +412,7 @@ public class JUI extends JInterface {
 	 * @param h
 	 */
 	@JavascriptInterface
-	public TextView addLabel(String label, int x, int y, int w, int h) {
+	public JTextView addLabel(String label, int x, int y, int w, int h) {
 		int defaultTextSize = 16;
 		return addLabel(label, x, y, w, h, defaultTextSize);
 	}
@@ -376,40 +428,28 @@ public class JUI extends JInterface {
 	 * @param textSize
 	 */
 	@JavascriptInterface
-	public TextView addLabel(String label, int x, int y, int w, int h, int textSize) {
+	public JTextView addLabel(String label, int x, int y, int w, int h,
+			int textSize) {
 
 		initializeLayout();
 		// Create the TextView
-		TextView tv = new TextView(a.get());
+		JTextView tv = new JTextView(a.get());
 		tv.setText(label);
 		tv.setTextSize((float) textSize);
 		// tv.setTypeface(null, Typeface.BOLD);
 		// tv.setGravity(Gravity.CENTER_VERTICAL);
 		// tv.setPadding(2, 0, 0, 0);
 		// tv.setTextColor(a.get().getResources().getColor(R.color.theme_text_white));
-		positionView(tv, x, y, w, h);
-		
+
 		// Add the view
 		themeWidget(tv);
-		addView(tv);
+		addView(tv, x, y, w, h);
 
-		viewArray[viewCount] = tv;
-
-		viewCount += 1;
-		
 		return tv;
 	}
 
-	/*
-	@JavascriptInterface
-	public void labelSetText(int view, String text) {
-		TextView tv = (TextView) viewArray[view];
-		tv.setText(text);
-	}
-	*/
-
 	/**
-	 * Adds an EditText view
+	 * Adds an Input dialog
 	 * 
 	 * @param label
 	 * @param x
@@ -418,14 +458,13 @@ public class JUI extends JInterface {
 	 * @param h
 	 * @param callbackfn
 	 */
-	public EditText addInput(String label, int x, int y, int w, int h,
+	public JEditText addInput(String label, int x, int y, int w, int h,
 			final String callbackfn) {
 
 		initializeLayout();
 		// Create view
-		EditText et = new EditText(a.get());
+		JEditText et = new JEditText(a.get());
 		et.setHint(label);
-		positionView(et, x, y, w, h);
 
 		// On focus lost, we need to call the callback function
 		et.setOnFocusChangeListener(new OnFocusChangeListener() {
@@ -438,8 +477,8 @@ public class JUI extends JInterface {
 
 		// Add the view
 		themeWidget(et);
-		addView(et); 
-		
+		addView(et, x, y, w, h);
+
 		return et;
 
 	}
@@ -456,14 +495,13 @@ public class JUI extends JInterface {
 	 * @param callbackfn
 	 */
 	@JavascriptInterface
-	public ToggleButton addToggle(final String label, int x, int y, int w, int h,
-			boolean initstate, final String callbackfn) {
+	public JToggleButton addToggle(final String label, int x, int y, int w,
+			int h, boolean initstate, final String callbackfn) {
 		initializeLayout();
 		// Create the view
-		ToggleButton tb = new ToggleButton(a.get());
+		JToggleButton tb = new JToggleButton(a.get());
 		tb.setChecked(initstate);
 		tb.setText(label);
-		positionView(tb, x, y, w, h);
 
 		// Add change listener
 		tb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -476,8 +514,8 @@ public class JUI extends JInterface {
 		});
 
 		// Add the view
-		addView(tb);
-		
+		addView(tb, x, y, w, h);
+
 		return tb;
 	}
 
@@ -492,16 +530,15 @@ public class JUI extends JInterface {
 	 * @param initstate
 	 * @param callbackfn
 	 */
-	public CheckBox addCheckbox(String label, int x, int y, int w, int h,
+	public JCheckBox addCheckbox(String label, int x, int y, int w, int h,
 			boolean initstate, final String callbackfn) {
 
 		initializeLayout();
 		// Adds a checkbox and set the initial state as initstate. if the button
 		// state changes, call the callbackfn
-		CheckBox cb = new CheckBox(a.get());
+		JCheckBox cb = new JCheckBox(a.get());
 		cb.setChecked(initstate);
 		cb.setText(label);
-		positionView(cb, x, y, w, h);
 
 		// Add the click callback
 		cb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -514,8 +551,8 @@ public class JUI extends JInterface {
 
 		// Add the view
 		themeWidget(cb);
-		addView(cb);
-		
+		addView(cb, x, y, w, h);
+
 		return cb;
 
 	}
@@ -530,14 +567,13 @@ public class JUI extends JInterface {
 	 * @param initstate
 	 * @param callbackfn
 	 */
-	public Switch addSwitch(int x, int y, int w, int h, boolean initstate,
+	public JSwitch addSwitch(int x, int y, int w, int h, boolean initstate,
 			final String callbackfn) {
 
 		initializeLayout();
 		// Adds a switch. If the state changes, we'll call the callback function
-		Switch s = new Switch(a.get());
+		JSwitch s = new JSwitch(a.get());
 		s.setChecked(initstate);
-		positionView(s, x, y, w, h);
 
 		// Add the click callback
 		s.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -549,7 +585,7 @@ public class JUI extends JInterface {
 		});
 
 		// Add the view
-		addView(s);
+		addView(s, x, y, w, h);
 
 		return s;
 	}
@@ -565,15 +601,14 @@ public class JUI extends JInterface {
 	 * @param initstate
 	 * @param callbackfn
 	 */
-	public RadioButton addRadioButton(String label, int x, int y, int w, int h,
-			boolean initstate, final String callbackfn) {
+	public JRadioButton addRadioButton(String label, int x, int y, int w,
+			int h, boolean initstate, final String callbackfn) {
 
 		initializeLayout();
 		// Create and position the radio button
-		RadioButton rb = new RadioButton(a.get());
+		JRadioButton rb = new JRadioButton(a.get());
 		rb.setChecked(initstate);
 		rb.setText(label);
-		positionView(rb, x, y, w, h);
 
 		// Add the click callback
 		rb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -586,7 +621,7 @@ public class JUI extends JInterface {
 
 		// Add the view
 		themeWidget(rb);
-		addView(rb);
+		addView(rb, x, y, w, h);
 
 		return rb;
 	}
@@ -600,21 +635,20 @@ public class JUI extends JInterface {
 	 * @param h
 	 * @param imagePath
 	 */
-	public ImageView addImage(int x, int y, int w, int h, String imagePath) {
+	public JImageView addImage(int x, int y, int w, int h, String imagePath) {
 
 		initializeLayout();
 		// Create and position the image view
-		final ImageView iv = new ImageView(a.get());
-		positionView(iv, x, y, w, h);
+		final JImageView iv = new JImageView(a.get());
 
 		// Add the image from file
-		new SetImageTask(iv).execute(AppRunnerSettings.get().project.getUrl()
-				+ File.separator + imagePath);
+		new SetImageTask(iv).execute(AppRunnerSettings.get().project
+				.getFolder() + File.separator + imagePath);
 
 		// Add the view
 		iv.setBackgroundColor(0x33b5e5);
-		addView(iv);
-		
+		addView(iv, x, y, w, h);
+
 		return iv;
 
 	}
@@ -627,20 +661,19 @@ public class JUI extends JInterface {
 	 * @param w
 	 * @param h
 	 * @param address
-	 * @return 
+	 * @return
 	 */
-	public ImageView addWebImage(int x, int y, int w, int h, String address) {
+	public JImageView addWebImage(int x, int y, int w, int h, String address) {
 
 		initializeLayout();
 		// Create and position the image view
-		final ImageView iv = new ImageView(a.get());
-		positionView(iv, x, y, w, h);
+		final JImageView iv = new JImageView(a.get());
 
 		// Add image asynchronously
 		new DownloadImageTask(iv).execute(address);
 
 		// Add the view
-		addView(iv);
+		addView(iv, x, y, w, h);
 
 		return iv;
 	}
@@ -655,9 +688,15 @@ public class JUI extends JInterface {
 	 * @param imagePath
 	 * @param callbackfn
 	 */
-	public void addImageButton(int x, int y, int w, int h, String imagePath,
-			final String callbackfn) {
-		addImageButton(x, y, w, h, imagePath, false, callbackfn);
+	public JImageButton addImageButton(int x, int y, int w, int h,
+			String imagePath, final String callbackfn) {
+		return addImageButton(x, y, w, h, imagePath, "", false, callbackfn);
+	}
+
+	public JImageButton addImageButton(int x, int y, int w, int h,
+			String imgNotPressed, String imgPressed, final String callbackfn) {
+		return addImageButton(x, y, w, h, imgNotPressed, imgPressed, false,
+				callbackfn);
 	}
 
 	/**
@@ -667,17 +706,17 @@ public class JUI extends JInterface {
 	 * @param y
 	 * @param w
 	 * @param h
-	 * @param imagePath
+	 * @param imgNotPressed
 	 * @param hideBackground
 	 * @param callbackfn
 	 */
-	public ImageButton addImageButton(int x, int y, int w, int h, String imagePath,
-			boolean hideBackground, final String callbackfn) {
+	public JImageButton addImageButton(int x, int y, int w, int h,
+			String imgNotPressed, String imgPressed,
+			final boolean hideBackground, final String callbackfn) {
 
 		initializeLayout();
 		// Create and position the image button
-		ImageButton ib = new ImageButton(a.get());
-		positionView(ib, x, y, w, h);
+		final JImageButton ib = new JImageButton(a.get());
 
 		ib.setScaleType(ScaleType.FIT_XY);
 		// Hide the background if desired
@@ -686,21 +725,47 @@ public class JUI extends JInterface {
 		}
 
 		// Add image asynchronously
-		new SetImageTask(ib).execute(AppRunnerSettings.get().project.getUrl()
-				+ File.separator + imagePath);
+		new SetImageTask(ib).execute(AppRunnerSettings.get().project
+				.getFolder() + File.separator + imgNotPressed);
 
 		// Set on click behavior
-		ib.setOnClickListener(new OnClickListener() {
+		ib.setOnTouchListener(new OnTouchListener() {
+
 			@Override
-			public void onClick(View v) {
-				callback(callbackfn);
+			public boolean onTouch(View v, MotionEvent event) {
+				Log.d(TAG, "" + event.getAction());
+				int action = event.getAction();
+				if (action == MotionEvent.ACTION_DOWN) {
+					Log.d(TAG, "down");
+					if (hideBackground) {
+						ib.getDrawable().setColorFilter(0xDD00CCFC,
+								PorterDuff.Mode.MULTIPLY);
+
+					}
+					callback(callbackfn);
+
+				} else if (action == MotionEvent.ACTION_UP
+						|| action == MotionEvent.ACTION_CANCEL) {
+					Log.d(TAG, "up");
+					if (hideBackground) {
+						ib.getDrawable().setColorFilter(0xFFFFFFFF,
+								PorterDuff.Mode.MULTIPLY);
+
+					}
+				}
+
+				return true;
 			}
 		});
 
 		// Add the view
-		addView(ib);
-		
+		addView(ib, x, y, w, h);
+
 		return ib;
+
+	}
+
+	public void addTabs() {
 
 	}
 
@@ -724,7 +789,7 @@ public class JUI extends JInterface {
 	 */
 	public void backgroundColor(int color) {
 		initializeLayout();
-		mMainLayout.setBackgroundColor(color);
+		bgRelativeLayout.setBackgroundColor(color);
 	}
 
 	/**
@@ -736,7 +801,7 @@ public class JUI extends JInterface {
 	 */
 	public void backgroundColor(int red, int green, int blue) {
 		initializeLayout();
-		mMainLayout.setBackgroundColor(Color.rgb(red, green, blue));
+		bgImageView.setBackgroundColor(Color.rgb(red, green, blue));
 	}
 
 	/**
@@ -747,13 +812,10 @@ public class JUI extends JInterface {
 	public void backgroundImage(String imagePath) {
 		initializeLayout();
 		// Add the bg image asynchronously
-		new SetBgImageTask(mMainLayout).execute(AppRunnerSettings.get().project
-				.getUrl() + File.separator + imagePath);
+		new SetBgImageTask(bgImageView).execute(AppRunnerSettings.get().project
+				.getFolder() + File.separator + imagePath);
 
 	}
-
-	// PlotView plotView;
-	// Plot plot1;
 
 	@JavascriptInterface
 	public JPlotView addPlot(int x, int y, int w, int h, int min, int max) {
@@ -762,7 +824,7 @@ public class JUI extends JInterface {
 		positionView(plotView, x, y, w, h);
 
 		// Add the view
-		addView(plotView);
+		addView(plotView, x, y, w, h);
 
 		JPlotView jPlotView = new JPlotView(a.get(), plotView, min, max);
 
@@ -770,13 +832,13 @@ public class JUI extends JInterface {
 	}
 
 	@JavascriptInterface
-	public CanvasView addCanvas(int x, int y, int w, int h) {
+	public JCanvasView addCanvas(int x, int y, int w, int h) {
 		initializeLayout();
 
-		CanvasView sv = new CanvasView(a.get(), w, h);
+		JCanvasView sv = new JCanvasView(a.get(), w, h);
 		positionView(sv, x, y, w, h);
 		// Add the view
-		addView(sv);
+		addView(sv, x, y, w, h);
 
 		return sv;
 	}
@@ -821,9 +883,9 @@ public class JUI extends JInterface {
 	 *            }
 	 */
 
-	public WebView addWebView(int x, int y, int w, int h) {
+	public JWebView addWebView(int x, int y, int w, int h) {
 		initializeLayout();
-		WebView webView = new CustomWebView(a.get());
+		JWebView webView = new JWebView(a.get());
 		WebSettings webSettings = webView.getSettings();
 		webSettings.setJavaScriptEnabled(true);
 		webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
@@ -832,7 +894,7 @@ public class JUI extends JInterface {
 
 		webView.clearCache(false);
 		webView.setBackgroundColor(0x00000000);
-		
+
 		webView.requestFocus(View.FOCUS_DOWN);
 		webView.setOnTouchListener(new View.OnTouchListener() {
 			@Override
@@ -850,9 +912,8 @@ public class JUI extends JInterface {
 		});
 
 		webView.addJavascriptInterface(a.get(), "activity");
-		positionView(webView, x, y, w, h);
 
-		addView(webView);
+		addView(webView, x, y, w, h);
 		// webview.loadData(content, "text/html", "utf-8");
 
 		return webView;
@@ -881,8 +942,7 @@ public class JUI extends JInterface {
 		fl.setId(12345);
 
 		// Add the view
-		positionView(fl, x, y, w, h);
-		addView(fl);
+		addView(fl, x, y, w, h);
 
 		CameraFragment cameraFragment = new CameraFragment();
 		Bundle bundle = new Bundle();
@@ -916,7 +976,6 @@ public class JUI extends JInterface {
 
 	}
 
-	
 	/**
 	 * yesnoDialog
 	 * 
@@ -929,23 +988,24 @@ public class JUI extends JInterface {
 		builder.setTitle(title);
 
 		// Set up the buttons
-		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() { 
-		    @Override
-		    public void onClick(DialogInterface dialog, int which) {
-		       callback(callbackfn, true);
-		    }
+		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				callback(callbackfn, true);
+			}
 		});
-		builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-		    @Override
-		    public void onClick(DialogInterface dialog, int which) {
-		        dialog.cancel();
-		        callback(callbackfn, false);
-		    }
-		});
+		builder.setNegativeButton("Cancel",
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.cancel();
+						callback(callbackfn, false);
+					}
+				});
 
 		builder.show();
 	}
-	
+
 	/**
 	 * inputDialog
 	 * 
@@ -953,34 +1013,68 @@ public class JUI extends JInterface {
 	 * 
 	 * @param title
 	 */
-	public void inputDialog(String title, final String callbackfn) { 
+	public void inputDialog(String title, final String callbackfn) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(a.get());
 		builder.setTitle(title);
 
 		// Set up the input
 		final EditText input = new EditText(a.get());
-		// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+		// Specify the type of input expected; this, for example, sets the input
+		// as a password, and will mask the text
 		input.setInputType(InputType.TYPE_CLASS_TEXT);
 		builder.setView(input);
 
 		// Set up the buttons
-		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() { 
-		    @Override
-		    public void onClick(DialogInterface dialog, int which) {
-		       String text = input.getText().toString();
-		       callback(callbackfn, text);
-		    }
+		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				String text = input.getText().toString();
+				callback(callbackfn, text);
+			}
 		});
-		builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-		    @Override
-		    public void onClick(DialogInterface dialog, int which) {
-		        dialog.cancel();
-		    }
-		});
+		builder.setNegativeButton("Cancel",
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.cancel();
+					}
+				});
 
 		builder.show();
 	}
 	
+	/**
+	 * choiceDialog
+	 * 
+	 * @author victordiaz
+	 * 
+	 * @param title
+	 * @param choices
+	 */
+	public void choiceDialog(String title, final String[] choices, final String callbackfn) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(a.get());
+		builder.setTitle(title);
+		
+		// Set up the input
+		final EditText input = new EditText(a.get());
+		// Specify the type of input expected; this, for example, sets the input
+		// as a password, and will mask the text
+		input.setInputType(InputType.TYPE_CLASS_TEXT);
+		builder.setView(input);
+		
+		// Set up the buttons
+		builder.setItems(choices, new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				callback(callbackfn,  "\"" + choices[which] +  "\"");
+				
+			}
+		});
+		
+		builder.show();
+	}
+
 	/**
 	 * Adds a video
 	 * 
@@ -1003,8 +1097,7 @@ public class JUI extends JInterface {
 		fl.setId(12345678);
 
 		// Add the view
-		positionView(fl, x, y, w, h);
-		addView(fl);
+		addView(fl, x, y, w, h);
 
 		final VideoPlayerFragment fragment = new VideoPlayerFragment();
 		fragment.addListener(new VideoListener() {
@@ -1018,7 +1111,7 @@ public class JUI extends JInterface {
 			public void onReady(boolean ready) {
 				// fragment.loadResourceVideo("/raw/cityfireflies");
 				fragment.loadExternalVideo(AppRunnerSettings.get().project
-						.getUrl() + File.separator + videoFile);
+						.getFolder() + File.separator + videoFile);
 				// fragment.setLoop(true);
 			}
 
@@ -1046,8 +1139,9 @@ public class JUI extends JInterface {
 	}
 
 	public void takeScreenshot(String imagePath) {
-		AndroidUtils.takeScreenshot(AppRunnerSettings.get().project.getUrl(),
-				imagePath, mMainLayout);
+		AndroidUtils.takeScreenshot(
+				AppRunnerSettings.get().project.getFolder(), imagePath,
+				mMainLayout);
 	}
 
 	@JavascriptInterface
@@ -1093,10 +1187,10 @@ public class JUI extends JInterface {
 	 * 
 	 */
 	private class SetImageTask extends AsyncTask<String, Void, Bitmap> {
-		ImageView bmImage;
+		ImageView bgImage;
 
 		public SetImageTask(ImageView bmImage) {
-			this.bmImage = bmImage;
+			this.bgImage = bmImage;
 		}
 
 		protected Bitmap doInBackground(String... paths) {
@@ -1113,7 +1207,7 @@ public class JUI extends JInterface {
 		}
 
 		protected void onPostExecute(Bitmap result) {
-			bmImage.setImageBitmap(result);
+			bgImage.setImageBitmap(result);
 		}
 	}
 
@@ -1125,10 +1219,10 @@ public class JUI extends JInterface {
 	 */
 	// We need to set the bitmap image asynchronously
 	private class SetBgImageTask extends AsyncTask<String, Void, Bitmap> {
-		FrameLayout fl;
+		ImageView fl;
 
-		public SetBgImageTask(FrameLayout fl) {
-			this.fl = fl;
+		public SetBgImageTask(ImageView bgImageView) {
+			this.fl = bgImageView;
 		}
 
 		protected Bitmap doInBackground(String... paths) {
@@ -1144,10 +1238,10 @@ public class JUI extends JInterface {
 			return null;
 		}
 
-		@SuppressWarnings("deprecation")
 		protected void onPostExecute(Bitmap result) {
-			Drawable d = new BitmapDrawable(a.get().getResources(), result);
-			fl.setBackgroundDrawable(d);
+			fl.setImageBitmap(result);
+			fl.setScaleType(ScaleType.CENTER_INSIDE);
+			// fl.setBackgroundDrawable(d);
 		}
 	}
 

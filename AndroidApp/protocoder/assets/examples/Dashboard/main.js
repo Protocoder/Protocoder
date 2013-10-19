@@ -7,7 +7,7 @@ var plot;
 
 //add a plot on the dashboard 
 ui.addButton("Add plot", 0, 0,500,100, function(){
-    plot = dashboard.addPlot("name", 600, 100, 200, 100);
+    plot = dashboard.addPlot("name", 600, 100, 200, 100, 0, 10);
 });
 
 //update the plot 

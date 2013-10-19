@@ -42,13 +42,19 @@ public class BaseMainApp extends Application {
 	public static String projectsDir;
 	public static String examplesDir;
 	public static Application instance;
+	public static String typeExampleStr = "examples";
+	public static String typeProjectStr = "projects";
+
 
 	public BaseMainApp() {
 		baseDir = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + 
 				AppSettings.appFolder + File.separator;
+
+		//baseDir = getFilesDir()+ File.separator + 
+		//		AppSettings.appFolder + File.separator;
 		
-		projectsDir = baseDir + "projects";
-		examplesDir = baseDir + "examples";
+		projectsDir = baseDir + typeProjectStr;
+		examplesDir = baseDir + typeExampleStr;
 		
 	}
 	

@@ -34,7 +34,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 
-import com.makewithmoto.R;
 import com.makewithmoto.base.BaseActivity;
 
 @SuppressLint("NewApi")

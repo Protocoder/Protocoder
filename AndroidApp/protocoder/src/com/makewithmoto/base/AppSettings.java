@@ -47,6 +47,7 @@ public class AppSettings {
 	public static String appFolder = "protocoder";
 	public static String SERVER_ADDRESS = "";
 	public static int websocketPort = 8587;
+	public static long animSpeed = 500;
 	public static final int httpPort = 8585;	
 	
 }

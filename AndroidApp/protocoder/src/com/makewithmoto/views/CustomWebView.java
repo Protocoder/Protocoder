@@ -30,7 +30,6 @@ package com.makewithmoto.views;
 import java.io.File;
 import java.lang.ref.WeakReference;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -47,10 +46,10 @@ public class CustomWebView extends WebView {
 
     private WeakReference<AppRunnerActivity> a;
 
-	public CustomWebView(Activity appActivity) {
-        super(appActivity);
+	public CustomWebView(Context context) {
+        super(context);
         this.a = new WeakReference<AppRunnerActivity>(
-				(AppRunnerActivity) appActivity);
+				(AppRunnerActivity) context);
     }
 
     public CustomWebView(Context context, AttributeSet attrs) {
@@ -67,7 +66,7 @@ public class CustomWebView extends WebView {
     }
     
     public void loadHTMLFile(String fileName) { 
-    	String path = AppRunnerSettings.get().project.getUrl()   + File.separator + fileName;
+    	String path = AppRunnerSettings.get().project.getFolder()   + File.separator + fileName;
     	loadUrl("file://"+path);
     }
     

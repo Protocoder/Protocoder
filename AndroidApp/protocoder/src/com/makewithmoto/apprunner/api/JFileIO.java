@@ -45,28 +45,28 @@ public class JFileIO extends JInterface {
 	}
 
 	@JavascriptInterface
-	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
+	@APIMethod(description = "", example = "")
 	public void createDir(String name) {
 
-		File file = new File(AppRunnerSettings.get().project.getUrl() + File.separator + name);
+		File file = new File(AppRunnerSettings.get().project.getFolder() + File.separator + name);
 		file.mkdirs();
 	}
 
 	@JavascriptInterface
-	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
+	@APIMethod(description = "", example = "")
 	public void remove(String name) {
 		FileIO.deleteDir(name);
 	}
 
 	@JavascriptInterface
-	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
+	@APIMethod(description = "", example = "")
 	public void saveStrings(String fileName, String[] lines) {
 		FileIO.saveStrings(fileName, lines);
 	}
 	
-	
+
 	@JavascriptInterface
-	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
+	@APIMethod(description = "", example = "")
 	public String[] loadStrings(String fileName) {
 		return FileIO.loadStrings(fileName);
 	}

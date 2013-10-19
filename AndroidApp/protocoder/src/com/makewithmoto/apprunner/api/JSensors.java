@@ -34,16 +34,22 @@ import com.makewithmoto.apidoc.annotation.APIMethod;
 import com.makewithmoto.apidoc.annotation.JavascriptInterface;
 import com.makewithmoto.apprunner.AppRunnerActivity;
 import com.makewithmoto.sensors.AccelerometerManager;
-import com.makewithmoto.sensors.AccelerometerManager.AccelerometerListener;
 import com.makewithmoto.sensors.GPSManager;
-import com.makewithmoto.sensors.GPSManager.GPSListener;
+import com.makewithmoto.sensors.GyroscopeManager;
+import com.makewithmoto.sensors.GyroscopeManager.GyroscopeListener;
 import com.makewithmoto.sensors.LightManager;
-import com.makewithmoto.sensors.LightManager.LightListener;
+import com.makewithmoto.sensors.MagneticManager;
+import com.makewithmoto.sensors.MagneticManager.MagneticListener;
 import com.makewithmoto.sensors.OrientationManager;
-import com.makewithmoto.sensors.OrientationManager.OrientationListener;
+import com.makewithmoto.sensors.PressureManager;
+import com.makewithmoto.sensors.PressureManager.PressureListener;
 import com.makewithmoto.sensors.ProximityManager;
-import com.makewithmoto.sensors.ProximityManager.ProximityListener;
 import com.makewithmoto.sensors.WhatIsRunning;
+import com.makewithmoto.sensors.AccelerometerManager.AccelerometerListener;
+import com.makewithmoto.sensors.GPSManager.GPSListener;
+import com.makewithmoto.sensors.LightManager.LightListener;
+import com.makewithmoto.sensors.OrientationManager.OrientationListener;
+import com.makewithmoto.sensors.ProximityManager.ProximityListener;
 
 public class JSensors extends JInterface {
 
@@ -60,6 +66,13 @@ public class JSensors extends JInterface {
 	private GPSManager gpsManager;
 	private GPSListener gpsListener;
 	private String onNFCfn;
+	private boolean gyroscopeStarted = false;
+	private GyroscopeManager gyroscopeManager;
+	private GyroscopeListener gyroscopeListener;
+	private MagneticManager magneticManager;
+	private MagneticListener magneticListener;
+	private PressureManager pressureManager;
+	private PressureListener pressureListener;
 
 
 	public JSensors(AppRunnerActivity mwmActivity) {
@@ -75,6 +88,7 @@ public class JSensors extends JInterface {
 	}
 
 	@JavascriptInterface
+	@APIMethod(description = "", example = "")
 	public void startAccelerometer(final String callbackfn) {
 		if (!accelerometerStarted) {
 			accelerometerManager = new AccelerometerManager(a.get());
@@ -100,6 +114,7 @@ public class JSensors extends JInterface {
 	}
 
 	@JavascriptInterface
+	@APIMethod(description = "", example = "")
 	public void stopAccelerometer() {
 		Log.d(TAG, "Called stopAccelerometer");
 		if (accelerometerStarted) {
@@ -108,9 +123,41 @@ public class JSensors extends JInterface {
 			accelerometerStarted = false;
 		}
 	}
+	
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	public void startGyroscope(final String callbackfn) {
+		if (!gyroscopeStarted) {
+			gyroscopeManager = new GyroscopeManager(a.get());
+			gyroscopeListener = new GyroscopeManager.GyroscopeListener() {
+				
+				@Override
+				public void onGyroscopeChanged(float x, float y, float z) {
+					callback(callbackfn, x, y, z);
+				}
+			};
+			gyroscopeManager.addListener(gyroscopeListener);
+			gyroscopeManager.start();
+			WhatIsRunning.getInstance().add(gyroscopeManager);
+			
+			gyroscopeStarted = true;
+		}
+	}
+	
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	public void stopGyroscope() {
+		if (gyroscopeStarted) {
+			gyroscopeManager.removeListener(gyroscopeListener);
+			gyroscopeManager.stop();
+			gyroscopeStarted = false;
+		}
+	}
 
 	@JavascriptInterface
+	@APIMethod(description = "", example = "")
 	public void startGPS(final String callbackfn) {
+	
 		if (!gpsStarted) {
 
 			gpsManager = new GPSManager(a.get());
@@ -132,20 +179,14 @@ public class JSensors extends JInterface {
 
 				@Override
 				public void onGPSStatus(boolean isGPSFix) {
-					// TODO Auto-generated method stub
-
 				}
 
 				@Override
 				public void onGPSSignalGood() {
-					// TODO Auto-generated method stub
-
 				}
 
 				@Override
 				public void onGPSSignalBad() {
-					// TODO Auto-generated method stub
-
 				}
 			};
 
@@ -158,6 +199,7 @@ public class JSensors extends JInterface {
 	}
 
 	@JavascriptInterface
+	@APIMethod(description = "", example = "")
 	public void stopGPS() {
 		Log.d(TAG, "Called stopGPS");
 		if (gpsStarted) {
@@ -168,22 +210,25 @@ public class JSensors extends JInterface {
 	}
 
 	@JavascriptInterface
+	@APIMethod(description = "", example = "")
 	public Location getLastKnownLocation() {
 		return gpsManager.getLastKnownLocation();
 	}
 
 	@JavascriptInterface
+	@APIMethod(description = "", example = "")
 	public String getLocationName(double lat, double lon) {
 		return gpsManager.getLocationName(lat, lon);
 	}
 
 	@JavascriptInterface
+	@APIMethod(description = "", example = "")
 	public double getDistance(double startLatitude, double startLongitude, double endLatitude, double endLongitude) {
 		return gpsManager.getDistance(startLatitude, startLongitude, endLatitude, endLongitude);
 	}
 
 	@JavascriptInterface
-	@APIMethod(description = "Shows a small popup with a given text", example = "android.toast(\"hello world!\", 2000);")
+	@APIMethod(description = "", example = "")
 	public void onNFC(final String fn) {
 		((AppRunnerActivity) a.get()).initializeNFC();
 
@@ -195,6 +240,7 @@ public class JSensors extends JInterface {
 	}
 
 	@JavascriptInterface
+	@APIMethod(description = "", example = "")
 	public void startOrientation(final String callbackfn) {
 		orientationManager = new OrientationManager(a.get());
 
@@ -212,12 +258,14 @@ public class JSensors extends JInterface {
 	}
 
 	@JavascriptInterface
+	@APIMethod(description = "", example = "")
 	public void stopOrientation() {
 		orientationManager.removeListener(orientationListener);
 		orientationManager.stop();
 	}
-	
+
 	@JavascriptInterface
+	@APIMethod(description = "", example = "")
 	public void startLightIntensity(final String callbackfn) {
 		lightManager = new LightManager(a.get());
 		
@@ -235,14 +283,16 @@ public class JSensors extends JInterface {
 		WhatIsRunning.getInstance().add(lightManager);
 		
 	}
-	
+
 	@JavascriptInterface
+	@APIMethod(description = "", example = "")
 	public void stopLightIntensity() {
 		lightManager.removeListener(lightListener);
 		lightManager.stop();
 	}
-	
+
 	@JavascriptInterface
+	@APIMethod(description = "", example = "")
 	public void startProximity(final String callbackfn) {
 		proximityManager = new ProximityManager(a.get());
 		
@@ -260,11 +310,66 @@ public class JSensors extends JInterface {
 		WhatIsRunning.getInstance().add(proximityManager);
 		
 	}
-	
+
 	@JavascriptInterface
+	@APIMethod(description = "", example = "")
 	public void stopProximity() {
 		proximityManager.removeListener(lightListener);
 		proximityManager.stop();
+	}
+	
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	public void startMagnetic(final String callbackfn) {
+		magneticManager = new MagneticManager(a.get());
+		
+		magneticListener = new MagneticManager.MagneticListener() {
+			
+			@Override
+			public void onMagneticChanged(float f) {
+				callback(callbackfn, f);					
+			}
+		};
+		
+		
+		magneticManager.addListener(magneticListener);
+		magneticManager.start();
+		WhatIsRunning.getInstance().add(magneticManager);
+		
+	}
+	
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	public void stopMagnetic() {
+		magneticManager.removeListener(magneticListener);
+		magneticManager.stop();
+	}
+	
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	public void startPressure(final String callbackfn) {
+		pressureManager = new PressureManager(a.get());
+		
+		pressureListener = new PressureManager.PressureListener() {
+			
+			@Override
+			public void onPressureChanged(float f) {
+				callback(callbackfn, f);	
+			}
+		};
+		
+		
+		pressureManager.addListener(pressureListener);
+		pressureManager.start();
+		WhatIsRunning.getInstance().add(pressureManager);
+		
+	}
+	
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	public void stopPressure() {
+		pressureManager.removeListener(pressureListener);
+		pressureManager.stop();
 	}
 
 	@Override

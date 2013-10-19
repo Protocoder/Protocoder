@@ -9,7 +9,7 @@ var widgets = new Array();
 var addWidget = function(widget) { 
   if (widget.type == "plot") { 
     widgets.push(widget.name);
-    return addPlot(widget.id, widget.name, widget.x, widget.y, widget.w, widget.h);
+    return addPlot(widget.id, widget.name, widget.x, widget.y, widget.w, widget.h, widget.minLimit, widget.maxLimit);
   } else if (widget.type == "button") {
     widgets.push(widget.name);
     return addButton(widget.id, widget.name, widget.x, widget.y, widget.w, widget.h);
@@ -60,6 +60,15 @@ var setText = function(element, text) {
 }
 
 
+var changeImage = function(element, url) { 
+  var img = $("#overlay #container #image_"+ element);
+  img.attr("src", url);
+  console.log(url);
+  console.log("------");
+  console.log(img);
+}
+
+
 var addImage = function(element, url, posx, posy, w, h) { 
   if (url.indexOf("http") == -1) { 
     url = window.location.origin + "/apps/" + currentProject.type + "/" + currentProject.name + "/" + url;
@@ -88,12 +97,14 @@ var setBackgroundColor = function(r, g, b, a) {
   $("#overlay #container").css("background", "rgba("+r+","+g+","+b+","+a+")");
 }
 
-var addPlot = function(element, name, posx, posy, w, h) {
+var addPlot = function(element, name, posx, posy, w, h, minLimit, maxLimit) {
   var _delay = 10;
   var _n = 40;
   var minVal; 
   var maxVal;
   var newPlot = true;
+  var _minLimit = minLimit;
+  var _maxLimit = maxLimit;
 
   var n = _n || 40,
       delay = _delay || 500,
@@ -186,7 +197,12 @@ var addPlot = function(element, name, posx, posy, w, h) {
   
       x.domain([0, n - 1]);
       // x.domain(d3.extent(data, function(d) { return x(d); }));
-      y.domain([d3.min(data, function(d) { return d; }), d3.max(data, function(d) { return d; })]);
+     // y.domain([d3.min(data, function(d) { return d; }), d3.max(data, function(d) { return d; })]);
+      y.domain([
+                _minLimit,
+                _maxLimit
+                ]);
+  
       //y.domain([minVal, maxVal]);
 
       // redraw the line, and slide it to the left

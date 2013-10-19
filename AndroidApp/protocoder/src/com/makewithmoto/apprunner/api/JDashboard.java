@@ -37,6 +37,11 @@ import android.util.Log;
 
 import com.makewithmoto.apidoc.annotation.APIMethod;
 import com.makewithmoto.apidoc.annotation.JavascriptInterface;
+import com.makewithmoto.apprunner.api.dashbwidgets.JWebAppButton;
+import com.makewithmoto.apprunner.api.dashbwidgets.JWebAppHTML;
+import com.makewithmoto.apprunner.api.dashbwidgets.JWebAppImage;
+import com.makewithmoto.apprunner.api.dashbwidgets.JWebAppLabel;
+import com.makewithmoto.apprunner.api.dashbwidgets.JWebAppPlot;
 import com.makewithmoto.network.CustomWebsocketServer;
 import com.makewithmoto.network.CustomWebsocketServer.WebSocketListener;
 import com.makewithmoto.utils.StrUtils;
@@ -49,20 +54,20 @@ public class JDashboard extends JInterface {
         super(a); 
 	}
 
-	@JavascriptInterface 
-	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
-	public JWebAppPlot addPlot(String name, int x, int y, int w, int h) {
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	public JWebAppPlot addPlot(String name, int x, int y, int w, int h, float minLimit, float maxLimit) throws UnknownHostException, JSONException {
 		
 		JWebAppPlot jWebAppPlot = new JWebAppPlot(a.get());
-		jWebAppPlot.add(StrUtils.generateRandomString(), name, x, y, w, h);
+		jWebAppPlot.add(StrUtils.generateRandomString(), name, x, y, w, h, minLimit, maxLimit);
 		
 		return jWebAppPlot;
 	}
 	
-	
-	@JavascriptInterface 
-	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
-	public JWebAppHTML addHTML(String html, int posx, int posy) throws UnknownHostException {
+
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	public JWebAppHTML addHTML(String html, int posx, int posy) throws UnknownHostException, JSONException {
 		
 		JWebAppHTML jWebAppHTML = new JWebAppHTML(a.get());
 		jWebAppHTML.add(StrUtils.generateRandomString(), html, posx, posy);
@@ -71,10 +76,10 @@ public class JDashboard extends JInterface {
 		return jWebAppHTML;
 	}
 	
-	
-	@JavascriptInterface 
-	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
-	public JWebAppButton addButton(String name, int x, int y, int w, int h, final String callbackfn) throws UnknownHostException {
+
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	public JWebAppButton addButton(String name, int x, int y, int w, int h, final String callbackfn) throws UnknownHostException, JSONException {
 		Log.d(TAG, "callback " + callbackfn);
 		
 		String id = StrUtils.generateRandomString();
@@ -93,10 +98,10 @@ public class JDashboard extends JInterface {
 		return jWebAppButton;
 	}
 	
-	
-	@JavascriptInterface 
-	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
-	public JWebAppLabel addLabel(String name, int x, int y, int size, String color) {
+
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	public JWebAppLabel addLabel(String name, int x, int y, int size, String color) throws UnknownHostException, JSONException {
 		String id = StrUtils.generateRandomString();
 
 		JWebAppLabel jWebAppLabel = new JWebAppLabel(a.get());
@@ -105,10 +110,10 @@ public class JDashboard extends JInterface {
 		return jWebAppLabel;
 	}
 	
-	
-	@JavascriptInterface 
-	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
-	public JWebAppImage addImage(String url, int x, int y, int w, int h) {
+
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	public JWebAppImage addImage(String url, int x, int y, int w, int h) throws UnknownHostException, JSONException {
 		String id = StrUtils.generateRandomString();
 
 		JWebAppImage jWebAppImage = new JWebAppImage(a.get());
@@ -118,9 +123,9 @@ public class JDashboard extends JInterface {
 	}
 	
 	
-	
-	@JavascriptInterface 
-	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
+
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
 	public void setBackgroundColor(int r, int g, int b, float alpha) {
 		JSONObject msg = new JSONObject();
 		try {
@@ -147,9 +152,9 @@ public class JDashboard extends JInterface {
 		
 		
 	}
-	
-	@JavascriptInterface 
-	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
+
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
 	public void show(boolean b) {
 		JSONObject msg = new JSONObject();
 		try {
