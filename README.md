@@ -1,8 +1,3 @@
-#hackMIT folks!
-tweet #protocoder or @makewithmoto for questions, open issues on github or contact us by mail victor@makewithmoto.com.
-Let us know how we can help you! 
-
-
 Protocoder
 ==========
 

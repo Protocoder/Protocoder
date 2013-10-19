@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.makewithmoto"
-    android:versionCode="3"
-    android:versionName="0.3" >
+    android:versionCode="8"
+    android:versionName="0.71" >
 
-    <uses-sdk android:minSdkVersion="13" />
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="18" />
 
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -56,8 +58,10 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+
                 <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="application/com.makewithmoto.beam" />
+
+                <data android:mimeType="application/com.protocoder.beam" />
             </intent-filter>
         </activity>
         <activity
@@ -110,15 +114,16 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <!-- android:screenOrientation="portrait" -->
         <activity
             android:name="com.makewithmoto.apprunner.AppRunnerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/runner_name"
             android:logo="@drawable/ic_action_logo"
-            android:screenOrientation="portrait" >
+            android:windowSoftInputMode="stateHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
-                <action android:name="com.makewithmoto.apprunner.MWMActivity" />
+                <action android:name="com.protocoder.apprunner.MWMActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <!--
@@ -146,6 +151,19 @@
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
+
+        <activity
+            android:name="com.makewithmoto.ItemListActivity"
+            android:label="@string/title_item_list" >
+        </activity>
+        <activity
+            android:name="com.makewithmoto.ItemDetailActivity"
+            android:label="@string/title_item_detail"
+            android:parentActivityName=".ItemListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ItemListActivity" />
+        </activity>
     </application>
 
 </manifest>

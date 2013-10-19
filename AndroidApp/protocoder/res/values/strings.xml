@@ -66,7 +66,10 @@
     <string name="setting_notifications_title">Notifications</string>
     <string name="setting_show_notifications_title">Show notifications</string>
     <string name="setting_show_notifications_body">Display a persistent notification when the server is running</string>
-    
+    <string name="setting_show_webserver_title">Webserver port</string>
+    <string name="setting_show_webserver"></string>
+    <string name="setting_show_websocket_title">Websocket port</string>
+    <string name="setting_show_websocket"></string>
     <string name="licenses">Licenses</string>
     <string name="license_title_websockets">Android Websockets</string>
     <string name="license_title_netutil">NetUtil</string>
@@ -78,6 +81,7 @@
     <string name="license_title_ioio">ioio</string>
     <string name="license_title_rhino">Mozilla Rhino</string>
     <string name="license_title_nano">Nano HTTPD</string>
-    
+    <string name="title_item_list">Items</string>
+    <string name="title_item_detail">Item Detail</string>
 
 </resources>

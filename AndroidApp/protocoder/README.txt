@@ -1,7 +1,7 @@
 README
 ======
 launch intent
-./adb shell am start -n com.makewithmoto.apprunner/com.makewithmoto.apprunner.MWMActivity -e project_name ioio_1
+./adb shell am start -n com.makewithmoto.apprunner/com.makewithmoto.apprunner.AppRunnerActivity -e project_name ioio_1
 
 transfer files ssh 
 scp <file to upload> <username>@<hostname>:<destination path>
