@@ -24,6 +24,15 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true" />
 
+    
+    <FrameLayout
+        android:id="@+id/touchOverlay"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true" />
+
+    
     <RelativeLayout
         android:id="@+id/console"
         android:layout_width="match_parent"
