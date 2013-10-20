@@ -41,6 +41,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -48,24 +49,32 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.codebutler.android_websockets.SocketIOClient;
-import com.codebutler.android_websockets.WebSocketClient;
 import com.makewithmoto.apidoc.annotation.APIMethod;
 import com.makewithmoto.apidoc.annotation.JavascriptInterface;
+import com.makewithmoto.apprunner.AppRunnerActivity;
+import com.makewithmoto.apprunner.api.JSensors.onNFCListener;
 import com.makewithmoto.network.OSC;
 import com.makewithmoto.network.OSC.Client;
 import com.makewithmoto.network.OSC.OSCServerListener;
 import com.makewithmoto.network.OSC.Server;
+import com.makewithmoto.sensors.WhatIsRunning;
 
 import de.sciss.net.OSCMessage;
 
 public class JNetwork extends JInterface {
 
 	private String TAG = "JNetwork";
+	private String onBluetoothfn;
 
 	public JNetwork(Activity a) {
 		super(a);
 
 	}
+	
+	public interface onBluetoothListener {
+		public void onDeviceFound(String name, String macAddress, float strength);
+	}
+
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
@@ -83,13 +92,33 @@ public class JNetwork extends JInterface {
 				for (int i = 0; i < msg.getArgCount(); i++) {
 					jsonArray.put(msg.getArg(i));
 				}
+				
+//				String[] str = null;
+//				try {
+//					str = new String[msg.getSize()];
+//					for (int i = 0; i < msg.getArgCount(); i++) {
+//						str[i] = "" + msg.getArg(i);
+//					}
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
+//				
 
-				callback(callbackfn, msg.getName(), jsonArray);
+				try {
+					Log.d(TAG, msg.getName() + " " + jsonArray.toString(2));
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				//callback(callbackfn, "\"" + msg.getName() + "\"", str);
+				callback(callbackfn, "\"" + msg.getName() + "\"", jsonArray);
 			}
 
 		});
 
 		server.start(port);
+		WhatIsRunning.getInstance().add(server);
+
 
 		return server;
 	}
@@ -99,6 +128,7 @@ public class JNetwork extends JInterface {
 	public OSC.Client connectOSC(String address, int port) {
 		OSC osc = new OSC();
 		Client client = osc.new Client(address, port);
+		WhatIsRunning.getInstance().add(client);
 
 		return client;
 	}
@@ -237,4 +267,20 @@ public class JNetwork extends JInterface {
 		callback(callbackfn);
 	}
 
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	public void scanBluetooth( final String callbackfn ) {
+		onBluetoothfn = callbackfn;
+		
+		a.get().scanBluetooth();
+		
+		((AppRunnerActivity) a.get()).addBluetoothListener(new onBluetoothListener() {
+			
+			@Override
+			public void onDeviceFound(String name, String macAddress, float strength) {
+				callback(onBluetoothfn, "\"" + name + "\"", "\"" + macAddress + "\"", "\"" + strength + "\"");				
+			}
+		});
+	
+	}
 }

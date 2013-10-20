@@ -210,6 +210,45 @@ public class JUI extends JInterface {
 	public void themeWidget(View v) {
 		v.setBackgroundResource(theme);
 	}
+	
+	@JavascriptInterface
+	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
+	public void onTouch(final String callbackfn) {
+		FrameLayout fl = (FrameLayout) ((AppRunnerActivity) a.get()).findViewById(R.id.touchOverlay);
+		
+		fl.setOnTouchListener(new View.OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+
+				
+				switch (event.getAction()) {
+				case MotionEvent.ACTION_DOWN:
+					// MainActivity.mMapIsTouched = true;
+					break;
+				case MotionEvent.ACTION_UP:
+					// MainActivity.mMapIsTouched = false;
+					break;
+
+				case MotionEvent.ACTION_MOVE:
+					int x = (int) event.getX();
+					int y = (int) event.getY();
+					Log.d(TAG, "" + x + " " + y);
+
+					callback(callbackfn, x, y);
+					//Point point = new Point(x, y);
+					//LatLng latLng = map.getProjection().fromScreenLocation(point);
+					//Point pixels = map.getProjection().toScreenLocation(latLng);;
+					//mapCustomFragment.setTouch(latLng);
+					
+					//Log.d("qq2", x + " " + y + " " + latLng.latitude + " " + latLng.longitude);
+					break;
+				}
+
+				return true; //a.get().dispatchTouchEvent(event);
+			}
+		});
+	}
 
 	@JavascriptInterface
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")

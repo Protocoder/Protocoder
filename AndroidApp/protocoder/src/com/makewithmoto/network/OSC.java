@@ -94,6 +94,10 @@ public class OSC {
 				Log.d(TAG, e2.getLocalizedMessage());
 			}
 		}
+		
+		public void stop() {
+			stopOSCServer();
+		}
 
 		public void stopOSCServer() {
 			try {
@@ -187,6 +191,11 @@ public class OSC {
 			}
 			trns2.dispose();
 
+		}
+		
+		public void stop() {
+			disconnectOSC();
+		
 		}
 	}
 

@@ -38,7 +38,10 @@ import android.animation.Animator.AnimatorListener;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.PendingIntent;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentFilter.MalformedMimeTypeException;
@@ -56,6 +59,7 @@ import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -97,6 +101,7 @@ public class AppRunnerActivity extends BaseActivity {
 	private JAndroid.onKeyListener onKeyListener;
 	private JAndroid.onSmsReceivedListener onSmsReceivedListener;
 	private JSensors.onNFCListener onNFCListener;
+	private JNetwork.onBluetoothListener onBluetoothListener;
 	private JMedia.onVoiceRecognitionListener onVoiceRecognitionListener;
 	private BroadcastReceiver mIntentReceiver;
 	public AppRunnerInterpreter interp;
@@ -263,6 +268,37 @@ public class AppRunnerActivity extends BaseActivity {
 		interp.callJsFunction("onRestart");
 	}
 
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+
+		switch (event.getAction()) {
+		case MotionEvent.ACTION_DOWN:
+			// MainActivity.mMapIsTouched = true;
+			break;
+		case MotionEvent.ACTION_UP:
+			// MainActivity.mMapIsTouched = false;
+			break;
+
+		case MotionEvent.ACTION_MOVE:
+			int x = (int) event.getX();
+			int y = (int) event.getY();
+			Log.d(TAG, "" + x + " " + y);
+
+			//callback(callbackfn, x, y);
+			//Point point = new Point(x, y);
+			//LatLng latLng = map.getProjection().fromScreenLocation(point);
+			//Point pixels = map.getProjection().toScreenLocation(latLng);;
+			//mapCustomFragment.setTouch(latLng);
+			
+			//Log.d("qq2", x + " " + y + " " + latLng.latitude + " " + latLng.longitude);
+			break;
+		}
+
+		//return true; //a.get().dispatchTouchEvent(event);
+		return super.onTouchEvent(event);
+	}
+	
+	
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -611,6 +647,34 @@ public class AppRunnerActivity extends BaseActivity {
 	public void addNFCListener(JSensors.onNFCListener onNFCListener2) {
 		onNFCListener = onNFCListener2;
 
+	}
+	
+	public void addBluetoothListener(JNetwork.onBluetoothListener onBluetoothListener2) {
+		onBluetoothListener = onBluetoothListener2;
+		
+	}
+
+	public void scanBluetooth() {
+	    BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+		mBluetoothAdapter.startDiscovery();
+		BroadcastReceiver mReceiver = new BroadcastReceiver() {
+			public void onReceive(Context context, Intent intent) {
+				String action = intent.getAction();
+				if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+					BluetoothDevice device = intent
+							.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+					
+	                int rssi = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI,Short.MIN_VALUE);
+
+					onBluetoothListener.onDeviceFound(device.getName(), device.getAddress(), rssi);
+					Log.d(TAG, device.getName() + "\n" + device.getAddress() + " " + rssi);
+				}
+			}
+		};
+
+		IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+		registerReceiver(mReceiver, filter);
 	}
 
 	/**
