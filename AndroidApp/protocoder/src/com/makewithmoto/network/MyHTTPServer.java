@@ -49,19 +49,23 @@ import com.makewithmoto.apprunner.api.JAndroid;
 import com.makewithmoto.apprunner.api.JCamera;
 import com.makewithmoto.apprunner.api.JConsole;
 import com.makewithmoto.apprunner.api.JDashboard;
+import com.makewithmoto.apprunner.api.JEditor;
 import com.makewithmoto.apprunner.api.JFileIO;
-import com.makewithmoto.apprunner.api.JIOIO;
-import com.makewithmoto.apprunner.api.JMakr;
 import com.makewithmoto.apprunner.api.JMedia;
 import com.makewithmoto.apprunner.api.JNetwork;
+import com.makewithmoto.apprunner.api.JProtocoder;
+import com.makewithmoto.apprunner.api.JPureData;
 import com.makewithmoto.apprunner.api.JSensors;
 import com.makewithmoto.apprunner.api.JUI;
+import com.makewithmoto.apprunner.api.JUtil;
 import com.makewithmoto.apprunner.api.JVideo;
-import com.makewithmoto.apprunner.api.dashbwidgets.JWebAppButton;
-import com.makewithmoto.apprunner.api.dashbwidgets.JWebAppHTML;
-import com.makewithmoto.apprunner.api.dashbwidgets.JWebAppImage;
-import com.makewithmoto.apprunner.api.dashbwidgets.JWebAppLabel;
-import com.makewithmoto.apprunner.api.dashbwidgets.JWebAppPlot;
+import com.makewithmoto.apprunner.api.boards.JIOIO;
+import com.makewithmoto.apprunner.api.boards.JMakr;
+import com.makewithmoto.apprunner.api.dashboard.JDashboardButton;
+import com.makewithmoto.apprunner.api.dashboard.JDashboardHTML;
+import com.makewithmoto.apprunner.api.dashboard.JDashboardImage;
+import com.makewithmoto.apprunner.api.dashboard.JDashboardLabel;
+import com.makewithmoto.apprunner.api.dashboard.JDashboardPlot;
 import com.makewithmoto.apprunner.api.widgets.JButton;
 import com.makewithmoto.apprunner.api.widgets.JCanvasView;
 import com.makewithmoto.apprunner.api.widgets.JCheckBox;
@@ -186,9 +190,9 @@ public class MyHTTPServer extends NanoHTTPD {
 				String fileType = parms.getProperty("fileType").toString();
 
 				int projectType = -1;
-				if (fileType.equals("list_projects")) {
+				if (fileType.equals("user")) {
 					projectType = ProjectManager.PROJECT_USER_MADE;
-				} else if (fileType.equals("list_examples")) {
+				} else if (fileType.equals("example")) {
 					projectType = ProjectManager.PROJECT_EXAMPLE;
 				}
 
@@ -242,9 +246,9 @@ public class MyHTTPServer extends NanoHTTPD {
 					name = obj.getString("name");
 					type = obj.getString("type");
 
-					if (type.equals("list_projects")) {
+					if (type.equals("user")) {
 						projectType = ProjectManager.PROJECT_USER_MADE;
-					} else if (type.equals("list_examples")) {
+					} else if (type.equals("example")) {
 						projectType = ProjectManager.PROJECT_EXAMPLE;
 					}
 
@@ -282,9 +286,9 @@ public class MyHTTPServer extends NanoHTTPD {
 					name = obj.getString("name");
 					type = obj.getString("type");
 
-					if (type.equals("list_projects")) {
+					if (type.equals("user")) {
 						projectType = ProjectManager.PROJECT_USER_MADE;
-					} else if (type.equals("list_examples")) {
+					} else if (type.equals("example")) {
 						projectType = ProjectManager.PROJECT_EXAMPLE;
 					}
 
@@ -317,9 +321,9 @@ public class MyHTTPServer extends NanoHTTPD {
 
 					type = parms.get("type").toString();
 
-					if (type.equals("list_projects")) {
+					if (type.equals("user")) {
 						projectType = ProjectManager.PROJECT_USER_MADE;
-					} else if (type.equals("list_examples")) {
+					} else if (type.equals("example")) {
 						projectType = ProjectManager.PROJECT_EXAMPLE;
 					}
 
@@ -339,7 +343,7 @@ public class MyHTTPServer extends NanoHTTPD {
 					name = obj.getString("name");
 					type = obj.getString("type");
 
-					if (type.equals("list_projects")) {
+					if (type.equals("user")) {
 						projectType = ProjectManager.PROJECT_USER_MADE;
 					} else if (type.equals("list_examples")) {
 						projectType = ProjectManager.PROJECT_EXAMPLE;
@@ -378,24 +382,27 @@ public class MyHTTPServer extends NanoHTTPD {
 					APIManager.getInstance().addClass(JAndroid.class);
 					APIManager.getInstance().addClass(JCamera.class);
 					APIManager.getInstance().addClass(JConsole.class);
+					APIManager.getInstance().addClass(JEditor.class);
 					APIManager.getInstance().addClass(JDashboard.class);
 					APIManager.getInstance().addClass(JFileIO.class);
 					APIManager.getInstance().addClass(JIOIO.class);
 					APIManager.getInstance().addClass(JMakr.class);
 					APIManager.getInstance().addClass(JMedia.class);
 					APIManager.getInstance().addClass(JNetwork.class);
-				//	APIManager.getInstance().addClass(JPureData.class);
+					APIManager.getInstance().addClass(JProtocoder.class);
+					APIManager.getInstance().addClass(JPureData.class);
 					APIManager.getInstance().addClass(JSensors.class);
+					APIManager.getInstance().addClass(JUtil.class);
 					APIManager.getInstance().addClass(JUI.class);
 					APIManager.getInstance().addClass(JVideo.class);
 					
 					APIManager.getInstance().addClass(JCheckBox.class);
 					APIManager.getInstance().addClass(JTextView.class);
-					APIManager.getInstance().addClass(JWebAppButton.class);
-					APIManager.getInstance().addClass(JWebAppHTML.class);
-					APIManager.getInstance().addClass(JWebAppImage.class);
-					APIManager.getInstance().addClass(JWebAppLabel.class);
-					APIManager.getInstance().addClass(JWebAppPlot.class);
+					APIManager.getInstance().addClass(JDashboardButton.class);
+					APIManager.getInstance().addClass(JDashboardHTML.class);
+					APIManager.getInstance().addClass(JDashboardImage.class);
+					APIManager.getInstance().addClass(JDashboardLabel.class);
+					APIManager.getInstance().addClass(JDashboardPlot.class);
 
 					APIManager.getInstance().addClass(JButton.class);
 					APIManager.getInstance().addClass(JCanvasView.class);

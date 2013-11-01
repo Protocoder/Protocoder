@@ -33,14 +33,19 @@ import com.makewithmoto.base.BaseMainApp;
 
 public class Project {
 
-	String name;
-	String url;
-	int type;
+	public String name;
+	public String url;
+	public int type;
+	public boolean containsReadme;
+	public boolean containsTutorial;
 
-	public Project(String projectName, String projectURL, int type) {
+	public Project(String projectName, String projectURL, int type,  boolean containsReadme, boolean containsTutorial) {
 		this.name = projectName;
 		this.url = projectURL;
 		this.type = type;
+		
+		this.containsReadme = containsReadme;
+		this.containsTutorial = containsTutorial;
 	}
 
 	public Project(String projectName, int type) {
@@ -52,6 +57,11 @@ public class Project {
 			this.url = BaseMainApp.examplesDir + File.separator + projectName;
 		}
 		this.type = type;
+	
+	}
+
+	public Project(String name, String projecURL, int projectType) {
+		this(name, projecURL, projectType, false, false);
 	}
 
 	public String getName() {

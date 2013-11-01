@@ -16,8 +16,7 @@ sensors.startAccelerometer(function(x, y, z) {
    y1 = y;
 });
 
-
-android.loop(35, function() { 
+util.loop(35, function() { 
     paint.setColor(new Color().argb(15, 255, 0, 0));
     canvas.getCanvas().drawRect(0, 0, 500, 500, paint); 
     paint.setColor(Color.BLUE);

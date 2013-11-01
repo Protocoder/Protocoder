@@ -90,6 +90,7 @@ import com.makewithmoto.base.BaseActivity;
 import com.makewithmoto.fragments.CameraFragment;
 import com.makewithmoto.fragments.VideoPlayerFragment;
 import com.makewithmoto.fragments.VideoPlayerFragment.VideoListener;
+import com.makewithmoto.fragments.VideoTextureFragment;
 import com.makewithmoto.utils.AndroidUtils;
 import com.makewithmoto.views.HoloCircleSeekBar;
 import com.makewithmoto.views.HoloCircleSeekBar.OnCircleSeekBarChangeListener;
@@ -950,7 +951,7 @@ public class JUI extends JInterface {
 			}
 		});
 
-		webView.addJavascriptInterface(a.get(), "activity");
+		webView.addJavascriptInterface(new JProtocoder(a.get()), "protocoder");
 
 		addView(webView, x, y, w, h);
 		// webview.loadData(content, "text/html", "utf-8");
@@ -1175,6 +1176,66 @@ public class JUI extends JInterface {
 
 		return jvideo;
 
+	}
+	/**
+	 * Adds a video
+	 * 
+	 * @author victordiaz
+	 * 
+	 * @param x
+	 * @param y
+	 * @param w
+	 * @param h
+	 */
+	public JVideo2 addVideoView2(final String videoFile, int x, int y, int w,
+			int h) {
+		
+		initializeLayout();
+		
+		// Create the main layout. This is where all the items actually go
+		FrameLayout fl = new FrameLayout(a.get());
+		fl.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
+				LayoutParams.MATCH_PARENT));
+		fl.setId(12345678);
+		
+		// Add the view
+		addView(fl, x, y, w, h);
+		
+		final VideoTextureFragment fragment = new VideoTextureFragment();
+		fragment.addListener(new VideoTextureFragment.VideoListener() {
+			
+			@Override
+			public void onTimeUpdate(int ms, int totalDuration) {		
+				
+			}
+			
+			@Override
+			public void onReady(boolean ready) {
+				fragment.loadExternalVideo(AppRunnerSettings.get().project
+						.getFolder() + File.separator + videoFile);				
+			}
+			
+			@Override
+			public void onFinish(boolean finished) {
+				
+			}
+		});
+		
+		FragmentTransaction ft = a.get().getSupportFragmentManager()
+				.beginTransaction(); // FIXME: Because we have no tagging
+		// system we need to use the int as
+		// a // tag, which may cause
+		// collisions
+		ft.add(fl.getId(), fragment, String.valueOf(fl.getId()));
+		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+		ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+		ft.addToBackStack(null);
+		ft.commit();
+		
+		JVideo2 jvideo = new JVideo2(a.get(), fragment);
+		
+		return jvideo;
+		
 	}
 
 	public void takeScreenshot(String imagePath) {

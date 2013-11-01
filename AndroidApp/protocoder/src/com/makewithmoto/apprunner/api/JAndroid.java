@@ -27,14 +27,10 @@
 
 package com.makewithmoto.apprunner.api;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Vibrator;
 import android.telephony.SmsManager;
 import android.util.Log;
@@ -49,8 +45,6 @@ import com.makewithmoto.utils.Intents;
 
 public class JAndroid extends JInterface {
 
-	private Handler handler;
-	ArrayList<Runnable> rl = new ArrayList<Runnable>();
 	private String onKeyDownfn;
 	private String onKeyUpfn;
 	private String onSmsReceivedfn;
@@ -58,8 +52,6 @@ public class JAndroid extends JInterface {
 	public JAndroid(Activity a) {
 		super(a);
 		WhatIsRunning.getInstance().add(this);
-
-		handler = new Handler();
 
 		((AppRunnerActivity) a).addOnKeyListener(new onKeyListener() {
 
@@ -93,8 +85,23 @@ public class JAndroid extends JInterface {
 		Intent intent = new Intent(a.get(), AppRunnerActivity.class);
 		intent.putExtra("projectName", name);
 		intent.putExtra("projectType", type);
-		a.get().startActivity(intent);
+		//a.get().startActivity(intent);
+	//	String code = StrUtils.generateRandomString();
+		a.get().startActivityForResult(intent, 22);
 	}
+
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	@APIVersion(minLevel = "2")
+	@APIRequires("android.permission.INTERNET")
+	public void returnValueToScript(String returnValue) {
+		Intent output = new Intent();
+		output.putExtra("return", returnValue);
+		a.get().setResult(22, output);
+		a.get().finish();
+	}
+	
+	
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
@@ -199,76 +206,9 @@ public class JAndroid extends JInterface {
 		onKeyUpfn = fn;
 	}
 
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	public void showConsole(boolean visible) {
-		((AppRunnerActivity) a.get()).showConsole(visible);
-
-	}
-
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	public void showEditor(boolean visible) {
-		((AppRunnerActivity) a.get()).showEditor(visible);
-
-	}
-
-	public class Looper {
-		Runnable task;
-
-		Looper(final int duration, final String callbackfn) {
-			task = new Runnable() {
-				@Override
-				public void run() {
-					callback(callbackfn);
-					handler.postDelayed(this, duration);
-				}
-			};
-			handler.post(task);
-
-			rl.add(task);
-		}
-
-		public void stop() {
-			handler.removeCallbacks(task);
-		}
-	}
-
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	public Looper loop(final int duration, final String callbackkfn) {
-
-		return new Looper(duration, callbackkfn);
-	}
-
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	public void delay(final int duration, final String fn) {
-
-		Runnable task = new Runnable() {
-			@Override
-			public void run() {
-				// handler.postDelayed(this, duration);
-				callback(fn);
-				handler.removeCallbacks(this);
-				rl.remove(this);
-			}
-		};
-		handler.postDelayed(task, duration);
-
-		rl.add(task);
-	}
-
-	public void stopAllTimers() {
-		Iterator<Runnable> ir = rl.iterator();
-		while (ir.hasNext()) {
-			handler.removeCallbacks(ir.next());
-			// handler.post(ir.next());
-		}
-	}
 
 	public void stop() {
-		stopAllTimers();
+
 	}
 
 	public interface onKeyListener {

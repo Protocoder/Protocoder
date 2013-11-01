@@ -19,7 +19,7 @@ ui.addButton("Start ioio", 0, 0, ui.screenWidth, 300, function() {
     });
 });
 
-android.loop(500, function() {
+util.loop(500, function() {
     if(ioioConnected == true) { 
         console.log("the reading is " + input.getVoltage());
     }

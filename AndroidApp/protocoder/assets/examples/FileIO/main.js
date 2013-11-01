@@ -5,9 +5,9 @@ q.push("hello 3");
 q.push("hello 4");
 q.push("hello 5");
 
-fileIO.saveStrings("file.txt", q);
+fileio.saveStrings("file.txt", q);
 
-var read = fileIO.loadStrings("qq.txt");
+var read = fileio.loadStrings("file.txt");
 
 for(var i = 0; i < read.length; i++) { 
   console.log(read[i]);  

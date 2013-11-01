@@ -37,14 +37,13 @@ import android.util.Log;
 
 import com.makewithmoto.apidoc.annotation.APIMethod;
 import com.makewithmoto.apidoc.annotation.JavascriptInterface;
-import com.makewithmoto.apprunner.api.dashbwidgets.JWebAppButton;
-import com.makewithmoto.apprunner.api.dashbwidgets.JWebAppHTML;
-import com.makewithmoto.apprunner.api.dashbwidgets.JWebAppImage;
-import com.makewithmoto.apprunner.api.dashbwidgets.JWebAppLabel;
-import com.makewithmoto.apprunner.api.dashbwidgets.JWebAppPlot;
+import com.makewithmoto.apprunner.api.dashboard.JDashboardButton;
+import com.makewithmoto.apprunner.api.dashboard.JDashboardHTML;
+import com.makewithmoto.apprunner.api.dashboard.JDashboardImage;
+import com.makewithmoto.apprunner.api.dashboard.JDashboardLabel;
+import com.makewithmoto.apprunner.api.dashboard.JDashboardPlot;
+import com.makewithmoto.apprunner.api.dashboard.JDashboardSlider;
 import com.makewithmoto.network.CustomWebsocketServer;
-import com.makewithmoto.network.CustomWebsocketServer.WebSocketListener;
-import com.makewithmoto.utils.StrUtils;
 
 public class JDashboard extends JInterface {
 
@@ -56,10 +55,10 @@ public class JDashboard extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
-	public JWebAppPlot addPlot(String name, int x, int y, int w, int h, float minLimit, float maxLimit) throws UnknownHostException, JSONException {
+	public JDashboardPlot addPlot(String name, int x, int y, int w, int h, float minLimit, float maxLimit) throws UnknownHostException, JSONException {
 		
-		JWebAppPlot jWebAppPlot = new JWebAppPlot(a.get());
-		jWebAppPlot.add(StrUtils.generateRandomString(), name, x, y, w, h, minLimit, maxLimit);
+		JDashboardPlot jWebAppPlot = new JDashboardPlot(a.get());
+		jWebAppPlot.add(name, x, y, w, h, minLimit, maxLimit);
 		
 		return jWebAppPlot;
 	}
@@ -67,10 +66,10 @@ public class JDashboard extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
-	public JWebAppHTML addHTML(String html, int posx, int posy) throws UnknownHostException, JSONException {
+	public JDashboardHTML addHTML(String html, int posx, int posy) throws UnknownHostException, JSONException {
 		
-		JWebAppHTML jWebAppHTML = new JWebAppHTML(a.get());
-		jWebAppHTML.add(StrUtils.generateRandomString(), html, posx, posy);
+		JDashboardHTML jWebAppHTML = new JDashboardHTML(a.get());
+		jWebAppHTML.add(html, posx, posy);
 		
 		
 		return jWebAppHTML;
@@ -79,33 +78,33 @@ public class JDashboard extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
-	public JWebAppButton addButton(String name, int x, int y, int w, int h, final String callbackfn) throws UnknownHostException, JSONException {
+	public JDashboardButton addButton(String name, int x, int y, int w, int h, final String callbackfn) throws UnknownHostException, JSONException {
 		Log.d(TAG, "callback " + callbackfn);
 		
-		String id = StrUtils.generateRandomString();
-		JWebAppButton jWebAppButton = new JWebAppButton(a.get());
-		jWebAppButton.add(id, name, x, y, w, h);
-		
-		CustomWebsocketServer.getInstance(a.get()).addListener(id, new WebSocketListener() {
-			
-			@Override
-			public void onUpdated(JSONObject jsonObject) {
-				callback(callbackfn);
-			}
-		});
-		
+		JDashboardButton jWebAppButton = new JDashboardButton(a.get());
+		jWebAppButton.add(name, x, y, w, h, callbackfn);
 
 		return jWebAppButton;
+	}
+	
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	public JDashboardSlider addSlider(String name, int x, int y, int w, int h, int min, int max, final String callbackfn) throws UnknownHostException, JSONException {
+		Log.d(TAG, "callback " + callbackfn);
+		
+		JDashboardSlider jWebAppSlider = new JDashboardSlider(a.get());
+		jWebAppSlider.add(name, x, y, w, h, min, max, callbackfn);
+		
+		return jWebAppSlider;
 	}
 	
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
-	public JWebAppLabel addLabel(String name, int x, int y, int size, String color) throws UnknownHostException, JSONException {
-		String id = StrUtils.generateRandomString();
+	public JDashboardLabel addLabel(String name, int x, int y, int size, String color) throws UnknownHostException, JSONException {
 
-		JWebAppLabel jWebAppLabel = new JWebAppLabel(a.get());
-		jWebAppLabel.add(id, name, x, y, size, color);
+		JDashboardLabel jWebAppLabel = new JDashboardLabel(a.get());
+		jWebAppLabel.add(name, x, y, size, color);
 				
 		return jWebAppLabel;
 	}
@@ -113,11 +112,10 @@ public class JDashboard extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
-	public JWebAppImage addImage(String url, int x, int y, int w, int h) throws UnknownHostException, JSONException {
-		String id = StrUtils.generateRandomString();
+	public JDashboardImage addImage(String url, int x, int y, int w, int h) throws UnknownHostException, JSONException {
 
-		JWebAppImage jWebAppImage = new JWebAppImage(a.get());
-		jWebAppImage.add(id, url, x, y, w, h);
+		JDashboardImage jWebAppImage = new JDashboardImage(a.get());
+		jWebAppImage.add(url, x, y, w, h);
 		
 		return jWebAppImage;
 	}

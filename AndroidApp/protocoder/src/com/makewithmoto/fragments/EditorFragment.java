@@ -231,6 +231,10 @@ public class EditorFragment extends BaseFragment {
 			edit.setText("Project loading failed");
 		}
 	}
+	
+	public void setText(String text) { 
+		edit.setText(text);	
+	}
 
 	public void run() {
 

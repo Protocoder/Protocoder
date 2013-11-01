@@ -1,4 +1,5 @@
 /*
+
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
@@ -70,15 +71,17 @@ import com.makewithmoto.apprunner.AppRunnerInterpreter.InterpreterInfo;
 import com.makewithmoto.apprunner.api.JAndroid;
 import com.makewithmoto.apprunner.api.JConsole;
 import com.makewithmoto.apprunner.api.JDashboard;
+import com.makewithmoto.apprunner.api.JEditor;
 import com.makewithmoto.apprunner.api.JFileIO;
-import com.makewithmoto.apprunner.api.JIOIO;
-import com.makewithmoto.apprunner.api.JMakr;
 import com.makewithmoto.apprunner.api.JMedia;
 import com.makewithmoto.apprunner.api.JNetwork;
+import com.makewithmoto.apprunner.api.JProtocoder;
 import com.makewithmoto.apprunner.api.JSensors;
 import com.makewithmoto.apprunner.api.JUI;
+import com.makewithmoto.apprunner.api.JUtil;
+import com.makewithmoto.apprunner.api.boards.JIOIO;
+import com.makewithmoto.apprunner.api.boards.JMakr;
 import com.makewithmoto.base.BaseActivity;
-import com.makewithmoto.base.BaseMainApp;
 import com.makewithmoto.events.Events;
 import com.makewithmoto.events.Events.ProjectEvent;
 import com.makewithmoto.events.Project;
@@ -114,13 +117,16 @@ public class AppRunnerActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		setImmersive(true);
+		setImmersive();
 		setContentView(R.layout.activity_apprunner);
+
 		interp = new AppRunnerInterpreter(this);
 
 		interp.addInterface(JAndroid.class);
+		interp.addInterface(JConsole.class);
 		interp.addInterface(JDashboard.class);
-		interp.addInterface(JUI.class);
+		interp.addInterface(JEditor.class);
 		interp.addInterface(JFileIO.class);
 		interp.addInterface(JDashboard.class);
 		interp.addInterface(JMakr.class);
@@ -128,7 +134,9 @@ public class AppRunnerActivity extends BaseActivity {
 		interp.addInterface(JMedia.class);
 		interp.addInterface(JNetwork.class);
 		interp.addInterface(JSensors.class);
-		interp.addInterface(JConsole.class);
+		interp.addInterface(JUI.class);
+		interp.addInterface(JUtil.class);
+		interp.addInterface(JProtocoder.class);
 
 		try {
 			Log.d(TAG, "starting websocket server");
@@ -284,21 +292,21 @@ public class AppRunnerActivity extends BaseActivity {
 			int y = (int) event.getY();
 			Log.d(TAG, "" + x + " " + y);
 
-			//callback(callbackfn, x, y);
-			//Point point = new Point(x, y);
-			//LatLng latLng = map.getProjection().fromScreenLocation(point);
-			//Point pixels = map.getProjection().toScreenLocation(latLng);;
-			//mapCustomFragment.setTouch(latLng);
-			
-			//Log.d("qq2", x + " " + y + " " + latLng.latitude + " " + latLng.longitude);
+			// callback(callbackfn, x, y);
+			// Point point = new Point(x, y);
+			// LatLng latLng = map.getProjection().fromScreenLocation(point);
+			// Point pixels = map.getProjection().toScreenLocation(latLng);;
+			// mapCustomFragment.setTouch(latLng);
+
+			// Log.d("qq2", x + " " + y + " " + latLng.latitude + " " +
+			// latLng.longitude);
 			break;
 		}
 
-		//return true; //a.get().dispatchTouchEvent(event);
+		// return true; //a.get().dispatchTouchEvent(event);
 		return super.onTouchEvent(event);
 	}
-	
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -648,14 +656,16 @@ public class AppRunnerActivity extends BaseActivity {
 		onNFCListener = onNFCListener2;
 
 	}
-	
-	public void addBluetoothListener(JNetwork.onBluetoothListener onBluetoothListener2) {
+
+	public void addBluetoothListener(
+			JNetwork.onBluetoothListener onBluetoothListener2) {
 		onBluetoothListener = onBluetoothListener2;
-		
+
 	}
 
 	public void scanBluetooth() {
-	    BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+		BluetoothAdapter mBluetoothAdapter = BluetoothAdapter
+				.getDefaultAdapter();
 
 		mBluetoothAdapter.startDiscovery();
 		BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -664,11 +674,14 @@ public class AppRunnerActivity extends BaseActivity {
 				if (BluetoothDevice.ACTION_FOUND.equals(action)) {
 					BluetoothDevice device = intent
 							.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-					
-	                int rssi = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI,Short.MIN_VALUE);
 
-					onBluetoothListener.onDeviceFound(device.getName(), device.getAddress(), rssi);
-					Log.d(TAG, device.getName() + "\n" + device.getAddress() + " " + rssi);
+					int rssi = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI,
+							Short.MIN_VALUE);
+
+					onBluetoothListener.onDeviceFound(device.getName(),
+							device.getAddress(), rssi);
+					Log.d(TAG, device.getName() + "\n" + device.getAddress()
+							+ " " + rssi);
 				}
 			}
 		};
@@ -695,9 +708,17 @@ public class AppRunnerActivity extends BaseActivity {
 			}
 			onVoiceRecognitionListener.onNewResult(matches.get(0));
 
+		} else if (requestCode == 22 && resultCode == RESULT_OK) { 
+			String result = data.getStringExtra("json");
+			interp.callJsFunction("onResult", result);
 		}
 
 		super.onActivityResult(requestCode, resultCode, data);
+	}
+	
+	public void onResult(String result) { 
+		
+		
 	}
 
 	public void addVoiceRecognitionListener(

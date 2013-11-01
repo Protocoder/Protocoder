@@ -17,6 +17,4 @@ sensors.startGPS(function (lat, lon, alt, speed, bearing) {
     altLabel.setText("Altitude : " + alt);
 
 	ui.addWebImage(0, 400, 700,500, "https://maps.googleapis.com/maps/api/staticmap?center="+lat+","+lon+"&zoom=20&size=700x500&sensor=false");
-
-
 });
