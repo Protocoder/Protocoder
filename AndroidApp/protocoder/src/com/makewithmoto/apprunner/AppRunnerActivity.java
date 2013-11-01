@@ -117,8 +117,9 @@ public class AppRunnerActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setImmersive(true);
-		setImmersive();
+		//setImmersive(true);
+		//setImmersive();
+		
 		setContentView(R.layout.activity_apprunner);
 
 		interp = new AppRunnerInterpreter(this);
