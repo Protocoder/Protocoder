@@ -50,16 +50,14 @@ public class CustomWebsocketServer extends WebSocketServer {
 	private static final String TAG = "WebSocketServer";
 	private static Context ctx;
 	private List<WebSocket> connections = new ArrayList<WebSocket>();
-	private static HashMap<String, WebSocketListener> listeners =  new HashMap<String, WebSocketListener>();; 
-
+	private static HashMap<String, WebSocketListener> listeners = new HashMap<String, WebSocketListener>();;
 
 	public interface WebSocketListener {
 
-		public void onUpdated(JSONObject jsonObject); 
-		
+		public void onUpdated(JSONObject jsonObject);
+
 	}
 
-	
 	// Singleton (one app view, different URLs)
 	public static CustomWebsocketServer getInstance(Context aCtx, int port,
 			Draft d) throws UnknownHostException {
@@ -68,10 +66,11 @@ public class CustomWebsocketServer extends WebSocketServer {
 			inst.start();
 		}
 		return inst;
-	} 
-	
+	}
+
 	// Singleton (one app view, different URLs)
-	public static CustomWebsocketServer getInstance(Context aCtx) throws UnknownHostException {
+	public static CustomWebsocketServer getInstance(Context aCtx)
+			throws UnknownHostException {
 		if (inst == null) {
 		}
 		return inst;
@@ -93,8 +92,7 @@ public class CustomWebsocketServer extends WebSocketServer {
 		counter++;
 		Log.d(TAG, "New websocket connection " + counter);
 		connections.add(aConn);
-		
-		
+
 	}
 
 	@Override
@@ -139,87 +137,45 @@ public class CustomWebsocketServer extends WebSocketServer {
 		conn.send(res.toString());
 	}
 
-	/*
-	 * Message from webapp
-	 */
-	public enum MessageType {
-		random_info, unknown, button;
-		public static MessageType fromString(String str) {
-			try {
-				return valueOf(str);
-			} catch (Exception e) {
-				return unknown;
-			}
-		}
-	}
-	
-	public void addListener(String name, WebSocketListener l) { 
+	public void addListener(String name, WebSocketListener l) {
 		listeners.put(name, l);
-		
+
 	}
-	
-	public void removeAllListeners() { 
+
+	public void removeAllListeners() {
 		listeners.clear();
 	}
-	
-	public void send(String type, String action, String ... values) { 
-		
-		//send device ip address 		
+
+	public void send(String type, String action, String... values) {
+
+		// send device ip address
 		/*
-		JSONObject msg = new JSONObject();
-		try {
-			msg.put("type", "device");
-			msg.put("action", "info");
+		 * JSONObject msg = new JSONObject(); try { msg.put("type", "device");
+		 * msg.put("action", "info");
+		 * 
+		 * JSONObject values = new JSONObject();; values.put("address_ip",
+		 * NetworkUtils.getLocalIpAddress().toString());
+		 * values.put("address_port", AppSettings.httpPort);
+		 * values.put("device_name", android.os.Build.MANUFACTURER +
+		 * android.os.Build.PRODUCT + " " + Build.MODEL); msg.put("values",
+		 * values);
+		 * 
+		 * } catch (JSONException e1) { e1.printStackTrace(); }
+		 * 
+		 * try { CustomWebsocketServer ws =
+		 * CustomWebsocketServer.getInstance(this); ws.send(msg); } catch
+		 * (UnknownHostException e) { e.printStackTrace(); }
+		 */
 
-			JSONObject values = new JSONObject();;
-			values.put("address_ip", NetworkUtils.getLocalIpAddress().toString());
-			values.put("address_port", AppSettings.httpPort);
-			values.put("device_name", android.os.Build.MANUFACTURER + android.os.Build.PRODUCT + " " + Build.MODEL);
-			msg.put("values", values);
-
-		} catch (JSONException e1) {
-			e1.printStackTrace();
-		}
-
-		try {
-			CustomWebsocketServer ws = CustomWebsocketServer.getInstance(this);
-			ws.send(msg);
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} 
-		*/
-		
-		
-		
 	}
 
 	// handle message from the webapp
 	private JSONObject handleMessage(String type, JSONObject msg)
 			throws JSONException {
 		JSONObject data = new JSONObject();
+		WebSocketListener l = listeners.get(msg.get("id"));
+		l.onUpdated(msg);
 
-		ALog.d(TAG, "handle Message " + msg);
-
-		switch (MessageType.fromString(type)) {
-		case random_info:
-
-			break;
-		case unknown:
-
-			break;
-
-		case button:
-			Log.d("qq", msg.toString(2) + " " + listeners);
-			WebSocketListener l = listeners.get(msg.get("id"));
-			
-			//Log.d("qq1","" + listeners);
-			//Log.d("qq2", "" + msg.get("id"));
-			//Log.d("qq3", "" + l);
-			l.onUpdated(data);
-			
-		default:
-			break;
-		}
 		return data;
 	}
 

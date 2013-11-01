@@ -1,10 +1,16 @@
+/*
+*	Reference
+*/ 
+
+var Reference = function() { 
+
+}
 
 //parse the help comming directly from the android and create a structure for it
-function parse_help(docString) {
-	console.log(docString);
-	ds = docString;
+Reference.prototype.parseHelp = function (docString) {
+	//console.log(docString);
+	var ds = docString;
 	var doc = JSON.parse(docString).apiClasses;
-	d = doc;
 
 	//iterate through classes 
 	$.each(doc, function(k, v) {

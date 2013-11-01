@@ -28,7 +28,6 @@
 package com.makewithmoto;
 
 import java.net.UnknownHostException;
-import java.util.List;
 
 import org.java_websocket.drafts.Draft_17;
 import org.json.JSONException;
@@ -44,8 +43,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -123,6 +120,8 @@ public class MainActivity extends BaseActivity implements
 
 	private FileObserver observer;
 
+	private ConnectivityChangeReceiver connectivityChangeReceiver;
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -161,7 +160,7 @@ public class MainActivity extends BaseActivity implements
 			@Override
 			public void onEvent(int event, String file) {
 				if ((FileObserver.CREATE & event) != 0) {
-					
+
 					Log.d(TAG, "File created [" + BaseMainApp.projectsDir + "/"
 							+ file + "]");
 
@@ -176,10 +175,8 @@ public class MainActivity extends BaseActivity implements
 			}
 		};
 
-		registerReceiver(new ConnectivityChangeReceiver(), new IntentFilter(
-				ConnectivityManager.CONNECTIVITY_ACTION));
+		connectivityChangeReceiver = new ConnectivityChangeReceiver();
 
-		
 	}
 
 	/**
@@ -200,7 +197,10 @@ public class MainActivity extends BaseActivity implements
 				hardKillConnections();
 			}
 		};
-		
+
+		registerReceiver(connectivityChangeReceiver, new IntentFilter(
+				ConnectivityManager.CONNECTIVITY_ACTION));
+
 		startServers();
 		IntentFilter filterSend = new IntentFilter();
 		filterSend.addAction("com.makewithmoto.intent.action.STOP_SERVER");
@@ -219,6 +219,8 @@ public class MainActivity extends BaseActivity implements
 		EventBus.getDefault().unregister(this);
 		unregisterReceiver(mStopServerReceiver);
 		observer.stopWatching();
+		unregisterReceiver(connectivityChangeReceiver);
+
 	}
 
 	/**
@@ -480,12 +482,12 @@ public class MainActivity extends BaseActivity implements
 						p.getType());
 
 				// check if the apprunner is installed
-				//final PackageManager mgr = this.getPackageManager();
-				//List<ResolveInfo> list = mgr.queryIntentActivities(
-				//		currentProjectApplicationIntent,
-				//		PackageManager.MATCH_DEFAULT_ONLY);
+				// final PackageManager mgr = this.getPackageManager();
+				// List<ResolveInfo> list = mgr.queryIntentActivities(
+				// currentProjectApplicationIntent,
+				// PackageManager.MATCH_DEFAULT_ONLY);
 
-				//Log.d(TAG, "intent available " + list.size());
+				// Log.d(TAG, "intent available " + list.size());
 
 				startActivityForResult(currentProjectApplicationIntent,
 						mProjectRequestCode);

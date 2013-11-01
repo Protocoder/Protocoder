@@ -5,22 +5,27 @@
 *
 */
 
-var remoteIP = window.location.hostname; //'localhost';
-
+var Communication = function() { 
+  this.remoteIP = window.location.hostname;  
+  //this.remoteIP = 'localhost';
+  this.remoteWSPORT = '8587';
+  this.self = this;
+  this.initWebsockets();
+}
 
 //listing apps in the future we might filter the listing
-function list_apps(filter) { 
+Communication.prototype.listApps = function (filter) { 
 	var obj = {};
 	obj.cmd = "list_apps";
 	obj.filter = filter;
 
-	$.get(remoteIP + "cmd="+JSON.stringify(obj), function(data) {
+	$.get(this.remoteIP + "cmd="+JSON.stringify(obj), function(data) {
 		setProjectList(filter, JSON.parse(data));
 	});
 }
 
 //push the code
-function push_code(project) { 
+Communication.prototype.pushCode = function (project) { 
 	var obj = {};
 	obj.cmd = "push_code";
 
@@ -31,7 +36,7 @@ function push_code(project) {
 	o.type = project.type;
 
 	$.ajax({
-		url:remoteIP + "cmd="+JSON.stringify(obj),
+		url:this.remoteIP + "cmd="+JSON.stringify(obj),
 		type: 'post',
 		data: o,
 		success: function(data) {
@@ -42,7 +47,7 @@ function push_code(project) {
 
 
 
-function executeCode(code) { 
+Communication.prototype.executeCode = function (code) { 
 	var obj = {};
 	obj.cmd = "execute_code";
 
@@ -52,7 +57,7 @@ function executeCode(code) {
 
 
 	$.ajax({
-		url:remoteIP + "cmd="+JSON.stringify(obj),
+		url:this.remoteIP + "cmd="+JSON.stringify(obj),
 		type: 'post',
 		data: o,
 		success: function(data) {
@@ -64,15 +69,16 @@ function executeCode(code) {
 }
 
 //fetch the code
-function fetch_code(pName, pType) { 
+Communication.prototype.fetchCode = function(pName, pType) { 
 	var obj = {};
 	obj.cmd = "fetch_code";
 	obj.name = pName;
 	obj.type = pType;
+  var self = this;
   try {
-  	$.get(remoteIP + "cmd="+JSON.stringify(obj), function(data) {
+  	$.get(this.remoteIP + "cmd="+JSON.stringify(obj), function(data) {
   		var code = JSON.parse(data);
-  		setCode(unescape(code.code));
+  		protocoder.editor.setCode(unescape(code.code));
   		currentProject.name = pName;
   		currentProject.type = pType;
   		document.title = " protocoder | " + pName;
@@ -80,20 +86,20 @@ function fetch_code(pName, pType) {
   		tabs.get("tab1").caption = pName;
   		tabs.refresh();
 
-  		list_files_in_project(pName, pType);
+  		self.listFilesInProject(pName, pType);
   	});
   } catch (e) {} 
 }
 
 //fetch the code
-function list_files_in_project(pName, pType) { 
+Communication.prototype.listFilesInProject = function (pName, pType) { 
 	var obj = {};
 	obj.cmd = "list_files_in_project";
 	obj.name = pName;
 	obj.type = pType;
 
   try {
-  	$.get(remoteIP + "cmd="+JSON.stringify(obj), function(data) {
+  	$.get(this.remoteIP + "cmd="+JSON.stringify(obj), function(data) {
   		w2ui['grid'].clear();
   		//console.log(data);
 
@@ -103,19 +109,19 @@ function list_files_in_project(pName, pType) {
   			w2ui['grid'].add( v );
   		});
 
-  		initUpload();
+  		protocoder.ui.initUpload();
 
   	});
   } catch (e) {};
 } 
 
-function run_app(project) {
+Communication.prototype.runApp = function (project) {
 	var obj = {};
 	obj.cmd = "run_app";
 	obj.name = project.name;
 	obj.url = project.url;
 	obj.type = project.type;
-	$.get(remoteIP + "cmd="+JSON.stringify(obj), function(data) {
+	$.get(this.remoteIP + "cmd="+JSON.stringify(obj), function(data) {
  		//alert('Load was performed. ' + data);
 	});
 	$("#console").empty();
@@ -123,39 +129,41 @@ function run_app(project) {
 }
 
 
-function create_new_project(new_name) {
+Communication.prototype.createNewProject = function (new_name) {
 	var obj = {};
 	obj.cmd = "create_new_project";
 	obj.name = new_name;
 	console.log(obj);
-	$.get(remoteIP + "cmd="+JSON.stringify(obj), function(data) {
+  var self = this;
+	$.get(this.remoteIP + "cmd="+JSON.stringify(obj), function(data) {
  		//alert('Load was performed. ' + data);
- 		list_apps("user");
- 		fetch_code(obj.name, "list_projects");
+ 	  self.listApps("user");
+ 		self.fetchCode(obj.name, "user");
 	});
 }
-function remove_app(id) {
+
+Communication.prototype.removeApp = function (id) {
 	var obj = {};
 	obj.cmd = "remove_app";
 
 	obj.remove_app = name;
-	$.get(remoteIP + "cmd="+JSON.stringify(obj), function(data) {
+	$.get(this.remoteIP + "cmd="+JSON.stringify(obj), function(data) {
  		alert('Load was performed. ' + data);
 	});
 }
 
-function get_reference(id) {
+Communication.prototype.getReference = function (id) {
 	var obj = {};
 	obj.cmd = "get_documentation";
 
-	$.get(remoteIP + "cmd="+JSON.stringify(obj), function(data) { 
+	$.get(this.remoteIP + "cmd="+JSON.stringify(obj), function(data) { 
 		var doc = JSON.parse(data);
-		parse_help(doc.api);
+		protocoder.reference.parseHelp(doc.api);
 	});
 }
 
 
-function get_camera() {
+Communication.prototype.getCamera = function () {
 	var url = 'http://'+localhost+':8080/takePic';
 
 	$.get(url, function(data) { 
@@ -180,12 +188,12 @@ function get_camera() {
 var ws; 
 var widgetsFn = new Object();
 
-function initWebsockets() {
+Communication.prototype.initWebsockets = function () {
   // Write your code in the same way as for native WebSocket:
-  ws = new WebSocket('ws://'+ remoteIP +':8587');
-
+  ws = new WebSocket('ws://'+ this.remoteIP +':' + this.remoteWSPORT);
+  var self = this;
   ws.onopen = function() {
-    connected();
+    self.connected();
   }
   ws.onmessage = function(e) {
     // Receives a message.
@@ -214,17 +222,13 @@ function initWebsockets() {
     //get_code 
     if (result.code != null) { 
       console.log(result.code);
-      editor.setValue(result.code);
+      protocoder.editor.setCode(result.code);
     }
 
     //get_new_code or save_file 
     if (result.project != null) {
       console.log(result.project);
     }
-
-    if (result.acc_x != null) {
-      //plot1(result.acc_x, ""); 
-    } 
 
     if (result.type == "error") { 
       currentError = result.values; 
@@ -239,27 +243,25 @@ function initWebsockets() {
 
 
     if (result.type == "console") { 
-      var log = result.values.val; 
-      $("#console").append('<p>' + log + '</p>');
-
-      var objDiv = document.getElementById("console");
-      objDiv.scrollTop = objDiv.scrollHeight;
+      if (result.action == "log") { 
+        var log = result.values.val; 
+        $("#console").append('<p>' + log + '</p>');
+        var objDiv = document.getElementById("console");
+        objDiv.scrollTop = objDiv.scrollHeight;
+       } else if (result.action == "clear") { 
+        $("#console").empty();
+       }
     }
 
     if (result.type == 'ide') { 
       if (result.action == "ready") {
         if (result.values.ready) { 
-          $("#tb_toolbar_item_project_run").addClass("app_running");
-          $("#tb_toolbar_item_project_run").removeClass("app_connected");
-
-          $("#tb_toolbar_item_project_run").find(".w2ui-tb-caption").text("close");
+          protocoder.ui.appRunning(true);
         } else {
-          $("#tb_toolbar_item_project_run").addClass("app_connected");
-          $("#tb_toolbar_item_project_run").removeClass("app_running");
-          $("#tb_toolbar_item_project_run").find(".w2ui-tb-caption").text("run");
+          protocoder.ui.appRunning(false);
         }
       } else if (result.action == "new_files_in_project") { 
-        list_files_in_project(currentProject.name, currentProject.type);
+        self.listFilesInProject(currentProject.name, currentProject.type);
       }
 
     }
@@ -270,71 +272,64 @@ function initWebsockets() {
       
       if (result.action == "showDashboard") { 
         if (result.values.val == true) { 
-          showDashboard();
+          protocoder.dashboard.show();
           console.log("show dashboard");
         } else {
-          hideDashboard();
+          protocoder.dashboard.hide();
         }
       } else if (result.action == "add") { 
         console.log("adding widget");
-        widgetsFn[result.values.id] = addWidget(result.values);
+        widgetsFn[result.values.id] = protocoder.dashboard.addWidget(result.values);
       } else if (result.action == "update") {
         console.log("updating widget");
         console.log(result.values.val);
         widgetsFn[result.values.id](result.values.val, "");
-      } else if (result.action == "setText") {
-        setText(result.values.id, result.values.val);
+      } else if (result.action == "setLabelText") {
+        protocoder.dashboard.setLabelText(result.values.id, result.values.val);
       } else if (result.action == "changeImage") { 
-        changeImage(result.values.id, result.values.url);
+        protocoder.dashboard.changeImage(result.values.id, result.values.url);
       }
 
     }
 
   }
   ws.onclose = function() {
-    disconnected();
+    self.disconnected();
   }
 
 }
 var reconnectionInterval;
+//text-decoration: underline;
 
-function connected() { 
+Communication.prototype.connected = function () { 
   console.log('connected');
   clearInterval(reconnectionInterval); //removes the reconnection 
-  $("#connection").addClass('card');
-  $("#connection").css("border-color","#00ff00");
-  $("#tb_toolbar_item_project_run").addClass("app_connected");
-
+  protocoder.ui.appConnected(true);
 }
 
-function disconnected() { 
+Communication.prototype.disconnected = function () { 
+  var self = this;
+  protocoder.ui.appConnected(false);
+
   console.log('disconnected');
-  $("#tb_toolbar_item_project_run").removeClass("app_connected");
-  $("#tb_toolbar_item_project_run").removeClass("app_running");
-
-  $("#connection").addClass('card');
-  $("#connection").css("border-color","#ff0000");
-  $("#tb_toolbar_item_project_run").removeClass("app_running");
-  $("#tb_toolbar_item_project_run").removeClass("app_connected");
-
 
   //try to reconnect 
   reconnectionInterval = setTimeout(function() {
     console.log("trying to reconnect");
-    initWebsockets();
+    self.initWebsockets();
   }, 1000);
 }
 
 var currentProject = [];
 
-function getCodeFor(projectName) {
+Communication.prototype.getCodeFor = function (projectName) {
    //get project 
    console.log("get project --> " + projectName);
    ws.send('{type:get_code, name:"'+projectName+'"}');
 }
 
- //save project 
-function saveCode(name) { 
+//save project 
+Communication.prototype.saveCode = function (name) { 
   
   var json = {}; 
   json["type"] = "save_file";

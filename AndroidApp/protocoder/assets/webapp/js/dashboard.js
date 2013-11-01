@@ -3,41 +3,53 @@
 *
 */
 
+var Dashboard = function() { 
+  this.widgets = new Array();
 
-var widgets = new Array();
+}
 
-var addWidget = function(widget) { 
+
+Dashboard.prototype.hide = function () { 
+  $("#overlay #container").fadeOut(200);
+} 
+
+Dashboard.prototype.show = function () { 
+  $("#overlay #container").fadeIn(300);
+}
+
+
+
+Dashboard.prototype.addWidget = function(widget) { 
+  this.widgets.push(widget.id);
+
   if (widget.type == "plot") { 
-    widgets.push(widget.name);
-    return addPlot(widget.id, widget.name, widget.x, widget.y, widget.w, widget.h, widget.minLimit, widget.maxLimit);
+    return this.addPlot(widget.id, widget.name, widget.x, widget.y, widget.w, widget.h, widget.minLimit, widget.maxLimit);
   } else if (widget.type == "button") {
-    widgets.push(widget.name);
-    return addButton(widget.id, widget.name, widget.x, widget.y, widget.w, widget.h);
+    return this.addButton(widget.id, widget.name, widget.x, widget.y, widget.w, widget.h);
+  } else if (widget.type == "slider") {
+    return this.addSlider(widget.id, widget.name, widget.x, widget.y, widget.w, widget.h, widget.min, widget.max);
   } else if (widget.type == "label") { 
-    widgets.push("label_"+widget.id);
-    return addLabel(widget.id, widget.name, widget.x, widget.y, widget.size, widget.color);
+    return this.addLabel(widget.id, widget.name, widget.x, widget.y, widget.size, widget.color);
   } else if (widget.type == "image") { 
-    widgets.push("image_"+widget.id);
-    return addImage(widget.id, widget.url, widget.x, widget.y, widget.w, widget.h);
+    return this.addImage(widget.id, widget.url, widget.x, widget.y, widget.w, widget.h);
   } else if (widget.type == "html") { 
-    widgets.push("html"+widget.id);
-    return addHTML(widget.id, widget.html, widget.x, widget.y); 
+    return this.addHTML(widget.id, widget.html, widget.x, widget.y); 
   } 
 
 }
 
 
-var removeWidgets = function() { 
-  $.each(widgets, function(k,v) {
+Dashboard.prototype.removeWidgets = function() { 
+  $.each(this.widgets, function(k,v) {
     $("#overlay #container " + "#"+v).remove();
-    widgets.pop(v); 
+    protocoder.dashboard.widgets.pop(v); 
   });
 
   //remove everything
   $("#overlay #container").empty();
 }
 
-var addHTML = function(element, html, posx, posy) { 
+Dashboard.prototype.addHTML = function(element, html, posx, posy) { 
    $('<div class ="widget chtml" id = "html_' + element +'">'+ html +' </div>')
           .appendTo("#overlay #container")
           .css({"top":posy+"px","left":posx+"px"});
@@ -47,7 +59,7 @@ var addHTML = function(element, html, posx, posy) {
 }
 
 
-var addLabel = function(element, name, posx, posy, size, color) { 
+Dashboard.prototype.addLabel = function(element, name, posx, posy, size, color) { 
    $('<div class ="widget label" id = "label_' + element +'">'+ name +' </div>')
           .appendTo("#overlay #container")
           .css({"font-size": size+"px", "color":color, "top":posy+"px","left":posx+"px"})
@@ -55,12 +67,12 @@ var addLabel = function(element, name, posx, posy, size, color) {
 }
 
 
-var setText = function(element, text) { 
+Dashboard.prototype.setLabelText = function(element, text) { 
    $("#overlay #container #label_"+ element).text(text)
 }
 
 
-var changeImage = function(element, url) { 
+Dashboard.prototype.changeImage = function(element, url) { 
   var img = $("#overlay #container #image_"+ element);
   img.attr("src", url);
   console.log(url);
@@ -69,7 +81,7 @@ var changeImage = function(element, url) {
 }
 
 
-var addImage = function(element, url, posx, posy, w, h) { 
+Dashboard.prototype.addImage = function(element, url, posx, posy, w, h) { 
   if (url.indexOf("http") == -1) { 
     url = window.location.origin + "/apps/" + currentProject.type + "/" + currentProject.name + "/" + url;
   } 
@@ -80,9 +92,17 @@ var addImage = function(element, url, posx, posy, w, h) {
           .draggable();
 }
 
+Dashboard.prototype.addSlider = function(element, name, posx, posy, w, h, min, max) {
+  $('<input type="range" min="'+ min +'" max="'+ max +'" class ="widget" id = "slider_' + element +'">'+' </input>')
+          .appendTo("#overlay #container")
+          .css({"width": w+"px", "height":h+"px","top":posy+"px","left":posx+"px"})
+          .change(function() {
+            ws.send('{type:slider, id:'+ element +', val:'+this.value+'}');
+          });
 
+} 
 
-var addButton = function(element, name, posx, posy, w, h) {
+Dashboard.prototype.addButton = function(element, name, posx, posy, w, h) {
   $('<button class ="widget" id = "button_' + element +'">'+ name +' </button>')
           .appendTo("#overlay #container")
           .css({"width": w+"px", "height":h+"px","top":posy+"px","left":posx+"px"})
@@ -93,11 +113,11 @@ var addButton = function(element, name, posx, posy, w, h) {
 
 } 
 
-var setBackgroundColor = function(r, g, b, a) { 
+Dashboard.prototype.setBackgroundColor = function(r, g, b, a) { 
   $("#overlay #container").css("background", "rgba("+r+","+g+","+b+","+a+")");
 }
 
-var addPlot = function(element, name, posx, posy, w, h, minLimit, maxLimit) {
+Dashboard.prototype.addPlot = function(element, name, posx, posy, w, h, minLimit, maxLimit) {
   var _delay = 10;
   var _n = 40;
   var minVal; 

@@ -113,23 +113,29 @@ body {
 	width: 100%;
 	height: 100%;
 	background: rgba(0, 0, 0, 0.8);
+	position: absolute;
+	padding-bottom: 22px;
 }
 
 #console {
 	width: 100%;
 	height: 100%;
 	position: absolute;
-	padding: 12px;
+	padding: 0px;
 	color: #8f8f8f;
 	font-family: sans-serif;
 	font-weight: 100;
 	overflow-y: scroll;
 	overflow-x: hidden;
+	font-size: 0.9em;
+
 
 	p { 
 		padding: 2px;
 		margin: 0px;
 		-webkit-user-select: auto; 
+		border-bottom: 1px dotted #444;
+		padding-left: 12px;
 	}
 }
 
@@ -253,26 +259,69 @@ body {
 }
 
 
-#projects { 
+#list_projects { 
 
 	display: none;
 	position: absolute;
-	top: -25px;
+	top: 48px;
 	left: 0px;
 	width: 100%;
 	height: 100%;
-	background-color: rgba(0, 0, 0, 0.498039);
+	background-color: rgba(238, 238, 238, 0.94);
 	float: left;
 	z-index: 122;
+
 
 	#container { 
 		
 		.project_list {
-			width: 300px;
-			height: 600px;
+			width: 400px;
+			height: auto;
 			float: left;
 			padding: 12px;
 			border-right: 1px solid rgba(255, 255, 255, 0.2);
+			margin-top: 55px;
+
+
+			h1 { 
+
+				font-size: 1.25em;
+				margin-bottom: 24px;
+				font-style: normal;
+				font-weight: 500;
+				text-shadow: 2px 2px #eeeeee;
+				vertical-align: middle;
+				text-align: left;
+				margin: 0px;
+				padding-top: 0px;
+				font-family: 'Roboto', sans-serif;
+				color: #646464;
+				text-transform: uppercase;
+			}
+
+			ul {
+				overflow-y: scroll;
+				height: 500px;
+				border: 1px solid rgb(213, 213, 213);
+				border-radius: 2px;
+				padding: 0px;
+			}
+
+
+			li { 
+				list-style-type: none;
+				color: rgb(129, 129, 129);
+				font-size: 1.2em;
+				font-family: sans-serif;
+				border-left: 0px solid rgb(230, 230, 230);
+				padding: 2px 2px 5px 8px;
+				border-bottom: 1px dotted rgb(146, 146, 146);
+			}
+
+			li:hover { 
+				background: rgba(255, 255, 255, 0.5);
+
+			}
 		}
 
 
@@ -361,7 +410,90 @@ body {
 	}
 }
 
+#toolbar { 
 
+	background-color: #444444;
+	box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 21px;
+	padding: 0px;
+	border: 0px;
+	height: 48px;
+	padding: 0px;
+	z-index: 125;
+
+	ul {
+		padding: 0px;
+		margin: 0px;
+		height: 100%;
+		
+		li { 
+			float: left;
+			padding: 0px 2px 0px 2px;
+			color: rgba(255, 255, 255, 0.9);
+			font-size: 1.1em;
+			text-transform: uppercase;
+			text-shadow: 1px 1px rgba(0, 0, 0, 0.59);
+			font-family: Roboto-Condensed-Regular, verdana, sans-serif;
+			list-style: none;
+			display: inline;
+			padding: 12px 10px 12px 10px;
+
+			background-color: rgba(255, 255, 255, 0);
+				border: 0px solid #aaaaaa;
+			-o-transition:.15s;
+	  		-ms-transition:.15s;
+	  		-moz-transition:.15s;
+	  		-webkit-transition:.15s;
+	  		/* ...and now for the proper property */
+	  		transition:.15s;
+
+		}
+
+		.icon {
+			float: left;
+			width: 20px;
+			height: 20px;
+			padding: 2px 5px 2px 2px;
+		}
+
+		#newProjectBtn .icon {
+			background: url('../images/new.png') no-repeat center;
+		}
+		
+		#saveBtn .icon {
+			background: url('../images/save.png') no-repeat center;
+		}
+		
+		#projectsBtn .icon {
+			background: url('../images/projects.png') no-repeat center;
+		}
+
+		#runBtn .icon {
+			background: url('../images/run.png') no-repeat center;
+		}
+
+		#sideBarBtn {
+			float: right;
+			margin-right: 110px;
+		}
+
+
+
+		li:hover{ 
+			border: 0px solid #aaaaaa;
+			background-color: rgba(51, 181, 229, 0.2);
+
+		}
+
+		#separator {
+			height: 100%;
+			width: 0px;
+			border-right: 1px solid rgb(109, 109, 109);
+			padding: 0px;
+		}
+
+
+	}
+}
 
 
 .w2ui-tabs .w2ui-tab {
@@ -712,9 +844,25 @@ body {
 }
 
 .app_running { 
-	background-color: rgba(255, 82, 82, 0.54);
+	color: rgba(255, 82, 82, 0.54) !important;
+	text-decoration: underline !important;
 }
 
 .app_connected { 
-	background-color: rgba(82, 255, 241, 0.54);
+	color: rgba(82, 255, 241, 0.54) !important;
+}
+
+input[type=range] {
+    -webkit-appearance: none;
+    background-color: silver;
+    width: 200px;
+    height:20px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+     -webkit-appearance: none;
+    background-color: #666;
+    opacity: 0.5;
+    width: 10px;
+    height: 20px;
 }

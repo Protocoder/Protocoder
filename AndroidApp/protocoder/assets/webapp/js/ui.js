@@ -1,101 +1,17 @@
-function initUI() { 
+/* 
+* 	UI 
+*/
+
+var Ui = function() { 
+	var dropboxEnabled = false;
+	this.initUI();
+}
+
+
+Ui.prototype.initUI = function() { 
 
 	var pstyle = 'border: 0px solid #dfdfdf; padding: 0px;';
 
-	$('#toolbar').w2toolbar({
-	        name: 'toolbar',
-	        items: [
-	        	/*
-	            { type: 'button',  id: 'logo', caption: '', img: 'icon-page' },
-				*/ 
-
-	            { type: 'button',  id: 'project_new', caption: 'New Project', img: 'icon-page' },
-	            { type: 'break',  id: 'break0' },
-	            { type: 'button',  id: 'project_save', caption: 'Save', img: 'icon-save'},
-	            
-	            { type: 'menu',   id: 'list_projects', caption: 'Projects', img: 'icon-folder', items: [
-	          
-	            ]},
-
-	            { type: 'menu',   id: 'list_examples', caption: 'Examples', img: 'icon-folder', items: [
-	          
-	            ]},
-
-   				
-
-	            /*
-	            { type: 'button',   id: 'reference', caption: 'Reference', img: 'icon-folder', items: [
-	           
-	            ]},
-	            */
-
-	            
-	            { type: 'break', id: 'break1' },
-	            { type: 'button',  id: 'project_run',  caption: 'Run', img: 'icon-run', hint: 'Run project' },
-
-	            { type: 'break', id: 'break1' },
-
-	            /*
-	            { type: 'button',   id: 'settings', caption: 'Settings', img: 'icon-folder', items: [
-	           
-	            ]},
-	            */
-
-	            { type: 'spacer' }
-
-	        ],
-	        onClick: function (target, data) {
-	            //this.owner.content('main', target);
-	            //console.log(data);
-	            
-	            switch(target) { 
-	            case 'project_new':
-	                    openPopup();
-	                    break;
-	            case 'project_run':
-	                if (currentProject.name != 'undefined') { 
-
-	                    currentProject.code = session.getValue();
-	                    push_code(currentProject);
-	                    removeWidgets();
-	                    run_app(currentProject);
-	                } else { 
-	                    openPopup();
-	                }
-	                
-	                break;
-	                
-	            case 'project_save':
-	                if (currentProject.length != 'undefined') { 
-
-	                    currentProject.code = session.getValue();
-	                    push_code(currentProject);
-	                } else { 
-	                    openPopup();
-	                    
-	                }
-
-	                break;
-	           case 'list_projects':
-	                if (data.subItem != 'undefined') { 
-	                    fetch_code(data.subItem, target);
-	                }
-
-	             
-	             //$("").w2overlay('This is an overlay.<br>Can be multi line HTML.');
-	                break;
-	            case 'list_examples':
-	                if (data.subItem != 'undefined') { 
-	                    fetch_code(data.subItem, target);  
-	                }
-	                break;
-	            case 'dashboard':
-	                    break;
-	            default: break;
-	        }
-	        }
-	            
-	});
 
 	$('#layout').w2layout({
 	    name: 'layout',
@@ -130,7 +46,7 @@ function initUI() {
 	$().w2layout({
 	    name: 'right_bar',
 	    panels: [
-	        { type: 'main', size: '70%', resizable: true, style: pstyle, content: '<div id = "reference_container" style="background:#dfdfdf"> <div id = "reference"><h1 style="color:#777777; font-size:1.25em; margin-bottom: 24px; font-style:normal; font-weight:500; text-shadow: 2px 2px #eeeeee; vertical-align:middle;">REFERENCE</h1></div> </div>' },
+	        { type: 'main', size: '70%', resizable: true, style: pstyle, content: '<div id = "reference_container" style="background:#dfdfdf"> <div id = "reference"><h1 style="color:#777777; font-size:1.25em; margin-bottom: 24px; font-style:normal; font-weight:500; text-shadow: 2px 2px #eeeeee; vertical-align:middle;"> QUICK REFERENCE</h1></div> </div>' },
 	        { type: 'bottom', size: '30%', resizable: true, hidden: false, style: pstyle, content: 'bottom', 
 	      	/* TODO add toolbar */ 
 	        /*
@@ -168,6 +84,14 @@ function initUI() {
 	w2ui['layout'].content('main', w2ui['code_editor']);
 	w2ui['layout'].content('right', w2ui['right_bar']);
 	w2ui['code_editor'].content('main', '<pre id="editor"></pre>');
+	w2ui['code_editor'].on('resize', function(target, eventData) { 
+		console.log(target); 
+		console.log(eventData); 
+		eventData.onComplete = function() { 
+			protocoder.editor.editor.resize();
+		}
+	});
+
 
 	function openPopup () {
 	    $().w2form({
@@ -192,7 +116,7 @@ function initUI() {
 	        },
 	        actions: {
 	            "save": function () { 
-	                create_new_project( $("input#project_name").val() );
+	                protocoder.communication.createNewProject( $("input#project_name").val() );
 	                $().w2popup('close'); 
 	            },
 	            "cancel": function () { 
@@ -233,31 +157,102 @@ function initUI() {
 	    }
 	});
 
+	//prevents swipes on macs 
+	//https://github.com/micho/jQuery.preventMacBackScroll
+	(function ($) {
+
+	  // This code is only valid for Mac
+	  if (!navigator.userAgent.match(/Macintosh/)) {
+	    return;
+	  }
+
+	  // Handle scroll events in Chrome
+	  if (navigator.userAgent.match(/Chrome/)) {
+
+	    // TODO: This only prevents scroll when reaching the topmost or leftmost
+	    // positions of a container. It doesn't handle rightmost or bottom,
+	    // and Lion scroll can be triggered by scrolling right (or bottom) and then
+	    // scrolling left without raising your fingers from the scroll position.
+	    $(window).mousewheel(function (e, d, x, y) {
+
+	    	if (typeof _ != 'undefined') { 
+		      var prevent_left, prevent_up;
+
+		      // If none of the parents can be scrolled left when we try to scroll left
+		      prevent_left = x < 0 && !_($(e.target).parents()).detect(function (el) {
+		        return $(el).scrollLeft() > 0;
+		      });
+
+		      // If none of the parents can be scrolled up when we try to scroll up
+		      prevent_up = y > 0 && !_($(e.target).parents()).detect(function  (el) {
+		        return $(el).scrollTop() > 0;
+		      });
+
+		      // Prevent futile scroll, which would trigger the Back/Next page event
+		      if (prevent_left || prevent_up) {
+		        e.preventDefault();
+		      }
+	      }
+	    });
+
+	  }
+
+	}(jQuery));
 
 	/* 
 	* Binding UI 
 	*/
 	var overlayShow = false;
+	$("#toolbar #newProjectBtn").click(function() { 
+		openPopup();
+	});
+
+	//save file
+	$("#toolbar #saveBtn").click(function() { 
+		if (currentProject.length != 'undefined') { 
+			currentProject.code = session.getValue();
+			protocoder.communication.pushCode(currentProject);
+		} else { 
+			openPopup();
+		}
+	});
+
+	//run app
+	$("#toolbar #runBtn").click(function() { 
+       if (currentProject.name != 'undefined') { 
+            currentProject.code = protocoder.editor.session.getValue();
+            protocoder.communication.pushCode(currentProject);
+            protocoder.dashboard.removeWidgets();
+            protocoder.communication.runApp(currentProject);
+        } else { 
+            openPopup();
+        } 
+	});
+	
+	//show hide bar
+	$("#toolbar #sideBarBtn").click(function() { 
+		w2ui['layout'].toggle('right', false)
+	});
+	
+
+
 	$("#overlay #toggle").click(function() { 
 		if (overlayShow) {
-			hideDashboard();
+			protocoder.dashboard.hide();
 		} else {
-			showDashboard();
+			protocoder.dashboard.show();
 		}
 
 		overlayShow ^= true;
 	});
-	$("#overlay #container #project_list").draggable();
-	$("#overlay #container #example_list").draggable();
 
-	$("#overlay #container #device_status").draggable();
-	$("#overlay #container #help").draggable();
-	$("#overlay #container #connection").draggable();
-	$("#error_from_android").draggable();
-	$("#remote_log").draggable();
+
+	$("#toolbar #projectsBtn").click(function() { 
+		protocoder.ui.showProjects();
+	});
 
 	if (location.hash.indexOf("#dashboard") != -1) {
-		showDashboard();
+		protocoder.dashboard.show();
 	}
 	
 	setTimeout(function() { 
@@ -295,12 +290,166 @@ function initUI() {
 
 }
 
-function hideDashboard() { 
-	$("#overlay #container").fadeOut(200);
+Ui.prototype.showProjectsStatus = false; 
+
+Ui.prototype.showProjects = function() {
+	if (this.showProjectsStatus == false) { 
+		$("#list_projects").fadeIn(300);
+	} else { 
+		$("#list_projects").fadeOut(300);
+	} 
+
+	this.showProjectsStatus ^= true;
 } 
 
-function showDashboard() { 
-	$("#overlay #container").fadeIn(300);
-}
+Ui.prototype.appRunningStatus = false; 
+Ui.prototype.appRunning = function(b) {
+	if (b) { 
+   		$("#runBtn").addClass("app_running")
+   					.removeClass("app_connected")
+        			.find("span").text("close");
 
+    } else { 
+   		$("#runBtn").addClass("app_connected")
+   					.removeClass("app_running")
+   					.find("span").text("run");
+	} 
+	this.appRunningStatus = b;
+} 
+
+Ui.prototype.appConnectedStatus = false; 
+Ui.prototype.appConnected = function(b) {
+	if (b) { 	 
+		$("#runBtn").addClass("app_connected");
+    } else { 
+		$("#runBtn").removeClass("app_connected")
+					.removeClass("app_running");
+	} 
+	this.appConnectedStatus = b;
+} 
+
+
+Ui.prototype.initUpload = function() {
+	dropboxEnabled = true;
+
+	if (currentProject.name != "undefined") { 
+		$("#grid_grid_records").append('<div id = "dropbox"> </div>');
+
+		var dropbox = $('#dropbox'),
+			message = $('.message', dropbox);
+		
+
+		dropbox.filedrop({
+			// The name of the $_FILES entry:
+			paramname:'pic',
+			
+			maxfiles: 10,
+	    	maxfilesize: 5,
+			url: './?' + 'name=' + currentProject.name + '&fileType=' + currentProject.type,
+			
+			uploadFinished:function(i,file,response){
+				$.data(file).addClass('done');
+				protocoder.communication.listFilesInProject(currentProject.name, currentProject.type);
+				// response is the JSON object that post_file.php returns
+				$('#dropbox').css("background-color", "rgba(0, 0, 0, 0.1);");
+
+			},
+			
+			dragEnter: function() { 
+				//$('#dropbox').css("background-color", "rgba(255, 0, 0, 0.5);");
+			},
+
+			dragOver: function() { 
+				$('#dropbox').css("background-color", "rgba(255, 0, 0, 0.5);");
+			}, 
+
+			dragLeave: function() { 
+				$('#dropbox').css("background-color", "rgba(0, 0, 0, 0.1);");
+			},
+	    	error: function(err, file) {
+				switch(err) {
+					case 'BrowserNotSupported':
+						showMessage('Your browser does not support HTML5 file uploads!');
+						break;
+					case 'TooManyFiles':
+						alert('Too many files! Please select 10 file at most!');
+						break;
+					case 'FileTooLarge':
+						alert(file.name+' is too large! Please upload files up to 5mb.');
+						break;
+					default:
+						break;
+				}
+			},
+			
+			// Called before each upload is started
+			beforeEach: function(file){
+				/*
+				if(!file.type.match(/^image\//)){
+					alert('Only images are allowed!');
+					
+					// Returning false will cause the
+					// file to be rejected
+					return false;
+				}
+				*/
+			},
+			
+			uploadStarted:function(i, file, len){
+				createImage(file);
+			},
+			
+			progressUpdated: function(i, file, progress) {
+				$.data(file).find('.progress').width(progress);
+			}
+	    	 
+		});
+		
+		var template = '<div class="preview">'+
+							'<span class="imageHolder">'+
+								'<img />'+
+								'<span class="uploaded"></span>'+
+							'</span>'+
+							'<div class="progressHolder">'+
+								'<div class="progress"></div>'+
+							'</div>'+
+						'</div>'; 
+		
+		
+		function createImage(file){
+
+			var preview = $(template), 
+				image = $('img', preview);
+				
+			var reader = new FileReader();
+			
+			image.width = 100;
+			image.height = 100;
+			
+			reader.onload = function(e){
+				
+				// e.target.result holds the DataURL which
+				// can be used as a source of the image:
+				
+				image.attr('src',e.target.result);
+			};
+			
+			// Reading the file as a DataURL. When finished,
+			// this will trigger the onload function above:
+			reader.readAsDataURL(file);
+			
+			message.hide();
+			preview.appendTo(dropbox);
+			
+			// Associating a preview container
+			// with the file, using jQuery's $.data():
+			
+			$.data(file,preview);
+		}
+
+		function showMessage(msg){
+			message.html(msg);
+		}
+	}
+};
 

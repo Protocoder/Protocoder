@@ -38,39 +38,40 @@ import com.makewithmoto.apidoc.annotation.APIMethod;
 import com.makewithmoto.apidoc.annotation.JavascriptInterface;
 import com.makewithmoto.network.CustomWebsocketServer;
 
-public class JConsole  extends JInterface {
-	
+public class JConsole extends JInterface {
+
 	String TAG = "JConsole";
-	
+
 	public JConsole(FragmentActivity mwmActivity) {
 		super(mwmActivity);
 	}
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
-	public void log(String output) {
+	public void log(String output) throws JSONException, UnknownHostException {
 		JSONObject msg = new JSONObject();
-		try {
-			msg.put("type", "console");
-			msg.put("action", "log");
+		msg.put("type", "console");
+		msg.put("action", "log");
+		JSONObject values = new JSONObject();
+		values.put("val", output);
+		msg.put("values", values);
 
-			JSONObject values = new JSONObject();;
-			values.put("val", output);
-			msg.put("values", values);
-
-		} catch (JSONException e1) {
-			e1.printStackTrace();
-		}
-
-		//Log.d(TAG, "update");
-
-		try {
-			CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
-			ws.send(msg);
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} 
-		
+		CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
+		ws.send(msg);
 	}
 	
+	
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	public void clear() throws JSONException, UnknownHostException {
+		JSONObject msg = new JSONObject();
+		msg.put("type", "console");
+		msg.put("action", "clear");		
+		
+		CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
+		ws.send(msg);
+	}
+	
+	
+
 }

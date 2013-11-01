@@ -3,14 +3,18 @@
 *
 */
 
+var Editor = function() { 
+	this.initEditor();
+	this.self = this;
 
-var editor; 
-var session;
+}
 
-function initEditor() { 
-	editor = ace.edit("editor");
-	session = editor.getSession();
 
+Editor.prototype.initEditor = function() { 
+	var editor = ace.edit("editor");
+	this.editor = editor;
+	var session = editor.getSession();
+	this.session = session;
 	session.setMode("ace/mode/javascript");
 
 	ace.require("ace/lib/fixoldbrowsers");
@@ -136,8 +140,8 @@ function initEditor() {
 
 	    	//get the code selected or the whole row 
 	    	if (selectedText.length > 0) { 
-	    		executeCode(selectedText);
-	    		highlight(range);
+	    		protocoder.communication.executeCode(selectedText);
+	    		protocoder.editor.highlight(range);
 
 	    	} else { 
 	    		var cursorPosition = editor.getCursorPosition();
@@ -149,8 +153,8 @@ function initEditor() {
 
 	    		if (currentLine.length > 0) { 
 	    			console.log("the text is " + currentLine);
-	    			executeCode(currentLine);
-	    			highlight(range_line);
+	    			protocoder.communication.executeCode(currentLine);
+	    			protocoder.editor.highlight(range_line);
 	    		}
 
 	    	}
@@ -162,22 +166,23 @@ function initEditor() {
 }
 
 
-function highlight(range) { 
-	var marker = session.addMarker( range, "run_code", "fullLine" );
+Editor.prototype.highlight = function(range) { 
+	var self = this;
+	var marker = self.session.addMarker( range, "run_code", "fullLine" );
 
 	setTimeout(function() { 
-		session.removeMarker(marker);
+		self.session.removeMarker(marker);
 	}, 500); 
 }
 
 
-function showErrors() { 
-	editor.session.setAnnotations([{row:1 ,column: 0, text: "message",type:"error"}]); 
+Editor.prototype.showErrors = function () { 
+	this.session.setAnnotations([{row:1 ,column: 0, text: "message",type:"error"}]); 
 }
 
 
 //set Code 
-function setCode(code) { 
-	session.setValue(code); 
+Editor.prototype.setCode = function (code) { 
+	this.session.setValue(code); 
 }
 

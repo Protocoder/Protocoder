@@ -128,7 +128,7 @@ public class ProjectManager {
 		JSONObject json = new JSONObject();
 		try {
 			json.put("name", p.getName());
-			json.put("url", p.getFolder());
+			json.put("type", p.getType());
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -167,7 +167,9 @@ public class ProjectManager {
 			String projectURL = file.getAbsolutePath();
 			String projectName = file.getName();
 			Log.d("PROJECT", "Adding project named " + projectName);
-			projects.add(new Project(projectName, projectURL, type));
+			boolean containsReadme = false;
+			boolean containsTutorial = false;
+			projects.add(new Project(projectName, projectURL, type, containsReadme, containsTutorial));
 		}
 
 		return projects;

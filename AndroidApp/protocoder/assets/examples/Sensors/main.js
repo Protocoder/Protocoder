@@ -3,7 +3,10 @@
 *
 */ 
 
+var label = ui.addLabel("", 20, 20, 500, 100, 16);
+
 sensors.startAccelerometer(function(x, y, z) {
+    label.setText("accelerometer " + x + ", " + y + ", " + z);
    //console.log("accelerometer " + x + ", " + y + ", " + z);
 });
 

@@ -139,7 +139,7 @@ public class VideoPlayerFragment extends Fragment {
 		mVideoView.setVideoPath(path);
 		MediaController mediaController = new MediaController(getActivity());
 		mediaController.setAnchorView(mVideoView);
-		mVideoView.setMediaController(mediaController);
+		mVideoView.setMediaController(null);
 
 		mVideoView.requestFocus();
 		mVideoView.setKeepScreenOn(true);

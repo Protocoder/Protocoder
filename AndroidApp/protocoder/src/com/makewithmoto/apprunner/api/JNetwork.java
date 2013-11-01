@@ -29,8 +29,10 @@ package com.makewithmoto.apprunner.api;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collections;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -39,12 +41,18 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.java_websocket.WebSocket;
+import org.java_websocket.drafts.Draft;
+import org.java_websocket.drafts.Draft_17;
+import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.handshake.ServerHandshake;
+import org.java_websocket.server.WebSocketServer;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -52,7 +60,8 @@ import com.codebutler.android_websockets.SocketIOClient;
 import com.makewithmoto.apidoc.annotation.APIMethod;
 import com.makewithmoto.apidoc.annotation.JavascriptInterface;
 import com.makewithmoto.apprunner.AppRunnerActivity;
-import com.makewithmoto.apprunner.api.JSensors.onNFCListener;
+import com.makewithmoto.network.NetworkUtils;
+import com.makewithmoto.network.NetworkUtils.DownloadTask.DownloadListener;
 import com.makewithmoto.network.OSC;
 import com.makewithmoto.network.OSC.Client;
 import com.makewithmoto.network.OSC.OSCServerListener;
@@ -70,11 +79,60 @@ public class JNetwork extends JInterface {
 		super(a);
 
 	}
-	
+
 	public interface onBluetoothListener {
 		public void onDeviceFound(String name, String macAddress, float strength);
 	}
 
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	public void downloadFile(String url, String fileName, final String callbackfn) {
+
+		NetworkUtils.DownloadTask downloadTask = new NetworkUtils.DownloadTask(
+				(Context) a.get(), fileName);
+		downloadTask.execute(url);
+		downloadTask.addListener(new DownloadListener() {
+
+			@Override
+			public void onUpdate(int progress) {
+				callback(callbackfn, progress);
+			}
+		});
+
+	}
+
+	// @JavascriptInterface
+	// @APIMethod(description = "", example = "")
+	public void isReachable(final String host, final String callbackfn) {
+
+		Thread t = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+
+				// doesnt work! isReachable
+				//
+				// try {
+				// InetAddress in = InetAddress.getByName(host);
+				// boolean isReacheable = in.isReachable(5000);
+				// callback(callbackfn, isReacheable);
+				// } catch (UnknownHostException e) {
+				// e.printStackTrace();
+				// } catch (IOException e) {
+				// e.printStackTrace();
+				// }
+
+			}
+		});
+		t.start();
+
+	}
+
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	public String getIP() {
+		return NetworkUtils.getLocalIpAddress(a.get());
+	}
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
@@ -92,17 +150,17 @@ public class JNetwork extends JInterface {
 				for (int i = 0; i < msg.getArgCount(); i++) {
 					jsonArray.put(msg.getArg(i));
 				}
-				
-//				String[] str = null;
-//				try {
-//					str = new String[msg.getSize()];
-//					for (int i = 0; i < msg.getArgCount(); i++) {
-//						str[i] = "" + msg.getArg(i);
-//					}
-//				} catch (IOException e) {
-//					e.printStackTrace();
-//				}
-//				
+
+				// String[] str = null;
+				// try {
+				// str = new String[msg.getSize()];
+				// for (int i = 0; i < msg.getArgCount(); i++) {
+				// str[i] = "" + msg.getArg(i);
+				// }
+				// } catch (IOException e) {
+				// e.printStackTrace();
+				// }
+				//
 
 				try {
 					Log.d(TAG, msg.getName() + " " + jsonArray.toString(2));
@@ -110,7 +168,7 @@ public class JNetwork extends JInterface {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				//callback(callbackfn, "\"" + msg.getName() + "\"", str);
+				// callback(callbackfn, "\"" + msg.getName() + "\"", str);
 				callback(callbackfn, "\"" + msg.getName() + "\"", jsonArray);
 			}
 
@@ -118,7 +176,6 @@ public class JNetwork extends JInterface {
 
 		server.start(port);
 		WhatIsRunning.getInstance().add(server);
-
 
 		return server;
 	}
@@ -132,16 +189,43 @@ public class JNetwork extends JInterface {
 
 		return client;
 	}
-	
 
-//	@JavascriptInterface
-//	@APIMethod(description = "", example = "")
-//	public  org.java_websocket.server.WebSocketServer startWebsocketServer(String uri, final String callbackfn) {
-//		org.java_websocket.server.WebSocketServer websocketServer = new org.java_websocket.server.WebSocketServer();
-//		
-//		return websocketServer;
-//		
-//	}
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	public WebSocketServer startWebsocketServer(int port,
+			final String callbackfn) {
+
+		InetSocketAddress inetSocket = new InetSocketAddress(port);
+		Draft d = new Draft_17();
+		WebSocketServer websocketServer = new WebSocketServer(inetSocket,
+				Collections.singletonList(d)) {
+
+			@Override
+			public void onClose(WebSocket arg0, int arg1, String arg2,
+					boolean arg3) {
+				callback(callbackfn, "close");
+			}
+
+			@Override
+			public void onError(WebSocket arg0, Exception arg1) {
+				callback(callbackfn, "error");
+			}
+
+			@Override
+			public void onMessage(WebSocket arg0, String arg1) {
+				callback(callbackfn, "message", "\"" + arg0 + "\"");
+			}
+
+			@Override
+			public void onOpen(WebSocket arg0, ClientHandshake arg1) {
+				callback(callbackfn, "open", "\"" + arg0 + "\"");
+			}
+		};
+		websocketServer.start();
+
+		return websocketServer;
+
+	}
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
@@ -155,12 +239,12 @@ public class JNetwork extends JInterface {
 
 				@Override
 				public void onOpen(ServerHandshake arg0) {
-					callback(callbackfn, "open", arg0);
+					callback(callbackfn, "open", "\"" + arg0 + "\"");
 				}
 
 				@Override
 				public void onMessage(String arg0) {
-					callback(callbackfn, "message", arg0);
+					callback(callbackfn, "message", "\"" + arg0 + "\"");
 				}
 
 				@Override
@@ -174,12 +258,11 @@ public class JNetwork extends JInterface {
 				}
 			};
 		} catch (URISyntaxException e) {
-			callback(callbackfn, "error " + e.toString());
+			callback(callbackfn, "error " + "\"" + e.toString() + "\"");
 			e.printStackTrace();
 		}
 		return webSocketClient;
 	}
-
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
@@ -204,7 +287,7 @@ public class JNetwork extends JInterface {
 
 					@Override
 					public void onDisconnect(int code, String reason) {
-						callback(callbackfn, "disconnect", reason);
+						callback(callbackfn, "disconnect", "\"" + reason + "\"");
 					}
 
 					@Override
@@ -215,7 +298,8 @@ public class JNetwork extends JInterface {
 
 					@Override
 					public void on(String event, JSONArray arguments) {
-						callback(callbackfn, "onmessage", event, arguments);
+						callback(callbackfn, "onmessage", event, "\""
+								+ arguments + "\"");
 
 					}
 				});
@@ -269,18 +353,21 @@ public class JNetwork extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
-	public void scanBluetooth( final String callbackfn ) {
+	public void scanBTNetworks(final String callbackfn) {
 		onBluetoothfn = callbackfn;
-		
+
 		a.get().scanBluetooth();
-		
-		((AppRunnerActivity) a.get()).addBluetoothListener(new onBluetoothListener() {
-			
-			@Override
-			public void onDeviceFound(String name, String macAddress, float strength) {
-				callback(onBluetoothfn, "\"" + name + "\"", "\"" + macAddress + "\"", "\"" + strength + "\"");				
-			}
-		});
-	
+
+		((AppRunnerActivity) a.get())
+				.addBluetoothListener(new onBluetoothListener() {
+
+					@Override
+					public void onDeviceFound(String name, String macAddress,
+							float strength) {
+						callback(onBluetoothfn, "\"" + name + "\"", "\""
+								+ macAddress + "\"", "\"" + strength + "\"");
+					}
+				});
+
 	}
 }
