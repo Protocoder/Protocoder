@@ -203,22 +203,22 @@ public class JNetwork extends JInterface {
 			@Override
 			public void onClose(WebSocket arg0, int arg1, String arg2,
 					boolean arg3) {
-				callback(callbackfn, "close");
+				callback(callbackfn, "\"" + "close" + "\"", "", arg0.getRemoteSocketAddress().toString(), "");
 			}
 
 			@Override
 			public void onError(WebSocket arg0, Exception arg1) {
-				callback(callbackfn, "error");
+				callback(callbackfn, "\"" + "error" + "\"", arg0.getRemoteSocketAddress().toString(), "");
 			}
 
 			@Override
 			public void onMessage(WebSocket arg0, String arg1) {
-				callback(callbackfn, "message", "\"" + arg0 + "\"");
+				callback(callbackfn, "\"" + "message" + "\"", arg0.getRemoteSocketAddress().toString(), "\"" + arg1 + "\"");
 			}
 
 			@Override
 			public void onOpen(WebSocket arg0, ClientHandshake arg1) {
-				callback(callbackfn, "open", "\"" + arg0 + "\"");
+				callback(callbackfn, "\"" + "open" + "\"", arg0.getRemoteSocketAddress().toString(), "");
 			}
 		};
 		websocketServer.start();
