@@ -274,10 +274,12 @@ body {
 
 	#container { 
 		margin-left: 55px;
-		
+		float: left;
+		height: auto;
+
 		.project_list {
 			width: 400px;
-			height: auto;
+			height: 80%;
 			float: left;
 			padding: 12px;
 			border-right: 1px solid rgba(255, 255, 255, 0.2);
@@ -301,12 +303,14 @@ body {
 
 			ul {
 				overflow-y: scroll;
-				height: 500px;
+				height: 70%;
 				border: 1px solid rgb(213, 213, 213);
 				border-radius: 2px;
 				padding: 0px;
 				background-color: white;
 				border-top: 3px solid #ffbb33;
+				position: absolute;
+				width: 380px;
 			}
 
 
@@ -373,6 +377,7 @@ body {
 	}
 
 	#toggle {
+
 		position: absolute;
 		z-index: 122;
 		top: 0px;
@@ -386,7 +391,7 @@ body {
     	background: #0099cc;
 
     	color: white;
-    	padding:15px 10px 14px 10px;
+    	padding:10px 10px 14px 10px;
     	margin-top:0px;
     	margin-right:0px;
     	font-size:14px;
@@ -400,6 +405,12 @@ body {
 		text-transform: uppercase;
 		font-weight: 800;
 
+
+		color: rgba(255, 255, 255, 0.9);
+		font-size: 1.1em;
+		text-transform: uppercase;
+		text-shadow: 1px 1px rgba(0, 0, 0, 0.59);
+		font-family: Roboto-Condensed-Regular, verdana, sans-serif;
 	}
 
 	#toggle:hover {
@@ -484,7 +495,7 @@ body {
 
 		#sideBarBtn {
 			float: right;
-			margin-right: 110px;
+			margin-right: 121px;
 		}
 
 
