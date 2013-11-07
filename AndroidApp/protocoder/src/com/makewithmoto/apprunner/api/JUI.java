@@ -1169,69 +1169,6 @@ public class JUI extends JInterface {
 	@APIParam( params = {"videoFileName", "x", "y", "w", "h"} )
 	public JVideo addVideoView(final String videoFile, int x, int y, int w,
 			int h) {
-
-		initializeLayout();
-
-		// Create the main layout. This is where all the items actually go
-		FrameLayout fl = new FrameLayout(a.get());
-		fl.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
-				LayoutParams.MATCH_PARENT));
-		fl.setId(12345678);
-
-		// Add the view
-		addView(fl, x, y, w, h);
-
-		final VideoPlayerFragment fragment = new VideoPlayerFragment();
-		fragment.addListener(new VideoListener() {
-
-			@Override
-			public void onTimeUpdate(int ms, int totalDuration) {
-
-			}
-
-			@Override
-			public void onReady(boolean ready) {
-				// fragment.loadResourceVideo("/raw/cityfireflies");
-				fragment.loadExternalVideo(AppRunnerSettings.get().project
-						.getFolder() + File.separator + videoFile);
-				// fragment.setLoop(true);
-			}
-
-			@Override
-			public void onFinish(boolean finished) {
-
-			}
-		});
-
-		FragmentTransaction ft = a.get().getSupportFragmentManager()
-				.beginTransaction(); // FIXME: Because we have no tagging
-										// system we need to use the int as
-										// a // tag, which may cause
-										// collisions
-		ft.add(fl.getId(), fragment, String.valueOf(fl.getId()));
-		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-		ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-		ft.addToBackStack(null);
-		ft.commit();
-
-		JVideo jvideo = new JVideo(a.get(), fragment);
-
-		return jvideo;
-
-	}
-	/**
-	 * Adds a video
-	 * 
-	 * @author victordiaz
-	 * 
-	 * @param x
-	 * @param y
-	 * @param w
-	 * @param h
-	 */
-	@APIParam( params = {"videoFileName", "x", "y", "w", "h"} )
-	public JVideo2 addVideoView2(final String videoFile, int x, int y, int w,
-			int h) {
 		
 		initializeLayout();
 		
@@ -1275,7 +1212,7 @@ public class JUI extends JInterface {
 		ft.addToBackStack(null);
 		ft.commit();
 		
-		JVideo2 jvideo = new JVideo2(a.get(), fragment);
+		JVideo jvideo = new JVideo(a.get(), fragment);
 		
 		return jvideo;
 		
