@@ -30,7 +30,8 @@ package com.makewithmoto.apprunner.api;
 import org.puredata.core.PdBase;
 
 import com.makewithmoto.apidoc.annotation.APIMethod;
-import com.makewithmoto.apidoc.annotation.JavascriptInterface;
+import com.makewithmoto.apidoc.annotation.APIParam;
+import com.makewithmoto.apprunner.JavascriptInterface;
 
 
 public class JPureData {
@@ -38,6 +39,7 @@ public class JPureData {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"message", "value"} )
 	public void sendMessage(String message, String value) {
 		if (value.isEmpty()) {
 			PdBase.sendBang(message);
@@ -51,12 +53,14 @@ public class JPureData {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"name"} )
 	public void sendBang(String name) {
 		PdBase.sendBang(name);
 	}
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"name", "value"} )
 	public void sendFloat(String name, int value) {
 		PdBase.sendFloat(name, value); 
 	}
@@ -64,6 +68,7 @@ public class JPureData {
 	
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"name", "pitch, velocity"} )
 	public void sendNoteOn(int channel, int pitch, int velocity) {
 		PdBase.sendNoteOn(channel, pitch, velocity); 
 	}
@@ -71,6 +76,7 @@ public class JPureData {
 	
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"port", "value"} )
 	public void sendFloat(int port, int value) {
 		PdBase.sendMidiByte(port, value); 
 	}

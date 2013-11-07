@@ -49,9 +49,11 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.makewithmoto.apidoc.annotation.APIMethod;
-import com.makewithmoto.apidoc.annotation.JavascriptInterface;
+import com.makewithmoto.apidoc.annotation.APIParam;
 import com.makewithmoto.apprunner.AppRunnerActivity;
 import com.makewithmoto.apprunner.AppRunnerSettings;
+import com.makewithmoto.apprunner.JInterface;
+import com.makewithmoto.apprunner.JavascriptInterface;
 import com.makewithmoto.media.Audio;
 import com.makewithmoto.media.AudioService;
 import com.makewithmoto.sensors.WhatIsRunning;
@@ -86,6 +88,7 @@ public class JMedia extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "plays a sound", example = "media.playSound(fileName);")
+	@APIParam( params = {"fileName"} )
 	public void playSound(String url) {
 
 		if (url.startsWith("http://") == false) {
@@ -98,6 +101,7 @@ public class JMedia extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"fileName", "function(objectType, value)"} )
 	public JPureData initPDPatch(String fileName, final String callbackfn) {
 		String filePath = AppRunnerSettings.get().project.getFolder() + File.separator + fileName;
 
@@ -199,6 +203,7 @@ public class JMedia extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"fileName", "showProgressBoolean"} )
 	public void recordAudio(String fileName, boolean showProgress) {
 		final MediaRecorder recorder = new MediaRecorder();
 		// ContentValues values = new ContentValues(3);
@@ -246,12 +251,14 @@ public class JMedia extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "text to speech", example = "media.textToSpeech('hello world');")
+	@APIParam( params = {"text"} )
 	public void textToSpeech(String text) {
 		Audio.speak(a.get(), text, Locale.getDefault());
 	}
 
 	@JavascriptInterface
 	@APIMethod(description = "start voice recognition", example ="media.startVoiceRecognition(function(text) { console.log(text) } );")
+	@APIParam( params = {"function(recognizedText)"} )
 	public void startVoiceRecognition(final String callbackfn) {
 		onVoiceRecognitionfn = callbackfn;
 

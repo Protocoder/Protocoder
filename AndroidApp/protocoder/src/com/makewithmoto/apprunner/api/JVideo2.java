@@ -32,12 +32,12 @@ import java.io.File;
 import android.app.Activity;
 
 import com.makewithmoto.apidoc.annotation.APIMethod;
-import com.makewithmoto.apidoc.annotation.JavascriptInterface;
+import com.makewithmoto.apidoc.annotation.APIParam;
 import com.makewithmoto.apprunner.AppRunnerSettings;
+import com.makewithmoto.apprunner.JInterface;
+import com.makewithmoto.apprunner.JavascriptInterface;
 import com.makewithmoto.apprunner.api.widgets.JViewInterface;
 import com.makewithmoto.base.AppSettings;
-import com.makewithmoto.fragments.VideoPlayerFragment;
-import com.makewithmoto.fragments.VideoPlayerFragment.VideoListener;
 import com.makewithmoto.fragments.VideoTextureFragment;
 
 public class JVideo2 extends JInterface implements JViewInterface {
@@ -60,6 +60,7 @@ public class JVideo2 extends JInterface implements JViewInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"milliseconds"} )
 	public void seekTo(int ms) {
 		videoFragment.seekTo(ms);
 	}	
@@ -79,6 +80,7 @@ public class JVideo2 extends JInterface implements JViewInterface {
 	
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"fileName"} )
 	public void load(String videoFile) {
 		videoFragment.loadExternalVideo(AppRunnerSettings.get().project
 						.getFolder() + File.separator + videoFile);
@@ -90,6 +92,7 @@ public class JVideo2 extends JInterface implements JViewInterface {
 	
 	@JavascriptInterface
 	@APIMethod(description = "", example = "camera.takePicture();")
+	@APIParam( params = {"function(milliseconds, totalDuration)"} )
 	public void onUpdate(final String callbackfn) {
 		videoFragment.addListener(new VideoTextureFragment.VideoListener() {
 			
@@ -114,16 +117,19 @@ public class JVideo2 extends JInterface implements JViewInterface {
 	
 	@JavascriptInterface
 	@APIMethod(description = "", example = "camera.takePicture();")
+	@APIParam( params = {"file", "function()"} )
 	public void setVolume(int vol) {
 		videoFragment.setVolume(vol);
 	}	
 	@JavascriptInterface
 	@APIMethod(description = "", example = "camera.takePicture();")
+	@APIParam( params = {"file", "function()"} )
 	public void setLoop(boolean b) {
 		videoFragment.setLoop(b);
 	}	
 	@JavascriptInterface
 	@APIMethod(description = "", example = "camera.takePicture();")
+	@APIParam( params = {"file", "function()"} )
 	public int getDuration() {
 		return videoFragment.getDuration();
 	}	
@@ -131,11 +137,33 @@ public class JVideo2 extends JInterface implements JViewInterface {
 	
 	@JavascriptInterface
 	@APIMethod(description = "", example = "camera.takePicture();")
+	@APIParam( params = {"file", "function()"} )
 	public int getCurrentPosition() {
 		return videoFragment.getCurrentPosition();
 	}
+	
+
+	@JavascriptInterface
+	@APIMethod(description = "", example = "camera.takePicture();")
+	@APIParam( params = {"milliseconds", "function()"} )
+	public void fadeIn(int time) { 
+		videoFragment.fade(time, 1.0f);
+	}
+	
+	
+	@JavascriptInterface
+	@APIMethod(description = "", example = "camera.takePicture();")
+	@APIParam( params = {"milliseconds", "function()"} )
+	public void fadeOut(int time) { 
+		videoFragment.fade(time, 0.0f);
+	}
+	
+	
 
 	
+	@JavascriptInterface
+	@APIMethod(description = "", example = "camera.takePicture();")
+	@APIParam( params = {"file", "function()"} )
 	@Override
 	public void move(float x, float y) { 
 		videoFragment.getView().animate().x(x).setDuration(AppSettings.animSpeed);
@@ -143,9 +171,14 @@ public class JVideo2 extends JInterface implements JViewInterface {
 
 	} 
 	
+	@JavascriptInterface
+	@APIMethod(description = "", example = "camera.takePicture();")
+	@APIParam( params = {"file", "function()"} )
 	@Override
 	public void rotate(float deg) { 
 		videoFragment.getView().animate().rotation(deg).setDuration(AppSettings.animSpeed);
 	}
+	
+	
 	
 }

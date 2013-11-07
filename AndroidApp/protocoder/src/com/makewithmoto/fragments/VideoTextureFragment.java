@@ -28,6 +28,7 @@ public class VideoTextureFragment extends Fragment implements
 		TextureView.SurfaceTextureListener, OnBufferingUpdateListener,
 		OnCompletionListener, OnPreparedListener, OnVideoSizeChangedListener {
 
+	protected static final String TAG = "VideoTextureFragment";
 	private MediaPlayer mMediaPlayer;
 	private TextureView mPreview;
 	Vector<VideoListener> listeners = new Vector<VideoListener>();
@@ -35,6 +36,8 @@ public class VideoTextureFragment extends Fragment implements
 	protected Handler handler;
 	private Surface s;
 	private boolean playingVideo = false;
+	private float currentVolume;
+	private Runnable fadeRunnable;
 
 	public interface VideoListener {
 
@@ -65,10 +68,8 @@ public class VideoTextureFragment extends Fragment implements
 		super.onActivityCreated(savedInstanceState);
 		Log.d("mm", "onActivityCreated");
 
-	
-
 	}
-	
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
@@ -77,8 +78,8 @@ public class VideoTextureFragment extends Fragment implements
 	}
 
 	public void loadExternalVideo(String path) {
-		if (playingVideo) { 
-			unloadVideo();			
+		if (playingVideo) {
+			unloadVideo();
 		}
 		loadVideo(path);
 	}
@@ -86,7 +87,7 @@ public class VideoTextureFragment extends Fragment implements
 	public void loadVideo(String path) {
 
 		playingVideo = true;
-		
+
 		try {
 			mMediaPlayer = new MediaPlayer();
 			mMediaPlayer.setDataSource(path);
@@ -98,8 +99,9 @@ public class VideoTextureFragment extends Fragment implements
 			mMediaPlayer.setOnVideoSizeChangedListener(this);
 			mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 			mMediaPlayer.start();
-			//mPreview.animate().rotation(200).alpha((float) 0.5).scaleX(0.5f)
-			//		.scaleY(0.5f).setDuration(5000);
+			currentVolume = 1.0f;
+			// mPreview.animate().rotation(200).alpha((float) 0.5).scaleX(0.5f)
+			// .scaleY(0.5f).setDuration(5000);
 
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
@@ -109,28 +111,27 @@ public class VideoTextureFragment extends Fragment implements
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}		
+		}
 	}
 
 	public void loadResourceVideo(String videoFile) {
 		String path = "android.resource://" + getActivity().getPackageName()
 				+ videoFile;
-	//	loadVideo(path);
+		// loadVideo(path);
 	}
 
-	
-	public void unloadVideo() { 
+	public void unloadVideo() {
 		// mp_.stop();
 		for (VideoListener l : listeners) {
 			l = null;
 		}
 		handler.removeCallbacks(r);
+		handler.removeCallbacks(fadeRunnable);
 		mMediaPlayer.stop();
 		mMediaPlayer.release();
 		playingVideo = false;
+		
 	}
-	
-
 
 	public void onSurfaceTextureAvailable(SurfaceTexture surface, int width,
 			int height) {
@@ -192,27 +193,24 @@ public class VideoTextureFragment extends Fragment implements
 	@Override
 	public void onBufferingUpdate(MediaPlayer mp, int percent) {
 	}
-	
-	
-	
-	
+
 	public void setVolume(float volume) {
 		if (mMediaPlayer != null) {
 			mMediaPlayer.setVolume(volume, volume);
-			
-		}	
+
+		}
 	}
-	
-	public void setLoop(boolean b) { 
+
+	public void setLoop(boolean b) {
 		mMediaPlayer.setLooping(b);
 	}
-	
+
 	public void close() {
 		handler.removeCallbacks(r);
-		//mVideoView.stopPlayback();
+		// mVideoView.stopPlayback();
 
 	}
-	
+
 	public int getCurrentPosition() {
 		return mMediaPlayer.getCurrentPosition();
 	}
@@ -241,18 +239,39 @@ public class VideoTextureFragment extends Fragment implements
 		mMediaPlayer.stop();
 	}
 
-
-	public void seekTo(int ms) { 
+	public void seekTo(int ms) {
 		mMediaPlayer.seekTo(ms);
 	}
-	
-	
+
 	public void addListener(VideoListener videoListener) {
 		listeners.add(videoListener);
 	}
 
 	public void removeListener(VideoListener videoListener) {
 		listeners.remove(videoListener);
+	}
+
+	public void fade(int time, float finalVolume) {
+
+		Log.d(TAG, "->" + finalVolume + " " + time); 
+
+		final float incr = (finalVolume - currentVolume) / time;
+
+		fadeRunnable = new Runnable() {
+			@Override
+			public void run() {
+				currentVolume += incr;
+				Log.d(TAG, "" + currentVolume + " " + incr); 
+				if (currentVolume >= 0.0f || currentVolume <= 1.0f) {
+					Log.d(TAG, "qq"); 
+					mMediaPlayer.setVolume(currentVolume, currentVolume);
+					handler.post(this);
+				} else {
+					handler.removeCallbacks(this);
+				}
+			}
+		};
+		handler.post(fadeRunnable);
 	}
 
 }

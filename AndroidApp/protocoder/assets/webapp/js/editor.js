@@ -56,7 +56,7 @@ Editor.prototype.initEditor = function() {
 	    },
 	    exec: function(env, args, request) {
 	    	currentProject.code = session.getValue();
-	    	push_code(currentProject);
+	    	protocoder.communication.pushCode(currentProject);
 	    }
 	});
 
@@ -70,7 +70,7 @@ Editor.prototype.initEditor = function() {
 	    },
 	    exec: function(env, args, request) {
 	    	currentProject.code = session.getValue();
-	    	push_code(currentProject);
+	    	protocoder.communication.pushCode(currentProject);
 	    	removeWidgets();
 	    	run_app(currentProject);
 

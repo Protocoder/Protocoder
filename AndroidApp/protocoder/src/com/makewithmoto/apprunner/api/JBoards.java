@@ -30,7 +30,9 @@ package com.makewithmoto.apprunner.api;
 import android.app.Activity;
 
 import com.makewithmoto.apidoc.annotation.APIMethod;
-import com.makewithmoto.apidoc.annotation.JavascriptInterface;
+import com.makewithmoto.apidoc.annotation.APIParam;
+import com.makewithmoto.apprunner.JInterface;
+import com.makewithmoto.apprunner.JavascriptInterface;
 import com.makewithmoto.apprunner.api.boards.JIOIO;
 import com.makewithmoto.apprunner.api.boards.JMakr;
 
@@ -38,13 +40,13 @@ public class JBoards extends JInterface {
 
 	private String TAG = "JBoards";
 
-
 	public JBoards(Activity a) {
 		super(a);
 	}
 
 	@JavascriptInterface
 	@APIMethod(description = "initializes ioio board", example = "")
+	@APIParam( params = {"function()"} )
 	public JIOIO startIOIO(String callbackfn) {
 		JIOIO ioio = new JIOIO(a.get());
 		ioio.start(callbackfn);
@@ -54,7 +56,8 @@ public class JBoards extends JInterface {
 	
 	@JavascriptInterface
 	@APIMethod(description = "initializes makr board", example = "")
-	public JMakr stopMAKR(String callbackfn) {
+	@APIParam( params = {"function()"} )
+	public JMakr startMAKR(String callbackfn) {
 		JMakr makr = new JMakr(a.get());
 		makr.start(callbackfn);
 		

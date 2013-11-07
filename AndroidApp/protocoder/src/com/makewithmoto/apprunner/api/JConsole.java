@@ -35,7 +35,9 @@ import org.json.JSONObject;
 import android.support.v4.app.FragmentActivity;
 
 import com.makewithmoto.apidoc.annotation.APIMethod;
-import com.makewithmoto.apidoc.annotation.JavascriptInterface;
+import com.makewithmoto.apidoc.annotation.APIParam;
+import com.makewithmoto.apprunner.JInterface;
+import com.makewithmoto.apprunner.JavascriptInterface;
 import com.makewithmoto.network.CustomWebsocketServer;
 
 public class JConsole extends JInterface {
@@ -48,6 +50,7 @@ public class JConsole extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"text"} )
 	public void log(String output) throws JSONException, UnknownHostException {
 		JSONObject msg = new JSONObject();
 		msg.put("type", "console");
@@ -63,6 +66,7 @@ public class JConsole extends JInterface {
 	
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {""} )
 	public void clear() throws JSONException, UnknownHostException {
 		JSONObject msg = new JSONObject();
 		msg.put("type", "console");

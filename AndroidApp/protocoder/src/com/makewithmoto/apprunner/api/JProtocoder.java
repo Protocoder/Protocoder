@@ -30,8 +30,10 @@ package com.makewithmoto.apprunner.api;
 import android.app.Activity;
 
 import com.makewithmoto.apidoc.annotation.APIMethod;
-import com.makewithmoto.apidoc.annotation.JavascriptInterface;
+import com.makewithmoto.apidoc.annotation.APIParam;
 import com.makewithmoto.apprunner.AppRunnerActivity;
+import com.makewithmoto.apprunner.JInterface;
+import com.makewithmoto.apprunner.JavascriptInterface;
 
 public class JProtocoder extends JInterface {
 
@@ -43,6 +45,7 @@ public class JProtocoder extends JInterface {
 	@android.webkit.JavascriptInterface
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"code"} )
 	public void eval(String code) {
 		((AppRunnerActivity) a.get()).interp.eval(code);
 

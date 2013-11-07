@@ -30,8 +30,10 @@ package com.makewithmoto.apprunner.api;
 import android.app.Activity;
 
 import com.makewithmoto.apidoc.annotation.APIMethod;
-import com.makewithmoto.apidoc.annotation.JavascriptInterface;
+import com.makewithmoto.apidoc.annotation.APIParam;
 import com.makewithmoto.apprunner.AppRunnerActivity;
+import com.makewithmoto.apprunner.JInterface;
+import com.makewithmoto.apprunner.JavascriptInterface;
 
 public class JEditor extends JInterface {
 
@@ -42,6 +44,7 @@ public class JEditor extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"boolean"} )
 	public void showConsole(boolean visible) {
 		((AppRunnerActivity) a.get()).showConsole(visible);
 
@@ -49,9 +52,27 @@ public class JEditor extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"boolean"} )
 	public void showEditor(boolean visible) {
 		((AppRunnerActivity) a.get()).showEditor(visible);
+	}
+	
+	
+	
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	@APIParam( params = {"boolean"} )
+	public void loadHTMLonSideBar(boolean visible) {
 
 	}
+	
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	@APIParam( params = {"boolean"} )
+	public void showSideBar(boolean visible) {
+		
+	}
+	
+	
 
 }

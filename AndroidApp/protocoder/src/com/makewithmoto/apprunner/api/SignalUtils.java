@@ -30,8 +30,10 @@ package com.makewithmoto.apprunner.api;
 import android.app.Activity;
 
 import com.makewithmoto.apidoc.annotation.APIMethod;
-import com.makewithmoto.apidoc.annotation.JavascriptInterface;
+import com.makewithmoto.apidoc.annotation.APIParam;
 import com.makewithmoto.apprunner.AppRunnerActivity;
+import com.makewithmoto.apprunner.JInterface;
+import com.makewithmoto.apprunner.JavascriptInterface;
 
 public class SignalUtils extends JInterface {
 
@@ -46,12 +48,11 @@ public class SignalUtils extends JInterface {
 	
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"function()"} )
 	public void fft(boolean visible) {
 		
 		//FFT fft = new FFT(10);
 		//fft.fft(re, im);
-		
-		((AppRunnerActivity) a.get()).showConsole(visible);
 	}
 
 	class LowPass { 

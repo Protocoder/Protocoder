@@ -36,10 +36,12 @@ import android.telephony.SmsManager;
 import android.util.Log;
 
 import com.makewithmoto.apidoc.annotation.APIMethod;
+import com.makewithmoto.apidoc.annotation.APIParam;
 import com.makewithmoto.apidoc.annotation.APIRequires;
 import com.makewithmoto.apidoc.annotation.APIVersion;
-import com.makewithmoto.apidoc.annotation.JavascriptInterface;
 import com.makewithmoto.apprunner.AppRunnerActivity;
+import com.makewithmoto.apprunner.JInterface;
+import com.makewithmoto.apprunner.JavascriptInterface;
 import com.makewithmoto.sensors.WhatIsRunning;
 import com.makewithmoto.utils.Intents;
 
@@ -79,6 +81,7 @@ public class JAndroid extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"name", "type"} )
 	@APIVersion(minLevel = "2")
 	@APIRequires("android.permission.INTERNET")
 	public void launchScript(String name, int type) {
@@ -118,15 +121,18 @@ public class JAndroid extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "makes the phone vibrate", example = "android.vibrate(500);")
+	@APIParam( params = {"duration"} )
 	public void vibrate(String duration) {
 		Log.d("TAG", "vibrate...");
 		Vibrator v = (Vibrator) a.get().getSystemService(
 				Context.VIBRATOR_SERVICE);
 		v.vibrate(Integer.parseInt(duration));
+		
 	}
 
 	@JavascriptInterface
 	@APIMethod(description = "Change brightness", example = "")
+	@APIParam( params = {"number", "message"} )
 	public void smsSend(String number, String msg) {
 
 		SmsManager sm = SmsManager.getDefault();
@@ -136,12 +142,14 @@ public class JAndroid extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"function(number, message)"} )
 	public void onSmsReceived(final String fn) {
 		onSmsReceivedfn = fn;
 	}
 
 	@JavascriptInterface
 	@APIMethod(description = "Set brightness", example = "")
+	@APIParam( params = {"brightness"} )
 	public void setBrightness(float val) {
 		((AppRunnerActivity) a.get()).setBrightness(val);
 	}
@@ -160,12 +168,14 @@ public class JAndroid extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"recepient", "subject", "message"} )
 	public void openEmailApp(String recepient, String subject, String msg) {
 		Intents.sendEmail(a.get(), recepient, subject, msg);
 	}
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"longitue", "latitude"} )
 	public void openMapApp(double longitude, double latitude) {
 		Intents.openMap(a.get(), longitude, latitude);
 	}
@@ -178,30 +188,35 @@ public class JAndroid extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"number"} )
 	public void call(String number) {
 		Intents.call(a.get(), number);
 	}
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"url"} )
 	public void openWebApp(String url) {
 		Intents.openWeb(a.get(), url);
 	}
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"text"} )
 	public void openWebSearch(String text) {
 		Intents.webSearch(a.get(), text);
 	}
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"function(keyNumber)"} )
 	public void onKeyDown(final String fn) {
 		onKeyDownfn = fn;
 	}
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"function(keyNumber)"} )
 	public void onKeyUp(final String fn) {
 		onKeyUpfn = fn;
 	}

@@ -32,8 +32,10 @@ import java.io.File;
 import android.app.Activity;
 
 import com.makewithmoto.apidoc.annotation.APIMethod;
-import com.makewithmoto.apidoc.annotation.JavascriptInterface;
+import com.makewithmoto.apidoc.annotation.APIParam;
 import com.makewithmoto.apprunner.AppRunnerSettings;
+import com.makewithmoto.apprunner.JInterface;
+import com.makewithmoto.apprunner.JavascriptInterface;
 import com.makewithmoto.utils.FileIO;
 
 public class JFileIO extends JInterface {
@@ -46,6 +48,7 @@ public class JFileIO extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"dirName"} )
 	public void createDir(String name) {
 
 		File file = new File(AppRunnerSettings.get().project.getFolder() + File.separator + name);
@@ -54,12 +57,14 @@ public class JFileIO extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"fileName"} )
 	public void remove(String name) {
 		FileIO.deleteDir(name);
 	}
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"fileName", "lines[]"} )
 	public void saveStrings(String fileName, String[] lines) {
 		FileIO.saveStrings(fileName, lines);
 	}
@@ -67,11 +72,10 @@ public class JFileIO extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"fileName"} )
 	public String[] loadStrings(String fileName) {
 		return FileIO.loadStrings(fileName);
 	}
 	
 
-	
-	
 }

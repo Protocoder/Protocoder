@@ -34,7 +34,9 @@ import android.app.Activity;
 import android.os.Handler;
 
 import com.makewithmoto.apidoc.annotation.APIMethod;
-import com.makewithmoto.apidoc.annotation.JavascriptInterface;
+import com.makewithmoto.apidoc.annotation.APIParam;
+import com.makewithmoto.apprunner.JInterface;
+import com.makewithmoto.apprunner.JavascriptInterface;
 import com.makewithmoto.sensors.WhatIsRunning;
 
 public class JUtil extends JInterface {
@@ -70,9 +72,17 @@ public class JUtil extends JInterface {
 			rl.add(task);
 		}
 
+
+		@JavascriptInterface
+		@APIMethod(description = "", example = "")
+		@APIParam( params = {"duration"} )
 		public void setDelay(int duration) {
 			this.delay = duration;
 		}
+		
+
+		@JavascriptInterface
+		@APIMethod(description = "", example = "")
 		public void stop() {
 			handler.removeCallbacks(task);
 		}
@@ -80,6 +90,7 @@ public class JUtil extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"milliseconds", "function()"} )
 	public Looper loop(final int duration, final String callbackkfn) {
 
 		return new Looper(duration, callbackkfn);
@@ -87,6 +98,7 @@ public class JUtil extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"milliseconds", "function()"} )
 	public void delay(final int duration, final String fn) {
 
 		Runnable task = new Runnable() {

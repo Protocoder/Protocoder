@@ -31,8 +31,10 @@ import android.location.Location;
 import android.util.Log;
 
 import com.makewithmoto.apidoc.annotation.APIMethod;
-import com.makewithmoto.apidoc.annotation.JavascriptInterface;
+import com.makewithmoto.apidoc.annotation.APIParam;
 import com.makewithmoto.apprunner.AppRunnerActivity;
+import com.makewithmoto.apprunner.JInterface;
+import com.makewithmoto.apprunner.JavascriptInterface;
 import com.makewithmoto.sensors.AccelerometerManager;
 import com.makewithmoto.sensors.GPSManager;
 import com.makewithmoto.sensors.GyroscopeManager;
@@ -89,6 +91,7 @@ public class JSensors extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"function(x, y, z)"} )
 	public void startAccelerometer(final String callbackfn) {
 		if (!accelerometerStarted) {
 			accelerometerManager = new AccelerometerManager(a.get());
@@ -115,6 +118,7 @@ public class JSensors extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {""} )
 	public void stopAccelerometer() {
 		Log.d(TAG, "Called stopAccelerometer");
 		if (accelerometerStarted) {
@@ -126,6 +130,7 @@ public class JSensors extends JInterface {
 	
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"", "function(x, y, z)"} )
 	public void startGyroscope(final String callbackfn) {
 		if (!gyroscopeStarted) {
 			gyroscopeManager = new GyroscopeManager(a.get());
@@ -146,6 +151,7 @@ public class JSensors extends JInterface {
 	
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {""} )
 	public void stopGyroscope() {
 		if (gyroscopeStarted) {
 			gyroscopeManager.removeListener(gyroscopeListener);
@@ -156,6 +162,7 @@ public class JSensors extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"function(lat, lon, alt, speed, bearing)"} )
 	public void startGPS(final String callbackfn) {
 	
 		if (!gpsStarted) {
@@ -200,6 +207,7 @@ public class JSensors extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {""} )
 	public void stopGPS() {
 		Log.d(TAG, "Called stopGPS");
 		if (gpsStarted) {
@@ -211,24 +219,28 @@ public class JSensors extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {""} )
 	public Location getLastKnownLocation() {
 		return gpsManager.getLastKnownLocation();
 	}
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"latitude", "longitude"} )
 	public String getLocationName(double lat, double lon) {
 		return gpsManager.getLocationName(lat, lon);
 	}
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"endLatitude", "endLongitude", "endLatitude", "endLongitude"} )
 	public double getDistance(double startLatitude, double startLongitude, double endLatitude, double endLongitude) {
 		return gpsManager.getDistance(startLatitude, startLongitude, endLatitude, endLongitude);
 	}
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"function(id)"} )
 	public void onNFC(final String fn) {
 		((AppRunnerActivity) a.get()).initializeNFC();
 
@@ -241,6 +253,7 @@ public class JSensors extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"function(pitch, roll, yaw)"} )
 	public void startOrientation(final String callbackfn) {
 		orientationManager = new OrientationManager(a.get());
 
@@ -259,6 +272,7 @@ public class JSensors extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {""} )
 	public void stopOrientation() {
 		orientationManager.removeListener(orientationListener);
 		orientationManager.stop();
@@ -266,6 +280,7 @@ public class JSensors extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"function(intensity)"} )
 	public void startLightIntensity(final String callbackfn) {
 		lightManager = new LightManager(a.get());
 		
@@ -286,6 +301,7 @@ public class JSensors extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {""} )
 	public void stopLightIntensity() {
 		lightManager.removeListener(lightListener);
 		lightManager.stop();
@@ -293,6 +309,7 @@ public class JSensors extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"function(proximity)"} )
 	public void startProximity(final String callbackfn) {
 		proximityManager = new ProximityManager(a.get());
 		
@@ -320,6 +337,7 @@ public class JSensors extends JInterface {
 	
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"function(value)"} )
 	public void startMagnetic(final String callbackfn) {
 		magneticManager = new MagneticManager(a.get());
 		
@@ -347,6 +365,7 @@ public class JSensors extends JInterface {
 	
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"function(value)"} )
 	public void startPressure(final String callbackfn) {
 		pressureManager = new PressureManager(a.get());
 		

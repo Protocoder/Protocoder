@@ -70,9 +70,11 @@ import android.widget.Toast;
 
 import com.makewithmoto.R;
 import com.makewithmoto.apidoc.annotation.APIMethod;
-import com.makewithmoto.apidoc.annotation.JavascriptInterface;
+import com.makewithmoto.apidoc.annotation.APIParam;
 import com.makewithmoto.apprunner.AppRunnerActivity;
 import com.makewithmoto.apprunner.AppRunnerSettings;
+import com.makewithmoto.apprunner.JInterface;
+import com.makewithmoto.apprunner.JavascriptInterface;
 import com.makewithmoto.apprunner.api.widgets.JButton;
 import com.makewithmoto.apprunner.api.widgets.JCanvasView;
 import com.makewithmoto.apprunner.api.widgets.JCheckBox;
@@ -114,12 +116,17 @@ public class JUI extends JInterface {
 	private int theme;
 	private RelativeLayout bgRelativeLayout;
 	private ImageView bgImageView;
+	private int w;
+	private int h;
 
 	public JUI(Activity a) {
 		super(a);
 
 		screenWidth = ((BaseActivity) a).screenWidth;
 		screenHeight = ((BaseActivity) a).screenHeight;
+		
+		w = ((BaseActivity) a).screenWidth;
+		h = ((BaseActivity) a).screenHeight;
 	}
 
 	private void initializeLayout() {
@@ -197,6 +204,7 @@ public class JUI extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "Uses a DARK / BLUE / NONE theme for some widgets", example = "ui.setTheme(\"DARK\"); ")
+	@APIParam( params = {"themeName"} )
 	public void setTheme(String theme) {
 		if (theme.equals("DARK")) {
 			this.theme = R.drawable.theme_rounded_rect_dark;
@@ -214,6 +222,7 @@ public class JUI extends JInterface {
 	
 	@JavascriptInterface
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
+	@APIParam( params = {"function(x, y)"} )
 	public void onTouch(final String callbackfn) {
 		FrameLayout fl = (FrameLayout) ((AppRunnerActivity) a.get()).findViewById(R.id.touchOverlay);
 		
@@ -253,18 +262,21 @@ public class JUI extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
+	@APIParam( params = {"titleName"} )
 	public void setTitle(String title) {
 		((AppRunnerActivity) a.get()).actionBar.setTitle(title);
 	}
 
 	@JavascriptInterface
 	@APIMethod(description = " ", example = "")
+	@APIParam( params = {"subtitleName"} )
 	public void setSubtitle(String title) {
 		((AppRunnerActivity) a.get()).actionBar.setSubtitle(title);
 	}
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"boolean"} )
 	public void showTitleBar(Boolean b) {
 		if (b)
 			((AppRunnerActivity) a.get()).actionBar.show();
@@ -275,6 +287,7 @@ public class JUI extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"r", "g", "b"} )
 	public void setTitleBgColor(int r, int g, int b) {
 		ColorDrawable d = new ColorDrawable();
 		int c = Color.rgb(r, g, b);
@@ -285,6 +298,7 @@ public class JUI extends JInterface {
 	
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"r", "g", "b"} )
 	public void setTitleTextColor(int r, int g, int b) {
 		ColorDrawable d = new ColorDrawable();
 		int c = Color.rgb(r, g, b);
@@ -296,6 +310,7 @@ public class JUI extends JInterface {
 	
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"imageName"} )
 	public void setTitleImage(String imagePath) {
 		Bitmap myBitmap = BitmapFactory.decodeFile(AppRunnerSettings.get().project.getFolder() + imagePath);
 		Drawable icon = new BitmapDrawable(a.get().getResources(), myBitmap);
@@ -303,11 +318,13 @@ public class JUI extends JInterface {
 		((AppRunnerActivity) a.get()).actionBar.setIcon(icon);
 	}
 
-//	@JavascriptInterface
-//	@APIMethod(description = "", example = "")
-//	public void showHomeBar(boolean b) {
-//		((AppRunnerActivity) a.get()).showHomeBar(b);
-//	}
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	@APIParam( params = {"boolean"} )
+	public void showHomeBar(boolean b) {
+		((AppRunnerActivity) a.get()).showHomeBar(b);
+	}
+
 //
 //	@JavascriptInterface
 //	@APIMethod(description = "", example = "")
@@ -317,6 +334,7 @@ public class JUI extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"text", "duration"} )
 	public void toast(String text, int duration) {
 		Toast.makeText(a.get(), text, duration).show();
 	}
@@ -333,6 +351,7 @@ public class JUI extends JInterface {
 	 */
 	@JavascriptInterface
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
+	@APIParam( params = {"label", "x", "y", "w", "h", "function(progress)"} )
 	public JButton addButton(String label, int x, int y, int w, int h,
 			final String callbackfn) {
 		initializeLayout();
@@ -367,6 +386,7 @@ public class JUI extends JInterface {
 	 * @param callbackfn
 	 */
 	@JavascriptInterface
+	@APIParam( params = {"x", "y", "w", "h, function(progress)"} )
 	public HoloCircleSeekBar addKnob(int x, int y, int w, int h,
 			final String callbackfn) {
 		initializeLayout();
@@ -405,6 +425,7 @@ public class JUI extends JInterface {
 	// We'll add in the circular view as a nice to have later once all the other
 	// widgets are handled.
 	@JavascriptInterface
+	@APIParam( params = {"x", "y", "w", "h", "max", "progress", "function(progress)"} )
 	public JSeekBar addSlider(int x, int y, int w, int h, int max,
 			int progress, final String callbackfn) {
 
@@ -419,18 +440,15 @@ public class JUI extends JInterface {
 
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
-				// @GOPI: Should we do something here? Any callback?
 			}
 
 			@Override
 			public void onStartTrackingTouch(SeekBar seekBar) {
-				// @GOPI: Should we do something here? Any callback?
 			}
 
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
-				// TODO Callback should capture the checked state
 				callback(callbackfn, progress);
 			}
 		});
@@ -452,6 +470,7 @@ public class JUI extends JInterface {
 	 * @param h
 	 */
 	@JavascriptInterface
+	@APIParam( params = {"label", "x", "y", "w", "h"} )
 	public JTextView addLabel(String label, int x, int y, int w, int h) {
 		int defaultTextSize = 16;
 		return addLabel(label, x, y, w, h, defaultTextSize);
@@ -468,6 +487,7 @@ public class JUI extends JInterface {
 	 * @param textSize
 	 */
 	@JavascriptInterface
+	@APIParam( params = {"label", "x", "y", "w", "h", "textSize"} )
 	public JTextView addLabel(String label, int x, int y, int w, int h,
 			int textSize) {
 
@@ -498,6 +518,7 @@ public class JUI extends JInterface {
 	 * @param h
 	 * @param callbackfn
 	 */
+	@APIParam( params = {"label", "x", "y", "w", "h", "function()"} )
 	public JEditText addInput(String label, int x, int y, int w, int h,
 			final String callbackfn) {
 
@@ -535,6 +556,7 @@ public class JUI extends JInterface {
 	 * @param callbackfn
 	 */
 	@JavascriptInterface
+	@APIParam( params = {"label", "x", "y", "w", "h", "checked", "function(checked)"} )
 	public JToggleButton addToggle(final String label, int x, int y, int w,
 			int h, boolean initstate, final String callbackfn) {
 		initializeLayout();
@@ -548,7 +570,6 @@ public class JUI extends JInterface {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView,
 					boolean isChecked) {
-				// TODO Callback should capture the checked state
 				callback(callbackfn, isChecked);
 			}
 		});
@@ -570,6 +591,7 @@ public class JUI extends JInterface {
 	 * @param initstate
 	 * @param callbackfn
 	 */
+	@APIParam( params = {"label", "x", "y", "w", "h", "checked", "function(checked)"} )
 	public JCheckBox addCheckbox(String label, int x, int y, int w, int h,
 			boolean initstate, final String callbackfn) {
 
@@ -585,7 +607,7 @@ public class JUI extends JInterface {
 			public void onCheckedChanged(CompoundButton buttonView,
 					boolean isChecked) {
 				// TODO Callback should capture the checked state
-				callback(callbackfn);
+				callback(callbackfn, isChecked);
 			}
 		});
 
@@ -607,6 +629,7 @@ public class JUI extends JInterface {
 	 * @param initstate
 	 * @param callbackfn
 	 */
+	@APIParam( params = {"x", "y", "w", "h", "checked", "function(checked)"} )
 	public JSwitch addSwitch(int x, int y, int w, int h, boolean initstate,
 			final String callbackfn) {
 
@@ -641,6 +664,7 @@ public class JUI extends JInterface {
 	 * @param initstate
 	 * @param callbackfn
 	 */
+	@APIParam( params = {"label", "x", "y", "w", "h", "checked", "function(checked)"} )
 	public JRadioButton addRadioButton(String label, int x, int y, int w,
 			int h, boolean initstate, final String callbackfn) {
 
@@ -655,7 +679,7 @@ public class JUI extends JInterface {
 			public void onCheckedChanged(CompoundButton buttonView,
 					boolean isChecked) {
 				// TODO Callback should capture the checked state
-				callback(callbackfn);
+				callback(callbackfn, isChecked);
 			}
 		});
 
@@ -675,6 +699,7 @@ public class JUI extends JInterface {
 	 * @param h
 	 * @param imagePath
 	 */
+	@APIParam( params = {"x", "y", "w", "h", "imageName"} )
 	public JImageView addImage(int x, int y, int w, int h, String imagePath) {
 
 		initializeLayout();
@@ -703,6 +728,8 @@ public class JUI extends JInterface {
 	 * @param address
 	 * @return
 	 */
+	//TODO change to a normal
+	@APIParam( params = {"x", "y", "w", "h", "url"} )
 	public JImageView addWebImage(int x, int y, int w, int h, String address) {
 
 		initializeLayout();
@@ -728,11 +755,13 @@ public class JUI extends JInterface {
 	 * @param imagePath
 	 * @param callbackfn
 	 */
+	@APIParam( params = {"x", "y", "w", "h", "imageName", "function()"} )
 	public JImageButton addImageButton(int x, int y, int w, int h,
 			String imagePath, final String callbackfn) {
 		return addImageButton(x, y, w, h, imagePath, "", false, callbackfn);
 	}
 
+	@APIParam( params = {"x", "y", "w", "h", "imageNameNotPressed", "imageNamePressed", "function()"} )
 	public JImageButton addImageButton(int x, int y, int w, int h,
 			String imgNotPressed, String imgPressed, final String callbackfn) {
 		return addImageButton(x, y, w, h, imgNotPressed, imgPressed, false,
@@ -750,6 +779,7 @@ public class JUI extends JInterface {
 	 * @param hideBackground
 	 * @param callbackfn
 	 */
+	@APIParam( params = {"x", "w", "h", "imageNameNotPressed", "imagePressed", "boolean", "function()"} )
 	public JImageButton addImageButton(int x, int y, int w, int h,
 			String imgNotPressed, String imgPressed,
 			final boolean hideBackground, final String callbackfn) {
@@ -817,6 +847,7 @@ public class JUI extends JInterface {
 	 * @param right
 	 * @param bottom
 	 */
+	@APIParam( params = {"left", "top", "right", "bottom"} )
 	public void setPadding(int left, int top, int right, int bottom) {
 		initializeLayout();
 		mMainLayout.setPadding(left, top, right, bottom);
@@ -827,6 +858,7 @@ public class JUI extends JInterface {
 	 * 
 	 * @param color
 	 */
+	@APIParam( params = {"hexColor"} )
 	public void backgroundColor(int color) {
 		initializeLayout();
 		bgRelativeLayout.setBackgroundColor(color);
@@ -839,9 +871,10 @@ public class JUI extends JInterface {
 	 * @param green
 	 * @param blue
 	 */
+	@APIParam( params = {"r", "g", "b"} )
 	public void backgroundColor(int red, int green, int blue) {
 		initializeLayout();
-		bgImageView.setBackgroundColor(Color.rgb(red, green, blue));
+		bgRelativeLayout.setBackgroundColor(Color.rgb(red, green, blue));
 	}
 
 	/**
@@ -849,6 +882,7 @@ public class JUI extends JInterface {
 	 * 
 	 * @param imagePath
 	 */
+	@APIParam( params = {"imageName"} )
 	public void backgroundImage(String imagePath) {
 		initializeLayout();
 		// Add the bg image asynchronously
@@ -858,6 +892,7 @@ public class JUI extends JInterface {
 	}
 
 	@JavascriptInterface
+	@APIParam( params = {"x", "y", "w", "h", "min", "max"} )
 	public JPlotView addPlot(int x, int y, int w, int h, int min, int max) {
 		initializeLayout();
 		PlotView plotView = new PlotView(a.get());
@@ -872,6 +907,7 @@ public class JUI extends JInterface {
 	}
 
 	@JavascriptInterface
+	@APIParam( params = {"x", "y", "w", "h"} )
 	public JCanvasView addCanvas(int x, int y, int w, int h) {
 		initializeLayout();
 
@@ -923,6 +959,7 @@ public class JUI extends JInterface {
 	 *            }
 	 */
 
+	@APIParam( params = {"x", "y", "w", "h"} )
 	public JWebView addWebView(int x, int y, int w, int h) {
 		initializeLayout();
 		JWebView webView = new JWebView(a.get());
@@ -970,6 +1007,7 @@ public class JUI extends JInterface {
 	 * @param w
 	 * @param h
 	 */
+	@APIParam( params = {"type", "x", "y", "w", "h"} )
 	public JCamera addCameraView(int type, /* int filter, */int x, int y,
 			int w, int h) {
 
@@ -1023,6 +1061,7 @@ public class JUI extends JInterface {
 	 * 
 	 * @param msg
 	 */
+	@APIParam( params = {"title", "function(boolean)"} )
 	public void yesnoDialog(String title, final String callbackfn) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(a.get());
 		builder.setTitle(title);
@@ -1053,6 +1092,7 @@ public class JUI extends JInterface {
 	 * 
 	 * @param title
 	 */
+	@APIParam( params = {"title", "function(text)"} )
 	public void inputDialog(String title, final String callbackfn) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(a.get());
 		builder.setTitle(title);
@@ -1091,6 +1131,7 @@ public class JUI extends JInterface {
 	 * @param title
 	 * @param choices
 	 */
+	@APIParam( params = {"title", "arrayStrings", "function(text)"} )
 	public void choiceDialog(String title, final String[] choices, final String callbackfn) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(a.get());
 		builder.setTitle(title);
@@ -1125,6 +1166,7 @@ public class JUI extends JInterface {
 	 * @param w
 	 * @param h
 	 */
+	@APIParam( params = {"videoFileName", "x", "y", "w", "h"} )
 	public JVideo addVideoView(final String videoFile, int x, int y, int w,
 			int h) {
 
@@ -1187,6 +1229,7 @@ public class JUI extends JInterface {
 	 * @param w
 	 * @param h
 	 */
+	@APIParam( params = {"videoFileName", "x", "y", "w", "h"} )
 	public JVideo2 addVideoView2(final String videoFile, int x, int y, int w,
 			int h) {
 		
@@ -1238,15 +1281,17 @@ public class JUI extends JInterface {
 		
 	}
 
+	@APIParam( params = {"imageName"} )
 	public void takeScreenshot(String imagePath) {
 		AndroidUtils.takeScreenshot(
 				AppRunnerSettings.get().project.getFolder(), imagePath,
 				mMainLayout);
 	}
 
-	@JavascriptInterface
-	public void startTrackingTouches(String b) {
-	}
+	//@JavascriptInterface
+	//@APIParam( params = {"milliseconds", "function()"} )
+	//public void startTrackingTouches(String b) {
+	//}
 
 	/**
 	 * This class lets us download an image asynchronously without blocking the

@@ -37,6 +37,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.makewithmoto.apidoc.annotation.APIMethod;
+import com.makewithmoto.apidoc.annotation.APIParam;
 
 /*
  * Usage 
@@ -45,10 +46,8 @@ import com.makewithmoto.apidoc.annotation.APIMethod;
  *		APIManager.getInstance().getDocumentation();
  *	
  */
-/**
- * @author Victor Diaz
- * 
- */
+
+
 public class APIManager {
 
 	public static APIManager getInstance() {
@@ -85,49 +84,30 @@ public class APIManager {
 			Method m[] = c.getDeclaredMethods();
 			for (int i = 0; i < m.length; i++) {
 
+				//get method
 				APIManagerMethod apiMethod = new APIManagerMethod();
-				// Log.d(TAG, "" + m[i]);
-				// Log.d(TAG, "" + m[i].getName());
 				apiMethod.name = m[i].getName();
-				// Paranamer paranamer = new AdaptiveParanamer();
-				// String[] paramNames = paranamer.lookupParameterNames(m[i],
-				// false); // will return null if not found
-
-				/*
-				 * Annotation[][] paramAnnotations =
-				 * m[i].getParameterAnnotations(); for (Annotation[] ann :
-				 * paramAnnotations) { if (ann.length > 0) { Log.d("mm", "" +
-				 * ann.toString());
-				 * 
-				 * for (Annotation a: ann) { Log.d("mm", "" + a.toString() + " "
-				 * + a.getClass().toString() + " " +
-				 * a.annotationType().toString() + " " +
-				 * a.getClass().getSimpleName()); if
-				 * (a.annotationType().getSimpleName
-				 * ().equals(APIParam.class.getSimpleName())) { Log.d("mm", "" +
-				 * ((APIParam) a ).toString()); } } } }
-				 */
-
+			
+				//get parameter types 
 				Class<?>[] param = m[i].getParameterTypes();
-				apiMethod.parameters = "";
+				String[] paramsType = new String[param.length];
+				
 				for (int j = 0; j < param.length; j++) {
 					String p = param[j].getSimpleName().toString();
-					if (p != null || p != "") {
-						apiMethod.parameters += " " + p;
-					}
-				}
+					paramsType[j] = p;
+				}				
+				apiMethod.paramsType = paramsType;
+				
+				//return type
 				apiMethod.returnType = m[i].getReturnType().getSimpleName().toString();
 
-				//Log.d("qmqm", apiMethod.parameters + " " + apiMethod.returnType);
-
-				// get method information
+				// get method information 
 				if (apiMethod.name.contains("$") == false) {
-
 					Annotation[] annotations = m[i].getDeclaredAnnotations();
-
 					// check if annotation exist and add apidocs
 					for (Annotation annotation2 : annotations) {
 
+						// description and example 
 						if (annotation2.annotationType().getSimpleName()
 								.equals(APIMethod.class.getSimpleName())) {
 							apiMethod.description = ((APIMethod) annotation2)
@@ -136,6 +116,15 @@ public class APIManager {
 									.example();
 
 						}
+
+						//get parameters names 
+						if (annotation2.annotationType().getSimpleName()
+								.equals(APIParam.class.getSimpleName())) {
+							apiMethod.parametersName = ((APIParam) annotation2)
+									.params();
+							Log.d(TAG, "getting names " + apiMethod.parametersName);
+						}		
+				
 					}
 
 					apiClass.apiMethods.add(apiMethod);
