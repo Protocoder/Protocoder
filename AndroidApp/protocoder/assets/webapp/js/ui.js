@@ -232,7 +232,7 @@ Ui.prototype.initUI = function() {
 	//show hide bar
 	$("#toolbar #sideBarBtn").click(function() { 
 		w2ui['layout'].toggle('right', false);
-		this.text("hola");
+		//this.text("hola");
 	});
 	
 

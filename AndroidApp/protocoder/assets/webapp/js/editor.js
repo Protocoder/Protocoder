@@ -71,8 +71,8 @@ Editor.prototype.initEditor = function() {
 	    exec: function(env, args, request) {
 	    	currentProject.code = session.getValue();
 	    	protocoder.communication.pushCode(currentProject);
-	    	removeWidgets();
-	    	run_app(currentProject);
+	    	protocoder.dashboard.removeWidgets();
+	    	protocoder.communication.runApp(currentProject);
 
 	    }
 	});
