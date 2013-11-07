@@ -27,62 +27,74 @@
 
 package com.makewithmoto.apprunner.api;
 
+import java.io.File;
+
 import android.app.Activity;
 
 import com.makewithmoto.apidoc.annotation.APIMethod;
 import com.makewithmoto.apidoc.annotation.APIParam;
+import com.makewithmoto.apprunner.AppRunnerSettings;
 import com.makewithmoto.apprunner.JInterface;
 import com.makewithmoto.apprunner.JavascriptInterface;
 import com.makewithmoto.apprunner.api.widgets.JViewInterface;
 import com.makewithmoto.base.AppSettings;
-import com.makewithmoto.fragments.VideoPlayerFragment;
-import com.makewithmoto.fragments.VideoPlayerFragment.VideoListener;
+import com.makewithmoto.fragments.VideoTextureFragment;
 
 public class JVideo extends JInterface implements JViewInterface {
 
-	private VideoPlayerFragment videoFragment;
+	private VideoTextureFragment videoFragment;
 
 
-	public JVideo(Activity a, VideoPlayerFragment videoFragment) {
+	public JVideo(Activity a, VideoTextureFragment fragment) {
 		super(a);
 		
-		this.videoFragment = videoFragment;
+		this.videoFragment = fragment;
 	}
 
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
-	@APIParam( params = {"file", "function()"} )
 	public void play() {
 		videoFragment.play();
 	}	
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
-	@APIParam( params = {"file", "function()"} )
+	@APIParam( params = {"milliseconds"} )
 	public void seekTo(int ms) {
 		videoFragment.seekTo(ms);
 	}	
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
-	@APIParam( params = {"file", "function()"} )
 	public void pause() {
 		videoFragment.pause();
 	}	
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
-	@APIParam( params = {"file", "function()"} )
 	public void stop() {
 		videoFragment.stop();
 	}	
 	
+	
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	@APIParam( params = {"fileName"} )
+	public void load(String videoFile) {
+		videoFragment.loadExternalVideo(AppRunnerSettings.get().project
+						.getFolder() + File.separator + videoFile);
+	}	
+	
+	
+	
+	
+	
 	@JavascriptInterface
 	@APIMethod(description = "", example = "camera.takePicture();")
-	@APIParam( params = {"file", "function()"} )
+	@APIParam( params = {"function(milliseconds, totalDuration)"} )
 	public void onUpdate(final String callbackfn) {
-		videoFragment.addListener(new VideoListener() {
+		videoFragment.addListener(new VideoTextureFragment.VideoListener() {
 			
 			@Override
 			public void onTimeUpdate(int ms, int totalDuration) {
@@ -108,6 +120,22 @@ public class JVideo extends JInterface implements JViewInterface {
 	public void setVolume(int vol) {
 		videoFragment.setVolume(vol);
 	}	
+	
+	
+	@JavascriptInterface
+	@APIMethod(description = "", example = "camera.takePicture();")
+	@APIParam( params = {"file", "function()"} )
+	public void getWidth() {
+		videoFragment.getWidth();
+	}	
+	
+	
+	@JavascriptInterface
+	@APIMethod(description = "", example = "camera.takePicture();")
+	@APIParam( params = {"file", "function()"} )
+	public void getHeight() {
+		videoFragment.getHeight();
+	}	
 	@JavascriptInterface
 	@APIMethod(description = "", example = "camera.takePicture();")
 	@APIParam( params = {"file", "function()"} )
@@ -128,8 +156,26 @@ public class JVideo extends JInterface implements JViewInterface {
 	public int getCurrentPosition() {
 		return videoFragment.getCurrentPosition();
 	}
+	
 
+	@JavascriptInterface
+	@APIMethod(description = "", example = "camera.takePicture();")
+	@APIParam( params = {"milliseconds", "function()"} )
+	public void fadeIn(int time) { 
+		videoFragment.fade(time, 1.0f);
+	}
+	
+	
+	@JavascriptInterface
+	@APIMethod(description = "", example = "camera.takePicture();")
+	@APIParam( params = {"milliseconds", "function()"} )
+	public void fadeOut(int time) { 
+		videoFragment.fade(time, 0.0f);
+	}
+	
+	
 
+	
 	@JavascriptInterface
 	@APIMethod(description = "", example = "camera.takePicture();")
 	@APIParam( params = {"file", "function()"} )
@@ -139,7 +185,7 @@ public class JVideo extends JInterface implements JViewInterface {
 		videoFragment.getView().animate().y(y).setDuration(AppSettings.animSpeed);
 
 	} 
-
+	
 	@JavascriptInterface
 	@APIMethod(description = "", example = "camera.takePicture();")
 	@APIParam( params = {"file", "function()"} )
@@ -147,5 +193,7 @@ public class JVideo extends JInterface implements JViewInterface {
 	public void rotate(float deg) { 
 		videoFragment.getView().animate().rotation(deg).setDuration(AppSettings.animSpeed);
 	}
+	
+	
 	
 }

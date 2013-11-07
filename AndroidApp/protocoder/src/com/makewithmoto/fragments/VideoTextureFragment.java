@@ -242,7 +242,7 @@ public class VideoTextureFragment extends Fragment implements
 	public void seekTo(int ms) {
 		mMediaPlayer.seekTo(ms);
 	}
-
+	
 	public void addListener(VideoListener videoListener) {
 		listeners.add(videoListener);
 	}
