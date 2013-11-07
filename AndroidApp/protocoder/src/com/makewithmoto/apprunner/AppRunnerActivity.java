@@ -97,22 +97,25 @@ import de.greenrobot.event.EventBus;
 @SuppressLint("NewApi")
 public class AppRunnerActivity extends BaseActivity {
 
+	private static final String TAG = "AppRunner";
+	public static final int VOICE_RECOGNITION_REQUEST_CODE = 55;
+
 	String scriptFileName;
 	private Project currentProject;
 	public ActionBar actionBar;
+	
 	private CustomWebsocketServer ws;
+	private BroadcastReceiver mIntentReceiver;
+	public AppRunnerInterpreter interp;
+	private FileObserver fileObserver;
+
+	//listeners in the main activity that will pass the info to the API classes 
 	private JAndroid.onKeyListener onKeyListener;
 	private JAndroid.onSmsReceivedListener onSmsReceivedListener;
 	private JSensors.onNFCListener onNFCListener;
 	private JNetwork.onBluetoothListener onBluetoothListener;
 	private JMedia.onVoiceRecognitionListener onVoiceRecognitionListener;
-	private BroadcastReceiver mIntentReceiver;
-	public AppRunnerInterpreter interp;
-	private FileObserver fileObserver;
 
-	private static final String TAG = "AppRunner";
-
-	public static final int VOICE_RECOGNITION_REQUEST_CODE = 55;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

@@ -46,7 +46,7 @@ Ui.prototype.initUI = function() {
 	$().w2layout({
 	    name: 'right_bar',
 	    panels: [
-	        { type: 'main', size: '70%', resizable: true, style: pstyle, content: '<div id = "reference_container" style="background:#dfdfdf"> <div id = "reference"><h1 style="color:#777777; font-size:1.25em; margin-bottom: 24px; font-style:normal; font-weight:500; text-shadow: 2px 2px #eeeeee; vertical-align:middle;"> QUICK REFERENCE</h1></div> </div>' },
+	        { type: 'main', size: '70%', resizable: true, style: pstyle, content: '<div id = "reference_container" style="background:#dfdfdf"> <div id = "reference"><h1 style="color:#777777; font-size:1.25em; margin-bottom: 24px; font-style:normal; font-weight:500; text-shadow: 2px 2px #eeeeee; vertical-align:middle;"> QUICK REFERENCE</h1> <div id ="content"> </div></div> </div>' },
 	        { type: 'bottom', size: '30%', resizable: true, hidden: false, style: pstyle, content: 'bottom', 
 	      	/* TODO add toolbar */ 
 	        /*
@@ -85,8 +85,8 @@ Ui.prototype.initUI = function() {
 	w2ui['layout'].content('right', w2ui['right_bar']);
 	w2ui['code_editor'].content('main', '<pre id="editor"></pre>');
 	w2ui['code_editor'].on('resize', function(target, eventData) { 
-		console.log(target); 
-		console.log(eventData); 
+		//console.log(target); 
+		//console.log(eventData); 
 		eventData.onComplete = function() { 
 			protocoder.editor.editor.resize();
 		}
@@ -328,6 +328,12 @@ Ui.prototype.appConnected = function(b) {
 	} 
 	this.appConnectedStatus = b;
 } 
+
+Ui.prototype.loadHTMLRightBar = function(filePath) { 
+	//w2ui['layout'].load('right', filePath);
+	//w2ui['layout'].load('right', filePath, 'slide-left');
+	$("#reference_container #content").load(filePath).fadeIn('500');
+}
 
 
 Ui.prototype.initUpload = function() {

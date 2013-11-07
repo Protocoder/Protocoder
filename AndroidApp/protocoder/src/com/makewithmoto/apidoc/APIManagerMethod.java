@@ -31,6 +31,7 @@ class APIManagerMethod {
 	public String name;
 	public String description;
 	public String example;
-	public String parameters;
+	public String[] paramsType;
+	public String[] parametersName;
 	public String returnType;
 }

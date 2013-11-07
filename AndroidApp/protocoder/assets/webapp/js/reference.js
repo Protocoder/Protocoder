@@ -8,14 +8,14 @@ var Reference = function() {
 
 //parse the help comming directly from the android and create a structure for it
 Reference.prototype.parseHelp = function (docString) {
-	//console.log(docString);
+	console.log(docString);
 	var ds = docString;
 	var doc = JSON.parse(docString).apiClasses;
 
 	//iterate through classes 
 	$.each(doc, function(k, v) {
 	    //all
-	    //console.log(v);
+	    console.log(v);
 
 
 	    //class
@@ -27,12 +27,23 @@ Reference.prototype.parseHelp = function (docString) {
 	    $.each (v.apiMethods, function(m, n) {
 
 	        var method = n;
+
+	        //className 
 	        $("#class_"+className + " .methods").append('<div id ="method_'+ method.name +'" class = "APImethod"></div>');
-	        $("#method_"+method.name).append('<h2><i>'+  method.returnType + " </i><strong>" + className + "." + method.name + "</strong><i>(" + method.parameters + ' )</i></h2>');
+	      
+			//method [return] methodName [parameters]      
+			var parameters = "";
+			if (typeof method.parametersName !== "undefined") {
+				parameters = method.parametersName.join(", ");
+			}
+	        $("#method_"+method.name).append('<h2><i>'+  method.returnType + " </i><strong>" + className + "." + method.name + "</strong><i>(" + parameters + ")</i></h2>");
 	        
+	        //add description if exist 
 	        if (method.description != undefined) { 
 	        	$("#method_"+method.name).append('<p id = "description"> '+ "here goes description" /*method.description*/ +' </p>');
 	        }
+
+	        //add example if exist 
 	        if (method.example != undefined){ 
 				$("#method_"+method.name).append('<p id = "example"> '+ "here goes example" /* method.example */ +' </p>');
 	        	

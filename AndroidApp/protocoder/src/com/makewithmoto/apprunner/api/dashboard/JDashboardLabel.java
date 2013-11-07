@@ -36,8 +36,8 @@ import android.app.Activity;
 import android.util.Log;
 
 import com.makewithmoto.apidoc.annotation.APIMethod;
-import com.makewithmoto.apidoc.annotation.JavascriptInterface;
-import com.makewithmoto.apprunner.api.JInterface;
+import com.makewithmoto.apprunner.JInterface;
+import com.makewithmoto.apprunner.JavascriptInterface;
 import com.makewithmoto.network.CustomWebsocketServer;
 import com.makewithmoto.utils.StrUtils;
 

@@ -58,8 +58,10 @@ import android.util.Log;
 
 import com.codebutler.android_websockets.SocketIOClient;
 import com.makewithmoto.apidoc.annotation.APIMethod;
-import com.makewithmoto.apidoc.annotation.JavascriptInterface;
+import com.makewithmoto.apidoc.annotation.APIParam;
 import com.makewithmoto.apprunner.AppRunnerActivity;
+import com.makewithmoto.apprunner.JInterface;
+import com.makewithmoto.apprunner.JavascriptInterface;
 import com.makewithmoto.network.NetworkUtils;
 import com.makewithmoto.network.NetworkUtils.DownloadTask.DownloadListener;
 import com.makewithmoto.network.OSC;
@@ -86,6 +88,7 @@ public class JNetwork extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"url", "fileName", "function(progress)"} )
 	public void downloadFile(String url, String fileName, final String callbackfn) {
 
 		NetworkUtils.DownloadTask downloadTask = new NetworkUtils.DownloadTask(
@@ -103,6 +106,7 @@ public class JNetwork extends JInterface {
 
 	// @JavascriptInterface
 	// @APIMethod(description = "", example = "")
+	// @APIParam( params = {"file", "function()"} )
 	public void isReachable(final String host, final String callbackfn) {
 
 		Thread t = new Thread(new Runnable() {
@@ -130,12 +134,14 @@ public class JNetwork extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {""} )
 	public String getIP() {
 		return NetworkUtils.getLocalIpAddress(a.get());
 	}
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"port", "function(jsonData)"} )
 	public OSC.Server startOSCServer(String port, final String callbackfn) {
 		OSC osc = new OSC();
 		Server server = osc.new Server();
@@ -182,6 +188,7 @@ public class JNetwork extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"address", "port"} )
 	public OSC.Client connectOSC(String address, int port) {
 		OSC osc = new OSC();
 		Client client = osc.new Client(address, port);
@@ -192,6 +199,7 @@ public class JNetwork extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"port", "function(status, remoteAddress, jsonData)"} )
 	public WebSocketServer startWebsocketServer(int port,
 			final String callbackfn) {
 
@@ -229,6 +237,7 @@ public class JNetwork extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"uri", "function(type, data)"} )
 	public org.java_websocket.client.WebSocketClient connectWebsocket(
 			String uri, final String callbackfn) {
 
@@ -266,6 +275,7 @@ public class JNetwork extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"uri", "function(type, data)"} )
 	public SocketIOClient connectSocketIO(String uri, final String callbackfn) {
 		SocketIOClient socketIOClient = new SocketIOClient(URI.create(uri),
 				new SocketIOClient.Handler() {
@@ -309,6 +319,7 @@ public class JNetwork extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"url", "function(data)"} )
 	public void getRequest(String url, final String callbackfn) {
 		class RequestTask extends AsyncTask<String, String, String> {
 
@@ -353,6 +364,7 @@ public class JNetwork extends JInterface {
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
+	@APIParam( params = {"function(name, macAddress, strength)"} )
 	public void scanBTNetworks(final String callbackfn) {
 		onBluetoothfn = callbackfn;
 

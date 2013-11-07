@@ -25,13 +25,12 @@
  * 
  */
 
-package com.makewithmoto.apprunner.api;
+package com.makewithmoto.apprunner;
 
 import java.lang.ref.WeakReference;
 
 import android.app.Activity;
 
-import com.makewithmoto.apprunner.AppRunnerActivity;
 
 public class JInterface {
 

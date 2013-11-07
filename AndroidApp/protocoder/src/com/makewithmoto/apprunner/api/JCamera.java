@@ -32,8 +32,11 @@ import java.io.File;
 import android.app.Activity;
 
 import com.makewithmoto.apidoc.annotation.APIMethod;
-import com.makewithmoto.apidoc.annotation.JavascriptInterface;
+import com.makewithmoto.apidoc.annotation.APIParam;
+import com.makewithmoto.apidoc.annotation.APIRequires;
 import com.makewithmoto.apprunner.AppRunnerSettings;
+import com.makewithmoto.apprunner.JInterface;
+import com.makewithmoto.apprunner.JavascriptInterface;
 import com.makewithmoto.apprunner.api.widgets.JViewInterface;
 import com.makewithmoto.base.AppSettings;
 import com.makewithmoto.fragments.CameraFragment;
@@ -50,10 +53,13 @@ public class JCamera extends JInterface implements JViewInterface {
 		this.cameraFragment = cameraFragment;
 	}
 
-	
 	@JavascriptInterface
+	@APIParam( params = {"file", "function()"} )
 	@APIMethod(description = "", example = "camera.takePicture();")
+	//@APIRequires()
 	public void takePicture(String file, final String callbackfn) {
+		String[] q = new String[]{"blah", "hey", "yo"};
+		//String[] qq = new Str
 		cameraFragment.takePic(AppRunnerSettings.get().project.getFolder() + File.separator + file);
 		cameraFragment.addListener(new CameraListener() {
 			

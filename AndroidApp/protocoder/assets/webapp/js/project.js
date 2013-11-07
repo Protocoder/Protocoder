@@ -28,8 +28,8 @@ function setProjectList(filter, data) {
   obj.items = new Array();
 
   $(data.projects).each(function(k, project) {
-   console.log("-->", k, project); 
-   console.log('#list_projects #'+div+" #ul");
+   //console.log("-->", k, project); 
+   //console.log('#list_projects #'+div+" #ul");
    // console.log("binding -> " + div + " #"+project.name);
   $('<li id ="'+project.name+'">' + project.name + '</li>').click(function () {
       currentProject = project;
