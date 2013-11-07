@@ -1202,7 +1202,8 @@ public class JUI extends JInterface {
 		});
 		
 		FragmentTransaction ft = a.get().getSupportFragmentManager()
-				.beginTransaction(); // FIXME: Because we have no tagging
+				.beginTransaction(); 
+		// FIXME: Because we have no tagging
 		// system we need to use the int as
 		// a // tag, which may cause
 		// collisions
