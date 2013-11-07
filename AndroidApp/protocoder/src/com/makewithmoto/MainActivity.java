@@ -27,7 +27,6 @@
 
 package com.makewithmoto;
 
-import java.lang.reflect.Method;
 import java.net.UnknownHostException;
 
 import org.java_websocket.drafts.Draft_17;
@@ -69,7 +68,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.makewithmoto.apprunner.AppRunnerActivity;
-import com.makewithmoto.apprunner.api.JCamera;
 import com.makewithmoto.base.AppSettings;
 import com.makewithmoto.base.BaseActivity;
 import com.makewithmoto.base.BaseMainApp;
@@ -84,9 +82,6 @@ import com.makewithmoto.network.MyHTTPServer;
 import com.makewithmoto.network.NetworkUtils;
 import com.makewithmoto.projectlist.ListFragmentExamples;
 import com.makewithmoto.projectlist.ListFragmentUserProjects;
-import com.thoughtworks.paranamer.AdaptiveParanamer;
-import com.thoughtworks.paranamer.CachingParanamer;
-import com.thoughtworks.paranamer.Paranamer;
 
 import de.greenrobot.event.EventBus;
 
