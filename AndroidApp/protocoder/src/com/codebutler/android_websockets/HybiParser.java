@@ -30,11 +30,15 @@
 
 package com.codebutler.android_websockets;
 
-import android.util.Log;
-
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.List;
+
+import android.util.Log;
 
 public class HybiParser {
     private static final String TAG = "HybiParser";

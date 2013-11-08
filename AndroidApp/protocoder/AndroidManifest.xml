@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.makewithmoto"
+    package="org.protocoder"
     android:versionCode="8"
     android:versionName="0.71" >
 
@@ -39,14 +39,14 @@
     <uses-feature android:name="android.hardware.camera" />
 
     <application
-        android:name="com.makewithmoto.MainApp"
+        android:name="org.protocoder.MainApp"
         android:allowBackup="false"
         android:hardwareAccelerated="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/MWMTheme" >
         <activity
-            android:name="com.makewithmoto.LauncherActivity"
+            android:name="org.protocoder.LauncherActivity"
             android:icon="@drawable/ic_launcher"
             android:label="@string/activity_name"
             android:logo="@drawable/ic_action_logo"
@@ -65,35 +65,35 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.makewithmoto.MainActivity"
+            android:name="org.protocoder.MainActivity"
             android:label="@string/activity_name"
             android:logo="@drawable/ic_action_logo" >
         </activity>
         <activity
-            android:name="com.makewithmoto.AboutActivity"
+            android:name="org.protocoder.AboutActivity"
             android:label="@string/activity_name"
             android:logo="@drawable/ic_action_logo" >
         </activity>
         <activity
-            android:name="com.makewithmoto.WelcomeActivity"
+            android:name="org.protocoder.WelcomeActivity"
             android:label="@string/activity_name"
             android:logo="@drawable/ic_action_logo"
             android:noHistory="true" >
         </activity>
         <activity
-            android:name="com.makewithmoto.LicenseActivity"
+            android:name="org.protocoder.LicenseActivity"
             android:label="@string/settings_activity_name"
             android:logo="@drawable/ic_action_logo"
             android:noHistory="true" >
         </activity>
         <activity
-            android:name="com.makewithmoto.SetPreferenceActivity"
+            android:name="org.protocoder.SetPreferenceActivity"
             android:label="@string/settings_activity_name"
             android:logo="@drawable/ic_action_logo"
             android:noHistory="true" >
         </activity>
         <activity
-            android:name="com.makewithmoto.beam.BeamActivity"
+            android:name="org.protocoder.beam.BeamActivity"
             android:label="@string/beam"
             android:logo="@drawable/ic_action_logo" >
             <intent-filter>
@@ -116,7 +116,7 @@
         </activity>
         <!-- android:screenOrientation="portrait" -->
         <activity
-            android:name="com.makewithmoto.apprunner.AppRunnerActivity"
+            android:name="org.protocoder.apprunner.AppRunnerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/runner_name"
             android:logo="@drawable/ic_action_logo"
@@ -143,23 +143,23 @@
             </intent-filter>
         </activity>
 
-        <service android:name="com.makewithmoto.hardware.IOIOBoardService" />
+        <service android:name="org.protocoder.hardware.IOIOBoardService" />
         <service android:name="org.puredata.android.service.PdService" />
 
-        <receiver android:name="com.makewithmoto.services.SmsReceiver" >
+        <receiver android:name="org.protocoder.services.SmsReceiver" >
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
 
         <activity
-            android:name="com.makewithmoto.ItemListActivity"
+            android:name="org.protocoder.ItemListActivity"
             android:label="@string/title_item_list" >
         </activity>
         <activity
-            android:name="com.makewithmoto.ItemDetailActivity"
+            android:name="org.protocoder.ItemDetailActivity"
             android:label="@string/title_item_detail"
-            android:parentActivityName=".ItemListActivity" >
+            android:parentActivityName="org.protocoder.ItemListActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ItemListActivity" />
