@@ -56,14 +56,14 @@ ui.addImageButton(400, 1050, 300, 300,"makewithmotologo.png", false, function(va
 });
 
 //Add an image loaded from the web
-ui.addWebImage(0, 1400, 500, 500, "http://images.latinospost.com/data/images/full/22151/pokemon.jpg");
+ui.addImage(0, 1400, 500, 500, "http://images.latinospost.com/data/images/full/22151/pokemon.jpg");
 
 //Add an image loaded from the web
 ui.addSwitch(0, 2000, 500, 100, true, function(val){ 
     console.log(val);
 });
 
-ui.addWebImage(0, 2000, 500,500, "https://maps.googleapis.com/maps/api/staticmap?center=-15.800513,-47.91378&zoom=11&size=200x200&sensor=false");
+ui.addImage(0, 2000, 500,500, "https://maps.googleapis.com/maps/api/staticmap?center=-15.800513,-47.91378&zoom=11&size=200x200&sensor=false");
 
 //Add a circular seekbar
 ui.addKnob(0, 2500, 350, 350, function(val) {

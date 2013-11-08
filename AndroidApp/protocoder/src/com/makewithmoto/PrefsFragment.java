@@ -33,11 +33,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.preference.TwoStatePreference;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +51,8 @@ import com.makewithmoto.events.ProjectManager;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class PrefsFragment extends PreferenceFragment {
+
+	protected static final String TAG = "PrefsFragment";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -63,6 +68,19 @@ public class PrefsFragment extends PreferenceFragment {
 			Bundle savedInstanceState) {
 		View view = super.onCreateView(inflater, container, savedInstanceState);
 		view.setBackgroundResource(R.drawable.gradient);
+
+		final EditTextPreference prefId = (EditTextPreference) findPreference("pref_id");
+		prefId.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+
+			@Override
+			public boolean onPreferenceChange(Preference preference,
+					Object newValue) {
+				prefId.setText((String) newValue);
+				return false;
+			}
+		});
+
+		prefId.setText(getId(getActivity()));
 
 		Preference button = (Preference) findPreference("licenses_detail");
 		button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -144,6 +162,24 @@ public class PrefsFragment extends PreferenceFragment {
 		}
 
 		return view;
+	}
+
+	public static String getId(Context c) {
+		// get apprunner settings
+		SharedPreferences sharedPrefs = PreferenceManager
+				.getDefaultSharedPreferences(c);
+		String id = sharedPrefs.getString("pref_id", "-1");
+
+		return id;
+	}
+
+	public static void setId(Context c, String id) {
+		// get apprunner settings
+		SharedPreferences sharedPrefs = PreferenceManager
+				.getDefaultSharedPreferences(c);
+		Editor editor = sharedPrefs.edit();
+		editor.putString("pref_id", id);
+		editor.commit();
 	}
 
 }

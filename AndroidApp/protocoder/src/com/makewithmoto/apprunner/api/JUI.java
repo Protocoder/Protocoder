@@ -699,50 +699,28 @@ public class JUI extends JInterface {
 	 * @param h
 	 * @param imagePath
 	 */
-	@APIParam( params = {"x", "y", "w", "h", "imageName"} )
+	@APIParam( params = {"x", "y", "w", "h", "imagePath"} )
 	public JImageView addImage(int x, int y, int w, int h, String imagePath) {
 
 		initializeLayout();
 		// Create and position the image view
 		final JImageView iv = new JImageView(a.get());
 
-		// Add the image from file
-		new SetImageTask(iv).execute(AppRunnerSettings.get().project
-				.getFolder() + File.separator + imagePath);
-
+		if (imagePath.startsWith("http")) {
+			// Add image asynchronously
+			new DownloadImageTask(iv).execute(imagePath);
+		} else { 
+			// Add the image from file
+			new SetImageTask(iv).execute(AppRunnerSettings.get().project
+					.getFolder() + File.separator + imagePath);			
+			
+		}
 		// Add the view
-		iv.setBackgroundColor(0x33b5e5);
+		//iv.setBackgroundColor(0x33b5e5);
 		addView(iv, x, y, w, h);
 
 		return iv;
 
-	}
-
-	/**
-	 * Adds an image from a URL
-	 * 
-	 * @param x
-	 * @param y
-	 * @param w
-	 * @param h
-	 * @param address
-	 * @return
-	 */
-	//TODO change to a normal
-	@APIParam( params = {"x", "y", "w", "h", "url"} )
-	public JImageView addWebImage(int x, int y, int w, int h, String address) {
-
-		initializeLayout();
-		// Create and position the image view
-		final JImageView iv = new JImageView(a.get());
-
-		// Add image asynchronously
-		new DownloadImageTask(iv).execute(address);
-
-		// Add the view
-		addView(iv, x, y, w, h);
-
-		return iv;
 	}
 
 	/**

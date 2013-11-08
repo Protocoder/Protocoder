@@ -43,7 +43,7 @@ import com.makewithmoto.utils.StrUtils;
 
 public class LauncherActivity extends BaseActivity {
 
-	private static final long SPLASH_SCREEN_DURATION = 1500;
+	private static final long SPLASH_SCREEN_DURATION = 0;
 	protected Handler mExitHandler = null;
 	protected Runnable mExitRunnable = null;
 	Intent intent = null;
@@ -53,7 +53,7 @@ public class LauncherActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 
 		//setTheme(android.R.style.Theme_NoDisplay);
-		setContentView(R.layout.activity_bootscreen);
+		//setContentView(R.layout.activity_bootscreen);
 		
 		// Prepare intent to exit the activity and move to the main one
 		boolean firstLaunch; // If this is the first time the
@@ -69,7 +69,12 @@ public class LauncherActivity extends BaseActivity {
 		} else {
 			intent = new Intent(this, MainActivity.class);
 		}
+		
 		intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+		startActivity(intent);
+		finish();
+
+		/*
 		mExitRunnable = new Runnable() {
 			@Override
 			public void run() {
@@ -80,7 +85,7 @@ public class LauncherActivity extends BaseActivity {
 		// Run the exitRunnable in in SPLASH_SCREEN_DURATION ms
 		mExitHandler = new Handler();
 		mExitHandler.postDelayed(mExitRunnable, SPLASH_SCREEN_DURATION);
-
+		 */
 	
 	}
 

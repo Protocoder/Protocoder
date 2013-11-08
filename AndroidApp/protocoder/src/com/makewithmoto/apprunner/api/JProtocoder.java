@@ -28,7 +28,10 @@
 package com.makewithmoto.apprunner.api;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
+import com.makewithmoto.PrefsFragment;
 import com.makewithmoto.apidoc.annotation.APIMethod;
 import com.makewithmoto.apidoc.annotation.APIParam;
 import com.makewithmoto.apprunner.AppRunnerActivity;
@@ -37,10 +40,16 @@ import com.makewithmoto.apprunner.JavascriptInterface;
 
 public class JProtocoder extends JInterface {
 
+	public String id;
+
 	public JProtocoder(Activity a) {
 		super(a);
-
+		
+		//get apprunner settings 
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(a);
+        id = sharedPrefs.getString("pref_id", "-1");
 	}
+	
 
 	@android.webkit.JavascriptInterface
 	@JavascriptInterface
@@ -48,7 +57,19 @@ public class JProtocoder extends JInterface {
 	@APIParam( params = {"code"} )
 	public void eval(String code) {
 		((AppRunnerActivity) a.get()).interp.eval(code);
-
+	}
+	
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	public String getId() {
+		return PrefsFragment.getId(a.get());
+		
+	}
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	@APIParam( params = {"id"} )
+	public void setId(String id) {
+		PrefsFragment.setId(a.get(), id);
 	}
 
 }

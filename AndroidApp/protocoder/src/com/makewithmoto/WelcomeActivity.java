@@ -37,6 +37,7 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -44,6 +45,7 @@ import android.widget.TextView;
 
 import com.makewithmoto.base.BaseActivity;
 import com.makewithmoto.events.ProjectManager;
+import com.makewithmoto.utils.StrUtils;
 
 @SuppressLint("NewApi")
 public class WelcomeActivity extends BaseActivity {
@@ -64,8 +66,8 @@ public class WelcomeActivity extends BaseActivity {
         //Set copyright
         TextView copyright = (TextView)findViewById(R.id.copyright);
         copyright.setText(readFile(R.raw.copyright_notice));
-
-        ProjectManager.getInstance().install(this);
+        PrefsFragment.setId(this, StrUtils.generateRandomString());	
+        ProjectManager.getInstance().install(this);        
     }
 
     /**
