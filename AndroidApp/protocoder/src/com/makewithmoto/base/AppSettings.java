@@ -50,4 +50,17 @@ public class AppSettings {
 	public static long animSpeed = 500;
 	public static final int httpPort = 8585;	
 	
+	//
+	public String id; 
+	
+
+	private static AppSettings instance;
+
+	public static AppSettings get() {
+		if (instance == null)
+			instance = new AppSettings();
+		return instance;
+	}
+	
+
 }

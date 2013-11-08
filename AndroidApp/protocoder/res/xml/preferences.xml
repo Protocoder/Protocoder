@@ -10,13 +10,16 @@
             android:key="@string/pref_webserver_port"
             android:summary="@string/setting_websocket_port"
             android:title="@string/setting_websocket_port_title" />
-		-->
         <CheckBoxPreference
             android:checked="true"
             android:key="@string/pref_curtain_notifications"
             android:summary="@string/setting_show_notifications_body"
             android:title="@string/setting_show_notifications_title" />
-
+		-->
+        <EditTextPreference
+            android:key="pref_id"
+            android:summary="@string/setting_id_description"
+            android:title="@string/setting_id_title" />
         <Preference
             android:key="reinstall_examples"
             android:summary="@string/setting_reinstall_description"

@@ -64,17 +64,19 @@ public class ProjectManager {
 		return INSTANCE;
 	}
 
-	
-	public void install(final Context c) { 
-    	new Runnable() {
+	public void install(final Context c) {
+
+		new Thread(new Runnable() {
 
 			@Override
 			public void run() {
-				File dir = new File(BaseMainApp.baseDir + "/" + BaseMainApp.typeExampleStr);
+				File dir = new File(BaseMainApp.baseDir + "/"
+						+ BaseMainApp.typeExampleStr);
 				FileIO.deleteDir(dir);
-				FileIO.copyFileOrDir(c.getApplicationContext(), BaseMainApp.typeExampleStr);
+				FileIO.copyFileOrDir(c.getApplicationContext(),
+						BaseMainApp.typeExampleStr);
 			}
-		}.run();
+		}).start();
 	}
 
 	public String getCode(Project p) {
@@ -169,7 +171,8 @@ public class ProjectManager {
 			Log.d("PROJECT", "Adding project named " + projectName);
 			boolean containsReadme = false;
 			boolean containsTutorial = false;
-			projects.add(new Project(projectName, projectURL, type, containsReadme, containsTutorial));
+			projects.add(new Project(projectName, projectURL, type,
+					containsReadme, containsTutorial));
 		}
 
 		return projects;
@@ -210,8 +213,8 @@ public class ProjectManager {
 		Log.d("Files", "Size: " + file.length);
 
 		JSONArray array = new JSONArray();
-		for (int i = 0; i < file.length; i++) { 
-			
+		for (int i = 0; i < file.length; i++) {
+
 			JSONObject jsonObject = new JSONObject();
 			try {
 				jsonObject.put("file_name", file[i].getName());
@@ -219,12 +222,11 @@ public class ProjectManager {
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-			
-			
+
 			array.put(jsonObject);
 			Log.d("Files", "FileName:" + file[i].getName());
 		}
-	
+
 		return array;
 	}
 
@@ -235,10 +237,10 @@ public class ProjectManager {
 		return projectURL;
 
 	}
-	
-	public void setCurrentProject(Project project) { 
+
+	public void setCurrentProject(Project project) {
 		currentProject = project;
-		
+
 	}
 
 	public Project getCurrentProject() {
