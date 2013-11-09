@@ -33,22 +33,22 @@ import android.content.Context;
 import android.widget.TextView;
 
 public class JTextView extends TextView implements JViewInterface {
-	
-	public JTextView(Context context) {
-		super(context);
-		// TODO Auto-generated constructor stub
-	}
 
-	@Override
-	public void move(float x, float y) { 
-		this.animate().x(x).setDuration(AppSettings.animSpeed);
-		this.animate().y(y).setDuration(AppSettings.animSpeed);
+    public JTextView(Context context) {
+	super(context);
+	// TODO Auto-generated constructor stub
+    }
 
-	} 
-	
-	@Override
-	public void rotate(float deg) { 
-		this.animate().rotation(deg).setDuration(AppSettings.animSpeed);
-	}
+    @Override
+    public void move(float x, float y) {
+	this.animate().x(x).setDuration(AppSettings.animSpeed);
+	this.animate().y(y).setDuration(AppSettings.animSpeed);
+
+    }
+
+    @Override
+    public void rotate(float deg) {
+	this.animate().rotation(deg).setDuration(AppSettings.animSpeed);
+    }
 
 }

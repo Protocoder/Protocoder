@@ -40,161 +40,143 @@ import org.protocoder.fragments.VideoTextureFragment;
 
 import android.app.Activity;
 
-
 public class JVideo extends JInterface implements JViewInterface {
 
-	private VideoTextureFragment videoFragment;
+    private VideoTextureFragment videoFragment;
 
+    public JVideo(Activity a, VideoTextureFragment fragment) {
+	super(a);
 
-	public JVideo(Activity a, VideoTextureFragment fragment) {
-		super(a);
-		
-		this.videoFragment = fragment;
-	}
+	this.videoFragment = fragment;
+    }
 
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    public void play() {
+	videoFragment.play();
+    }
 
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	public void play() {
-		videoFragment.play();
-	}	
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "milliseconds" })
+    public void seekTo(int ms) {
+	videoFragment.seekTo(ms);
+    }
 
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	@APIParam( params = {"milliseconds"} )
-	public void seekTo(int ms) {
-		videoFragment.seekTo(ms);
-	}	
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    public void pause() {
+	videoFragment.pause();
+    }
 
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	public void pause() {
-		videoFragment.pause();
-	}	
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    public void stop() {
+	videoFragment.stop();
+    }
 
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	public void stop() {
-		videoFragment.stop();
-	}	
-	
-	
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	@APIParam( params = {"fileName"} )
-	public void load(String videoFile) {
-		videoFragment.loadExternalVideo(AppRunnerSettings.get().project
-						.getFolder() + File.separator + videoFile);
-	}	
-	
-	
-	
-	
-	
-	@JavascriptInterface
-	@APIMethod(description = "", example = "camera.takePicture();")
-	@APIParam( params = {"function(milliseconds, totalDuration)"} )
-	public void onUpdate(final String callbackfn) {
-		videoFragment.addListener(new VideoTextureFragment.VideoListener() {
-			
-			@Override
-			public void onTimeUpdate(int ms, int totalDuration) {
-				callback(callbackfn, ms, totalDuration);				
-			}
-			
-			@Override
-			public void onReady(boolean ready) {
-				
-			}
-			
-			@Override
-			public void onFinish(boolean finished) {
-				
-			}
-		});
-	}	
-	
-	
-	@JavascriptInterface
-	@APIMethod(description = "", example = "camera.takePicture();")
-	@APIParam( params = {"file", "function()"} )
-	public void setVolume(int vol) {
-		videoFragment.setVolume(vol);
-	}	
-	
-	
-	@JavascriptInterface
-	@APIMethod(description = "", example = "camera.takePicture();")
-	@APIParam( params = {"file", "function()"} )
-	public void getWidth() {
-		videoFragment.getWidth();
-	}	
-	
-	
-	@JavascriptInterface
-	@APIMethod(description = "", example = "camera.takePicture();")
-	@APIParam( params = {"file", "function()"} )
-	public void getHeight() {
-		videoFragment.getHeight();
-	}	
-	@JavascriptInterface
-	@APIMethod(description = "", example = "camera.takePicture();")
-	@APIParam( params = {"file", "function()"} )
-	public void setLoop(boolean b) {
-		videoFragment.setLoop(b);
-	}	
-	@JavascriptInterface
-	@APIMethod(description = "", example = "camera.takePicture();")
-	@APIParam( params = {"file", "function()"} )
-	public int getDuration() {
-		return videoFragment.getDuration();
-	}	
-	
-	
-	@JavascriptInterface
-	@APIMethod(description = "", example = "camera.takePicture();")
-	@APIParam( params = {"file", "function()"} )
-	public int getCurrentPosition() {
-		return videoFragment.getCurrentPosition();
-	}
-	
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "fileName" })
+    public void load(String videoFile) {
+	videoFragment.loadExternalVideo(AppRunnerSettings.get().project.getFolder() + File.separator + videoFile);
+    }
 
-	@JavascriptInterface
-	@APIMethod(description = "", example = "camera.takePicture();")
-	@APIParam( params = {"milliseconds", "function()"} )
-	public void fadeIn(int time) { 
-		videoFragment.fade(time, 1.0f);
-	}
-	
-	
-	@JavascriptInterface
-	@APIMethod(description = "", example = "camera.takePicture();")
-	@APIParam( params = {"milliseconds", "function()"} )
-	public void fadeOut(int time) { 
-		videoFragment.fade(time, 0.0f);
-	}
-	
-	
+    @JavascriptInterface
+    @APIMethod(description = "", example = "camera.takePicture();")
+    @APIParam(params = { "function(milliseconds, totalDuration)" })
+    public void onUpdate(final String callbackfn) {
+	videoFragment.addListener(new VideoTextureFragment.VideoListener() {
 
-	
-	@JavascriptInterface
-	@APIMethod(description = "", example = "camera.takePicture();")
-	@APIParam( params = {"file", "function()"} )
-	@Override
-	public void move(float x, float y) { 
-		videoFragment.getView().animate().x(x).setDuration(AppSettings.animSpeed);
-		videoFragment.getView().animate().y(y).setDuration(AppSettings.animSpeed);
+	    @Override
+	    public void onTimeUpdate(int ms, int totalDuration) {
+		callback(callbackfn, ms, totalDuration);
+	    }
 
-	} 
-	
-	@JavascriptInterface
-	@APIMethod(description = "", example = "camera.takePicture();")
-	@APIParam( params = {"file", "function()"} )
-	@Override
-	public void rotate(float deg) { 
-		videoFragment.getView().animate().rotation(deg).setDuration(AppSettings.animSpeed);
-	}
-	
-	
-	
+	    @Override
+	    public void onReady(boolean ready) {
+
+	    }
+
+	    @Override
+	    public void onFinish(boolean finished) {
+
+	    }
+	});
+    }
+
+    @JavascriptInterface
+    @APIMethod(description = "", example = "camera.takePicture();")
+    @APIParam(params = { "file", "function()" })
+    public void setVolume(int vol) {
+	videoFragment.setVolume(vol);
+    }
+
+    @JavascriptInterface
+    @APIMethod(description = "", example = "camera.takePicture();")
+    @APIParam(params = { "file", "function()" })
+    public void getWidth() {
+	videoFragment.getWidth();
+    }
+
+    @JavascriptInterface
+    @APIMethod(description = "", example = "camera.takePicture();")
+    @APIParam(params = { "file", "function()" })
+    public void getHeight() {
+	videoFragment.getHeight();
+    }
+
+    @JavascriptInterface
+    @APIMethod(description = "", example = "camera.takePicture();")
+    @APIParam(params = { "file", "function()" })
+    public void setLoop(boolean b) {
+	videoFragment.setLoop(b);
+    }
+
+    @JavascriptInterface
+    @APIMethod(description = "", example = "camera.takePicture();")
+    @APIParam(params = { "file", "function()" })
+    public int getDuration() {
+	return videoFragment.getDuration();
+    }
+
+    @JavascriptInterface
+    @APIMethod(description = "", example = "camera.takePicture();")
+    @APIParam(params = { "file", "function()" })
+    public int getCurrentPosition() {
+	return videoFragment.getCurrentPosition();
+    }
+
+    @JavascriptInterface
+    @APIMethod(description = "", example = "camera.takePicture();")
+    @APIParam(params = { "milliseconds", "function()" })
+    public void fadeIn(int time) {
+	videoFragment.fade(time, 1.0f);
+    }
+
+    @JavascriptInterface
+    @APIMethod(description = "", example = "camera.takePicture();")
+    @APIParam(params = { "milliseconds", "function()" })
+    public void fadeOut(int time) {
+	videoFragment.fade(time, 0.0f);
+    }
+
+    @JavascriptInterface
+    @APIMethod(description = "", example = "camera.takePicture();")
+    @APIParam(params = { "file", "function()" })
+    @Override
+    public void move(float x, float y) {
+	videoFragment.getView().animate().x(x).setDuration(AppSettings.animSpeed);
+	videoFragment.getView().animate().y(y).setDuration(AppSettings.animSpeed);
+
+    }
+
+    @JavascriptInterface
+    @APIMethod(description = "", example = "camera.takePicture();")
+    @APIParam(params = { "file", "function()" })
+    @Override
+    public void rotate(float deg) {
+	videoFragment.getView().animate().rotation(deg).setDuration(AppSettings.animSpeed);
+    }
+
 }

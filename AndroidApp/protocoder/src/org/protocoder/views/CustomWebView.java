@@ -38,7 +38,6 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.webkit.WebView;
 
-
 /*
  * http://stackoverflow.com/questions/13257990/android-webview-inside-scrollview-scrolls-only-scrollview
  */
@@ -47,33 +46,32 @@ public class CustomWebView extends WebView {
 
     private WeakReference<AppRunnerActivity> a;
 
-	public CustomWebView(Context context) {
-        super(context);
-        this.a = new WeakReference<AppRunnerActivity>(
-				(AppRunnerActivity) context);
+    public CustomWebView(Context context) {
+	super(context);
+	this.a = new WeakReference<AppRunnerActivity>((AppRunnerActivity) context);
     }
 
     public CustomWebView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+	super(context, attrs);
     }
 
     public CustomWebView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
+	super(context, attrs, defStyle);
     }
 
-    public void loadData(String content) { 
-	    this.loadData(content, "text/html", "utf-8");	
+    public void loadData(String content) {
+	this.loadData(content, "text/html", "utf-8");
 
     }
-    
-    public void loadHTMLFile(String fileName) { 
-    	String path = AppRunnerSettings.get().project.getFolder()   + File.separator + fileName;
-    	loadUrl("file://"+path);
+
+    public void loadHTMLFile(String fileName) {
+	String path = AppRunnerSettings.get().project.getFolder() + File.separator + fileName;
+	loadUrl("file://" + path);
     }
-    
+
     @Override
-    public boolean onTouchEvent(MotionEvent event){
-        requestDisallowInterceptTouchEvent(true);
-        return super.onTouchEvent(event);
-    }          
+    public boolean onTouchEvent(MotionEvent event) {
+	requestDisallowInterceptTouchEvent(true);
+	return super.onTouchEvent(event);
+    }
 }

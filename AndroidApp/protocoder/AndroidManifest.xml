@@ -123,7 +123,7 @@
             android:windowSoftInputMode="stateHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
-                <action android:name="com.protocoder.apprunner.MWMActivity" />
+                <action android:name="com.protocoder.apprunner.AppRunnerActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <!--
@@ -152,18 +152,6 @@
             </intent-filter>
         </receiver>
 
-        <activity
-            android:name="org.protocoder.ItemListActivity"
-            android:label="@string/title_item_list" >
-        </activity>
-        <activity
-            android:name="org.protocoder.ItemDetailActivity"
-            android:label="@string/title_item_detail"
-            android:parentActivityName="org.protocoder.ItemListActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ItemListActivity" />
-        </activity>
     </application>
 
 </manifest>

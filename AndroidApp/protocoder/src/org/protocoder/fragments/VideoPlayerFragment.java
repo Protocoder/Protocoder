@@ -51,217 +51,213 @@ import android.widget.VideoView;
 @SuppressLint("NewApi")
 public class VideoPlayerFragment extends Fragment {
 
-	private View v;
-	private VideoView mVideoView;
-	Vector<VideoListener> listeners = new Vector<VideoListener>();
-	Runnable r;
-	protected Handler handler;
-	protected MediaPlayer mp_;
+    private View v;
+    private VideoView mVideoView;
+    Vector<VideoListener> listeners = new Vector<VideoListener>();
+    Runnable r;
+    protected Handler handler;
+    protected MediaPlayer mp_;
 
-	public interface VideoListener {
+    public interface VideoListener {
 
-		public void onReady(boolean ready);
+	public void onReady(boolean ready);
 
-		public void onFinish(boolean finished);
+	public void onFinish(boolean finished);
 
-		public void onTimeUpdate(int ms, int totalDuration);
+	public void onTimeUpdate(int ms, int totalDuration);
+    }
+
+    /**
+     * Called when the activity is first created.
+     * 
+     * @return
+     */
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+	super.onCreateView(inflater, container, savedInstanceState);
+
+	v = inflater.inflate(R.layout.fragment_videoplayer, container, false);
+	mVideoView = (VideoView) v.findViewById(R.id.video_view);
+
+	final FrameLayout fl = (FrameLayout) v.findViewById(R.id.video_parent);
+
+	fl.setOnClickListener(new OnClickListener() {
+
+	    @Override
+	    public void onClick(View v) {
+		// fl.animate().scaleX(0.5f).scaleY(0.5f).setDuration(5000);
+	    }
+	});
+	Log.d("mm", "onCreateView");
+
+	handler = new Handler();
+
+	return v;
+
+    }
+
+    public void onActivityCreated(Bundle savedInstanceState) {
+	super.onActivityCreated(savedInstanceState);
+	Log.d("mm", "onActivityCreated");
+
+	for (VideoListener l : listeners) {
+	    l.onReady(true);
 	}
 
-	/**
-	 * Called when the activity is first created.
-	 * 
-	 * @return
+    }
+
+    @Override
+    public void onDestroy() {
+	super.onDestroy();
+
+	// mp_.stop();
+	for (VideoListener l : listeners) {
+	    l = null;
+	}
+	handler.removeCallbacks(r);
+    }
+
+    public void loadExternalVideo(String path) {
+	loadVideo(path);
+    }
+
+    public void loadResourceVideo(String videoFile) {
+	String path = "android.resource://" + getActivity().getPackageName() + videoFile;
+	loadVideo(path);
+    }
+
+    public void loadVideo(final String path) {
+	/*
+	 * Alternatively,for streaming media you can use mVideoView.setVideoURI(Uri.parse(URLstring));
 	 */
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	mVideoView.setVideoPath(path);
+	MediaController mediaController = new MediaController(getActivity());
+	mediaController.setAnchorView(mVideoView);
+	mVideoView.setMediaController(null);
 
-		super.onCreateView(inflater, container, savedInstanceState);
+	mVideoView.requestFocus();
+	mVideoView.setKeepScreenOn(true);
 
-		v = inflater.inflate(R.layout.fragment_videoplayer, container, false);
-		mVideoView = (VideoView) v.findViewById(R.id.video_view);
+	mVideoView.start();
 
-		final FrameLayout fl = (FrameLayout) v.findViewById(R.id.video_parent);
+	mVideoView.setOnClickListener(new OnClickListener() {
 
-		fl.setOnClickListener(new OnClickListener() {
+	    @Override
+	    public void onClick(View v) {
+		close();
+	    }
+	});
 
-			@Override
-			public void onClick(View v) {
-			//	fl.animate().scaleX(0.5f).scaleY(0.5f).setDuration(5000);
+	mVideoView.setOnPreparedListener(new OnPreparedListener() {
+	    @Override
+	    public void onPrepared(MediaPlayer mp) {
+		mp_ = mp;
+		mp_.setLooping(true);
+
+		// mVideoView.animate().rotation(200).alpha((float) 0.5)
+		// .scaleX(0.2f).scaleY(0.2f).setDuration(2000);
+
+		r = new Runnable() {
+
+		    @Override
+		    public void run() {
+			for (VideoListener l : listeners) {
+			    try {
+				l.onTimeUpdate(mp_.getCurrentPosition(), mp_.getDuration());
+
+			    } catch (Exception e) {
+			    }
+
 			}
-		});
-		Log.d("mm", "onCreateView");
+			handler.postDelayed(this, 1000);
+		    }
+		};
 
-		handler = new Handler();
+		handler.post(r);
+	    }
+	});
 
-		return v;
+	// mp_.setO
 
-	}
+	mVideoView.setOnCompletionListener(new OnCompletionListener() {
 
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		Log.d("mm", "onActivityCreated");
+	    public void onCompletion(MediaPlayer mp) {
 
+		// finish();
 		for (VideoListener l : listeners) {
-			l.onReady(true);
+		    l.onFinish(true);
 		}
 
-	}
+	    }
+	});
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
+    }
 
-		// mp_.stop();
-		for (VideoListener l : listeners) {
-			l = null;
-		}
-		handler.removeCallbacks(r);
-	}
-
-	public void loadExternalVideo(String path) {
-		loadVideo(path);
-	}
-
-	public void loadResourceVideo(String videoFile) {
-		String path = "android.resource://" + getActivity().getPackageName()
-				+ videoFile;
-		loadVideo(path);
-	}
-
-	public void loadVideo(final String path) {
-		/*
-		 * Alternatively,for streaming media you can use
-		 * mVideoView.setVideoURI(Uri.parse(URLstring));
-		 */
-
-		mVideoView.setVideoPath(path);
-		MediaController mediaController = new MediaController(getActivity());
-		mediaController.setAnchorView(mVideoView);
-		mVideoView.setMediaController(null);
-
-		mVideoView.requestFocus();
-		mVideoView.setKeepScreenOn(true);
-
-		mVideoView.start();
-
-		mVideoView.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				close();
-			}
-		});
-
-		mVideoView.setOnPreparedListener(new OnPreparedListener() {
-			@Override
-			public void onPrepared(MediaPlayer mp) {
-				mp_ = mp;
-				mp_.setLooping(true);
-
-				// mVideoView.animate().rotation(200).alpha((float) 0.5)
-				// .scaleX(0.2f).scaleY(0.2f).setDuration(2000);
-
-				r = new Runnable() {
-
-					@Override
-					public void run() {
-						for (VideoListener l : listeners) {
-							try {
-								l.onTimeUpdate(mp_.getCurrentPosition(),
-										mp_.getDuration());
-
-							} catch (Exception e) {
-							}
-
-						}
-						handler.postDelayed(this, 1000);
-					}
-				};
-
-				handler.post(r);
-			}
-		});
-
-		// mp_.setO
-
-		mVideoView.setOnCompletionListener(new OnCompletionListener() {
-
-			public void onCompletion(MediaPlayer mp) {
-
-				// finish();
-				for (VideoListener l : listeners) {
-					l.onFinish(true);
-				}
-
-			}
-		});
+    public void setVolume(float volume) {
+	if (mp_ != null) {
+	    mp_.setVolume(volume, volume);
 
 	}
+    }
 
-	public void setVolume(float volume) {
-		if (mp_ != null) {
-			mp_.setVolume(volume, volume);
+    public void setLoop(boolean b) {
+	mp_.setLooping(b);
+    }
 
-		}
+    public void close() {
+	handler.removeCallbacks(r);
+	// mVideoView.stopPlayback();
+
+    }
+
+    public boolean onTouchEvent(MotionEvent event) {
+	if (event.getAction() == MotionEvent.ACTION_DOWN) {
+
 	}
+	return true;
+    }
 
-	public void setLoop(boolean b) {
-		mp_.setLooping(b);
-	}
+    public void addListener(VideoListener videoListener) {
+	listeners.add(videoListener);
+    }
 
-	public void close() {
-		handler.removeCallbacks(r);
-		// mVideoView.stopPlayback();
+    public void removeListener(VideoListener videoListener) {
+	listeners.remove(videoListener);
+    }
 
-	}
+    public void seekTo(int ms) {
+	mp_.seekTo(ms);
+    }
 
-	public boolean onTouchEvent(MotionEvent event) {
-		if (event.getAction() == MotionEvent.ACTION_DOWN) {
+    public int getDuration() {
+	return mp_.getDuration();
+    }
 
-		}
-		return true;
-	}
+    public int getCurrentPosition() {
+	return mp_.getCurrentPosition();
+    }
 
-	public void addListener(VideoListener videoListener) {
-		listeners.add(videoListener);
-	}
+    public void getWidth() {
+	mp_.getVideoWidth();
+    }
 
-	public void removeListener(VideoListener videoListener) {
-		listeners.remove(videoListener);
-	}
+    public void getHeight() {
+	mp_.getVideoHeight();
+    }
 
-	public void seekTo(int ms) {
-		mp_.seekTo(ms);
-	}
+    public void play() {
+	mp_.start();
+    }
 
-	public int getDuration() {
-		return mp_.getDuration();
-	}
+    public void pause() {
+	mp_.pause();
+    }
 
-	public int getCurrentPosition() {
-		return mp_.getCurrentPosition();
-	}
-
-	public void getWidth() {
-		mp_.getVideoWidth();
-	}
-
-	public void getHeight() {
-		mp_.getVideoHeight();
-	}
-
-	public void play() {
-		mp_.start();
-	}
-
-	public void pause() {
-		mp_.pause();
-	}
-
-	public void stop() {
-		mp_.stop();
-	}
+    public void stop() {
+	mp_.stop();
+    }
 
 }

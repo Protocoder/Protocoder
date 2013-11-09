@@ -31,8 +31,8 @@ import org.protocoder.base.BaseMainApp;
 
 public class MainApp extends BaseMainApp {
 
-	public MainApp() {
+    public MainApp() {
 
-	}
-	
+    }
+
 }

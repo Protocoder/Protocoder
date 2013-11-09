@@ -35,35 +35,33 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.os.Environment;
 
-
 public class BaseMainApp extends Application {
 
-	public static SharedPreferences app_preferences;
-	public static String baseDir;
-	public static String projectsDir;
-	public static String examplesDir;
-	public static Application instance;
-	public static String typeExampleStr = "examples";
-	public static String typeProjectStr = "projects";
+    public static SharedPreferences app_preferences;
+    public static String baseDir;
+    public static String projectsDir;
+    public static String examplesDir;
+    public static Application instance;
+    public static String typeExampleStr = "examples";
+    public static String typeProjectStr = "projects";
 
+    public BaseMainApp() {
+	baseDir = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + AppSettings.appFolder
+		+ File.separator;
 
-	public BaseMainApp() {
-		baseDir = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + 
-				AppSettings.appFolder + File.separator;
+	// baseDir = getFilesDir()+ File.separator +
+	// AppSettings.appFolder + File.separator;
 
-		//baseDir = getFilesDir()+ File.separator + 
-		//		AppSettings.appFolder + File.separator;
-		
-		projectsDir = baseDir + typeProjectStr;
-		examplesDir = baseDir + typeExampleStr;
-		
-	}
-	
-	@Override
-	public void onCreate() {
-		super.onCreate();
-		
-		// Copy all example apps to the base directory
-		FileIO.copyAssetFolder(getAssets(), "ExampleApps", baseDir);
-	}
+	projectsDir = baseDir + typeProjectStr;
+	examplesDir = baseDir + typeExampleStr;
+
+    }
+
+    @Override
+    public void onCreate() {
+	super.onCreate();
+
+	// Copy all example apps to the base directory
+	FileIO.copyAssetFolder(getAssets(), "ExampleApps", baseDir);
+    }
 }

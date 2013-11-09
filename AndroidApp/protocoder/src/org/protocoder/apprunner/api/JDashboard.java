@@ -46,144 +46,138 @@ import org.protocoder.network.CustomWebsocketServer;
 import android.app.Activity;
 import android.util.Log;
 
-
 public class JDashboard extends JInterface {
 
-	String TAG = "JDashboard";
+    String TAG = "JDashboard";
 
-	public JDashboard(Activity a) {
-        super(a); 
+    public JDashboard(Activity a) {
+	super(a);
+    }
+
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "name", "x", "y", "w", "h", "minLimit", "maxLimit" })
+    public JDashboardPlot addPlot(String name, int x, int y, int w, int h, float minLimit, float maxLimit)
+	    throws UnknownHostException, JSONException {
+
+	JDashboardPlot jWebAppPlot = new JDashboardPlot(a.get());
+	jWebAppPlot.add(name, x, y, w, h, minLimit, maxLimit);
+
+	return jWebAppPlot;
+    }
+
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "html", "x", "y" })
+    public JDashboardHTML addHTML(String html, int x, int y) throws UnknownHostException, JSONException {
+
+	JDashboardHTML jWebAppHTML = new JDashboardHTML(a.get());
+	jWebAppHTML.add(html, x, y);
+
+	return jWebAppHTML;
+    }
+
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "name", "x", "y", "w", "h", "function()" })
+    public JDashboardButton addButton(String name, int x, int y, int w, int h, final String callbackfn)
+	    throws UnknownHostException, JSONException {
+	Log.d(TAG, "callback " + callbackfn);
+
+	JDashboardButton jWebAppButton = new JDashboardButton(a.get());
+	jWebAppButton.add(name, x, y, w, h, callbackfn);
+
+	return jWebAppButton;
+    }
+
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "name", "x", "y", "w", "h", "min", "max" })
+    public JDashboardSlider addSlider(String name, int x, int y, int w, int h, int min, int max, final String callbackfn)
+	    throws UnknownHostException, JSONException {
+	Log.d(TAG, "callback " + callbackfn);
+
+	JDashboardSlider jWebAppSlider = new JDashboardSlider(a.get());
+	jWebAppSlider.add(name, x, y, w, h, min, max, callbackfn);
+
+	return jWebAppSlider;
+    }
+
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "name", "x", "y", "size", "hexColor" })
+    public JDashboardLabel addLabel(String name, int x, int y, int size, String color) throws UnknownHostException,
+	    JSONException {
+
+	JDashboardLabel jWebAppLabel = new JDashboardLabel(a.get());
+	jWebAppLabel.add(name, x, y, size, color);
+
+	return jWebAppLabel;
+    }
+
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "url", "x", "y", "w", "h" })
+    public JDashboardImage addImage(String url, int x, int y, int w, int h) throws UnknownHostException, JSONException {
+
+	JDashboardImage jWebAppImage = new JDashboardImage(a.get());
+	jWebAppImage.add(url, x, y, w, h);
+
+	return jWebAppImage;
+    }
+
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "r", "g", "b", "alpha" })
+    public void setBackgroundColor(int r, int g, int b, float alpha) {
+	JSONObject msg = new JSONObject();
+	try {
+	    msg.put("type", "widget");
+	    msg.put("action", "setBackgroundColor");
+
+	    JSONObject values = new JSONObject();
+	    values.put("r", r);
+	    values.put("g", g);
+	    values.put("b", b);
+	    values.put("alpha", alpha);
+	    msg.put("values", values);
+
+	} catch (JSONException e1) {
+	    e1.printStackTrace();
 	}
 
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	@APIParam( params = {"name", "x", "y", "w", "h", "minLimit", "maxLimit"} )
-	public JDashboardPlot addPlot(String name, int x, int y, int w, int h, float minLimit, float maxLimit) throws UnknownHostException, JSONException {
-		
-		JDashboardPlot jWebAppPlot = new JDashboardPlot(a.get());
-		jWebAppPlot.add(name, x, y, w, h, minLimit, maxLimit);
-		
-		return jWebAppPlot;
-	}
-	
-
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	@APIParam( params = {"html", "x", "y"} )
-	public JDashboardHTML addHTML(String html, int x, int y) throws UnknownHostException, JSONException {
-		
-		JDashboardHTML jWebAppHTML = new JDashboardHTML(a.get());
-		jWebAppHTML.add(html, x, y);
-		
-		
-		return jWebAppHTML;
-	}
-	
-
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	@APIParam( params = {"name", "x", "y", "w", "h", "function()"} )
-	public JDashboardButton addButton(String name, int x, int y, int w, int h, final String callbackfn) throws UnknownHostException, JSONException {
-		Log.d(TAG, "callback " + callbackfn);
-		
-		JDashboardButton jWebAppButton = new JDashboardButton(a.get());
-		jWebAppButton.add(name, x, y, w, h, callbackfn);
-
-		return jWebAppButton;
-	}
-	
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	@APIParam( params = {"name", "x", "y", "w", "h", "min", "max"} )
-	public JDashboardSlider addSlider(String name, int x, int y, int w, int h, int min, int max, final String callbackfn) throws UnknownHostException, JSONException {
-		Log.d(TAG, "callback " + callbackfn);
-		
-		JDashboardSlider jWebAppSlider = new JDashboardSlider(a.get());
-		jWebAppSlider.add(name, x, y, w, h, min, max, callbackfn);
-		
-		return jWebAppSlider;
-	}
-	
-
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	@APIParam( params = {"name", "x", "y", "size", "hexColor"} )
-	public JDashboardLabel addLabel(String name, int x, int y, int size, String color) throws UnknownHostException, JSONException {
-
-		JDashboardLabel jWebAppLabel = new JDashboardLabel(a.get());
-		jWebAppLabel.add(name, x, y, size, color);
-				
-		return jWebAppLabel;
-	}
-	
-
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	@APIParam( params = {"url", "x", "y", "w", "h"} )
-	public JDashboardImage addImage(String url, int x, int y, int w, int h) throws UnknownHostException, JSONException {
-
-		JDashboardImage jWebAppImage = new JDashboardImage(a.get());
-		jWebAppImage.add(url, x, y, w, h);
-		
-		return jWebAppImage;
-	}
-	
-	
-
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	@APIParam( params = {"r", "g", "b", "alpha"} )
-	public void setBackgroundColor(int r, int g, int b, float alpha) {
-		JSONObject msg = new JSONObject();
-		try {
-			msg.put("type", "widget");
-			msg.put("action", "setBackgroundColor");
-			
-			JSONObject values = new JSONObject();
-			values.put("r", r);
-			values.put("g", g);
-			values.put("b", b);
-			values.put("alpha", alpha);
-			msg.put("values", values);
-			
-		} catch (JSONException e1) {
-			e1.printStackTrace();
-		}
-		
-		try {
-			CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
-			ws.send(msg);
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} 
-		
-		
+	try {
+	    CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
+	    ws.send(msg);
+	} catch (UnknownHostException e) {
+	    e.printStackTrace();
 	}
 
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	@APIParam( params = {"boolean"} )
-	public void show(boolean b) {
-		JSONObject msg = new JSONObject();
-		try {
-			msg.put("type", "widget");
-			msg.put("action", "showDashboard");
+    }
 
-			JSONObject values = new JSONObject();
-			values.put("val", b);
-			msg.put("values", values);
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "boolean" })
+    public void show(boolean b) {
+	JSONObject msg = new JSONObject();
+	try {
+	    msg.put("type", "widget");
+	    msg.put("action", "showDashboard");
 
-		} catch (JSONException e1) {
-			e1.printStackTrace();
-		}
+	    JSONObject values = new JSONObject();
+	    values.put("val", b);
+	    msg.put("values", values);
 
-		try {
-			CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
-			ws.send(msg);
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} 
-		
-		
+	} catch (JSONException e1) {
+	    e1.printStackTrace();
 	}
+
+	try {
+	    CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
+	    ws.send(msg);
+	} catch (UnknownHostException e) {
+	    e.printStackTrace();
+	}
+
+    }
 }

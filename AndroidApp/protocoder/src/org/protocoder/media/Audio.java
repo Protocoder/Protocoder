@@ -47,135 +47,129 @@ import android.util.Log;
 
 public class Audio {
 
-	private static final String TAG = "AudioPlayer";
+    private static final String TAG = "AudioPlayer";
 
-	public static MediaPlayer playSound(String url, int volume) {
-		Log.d(TAG, "playing " + url);
-		
-		final MediaPlayer mMediaPlayer = new MediaPlayer();
-		mMediaPlayer.setLooping(false);
-		mMediaPlayer.setOnPreparedListener(new OnPreparedListener() {
+    public static MediaPlayer playSound(String url, int volume) {
+	Log.d(TAG, "playing " + url);
 
-			@Override
-			public void onPrepared(MediaPlayer mp) {
-				Log.d(TAG, "prepared");
-				mMediaPlayer.start();
+	final MediaPlayer mMediaPlayer = new MediaPlayer();
+	mMediaPlayer.setLooping(false);
+	mMediaPlayer.setOnPreparedListener(new OnPreparedListener() {
 
-			}
-		});
+	    @Override
+	    public void onPrepared(MediaPlayer mp) {
+		Log.d(TAG, "prepared");
+		mMediaPlayer.start();
 
-		mMediaPlayer
-				.setOnBufferingUpdateListener(new OnBufferingUpdateListener() {
+	    }
+	});
 
-					@Override
-					public void onBufferingUpdate(MediaPlayer mp, int percent) {
-						Log.d(TAG, "" + percent);
-					}
-				});
+	mMediaPlayer.setOnBufferingUpdateListener(new OnBufferingUpdateListener() {
 
-		mMediaPlayer.setOnCompletionListener(new OnCompletionListener() {
+	    @Override
+	    public void onBufferingUpdate(MediaPlayer mp, int percent) {
+		Log.d(TAG, "" + percent);
+	    }
+	});
 
-			@Override
-			public void onCompletion(MediaPlayer mp) {
-				Log.d(TAG, "completed");
-				mMediaPlayer.reset();
-			}
-		});
+	mMediaPlayer.setOnCompletionListener(new OnCompletionListener() {
 
-		try {
+	    @Override
+	    public void onCompletion(MediaPlayer mp) {
+		Log.d(TAG, "completed");
+		mMediaPlayer.reset();
+	    }
+	});
 
-			mMediaPlayer.setDataSource(url);
-			mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+	try {
 
-			mMediaPlayer.prepareAsync();
+	    mMediaPlayer.setDataSource(url);
+	    mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+	    mMediaPlayer.prepareAsync();
+
+	} catch (IllegalArgumentException e) {
+	    e.printStackTrace();
+	} catch (IllegalStateException e) {
+	    e.printStackTrace();
+	} catch (SecurityException e) {
+	    e.printStackTrace();
+	} catch (IOException e) {
+	    e.printStackTrace();
+	}
+	mMediaPlayer.setVolume(volume, volume);
+
+	return mMediaPlayer;
+    }
+
+    public static void setVolume(MediaPlayer mMediaPlayer, int value) {
+	float volume = (float) (value) / 100;
+	Log.d(TAG, "" + volume);
+	mMediaPlayer.setVolume(volume, volume);
+
+    }
+
+    static TextToSpeech mTts;
+
+    public static void speak(Context c, final String textMsg, final Locale locale) {
+	mTts = new TextToSpeech(c, new OnInitListener() {
+	    @Override
+	    public void onInit(int status) {
+		if (status == TextToSpeech.SUCCESS) {
+
+		    int result = mTts.setLanguage(locale);
+		    if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+			// Lanuage data is missing or the language is not
+			// supported.
+			Log.e(TAG, "Language is not available.");
+		    } else {
+
+			mTts.speak(textMsg, TextToSpeech.QUEUE_FLUSH, null);
+
+		    }
+		} else {
+		    // Initialization failed.
+		    Log.e(TAG, "Could not initialize TextToSpeech.");
 		}
-		mMediaPlayer.setVolume(volume, volume);
+	    }
+	});
+    }
 
-		return mMediaPlayer;
+    public final static int VOICE_RECOGNITION_REQUEST_CODE = 1234;
+
+    /**
+     * Fire an intent to start the speech recognition activity. onActivityResult is handled in BaseActivity
+     */
+    private void startVoiceRecognitionActivity(Activity a) {
+
+	Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+	intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+	intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Tell me something!");
+	a.startActivityForResult(intent, VOICE_RECOGNITION_REQUEST_CODE);
+    }
+
+    public static void setSpeakerOn(boolean b) {
+
+	Class audioSystemClass;
+	try {
+	    audioSystemClass = Class.forName("android.media.AudioSystem");
+	    Method setForceUse = audioSystemClass.getMethod("setForceUse", int.class, int.class);
+	    // First 1 == FOR_MEDIA, second 1 == FORCE_SPEAKER. To go back to
+	    // the default
+	    // behavior, use FORCE_NONE (0).
+	    setForceUse.invoke(null, 1, 1);
+	} catch (ClassNotFoundException e) {
+	    e.printStackTrace();
+	} catch (NoSuchMethodException e) {
+	    e.printStackTrace();
+	} catch (IllegalArgumentException e) {
+	    e.printStackTrace();
+	} catch (IllegalAccessException e) {
+	    e.printStackTrace();
+	} catch (InvocationTargetException e) {
+	    e.printStackTrace();
 	}
 
-	public static void setVolume(MediaPlayer mMediaPlayer, int value) {
-		float volume = (float) (value) / 100;
-		Log.d(TAG, "" + volume);
-		mMediaPlayer.setVolume(volume, volume);
-
-	}
-
-	static TextToSpeech mTts;
-
-	public static void speak(Context c, final String textMsg,
-			final Locale locale) {
-		mTts = new TextToSpeech(c, new OnInitListener() {
-			@Override
-			public void onInit(int status) {
-				if (status == TextToSpeech.SUCCESS) {
-				
-					int result = mTts.setLanguage(locale);
-					if (result == TextToSpeech.LANG_MISSING_DATA
-							|| result == TextToSpeech.LANG_NOT_SUPPORTED) {
-						// Lanuage data is missing or the language is not
-						// supported.
-						Log.e(TAG, "Language is not available.");
-					} else {
-		
-						mTts.speak(textMsg, TextToSpeech.QUEUE_FLUSH, null);
-
-					}
-				} else {
-					// Initialization failed.
-					Log.e(TAG, "Could not initialize TextToSpeech.");
-				}
-			}
-		});
-	}
-
-	public final static int VOICE_RECOGNITION_REQUEST_CODE = 1234;
-
-	/**
-	 * Fire an intent to start the speech recognition activity. onActivityResult
-	 * is handled in BaseActivity
-	 */
-	private void startVoiceRecognitionActivity(Activity a) {
-
-		Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-		intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-				RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-		intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Tell me something!");
-		a.startActivityForResult(intent, VOICE_RECOGNITION_REQUEST_CODE);
-	}
-
-	public static void setSpeakerOn(boolean b) {
-
-		Class audioSystemClass;
-		try {
-			audioSystemClass = Class.forName("android.media.AudioSystem");
-			Method setForceUse = audioSystemClass.getMethod("setForceUse",
-					int.class, int.class);
-			// First 1 == FOR_MEDIA, second 1 == FORCE_SPEAKER. To go back to
-			// the default
-			// behavior, use FORCE_NONE (0).
-			setForceUse.invoke(null, 1, 1);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		}
-
-	}
+    }
 
 }

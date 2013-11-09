@@ -41,82 +41,75 @@ import org.protocoder.fragments.CameraFragment.CameraListener;
 
 import android.app.Activity;
 
-
 public class JCamera extends JInterface implements JViewInterface {
 
-	private CameraFragment cameraFragment;
+    private CameraFragment cameraFragment;
 
+    public JCamera(Activity a, CameraFragment cameraFragment) {
+	super(a);
 
-	public JCamera(Activity a, CameraFragment cameraFragment) {
-		super(a);
-		
-		this.cameraFragment = cameraFragment;
-	}
+	this.cameraFragment = cameraFragment;
+    }
 
-	@JavascriptInterface
-	@APIParam( params = {"file", "function()"} )
-	@APIMethod(description = "", example = "camera.takePicture();")
-	//@APIRequires()
-	public void takePicture(String file, final String callbackfn) {
-		String[] q = new String[]{"blah", "hey", "yo"};
-		//String[] qq = new Str
-		cameraFragment.takePic(AppRunnerSettings.get().project.getFolder() + File.separator + file);
-		cameraFragment.addListener(new CameraListener() {
-			
-			@Override
-			public void onVideoRecorded() {
-				
-			}
-			
-			@Override
-			public void onPicTaken() {
-				callback(callbackfn);
-				cameraFragment.removeListener(this);
-			}
-		});
-	}	
+    @JavascriptInterface
+    @APIParam(params = { "file", "function()" })
+    @APIMethod(description = "", example = "camera.takePicture();")
+    // @APIRequires()
+    public void takePicture(String file, final String callbackfn) {
+	String[] q = new String[] { "blah", "hey", "yo" };
+	// String[] qq = new Str
+	cameraFragment.takePic(AppRunnerSettings.get().project.getFolder() + File.separator + file);
+	cameraFragment.addListener(new CameraListener() {
 
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	public void recordVideo(String file) {
-		cameraFragment.recordVideo(AppRunnerSettings.get().project.getFolder() + File.separator + file);
-	}	
-	
-	
+	    @Override
+	    public void onVideoRecorded() {
 
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	public void stopRecordingVideo(final String callbackfn) {
-//		cameraFragment.recordVideo(((AppRunnerActivity) a.get()).getCurrentDir() + File.separator + file);
-//		cameraFragment.addListener(new CameraListener() {
-//			
-//			@Override
-//			public void onVideoRecorded() {
-//				callback(callbackfn);
-//				cameraFragment.removeListener(this);
-//				
-//			}
-//			
-//			@Override
-//			public void onPicTaken() {
-//			}
-//		});
-	}
+	    }
 
-	
-	@Override
-	public void move(float x, float y) { 
-		cameraFragment.getView().animate().x(x).setDuration(AppSettings.animSpeed);
-		cameraFragment.getView().animate().y(y).setDuration(AppSettings.animSpeed);
+	    @Override
+	    public void onPicTaken() {
+		callback(callbackfn);
+		cameraFragment.removeListener(this);
+	    }
+	});
+    }
 
-	} 
-	
-	@Override
-	public void rotate(float deg) { 
-		cameraFragment.getView().animate().rotation(deg).setDuration(AppSettings.animSpeed);
-	}
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    public void recordVideo(String file) {
+	cameraFragment.recordVideo(AppRunnerSettings.get().project.getFolder() + File.separator + file);
+    }
 
-	
-	
-	
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    public void stopRecordingVideo(final String callbackfn) {
+	// cameraFragment.recordVideo(((AppRunnerActivity)
+	// a.get()).getCurrentDir() + File.separator + file);
+	// cameraFragment.addListener(new CameraListener() {
+	//
+	// @Override
+	// public void onVideoRecorded() {
+	// callback(callbackfn);
+	// cameraFragment.removeListener(this);
+	//
+	// }
+	//
+	// @Override
+	// public void onPicTaken() {
+	// }
+	// });
+    }
+
+    @Override
+    public void move(float x, float y) {
+	cameraFragment.getView().animate().x(x).setDuration(AppSettings.animSpeed);
+	cameraFragment.getView().animate().y(y).setDuration(AppSettings.animSpeed);
+
+    }
+
+    @Override
+    public void rotate(float deg) {
+	cameraFragment.getView().animate().rotation(deg).setDuration(AppSettings.animSpeed);
+    }
+
 }

@@ -40,59 +40,58 @@ import org.protocoder.utils.StrUtils;
 import android.app.Activity;
 import android.util.Log;
 
-
 public class JDashboardImage extends JInterface {
 
-	private static final String TAG = "JWebAppImage";
-	String id;
+    private static final String TAG = "JWebAppImage";
+    String id;
 
-	public JDashboardImage(Activity a) {
-		super(a);
-	}
+    public JDashboardImage(Activity a) {
+	super(a);
+    }
 
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	public void add(String url, int x, int y, int w, int h) throws UnknownHostException, JSONException {
-		this.id = StrUtils.generateRandomString();
-		JSONObject msg = new JSONObject();
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    public void add(String url, int x, int y, int w, int h) throws UnknownHostException, JSONException {
+	this.id = StrUtils.generateRandomString();
+	JSONObject msg = new JSONObject();
 
-		msg.put("type", "widget");
-		msg.put("action", "add");
+	msg.put("type", "widget");
+	msg.put("action", "add");
 
-		JSONObject values = new JSONObject();
-		values.put("id", id);
-		values.put("url", url);
-		values.put("type", "image");
-		values.put("x", x);
-		values.put("y", y);
-		values.put("w", w);
-		values.put("h", h);
+	JSONObject values = new JSONObject();
+	values.put("id", id);
+	values.put("url", url);
+	values.put("type", "image");
+	values.put("x", x);
+	values.put("y", y);
+	values.put("w", w);
+	values.put("h", h);
 
-		msg.put("values", values);
+	msg.put("values", values);
 
-		Log.d(TAG, "added widget ");
+	Log.d(TAG, "added widget ");
 
-		CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
-		ws.send(msg);
+	CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
+	ws.send(msg);
 
-	}
+    }
 
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	public void changeImage(String url) throws JSONException, UnknownHostException {
-		JSONObject msg = new JSONObject();
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    public void changeImage(String url) throws JSONException, UnknownHostException {
+	JSONObject msg = new JSONObject();
 
-		msg.put("type", "widget");
-		msg.put("action", "changeImage");
+	msg.put("type", "widget");
+	msg.put("action", "changeImage");
 
-		JSONObject values = new JSONObject();
-		values.put("id", id);
-		values.put("type", "label");
-		values.put("url", url);
-		msg.put("values", values);
+	JSONObject values = new JSONObject();
+	values.put("id", id);
+	values.put("type", "label");
+	values.put("url", url);
+	msg.put("values", values);
 
-		CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
-		ws.send(msg);
+	CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
+	ws.send(msg);
 
-	}
+    }
 }

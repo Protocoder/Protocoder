@@ -43,105 +43,98 @@ import android.view.ViewGroup;
 
 public class LauncherActivity extends BaseActivity {
 
-	private static final long SPLASH_SCREEN_DURATION = 0;
-	protected Handler mExitHandler = null;
-	protected Runnable mExitRunnable = null;
-	Intent intent = null;
+    private static final long SPLASH_SCREEN_DURATION = 0;
+    protected Handler mExitHandler = null;
+    protected Runnable mExitRunnable = null;
+    Intent intent = null;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+	super.onCreate(savedInstanceState);
 
-		//setTheme(android.R.style.Theme_NoDisplay);
-		//setContentView(R.layout.activity_bootscreen);
-		
-		// Prepare intent to exit the activity and move to the main one
-		boolean firstLaunch; // If this is the first time the
-		SharedPreferences userDetails = getSharedPreferences(
-				"com.makewithmoto", MODE_PRIVATE);
-		firstLaunch = userDetails.getBoolean(
-				getResources().getString(R.string.pref_is_first_launch), true);
-		
-		
-		if (firstLaunch) {
-			intent = new Intent(this, WelcomeActivity.class);
-			userDetails.edit().putString("device_id", StrUtils.generateRandomString());
-		} else {
-			intent = new Intent(this, MainActivity.class);
-		}
-		
-		intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-		startActivity(intent);
-		finish();
+	// setTheme(android.R.style.Theme_NoDisplay);
+	// setContentView(R.layout.activity_bootscreen);
 
-		/*
-		mExitRunnable = new Runnable() {
-			@Override
-			public void run() {
-				exitSplash();
-			}
-		};
+	// Prepare intent to exit the activity and move to the main one
+	boolean firstLaunch; // If this is the first time the
+	SharedPreferences userDetails = getSharedPreferences("com.makewithmoto", MODE_PRIVATE);
+	firstLaunch = userDetails.getBoolean(getResources().getString(R.string.pref_is_first_launch), true);
 
-		// Run the exitRunnable in in SPLASH_SCREEN_DURATION ms
-		mExitHandler = new Handler();
-		mExitHandler.postDelayed(mExitRunnable, SPLASH_SCREEN_DURATION);
-		 */
-	
+	if (firstLaunch) {
+	    intent = new Intent(this, WelcomeActivity.class);
+	    userDetails.edit().putString("device_id", StrUtils.generateRandomString());
+	} else {
+	    intent = new Intent(this, MainActivity.class);
 	}
 
-	/**
-	 * onPause
-	 */
-	@Override
-	protected void onPause() {
-		super.onPause();
-	}
+	intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+	startActivity(intent);
+	finish();
 
-	/**
-	 * onDestroy
-	 */
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		// HSHIEH: Android takes care of this for us actually
-		ViewGroup vg = (ViewGroup) findViewById(R.layout.activity_bootscreen);
-		if (vg != null) {
-			vg.invalidate();
-			vg.removeAllViews();
-		}
-	}
-
-	/**
-	 * On touch event, exit the splash screen (non-Javadoc)
+	/*
+	 * mExitRunnable = new Runnable() {
 	 * 
-	 * @see android.app.Activity#onTouchEvent(android.view.MotionEvent)
-	 */
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			// Remove the exitRunnable callback from the handler queue
-			mExitHandler.removeCallbacks(mExitRunnable);
-			// Run the exit code manually
-			exitSplash();
-		}
-		return true;
-	}
-
-	/**
-	 * This is a private method to exit the splash screen
+	 * @Override public void run() { exitSplash(); } };
 	 * 
+	 * // Run the exitRunnable in in SPLASH_SCREEN_DURATION ms mExitHandler = new Handler();
+	 * mExitHandler.postDelayed(mExitRunnable, SPLASH_SCREEN_DURATION);
 	 */
-	@SuppressLint("NewApi")
-	private void exitSplash() {
-		finish();
 
-		if (AppSettings.CURRENT_VERSION > Build.VERSION.SDK_INT) {
-			ActivityOptions options = ActivityOptions.makeCustomAnimation(this,
-					android.R.anim.fade_in, android.R.anim.fade_out);
-			startActivity(intent, options.toBundle());
-		} else {
-			startActivity(intent);
+    }
 
-		}
+    /**
+     * onPause
+     */
+    @Override
+    protected void onPause() {
+	super.onPause();
+    }
+
+    /**
+     * onDestroy
+     */
+    @Override
+    protected void onDestroy() {
+	super.onDestroy();
+	// HSHIEH: Android takes care of this for us actually
+	ViewGroup vg = (ViewGroup) findViewById(R.layout.activity_bootscreen);
+	if (vg != null) {
+	    vg.invalidate();
+	    vg.removeAllViews();
 	}
+    }
+
+    /**
+     * On touch event, exit the splash screen (non-Javadoc)
+     * 
+     * @see android.app.Activity#onTouchEvent(android.view.MotionEvent)
+     */
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+	if (event.getAction() == MotionEvent.ACTION_DOWN) {
+	    // Remove the exitRunnable callback from the handler queue
+	    mExitHandler.removeCallbacks(mExitRunnable);
+	    // Run the exit code manually
+	    exitSplash();
+	}
+	return true;
+    }
+
+    /**
+     * This is a private method to exit the splash screen
+     * 
+     */
+    @SuppressLint("NewApi")
+    private void exitSplash() {
+	finish();
+
+	if (AppSettings.CURRENT_VERSION > Build.VERSION.SDK_INT) {
+	    ActivityOptions options = ActivityOptions.makeCustomAnimation(this, android.R.anim.fade_in,
+		    android.R.anim.fade_out);
+	    startActivity(intent, options.toBundle());
+	} else {
+	    startActivity(intent);
+
+	}
+    }
 }

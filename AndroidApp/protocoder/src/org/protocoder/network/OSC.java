@@ -43,160 +43,158 @@ import de.sciss.net.OSCTransmitter;
 
 public class OSC {
 
-	protected static final String TAG = "OSC";
+    protected static final String TAG = "OSC";
 
-	public interface OSCServerListener {
+    public interface OSCServerListener {
 
-		public void onMessage(OSCMessage msg);
+	public void onMessage(OSCMessage msg);
+
+    }
+
+    public class Server {
+
+	// OSC server
+	OSCReceiver rcv;
+	OSCTransmitter trns;
+	DatagramChannel dch;
+	int n = 0;
+
+	SocketAddress inPort = null;
+
+	Vector<OSCServerListener> listeners = new Vector<OSCServerListener>();
+
+	public void start(String port) {
+
+	    rcv = null;
+	    dch = null;
+
+	    try {
+		inPort = new InetSocketAddress(Integer.parseInt(port));
+
+		dch = DatagramChannel.open();
+		dch.socket().bind(inPort); // assigns an automatic local socket
+		// address
+		rcv = OSCReceiver.newUsing(dch);
+
+		rcv.addOSCListener(new OSCListener() {
+
+		    public void messageReceived(OSCMessage msg, SocketAddress sender, long time) {
+
+			for (OSCServerListener l : listeners) {
+			    ((OSCServerListener) l).onMessage(msg);
+			}
+
+		    }
+		});
+
+		rcv.startListening();
+
+	    } catch (IOException e2) {
+		Log.d(TAG, e2.getLocalizedMessage());
+	    }
+	}
+
+	public void stop() {
+	    stopOSCServer();
+	}
+
+	public void stopOSCServer() {
+	    try {
+		dch.close();
+	    } catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	    }
+	    rcv.dispose();
+	}
+
+	public void addListener(OSCServerListener listener) {
+	    listeners.add(listener);
+	}
+
+	public void removeListener(OSCServerListener listener) {
+	    listeners.remove(listener);
+	}
+
+    }
+
+    public class Client {
+
+	// OSC client
+	SocketAddress addr2;
+	DatagramChannel dch2;
+	OSCTransmitter trns2;
+	boolean oscConnected = false;
+
+	public Client(String address, int port) {
+	    connectOSC(address, port);
+	}
+
+	public void connectOSC(String address, int port) {
+
+	    Log.d(TAG, "connecting to " + address + " in " + port);
+	    try {
+		addr2 = new InetSocketAddress(InetAddress.getByName(address), port);
+		dch2 = DatagramChannel.open();
+		dch2.socket().bind(null);
+		trns2 = OSCTransmitter.newUsing(dch2);
+		Log.d(TAG, "connected to " + address + " in " + port);
+		oscConnected = true;
+	    } catch (NumberFormatException e) {
+		e.printStackTrace();
+	    } catch (UnknownHostException e) {
+		e.printStackTrace();
+	    } catch (IOException e) {
+		e.printStackTrace();
+	    }
 
 	}
 
-	public class Server {
+	public boolean isOSCConnected() {
+	    return oscConnected;
+	}
 
-		// OSC server
-		OSCReceiver rcv;
-		OSCTransmitter trns;
-		DatagramChannel dch;
-		int n = 0;
+	public void send(final String msg, final Object[] o) {
 
-		SocketAddress inPort = null;
+	    if (oscConnected == true) {
+		// send
 
-		Vector<OSCServerListener> listeners = new Vector<OSCServerListener>();
+		Thread t = new Thread(new Runnable() {
 
-		public void start(String port) {
-
-			rcv = null;
-			dch = null;
-
+		    @Override
+		    public void run() {
+			// Object[] o = new Object[1];
+			// o[0] = content;
+			Log.d(TAG, "sending");
 			try {
-				inPort = new InetSocketAddress(Integer.parseInt(port));
-
-				dch = DatagramChannel.open();
-				dch.socket().bind(inPort); // assigns an automatic local socket
-				// address
-				rcv = OSCReceiver.newUsing(dch);
-
-				rcv.addOSCListener(new OSCListener() {
-
-					public void messageReceived(OSCMessage msg,
-							SocketAddress sender, long time) {
-
-						for (OSCServerListener l : listeners) {
-							((OSCServerListener) l).onMessage(msg);
-						}
-
-					}
-				});
-
-				rcv.startListening();
-
-			} catch (IOException e2) {
-				Log.d(TAG, e2.getLocalizedMessage());
-			}
-		}
-		
-		public void stop() {
-			stopOSCServer();
-		}
-
-		public void stopOSCServer() {
-			try {
-				dch.close();
+			    Log.d(TAG, "sent");
+			    trns2.send(new OSCMessage(msg, o), addr2);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			    Log.d(TAG, "not sent");
+			    e.printStackTrace();
 			}
-			rcv.dispose();
-		}
 
-		public void addListener(OSCServerListener listener) {
-			listeners.add(listener);
-		}
+		    }
+		});
+		t.start();
+	    }
+	}
 
-		public void removeListener(OSCServerListener listener) {
-			listeners.remove(listener);
-		}
+	public void disconnectOSC() {
+	    try {
+		dch2.close();
+	    } catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	    }
+	    trns2.dispose();
 
 	}
 
-	public class Client {
+	public void stop() {
+	    disconnectOSC();
 
-		// OSC client
-		SocketAddress addr2;
-		DatagramChannel dch2;
-		OSCTransmitter trns2;
-		boolean oscConnected = false;
-
-		public Client(String address, int port) {
-			connectOSC(address, port);
-		}
-
-		public void connectOSC(String address, int port) {
-
-			Log.d(TAG, "connecting to " + address + " in " + port);
-			try {
-				addr2 = new InetSocketAddress(InetAddress.getByName(address),
-						port);
-				dch2 = DatagramChannel.open();
-				dch2.socket().bind(null);
-				trns2 = OSCTransmitter.newUsing(dch2);
-				Log.d(TAG, "connected to " + address + " in " + port);
-				oscConnected = true;
-			} catch (NumberFormatException e) {
-				e.printStackTrace();
-			} catch (UnknownHostException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-		}
-
-		public boolean isOSCConnected() {
-			return oscConnected;
-		}
-
-		public void send(final String msg, final Object[] o) {
-
-			if (oscConnected == true) {
-				// send
-
-				Thread t = new Thread(new Runnable() {
-
-					@Override
-					public void run() {
-						//Object[] o = new Object[1];
-						//o[0] = content;
-						Log.d(TAG, "sending");
-						try {
-							Log.d(TAG, "sent");
-							trns2.send(new OSCMessage(msg, o), addr2);
-						} catch (IOException e) {
-							Log.d(TAG, "not sent");
-							e.printStackTrace();
-						}
-
-					}
-				});
-				t.start();
-			}
-		}
-
-		public void disconnectOSC() {
-			try {
-				dch2.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			trns2.dispose();
-
-		}
-		
-		public void stop() {
-			disconnectOSC();
-		
-		}
 	}
+    }
 
 }

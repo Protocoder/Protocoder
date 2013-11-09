@@ -40,59 +40,60 @@ import java.io.InputStreamReader;
 import android.util.Log;
 
 public class SysFs {
-	
-	static final String TAG = "SysFS";
-	
-	public static boolean write(String filename, String data) {
-		try {
-			File mpuFile = new File(filename);
-			if(mpuFile.canWrite()) {
-				BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
-				bw.write(data);
-				bw.close();
-			} else {
-				Process p = Runtime.getRuntime().exec("su");
 
-				DataOutputStream dos = new DataOutputStream(p.getOutputStream());
-				dos.writeBytes("echo " + data + " > " + filename + "\n");
-				dos.writeBytes("exit");
-				dos.flush();
-				dos.close();
+    static final String TAG = "SysFS";
 
-				if(p.waitFor() != 0) {
-					Log.i(TAG, "Could not write to " + filename + " (exit: " + p.exitValue() + ")");
-					InputStream in = p.getErrorStream();
-					StringBuilder sb = new StringBuilder();
-			        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-			        String line = bufferedReader.readLine();
-			        while (line != null) {
-			        	sb.append(line); sb.append('\n');
-			        	line = bufferedReader.readLine();
-			        }
-					Log.i(TAG, sb.toString());
-				}
-			}
-		} catch (IOException ex) {
-			Log.i(TAG, "Error: " + ex.getMessage());
-			return false;
-		} catch (InterruptedException e) {
-			Log.i(TAG, "Error writing with root permission");
-			e.printStackTrace();
-			return false;
+    public static boolean write(String filename, String data) {
+	try {
+	    File mpuFile = new File(filename);
+	    if (mpuFile.canWrite()) {
+		BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
+		bw.write(data);
+		bw.close();
+	    } else {
+		Process p = Runtime.getRuntime().exec("su");
+
+		DataOutputStream dos = new DataOutputStream(p.getOutputStream());
+		dos.writeBytes("echo " + data + " > " + filename + "\n");
+		dos.writeBytes("exit");
+		dos.flush();
+		dos.close();
+
+		if (p.waitFor() != 0) {
+		    Log.i(TAG, "Could not write to " + filename + " (exit: " + p.exitValue() + ")");
+		    InputStream in = p.getErrorStream();
+		    StringBuilder sb = new StringBuilder();
+		    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+		    String line = bufferedReader.readLine();
+		    while (line != null) {
+			sb.append(line);
+			sb.append('\n');
+			line = bufferedReader.readLine();
+		    }
+		    Log.i(TAG, sb.toString());
 		}
-		return true;
+	    }
+	} catch (IOException ex) {
+	    Log.i(TAG, "Error: " + ex.getMessage());
+	    return false;
+	} catch (InterruptedException e) {
+	    Log.i(TAG, "Error writing with root permission");
+	    e.printStackTrace();
+	    return false;
 	}
-	
-	public static String read(String filename) {
-		String value;
-		try {
-			BufferedReader br = new BufferedReader(new FileReader(filename));
-			value = br.readLine();
-			br.close();
-		} catch (IOException ex) {
-			return "-1";
-		}
-		return value;
+	return true;
+    }
+
+    public static String read(String filename) {
+	String value;
+	try {
+	    BufferedReader br = new BufferedReader(new FileReader(filename));
+	    value = br.readLine();
+	    br.close();
+	} catch (IOException ex) {
+	    return "-1";
 	}
-	
+	return value;
+    }
+
 }

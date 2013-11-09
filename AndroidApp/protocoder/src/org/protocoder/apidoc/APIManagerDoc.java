@@ -30,7 +30,6 @@ package org.protocoder.apidoc;
 import java.util.Vector;
 
 class APIManagerDoc {
-	public Vector<APIManagerClass> apiClasses = new Vector<APIManagerClass>();
+    public Vector<APIManagerClass> apiClasses = new Vector<APIManagerClass>();
 
 }
-

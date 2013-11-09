@@ -39,43 +39,39 @@ import org.protocoder.network.CustomWebsocketServer;
 
 import android.support.v4.app.FragmentActivity;
 
-
 public class JConsole extends JInterface {
 
-	String TAG = "JConsole";
+    String TAG = "JConsole";
 
-	public JConsole(FragmentActivity mwmActivity) {
-		super(mwmActivity);
-	}
+    public JConsole(FragmentActivity mwmActivity) {
+	super(mwmActivity);
+    }
 
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	@APIParam( params = {"text"} )
-	public void log(String output) throws JSONException, UnknownHostException {
-		JSONObject msg = new JSONObject();
-		msg.put("type", "console");
-		msg.put("action", "log");
-		JSONObject values = new JSONObject();
-		values.put("val", output);
-		msg.put("values", values);
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "text" })
+    public void log(String output) throws JSONException, UnknownHostException {
+	JSONObject msg = new JSONObject();
+	msg.put("type", "console");
+	msg.put("action", "log");
+	JSONObject values = new JSONObject();
+	values.put("val", output);
+	msg.put("values", values);
 
-		CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
-		ws.send(msg);
-	}
-	
-	
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	@APIParam( params = {""} )
-	public void clear() throws JSONException, UnknownHostException {
-		JSONObject msg = new JSONObject();
-		msg.put("type", "console");
-		msg.put("action", "clear");		
-		
-		CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
-		ws.send(msg);
-	}
-	
-	
+	CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
+	ws.send(msg);
+    }
+
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "" })
+    public void clear() throws JSONException, UnknownHostException {
+	JSONObject msg = new JSONObject();
+	msg.put("type", "console");
+	msg.put("action", "clear");
+
+	CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
+	ws.send(msg);
+    }
 
 }

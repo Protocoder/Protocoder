@@ -34,53 +34,51 @@ import org.protocoder.apprunner.JavascriptInterface;
 
 import android.app.Activity;
 
-
 public class SignalUtils extends JInterface {
 
-	public SignalUtils(Activity a) {
-		super(a);
+    public SignalUtils(Activity a) {
+	super(a);
 
+    }
+
+    public LowPass lowpass() {
+	return null;
+    }
+
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "function()" })
+    public void fft(boolean visible) {
+
+	// FFT fft = new FFT(10);
+	// fft.fft(re, im);
+    }
+
+    class LowPass {
+	int n;
+	float[] vals;
+	float sum = 0.0f;
+
+	public LowPass(int n) {
+	    this.n = n;
+	    vals = new float[n];
 	}
 
-	public LowPass lowpass() {
-		return null; 
-	}
-	
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	@APIParam( params = {"function()"} )
-	public void fft(boolean visible) {
-		
-		//FFT fft = new FFT(10);
-		//fft.fft(re, im);
-	}
+	public float smooth(float newVal) {
 
-	class LowPass { 
-		int n;
-		float[] vals;
-		float sum = 0.0f;
-		
-		public LowPass(int n) {
-			this.n = n;
-			vals = new float[n];
+	    for (int i = 0; i < vals.length; i++) {
+		sum = +vals[i];
+
+		// shift to the left
+		if (i < vals.length - 1) {
+		    vals[i] = vals[i + 1];
+		} else {
+		    vals[i] = newVal;
 		}
-		
-		
-		public float smooth(float newVal) {
-			
-			for (int i = 0; i < vals.length; i++) {
-				sum =+ vals[i];
-				
-				//shift to the left
-				if (i < vals.length - 1) { 
-					vals[i] = vals[i + 1];
-				} else { 
-					vals[i] = newVal;
-				}
-			}
-			return sum / n; 
-		}
-		
+	    }
+	    return sum / n;
 	}
+
+    }
 
 }

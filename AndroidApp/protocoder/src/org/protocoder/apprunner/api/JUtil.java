@@ -39,94 +39,90 @@ import org.protocoder.sensors.WhatIsRunning;
 import android.app.Activity;
 import android.os.Handler;
 
-
 public class JUtil extends JInterface {
 
-	private Handler handler;
-	ArrayList<Runnable> rl = new ArrayList<Runnable>();
-	private String onKeyDownfn;
-	private String onKeyUpfn;
-	private String onSmsReceivedfn;
+    private Handler handler;
+    ArrayList<Runnable> rl = new ArrayList<Runnable>();
+    private String onKeyDownfn;
+    private String onKeyUpfn;
+    private String onSmsReceivedfn;
 
-	public JUtil(Activity a) {
-		super(a);
-		WhatIsRunning.getInstance().add(this);
-		handler = new Handler();
+    public JUtil(Activity a) {
+	super(a);
+	WhatIsRunning.getInstance().add(this);
+	handler = new Handler();
 
-	}
+    }
 
-	public class Looper {
-		Runnable task;
-		public int delay;
+    public class Looper {
+	Runnable task;
+	public int delay;
 
-		Looper(final int duration, final String callbackfn) {
-			delay = duration;
-			task = new Runnable() {
-				@Override
-				public void run() {
-					callback(callbackfn);
-					handler.postDelayed(this, delay);
-				}
-			};
-			handler.post(task);
-
-			rl.add(task);
+	Looper(final int duration, final String callbackfn) {
+	    delay = duration;
+	    task = new Runnable() {
+		@Override
+		public void run() {
+		    callback(callbackfn);
+		    handler.postDelayed(this, delay);
 		}
+	    };
+	    handler.post(task);
 
-
-		@JavascriptInterface
-		@APIMethod(description = "", example = "")
-		@APIParam( params = {"duration"} )
-		public void setDelay(int duration) {
-			this.delay = duration;
-		}
-		
-
-		@JavascriptInterface
-		@APIMethod(description = "", example = "")
-		public void stop() {
-			handler.removeCallbacks(task);
-		}
+	    rl.add(task);
 	}
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
-	@APIParam( params = {"milliseconds", "function()"} )
-	public Looper loop(final int duration, final String callbackkfn) {
-
-		return new Looper(duration, callbackkfn);
+	@APIParam(params = { "duration" })
+	public void setDelay(int duration) {
+	    this.delay = duration;
 	}
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
-	@APIParam( params = {"milliseconds", "function()"} )
-	public void delay(final int duration, final String fn) {
-
-		Runnable task = new Runnable() {
-			@Override
-			public void run() {
-				// handler.postDelayed(this, duration);
-				callback(fn);
-				handler.removeCallbacks(this);
-				rl.remove(this);
-			}
-		};
-		handler.postDelayed(task, duration);
-
-		rl.add(task);
-	}
-
-	public void stopAllTimers() {
-		Iterator<Runnable> ir = rl.iterator();
-		while (ir.hasNext()) {
-			handler.removeCallbacks(ir.next());
-			// handler.post(ir.next());
-		}
-	}
-
 	public void stop() {
-		stopAllTimers();
+	    handler.removeCallbacks(task);
 	}
+    }
 
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "milliseconds", "function()" })
+    public Looper loop(final int duration, final String callbackkfn) {
+
+	return new Looper(duration, callbackkfn);
+    }
+
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "milliseconds", "function()" })
+    public void delay(final int duration, final String fn) {
+
+	Runnable task = new Runnable() {
+	    @Override
+	    public void run() {
+		// handler.postDelayed(this, duration);
+		callback(fn);
+		handler.removeCallbacks(this);
+		rl.remove(this);
+	    }
+	};
+	handler.postDelayed(task, duration);
+
+	rl.add(task);
+    }
+
+    public void stopAllTimers() {
+	Iterator<Runnable> ir = rl.iterator();
+	while (ir.hasNext()) {
+	    handler.removeCallbacks(ir.next());
+	    // handler.post(ir.next());
+	}
+    }
+
+    public void stop() {
+	stopAllTimers();
+    }
 
 }
