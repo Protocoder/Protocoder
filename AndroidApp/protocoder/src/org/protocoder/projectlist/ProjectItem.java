@@ -41,31 +41,31 @@ import android.widget.TextView;
 
 public class ProjectItem extends LinearLayout {
 
-	private WeakReference<View> v;
-	//private Context c;
-	private WeakReference<Context> c;
+    private WeakReference<View> v;
+    // private Context c;
+    private WeakReference<Context> c;
 
-	public ProjectItem(Context context) {
-		super(context);
-		this.c = new WeakReference<Context>(context);
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		this.v = new WeakReference<View>(inflater.inflate(R.layout.view_project_item, this, true));
-	}
+    public ProjectItem(Context context) {
+	super(context);
+	this.c = new WeakReference<Context>(context);
+	LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	this.v = new WeakReference<View>(inflater.inflate(R.layout.view_project_item, this, true));
+    }
 
-	public ProjectItem(Context context, AttributeSet attributeSet) {
-		super(context, attributeSet);
+    public ProjectItem(Context context, AttributeSet attributeSet) {
+	super(context, attributeSet);
 
-	}
+    }
 
-	public void setImage(int resId) {
-		ImageView imageView = (ImageView) v.get().findViewById(R.id.customViewImage);
-		imageView.setImageResource(resId);
-	}
+    public void setImage(int resId) {
+	ImageView imageView = (ImageView) v.get().findViewById(R.id.customViewImage);
+	imageView.setImageResource(resId);
+    }
 
-	public void setText(String text) {
-		TextView textView = (TextView) v.get().findViewById(R.id.customViewText);
-		//TextUtils.changeFont(c.get(), textView, Fonts.MENU_TITLE);
-		textView.setText(text);
-	}
+    public void setText(String text) {
+	TextView textView = (TextView) v.get().findViewById(R.id.customViewText);
+	// TextUtils.changeFont(c.get(), textView, Fonts.MENU_TITLE);
+	textView.setText(text);
+    }
 
 }

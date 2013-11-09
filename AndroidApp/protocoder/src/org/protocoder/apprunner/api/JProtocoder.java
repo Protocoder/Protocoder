@@ -38,39 +38,38 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-
 public class JProtocoder extends JInterface {
 
-	public String id;
+    public String id;
 
-	public JProtocoder(Activity a) {
-		super(a);
-		
-		//get apprunner settings 
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(a);
-        id = sharedPrefs.getString("pref_id", "-1");
-	}
-	
+    public JProtocoder(Activity a) {
+	super(a);
 
-	@android.webkit.JavascriptInterface
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	@APIParam( params = {"code"} )
-	public void eval(String code) {
-		((AppRunnerActivity) a.get()).interp.eval(code);
-	}
-	
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	public String getId() {
-		return PrefsFragment.getId(a.get());
-		
-	}
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	@APIParam( params = {"id"} )
-	public void setId(String id) {
-		PrefsFragment.setId(a.get(), id);
-	}
+	// get apprunner settings
+	SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(a);
+	id = sharedPrefs.getString("pref_id", "-1");
+    }
+
+    @android.webkit.JavascriptInterface
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "code" })
+    public void eval(String code) {
+	((AppRunnerActivity) a.get()).interp.eval(code);
+    }
+
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    public String getId() {
+	return PrefsFragment.getId(a.get());
+
+    }
+
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "id" })
+    public void setId(String id) {
+	PrefsFragment.setId(a.get(), id);
+    }
 
 }

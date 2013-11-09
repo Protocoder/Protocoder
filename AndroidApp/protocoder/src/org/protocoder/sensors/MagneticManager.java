@@ -35,49 +35,47 @@ import android.hardware.SensorManager;
 
 public class MagneticManager extends CustomSensorManager implements WhatIsRunningInterface {
 
-	public interface MagneticListener extends CustomSensorListener {
+    public interface MagneticListener extends CustomSensorListener {
 
-		public void onMagneticChanged(float f); 
-		
-	}
+	public void onMagneticChanged(float f);
 
-	private final static String TAG = "Magnetic";
-	
+    }
 
-	public MagneticManager(Context c) { 
-		super(c);
-		
-		// register
-		sensor = sensormanager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+    private final static String TAG = "Magnetic";
 
-		listener = new SensorEventListener() {
+    public MagneticManager(Context c) {
+	super(c);
 
-			@Override
-			public void onSensorChanged(SensorEvent event) { 
-				//listener
-				for (CustomSensorListener l : listeners) {
-					((MagneticListener)l).onMagneticChanged(event.values[0]);
-				}
-				
-			}
+	// register
+	sensor = sensormanager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
-			@Override
-			public void onAccuracyChanged(Sensor sensor, int accuracy) {
-				switch (accuracy) {
-				case SensorManager.SENSOR_STATUS_UNRELIABLE:
-					break;
-				case SensorManager.SENSOR_STATUS_ACCURACY_LOW:
-					break;
-				case SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM:
-					break;
-				case SensorManager.SENSOR_STATUS_ACCURACY_HIGH:
-					break;
-				}
-			}
+	listener = new SensorEventListener() {
 
-		};
+	    @Override
+	    public void onSensorChanged(SensorEvent event) {
+		// listener
+		for (CustomSensorListener l : listeners) {
+		    ((MagneticListener) l).onMagneticChanged(event.values[0]);
+		}
 
-	}
+	    }
 
+	    @Override
+	    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+		switch (accuracy) {
+		case SensorManager.SENSOR_STATUS_UNRELIABLE:
+		    break;
+		case SensorManager.SENSOR_STATUS_ACCURACY_LOW:
+		    break;
+		case SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM:
+		    break;
+		case SensorManager.SENSOR_STATUS_ACCURACY_HIGH:
+		    break;
+		}
+	    }
+
+	};
+
+    }
 
 }

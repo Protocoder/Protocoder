@@ -25,7 +25,6 @@
  * 
  */
 
-
 package org.protocoder.apprunner.api.widgets;
 
 import org.protocoder.base.AppSettings;
@@ -33,23 +32,21 @@ import org.protocoder.views.CanvasView;
 
 import android.content.Context;
 
-
 public class JCanvasView extends CanvasView implements JViewInterface {
 
-	
-	public JCanvasView(Context context, int w, int h) {
-		super(context, w, h);
-		// TODO Auto-generated constructor stub
-	}
+    public JCanvasView(Context context, int w, int h) {
+	super(context, w, h);
+	// TODO Auto-generated constructor stub
+    }
 
-	@Override
-	public void move(float x, float y) { 
-		this.animate().x(x).setDuration(AppSettings.animSpeed);
-		this.animate().y(y).setDuration(AppSettings.animSpeed);
-	} 
-	
-	@Override
-	public void rotate(float deg) { 
-		this.animate().rotation(deg).setDuration(AppSettings.animSpeed);
-	}
+    @Override
+    public void move(float x, float y) {
+	this.animate().x(x).setDuration(AppSettings.animSpeed);
+	this.animate().y(y).setDuration(AppSettings.animSpeed);
+    }
+
+    @Override
+    public void rotate(float deg) {
+	this.animate().rotation(deg).setDuration(AppSettings.animSpeed);
+    }
 }

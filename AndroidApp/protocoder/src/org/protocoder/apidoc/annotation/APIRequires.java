@@ -2,6 +2,6 @@ package org.protocoder.apidoc.annotation;
 
 public @interface APIRequires {
 
-	String value();
+    String value();
 
 }

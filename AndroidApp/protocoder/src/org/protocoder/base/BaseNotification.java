@@ -36,73 +36,68 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
 
-
 //TODO http://developer.android.com/training/notify-user/expanded.html 
 public class BaseNotification {
 
-	public static int NOTIFICATION_APP_RUNNING = 1;
+    public static int NOTIFICATION_APP_RUNNING = 1;
 
-	Context c;
-	NotificationManager mNotificationManager;
-	boolean mIsShowing = false;
+    Context c;
+    NotificationManager mNotificationManager;
+    boolean mIsShowing = false;
 
-	private Builder mBuilder;
+    private Builder mBuilder;
 
-	public BaseNotification(Context context) {
-		c = context;
+    public BaseNotification(Context context) {
+	c = context;
 
-		mNotificationManager = (NotificationManager) c
-				.getSystemService(Context.NOTIFICATION_SERVICE);
+	mNotificationManager = (NotificationManager) c.getSystemService(Context.NOTIFICATION_SERVICE);
 
-	}
+    }
 
-	public void show(Class<?> cls, int icon, String text, String title){
-	    show(cls, icon, text, title, R.drawable.ic_launcher);
-	}
-	
-	public void show(Class<?> cls, int icon, String text, String title, int actionIcon) {
-		CharSequence tickerText = "MWM";
-		mIsShowing = true;
+    public void show(Class<?> cls, int icon, String text, String title) {
+	show(cls, icon, text, title, R.drawable.ic_launcher);
+    }
 
-		long when = System.currentTimeMillis();
+    public void show(Class<?> cls, int icon, String text, String title, int actionIcon) {
+	CharSequence tickerText = "MWM";
+	mIsShowing = true;
 
-		Intent notificationIntent = new Intent(c, cls);
-		PendingIntent contentIntent = PendingIntent.getActivity(c, 0,
-				notificationIntent, 0);
-		
-		Intent stopServerIntent = new Intent();  
-		stopServerIntent.setAction("com.makewithmoto.intent.action.STOP_SERVER");
-		PendingIntent stopServerPendingIntent = PendingIntent.getBroadcast(c, 0, stopServerIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+	long when = System.currentTimeMillis();
 
-		mBuilder = new NotificationCompat.Builder(c);
-		mBuilder.setContentTitle(title)
-				.setContentText(text)
-				.setSmallIcon(icon)
-				.setOngoing(true)
-				.setProgress(0, 0, true)
-				.setContentIntent(contentIntent)
-				//.setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
-				.addAction(actionIcon, "Stop server", stopServerPendingIntent);
-			
-		// notification.defaults |= Notification.DEFAULT_LIGHTS;
-		// notification.ledARGB = Color.RED;
-		// notification.ledOffMS = 300;
-		// notification.ledOnMS = 300;
+	Intent notificationIntent = new Intent(c, cls);
+	PendingIntent contentIntent = PendingIntent.getActivity(c, 0, notificationIntent, 0);
 
-		// notification.defaults |= Notification.DEFAULT_SOUND;
+	Intent stopServerIntent = new Intent();
+	stopServerIntent.setAction("com.makewithmoto.intent.action.STOP_SERVER");
+	PendingIntent stopServerPendingIntent = PendingIntent.getBroadcast(c, 0, stopServerIntent,
+		PendingIntent.FLAG_UPDATE_CURRENT);
 
-		mNotificationManager.notify(NOTIFICATION_APP_RUNNING, mBuilder.build());
+	mBuilder = new NotificationCompat.Builder(c);
+	mBuilder.setContentTitle(title).setContentText(text).setSmallIcon(icon).setOngoing(true)
+		.setProgress(0, 0, true).setContentIntent(contentIntent)
+		// .setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
+		.addAction(actionIcon, "Stop server", stopServerPendingIntent);
 
-	}
+	// notification.defaults |= Notification.DEFAULT_LIGHTS;
+	// notification.ledARGB = Color.RED;
+	// notification.ledOffMS = 300;
+	// notification.ledOnMS = 300;
 
-	public void hide() {
-		if (mIsShowing) mNotificationManager.cancel(null, NOTIFICATION_APP_RUNNING);
-		mIsShowing = false;
-	}
+	// notification.defaults |= Notification.DEFAULT_SOUND;
 
-	public static void killAll(Context ctx){
-	    NotificationManager notifManager  = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-	    notifManager.cancelAll();
-	}
+	mNotificationManager.notify(NOTIFICATION_APP_RUNNING, mBuilder.build());
+
+    }
+
+    public void hide() {
+	if (mIsShowing)
+	    mNotificationManager.cancel(null, NOTIFICATION_APP_RUNNING);
+	mIsShowing = false;
+    }
+
+    public static void killAll(Context ctx) {
+	NotificationManager notifManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+	notifManager.cancelAll();
+    }
 
 }

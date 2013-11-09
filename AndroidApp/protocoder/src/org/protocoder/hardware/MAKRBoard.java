@@ -42,188 +42,173 @@ import java.security.InvalidParameterException;
 import android.util.Log;
 import android_serialport_api.SerialPort;
 
-public class MAKRBoard{
-	
-	
-	private boolean isStarted = false;
-	private static final String TAG = "MAKRBoard";
-	private static final String MAKR_ENABLE = "/sys/class/makr/makr/5v_enable";
-	
-	protected SerialPort mSerialPort;
-	protected OutputStream mOutputStream;
-	private InputStream mInputStream;
-	private String receivedData;
-	
-	
-	public boolean isEnabled() {
-		boolean status = false;
-		BufferedReader br = null;
+public class MAKRBoard {
+
+    private boolean isStarted = false;
+    private static final String TAG = "MAKRBoard";
+    private static final String MAKR_ENABLE = "/sys/class/makr/makr/5v_enable";
+
+    protected SerialPort mSerialPort;
+    protected OutputStream mOutputStream;
+    private InputStream mInputStream;
+    private String receivedData;
+
+    public boolean isEnabled() {
+	boolean status = false;
+	BufferedReader br = null;
+	try {
+	    br = new BufferedReader(new FileReader(MAKR_ENABLE));
+	    String rv = br.readLine();
+	    if (rv.matches("on")) {
+		return true;
+	    }
+	} catch (FileNotFoundException e) {
+	    Log.e(TAG, e.getMessage());
+	} catch (IOException e) {
+	    Log.e(TAG, e.getMessage());
+	} finally {
+	    if (br != null) {
 		try {
-			br = new BufferedReader(new FileReader(MAKR_ENABLE));
-			String rv = br.readLine();
-			if (rv.matches("on")) {
-				return true;
-			}
-		} catch (FileNotFoundException e) {
-			Log.e(TAG, e.getMessage());
+		    br.close();
 		} catch (IOException e) {
-			Log.e(TAG, e.getMessage());
-		} finally {
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-				}
-			}
 		}
-		return status;
+	    }
 	}
+	return status;
+    }
 
-	/*
-	 * Turn on or off the device
-	 */
-	public void enable(boolean value) {
-		BufferedWriter writer = null;
+    /*
+     * Turn on or off the device
+     */
+    public void enable(boolean value) {
+	BufferedWriter writer = null;
+	try {
+	    FileOutputStream fos = new FileOutputStream(MAKR_ENABLE);
+	    OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF-8");
+	    writer = new BufferedWriter(osw);
+	    if (value)
+		writer.write("on\n");
+	    else
+		writer.write("off\n");
+	} catch (FileNotFoundException e) {
+	    Log.e(TAG, e.getMessage());
+	} catch (IOException e) {
+	    Log.e(TAG, e.getMessage());
+	} finally {
+	    if (writer != null) {
 		try {
-			FileOutputStream fos = new FileOutputStream(MAKR_ENABLE);
-			OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF-8");
-			writer = new BufferedWriter(osw);
-			if (value)
-				writer.write("on\n");
-			else
-				writer.write("off\n");
-		} catch (FileNotFoundException e) {
-			Log.e(TAG, e.getMessage());
+		    writer.close();
 		} catch (IOException e) {
-			Log.e(TAG, e.getMessage());
-		} finally {
-			if (writer != null) {
-				try {
-					writer.close();
-				} catch (IOException e) {
-				}
-			}
 		}
+	    }
+	}
+    }
+
+    public void powerOn() {
+	// enable the device
+	if (!isEnabled()) {
+	    enable(true);
+	}
+    }
+
+    public void powerOff() {
+	if (isEnabled()) {
+	    enable(false);
+	}
+    }
+
+    public void start() {
+
+	try {
+	    mSerialPort = getSerialPort();
+	    mOutputStream = mSerialPort.getOutputStream();
+	    mInputStream = mSerialPort.getInputStream();
+	} catch (SecurityException e) {
+	    // DisplayError(R.string.error_security);
+	} catch (IOException e) {
+	    // DisplayError(R.string.error_unknown);
+	} catch (InvalidParameterException e) {
+	    // DisplayError(R.string.error_configuration);
 	}
 
-	
+	powerOn();
+	isStarted = true;
+    }
 
-	public void powerOn() {
-		// enable the device
-		if (!isEnabled()) {
-				enable(true);
-		}
-	}
-	
-	
+    public void stop() {
+	closeSerialPort();
+	mSerialPort = null;
+	powerOff();
+    }
 
-	public void powerOff() {
-		if (isEnabled()) {
-		    enable(false);
-		}
-	}
-	
-	
-	
-	public void start() {
-		
-		try {
-			mSerialPort = getSerialPort();
-			mOutputStream = mSerialPort.getOutputStream();
-			mInputStream = mSerialPort.getInputStream();
-		} catch (SecurityException e) {
-			// DisplayError(R.string.error_security);
-		} catch (IOException e) {
-			// DisplayError(R.string.error_unknown);
-		} catch (InvalidParameterException e) {
-			// DisplayError(R.string.error_configuration);
-		}
-		
-		powerOn();
-		isStarted = true;
-	}
-	
-	
-	public void stop() {
-		closeSerialPort();
-		mSerialPort = null;
-	    powerOff();
+    public String readSerial() {
+
+	final int size;
+	try {
+	    final byte[] buffer = new byte[64];
+	    if (mInputStream == null)
+		return "";
+	    size = mInputStream.read(buffer);
+	    if (size > 0) {
+		receivedData = new String(buffer, 0, size);
+	    } else {
+		receivedData = "";
+	    }
+	    // Log.d(TAG,"Rx data : "+receivedData);
+	} catch (IOException e) {
+	    e.printStackTrace();
+	    return "";
 	}
 
-	
-	public String readSerial(){
-		
-		final int size;
-		try {
-			final byte[] buffer = new byte[64];
-			if (mInputStream == null)
-				return "";
-			size = mInputStream.read(buffer);
-			if (size > 0) {
-				receivedData = new String(buffer, 0, size);	
-			}
-			else{
-				receivedData = "";
-			}
-			//Log.d(TAG,"Rx data : "+receivedData);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return "";
-		}
-		
-		return receivedData;
-		
-	}
-	
-	
-	public void writeSerial(String cmd) {
+	return receivedData;
 
-		try {
-			cmd = cmd + "\n";
-			mOutputStream.write(cmd.getBytes());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+    }
 
+    public void writeSerial(String cmd) {
+
+	try {
+	    cmd = cmd + "\n";
+	    mOutputStream.write(cmd.getBytes());
+	} catch (IOException e) {
+	    e.printStackTrace();
 	}
 
-	
-	
-	/* Serial port stuff */ 
-	public SerialPort getSerialPort() throws SecurityException, IOException, InvalidParameterException {
-		if (mSerialPort == null) {
-			String path = "/dev/ttyHSL2";
-			int baudrate = 9600;
+    }
 
-			/* Check parameters */
-			if ( (path.length() == 0) || (baudrate == -1)) {
-				throw new InvalidParameterException();
-			}
+    /* Serial port stuff */
+    public SerialPort getSerialPort() throws SecurityException, IOException, InvalidParameterException {
+	if (mSerialPort == null) {
+	    String path = "/dev/ttyHSL2";
+	    int baudrate = 9600;
 
-			/* Open the serial port */
-			mSerialPort = new SerialPort(new File(path), baudrate, 0);
-		}
-		return mSerialPort;
-	}
+	    /* Check parameters */
+	    if ((path.length() == 0) || (baudrate == -1)) {
+		throw new InvalidParameterException();
+	    }
 
-	public void closeSerialPort() {
-		if (mSerialPort != null) {
-			mSerialPort.close();
-			mSerialPort = null; 
-		}
+	    /* Open the serial port */
+	    mSerialPort = new SerialPort(new File(path), baudrate, 0);
 	}
-		
-	
-	public void resume() {
-		if (isStarted ) { 
-			start();		
-		}
+	return mSerialPort;
+    }
+
+    public void closeSerialPort() {
+	if (mSerialPort != null) {
+	    mSerialPort.close();
+	    mSerialPort = null;
 	}
-	
-	public void pause() {
-		if (isStarted ) { 
-			stop();		
-		}
+    }
+
+    public void resume() {
+	if (isStarted) {
+	    start();
 	}
+    }
+
+    public void pause() {
+	if (isStarted) {
+	    stop();
+	}
+    }
 
 }

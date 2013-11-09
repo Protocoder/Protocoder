@@ -7,4 +7,7 @@
     <dimen name="license_card_marginBottom">5dp</dimen>
     <dimen name="license_card_title_padding">10dp</dimen>
 
+    <dimen name="apprunner_console">150dp</dimen>
+    <dimen name="apprunner_console_text_padding">15dp</dimen>
+
 </resources>

@@ -25,7 +25,6 @@
  * 
  */
 
-
 package org.protocoder.apprunner.api.widgets;
 
 import org.protocoder.base.AppSettings;
@@ -33,22 +32,21 @@ import org.protocoder.base.AppSettings;
 import android.content.Context;
 import android.widget.CheckBox;
 
-public class JCheckBox extends CheckBox implements JViewInterface{
+public class JCheckBox extends CheckBox implements JViewInterface {
 
-	
-	public JCheckBox(Context context) {
-		super(context);
-	}
+    public JCheckBox(Context context) {
+	super(context);
+    }
 
-	@Override
-	public void move(float x, float y) { 
-		this.animate().x(x).setDuration(AppSettings.animSpeed);
-		this.animate().y(y).setDuration(AppSettings.animSpeed);
-	} 
-	
-	@Override
-	public void rotate(float deg) { 
-		this.animate().rotation(deg).setDuration(AppSettings.animSpeed);
-	}
-	
+    @Override
+    public void move(float x, float y) {
+	this.animate().x(x).setDuration(AppSettings.animSpeed);
+	this.animate().y(y).setDuration(AppSettings.animSpeed);
+    }
+
+    @Override
+    public void rotate(float deg) {
+	this.animate().rotation(deg).setDuration(AppSettings.animSpeed);
+    }
+
 }

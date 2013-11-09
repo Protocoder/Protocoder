@@ -28,8 +28,11 @@
 package org.protocoder.hardware;
 
 public interface HardwareCallback {
-	public void onConnect(Object obj);
-	public void setup();
-	public void loop();
-	public void onComplete();
+    public void onConnect(Object obj);
+
+    public void setup();
+
+    public void loop();
+
+    public void onComplete();
 }

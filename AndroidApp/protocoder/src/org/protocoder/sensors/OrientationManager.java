@@ -34,37 +34,32 @@ import android.hardware.SensorEventListener;
 
 public class OrientationManager extends CustomSensorManager implements WhatIsRunningInterface {
 
-	public interface OrientationListener extends CustomSensorListener {
+    public interface OrientationListener extends CustomSensorListener {
 
-		public void onOrientation(float pitch, float roll, float z);
-	}
+	public void onOrientation(float pitch, float roll, float z);
+    }
 
-	public OrientationManager(Context c) {
-		super(c);
-		
-	
-		sensor = sensormanager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+    public OrientationManager(Context c) {
+	super(c);
 
-		listener = new SensorEventListener() {
+	sensor = sensormanager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
 
-			@Override
-			public void onSensorChanged(SensorEvent event) {
+	listener = new SensorEventListener() {
 
-				for (CustomSensorListener l : listeners) {
-					((OrientationListener) l).onOrientation(event.values[0], event.values[1],
-							event.values[2]);
+	    @Override
+	    public void onSensorChanged(SensorEvent event) {
 
-				
+		for (CustomSensorListener l : listeners) {
+		    ((OrientationListener) l).onOrientation(event.values[0], event.values[1], event.values[2]);
 
-				}
-			}
+		}
+	    }
 
-			@Override
-			public void onAccuracyChanged(Sensor sensor, int accuracy) {
+	    @Override
+	    public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
-			}
-		};
-	}
-
+	    }
+	};
+    }
 
 }

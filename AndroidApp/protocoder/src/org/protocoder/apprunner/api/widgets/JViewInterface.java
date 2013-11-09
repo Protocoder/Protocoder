@@ -25,12 +25,12 @@
  * 
  */
 
-
 package org.protocoder.apprunner.api.widgets;
 
 public interface JViewInterface {
 
-	public void move(float x, float y);
-	public void rotate(float deg);
-	
+    public void move(float x, float y);
+
+    public void rotate(float deg);
+
 }

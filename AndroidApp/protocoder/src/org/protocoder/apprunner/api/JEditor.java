@@ -35,45 +35,40 @@ import org.protocoder.apprunner.JavascriptInterface;
 
 import android.app.Activity;
 
-
 public class JEditor extends JInterface {
 
-	public JEditor(Activity a) {
-		super(a);
+    public JEditor(Activity a) {
+	super(a);
 
-	}
+    }
 
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	@APIParam( params = {"boolean"} )
-	public void showConsole(boolean visible) {
-		((AppRunnerActivity) a.get()).showConsole(visible);
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "boolean" })
+    public void showConsole(boolean visible) {
+	((AppRunnerActivity) a.get()).showConsole(visible);
 
-	}
+    }
 
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	@APIParam( params = {"boolean"} )
-	public void showEditor(boolean visible) {
-		((AppRunnerActivity) a.get()).showEditor(visible);
-	}
-	
-	
-	
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	@APIParam( params = {"boolean"} )
-	public void loadHTMLonSideBar(boolean visible) {
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "boolean" })
+    public void showEditor(boolean visible) {
+	((AppRunnerActivity) a.get()).showEditor(visible);
+    }
 
-	}
-	
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	@APIParam( params = {"boolean"} )
-	public void showSideBar(boolean visible) {
-		
-	}
-	
-	
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "boolean" })
+    public void loadHTMLonSideBar(boolean visible) {
+
+    }
+
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "boolean" })
+    public void showSideBar(boolean visible) {
+
+    }
 
 }

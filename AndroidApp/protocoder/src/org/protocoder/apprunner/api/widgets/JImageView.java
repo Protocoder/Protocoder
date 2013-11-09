@@ -25,7 +25,6 @@
  * 
  */
 
-
 package org.protocoder.apprunner.api.widgets;
 
 import org.protocoder.base.AppSettings;
@@ -35,18 +34,18 @@ import android.widget.ImageView;
 
 public class JImageView extends ImageView implements JViewInterface {
 
-	public JImageView(Context context) {
-		super(context);
-	}
+    public JImageView(Context context) {
+	super(context);
+    }
 
-	@Override
-	public void move(float x, float y) { 
-		this.animate().x(x).setDuration(AppSettings.animSpeed);
-		this.animate().y(y).setDuration(AppSettings.animSpeed);
-	} 
-	
-	@Override
-	public void rotate(float deg) { 
-		this.animate().rotation(deg).setDuration(AppSettings.animSpeed);
-	}
+    @Override
+    public void move(float x, float y) {
+	this.animate().x(x).setDuration(AppSettings.animSpeed);
+	this.animate().y(y).setDuration(AppSettings.animSpeed);
+    }
+
+    @Override
+    public void rotate(float deg) {
+	this.animate().rotation(deg).setDuration(AppSettings.animSpeed);
+    }
 }

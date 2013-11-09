@@ -34,14 +34,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+@Documented
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@Inherited
+public @interface APIMethod {
 
-@Documented  
-@Target(ElementType.METHOD) 
-@Retention(RetentionPolicy.RUNTIME) 
-@Inherited 
-public @interface APIMethod { 
-	
-	public String description() default ""; 
-	public String example() default ""; 	
+    public String description() default "";
 
-} 
+    public String example() default "";
+
+}

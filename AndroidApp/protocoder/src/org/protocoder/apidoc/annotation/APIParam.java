@@ -34,10 +34,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Documented  
-@Target(ElementType.METHOD) 
-@Retention(RetentionPolicy.RUNTIME) 
-@Inherited 
-public @interface APIParam { 
-	String[] params();
-} 
+@Documented
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@Inherited
+public @interface APIParam {
+    String[] params();
+}

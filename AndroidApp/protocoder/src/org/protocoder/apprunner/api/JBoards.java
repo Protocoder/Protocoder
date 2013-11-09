@@ -36,33 +36,32 @@ import org.protocoder.apprunner.api.boards.JMakr;
 
 import android.app.Activity;
 
-
 public class JBoards extends JInterface {
 
-	private String TAG = "JBoards";
+    private String TAG = "JBoards";
 
-	public JBoards(Activity a) {
-		super(a);
-	}
+    public JBoards(Activity a) {
+	super(a);
+    }
 
-	@JavascriptInterface
-	@APIMethod(description = "initializes ioio board", example = "")
-	@APIParam( params = {"function()"} )
-	public JIOIO startIOIO(String callbackfn) {
-		JIOIO ioio = new JIOIO(a.get());
-		ioio.start(callbackfn);
-		
-		return ioio;
-	}
-	
-	@JavascriptInterface
-	@APIMethod(description = "initializes makr board", example = "")
-	@APIParam( params = {"function()"} )
-	public JMakr startMAKR(String callbackfn) {
-		JMakr makr = new JMakr(a.get());
-		makr.start(callbackfn);
-		
-		return makr;
-	}
+    @JavascriptInterface
+    @APIMethod(description = "initializes ioio board", example = "")
+    @APIParam(params = { "function()" })
+    public JIOIO startIOIO(String callbackfn) {
+	JIOIO ioio = new JIOIO(a.get());
+	ioio.start(callbackfn);
+
+	return ioio;
+    }
+
+    @JavascriptInterface
+    @APIMethod(description = "initializes makr board", example = "")
+    @APIParam(params = { "function()" })
+    public JMakr startMAKR(String callbackfn) {
+	JMakr makr = new JMakr(a.get());
+	makr.start(callbackfn);
+
+	return makr;
+    }
 
 }

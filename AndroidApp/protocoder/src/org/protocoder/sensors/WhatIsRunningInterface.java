@@ -29,6 +29,7 @@ package org.protocoder.sensors;
 
 public interface WhatIsRunningInterface {
 
-	public void start();
-	public void stop();
+    public void start();
+
+    public void stop();
 }

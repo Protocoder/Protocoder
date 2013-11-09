@@ -44,127 +44,121 @@ import org.protocoder.sensors.WhatIsRunning;
 import android.app.Activity;
 import android.util.Log;
 
-
 public class JIOIO extends JInterface implements HardwareCallback {
 
-	private String TAG = "JIOIO";
+    private String TAG = "JIOIO";
 
-	private IOIOBoard board;
+    private IOIOBoard board;
 
-	boolean isStarted = false;
+    boolean isStarted = false;
 
-	private IOIO ioio;
+    private IOIO ioio;
 
-	private DigitalOutput led;
+    private DigitalOutput led;
 
-	private String moiocallbackfn;
+    private String moiocallbackfn;
 
-	public JIOIO(Activity a) {
-		super(a);
-	}
+    public JIOIO(Activity a) {
+	super(a);
+    }
 
-	@JavascriptInterface
-	@APIMethod(description = "initializes ioio board", example = "ioio.start();")
-	public void start(String callbackfn) {
-		moiocallbackfn = callbackfn;
-		if (!isStarted) {
-			this.board = new IOIOBoard(a.get(), this);
-			board.powerOn();
-			WhatIsRunning.getInstance().add(board);
-
-		}
-	}
-	
-	public IOIO get() { 
-		return ioio;	
-	}
-
-	@JavascriptInterface
-	@APIMethod(description = "clean up and poweroff makr board", example = "ioio.stop();")
-	public void stop() {
-		isStarted = false;
-		board.powerOff();
-		board = null;
-	}
-
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	public DigitalOutput openDigitalOutput(int pinNum)
-			throws ConnectionLostException {
-		return ioio.openDigitalOutput(pinNum, false); // start with the on board
-														// LED off
+    @JavascriptInterface
+    @APIMethod(description = "initializes ioio board", example = "ioio.start();")
+    public void start(String callbackfn) {
+	moiocallbackfn = callbackfn;
+	if (!isStarted) {
+	    this.board = new IOIOBoard(a.get(), this);
+	    board.powerOn();
+	    WhatIsRunning.getInstance().add(board);
 
 	}
+    }
 
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	public DigitalInput openDigitalInput(int pinNum)
-			throws ConnectionLostException {
-		return ioio.openDigitalInput(pinNum, DigitalInput.Spec.Mode.PULL_UP);
+    public IOIO get() {
+	return ioio;
+    }
 
-	}
+    @JavascriptInterface
+    @APIMethod(description = "clean up and poweroff makr board", example = "ioio.stop();")
+    public void stop() {
+	isStarted = false;
+	board.powerOff();
+	board = null;
+    }
 
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	public AnalogInput openAnalogInput(int pinNum)
-			throws ConnectionLostException {
-		return ioio.openAnalogInput(pinNum);
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    public DigitalOutput openDigitalOutput(int pinNum) throws ConnectionLostException {
+	return ioio.openDigitalOutput(pinNum, false); // start with the on board
+						      // LED off
 
-	}
+    }
 
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	public PwmOutput openPWMOutput(int pinNum, int freq)
-			throws ConnectionLostException {
-		return ioio.openPwmOutput(pinNum, freq);
-	}
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    public DigitalInput openDigitalInput(int pinNum) throws ConnectionLostException {
+	return ioio.openDigitalInput(pinNum, DigitalInput.Spec.Mode.PULL_UP);
 
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	public void setDigitalPin(int num, boolean status)
-			throws ConnectionLostException {
-		led.write(status);
+    }
 
-	}
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    public AnalogInput openAnalogInput(int pinNum) throws ConnectionLostException {
+	return ioio.openAnalogInput(pinNum);
 
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	public void resume() {
-		// makr.resume();
-	}
+    }
 
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	public void pause() {
-		// makr.pause();
-	}
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    public PwmOutput openPWMOutput(int pinNum, int freq) throws ConnectionLostException {
+	return ioio.openPwmOutput(pinNum, freq);
+    }
 
-	@Override
-	public void onConnect(Object obj) {
-		this.ioio = (IOIO) obj;
-		Log.d(TAG, "MOIO Connected");
-		callback(moiocallbackfn); 
-		
-		isStarted = true;
-		this.a.get().runOnUiThread(new Runnable() {
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    public void setDigitalPin(int num, boolean status) throws ConnectionLostException {
+	led.write(status);
 
-			@Override
-			public void run() {
-			}
-		});
-	}
+    }
 
-	@Override
-	public void setup() {
-	}
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    public void resume() {
+	// makr.resume();
+    }
 
-	@Override
-	public void loop() {
-	}
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    public void pause() {
+	// makr.pause();
+    }
 
-	@Override
-	public void onComplete() {
-		this.a.get().finish();
-	}
+    @Override
+    public void onConnect(Object obj) {
+	this.ioio = (IOIO) obj;
+	Log.d(TAG, "MOIO Connected");
+	callback(moiocallbackfn);
+
+	isStarted = true;
+	this.a.get().runOnUiThread(new Runnable() {
+
+	    @Override
+	    public void run() {
+	    }
+	});
+    }
+
+    @Override
+    public void setup() {
+    }
+
+    @Override
+    public void loop() {
+    }
+
+    @Override
+    public void onComplete() {
+	this.a.get().finish();
+    }
 
 }

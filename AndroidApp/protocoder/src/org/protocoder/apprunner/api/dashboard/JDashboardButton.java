@@ -40,70 +40,67 @@ import org.protocoder.utils.StrUtils;
 
 import android.app.Activity;
 
-
 public class JDashboardButton extends JInterface {
 
-	private static final String TAG = "JWebAppButton";
-	String id;
-	String name;
+    private static final String TAG = "JWebAppButton";
+    String id;
+    String name;
 
-	public JDashboardButton(Activity a) {
-		super(a);
-	}
+    public JDashboardButton(Activity a) {
+	super(a);
+    }
 
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	public void add(String name, int x, int y, int w, int h, final String callbackfn)
-			throws JSONException, UnknownHostException { 
-		this.id = StrUtils.generateRandomString();
-		this.name = name;
-		JSONObject msg = new JSONObject();
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    public void add(String name, int x, int y, int w, int h, final String callbackfn) throws JSONException,
+	    UnknownHostException {
+	this.id = StrUtils.generateRandomString();
+	this.name = name;
+	JSONObject msg = new JSONObject();
 
-		msg.put("type", "widget");
-		msg.put("action", "add");
+	msg.put("type", "widget");
+	msg.put("action", "add");
 
-		JSONObject values = new JSONObject();
-		values.put("id", id);
-		values.put("name", name);
-		values.put("type", "button");
-		values.put("x", x);
-		values.put("y", y);
-		values.put("w", w);
-		values.put("h", h);
+	JSONObject values = new JSONObject();
+	values.put("id", id);
+	values.put("name", name);
+	values.put("type", "button");
+	values.put("x", x);
+	values.put("y", y);
+	values.put("w", w);
+	values.put("h", h);
 
-		msg.put("values", values);
+	msg.put("values", values);
 
-		CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
-		ws.send(msg);
-		
-		CustomWebsocketServer.getInstance(a.get()).addListener(id, new WebSocketListener() {
-			
-			@Override
-			public void onUpdated(JSONObject jsonObject) {
-				callback(callbackfn);
-			}
-		});
-		
+	CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
+	ws.send(msg);
 
-	}
+	CustomWebsocketServer.getInstance(a.get()).addListener(id, new WebSocketListener() {
 
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	public void update(boolean pressed) throws JSONException,
-			UnknownHostException {
-		JSONObject msg = new JSONObject();
+	    @Override
+	    public void onUpdated(JSONObject jsonObject) {
+		callback(callbackfn);
+	    }
+	});
 
-		msg.put("type", "widget");
-		msg.put("action", "update");
+    }
 
-		JSONObject values = new JSONObject();
-		values.put("name", name);
-		values.put("type", "button");
-		values.put("val", pressed);
-		msg.put("values", values);
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    public void update(boolean pressed) throws JSONException, UnknownHostException {
+	JSONObject msg = new JSONObject();
 
-		CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
-		ws.send(msg);
+	msg.put("type", "widget");
+	msg.put("action", "update");
 
-	}
+	JSONObject values = new JSONObject();
+	values.put("name", name);
+	values.put("type", "button");
+	values.put("val", pressed);
+	msg.put("values", values);
+
+	CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
+	ws.send(msg);
+
+    }
 }

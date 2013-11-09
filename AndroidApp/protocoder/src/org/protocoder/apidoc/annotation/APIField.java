@@ -34,13 +34,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Documented  
-@Target(ElementType.FIELD) 
-@Retention(RetentionPolicy.RUNTIME) 
-@Inherited 
-public @interface APIField { 
-	
-	public String description() default ""; 
-	public String example() default ""; 	
-	
-} 
+@Documented
+@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
+@Inherited
+public @interface APIField {
+
+    public String description() default "";
+
+    public String example() default "";
+
+}

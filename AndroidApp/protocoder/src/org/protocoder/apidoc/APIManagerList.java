@@ -37,134 +37,123 @@ import android.util.Log;
 
 public class APIManagerList {
 
+    class API {
 
-	class API { 
-		
-		public Class cls; 
-		protected Method methods; 
-		
-		
-		public API(Class cls, Object obj, String name, Method method) {
-			this.cls = cls; 
-			this.methods = method; 
-		} 
-		
+	public Class cls;
+	protected Method methods;
+
+	public API(Class cls, Object obj, String name, Method method) {
+	    this.cls = cls;
+	    this.methods = method;
 	}
 
-	private static final String TAG = "MethodsExtract";
-	
+    }
 
-	String methodAnnotationName = "JavaScriptInterface"; 
-	private Vector<API> apis; 
-	
-	APIManagerList() {
-		methodAnnotationName = "JavaScriptInterface";
+    private static final String TAG = "MethodsExtract";
 
-		apis = new Vector<API>();
-		//PackageUtils.getClasseNamesInPackage(jarName, packageName);
-		//Log.d(TAG, "" + java.lang.Class.class.getClasses().toString());
-	}
+    String methodAnnotationName = "JavaScriptInterface";
+    private Vector<API> apis;
 
-	public void addObject(Object obj) {
+    APIManagerList() {
+	methodAnnotationName = "JavaScriptInterface";
 
-		Class cls = obj.getClass();
+	apis = new Vector<API>();
+	// PackageUtils.getClasseNamesInPackage(jarName, packageName);
+	// Log.d(TAG, "" + java.lang.Class.class.getClasses().toString());
+    }
 
-		Log.d(TAG, " -- adding new object with Class " + cls.getName() + " "
-				+ cls.getSimpleName());	
-		
-		
-		 
+    public void addObject(Object obj) {
 
-		// searching fields with annotations
-		Field attr[] = cls.getDeclaredFields(); 
-		Log.d(TAG, "Declared annotations " + cls.getDeclaredAnnotations());
+	Class cls = obj.getClass();
 
-		for (int i = 0; i < attr.length; i++) {
+	Log.d(TAG, " -- adding new object with Class " + cls.getName() + " " + cls.getSimpleName());
 
-			attr[i].setAccessible(true); 
-			Field url = attr[i];
-			String name = attr[i].getName();
-			Class<?> type = attr[i].getType();
+	// searching fields with annotations
+	Field attr[] = cls.getDeclaredFields();
+	Log.d(TAG, "Declared annotations " + cls.getDeclaredAnnotations());
 
-			// foreach annotation in this object
-			Annotation a[] = attr[i].getAnnotations();
-			for (int j = 0; j < a.length; j++) {
+	for (int i = 0; i < attr.length; i++) {
 
-				String objectName = a[j].annotationType().getSimpleName();
-		
-//				if (objectName.equals(annotationName)) {
-//
-//					// guardar aqui la referencia al objeto
-//					API api = new API(cls, obj, name, attr[i]); 
-//					apis.add(api);
-//
-//				}
+	    attr[i].setAccessible(true);
+	    Field url = attr[i];
+	    String name = attr[i].getName();
+	    Class<?> type = attr[i].getType();
 
-			}
+	    // foreach annotation in this object
+	    Annotation a[] = attr[i].getAnnotations();
+	    for (int j = 0; j < a.length; j++) {
 
-		} 
-		
-		//------------------ get declared methods 
-		Method methods[] = cls.getDeclaredMethods(); 
+		String objectName = a[j].annotationType().getSimpleName();
 
-		for (int i = 0; i < methods.length; i++) {
+		// if (objectName.equals(annotationName)) {
+		//
+		// // guardar aqui la referencia al objeto
+		// API api = new API(cls, obj, name, attr[i]);
+		// apis.add(api);
+		//
+		// }
 
-			Method method = methods[i];
-			method.setAccessible(true); 
-			String name = methods[i].getName();
-
-
-			// foreach annotation in this object
-			Annotation a[] = method.getAnnotations();
-			for (int j = 0; j < a.length; j++) {
-
-				String objectName = a[j].annotationType().getSimpleName();
-		
-				if (objectName.equals(methodAnnotationName)) {
-
-			
-					Log.d(TAG, "annotation method: " + method + " " + name);
-					
-					// save object reference 
-					API qq = new API(cls, obj, name, method); 
-					apis.add(qq);
-
-
-				}
-
-			}
-
-		} 
-		
+	    }
 
 	}
 
-	public Object getValue(Object obj, Field attr) {
-		Object value = null;
+	// ------------------ get declared methods
+	Method methods[] = cls.getDeclaredMethods();
 
-		// get value
-		try {
-			value = attr.get(obj);
-		} catch (IllegalArgumentException e1) {
-			e1.printStackTrace();
-		} catch (IllegalAccessException e1) {
-			e1.printStackTrace();
+	for (int i = 0; i < methods.length; i++) {
+
+	    Method method = methods[i];
+	    method.setAccessible(true);
+	    String name = methods[i].getName();
+
+	    // foreach annotation in this object
+	    Annotation a[] = method.getAnnotations();
+	    for (int j = 0; j < a.length; j++) {
+
+		String objectName = a[j].annotationType().getSimpleName();
+
+		if (objectName.equals(methodAnnotationName)) {
+
+		    Log.d(TAG, "annotation method: " + method + " " + name);
+
+		    // save object reference
+		    API qq = new API(cls, obj, name, method);
+		    apis.add(qq);
+
 		}
 
-		return value;
+	    }
+
 	}
 
-	public void callMethod(Object obj, Method method) {
-		try {
-			method.invoke(obj, null);
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		} 
-	
+    }
+
+    public Object getValue(Object obj, Field attr) {
+	Object value = null;
+
+	// get value
+	try {
+	    value = attr.get(obj);
+	} catch (IllegalArgumentException e1) {
+	    e1.printStackTrace();
+	} catch (IllegalAccessException e1) {
+	    e1.printStackTrace();
 	}
+
+	return value;
+    }
+
+    public void callMethod(Object obj, Method method) {
+	try {
+	    method.invoke(obj, null);
+	} catch (IllegalArgumentException e) {
+	    e.printStackTrace();
+	} catch (IllegalAccessException e) {
+	    e.printStackTrace();
+	} catch (InvocationTargetException e) {
+	    e.printStackTrace();
+	}
+
+    }
 
 }

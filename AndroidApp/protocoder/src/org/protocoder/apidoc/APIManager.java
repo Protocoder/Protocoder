@@ -48,163 +48,155 @@ import com.google.gson.Gson;
  *	
  */
 
-
 public class APIManager {
 
-	public static APIManager getInstance() {
-		if (instance == null) {
-			instance = new APIManager();
+    public static APIManager getInstance() {
+	if (instance == null) {
+	    instance = new APIManager();
+	}
+	return instance;
+    }
+
+    private static final String TAG = "APIManager";
+    private static APIManager instance;
+
+    HashMap<String, API> apis = new HashMap<String, API>();
+    APIManagerDoc doc = new APIManagerDoc();
+
+    public APIManager() {
+
+    }
+
+    /**
+     * add a new class to extract the methods
+     * 
+     * @param class1
+     */
+    public void addClass(Class c) {
+
+	try {
+	    // api docs
+	    APIManagerClass apiClass = new APIManagerClass();
+	    apiClass.name = c.getSimpleName();
+	    Log.d(TAG, "" + c.getName());
+
+	    // getting all the methods
+	    Method m[] = c.getDeclaredMethods();
+	    for (int i = 0; i < m.length; i++) {
+
+		// get method
+		APIManagerMethod apiMethod = new APIManagerMethod();
+		apiMethod.name = m[i].getName();
+
+		// get parameter types
+		Class<?>[] param = m[i].getParameterTypes();
+		String[] paramsType = new String[param.length];
+
+		for (int j = 0; j < param.length; j++) {
+		    String p = param[j].getSimpleName().toString();
+		    paramsType[j] = p;
 		}
-		return instance;
-	}
+		apiMethod.paramsType = paramsType;
 
-	private static final String TAG = "APIManager";
-	private static APIManager instance;
+		// return type
+		apiMethod.returnType = m[i].getReturnType().getSimpleName().toString();
 
-	HashMap<String, API> apis = new HashMap<String, API>();
-	APIManagerDoc doc = new APIManagerDoc();
+		// get method information
+		if (apiMethod.name.contains("$") == false) {
+		    Annotation[] annotations = m[i].getDeclaredAnnotations();
+		    // check if annotation exist and add apidocs
+		    for (Annotation annotation2 : annotations) {
 
-	public APIManager() {
+			// description and example
+			if (annotation2.annotationType().getSimpleName().equals(APIMethod.class.getSimpleName())) {
+			    apiMethod.description = ((APIMethod) annotation2).description();
+			    apiMethod.example = ((APIMethod) annotation2).example();
 
-	}
-
-	/**
-	 * add a new class to extract the methods
-	 * 
-	 * @param class1
-	 */
-	public void addClass(Class c) {
-
-		try {
-			// api docs
-			APIManagerClass apiClass = new APIManagerClass();
-			apiClass.name = c.getSimpleName();
-			Log.d(TAG, "" + c.getName());
-
-			// getting all the methods
-			Method m[] = c.getDeclaredMethods();
-			for (int i = 0; i < m.length; i++) {
-
-				//get method
-				APIManagerMethod apiMethod = new APIManagerMethod();
-				apiMethod.name = m[i].getName();
-			
-				//get parameter types 
-				Class<?>[] param = m[i].getParameterTypes();
-				String[] paramsType = new String[param.length];
-				
-				for (int j = 0; j < param.length; j++) {
-					String p = param[j].getSimpleName().toString();
-					paramsType[j] = p;
-				}				
-				apiMethod.paramsType = paramsType;
-				
-				//return type
-				apiMethod.returnType = m[i].getReturnType().getSimpleName().toString();
-
-				// get method information 
-				if (apiMethod.name.contains("$") == false) {
-					Annotation[] annotations = m[i].getDeclaredAnnotations();
-					// check if annotation exist and add apidocs
-					for (Annotation annotation2 : annotations) {
-
-						// description and example 
-						if (annotation2.annotationType().getSimpleName()
-								.equals(APIMethod.class.getSimpleName())) {
-							apiMethod.description = ((APIMethod) annotation2)
-									.description();
-							apiMethod.example = ((APIMethod) annotation2)
-									.example();
-
-						}
-
-						//get parameters names 
-						if (annotation2.annotationType().getSimpleName()
-								.equals(APIParam.class.getSimpleName())) {
-							apiMethod.parametersName = ((APIParam) annotation2)
-									.params();
-							Log.d(TAG, "getting names " + apiMethod.parametersName);
-						}		
-				
-					}
-
-					apiClass.apiMethods.add(apiMethod);
-				}
 			}
 
-			doc.apiClasses.add(apiClass);
-
-			// classes and methods
-			// apis.put(c.getSimpleName(), new API(c, m));
-
-		} catch (Throwable e) {
-			System.err.println(e);
-		}
-
-	}
-
-	public HashMap<String, API> getAPIs() {
-
-		return apis;
-	}
-
-	public void listAPIs() {
-		Iterator it = apis.entrySet().iterator();
-		while (it.hasNext()) {
-			Map.Entry pairs = (Map.Entry) it.next();
-
-			API p = (API) pairs.getValue();
-			Method[] methods = p.methods;
-
-			for (Method m : methods) {
-				// get class and method
-				Log.d(TAG, pairs.getKey() + " = " + m.getName());
-
-				Annotation[] annotations = m.getDeclaredAnnotations();
-
-				for (Annotation annotation2 : annotations) {
-
-					Log.d(TAG, annotation2.toString() + " "
-							+ annotation2.annotationType().getSimpleName()
-							+ " " + APIMethod.class.getSimpleName());
-
-					if (annotation2.annotationType().getSimpleName()
-							.equals(APIMethod.class.getSimpleName())) {
-						String desc = ((APIMethod) annotation2).description();
-						String example = ((APIMethod) annotation2).example();
-						Log.d(TAG, desc);
-					}
-				}
-
+			// get parameters names
+			if (annotation2.annotationType().getSimpleName().equals(APIParam.class.getSimpleName())) {
+			    apiMethod.parametersName = ((APIParam) annotation2).params();
+			    Log.d(TAG, "getting names " + apiMethod.parametersName);
 			}
-			it.remove(); // avoids a ConcurrentModificationException
+
+		    }
+
+		    apiClass.apiMethods.add(apiMethod);
+		}
+	    }
+
+	    doc.apiClasses.add(apiClass);
+
+	    // classes and methods
+	    // apis.put(c.getSimpleName(), new API(c, m));
+
+	} catch (Throwable e) {
+	    System.err.println(e);
+	}
+
+    }
+
+    public HashMap<String, API> getAPIs() {
+
+	return apis;
+    }
+
+    public void listAPIs() {
+	Iterator it = apis.entrySet().iterator();
+	while (it.hasNext()) {
+	    Map.Entry pairs = (Map.Entry) it.next();
+
+	    API p = (API) pairs.getValue();
+	    Method[] methods = p.methods;
+
+	    for (Method m : methods) {
+		// get class and method
+		Log.d(TAG, pairs.getKey() + " = " + m.getName());
+
+		Annotation[] annotations = m.getDeclaredAnnotations();
+
+		for (Annotation annotation2 : annotations) {
+
+		    Log.d(TAG, annotation2.toString() + " " + annotation2.annotationType().getSimpleName() + " "
+			    + APIMethod.class.getSimpleName());
+
+		    if (annotation2.annotationType().getSimpleName().equals(APIMethod.class.getSimpleName())) {
+			String desc = ((APIMethod) annotation2).description();
+			String example = ((APIMethod) annotation2).example();
+			Log.d(TAG, desc);
+		    }
 		}
 
+	    }
+	    it.remove(); // avoids a ConcurrentModificationException
 	}
 
-	public String getDocumentation() {
-		Gson gson = new Gson();
-		String json = gson.toJson(doc);
+    }
 
-		return json.toString();
+    public String getDocumentation() {
+	Gson gson = new Gson();
+	String json = gson.toJson(doc);
+
+	return json.toString();
+    }
+
+    public void clear() {
+	apis.clear();
+	doc = null;
+	apis = new HashMap<String, API>();
+	doc = new APIManagerDoc();
+    }
+
+    class API {
+
+	public Class cls;
+	public Method[] methods;
+
+	public API(Class cls, Method[] m) {
+	    this.cls = cls;
+	    this.methods = m;
 	}
-
-	public void clear() {
-		apis.clear();
-		doc = null;
-		apis = new HashMap<String, API>();
-		doc = new APIManagerDoc();
-	}
-
-	class API {
-
-		public Class cls;
-		public Method[] methods;
-
-		public API(Class cls, Method[] m) {
-			this.cls = cls;
-			this.methods = m;
-		}
-	}
+    }
 
 }

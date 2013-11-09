@@ -32,54 +32,47 @@ import org.protocoder.apidoc.annotation.APIParam;
 import org.protocoder.apprunner.JavascriptInterface;
 import org.puredata.core.PdBase;
 
-
-
 public class JPureData {
 
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "message", "value" })
+    public void sendMessage(String message, String value) {
+	if (value.isEmpty()) {
+	    PdBase.sendBang(message);
+	} else if (value.matches("[0-9]+")) {
+	    PdBase.sendFloat(message, Float.parseFloat(value));
+	} else {
+	    PdBase.sendSymbol(message, value);
+	}
+    }
 
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	@APIParam( params = {"message", "value"} )
-	public void sendMessage(String message, String value) {
-		if (value.isEmpty()) {
-			PdBase.sendBang(message);
-		} else if(value.matches("[0-9]+")) {
-			PdBase.sendFloat(message, Float.parseFloat(value));
-		} else { 
-			PdBase.sendSymbol(message, value);
-		}
-	}
-	
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "name" })
+    public void sendBang(String name) {
+	PdBase.sendBang(name);
+    }
 
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	@APIParam( params = {"name"} )
-	public void sendBang(String name) {
-		PdBase.sendBang(name);
-	}
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "name", "value" })
+    public void sendFloat(String name, int value) {
+	PdBase.sendFloat(name, value);
+    }
 
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	@APIParam( params = {"name", "value"} )
-	public void sendFloat(String name, int value) {
-		PdBase.sendFloat(name, value); 
-	}
-	
-	
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	@APIParam( params = {"name", "pitch, velocity"} )
-	public void sendNoteOn(int channel, int pitch, int velocity) {
-		PdBase.sendNoteOn(channel, pitch, velocity); 
-	}
-	
-	
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	@APIParam( params = {"port", "value"} )
-	public void sendFloat(int port, int value) {
-		PdBase.sendMidiByte(port, value); 
-	}
-	
-	
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "name", "pitch, velocity" })
+    public void sendNoteOn(int channel, int pitch, int velocity) {
+	PdBase.sendNoteOn(channel, pitch, velocity);
+    }
+
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "port", "value" })
+    public void sendFloat(int port, int value) {
+	PdBase.sendMidiByte(port, value);
+    }
+
 }

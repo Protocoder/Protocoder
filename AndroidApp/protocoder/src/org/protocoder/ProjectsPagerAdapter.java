@@ -37,48 +37,48 @@ public class ProjectsPagerAdapter extends FragmentStatePagerAdapter {
     private Fragment fragmentExamples;
 
     public ProjectsPagerAdapter(FragmentManager fm) {
-        super(fm);
+	super(fm);
     }
 
     @Override
     public Fragment getItem(int i) {
 
-        Fragment f;
+	Fragment f;
 
-        if (i == 0) {
-            f = fragmentProjects;
-        } else {
-            f = fragmentExamples;
-        }
-        return f;
-        // return fragment;
+	if (i == 0) {
+	    f = fragmentProjects;
+	} else {
+	    f = fragmentExamples;
+	}
+	return f;
+	// return fragment;
     }
 
     @Override
     public int getCount() {
-        // For this contrived example, we have a 100-object collection.
-        return 2;
+	// For this contrived example, we have a 100-object collection.
+	return 2;
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        String r;
+	String r;
 
-        if (position == 0) {
-            r = "My Projects";
-        } else {
-            r = "Examples";
-        }
+	if (position == 0) {
+	    r = "My Projects";
+	} else {
+	    r = "Examples";
+	}
 
-        return r;
+	return r;
     }
 
     public void setProjectsFragment(Fragment f) {
-        fragmentProjects = f;
+	fragmentProjects = f;
 
     }
 
     public void setExamplesFragment(Fragment f) {
-        fragmentExamples = f;
+	fragmentExamples = f;
     }
 }

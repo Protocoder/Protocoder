@@ -52,134 +52,114 @@ import android.view.ViewGroup;
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class PrefsFragment extends PreferenceFragment {
 
-	protected static final String TAG = "PrefsFragment";
+    protected static final String TAG = "PrefsFragment";
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+	// TODO Auto-generated method stub
+	super.onCreate(savedInstanceState);
 
-		// Load the preferences from an XML resource
-		addPreferencesFromResource(R.xml.preferences);
-	}
+	// Load the preferences from an XML resource
+	addPreferencesFromResource(R.xml.preferences);
+    }
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View view = super.onCreateView(inflater, container, savedInstanceState);
-		view.setBackgroundResource(R.drawable.gradient);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	View view = super.onCreateView(inflater, container, savedInstanceState);
+	view.setBackgroundResource(R.drawable.gradient);
 
-		final EditTextPreference prefId = (EditTextPreference) findPreference("pref_id");
-		prefId.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+	final EditTextPreference prefId = (EditTextPreference) findPreference("pref_id");
+	prefId.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 
-			@Override
-			public boolean onPreferenceChange(Preference preference,
-					Object newValue) {
-				prefId.setText((String) newValue);
-				return false;
-			}
-		});
+	    @Override
+	    public boolean onPreferenceChange(Preference preference, Object newValue) {
+		prefId.setText((String) newValue);
+		return false;
+	    }
+	});
 
-		prefId.setText(getId(getActivity()));
+	prefId.setText(getId(getActivity()));
 
-		Preference button = (Preference) findPreference("licenses_detail");
-		button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference arg0) {
-				startActivity(new Intent(getActivity(), LicenseActivity.class));
-				return true;
-			}
-		});
+	Preference button = (Preference) findPreference("licenses_detail");
+	button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+	    @Override
+	    public boolean onPreferenceClick(Preference arg0) {
+		startActivity(new Intent(getActivity(), LicenseActivity.class));
+		return true;
+	    }
+	});
 
-		Preference button2 = (Preference) findPreference("reinstall_examples");
-		button2.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference arg0) {
+	Preference button2 = (Preference) findPreference("reinstall_examples");
+	button2.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+	    @Override
+	    public boolean onPreferenceClick(Preference arg0) {
 
-				new AlertDialog.Builder(getActivity())
-						.setMessage(
-								"Do you really want to reinstall the examples?")
-						.setCancelable(false)
-						.setPositiveButton("Yes",
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-											int which) {
-										// Perform Your Task Here--When Yes Is
-										// Pressed.
-										ProjectManager.getInstance().install(
-												getActivity());
-										dialog.cancel();
-									}
-								})
-						.setNegativeButton("No",
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-											int which) {
-										// Perform Your Task Here--When No is
-										// pressed
-										dialog.cancel();
-									}
-								}).show();
+		new AlertDialog.Builder(getActivity()).setMessage("Do you really want to reinstall the examples?")
+			.setCancelable(false).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+			    public void onClick(DialogInterface dialog, int which) {
+				// Perform Your Task Here--When Yes Is
+				// Pressed.
+				ProjectManager.getInstance().install(getActivity());
+				dialog.cancel();
+			    }
+			}).setNegativeButton("No", new DialogInterface.OnClickListener() {
+			    public void onClick(DialogInterface dialog, int which) {
+				// Perform Your Task Here--When No is
+				// pressed
+				dialog.cancel();
+			    }
+			}).show();
 
-				return true;
-			}
-		});
+		return true;
+	    }
+	});
 
-		// Show curtain notification
-		final TwoStatePreference curtainPreference = (TwoStatePreference) findPreference(getString(R.string.pref_curtain_notifications));
-		if (curtainPreference != null) {
-			curtainPreference
-					.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-						@Override
-						public boolean onPreferenceChange(
-								Preference preference, Object o) {
-							boolean isChecked = (Boolean) o;
-							SharedPreferences prefs = getActivity()
-									.getSharedPreferences("com.makewithmoto",
-											Context.MODE_PRIVATE);
-							prefs.edit()
-									.putBoolean(
-											getActivity()
-													.getResources()
-													.getString(
-															R.string.pref_curtain_notifications),
-											isChecked).commit();
-							// if start
-							if (isChecked) {
-								// Do nothing as the server will restart on
-								// resume of MainActivity.
-								// If we don't have the server automatically
-								// restart, then this is a separate issue.
-							} else {
-								// Kill all notifications
-								BaseNotification.killAll(getActivity());
-							}
-							return true;
-						}
-					});
-		} else {
-			// something
+	// Show curtain notification
+	final TwoStatePreference curtainPreference = (TwoStatePreference) findPreference(getString(R.string.pref_curtain_notifications));
+	if (curtainPreference != null) {
+	    curtainPreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object o) {
+		    boolean isChecked = (Boolean) o;
+		    SharedPreferences prefs = getActivity().getSharedPreferences("com.makewithmoto",
+			    Context.MODE_PRIVATE);
+		    prefs.edit().putBoolean(
+			    getActivity().getResources().getString(R.string.pref_curtain_notifications), isChecked)
+			    .commit();
+		    // if start
+		    if (isChecked) {
+			// Do nothing as the server will restart on
+			// resume of MainActivity.
+			// If we don't have the server automatically
+			// restart, then this is a separate issue.
+		    } else {
+			// Kill all notifications
+			BaseNotification.killAll(getActivity());
+		    }
+		    return true;
 		}
-
-		return view;
+	    });
+	} else {
+	    // something
 	}
 
-	public static String getId(Context c) {
-		// get apprunner settings
-		SharedPreferences sharedPrefs = PreferenceManager
-				.getDefaultSharedPreferences(c);
-		String id = sharedPrefs.getString("pref_id", "-1");
+	return view;
+    }
 
-		return id;
-	}
+    public static String getId(Context c) {
+	// get apprunner settings
+	SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(c);
+	String id = sharedPrefs.getString("pref_id", "-1");
 
-	public static void setId(Context c, String id) {
-		// get apprunner settings
-		SharedPreferences sharedPrefs = PreferenceManager
-				.getDefaultSharedPreferences(c);
-		Editor editor = sharedPrefs.edit();
-		editor.putString("pref_id", id);
-		editor.commit();
-	}
+	return id;
+    }
+
+    public static void setId(Context c, String id) {
+	// get apprunner settings
+	SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(c);
+	Editor editor = sharedPrefs.edit();
+	editor.putString("pref_id", id);
+	editor.commit();
+    }
 
 }

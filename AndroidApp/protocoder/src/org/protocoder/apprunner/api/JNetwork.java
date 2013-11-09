@@ -74,312 +74,301 @@ import de.sciss.net.OSCMessage;
 
 public class JNetwork extends JInterface {
 
-	private String TAG = "JNetwork";
-	private String onBluetoothfn;
+    private String TAG = "JNetwork";
+    private String onBluetoothfn;
 
-	public JNetwork(Activity a) {
-		super(a);
+    public JNetwork(Activity a) {
+	super(a);
 
-	}
+    }
 
-	public interface onBluetoothListener {
-		public void onDeviceFound(String name, String macAddress, float strength);
-	}
+    public interface onBluetoothListener {
+	public void onDeviceFound(String name, String macAddress, float strength);
+    }
 
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	@APIParam( params = {"url", "fileName", "function(progress)"} )
-	public void downloadFile(String url, String fileName, final String callbackfn) {
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "url", "fileName", "function(progress)" })
+    public void downloadFile(String url, String fileName, final String callbackfn) {
 
-		NetworkUtils.DownloadTask downloadTask = new NetworkUtils.DownloadTask(
-				(Context) a.get(), fileName);
-		downloadTask.execute(url);
-		downloadTask.addListener(new DownloadListener() {
+	NetworkUtils.DownloadTask downloadTask = new NetworkUtils.DownloadTask((Context) a.get(), fileName);
+	downloadTask.execute(url);
+	downloadTask.addListener(new DownloadListener() {
 
-			@Override
-			public void onUpdate(int progress) {
-				callback(callbackfn, progress);
-			}
-		});
+	    @Override
+	    public void onUpdate(int progress) {
+		callback(callbackfn, progress);
+	    }
+	});
 
-	}
+    }
 
-	// @JavascriptInterface
-	// @APIMethod(description = "", example = "")
-	// @APIParam( params = {"file", "function()"} )
-	public void isReachable(final String host, final String callbackfn) {
+    // @JavascriptInterface
+    // @APIMethod(description = "", example = "")
+    // @APIParam( params = {"file", "function()"} )
+    public void isReachable(final String host, final String callbackfn) {
 
-		Thread t = new Thread(new Runnable() {
+	Thread t = new Thread(new Runnable() {
 
-			@Override
-			public void run() {
+	    @Override
+	    public void run() {
 
-				// doesnt work! isReachable
-				//
-				// try {
-				// InetAddress in = InetAddress.getByName(host);
-				// boolean isReacheable = in.isReachable(5000);
-				// callback(callbackfn, isReacheable);
-				// } catch (UnknownHostException e) {
-				// e.printStackTrace();
-				// } catch (IOException e) {
-				// e.printStackTrace();
-				// }
+		// doesnt work! isReachable
+		//
+		// try {
+		// InetAddress in = InetAddress.getByName(host);
+		// boolean isReacheable = in.isReachable(5000);
+		// callback(callbackfn, isReacheable);
+		// } catch (UnknownHostException e) {
+		// e.printStackTrace();
+		// } catch (IOException e) {
+		// e.printStackTrace();
+		// }
 
-			}
-		});
-		t.start();
+	    }
+	});
+	t.start();
 
-	}
+    }
 
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	@APIParam( params = {""} )
-	public String getIP() {
-		return NetworkUtils.getLocalIpAddress(a.get());
-	}
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "" })
+    public String getIP() {
+	return NetworkUtils.getLocalIpAddress(a.get());
+    }
 
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	@APIParam( params = {"port", "function(jsonData)"} )
-	public OSC.Server startOSCServer(String port, final String callbackfn) {
-		OSC osc = new OSC();
-		Server server = osc.new Server();
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "port", "function(jsonData)" })
+    public OSC.Server startOSCServer(String port, final String callbackfn) {
+	OSC osc = new OSC();
+	Server server = osc.new Server();
 
-		server.addListener(new OSCServerListener() {
+	server.addListener(new OSCServerListener() {
 
-			@Override
-			public void onMessage(OSCMessage msg) {
-				Log.d(TAG, "message received " + msg);
+	    @Override
+	    public void onMessage(OSCMessage msg) {
+		Log.d(TAG, "message received " + msg);
 
-				JSONArray jsonArray = new JSONArray();
-				for (int i = 0; i < msg.getArgCount(); i++) {
-					jsonArray.put(msg.getArg(i));
-				}
+		JSONArray jsonArray = new JSONArray();
+		for (int i = 0; i < msg.getArgCount(); i++) {
+		    jsonArray.put(msg.getArg(i));
+		}
 
-				// String[] str = null;
-				// try {
-				// str = new String[msg.getSize()];
-				// for (int i = 0; i < msg.getArgCount(); i++) {
-				// str[i] = "" + msg.getArg(i);
-				// }
-				// } catch (IOException e) {
-				// e.printStackTrace();
-				// }
-				//
+		// String[] str = null;
+		// try {
+		// str = new String[msg.getSize()];
+		// for (int i = 0; i < msg.getArgCount(); i++) {
+		// str[i] = "" + msg.getArg(i);
+		// }
+		// } catch (IOException e) {
+		// e.printStackTrace();
+		// }
+		//
 
-				try {
-					Log.d(TAG, msg.getName() + " " + jsonArray.toString(2));
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				// callback(callbackfn, "\"" + msg.getName() + "\"", str);
-				callback(callbackfn, "\"" + msg.getName() + "\"", jsonArray);
-			}
-
-		});
-
-		server.start(port);
-		WhatIsRunning.getInstance().add(server);
-
-		return server;
-	}
-
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	@APIParam( params = {"address", "port"} )
-	public OSC.Client connectOSC(String address, int port) {
-		OSC osc = new OSC();
-		Client client = osc.new Client(address, port);
-		WhatIsRunning.getInstance().add(client);
-
-		return client;
-	}
-
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	@APIParam( params = {"port", "function(status, remoteAddress, jsonData)"} )
-	public WebSocketServer startWebsocketServer(int port,
-			final String callbackfn) {
-
-		InetSocketAddress inetSocket = new InetSocketAddress(port);
-		Draft d = new Draft_17();
-		WebSocketServer websocketServer = new WebSocketServer(inetSocket,
-				Collections.singletonList(d)) {
-
-			@Override
-			public void onClose(WebSocket arg0, int arg1, String arg2,
-					boolean arg3) {
-				callback(callbackfn, "\"" + "close" + "\"", "", arg0.getRemoteSocketAddress().toString(), "");
-			}
-
-			@Override
-			public void onError(WebSocket arg0, Exception arg1) {
-				callback(callbackfn, "\"" + "error" + "\"", arg0.getRemoteSocketAddress().toString(), "");
-			}
-
-			@Override
-			public void onMessage(WebSocket arg0, String arg1) {
-				callback(callbackfn, "\"" + "message" + "\"", arg0.getRemoteSocketAddress().toString(), "\"" + arg1 + "\"");
-			}
-
-			@Override
-			public void onOpen(WebSocket arg0, ClientHandshake arg1) {
-				callback(callbackfn, "\"" + "open" + "\"", arg0.getRemoteSocketAddress().toString(), "");
-			}
-		};
-		websocketServer.start();
-
-		return websocketServer;
-
-	}
-
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	@APIParam( params = {"uri", "function(type, data)"} )
-	public org.java_websocket.client.WebSocketClient connectWebsocket(
-			String uri, final String callbackfn) {
-
-		org.java_websocket.client.WebSocketClient webSocketClient = null;
 		try {
-			webSocketClient = new org.java_websocket.client.WebSocketClient(
-					new URI(uri)) {
-
-				@Override
-				public void onOpen(ServerHandshake arg0) {
-					callback(callbackfn, "open", "\"" + arg0 + "\"");
-				}
-
-				@Override
-				public void onMessage(String arg0) {
-					callback(callbackfn, "message", "\"" + arg0 + "\"");
-				}
-
-				@Override
-				public void onError(Exception arg0) {
-					callback(callbackfn, "error");
-				}
-
-				@Override
-				public void onClose(int arg0, String arg1, boolean arg2) {
-					callback(callbackfn, "close");
-				}
-			};
-		} catch (URISyntaxException e) {
-			callback(callbackfn, "error " + "\"" + e.toString() + "\"");
-			e.printStackTrace();
+		    Log.d(TAG, msg.getName() + " " + jsonArray.toString(2));
+		} catch (JSONException e) {
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
 		}
-		return webSocketClient;
-	}
+		// callback(callbackfn, "\"" + msg.getName() + "\"", str);
+		callback(callbackfn, "\"" + msg.getName() + "\"", jsonArray);
+	    }
 
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	@APIParam( params = {"uri", "function(type, data)"} )
-	public SocketIOClient connectSocketIO(String uri, final String callbackfn) {
-		SocketIOClient socketIOClient = new SocketIOClient(URI.create(uri),
-				new SocketIOClient.Handler() {
+	});
 
-					@Override
-					public void onMessage(String message) {
+	server.start(port);
+	WhatIsRunning.getInstance().add(server);
 
-					}
+	return server;
+    }
 
-					@Override
-					public void onJSON(JSONObject json) {
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "address", "port" })
+    public OSC.Client connectOSC(String address, int port) {
+	OSC osc = new OSC();
+	Client client = osc.new Client(address, port);
+	WhatIsRunning.getInstance().add(client);
 
-					}
+	return client;
+    }
 
-					@Override
-					public void onError(Exception error) {
-						callback(callbackfn, "error");
-					}
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "port", "function(status, remoteAddress, jsonData)" })
+    public WebSocketServer startWebsocketServer(int port, final String callbackfn) {
 
-					@Override
-					public void onDisconnect(int code, String reason) {
-						callback(callbackfn, "disconnect", "\"" + reason + "\"");
-					}
+	InetSocketAddress inetSocket = new InetSocketAddress(port);
+	Draft d = new Draft_17();
+	WebSocketServer websocketServer = new WebSocketServer(inetSocket, Collections.singletonList(d)) {
 
-					@Override
-					public void onConnect() {
-						callback(callbackfn, "connected");
+	    @Override
+	    public void onClose(WebSocket arg0, int arg1, String arg2, boolean arg3) {
+		callback(callbackfn, "\"" + "close" + "\"", "", arg0.getRemoteSocketAddress().toString(), "");
+	    }
 
-					}
+	    @Override
+	    public void onError(WebSocket arg0, Exception arg1) {
+		callback(callbackfn, "\"" + "error" + "\"", arg0.getRemoteSocketAddress().toString(), "");
+	    }
 
-					@Override
-					public void on(String event, JSONArray arguments) {
-						callback(callbackfn, "onmessage", event, "\""
-								+ arguments + "\"");
+	    @Override
+	    public void onMessage(WebSocket arg0, String arg1) {
+		callback(callbackfn, "\"" + "message" + "\"", arg0.getRemoteSocketAddress().toString(), "\"" + arg1
+			+ "\"");
+	    }
 
-					}
-				});
+	    @Override
+	    public void onOpen(WebSocket arg0, ClientHandshake arg1) {
+		callback(callbackfn, "\"" + "open" + "\"", arg0.getRemoteSocketAddress().toString(), "");
+	    }
+	};
+	websocketServer.start();
 
-		return socketIOClient;
-	}
+	return websocketServer;
 
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	@APIParam( params = {"url", "function(data)"} )
-	public void getRequest(String url, final String callbackfn) {
-		class RequestTask extends AsyncTask<String, String, String> {
+    }
 
-			@Override
-			protected String doInBackground(String... uri) {
-				HttpClient httpclient = new DefaultHttpClient();
-				HttpResponse response;
-				String responseString = null;
-				try {
-					response = httpclient.execute(new HttpGet(uri[0]));
-					StatusLine statusLine = response.getStatusLine();
-					if (statusLine.getStatusCode() == HttpStatus.SC_OK) {
-						ByteArrayOutputStream out = new ByteArrayOutputStream();
-						response.getEntity().writeTo(out);
-						out.close();
-						responseString = out.toString();
-					} else {
-						// Closes the connection.
-						response.getEntity().getContent().close();
-						throw new IOException(statusLine.getReasonPhrase());
-					}
-					callback(callbackfn, statusLine.getStatusCode(), "\""
-							+ responseString + "\"");
-				} catch (ClientProtocolException e) {
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "uri", "function(type, data)" })
+    public org.java_websocket.client.WebSocketClient connectWebsocket(String uri, final String callbackfn) {
 
-				} catch (IOException e) {
+	org.java_websocket.client.WebSocketClient webSocketClient = null;
+	try {
+	    webSocketClient = new org.java_websocket.client.WebSocketClient(new URI(uri)) {
 
-				}
-				return responseString;
-			}
-
-			@Override
-			protected void onPostExecute(String result) {
-				super.onPostExecute(result);
-				// Do anything with response..
-			}
+		@Override
+		public void onOpen(ServerHandshake arg0) {
+		    callback(callbackfn, "open", "\"" + arg0 + "\"");
 		}
 
-		Log.d(TAG, "" + new RequestTask().execute(url));
-		callback(callbackfn);
+		@Override
+		public void onMessage(String arg0) {
+		    callback(callbackfn, "message", "\"" + arg0 + "\"");
+		}
+
+		@Override
+		public void onError(Exception arg0) {
+		    callback(callbackfn, "error");
+		}
+
+		@Override
+		public void onClose(int arg0, String arg1, boolean arg2) {
+		    callback(callbackfn, "close");
+		}
+	    };
+	} catch (URISyntaxException e) {
+	    callback(callbackfn, "error " + "\"" + e.toString() + "\"");
+	    e.printStackTrace();
+	}
+	return webSocketClient;
+    }
+
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "uri", "function(type, data)" })
+    public SocketIOClient connectSocketIO(String uri, final String callbackfn) {
+	SocketIOClient socketIOClient = new SocketIOClient(URI.create(uri), new SocketIOClient.Handler() {
+
+	    @Override
+	    public void onMessage(String message) {
+
+	    }
+
+	    @Override
+	    public void onJSON(JSONObject json) {
+
+	    }
+
+	    @Override
+	    public void onError(Exception error) {
+		callback(callbackfn, "error");
+	    }
+
+	    @Override
+	    public void onDisconnect(int code, String reason) {
+		callback(callbackfn, "disconnect", "\"" + reason + "\"");
+	    }
+
+	    @Override
+	    public void onConnect() {
+		callback(callbackfn, "connected");
+
+	    }
+
+	    @Override
+	    public void on(String event, JSONArray arguments) {
+		callback(callbackfn, "onmessage", event, "\"" + arguments + "\"");
+
+	    }
+	});
+
+	return socketIOClient;
+    }
+
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "url", "function(data)" })
+    public void getRequest(String url, final String callbackfn) {
+	class RequestTask extends AsyncTask<String, String, String> {
+
+	    @Override
+	    protected String doInBackground(String... uri) {
+		HttpClient httpclient = new DefaultHttpClient();
+		HttpResponse response;
+		String responseString = null;
+		try {
+		    response = httpclient.execute(new HttpGet(uri[0]));
+		    StatusLine statusLine = response.getStatusLine();
+		    if (statusLine.getStatusCode() == HttpStatus.SC_OK) {
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			response.getEntity().writeTo(out);
+			out.close();
+			responseString = out.toString();
+		    } else {
+			// Closes the connection.
+			response.getEntity().getContent().close();
+			throw new IOException(statusLine.getReasonPhrase());
+		    }
+		    callback(callbackfn, statusLine.getStatusCode(), "\"" + responseString + "\"");
+		} catch (ClientProtocolException e) {
+
+		} catch (IOException e) {
+
+		}
+		return responseString;
+	    }
+
+	    @Override
+	    protected void onPostExecute(String result) {
+		super.onPostExecute(result);
+		// Do anything with response..
+	    }
 	}
 
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	@APIParam( params = {"function(name, macAddress, strength)"} )
-	public void scanBTNetworks(final String callbackfn) {
-		onBluetoothfn = callbackfn;
+	Log.d(TAG, "" + new RequestTask().execute(url));
+	callback(callbackfn);
+    }
 
-		a.get().scanBluetooth();
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "function(name, macAddress, strength)" })
+    public void scanBTNetworks(final String callbackfn) {
+	onBluetoothfn = callbackfn;
 
-		((AppRunnerActivity) a.get())
-				.addBluetoothListener(new onBluetoothListener() {
+	a.get().scanBluetooth();
 
-					@Override
-					public void onDeviceFound(String name, String macAddress,
-							float strength) {
-						callback(onBluetoothfn, "\"" + name + "\"", "\""
-								+ macAddress + "\"", "\"" + strength + "\"");
-					}
-				});
+	((AppRunnerActivity) a.get()).addBluetoothListener(new onBluetoothListener() {
 
-	}
+	    @Override
+	    public void onDeviceFound(String name, String macAddress, float strength) {
+		callback(onBluetoothfn, "\"" + name + "\"", "\"" + macAddress + "\"", "\"" + strength + "\"");
+	    }
+	});
+
+    }
 }

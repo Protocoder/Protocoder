@@ -28,10 +28,10 @@
 package org.protocoder.apidoc;
 
 class APIManagerMethod {
-	public String name;
-	public String description;
-	public String example;
-	public String[] paramsType;
-	public String[] parametersName;
-	public String returnType;
+    public String name;
+    public String description;
+    public String example;
+    public String[] paramsType;
+    public String[] parametersName;
+    public String returnType;
 }

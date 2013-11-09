@@ -24,254 +24,247 @@ import android.view.View;
 import android.view.ViewGroup;
 
 @SuppressLint("NewApi")
-public class VideoTextureFragment extends Fragment implements
-		TextureView.SurfaceTextureListener, OnBufferingUpdateListener,
-		OnCompletionListener, OnPreparedListener, OnVideoSizeChangedListener {
+public class VideoTextureFragment extends Fragment implements TextureView.SurfaceTextureListener,
+	OnBufferingUpdateListener, OnCompletionListener, OnPreparedListener, OnVideoSizeChangedListener {
 
-	protected static final String TAG = "VideoTextureFragment";
-	private MediaPlayer mMediaPlayer;
-	private TextureView mPreview;
-	Vector<VideoListener> listeners = new Vector<VideoListener>();
-	Runnable r;
-	protected Handler handler;
-	private Surface s;
-	private boolean playingVideo = false;
-	private float currentVolume;
-	private Runnable fadeRunnable;
+    protected static final String TAG = "VideoTextureFragment";
+    private MediaPlayer mMediaPlayer;
+    private TextureView mPreview;
+    Vector<VideoListener> listeners = new Vector<VideoListener>();
+    Runnable r;
+    protected Handler handler;
+    private Surface s;
+    private boolean playingVideo = false;
+    private float currentVolume;
+    private Runnable fadeRunnable;
 
-	public interface VideoListener {
+    public interface VideoListener {
 
-		public void onReady(boolean ready);
+	public void onReady(boolean ready);
 
-		public void onFinish(boolean finished);
+	public void onFinish(boolean finished);
 
-		public void onTimeUpdate(int ms, int totalDuration);
+	public void onTimeUpdate(int ms, int totalDuration);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	super.onCreateView(inflater, container, savedInstanceState);
+
+	View v = inflater.inflate(R.layout.fragment_texturevideo, container, false);
+
+	mPreview = (TextureView) v.findViewById(R.id.video_view2);
+	mPreview.setSurfaceTextureListener(this);
+
+	handler = new Handler();
+
+	return v;
+    }
+
+    public void onActivityCreated(Bundle savedInstanceState) {
+	super.onActivityCreated(savedInstanceState);
+	Log.d("mm", "onActivityCreated");
+
+    }
+
+    @Override
+    public void onDestroy() {
+	super.onDestroy();
+
+	unloadVideo();
+    }
+
+    public void loadExternalVideo(String path) {
+	if (playingVideo) {
+	    unloadVideo();
 	}
+	loadVideo(path);
+    }
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		super.onCreateView(inflater, container, savedInstanceState);
+    public void loadVideo(String path) {
 
-		View v = inflater.inflate(R.layout.fragment_texturevideo, container,
-				false);
+	playingVideo = true;
 
-		mPreview = (TextureView) v.findViewById(R.id.video_view2);
-		mPreview.setSurfaceTextureListener(this);
+	try {
+	    mMediaPlayer = new MediaPlayer();
+	    mMediaPlayer.setDataSource(path);
+	    mMediaPlayer.setSurface(s);
+	    mMediaPlayer.prepare();
+	    mMediaPlayer.setOnBufferingUpdateListener(this);
+	    mMediaPlayer.setOnCompletionListener(this);
+	    mMediaPlayer.setOnPreparedListener(this);
+	    mMediaPlayer.setOnVideoSizeChangedListener(this);
+	    mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+	    mMediaPlayer.start();
+	    currentVolume = 1.0f;
+	    // mPreview.animate().rotation(200).alpha((float) 0.5).scaleX(0.5f)
+	    // .scaleY(0.5f).setDuration(5000);
 
-		handler = new Handler();
-
-		return v;
+	} catch (IllegalArgumentException e) {
+	    e.printStackTrace();
+	} catch (SecurityException e) {
+	    e.printStackTrace();
+	} catch (IllegalStateException e) {
+	    e.printStackTrace();
+	} catch (IOException e) {
+	    e.printStackTrace();
 	}
+    }
 
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		Log.d("mm", "onActivityCreated");
+    public void loadResourceVideo(String videoFile) {
+	String path = "android.resource://" + getActivity().getPackageName() + videoFile;
+	// loadVideo(path);
+    }
 
+    public void unloadVideo() {
+	// mp_.stop();
+	for (VideoListener l : listeners) {
+	    l = null;
 	}
+	handler.removeCallbacks(r);
+	handler.removeCallbacks(fadeRunnable);
+	mMediaPlayer.stop();
+	mMediaPlayer.release();
+	playingVideo = false;
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
+    }
 
-		unloadVideo();
+    public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+	s = new Surface(surface);
+
+	for (VideoListener l : listeners) {
+	    l.onReady(true);
 	}
+    }
 
-	public void loadExternalVideo(String path) {
-		if (playingVideo) {
-			unloadVideo();
-		}
-		loadVideo(path);
-	}
+    @Override
+    public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+	return false;
+    }
 
-	public void loadVideo(String path) {
+    @Override
+    public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+    }
 
-		playingVideo = true;
+    @Override
+    public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+    }
 
-		try {
-			mMediaPlayer = new MediaPlayer();
-			mMediaPlayer.setDataSource(path);
-			mMediaPlayer.setSurface(s);
-			mMediaPlayer.prepare();
-			mMediaPlayer.setOnBufferingUpdateListener(this);
-			mMediaPlayer.setOnCompletionListener(this);
-			mMediaPlayer.setOnPreparedListener(this);
-			mMediaPlayer.setOnVideoSizeChangedListener(this);
-			mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-			mMediaPlayer.start();
-			currentVolume = 1.0f;
-			// mPreview.animate().rotation(200).alpha((float) 0.5).scaleX(0.5f)
-			// .scaleY(0.5f).setDuration(5000);
+    @Override
+    public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
+    }
 
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+    @Override
+    public void onPrepared(MediaPlayer mp) {
+	mMediaPlayer = mp;
+	mMediaPlayer.setLooping(true);
 
-	public void loadResourceVideo(String videoFile) {
-		String path = "android.resource://" + getActivity().getPackageName()
-				+ videoFile;
-		// loadVideo(path);
-	}
+	r = new Runnable() {
 
-	public void unloadVideo() {
-		// mp_.stop();
+	    @Override
+	    public void run() {
 		for (VideoListener l : listeners) {
-			l = null;
+		    l.onTimeUpdate(mMediaPlayer.getCurrentPosition(), mMediaPlayer.getDuration());
 		}
-		handler.removeCallbacks(r);
-		handler.removeCallbacks(fadeRunnable);
-		mMediaPlayer.stop();
-		mMediaPlayer.release();
-		playingVideo = false;
-		
+		handler.postDelayed(this, 1000);
+	    }
+	};
+
+	handler.post(r);
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+
+	// finish();
+	for (VideoListener l : listeners) {
+	    l.onFinish(true);
 	}
 
-	public void onSurfaceTextureAvailable(SurfaceTexture surface, int width,
-			int height) {
-		s = new Surface(surface);
+    }
 
-		for (VideoListener l : listeners) {
-			l.onReady(true);
+    @Override
+    public void onBufferingUpdate(MediaPlayer mp, int percent) {
+    }
+
+    public void setVolume(float volume) {
+	if (mMediaPlayer != null) {
+	    mMediaPlayer.setVolume(volume, volume);
+
+	}
+    }
+
+    public void setLoop(boolean b) {
+	mMediaPlayer.setLooping(b);
+    }
+
+    public void close() {
+	handler.removeCallbacks(r);
+	// mVideoView.stopPlayback();
+
+    }
+
+    public int getCurrentPosition() {
+	return mMediaPlayer.getCurrentPosition();
+    }
+
+    public int getDuration() {
+	return mMediaPlayer.getDuration();
+    }
+
+    public void getWidth() {
+	mMediaPlayer.getVideoWidth();
+    }
+
+    public void getHeight() {
+	mMediaPlayer.getVideoHeight();
+    }
+
+    public void play() {
+	mMediaPlayer.start();
+    }
+
+    public void pause() {
+	mMediaPlayer.pause();
+    }
+
+    public void stop() {
+	mMediaPlayer.stop();
+    }
+
+    public void seekTo(int ms) {
+	mMediaPlayer.seekTo(ms);
+    }
+
+    public void addListener(VideoListener videoListener) {
+	listeners.add(videoListener);
+    }
+
+    public void removeListener(VideoListener videoListener) {
+	listeners.remove(videoListener);
+    }
+
+    public void fade(int time, float finalVolume) {
+
+	Log.d(TAG, "->" + finalVolume + " " + time);
+
+	final float incr = (finalVolume - currentVolume) / time;
+
+	fadeRunnable = new Runnable() {
+	    @Override
+	    public void run() {
+		currentVolume += incr;
+		Log.d(TAG, "" + currentVolume + " " + incr);
+		if (currentVolume >= 0.0f || currentVolume <= 1.0f) {
+		    Log.d(TAG, "qq");
+		    mMediaPlayer.setVolume(currentVolume, currentVolume);
+		    handler.post(this);
+		} else {
+		    handler.removeCallbacks(this);
 		}
-	}
-
-	@Override
-	public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-		return false;
-	}
-
-	@Override
-	public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width,
-			int height) {
-	}
-
-	@Override
-	public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-	}
-
-	@Override
-	public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
-	}
-
-	@Override
-	public void onPrepared(MediaPlayer mp) {
-		mMediaPlayer = mp;
-		mMediaPlayer.setLooping(true);
-
-		r = new Runnable() {
-
-			@Override
-			public void run() {
-				for (VideoListener l : listeners) {
-					l.onTimeUpdate(mMediaPlayer.getCurrentPosition(),
-							mMediaPlayer.getDuration());
-				}
-				handler.postDelayed(this, 1000);
-			}
-		};
-
-		handler.post(r);
-	}
-
-	@Override
-	public void onCompletion(MediaPlayer mp) {
-
-		// finish();
-		for (VideoListener l : listeners) {
-			l.onFinish(true);
-		}
-
-	}
-
-	@Override
-	public void onBufferingUpdate(MediaPlayer mp, int percent) {
-	}
-
-	public void setVolume(float volume) {
-		if (mMediaPlayer != null) {
-			mMediaPlayer.setVolume(volume, volume);
-
-		}
-	}
-
-	public void setLoop(boolean b) {
-		mMediaPlayer.setLooping(b);
-	}
-
-	public void close() {
-		handler.removeCallbacks(r);
-		// mVideoView.stopPlayback();
-
-	}
-
-	public int getCurrentPosition() {
-		return mMediaPlayer.getCurrentPosition();
-	}
-
-	public int getDuration() {
-		return mMediaPlayer.getDuration();
-	}
-
-	public void getWidth() {
-		mMediaPlayer.getVideoWidth();
-	}
-
-	public void getHeight() {
-		mMediaPlayer.getVideoHeight();
-	}
-
-	public void play() {
-		mMediaPlayer.start();
-	}
-
-	public void pause() {
-		mMediaPlayer.pause();
-	}
-
-	public void stop() {
-		mMediaPlayer.stop();
-	}
-
-	public void seekTo(int ms) {
-		mMediaPlayer.seekTo(ms);
-	}
-	
-	public void addListener(VideoListener videoListener) {
-		listeners.add(videoListener);
-	}
-
-	public void removeListener(VideoListener videoListener) {
-		listeners.remove(videoListener);
-	}
-
-	public void fade(int time, float finalVolume) {
-
-		Log.d(TAG, "->" + finalVolume + " " + time); 
-
-		final float incr = (finalVolume - currentVolume) / time;
-
-		fadeRunnable = new Runnable() {
-			@Override
-			public void run() {
-				currentVolume += incr;
-				Log.d(TAG, "" + currentVolume + " " + incr); 
-				if (currentVolume >= 0.0f || currentVolume <= 1.0f) {
-					Log.d(TAG, "qq"); 
-					mMediaPlayer.setVolume(currentVolume, currentVolume);
-					handler.post(this);
-				} else {
-					handler.removeCallbacks(this);
-				}
-			}
-		};
-		handler.post(fadeRunnable);
-	}
+	    }
+	};
+	handler.post(fadeRunnable);
+    }
 
 }

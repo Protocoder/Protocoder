@@ -35,91 +35,85 @@ import android.hardware.SensorManager;
 
 public class AccelerometerManager extends CustomSensorManager implements WhatIsRunningInterface {
 
-	public interface AccelerometerListener extends CustomSensorListener {
+    public interface AccelerometerListener extends CustomSensorListener {
 
-		public void onAccelerometerChanged(float x, float y, float z); 
-		public void onShake(float force); 
-		
-	}
+	public void onAccelerometerChanged(float x, float y, float z);
 
-	
-	
-	private final static String TAG = "Accel";
+	public void onShake(float force);
 
-	private float currentValueX;
-	private float previousValueX;
-	private float currentValueY;
-	private float previousValueY;
-	private float currentValueZ;
-	private float previousValueZ;
+    }
 
+    private final static String TAG = "Accel";
 
+    private float currentValueX;
+    private float previousValueX;
+    private float currentValueY;
+    private float previousValueY;
+    private float currentValueZ;
+    private float previousValueZ;
 
-	public AccelerometerManager(Context c) {
-		super(c); 
-		
-		// register
-		sensormanager = (SensorManager) c.getSystemService(Context.SENSOR_SERVICE);
-		sensor = sensormanager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+    public AccelerometerManager(Context c) {
+	super(c);
 
-		listener = new SensorEventListener() {
+	// register
+	sensormanager = (SensorManager) c.getSystemService(Context.SENSOR_SERVICE);
+	sensor = sensormanager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-			@Override
-			public void onSensorChanged(SensorEvent event) { 
-				//listener
-				for (CustomSensorListener l : listeners) {
-					((AccelerometerListener)l).onAccelerometerChanged(event.values[0], event.values[1], event.values[2]);
-					
-					float force = (float) Math.sqrt(Math.pow(event.values[0], 2)
-													+ Math.pow(event.values[1], 2)
-													+ Math.pow(event.values[2], 2));
-				
-					((AccelerometerListener)l).onShake(force);
-				}
-			}
+	listener = new SensorEventListener() {
 
-			@Override
-			public void onAccuracyChanged(Sensor sensor, int accuracy) {
-				switch (accuracy) {
-				case SensorManager.SENSOR_STATUS_UNRELIABLE:
-					break;
-				case SensorManager.SENSOR_STATUS_ACCURACY_LOW:
-					break;
-				case SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM:
-					break;
-				case SensorManager.SENSOR_STATUS_ACCURACY_HIGH:
-					break;
-				}
-			}
+	    @Override
+	    public void onSensorChanged(SensorEvent event) {
+		// listener
+		for (CustomSensorListener l : listeners) {
+		    ((AccelerometerListener) l).onAccelerometerChanged(event.values[0], event.values[1],
+			    event.values[2]);
 
-		};
+		    float force = (float) Math.sqrt(Math.pow(event.values[0], 2) + Math.pow(event.values[1], 2)
+			    + Math.pow(event.values[2], 2));
 
-	}
+		    ((AccelerometerListener) l).onShake(force);
+		}
+	    }
 
-	public float total() {
+	    @Override
+	    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+		switch (accuracy) {
+		case SensorManager.SENSOR_STATUS_UNRELIABLE:
+		    break;
+		case SensorManager.SENSOR_STATUS_ACCURACY_LOW:
+		    break;
+		case SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM:
+		    break;
+		case SensorManager.SENSOR_STATUS_ACCURACY_HIGH:
+		    break;
+		}
+	    }
 
-		return currentValueX + currentValueY + currentValueZ;
-	}
+	};
 
-	public float totalDiff() {
+    }
 
-		return Math.abs((currentValueX + currentValueY + currentValueZ)
-				- (currentValueX + currentValueY + currentValueZ));
-	}
+    public float total() {
 
-	public float diffX() {
-		return Math.abs(currentValueX - previousValueX);
-	}
+	return currentValueX + currentValueY + currentValueZ;
+    }
 
-	public float diffY() {
-		return Math.abs(currentValueY - previousValueY);
-	}
+    public float totalDiff() {
 
-	public float diffZ() {
-		return Math.abs(currentValueZ - previousValueZ);
-	}
+	return Math.abs((currentValueX + currentValueY + currentValueZ)
+		- (currentValueX + currentValueY + currentValueZ));
+    }
 
-	
+    public float diffX() {
+	return Math.abs(currentValueX - previousValueX);
+    }
 
+    public float diffY() {
+	return Math.abs(currentValueY - previousValueY);
+    }
+
+    public float diffZ() {
+	return Math.abs(currentValueZ - previousValueZ);
+    }
 
 }
