@@ -122,10 +122,6 @@ public class ListFragmentBase extends BaseFragment {
 		getActivity().overridePendingTransition(R.anim.splash_slide_in_anim_set,
 			R.anim.splash_slide_out_anim_set);
 
-		// Code this in if you want to show the context menu on single
-		// click
-		// gridView.showContextMenuForChild(v);
-
 	    }
 	});
 
@@ -191,28 +187,23 @@ public class ListFragmentBase extends BaseFragment {
 
 	Project project = projects.get(index);
 
-	switch (item.getItemId()) {
-
-	case R.id.menu_project_list_run:
+	int itemId = item.getItemId();
+	if (itemId == R.id.menu_project_list_run) {
 	    ProjectEvent evt = new ProjectEvent(project, "run");
 	    EventBus.getDefault().post(evt);
 	    getActivity().overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
 	    return true;
-	case R.id.menu_project_list_edit:
-	    EditorFragment editorFragment = new EditorFragment(); // .newInstance(project);
+	} else if (itemId == R.id.menu_project_list_edit) {
+	    EditorFragment editorFragment = new EditorFragment(); 
 	    Bundle bundle = new Bundle();
-
-	    bundle.putString("project_name", project.getName());
-	    bundle.putString("project_url", project.getFolder());
-	    bundle.putInt("project_type", projectType);
-	    Log.d("UU", "" + project.getFolder() + " " + projectType + " " + project.getName());
+	    bundle.putString(Project.NAME, project.getName());
+	    bundle.putString(Project.URL, project.getFolder());
+	    bundle.putInt(Project.TYPE, projectType);
 
 	    editorFragment.setArguments(bundle);
 	    ((MainActivity) getActivity()).addFragment(editorFragment, R.id.fragmentEditor, "editorFragment", true);
-
 	    return true;
-	case R.id.menu_project_list_delete:
-
+	} else if (itemId == R.id.menu_project_list_delete) {
 	    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
 		@Override
 		public void onClick(DialogInterface dialog, int which) {
@@ -228,15 +219,11 @@ public class ListFragmentBase extends BaseFragment {
 		    }
 		}
 	    };
-
 	    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 	    builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener).setNegativeButton("No",
 		    dialogClickListener).show();
-
 	    return true;
-
-	case R.id.menu_project_list_add_shortcut:
-
+	} else if (itemId == R.id.menu_project_list_add_shortcut) {
 	    try {
 
 		Intent shortcutIntent = new Intent(getActivity(), AppRunnerActivity.class);
@@ -251,33 +238,23 @@ public class ListFragmentBase extends BaseFragment {
 
 		putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
 		putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, project.getName());
-		putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon); // can
-										       // also
-										       // be
-										       // ignored
-										       // too
+		putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon); // can also  be  ignored too
 		putShortCutIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
 		getActivity().sendBroadcast(putShortCutIntent);
 	    } catch (Exception e) {
 		// TODO
 	    }
-
 	    // Show toast
 	    Toast.makeText(getActivity(), "Adding shortcut for " + project.getName(), Toast.LENGTH_SHORT).show();
-
 	    return true;
-
-	case R.id.menu_project_list_share_with:
-
+	} else if (itemId == R.id.menu_project_list_share_with) {
 	    Intent sendIntent = new Intent();
 	    sendIntent.setAction(Intent.ACTION_SEND);
 	    sendIntent.putExtra(Intent.EXTRA_TEXT, ProjectManager.getInstance().getCode(project));
 	    sendIntent.setType("text/plain");
 	    startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
-
 	    return true;
-	case R.id.menu_project_list_beam:
-
+	} else if (itemId == R.id.menu_project_list_beam) {
 	    Intent beamIntent = new Intent(getActivity(), BeamActivity.class);
 	    // beamIntent.setAction(Intent.ACTION_SEND);
 	    beamIntent.putExtra(Intent.EXTRA_TEXT, ProjectManager.getInstance().getCode(project));
@@ -285,9 +262,8 @@ public class ListFragmentBase extends BaseFragment {
 	    beamIntent.setAction(Intent.ACTION_SEND);
 	    startActivity(beamIntent);
 	    getActivity().overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
-
 	    return true;
-	default:
+	} else {
 	    return super.onContextItemSelected(item);
 	}
     }

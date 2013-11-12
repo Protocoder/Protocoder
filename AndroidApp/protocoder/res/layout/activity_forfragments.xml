@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
-            android:background="#BB287ED1"
+            android:background="#bbff8800"
             android:padding="8dp"
             android:textColor="#fff"
             android:textStyle="bold"

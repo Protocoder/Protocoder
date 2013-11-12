@@ -36,7 +36,6 @@ import org.protocoder.apprunner.AppRunnerActivity;
 import org.protocoder.base.AppSettings;
 import org.protocoder.base.BaseActivity;
 import org.protocoder.base.BaseMainApp;
-import org.protocoder.base.BaseNotification;
 import org.protocoder.events.Events.ProjectEvent;
 import org.protocoder.events.Project;
 import org.protocoder.events.ProjectManager;
@@ -57,7 +56,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -90,41 +88,32 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
 
     Context c;
     private int mProjectRequestCode = 1;
-    public boolean ledON = true;
-    protected float servoVal;
-    Handler handler;
-    BaseNotification mNotification;
-    Menu mMenu;
-    BroadcastReceiver mStopServerReceiver;
+    private Intent currentProjectApplicationIntent;
 
-    MyHTTPServer httpServer;
-
-    ProjectsPagerAdapter mProjectPagerAdapter;
-    ViewPager mViewPager;
-
+    // fragments that hold the projects
     private ListFragmentUserProjects userProjectListFragment;
     private ListFragmentExamples exampleListFragment;
 
-    private Boolean showingHelp = false;
-
+    Menu mMenu;
+    ProjectsPagerAdapter mProjectPagerAdapter;
+    ViewPager mViewPager;
     private TextView textIP;
     private LinearLayout mIpContainer;
     protected int textIPHeight;
 
-    private Intent currentProjectApplicationIntent;
-
-    private CustomWebsocketServer ws;
-
     private FileObserver observer;
 
+    //connection
+    BroadcastReceiver mStopServerReceiver;
+    MyHTTPServer httpServer;
+    private CustomWebsocketServer ws;
     private ConnectivityChangeReceiver connectivityChangeReceiver;
 
-    /** Called when the activity is first created. */
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
 
-	// Set the content view and get the context
 	setContentView(R.layout.activity_forfragments);
 	c = this;
 
@@ -135,22 +124,18 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
 	// Instantiate fragments
 	userProjectListFragment = new ListFragmentUserProjects();
 	exampleListFragment = new ListFragmentExamples();
-	// addFragment(projectListFragment, R.id.f1, false);
 
 	mProjectPagerAdapter = new ProjectsPagerAdapter(getSupportFragmentManager());
 	mProjectPagerAdapter.setExamplesFragment(exampleListFragment);
 	mProjectPagerAdapter.setProjectsFragment(userProjectListFragment);
 
-	// Set up the ViewPager, attaching the adapter.
 	mViewPager = (ViewPager) findViewById(R.id.pager);
 	mViewPager.setAdapter(mProjectPagerAdapter);
 
-	// Start the servers
 	startServers();
 
 	observer = new FileObserver(BaseMainApp.projectsDir,
-	// set up a file obs`erver to
-	// watch this directory on sd card
+	// set up a file observer to watch this directory on sd card
 		FileObserver.CREATE | FileObserver.DELETE) {
 
 	    @Override
@@ -159,9 +144,8 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
 
 		    Log.d(TAG, "File created [" + BaseMainApp.projectsDir + "/" + file + "]");
 
-		    // check if its a "create" and not
-		    // equal to probe because thats created
-		    // every time camera is launched
+		    // check if its a "create" and not equal to probe because thats created every time camera is
+		    // launched
 		} else if ((FileObserver.DELETE & event) != 0) {
 		    Log.d(TAG, "File deleted [" + BaseMainApp.projectsDir + "/" + file + "]");
 
@@ -182,8 +166,6 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
 	Log.d(TAG, "Registering as an EventBus listener in MainActivity");
 	EventBus.getDefault().register(this);
 
-	// TODO do something with the webserver
-	// Create broadcast receiver for if the user cancels from the curtain
 	mStopServerReceiver = new BroadcastReceiver() {
 
 	    @Override
@@ -199,7 +181,6 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
 	filterSend.addAction("com.makewithmoto.intent.action.STOP_SERVER");
 	registerReceiver(mStopServerReceiver, filterSend);
 	observer.startWatching();
-	// startServers();
     }
 
     /**
@@ -258,25 +239,10 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
 	// check if wifi connection is available
 	if (NetworkUtils.isNetworkAvailable(c) != true) {
 	    Log.d(TAG, "There is no connection");
-	    // textIP.setText("Connect to a network if you want to code via your computer");
 	    hardKillConnections();
 	    return -1;
 	} else {
 
-	}
-
-	Log.d(TAG, "There is connection");
-	// Show the notification
-	SharedPreferences prefs = getSharedPreferences("com.makewithmoto", MODE_PRIVATE);
-	boolean showNotification = prefs
-		.getBoolean(getResources().getString(R.string.pref_curtain_notifications), true);
-	if (showNotification) {
-	    mNotification = new BaseNotification(this);
-	    /*
-	     * mNotification.show(MainActivity.class, R.drawable.ic_stat_logo, "http://" +
-	     * NetworkUtils.getLocalIpAddress(this) + ":" + AppSettings.httpPort, "protocoder Running",
-	     * R.drawable.ic_navigation_cancel);
-	     */
 	}
 
 	// start webserver
@@ -295,13 +261,10 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
 
 	    @Override
 	    public void run() {
-
-		// Log.d(TAG, " " + x);
 		JSONObject obj = new JSONObject();
 		try {
 		    obj.put("executeRemote", "addButton");
 		} catch (JSONException e) {
-		    // TODO Auto-generated catch block
 		    e.printStackTrace();
 		}
 		ws.send(obj);
@@ -309,7 +272,6 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
 		handler.postDelayed(this, 1000);
 	    }
 	};
-	// handler.postDelayed(r, 0);
 
 	// check if there is a WIFI connection or we can connect via USB
 	if (NetworkUtils.getLocalIpAddress(this) == null) {
@@ -367,20 +329,9 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
      * Unbinds service and stops the http server
      */
     private void killConnections() {
-	// TODO enable this at some point
-	// TODO add websocket
-
 	if (httpServer != null) {
 	    httpServer.close();
 	    httpServer = null;
-	}
-	// Hide the notification
-	SharedPreferences prefs = getSharedPreferences("com.makewithmoto", MODE_PRIVATE);
-	boolean showNotification = prefs
-		.getBoolean(getResources().getString(R.string.pref_curtain_notifications), true);
-	if (showNotification) {
-	    if (mNotification != null)
-		mNotification.hide();
 	}
 	textIP.setText(getResources().getString(R.string.start_the_server));
 	textIP.setOnClickListener(null);// Remove the old listener explicitly
@@ -391,9 +342,6 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
      * Explicitly kills connections, with UI impact
      */
     private void hardKillConnections() {
-	// TODO enable this at some point
-	// TODO add here websocket
-
 	if (httpServer != null) {
 	    httpServer.stop();
 	    httpServer = null;
@@ -410,14 +358,6 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
 	    }
 	});
 
-	// Hide the notification
-	SharedPreferences prefs = getSharedPreferences("com.makewithmoto", MODE_PRIVATE);
-	boolean showNotification = prefs
-		.getBoolean(getResources().getString(R.string.pref_curtain_notifications), true);
-	if (showNotification) {
-	    if (mNotification != null)
-		mNotification.hide();
-	}
     }
 
     private void updateStartStopActionbarItem() {
@@ -445,20 +385,11 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
 
 	    try {
 		currentProjectApplicationIntent = new Intent(MainActivity.this, AppRunnerActivity.class);
-		String script = ProjectManager.getInstance().getCode(evt.getProject());
 
 		Project p = evt.getProject();
 
-		currentProjectApplicationIntent.putExtra("projectName", p.getName());
-		currentProjectApplicationIntent.putExtra("projectType", p.getType());
-
-		// check if the apprunner is installed
-		// final PackageManager mgr = this.getPackageManager();
-		// List<ResolveInfo> list = mgr.queryIntentActivities(
-		// currentProjectApplicationIntent,
-		// PackageManager.MATCH_DEFAULT_ONLY);
-
-		// Log.d(TAG, "intent available " + list.size());
+		currentProjectApplicationIntent.putExtra(Project.NAME, p.getName());
+		currentProjectApplicationIntent.putExtra(Project.TYPE, p.getType());
 
 		startActivityForResult(currentProjectApplicationIntent, mProjectRequestCode);
 	    } catch (Exception e) {
@@ -494,22 +425,18 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
     public boolean onOptionsItemSelected(MenuItem item) {
 	AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 
-	switch (item.getItemId()) {
-
-	case android.R.id.home:
-
+	int itemId = item.getItemId();
+	if (itemId == android.R.id.home) {
 	    return true;
-	case R.id.menu_new:
+	} else if (itemId == R.id.menu_new) {
 	    showEditDialog();
-
 	    return true;
-	case R.id.menu_help:
+	} else if (itemId == R.id.menu_help) {
 	    Intent aboutActivityIntent = new Intent(this, AboutActivity.class);
 	    startActivity(aboutActivityIntent);
 	    overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
-
 	    return true;
-	case R.id.menu_start_stop:
+	} else if (itemId == R.id.menu_start_stop) {
 	    if (httpServer != null) {
 		hardKillConnections();
 	    } else {
@@ -517,12 +444,12 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
 	    }
 	    updateStartStopActionbarItem();
 	    return true;
-	case R.id.menu_settings:
+	} else if (itemId == R.id.menu_settings) {
 	    Intent preferencesIntent = new Intent(this, SetPreferenceActivity.class);
 	    startActivity(preferencesIntent);
 	    overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
 	    return true;
-	default:
+	} else {
 	    return super.onOptionsItemSelected(item);
 	}
     }
@@ -595,7 +522,7 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-	    debugIntent(intent, "grokkingandroid");
+	    debugIntent(intent, "");
 	    startServers();
 	}
 

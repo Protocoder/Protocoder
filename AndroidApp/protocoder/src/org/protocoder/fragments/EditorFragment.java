@@ -112,9 +112,8 @@ public class EditorFragment extends BaseFragment {
 
 	Bundle bundle = getArguments();
 	if (bundle != null) {
-	    String projectName = bundle.getString("project_name");
-	    String projectURL = bundle.getString("project_url");
-	    int projectType = bundle.getInt("project_type", -1);
+	    String projectName = bundle.getString(Project.NAME);
+	    int projectType = bundle.getInt(Project.TYPE, -1);
 	    Log.d("mm", projectName);
 	    if (projectName != "") {
 		loadProject(ProjectManager.getInstance().get(projectName, projectType));
@@ -140,11 +139,6 @@ public class EditorFragment extends BaseFragment {
 
     public static EditorFragment newInstance(ProjectManager project) {
 	EditorFragment myFragment = new EditorFragment();
-
-	// Bundle args = new Bundle();
-	// args.putSerializable("qq", project);
-	// args.putInt("someInt", someInt);
-	// myFragment.setArguments(args);
 
 	return myFragment;
     }
@@ -243,7 +237,6 @@ public class EditorFragment extends BaseFragment {
     }
 
     public void toggleEditable(boolean b) {
-	// edit.setOn
 
     }
 
