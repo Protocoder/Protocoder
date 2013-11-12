@@ -33,6 +33,7 @@ import java.util.ArrayList;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.protocoder.AppSettings;
 import org.protocoder.MainActivity;
 import org.protocoder.R;
 import org.protocoder.apprunner.AppRunnerInterpreter.InterpreterInfo;
@@ -751,7 +752,10 @@ public class AppRunnerActivity extends BaseActivity {
 	    // Set up the actionbar
 	    actionBar = getActionBar();
 	    if (actionBar != null) {
-		actionBar.setDisplayHomeAsUpEnabled(true);
+		
+		if (AppSettings.standAlone == false) {
+		    actionBar.setDisplayHomeAsUpEnabled(true);
+		}
 		actionBar.setTitle(currentProject.getName());
 	    }
 	    actionBarSet = true;

@@ -27,10 +27,10 @@
 
 package org.protocoder.apprunner.api.widgets;
 
+import org.protocoder.AppSettings;
 import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apprunner.JInterface;
 import org.protocoder.apprunner.JavascriptInterface;
-import org.protocoder.base.AppSettings;
 import org.protocoder.views.PlotView;
 import org.protocoder.views.PlotView.Plot;
 

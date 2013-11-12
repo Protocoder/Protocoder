@@ -29,6 +29,7 @@ package org.protocoder.base;
 
 import java.io.File;
 
+import org.protocoder.AppSettings;
 import org.protocoder.utils.FileIO;
 
 import android.app.Application;

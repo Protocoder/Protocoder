@@ -27,7 +27,7 @@
 
 package org.protocoder.apprunner.api.widgets;
 
-import org.protocoder.base.AppSettings;
+import org.protocoder.AppSettings;
 
 import android.content.Context;
 import android.widget.ToggleButton;

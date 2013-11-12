@@ -63,15 +63,15 @@ public class ProjectManager {
 	return INSTANCE;
     }
 
-    public void install(final Context c) {
+    public void install(final Context c, final String assetsName) {
 
 	new Thread(new Runnable() {
 
 	    @Override
 	    public void run() {
-		File dir = new File(BaseMainApp.baseDir + "/" + BaseMainApp.typeExampleStr);
+		File dir = new File(BaseMainApp.baseDir + "/" + assetsName);
 		FileIO.deleteDir(dir);
-		FileIO.copyFileOrDir(c.getApplicationContext(), BaseMainApp.typeExampleStr);
+		FileIO.copyFileOrDir(c.getApplicationContext(), assetsName);
 	    }
 	}).start();
     }

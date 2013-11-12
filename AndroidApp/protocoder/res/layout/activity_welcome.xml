@@ -52,6 +52,9 @@
             android:layout_marginRight="16dp"
             android:text="@string/welcome_body"
             android:textColor="@color/mwmgray"
+            android:shadowColor="#ffffff"
+            android:shadowDx="2"
+            android:shadowDy="2"
             android:textSize="18sp" />
 
         <Button

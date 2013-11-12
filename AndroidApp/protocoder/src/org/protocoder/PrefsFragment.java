@@ -27,6 +27,7 @@
 
 package org.protocoder;
 
+import org.protocoder.base.BaseMainApp;
 import org.protocoder.base.BaseNotification;
 import org.protocoder.events.ProjectManager;
 
@@ -99,7 +100,7 @@ public class PrefsFragment extends PreferenceFragment {
 			    public void onClick(DialogInterface dialog, int which) {
 				// Perform Your Task Here--When Yes Is
 				// Pressed.
-				ProjectManager.getInstance().install(getActivity());
+				ProjectManager.getInstance().install(getActivity(), BaseMainApp.typeExampleStr);
 				dialog.cancel();
 			    }
 			}).setNegativeButton("No", new DialogInterface.OnClickListener() {
