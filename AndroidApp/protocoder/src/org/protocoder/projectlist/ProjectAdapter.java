@@ -83,7 +83,7 @@ public class ProjectAdapter extends BaseAdapter {
 	    } else {
 		customView.setImage(R.drawable.ic_script_example);
 	    }
-	    // Log.d("qq", "" + projects.get(position).getName());
+
 	    customView.setText(projects.get(position).getName());
 	    ImageView imageView = (ImageView) customView.findViewById(R.id.card_menu_button);
 	    imageView.setOnClickListener(new OnClickListener() {

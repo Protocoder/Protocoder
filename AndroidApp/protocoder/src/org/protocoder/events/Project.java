@@ -33,6 +33,11 @@ import org.protocoder.base.BaseMainApp;
 
 public class Project {
 
+    public final static String TYPE = "projectType";
+    public final static String NAME = "projectName";
+    public final static String URL = "projectUrl";
+    
+    
     public String name;
     public String url;
     public int type;

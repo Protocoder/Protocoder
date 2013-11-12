@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="MWMTheme" parent="@android:style/Theme.Holo.Light.DarkActionBar">
-        <item name="android:actionBarStyle">@style/MWMTheme.ActionBarStyle</item>
-    </style>
-    
-    
-    <style name="MWMLaunchTheme" parent="@android:style/Theme.Holo.Light.NoActionBar">
-
-    </style>
-    
-
-    <style name="MWMTheme.ActionBarStyle" parent="@android:style/Widget.Holo.Light.ActionBar">
-        <item name="android:titleTextStyle">@style/MWMTheme.ActionBar.TitleTextStyle</item>
-        <item name="android:background">@color/mwmblue</item>
+    <style name="ProtocoderTheme" parent="@android:style/Theme.Holo.Light">
+        <item name="android:actionBarStyle">@style/ProtocoderTheme.ActionBarStyle</item>
     </style>
 
-    <style name="MWMTheme.ActionBar.TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
-        <item name="android:textColor">@color/white</item>
+    <style name="ProtocoderLaunchTheme" parent="@android:style/Theme.Holo.Light.NoActionBar"></style>
+
+    <style name="ProtocoderTheme.ActionBarStyle" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:titleTextStyle">@style/ProtocoderTheme.ActionBar.TitleTextStyle</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:selectableItemBackground">@drawable/actionbar_highlight</item>
+        <item name="android:actionOverflowButtonStyle">@style/OverFlow</item>
+    </style>
+
+    <style name="OverFlow" parent="@android:style/Widget.Holo.ActionButton.Overflow">
+        <item name="android:src">@drawable/ic_action_overflow</item>
+    </style>
+
+    <style name="ProtocoderTheme.ActionBar.TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/title</item>
         <item name="android:fontFamily">sans-serif-condensed</item>
         <item name="android:textStyle">bold</item>
     </style>

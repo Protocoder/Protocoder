@@ -1,7 +1,2 @@
 TODO
 ===== 
-- add bluetooth support 
-- get / post httprequest 
-- webview bidirectional calls 
-- reference 
-- change webIDE projects / examples into a single sliding page 
