@@ -25,7 +25,7 @@
  * 
  */
 
-package org.protocoder.base;
+package org.protocoder;
 
 import android.os.Build;
 
@@ -41,6 +41,7 @@ public class AppSettings {
     public static boolean hideHomeBar = false;
     public static boolean screenAlwaysOn = false;
     public static boolean closeWithBack = true;
+    public static boolean standAlone = false;
 
     public static int CURRENT_VERSION = Build.VERSION_CODES.ICE_CREAM_SANDWICH;
 
@@ -48,9 +49,8 @@ public class AppSettings {
     public static String SERVER_ADDRESS = "";
     public static int websocketPort = 8587;
     public static long animSpeed = 500;
-    public static final int httpPort = 8585;
+    public static int httpPort = 8585;
 
-    //
     public String id;
 
     private static AppSettings instance;

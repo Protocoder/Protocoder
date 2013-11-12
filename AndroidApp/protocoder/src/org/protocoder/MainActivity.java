@@ -33,7 +33,6 @@ import org.java_websocket.drafts.Draft_17;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.protocoder.apprunner.AppRunnerActivity;
-import org.protocoder.base.AppSettings;
 import org.protocoder.base.BaseActivity;
 import org.protocoder.base.BaseMainApp;
 import org.protocoder.events.Events.ProjectEvent;

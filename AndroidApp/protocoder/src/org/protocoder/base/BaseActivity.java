@@ -29,6 +29,7 @@ package org.protocoder.base;
 
 import java.util.ArrayList;
 
+import org.protocoder.AppSettings;
 import org.protocoder.media.Audio;
 
 import android.R;

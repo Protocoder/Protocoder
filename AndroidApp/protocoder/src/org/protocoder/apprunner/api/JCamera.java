@@ -29,13 +29,13 @@ package org.protocoder.apprunner.api;
 
 import java.io.File;
 
+import org.protocoder.AppSettings;
 import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apidoc.annotation.APIParam;
 import org.protocoder.apprunner.AppRunnerSettings;
 import org.protocoder.apprunner.JInterface;
 import org.protocoder.apprunner.JavascriptInterface;
 import org.protocoder.apprunner.api.widgets.JViewInterface;
-import org.protocoder.base.AppSettings;
 import org.protocoder.fragments.CameraFragment;
 import org.protocoder.fragments.CameraFragment.CameraListener;
 

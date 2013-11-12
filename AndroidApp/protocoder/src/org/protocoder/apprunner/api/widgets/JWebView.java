@@ -27,7 +27,7 @@
 
 package org.protocoder.apprunner.api.widgets;
 
-import org.protocoder.base.AppSettings;
+import org.protocoder.AppSettings;
 import org.protocoder.views.CustomWebView;
 
 import android.content.Context;

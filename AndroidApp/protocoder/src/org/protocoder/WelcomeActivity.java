@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.protocoder.base.BaseActivity;
+import org.protocoder.base.BaseMainApp;
 import org.protocoder.events.ProjectManager;
 import org.protocoder.utils.StrUtils;
 
@@ -64,8 +65,12 @@ public class WelcomeActivity extends BaseActivity {
 	// Set copyright
 	TextView copyright = (TextView) findViewById(R.id.copyright);
 	copyright.setText(readFile(R.raw.copyright_notice));
+	
+	//first time id 
 	PrefsFragment.setId(this, StrUtils.generateRandomString());
-	ProjectManager.getInstance().install(this);
+	
+	//install examples 
+	ProjectManager.getInstance().install(this, BaseMainApp.typeExampleStr);
     }
 
     /**
@@ -110,7 +115,7 @@ public class WelcomeActivity extends BaseActivity {
 
     public void onAcceptClick(View v) {
 	// Write a shared pref to never come back here
-	SharedPreferences userDetails = getSharedPreferences("com.makewithmoto", MODE_PRIVATE);
+	SharedPreferences userDetails = getSharedPreferences("org.protocoder", MODE_PRIVATE);
 	userDetails.edit().putBoolean(getResources().getString(R.string.pref_is_first_launch), false).commit();
 	// Start the activity
 	Intent i = new Intent(this, MainActivity.class);
