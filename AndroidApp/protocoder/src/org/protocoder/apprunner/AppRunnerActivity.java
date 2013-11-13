@@ -196,6 +196,7 @@ public class AppRunnerActivity extends BaseActivity {
 	    } else if (projectType == ProjectManager.PROJECT_USER_MADE) {
 		actionBarColor = getResources().getColor(R.color.project_user_color);
 	    }
+	    setActionBar(actionBarColor, getResources().getColor(R.color.white));
 
 	    AppRunnerSettings.get().project = currentProject;
 	    String script = ProjectManager.getInstance().getCode(currentProject);
@@ -207,7 +208,6 @@ public class AppRunnerActivity extends BaseActivity {
 	    if (null != script) {
 		interp.eval(script, projectName);
 	    }
-	    setActionBar(actionBarColor, getResources().getColor(R.color.white));
 	    interp.eval(interp.SCRIPT_POSTFIX);
 
 	}
@@ -767,8 +767,10 @@ public class AppRunnerActivity extends BaseActivity {
 		    actionBar.setDisplayHomeAsUpEnabled(true);
 		}
 
+		Log.d(TAG, "mmm");
 		// set color
 		if (colorBg != null) {
+		    Log.d(TAG, "setting bg");
 		    ColorDrawable d = new ColorDrawable();
 		    d.setColor(colorBg);
 		    actionBar.setBackgroundDrawable(d);
@@ -784,7 +786,7 @@ public class AppRunnerActivity extends BaseActivity {
 		    textTitleView.setTextColor(colorText);
 		}
 	    }
-	    actionBarSet = true;
+	  //  actionBarSet = true;
 	}
     }
 
