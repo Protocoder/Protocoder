@@ -74,6 +74,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentFilter.MalformedMimeTypeException;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
@@ -187,8 +190,14 @@ public class AppRunnerActivity extends BaseActivity {
 	    currentProject = ProjectManager.getInstance().get(projectName, projectType);
 	    Log.d(TAG, "launching " + projectName + " " + projectType);
 
-	    AppRunnerSettings.get().project = currentProject;
+	    Integer actionBarColor = null;
+	    if (projectType == ProjectManager.PROJECT_EXAMPLE) {
+		actionBarColor = getResources().getColor(R.color.project_example_color);
+	    } else if (projectType == ProjectManager.PROJECT_USER_MADE) {
+		actionBarColor = getResources().getColor(R.color.project_user_color);
+	    }
 
+	    AppRunnerSettings.get().project = currentProject;
 	    String script = ProjectManager.getInstance().getCode(currentProject);
 
 	    // loading the libraries
@@ -198,7 +207,7 @@ public class AppRunnerActivity extends BaseActivity {
 	    if (null != script) {
 		interp.eval(script, projectName);
 	    }
-	    setActionBar();
+	    setActionBar(actionBarColor, getResources().getColor(R.color.white));
 	    interp.eval(interp.SCRIPT_POSTFIX);
 
 	}
@@ -747,16 +756,33 @@ public class AppRunnerActivity extends BaseActivity {
 	onVoiceRecognitionListener = onVoiceRecognitionListener2;
     }
 
-    public void setActionBar() {
+    public void setActionBar(Integer colorBg, Integer colorText) {
 	if (!actionBarSet) {
 	    // Set up the actionbar
 	    actionBar = getActionBar();
 	    if (actionBar != null) {
-		
+
+		// home clickable if is running inside protocoder
 		if (AppSettings.standAlone == false) {
 		    actionBar.setDisplayHomeAsUpEnabled(true);
 		}
+
+		// set color
+		if (colorBg != null) {
+		    ColorDrawable d = new ColorDrawable();
+		    d.setColor(colorBg);
+		    actionBar.setBackgroundDrawable(d);
+		}
+
+		// title
 		actionBar.setTitle(currentProject.getName());
+
+		// set title color
+		if (colorText != null) {
+		    int titleId = Resources.getSystem().getIdentifier("action_bar_title", "id", "android");
+		    TextView textTitleView = (TextView) findViewById(titleId);
+		    textTitleView.setTextColor(colorText);
+		}
 	    }
 	    actionBarSet = true;
 	}

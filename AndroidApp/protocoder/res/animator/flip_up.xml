@@ -8,7 +8,7 @@
         android:propertyName="rotationX"
         android:repeatMode="reverse"
         android:repeatCount="1"
-        android:duration="350"/>
+        android:duration="150"/>
     <objectAnimator
         android:valueFrom="0"
         android:valueTo="-2"
@@ -24,5 +24,5 @@
         android:propertyName="alpha"
         android:repeatMode="reverse"
         android:repeatCount="1"
-        android:duration="350"/>
+        android:duration="150"/>
 </set>

@@ -290,7 +290,7 @@ public class JUI extends JInterface {
 	if (noActionBarAllowed)
 	    return;
 
-	((AppRunnerActivity) a.get()).setActionBar();
+	((AppRunnerActivity) a.get()).setActionBar(null, null);
 	((AppRunnerActivity) a.get()).actionBar.setTitle(title);
     }
 
@@ -301,7 +301,7 @@ public class JUI extends JInterface {
 	if (noActionBarAllowed)
 	    return;
 
-	((AppRunnerActivity) a.get()).setActionBar();
+	((AppRunnerActivity) a.get()).setActionBar(null, null);
 	((AppRunnerActivity) a.get()).actionBar.setSubtitle(title);
     }
 
@@ -312,7 +312,7 @@ public class JUI extends JInterface {
 	if (noActionBarAllowed)
 	    return;
 
-	((AppRunnerActivity) a.get()).setActionBar();
+	((AppRunnerActivity) a.get()).setActionBar(null, null);
 	if (b)
 	    ((AppRunnerActivity) a.get()).actionBar.show();
 	else {
@@ -326,11 +326,8 @@ public class JUI extends JInterface {
     public void setTitleBgColor(int r, int g, int b) {
 	if (noActionBarAllowed)
 	    return;
-	((AppRunnerActivity) a.get()).setActionBar();
-	ColorDrawable d = new ColorDrawable();
 	int c = Color.rgb(r, g, b);
-	d.setColor(c);
-	((AppRunnerActivity) a.get()).actionBar.setBackgroundDrawable(d);
+	((AppRunnerActivity) a.get()).setActionBar(c, null);
     }
 
     @JavascriptInterface
@@ -340,13 +337,8 @@ public class JUI extends JInterface {
 	if (noActionBarAllowed)
 	    return;
 
-	((AppRunnerActivity) a.get()).setActionBar();
-	ColorDrawable d = new ColorDrawable();
 	int c = Color.rgb(r, g, b);
-	d.setColor(c);
-	int titleId = Resources.getSystem().getIdentifier("action_bar_title", "id", "android");
-	TextView yourTextView = (TextView) a.get().findViewById(titleId);
-	yourTextView.setTextColor(c);
+	((AppRunnerActivity) a.get()).setActionBar(null, c);
     }
 
     @JavascriptInterface

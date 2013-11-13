@@ -16,16 +16,16 @@
     titles for adjacent pages.
         -->
 
-        <android.support.v4.view.PagerTitleStrip
+        <org.protocoder.views.ProjectSelectorStrip
             android:id="@+id/pager_title_strip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
             android:background="#bbff8800"
             android:padding="8dp"
+            android:textAppearance="@style/PagerTitleStripText"
             android:textColor="#fff"
-            android:textStyle="bold"
-             />
+            android:textStyle="bold" />
     </android.support.v4.view.ViewPager>
 
     <LinearLayout
@@ -46,8 +46,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#AA777777" 
-            >
+            android:background="#AA777777" >
 
             <TextView
                 android:id="@+id/ip"

@@ -45,6 +45,7 @@ import org.protocoder.network.MyHTTPServer;
 import org.protocoder.network.NetworkUtils;
 import org.protocoder.projectlist.ListFragmentExamples;
 import org.protocoder.projectlist.ListFragmentUserProjects;
+import org.protocoder.views.ProjectSelectorStrip;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
@@ -63,6 +64,7 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -102,12 +104,31 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
 
     private FileObserver observer;
 
-    //connection
+    // connection
     BroadcastReceiver mStopServerReceiver;
     MyHTTPServer httpServer;
     private CustomWebsocketServer ws;
     private ConnectivityChangeReceiver connectivityChangeReceiver;
 
+    int calculateColor(float fraction, int startValue, int endValue) {
+
+	int startInt = (Integer) startValue;
+	int startA = (startInt >> 24) & 0xff;
+	int startR = (startInt >> 16) & 0xff;
+	int startG = (startInt >> 8) & 0xff;
+	int startB = startInt & 0xff;
+
+	int endInt = (Integer) endValue;
+	int endA = (endInt >> 24) & 0xff;
+	int endR = (endInt >> 16) & 0xff;
+	int endG = (endInt >> 8) & 0xff;
+	int endB = endInt & 0xff;
+
+	return (int) ((startA + (int) (fraction * (endA - startA))) << 24)
+		| (int) ((startR + (int) (fraction * (endR - startR))) << 16)
+		| (int) ((startG + (int) (fraction * (endG - startG))) << 8)
+		| (int) ((startB + (int) (fraction * (endB - startB))));
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -130,6 +151,30 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
 
 	mViewPager = (ViewPager) findViewById(R.id.pager);
 	mViewPager.setAdapter(mProjectPagerAdapter);
+
+	// final int c0 = Color.parseColor( getResources().getColor(R.color.project_user_color) );
+	final int c0 = getResources().getColor(R.color.project_user_color);
+	final int c1 = getResources().getColor(R.color.project_example_color);
+
+	final ProjectSelectorStrip strip = (ProjectSelectorStrip) findViewById(R.id.pager_title_strip);
+	mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
+
+	    @Override
+	    public void onPageSelected(int arg0) {
+	    }
+
+	    @Override
+	    public void onPageScrolled(int arg0, float arg1, int arg2) {
+
+		int c = calculateColor(arg0 + arg1, c0, c1);
+		strip.setBackgroundColor(c);
+
+	    }
+
+	    @Override
+	    public void onPageScrollStateChanged(int arg0) {
+	    }
+	});
 
 	startServers();
 

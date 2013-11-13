@@ -41,6 +41,10 @@ import org.protocoder.events.Project;
 import org.protocoder.events.ProjectManager;
 import org.protocoder.fragments.EditorFragment;
 
+import android.animation.Animator;
+import android.animation.Animator.AnimatorListener;
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -111,12 +115,37 @@ public class ListFragmentBase extends BaseFragment {
 
 	gridView.setOnItemClickListener(new OnItemClickListener() {
 	    @Override
-	    public void onItemClick(AdapterView<?> parent, final View v, int position, long id) {
+	    public void onItemClick(AdapterView<?> parent, final View v, final int position, long id) {
 
-		ProjectAnimations.projectLaunch(v);
-
+		//ProjectAnimations.projectLaunch(v);
+		
+		AnimatorSet animSpin;
+		animSpin = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(), R.animator.flip_up);
+		animSpin.setTarget(v);
+		animSpin.addListener(new AnimatorListener() {
+		    
+		    @Override
+		    public void onAnimationStart(Animator animation) {
+			
+		    }
+		    
+		    @Override
+		    public void onAnimationRepeat(Animator animation) {
+			
+		    }
+		    
+		    @Override
+		    public void onAnimationEnd(Animator animation) {
+		
+		    }
+		    
+		    @Override
+		    public void onAnimationCancel(Animator animation) {
+			
+		    }
+		});
+		animSpin.start();
 		Project project = projects.get(position);
-		Log.d("BB", "onItemClickListener" + " " + position + " " + project.getName());
 		ProjectEvent evt = new ProjectEvent(project, "run");
 		EventBus.getDefault().post(evt);
 		getActivity().overridePendingTransition(R.anim.splash_slide_in_anim_set,
@@ -295,11 +324,7 @@ public class ListFragmentBase extends BaseFragment {
 	ProjectAnimations.projectRefresh(v);
     }
 
-    public void projectLaunch(String projectName) {
-	View v = gridView.findViewWithTag(projectName);
-	ProjectAnimations.projectLaunch(v);
 
-    }
 
     public void onEventMainThread(ProjectEvent evt) {
 	if (evt.getAction() == "run") {
