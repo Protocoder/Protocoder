@@ -115,14 +115,17 @@ public class JUI extends JInterface {
     // properties
     public int canvasWidth;
     public int canvasHeight;
+    public int cw;
+    public int ch;
     private ScrollView sv;
     public int screenWidth;
     public int screenHeight;
-    private int w;
-    private int h;
+    public int sw;
+    public int sh;
     private int theme;
     private boolean absoluteLayout = true;
     private boolean noActionBarAllowed = false;
+    private boolean isScrollLayout = true;
 
     public JUI(Activity a) {
 	super(a);
@@ -130,40 +133,54 @@ public class JUI extends JInterface {
 	screenWidth = ((BaseActivity) a).screenWidth;
 	screenHeight = ((BaseActivity) a).screenHeight;
 
-	w = ((BaseActivity) a).screenWidth;
-	h = ((BaseActivity) a).screenHeight;
+	sw = ((BaseActivity) a).screenWidth;
+	sh = ((BaseActivity) a).screenHeight;
     }
 
     private void initializeLayout() {
 	if (!isMainLayoutSetup) {
 	    LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 
+	    // this is the structure of the layout
+	    // parentLayout
+	    // holderLayout
+	    // bgImage
+	    // [uiAbsoluteLayout] if (!isScrollLayout)
+	    // [scrollview] if (isScrollLayout)
+	    // [uiAbsoluteLayout]
+
 	    if (absoluteLayout) {
-		// We need to let the view scroll, so we're creating a scroll view
-		sv = new ScrollView(a.get());
-		sv.setLayoutParams(layoutParams);
-		sv.setFillViewport(true);
-
-		// Create the main layout. This is where all the items actually go
-		uiAbsoluteLayout = new FrameLayout(a.get());
-		uiAbsoluteLayout.setLayoutParams(layoutParams);
-		sv.addView(uiAbsoluteLayout);
-
-		// set the holder for absolute positioning widgets
+		// set the parent
 		RelativeLayout parentLayout = new RelativeLayout(a.get());
 		parentLayout.setLayoutParams(layoutParams);
 		parentLayout.setGravity(Gravity.BOTTOM);
 		parentLayout.setBackgroundColor(a.get().getResources().getColor(R.color.transparent));
 
-		// background
-		bgImageView = new ImageView(a.get());
-		parentLayout.addView(bgImageView, layoutParams);
-
-		// set the holder for absolute positioning widgets
+		// set the holder
 		holderLayout = new RelativeLayout(a.get());
 		holderLayout.setLayoutParams(layoutParams);
 		holderLayout.setBackgroundColor(a.get().getResources().getColor(R.color.transparent));
 		parentLayout.addView(holderLayout);
+
+		// Create the main layout. This is where all the items actually go
+		uiAbsoluteLayout = new FrameLayout(a.get());
+		uiAbsoluteLayout.setLayoutParams(layoutParams);
+		uiAbsoluteLayout.setBackgroundColor(a.get().getResources().getColor(R.color.transparent));
+
+		// We need to let the view scroll, so we're creating a scroll view
+		sv = new ScrollView(a.get());
+		sv.setLayoutParams(layoutParams);
+		sv.setBackgroundColor(a.get().getResources().getColor(R.color.transparent));
+		sv.setFillViewport(true);
+		// sv.setEnabled(false);
+
+		allowScroll(isScrollLayout);
+
+		sv.addView(uiAbsoluteLayout);
+
+		// background image
+		bgImageView = new ImageView(a.get());
+		holderLayout.addView(bgImageView, layoutParams);
 
 		// set the layout
 		a.get().initLayout();
@@ -171,11 +188,30 @@ public class JUI extends JInterface {
 		holderLayout.addView(sv);
 	    } else {
 		GridLayout gl = new GridLayout(a.get());
-
 	    }
 
 	    isMainLayoutSetup = true;
 	}
+    }
+
+    @JavascriptInterface
+    @APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
+    @APIParam(params = { "boolean" })
+    private void allowScroll(boolean scroll) {
+	if (scroll) {
+	    sv.setOnTouchListener(null);
+	} else {
+	    sv.setOnTouchListener(new OnTouchListener() {
+	        
+	        @Override
+	        public boolean onTouch(View v, MotionEvent event) {
+	            
+	    	return true;
+	        }
+	    });
+	    sv.addView(uiAbsoluteLayout);
+	} 	
+	isScrollLayout = scroll;
     }
 
     private void addView(View v, int x, int y, int w, int h) {
