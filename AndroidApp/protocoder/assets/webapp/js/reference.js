@@ -36,6 +36,10 @@ Reference.prototype.parseHelp = function (docString) {
 			if (typeof method.parametersName !== "undefined") {
 				parameters = method.parametersName.join(", ");
 			}
+
+			//if return type is void dont show it 
+			if (method.returnType == "void") method.returnType = "";
+
 	        $("#method_"+method.name).append('<h2><i>'+  method.returnType + " </i><strong>" + className + "." + method.name + "</strong><i>(" + parameters + ")</i></h2>");
 	        
 	        //add description if exist 

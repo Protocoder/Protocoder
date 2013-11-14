@@ -1,7 +1,7 @@
 Protocoder
 ==========
 
-Protocoder is a coding environment + framework in Javascript for quick prototyping on Android devices having some enfansis on rapid hardware hacking. 
+Protocoder is a coding environment + framework in Javascript for quick prototyping on Android devices having some emphasis on rapid hardware hacking. 
 
 It all started during the http://www.makewithmoto.com tour. A 5 month cross country roadtrip across the US with a fearless crew from Motorola ATAP on a velcro-covered van and a VW bus full of 3d printers, hackable phones, arduinos, ioios, electronics components. 
 During the roadtrip we hacked together with university students and hackerspaces fellows and we realized we needed a better tool for prototyping, which we decided to start coding during the trip. Protocoder has been developed inside cars, hotel lobbys, cafes, restaurants, parks, here and there.

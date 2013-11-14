@@ -283,15 +283,17 @@ public class ListFragmentBase extends BaseFragment {
 	    sendIntent.setType("text/plain");
 	    startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
 	    return true;
-	} else if (itemId == R.id.menu_project_list_beam) {
-	    Intent beamIntent = new Intent(getActivity(), BeamActivity.class);
-	    // beamIntent.setAction(Intent.ACTION_SEND);
-	    beamIntent.putExtra(Intent.EXTRA_TEXT, ProjectManager.getInstance().getCode(project));
-	    beamIntent.setType("text/plain");
-	    beamIntent.setAction(Intent.ACTION_SEND);
-	    startActivity(beamIntent);
-	    getActivity().overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
-	    return true;
+	    
+	//TODO fix beam 
+//	} else if (itemId == R.id.menu_project_list_beam) {
+//	    Intent beamIntent = new Intent(getActivity(), BeamActivity.class);
+//	    // beamIntent.setAction(Intent.ACTION_SEND);
+//	    beamIntent.putExtra(Intent.EXTRA_TEXT, ProjectManager.getInstance().getCode(project));
+//	    beamIntent.setType("text/plain");
+//	    beamIntent.setAction(Intent.ACTION_SEND);
+//	    startActivity(beamIntent);
+//	    getActivity().overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
+//	    return true;
 	} else {
 	    return super.onContextItemSelected(item);
 	}

@@ -152,8 +152,8 @@ public class JAndroid extends JInterface {
 
     @JavascriptInterface
     @APIMethod(description = "Change brightness", example = "")
-    public void getBrightness() {
-	((AppRunnerActivity) a.get()).getCurrentBrightness();
+    public float getBrightness() {
+	return ((AppRunnerActivity) a.get()).getCurrentBrightness();
     }
 
     @JavascriptInterface

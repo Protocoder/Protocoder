@@ -45,6 +45,7 @@ import org.protocoder.network.MyHTTPServer;
 import org.protocoder.network.NetworkUtils;
 import org.protocoder.projectlist.ListFragmentExamples;
 import org.protocoder.projectlist.ListFragmentUserProjects;
+import org.protocoder.views.CanvasView;
 import org.protocoder.views.ProjectSelectorStrip;
 
 import android.animation.AnimatorSet;
@@ -56,11 +57,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.FileObserver;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
@@ -109,6 +113,8 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
     MyHTTPServer httpServer;
     private CustomWebsocketServer ws;
     private ConnectivityChangeReceiver connectivityChangeReceiver;
+    int usbEnabled = 0;
+
 
     int calculateColor(float fraction, int startValue, int endValue) {
 
@@ -151,6 +157,13 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
 
 	mViewPager = (ViewPager) findViewById(R.id.pager);
 	mViewPager.setAdapter(mProjectPagerAdapter);
+	
+	//CanvasView c = (CanvasView) findViewById(R.id.cView);
+	//Paint paint = new Paint();
+	
+	//paint.setColor(Color.argb(15, 255, 0, 0));
+	//c.getCanvas().drawRect(0, 0, 500, 500, paint); 
+	
 
 	// final int c0 = Color.parseColor( getResources().getColor(R.color.project_user_color) );
 	final int c0 = getResources().getColor(R.color.project_user_color);
@@ -272,7 +285,10 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
 	 * 
 	 * } }, intentFilter);
 	 */
-
+	
+	//check if usb is enabled 
+	usbEnabled = Settings.Secure.getInt(getContentResolver(), Settings.Secure.ADB_ENABLED, 0);
+	
 	// Create the IP text view
 	textIP = (TextView) findViewById(R.id.ip);
 	textIP.setOnClickListener(null);// Remove the old listener explicitly

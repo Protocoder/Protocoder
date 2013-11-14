@@ -197,7 +197,7 @@ Communication.prototype.initWebsockets = function () {
   }
   ws.onmessage = function(e) {
     // Receives a message.
-    console.log('message', e.data)
+    //console.log('message', e.data)
 
     //run_project
     if (e.data == "Connected") { 
@@ -208,7 +208,7 @@ Communication.prototype.initWebsockets = function () {
 
     //show remote logs 
     if (result.type == 'log_event') {
-      console.log("REMOTE_LOG::" + result.tag + " --> " + result.msg);
+      //console.log("REMOTE_LOG::" + result.tag + " --> " + result.msg);
     }  
 
     //get_projects
@@ -267,7 +267,7 @@ Communication.prototype.initWebsockets = function () {
     }
     
 
-    console.log(result);
+    //console.log(result);
     if (result.type == "widget") { 
       
       if (result.action == "showDashboard") { 
