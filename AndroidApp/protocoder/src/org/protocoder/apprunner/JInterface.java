@@ -48,6 +48,7 @@ public class JInterface {
 	    // c.get().interpreter.callJsFunction(fn,"");
 	    String f1 = fn;
 	    boolean firstarg = true;
+	    
 	    if (fn.contains("function")) {
 		f1 = "var fn = " + fn + "\n fn(";
 		for (T t : args) {

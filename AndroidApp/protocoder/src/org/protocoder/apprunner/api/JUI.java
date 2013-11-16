@@ -57,19 +57,19 @@ import org.protocoder.utils.AndroidUtils;
 import org.protocoder.views.HoloCircleSeekBar;
 import org.protocoder.views.HoloCircleSeekBar.OnCircleSeekBarChangeListener;
 import org.protocoder.views.PlotView;
+import org.protocoder.views.TouchAreaView;
+import org.protocoder.views.TouchAreaView.OnTouchAreaListener;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -96,7 +96,6 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
-import android.widget.TextView;
 import android.widget.Toast;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -197,20 +196,20 @@ public class JUI extends JInterface {
     @JavascriptInterface
     @APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
     @APIParam(params = { "boolean" })
-    private void allowScroll(boolean scroll) {
+    public void allowScroll(boolean scroll) {
 	if (scroll) {
 	    sv.setOnTouchListener(null);
 	} else {
 	    sv.setOnTouchListener(new OnTouchListener() {
-	        
-	        @Override
-	        public boolean onTouch(View v, MotionEvent event) {
-	            
-	    	return true;
-	        }
+
+		@Override
+		public boolean onTouch(View v, MotionEvent event) {
+
+		    return true;
+		}
 	    });
 	    sv.addView(uiAbsoluteLayout);
-	} 	
+	}
 	isScrollLayout = scroll;
     }
 
@@ -466,14 +465,32 @@ public class JUI extends JInterface {
     }
 
     /**
-     * Adds a circular seekbar or picker
+     * Adds a touch area
      * 
-     * @param label
-     * @param x
-     * @param y
-     * @param w
-     * @param h
-     * @param callbackfn
+     */
+    @JavascriptInterface
+    @APIParam(params = { "x", "y", "w", "h", "hexColor", "function(touching, x, y)" })
+    public TouchAreaView addTouchArea(int x, int y, int w, int h, String hexColor, final String callbackfn) {
+	initializeLayout();
+
+	TouchAreaView taV = new TouchAreaView(a.get(), hexColor);
+	taV.setTouchAreaListener(new OnTouchAreaListener() {
+
+	    @Override
+	    public void onTouch(TouchAreaView touchAreaView, boolean touching, float x, float y) {
+		callback(callbackfn, touching, x, y);
+	    }
+	});
+
+	// Add the view
+	addView(taV, x, y, w, h);
+
+	return taV;
+    }
+
+    /**
+     * Adds a circular seekbar
+     * 
      */
     @JavascriptInterface
     @APIParam(params = { "x", "y", "w", "h, function(progress)" })

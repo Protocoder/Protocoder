@@ -42,14 +42,14 @@
         android:name="org.protocoder.MainApp"
         android:allowBackup="false"
         android:hardwareAccelerated="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/ic_script"
         android:label="@string/app_name"
         android:theme="@style/ProtocoderTheme" >
         <activity
             android:name="org.protocoder.LauncherActivity"
-            android:icon="@drawable/ic_launcher"
+            android:icon="@drawable/ic_script"
             android:label="@string/activity_name"
-            android:logo="@drawable/ic_action_logo"
+            android:logo="@drawable/ic_script"
             android:theme="@style/ProtocoderLaunchTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -66,36 +66,30 @@
         </activity>
         <activity
             android:name="org.protocoder.MainActivity"
-            android:label="@string/activity_name"
-            android:logo="@drawable/ic_action_logo" >
+            android:label="@string/activity_name">
         </activity>
         <activity
             android:name="org.protocoder.AboutActivity"
-            android:label="@string/activity_name"
-            android:logo="@drawable/ic_action_logo" >
+            android:label="@string/activity_name">
         </activity>
         <activity
             android:name="org.protocoder.WelcomeActivity"
-            android:label="@string/activity_name"
-            android:logo="@drawable/ic_action_logo"
+            android:label="@string/activity_name">
             android:noHistory="true" >
         </activity>
         <activity
             android:name="org.protocoder.LicenseActivity"
             android:label="@string/settings_activity_name"
-            android:logo="@drawable/ic_action_logo"
             android:noHistory="true" >
         </activity>
         <activity
             android:name="org.protocoder.SetPreferenceActivity"
             android:label="@string/settings_activity_name"
-            android:logo="@drawable/ic_action_logo"
             android:noHistory="true" >
         </activity>
         <activity
             android:name="org.protocoder.beam.BeamActivity"
-            android:label="@string/beam"
-            android:logo="@drawable/ic_action_logo" >
+            android:label="@string/beam">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -119,7 +113,6 @@
             android:name="org.protocoder.apprunner.AppRunnerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/runner_name"
-            android:logo="@drawable/ic_action_logo"
             android:windowSoftInputMode="stateHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
