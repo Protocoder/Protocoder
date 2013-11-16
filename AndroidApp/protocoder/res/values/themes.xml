@@ -12,6 +12,8 @@
         <item name="android:background">@color/white</item>
         <item name="android:selectableItemBackground">@drawable/actionbar_highlight</item>
         <item name="android:actionOverflowButtonStyle">@style/OverFlow</item>
+        <item name="android:displayOptions">showHome|homeAsUp|showTitle</item>
+        <item name="android:icon">@android:color/transparent</item>
     </style>
 
     <style name="OverFlow" parent="@android:style/Widget.Holo.ActionButton.Overflow">

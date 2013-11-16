@@ -50,6 +50,29 @@ public class JConsole extends JInterface {
     @JavascriptInterface
     @APIMethod(description = "", example = "")
     @APIParam(params = { "text" })
+    public void log(String... outputs) throws JSONException, UnknownHostException {
+
+	StringBuilder builder = new StringBuilder();
+	
+	for (String output : outputs) {
+	    builder.append(" ");
+	    builder.append(output);
+	}
+
+	JSONObject msg = new JSONObject();
+	msg.put("type", "console");
+	msg.put("action", "log");
+	JSONObject values = new JSONObject();
+	values.put("val", builder.toString());
+	msg.put("values", values);
+
+	CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
+	ws.send(msg);
+    }
+
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "text" })
     public void log(String output) throws JSONException, UnknownHostException {
 	JSONObject msg = new JSONObject();
 	msg.put("type", "console");
