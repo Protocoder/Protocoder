@@ -72,6 +72,9 @@ public class Intents {
     private static final String uri_market_facebook = market_root + "com.facebook.katana";
     public static final Uri GOOGLE_PLAY_FACEBOOK_URI = Uri.parse(uri_market_facebook);
 
+    //com.google.android.googlequicksearchbox.MUSIC_SEARCH
+    //
+    
     public static void launchGooglePlaytIntent(final Context c, int string_title_res_id, final Uri google_play_uri) {
 	AlertDialog.Builder adb = new AlertDialog.Builder(c);
 

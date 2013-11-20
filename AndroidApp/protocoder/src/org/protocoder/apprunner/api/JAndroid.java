@@ -165,6 +165,14 @@ public class JAndroid extends JInterface {
     @JavascriptInterface
     @APIMethod(description = "", example = "")
     @APIParam(params = { "recepient", "subject", "message" })
+    public void launchIntent(String intent) {
+	Intent market_intent = new Intent(intent);
+	a.get().startActivity(market_intent);
+    }
+
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "recepient", "subject", "message" })
     public void openEmailApp(String recepient, String subject, String msg) {
 	Intents.sendEmail(a.get(), recepient, subject, msg);
     }

@@ -31,6 +31,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permisssion.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETINGS" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.RECORD_VIDEO" />
     <uses-permission android:name="android.permission.CALL_PHONE" >
@@ -63,18 +64,25 @@
 
                 <data android:mimeType="application/com.protocoder.beam" />
             </intent-filter>
+            
+            <intent-filter>
+                <action android:name="android.intent.action.ASSIST" />
+                <category android:name="android.intent.category.DEFAULT" >
+                </category>
+            </intent-filter>
+            
         </activity>
         <activity
             android:name="org.protocoder.MainActivity"
-            android:label="@string/activity_name">
+            android:label="@string/activity_name" >
         </activity>
         <activity
             android:name="org.protocoder.AboutActivity"
-            android:label="@string/activity_name">
+            android:label="@string/activity_name" >
         </activity>
         <activity
             android:name="org.protocoder.WelcomeActivity"
-            android:label="@string/activity_name">
+            android:label="@string/activity_name" >
             android:noHistory="true" >
         </activity>
         <activity
@@ -89,7 +97,7 @@
         </activity>
         <activity
             android:name="org.protocoder.beam.BeamActivity"
-            android:label="@string/beam">
+            android:label="@string/beam" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -144,7 +152,6 @@
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
-
     </application>
 
 </manifest>

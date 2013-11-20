@@ -43,7 +43,7 @@ public class AppSettings {
     public static boolean closeWithBack = true;
     public static boolean standAlone = false;
 
-    public static int CURRENT_VERSION = Build.VERSION_CODES.ICE_CREAM_SANDWICH;
+    public static int MIN_SUPPORTED_VERSION = Build.VERSION_CODES.ICE_CREAM_SANDWICH;
 
     public static String appFolder = "protocoder";
     public static String SERVER_ADDRESS = "";

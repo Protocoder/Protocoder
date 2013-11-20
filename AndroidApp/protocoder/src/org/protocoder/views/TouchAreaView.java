@@ -60,12 +60,12 @@ public class TouchAreaView extends View {
     private float yPointer;
     private boolean touching = false;
     private OnTouchAreaListener mOnTouchAreaListener;
-    private String mHexColor;
+    private boolean showArea;
 
-    public TouchAreaView(Context context, String hexColor) {
+    public TouchAreaView(Context context, boolean showArea) {
 	super(context);
 
-	mHexColor = hexColor;
+	this.showArea = showArea;
 	init();
     }
 
@@ -75,14 +75,12 @@ public class TouchAreaView extends View {
     }
 
     public void init() {
-
 	mPaint.setStrokeWidth(1.0f);
 	// mPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
 
 	if (isInEditMode()) {
 	    loadDemoValues();
 	}
-
     }
 
     public void loadDemoValues() {
@@ -102,10 +100,7 @@ public class TouchAreaView extends View {
 	mCanvas = new Canvas();
 	bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
 	mCanvas.setBitmap(bitmap);
-	mPaint.setColor(0x88000000);
-	mPaint.setStyle(Style.STROKE);
 
-	mCanvas.drawRect(new RectF(0, 0, mWidth, mHeight), mPaint);
 
 	super.onSizeChanged(w, h, oldw, oldh);
     }
@@ -122,15 +117,22 @@ public class TouchAreaView extends View {
 	    // paint
 	    // mPaint.setStyle(Style.STROKE);
 
-	    if (touching) {
-		mPaint.setStyle(Paint.Style.FILL);
-		mPaint.setColor(0x880000FF);
+	    if (showArea) {
+		mPaint.setColor(0x88FFFFFF);
+		mPaint.setStyle(Style.STROKE);
+
 		mCanvas.drawRect(new RectF(0, 0, mWidth, mHeight), mPaint);
-	    } else { 
-		mPaint.setStyle(Paint.Style.STROKE);
-		mCanvas.drawColor(0, Mode.CLEAR);
-		mPaint.setColor(0x88000000);
-		mCanvas.drawRect(new RectF(0, 0, mWidth, mHeight), mPaint);
+		
+		if (touching) {
+		    mPaint.setStyle(Paint.Style.FILL);
+		    mPaint.setColor(0x880000FF);
+		    mCanvas.drawRect(new RectF(0, 0, mWidth, mHeight), mPaint);
+		} else {
+		    mPaint.setStyle(Paint.Style.STROKE);
+		    mCanvas.drawColor(0, Mode.CLEAR);
+		    mPaint.setColor(0x88000000);
+		    mCanvas.drawRect(new RectF(0, 0, mWidth, mHeight), mPaint);
+		}
 	    }
 	}
     }
@@ -158,7 +160,7 @@ public class TouchAreaView extends View {
 	case MotionEvent.ACTION_MOVE:
 	    if (xPointer > 0 && xPointer < mWidth && yPointer > 0 && yPointer < mHeight) {
 		touching = true;
-	    } else { 
+	    } else {
 		touching = false;
 	    }
 	    break;

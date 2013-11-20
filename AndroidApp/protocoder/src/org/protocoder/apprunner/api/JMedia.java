@@ -51,6 +51,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.media.MediaRecorder;
 import android.speech.RecognizerIntent;
 import android.telephony.PhoneStateListener;
@@ -77,13 +78,6 @@ public class JMedia extends JInterface {
 
     }
 
-    // @JavascriptInterface
-    // @APIAnnotation(description = "plays a video", example =
-    // "media.playVieo(fileName);")
-    public void playVideo(String file) {
-
-    }
-
     @JavascriptInterface
     @APIMethod(description = "plays a sound", example = "media.playSound(fileName);")
     @APIParam(params = { "fileName" })
@@ -93,6 +87,22 @@ public class JMedia extends JInterface {
 	    url = AppRunnerSettings.get().project.getFolder() + File.separator + url;
 	}
 	Audio.playSound(url, 100);
+    }
+
+    @JavascriptInterface
+    @APIMethod(description = "routes the audio through the speakers", example = "media.playSound(fileName);")
+    @APIParam(params = { "" })
+    public void setAudioOnSpeakers() {
+	AudioManager audioManager = (AudioManager) a.get().getSystemService(Context.AUDIO_SERVICE);
+	//audioManager.setMode(AudioManager.MODE_IN_CALL);
+	audioManager.setSpeakerphoneOn(true);
+    }
+
+    @JavascriptInterface
+    @APIMethod(description = "routes the audio through the speakers", example = "media.playSound(fileName);")
+    @APIParam(params = { "volume" })
+    public void setVolume(int volume) {
+	a.get().setVolume(volume);
     }
 
     @JavascriptInterface

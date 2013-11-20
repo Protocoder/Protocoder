@@ -265,8 +265,8 @@ public class AppRunnerInterpreter {
     }
 
     public static class Interpreter {
-	Context context;
-	Scriptable scope;
+	public Context context;
+	public Scriptable scope;
 	Require require;
 
 	public Interpreter() {
@@ -307,6 +307,7 @@ public class AppRunnerInterpreter {
 	}
 
 	public Object callJsFunction(String funName, Object... args) throws Throwable {
+	    Log.d(TAG, "calling " + funName);
 	    Object fun = scope.get(funName, scope);
 	    if (fun instanceof Function) {
 		Log.i(TAG, "Calling JsFun " + funName);
