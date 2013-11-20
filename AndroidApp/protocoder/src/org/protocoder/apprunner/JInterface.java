@@ -42,6 +42,7 @@ public class JInterface {
 
     }
 
+    
     public <T> void callback(String fn, T... args) {
 
 	try {

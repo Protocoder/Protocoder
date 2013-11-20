@@ -373,7 +373,7 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
 		setAnimation.play(alphaAnimator).with(shiftAnimator);
 		setAnimation.start();
 
-		if (AppSettings.CURRENT_VERSION > Build.VERSION.SDK_INT) {
+		if (AppSettings.MIN_SUPPORTED_VERSION > Build.VERSION.SDK_INT) {
 		    obs.removeOnGlobalLayoutListener(this);
 		} else {
 		    obs.removeGlobalOnLayoutListener(this);

@@ -61,6 +61,7 @@ public class BaseActivity extends FragmentActivity {
     public int screenWidth;
     public int screenHeight;
     public boolean actionBarAllowed = true;
+    private boolean lightsOutMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,19 +112,35 @@ public class BaseActivity extends FragmentActivity {
     public void showHomeBar(boolean b) {
 
 	if (b == true) {
-	    if (Build.VERSION.SDK_INT > AppSettings.CURRENT_VERSION) {
+	    if (Build.VERSION.SDK_INT > AppSettings.MIN_SUPPORTED_VERSION) {
 		getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
 	    } else {
 
 	    }
 
 	} else {
-	    if (Build.VERSION.SDK_INT > AppSettings.CURRENT_VERSION) {
+	    if (Build.VERSION.SDK_INT > AppSettings.MIN_SUPPORTED_VERSION) {
 		getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
 	    } else {
 
 	    }
 	}
+    }
+
+    public void lightsOutMode() {
+	lightsOutMode = true;
+	final View rootView = getWindow().getDecorView();
+	rootView.setSystemUiVisibility(View.STATUS_BAR_VISIBLE);
+	rootView.setSystemUiVisibility(View.STATUS_BAR_HIDDEN);
+
+	rootView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
+	    @Override
+	    public void onSystemUiVisibilityChange(int visibility) {
+		Log.d(TAG, "" + visibility);
+		rootView.setSystemUiVisibility(View.STATUS_BAR_VISIBLE);
+		rootView.setSystemUiVisibility(View.STATUS_BAR_HIDDEN);
+	    }
+	});
     }
 
     public void setScreenAlwaysOn() {
@@ -190,12 +207,10 @@ public class BaseActivity extends FragmentActivity {
     }
 
     public void setVolume(int value) {
-
 	AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 	value = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) * value / 100;
 
 	audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, value, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
-
     }
 
     public void setWakeLock(boolean b) {

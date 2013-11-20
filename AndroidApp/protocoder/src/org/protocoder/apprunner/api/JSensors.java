@@ -318,7 +318,7 @@ public class JSensors extends JInterface {
 	    }
 	};
 
-	proximityManager.addListener(lightListener);
+	proximityManager.addListener(proximityListener);
 	proximityManager.start();
 	WhatIsRunning.getInstance().add(proximityManager);
 
@@ -361,7 +361,7 @@ public class JSensors extends JInterface {
     @JavascriptInterface
     @APIMethod(description = "", example = "")
     @APIParam(params = { "function(value)" })
-    public void startPressure(final String callbackfn) {
+    public void startBarometer(final String callbackfn) {
 	pressureManager = new PressureManager(a.get());
 
 	pressureListener = new PressureManager.PressureListener() {

@@ -30,6 +30,8 @@ package org.protocoder.apprunner.api;
 import java.io.File;
 import java.io.InputStream;
 
+import org.mozilla.javascript.Function;
+import org.mozilla.javascript.Scriptable;
 import org.protocoder.R;
 import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apidoc.annotation.APIParam;
@@ -63,6 +65,7 @@ import org.protocoder.views.TouchAreaView.OnTouchAreaListener;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
@@ -208,7 +211,6 @@ public class JUI extends JInterface {
 		    return true;
 		}
 	    });
-	    sv.addView(uiAbsoluteLayout);
 	}
 	isScrollLayout = scroll;
     }
@@ -409,6 +411,14 @@ public class JUI extends JInterface {
 	noActionBarAllowed = true;
 	((AppRunnerActivity) a.get()).setImmersive();
     }
+    
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    public void setLightsOut() {
+	a.get().lightsOutMode();
+    }
+    
+    
 
     @JavascriptInterface
     @APIMethod(description = "", example = "")
@@ -444,17 +454,24 @@ public class JUI extends JInterface {
     @APIParam(params = { "label", "x", "y", "w", "h", "function(progress)" })
     public JButton addButton(String label, int x, int y, int w, int h, final String callbackfn) {
 	initializeLayout();
-
+	
 	// Create the button
 	JButton b = new JButton(a.get());
 	b.setText(label);
+	//org.mozilla.javascript.Context cx  = org.mozilla.javascript.Context.enter();
+	//final Scriptable scope = cx.newObject(a.get().interp.interpreter.scope);
 
 	// Set on click behavior
 	b.setOnClickListener(new OnClickListener() {
 	    @Override
 	    public void onClick(View v) {
-		// TODO Callback should capture the checked state
+		Log.d("JS", "" + callbackfn);
+		//pass the scope 
+		//Object[] o = new Object[1];
+		
+		//callbackfn.call(a.get().interp.interpreter.context, a.get().interp.interpreter.scope, scope, o);
 		callback(callbackfn);
+		
 	    }
 	});
 
@@ -469,11 +486,11 @@ public class JUI extends JInterface {
      * 
      */
     @JavascriptInterface
-    @APIParam(params = { "x", "y", "w", "h", "hexColor", "function(touching, x, y)" })
-    public TouchAreaView addTouchArea(int x, int y, int w, int h, String hexColor, final String callbackfn) {
+    @APIParam(params = { "x", "y", "w", "h", "bShowArea", "function(touching, x, y)" })
+    public TouchAreaView addTouchArea(int x, int y, int w, int h, boolean showArea, final String callbackfn) {
 	initializeLayout();
 
-	TouchAreaView taV = new TouchAreaView(a.get(), hexColor);
+	TouchAreaView taV = new TouchAreaView(a.get(), showArea);
 	taV.setTouchAreaListener(new OnTouchAreaListener() {
 
 	    @Override
