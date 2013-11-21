@@ -297,9 +297,7 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
 	updateStartStopActionbarItem();
 
 	// start webserver
-	Log.d(TAG, "start webserver 1");
 	httpServer = MyHTTPServer.getInstance(getApplicationContext(), AppSettings.httpPort);
-	Log.d(TAG, "start webserver 2");
 
 	// websocket
 	try {
