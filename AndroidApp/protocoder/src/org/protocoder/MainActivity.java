@@ -296,17 +296,10 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
 	mIpContainer = (LinearLayout) findViewById(R.id.ip_container);
 	updateStartStopActionbarItem();
 
-	// check if wifi connection is available
-	if (NetworkUtils.isNetworkAvailable(c) != true) {
-	    Log.d(TAG, "There is no connection");
-	    hardKillConnections();
-	    return -1;
-	} else {
-
-	}
-
 	// start webserver
+	Log.d(TAG, "start webserver 1");
 	httpServer = MyHTTPServer.getInstance(getApplicationContext(), AppSettings.httpPort);
+	Log.d(TAG, "start webserver 2");
 
 	// websocket
 	try {
@@ -315,23 +308,6 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
 	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	}
-
-	final Handler handler = new Handler();
-	Runnable r = new Runnable() {
-
-	    @Override
-	    public void run() {
-		JSONObject obj = new JSONObject();
-		try {
-		    obj.put("executeRemote", "addButton");
-		} catch (JSONException e) {
-		    e.printStackTrace();
-		}
-		ws.send(obj);
-
-		handler.postDelayed(this, 1000);
-	    }
-	};
 
 	// check if there is a WIFI connection or we can connect via USB
 	if (NetworkUtils.getLocalIpAddress(this) == null) {
