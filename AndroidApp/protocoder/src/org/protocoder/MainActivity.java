@@ -286,6 +286,7 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
 	 * } }, intentFilter);
 	 */
 	
+	
 	//check if usb is enabled 
 	usbEnabled = Settings.Secure.getInt(getContentResolver(), Settings.Secure.ADB_ENABLED, 0);
 	
