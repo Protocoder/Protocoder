@@ -1,18 +1,10 @@
 /*
-*	Shows a popup when the nfc tag id matches 
-*	the detectedNFCId 
+*	Shows which id and message are written in the NFC tag 
 */
 
-//replace your nfc tag id 
-var detectedNFCId = "040E0E020A0B00";
+var nfcdata = ui.addLabel("", 20, 20, 500, 100, 16);
 
-sensors.onNFC(function (data) { 
-    console.log("the nfc id is: " + data); 
-    
-    if (data == detectedNFCId) { 
-        ui.toast(data + " does match", 2000);
-    } else { 
-        ui.toast(data + " doesn't match", 2000);  
-    } 
-    
+sensors.onNFC(function (id, data) { 
+    console.log("the nfc id is: " + id, data); 
+    nfcdata.setText(id + " " + data)
 });

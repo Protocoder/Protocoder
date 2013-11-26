@@ -58,6 +58,8 @@ import org.protocoder.events.ProjectManager;
 import org.protocoder.fragments.EditorFragment;
 import org.protocoder.fragments.EditorFragment.EditorFragmentListener;
 import org.protocoder.network.CustomWebsocketServer;
+import org.protocoder.network.IDEcommunication;
+import org.protocoder.sensors.NFCUtil;
 import org.protocoder.sensors.WhatIsRunning;
 import org.protocoder.utils.StrUtils;
 
@@ -77,8 +79,12 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
+import android.nfc.NfcEvent;
 import android.nfc.Tag;
+import android.nfc.tech.Ndef;
 import android.nfc.tech.NfcF;
 import android.os.Bundle;
 import android.os.FileObserver;
@@ -114,6 +120,7 @@ public class AppRunnerActivity extends BaseActivity {
     private JAndroid.onKeyListener onKeyListener;
     private JAndroid.onSmsReceivedListener onSmsReceivedListener;
     private JSensors.onNFCListener onNFCListener;
+    private JSensors.onNFCWrittenListener onNFCWrittenListener;
     private JNetwork.onBluetoothListener onBluetoothListener;
     private JMedia.onVoiceRecognitionListener onVoiceRecognitionListener;
 
@@ -225,34 +232,8 @@ public class AppRunnerActivity extends BaseActivity {
 	startFileObserver();
 
 	// send ready to the ide
-	ready(true);
+	IDEcommunication.getInstance(this).ready(true);
 
-    }
-
-    public void ready(boolean r) {
-
-	JSONObject msg = new JSONObject();
-	try {
-	    msg.put("type", "ide");
-	    msg.put("action", "ready");
-
-	    JSONObject values = new JSONObject();
-
-	    values.put("ready", r);
-	    msg.put("values", values);
-
-	} catch (JSONException e1) {
-	    e1.printStackTrace();
-	}
-
-	try {
-	    CustomWebsocketServer ws = CustomWebsocketServer.getInstance(this);
-	    ws.send(msg);
-	} catch (UnknownHostException e) {
-	    e.printStackTrace();
-	} catch (Exception e) {
-	    // TODO: handle exception
-	}
     }
 
     public void onEventMainThread(ProjectEvent evt) {
@@ -360,7 +341,7 @@ public class AppRunnerActivity extends BaseActivity {
 	    mAdapter.disableForegroundDispatch(this);
 	}
 	this.unregisterReceiver(this.mIntentReceiver);
-	ready(false);
+	IDEcommunication.getInstance(this).ready(false);
 	fileObserver.stopWatching();
     }
 
@@ -375,6 +356,7 @@ public class AppRunnerActivity extends BaseActivity {
 	super.onDestroy();
 	interp.callJsFunction("onDestroy");
 	interp = null;
+	IDEcommunication.getInstance(this).ready(false);
 	WhatIsRunning.getInstance().stopAll();
 
     }
@@ -635,38 +617,47 @@ public class AppRunnerActivity extends BaseActivity {
     private IntentFilter[] mFilters;
     private String[][] mTechLists;
     private boolean nfcSupported;
+    private boolean nfcInit = false;
 
     public void initializeNFC() {
 
-	PackageManager pm = getPackageManager();
-	nfcSupported = pm.hasSystemFeature(PackageManager.FEATURE_NFC);
+	if (nfcInit == false) {
+	    PackageManager pm = getPackageManager();
+	    nfcSupported = pm.hasSystemFeature(PackageManager.FEATURE_NFC);
 
-	if (nfcSupported == false)
-	    return;
+	    if (nfcSupported == false)
+		return;
 
-	// cuando esta en foreground
-	Log.d(TAG, "Starting NFC");
-	mAdapter = NfcAdapter.getDefaultAdapter(this);
+	    // cuando esta en foreground
+	    Log.d(TAG, "Starting NFC");
+	    mAdapter = NfcAdapter.getDefaultAdapter(this);
+	    /*
+	     * mAdapter.setNdefPushMessageCallback(new NfcAdapter.CreateNdefMessageCallback() {
+	     * 
+	     * @Override public NdefMessage createNdefMessage(NfcEvent event) { // TODO Auto-generated method stub
+	     * return null; } }, this, null);
+	     */
 
-	// Create a generic PendingIntent that will be deliver to this activity.
-	// The NFC stack will fill in the intent with the details of the
-	// discovered tag before
-	// delivering to this activity.
-	mPendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass())
-		.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+	    // Create a generic PendingIntent that will be deliver to this activity.
+	    // The NFC stack will fill in the intent with the details of the
+	    // discovered tag before
+	    // delivering to this activity.
+	    mPendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass())
+		    .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 
-	// Setup an intent filter for all MIME based dispatches
-	IntentFilter ndef = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
-	try {
-	    ndef.addDataType("*/*");
-	} catch (MalformedMimeTypeException e) {
-	    throw new RuntimeException("fail", e);
+	    // Setup an intent filter for all MIME based dispatches
+	    IntentFilter ndef = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
+	    try {
+		ndef.addDataType("*/*");
+	    } catch (MalformedMimeTypeException e) {
+		throw new RuntimeException("fail", e);
+	    }
+	    mFilters = new IntentFilter[] { ndef, };
+
+	    // Setup a tech list for all NfcF tags
+	    mTechLists = new String[][] { new String[] { NfcF.class.getName() } };
+	    nfcInit = true;
 	}
-	mFilters = new IntentFilter[] { ndef, };
-
-	// Setup a tech list for all NfcF tags
-	mTechLists = new String[][] { new String[] { NfcF.class.getName() } };
-
     }
 
     @Override
@@ -679,22 +670,72 @@ public class AppRunnerActivity extends BaseActivity {
 	    // intent);
 
 	    Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-	    // TechFilter t = new TechFilter();
-	    byte[] tagId = intent.getByteArrayExtra(NfcAdapter.EXTRA_ID);
-	    // NdefMessage[] msgs = (NdefMessage[]) intent
-	    // .getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
 
+	    // byte[] tagId = intent.getByteArrayExtra(NfcAdapter.EXTRA_ID);
 	    String nfcID = StrUtils.bytetostring(tag.getId());
-	    // Toast.makeText(this, "Tag detected: " + nfcID,
-	    // Toast.LENGTH_LONG).show();
-	    onNFCListener.onNewTag(nfcID);
+
+	    // String nfcMsg = intent.getStringExtra("nfcMessage");
+
+	    // Log.d(TAG, "-->" + NFCUtil.nfcMsg);
+	    if (NFCUtil.nfcMsg != null) {
+		Log.d(TAG, "->" + NFCUtil.nfcMsg);
+		NFCUtil.writeTag(this, tag, NFCUtil.nfcMsg);
+		onNFCWrittenListener.onNewTag();
+		onNFCWrittenListener = null;
+		NFCUtil.nfcMsg = null;
+	    } else {
+
+		// get NDEF tag details
+		Ndef ndefTag = Ndef.get(tag);
+		int size = ndefTag.getMaxSize(); // tag size
+		boolean writable = ndefTag.isWritable(); // is tag writable?
+		String type = ndefTag.getType(); // tag type
+
+		String nfcMessage = "";
+
+		// get NDEF message details
+		NdefMessage ndefMesg = ndefTag.getCachedNdefMessage();
+		if (ndefMesg != null) {
+		    NdefRecord[] ndefRecords = ndefMesg.getRecords();
+		    int len = ndefRecords.length;
+		    String[] recTypes = new String[len]; // will contain the NDEF record types
+		    String[] recPayloads = new String[len]; // will contain the NDEF record types
+		    for (int i = 0; i < len; i++) {
+			recTypes[i] = new String(ndefRecords[i].getType());
+			recPayloads[i] = new String(ndefRecords[i].getPayload());
+			// Log.d(TAG, "qq " + i + " " + recTypes[i] + " " + recPayloads[i]);
+
+		    }
+		    nfcMessage = recPayloads[0];
+
+		}
+
+		// if (intent.equals(NfcAdapter.ACTION_TAG_DISCOVERED)) {
+		// NdefMessage[] msgs = (NdefMessage[]) intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+		//
+		// NdefRecord[] recs = msgs[0].getRecords();
+		// byte[] type = recs[0].getType();
+		// byte[] value = recs[0].getPayload();
+		//
+		// Log.d(TAG, "qq " + StrUtils.bytetostring(type) + " " + StrUtils.bytetostring(value));
+		// }
+
+		// Toast.makeText(this, "Tag detected: " + nfcID,
+		// Toast.LENGTH_LONG).show();
+		onNFCListener.onNewTag(nfcID, nfcMessage);
+	    }
 
 	}
 
     }
 
-    public void addNFCListener(JSensors.onNFCListener onNFCListener2) {
+    public void addNFCReadListener(JSensors.onNFCListener onNFCListener2) {
 	onNFCListener = onNFCListener2;
+
+    }
+
+    public void addNFCWrittenListener(JSensors.onNFCWrittenListener onNFCWrittenListener2) {
+	onNFCWrittenListener = onNFCWrittenListener2;
 
     }
 
