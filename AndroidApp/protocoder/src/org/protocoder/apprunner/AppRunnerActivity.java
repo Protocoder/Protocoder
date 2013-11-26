@@ -671,18 +671,17 @@ public class AppRunnerActivity extends BaseActivity {
 
 	    Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
 
-	    // byte[] tagId = intent.getByteArrayExtra(NfcAdapter.EXTRA_ID);
 	    String nfcID = StrUtils.bytetostring(tag.getId());
 
-	    // String nfcMsg = intent.getStringExtra("nfcMessage");
-
-	    // Log.d(TAG, "-->" + NFCUtil.nfcMsg);
+	    // if there is a message waiting to be written
 	    if (NFCUtil.nfcMsg != null) {
 		Log.d(TAG, "->" + NFCUtil.nfcMsg);
 		NFCUtil.writeTag(this, tag, NFCUtil.nfcMsg);
 		onNFCWrittenListener.onNewTag();
 		onNFCWrittenListener = null;
 		NFCUtil.nfcMsg = null;
+
+	    // read the nfc tag info
 	    } else {
 
 		// get NDEF tag details
@@ -710,18 +709,6 @@ public class AppRunnerActivity extends BaseActivity {
 
 		}
 
-		// if (intent.equals(NfcAdapter.ACTION_TAG_DISCOVERED)) {
-		// NdefMessage[] msgs = (NdefMessage[]) intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
-		//
-		// NdefRecord[] recs = msgs[0].getRecords();
-		// byte[] type = recs[0].getType();
-		// byte[] value = recs[0].getPayload();
-		//
-		// Log.d(TAG, "qq " + StrUtils.bytetostring(type) + " " + StrUtils.bytetostring(value));
-		// }
-
-		// Toast.makeText(this, "Tag detected: " + nfcID,
-		// Toast.LENGTH_LONG).show();
 		onNFCListener.onNewTag(nfcID, nfcMessage);
 	    }
 
