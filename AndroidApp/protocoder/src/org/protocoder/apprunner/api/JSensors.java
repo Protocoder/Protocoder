@@ -33,6 +33,7 @@ import org.protocoder.apprunner.AppRunnerActivity;
 import org.protocoder.apprunner.JInterface;
 import org.protocoder.apprunner.JavascriptInterface;
 import org.protocoder.sensors.AccelerometerManager;
+import org.protocoder.sensors.NFCUtil;
 import org.protocoder.sensors.AccelerometerManager.AccelerometerListener;
 import org.protocoder.sensors.GPSManager;
 import org.protocoder.sensors.GPSManager.GPSListener;
@@ -50,7 +51,12 @@ import org.protocoder.sensors.ProximityManager;
 import org.protocoder.sensors.ProximityManager.ProximityListener;
 import org.protocoder.sensors.WhatIsRunning;
 
+import android.app.Activity;
+import android.app.PendingIntent;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Location;
+import android.nfc.NfcAdapter;
 import android.util.Log;
 
 public class JSensors extends JInterface {
@@ -79,10 +85,10 @@ public class JSensors extends JInterface {
     public JSensors(AppRunnerActivity mwmActivity) {
 	super(mwmActivity);
 
-	((AppRunnerActivity) a.get()).addNFCListener(new onNFCListener() {
+	((AppRunnerActivity) a.get()).addNFCReadListener(new onNFCListener() {
 	    @Override
-	    public void onNewTag(String id) {
-		callback(onNFCfn, "\"" + id + "\"");
+	    public void onNewTag(String id, String data) {
+		callback(onNFCfn, "\"" + id + "\"", "\"" + data + "\"");
 	    }
 	});
 
@@ -238,15 +244,58 @@ public class JSensors extends JInterface {
 
     @JavascriptInterface
     @APIMethod(description = "", example = "")
-    @APIParam(params = { "function(id)" })
+    @APIParam(params = { "function(id, data)" })
     public void onNFC(final String fn) {
 	((AppRunnerActivity) a.get()).initializeNFC();
 
 	onNFCfn = fn;
     }
+    
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "function()" })
+    public void writeNFC(String data, final String fn) { 
+	NFCUtil.nfcMsg = data;
+	((AppRunnerActivity) a.get()).initializeNFC();
+	
+	a.get().addNFCWrittenListener(new onNFCWrittenListener() {
+	    
+	    @Override
+	    public void onNewTag() {
+		callback(fn, true);
+	    }
+	});
+	
+	// Construct the data to write to the tag
+	// Should be of the form [relay/group]-[rid/gid]-[cmd]
+	//String nfcMessage = data;
+	 
+	// When an NFC tag comes into range, call the main activity which handles writing the data to the tag
+	// NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(a.get());
+	 
+	//Intent nfcIntent = new Intent(a.get(), AppRunnerActivity.class).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+	//nfcIntent.putExtra("nfcMessage", nfcMessage);
+	//PendingIntent pi = PendingIntent.getActivity(a.get(), 0, nfcIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+	//IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);  
+	 
+	//nfcAdapter.enableForegroundDispatch((Activity) a.get(), pi, new IntentFilter[] {tagDetected}, null);
+    }
+    
+    public interface onNFCWrittenListener {
+	public void onNewTag();
+    }
 
     public interface onNFCListener {
-	public void onNewTag(String id);
+	public void onNewTag(String id, String nfcMessage);
+    }
+
+    @JavascriptInterface
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "function(msg)" })
+    public void nfcWrite(final String fn) {
+	((AppRunnerActivity) a.get()).initializeNFC();
+
+	onNFCfn = fn;
     }
 
     @JavascriptInterface

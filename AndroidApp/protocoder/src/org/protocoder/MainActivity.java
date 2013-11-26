@@ -30,8 +30,6 @@ package org.protocoder;
 import java.net.UnknownHostException;
 
 import org.java_websocket.drafts.Draft_17;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.protocoder.apprunner.AppRunnerActivity;
 import org.protocoder.base.BaseActivity;
 import org.protocoder.base.BaseMainApp;
@@ -41,11 +39,11 @@ import org.protocoder.events.ProjectManager;
 import org.protocoder.fragments.NewProjectDialog;
 import org.protocoder.network.ALog;
 import org.protocoder.network.CustomWebsocketServer;
+import org.protocoder.network.IDEcommunication;
 import org.protocoder.network.MyHTTPServer;
 import org.protocoder.network.NetworkUtils;
 import org.protocoder.projectlist.ListFragmentExamples;
 import org.protocoder.projectlist.ListFragmentUserProjects;
-import org.protocoder.views.CanvasView;
 import org.protocoder.views.ProjectSelectorStrip;
 
 import android.animation.AnimatorSet;
@@ -57,13 +55,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.FileObserver;
-import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -303,6 +298,7 @@ public class MainActivity extends BaseActivity implements NewProjectDialog.NewPr
 	// websocket
 	try {
 	    ws = CustomWebsocketServer.getInstance(this, AppSettings.websocketPort, new Draft_17());
+	    IDEcommunication.getInstance(this).ready(false);
 	} catch (UnknownHostException e) {
 	    // TODO Auto-generated catch block
 	    e.printStackTrace();

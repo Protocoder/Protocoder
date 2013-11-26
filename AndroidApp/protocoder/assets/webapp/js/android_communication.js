@@ -124,7 +124,7 @@ Communication.prototype.runApp = function (project) {
 	$.get(this.remoteIP + "cmd="+JSON.stringify(obj), function(data) {
  		//alert('Load was performed. ' + data);
 	});
-	$("#console").empty();
+	$("#console_wrapper #console").empty();
 
 }
 
@@ -197,7 +197,7 @@ Communication.prototype.initWebsockets = function () {
   }
   ws.onmessage = function(e) {
     // Receives a message.
-    //console.log('message', e.data)
+    console.log('message', e.data)
 
     //run_project
     if (e.data == "Connected") { 
@@ -233,11 +233,12 @@ Communication.prototype.initWebsockets = function () {
     if (result.type == "error") { 
       currentError = result.values; 
       console.log("error "  + currentError);
-      $("#console").empty();
-      $("#console").append("<p> " + currentError + " </p>");
+
+      $("#console_wrapper #console").empty();
+      $("#console_wrapper #console").append("<p> " + currentError + " </p>");
    
-      var objDiv = document.getElementById("console");
-      objDiv.scrollTop = objDiv.scrollHeight;
+      var c = $("#console_wrapper #console")[0];
+      c.scrollTop = c.scrollHeight;
      // w2ui['layout'].show('bottom', false);
     }
 
@@ -245,11 +246,11 @@ Communication.prototype.initWebsockets = function () {
     if (result.type == "console") { 
       if (result.action == "log") { 
         var log = result.values.val; 
-        $("#console").append('<p>' + log + '</p>');
-        var objDiv = document.getElementById("console");
-        objDiv.scrollTop = objDiv.scrollHeight;
+        $("#console_wrapper #console").append('<p>' + log + '</p>');
+        var c = $("#console_wrapper #console")[0];
+        c.scrollTop = c.scrollHeight;
        } else if (result.action == "clear") { 
-        $("#console").empty();
+        $("#console_wrapper #console").empty();
        }
     }
 

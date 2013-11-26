@@ -17,7 +17,6 @@ Reference.prototype.parseHelp = function (docString) {
 	    //all
 	    console.log(v);
 
-
 	    //class
 	    var className = v.name.substr(1, v.name.length).toLowerCase();
 	   // console.log(className);
@@ -29,7 +28,7 @@ Reference.prototype.parseHelp = function (docString) {
 	        var method = n;
 
 	        //className 
-	        $("#class_"+className + " .methods").append('<div id ="method_'+ method.name +'" class = "APImethod"></div>');
+	        $("#reference #class_"+className + " .methods").append('<div id ="method_'+ method.name +'" class = "APImethod"></div>');
 	      
 			//method [return] methodName [parameters]      
 			var parameters = "";
@@ -40,7 +39,7 @@ Reference.prototype.parseHelp = function (docString) {
 			//if return type is void dont show it 
 			if (method.returnType == "void") method.returnType = "";
 
-	        $("#method_"+method.name).append('<h2><i>'+  method.returnType + " </i><strong>" + className + "." + method.name + "</strong><i>(" + parameters + ")</i></h2>");
+	        $("#reference #class_"+className + " #method_"+method.name).append('<h2><i>'+  method.returnType + " </i><strong>" + className + "." + method.name + "</strong><i>(" + parameters + ")</i></h2>");
 	        
 	        //add description if exist 
 	        if (method.description != undefined) { 

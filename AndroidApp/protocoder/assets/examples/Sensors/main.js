@@ -9,7 +9,7 @@ var light = ui.addLabel("", 20, 220, 500, 100, 16);
 var gyroscope = ui.addLabel("", 20, 320, 500, 100, 16);
 var magnetic = ui.addLabel("", 20, 420, 500, 100, 16);
 var barometer = ui.addLabel("", 20, 520, 500, 100, 16);
-var proximity = ui.addLabel("", 20, 520, 500, 100, 16);
+var proximity = ui.addLabel("", 20, 620, 500, 100, 16);
 
 
 sensors.startAccelerometer(function(x, y, z) {
