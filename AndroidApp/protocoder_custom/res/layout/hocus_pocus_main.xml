@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/hocuspocus_relative"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#00000000" >
+
+    <ScrollView
+        android:id="@+id/hocuspocus_main"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentTop="true"
+        android:background="#00000000" >
+
+        <LinearLayout
+            android:id="@+id/ll"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="match_parent"
+                android:layout_height="28dp"
+                android:layout_margin="8dp"
+                android:gravity="center"
+                android:shadowColor="#BB000000"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowRadius="1"
+                android:text="HOCUS POCUS"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="#DDFFFFFF"
+                android:textStyle="bold"
+                android:typeface="sans" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:layout_margin="5dp"
+                android:background="@android:color/darker_gray" />
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/hocuspocus_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="8dp"
+        android:text="qq" />
+
+</RelativeLayout>

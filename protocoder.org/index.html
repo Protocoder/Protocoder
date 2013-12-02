@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Android rapid prototyping tool. IOIO, OSC, websockets.">
+    <meta name="author" content="">
+    <!--
+    <link rel="shortcut icon" href="../../docs-assets/ico/favicon.png">
+    -->
+    <title>protocoder | Hardware and software prototyping for Android devices</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="./dist/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="../../docs-assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Custom styles for this template -->
+    <link href="./docs-assets/css/template.css" rel="stylesheet">
+    <link href="./docs-assets/css/custom.css" rel="stylesheet"> 
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+
+
+    <link href="docs-assets/libs/prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <link href="docs-assets/libs/prettify/sunburst.css" type="text/css" rel="stylesheet" />
+
+    <script type="text/javascript" src="docs-assets/libs/prettify/prettify.js"></script>
+  </head>
+<!-- NAVBAR
+================================================== -->
+  <body onload = "prettyPrint()">
+    <div class="navbar-wrapper">
+      <div class="container">
+
+        <div class="navbar navbar-default navbar-static-top" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="#">protocoder</a>
+            </div>
+            <div class="navbar-collapse collapse">
+              <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="https://github.com/victordiaz/protocoder/wiki">Contribute</a></li>
+                <li><a href="#download">Download</a></li>
+                <!--
+                <li><a href="#about">About</a></li>
+                -->
+                <!--
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="#">Action</a></li>
+                    <li><a href="#">Another action</a></li>
+                    <li><a href="#">Something else here</a></li>
+                    <li class="divider"></li>
+                    <li class="dropdown-header">Nav header</li>
+                    <li><a href="#">Separated link</a></li>
+                    <li><a href="#">One more separated link</a></li>
+                  </ul>
+                </li>
+                -->
+
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- Carousel
+    ================================================== -->
+    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+      <!-- Indicators 
+      <ol class="carousel-indicators">
+        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#myCarousel" data-slide-to="1"></li>
+        <li data-target="#myCarousel" data-slide-to="2"></li>
+      </ol>
+      -->
+      <div class="carousel-inner">
+        <div class="item active" id = "bg-header">
+          <div class="container">
+            <div class="carousel-caption">
+              <h1>Rapid prototyping for Android</h1>
+              <p id = "description-header">Prototype interactions and apps that use sensors, network, sound and microcontrollers. No need to install anything in your computer. Just a web browser.</p>
+              <p><a class="btn btn-lg btn-primary" href="https://github.com/victordiaz/protocoder" role="button">Fork me on Github!</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /.carousel -->
+
+
+
+    <!-- Marketing messaging and featurettes
+    ================================================== -->
+    <!-- Wrap the rest of the page in another container to center all the content. -->
+
+    <div class="container marketing">
+
+      <!-- Three columns of text below the carousel -->
+      <div class="row">
+        <div class="span-12 pagination-centered">
+          <img class="img-circle" src="./docs-assets/images/separation.png" alt="separation">
+          <h2>What is protocoder?</h2>
+          <p>Protocoder is a coding environment + Javascript framework for quick prototyping on Android devices having some emphasis on rapid hardware hacking. Just download the app on your phone and you are ready to code. 
+
+          </p>
+          <div class = "flex-video widescreen">
+          <iframe src="//www.youtube.com/embed/dNHltOhTs2o" frameborder="0" allowfullscreen></iframe>
+          </div>
+        </div><!-- /.col-lg-4 -->
+       </div>
+
+      <div class="row">
+        <div class="col-lg-6 pagination-centered">
+          <img class="img-circle" src="./docs-assets/images/separation.png" alt="separation">
+          <h2>How does it work?</h2>
+
+          <p>Install the app in your Android device and access the web IDE from your computer. Code in javascript using the protocoder framework. No needs to write dozends of lines to access sensors or write an UI, simple to use, fast to code.</p>
+        
+          <pre class="prettyprint">
+  //how to get sensor data
+  sensors.startAccelerometer(function(x, y, z)) { 
+    console.log(x + " " + " " + y + " " + z); 
+  }
+
+  //send and sms
+  android.sendSMS(number, "text");
+
+  //play a video
+  ui.addVideoView("fileName", 0, 0, 500, 200);
+          </pre>
+
+          <p>
+          Protocoder runs internally a webserver and a websockets server to serve you an IDE that you can use wirelessly or via USB cable using the companion app. It supports most android hardware functionality, the only requirement is running Android version > 4.0 in your device. 
+          </p>
+
+        </div><!-- /.col-lg-4 -->
+        <div class="col-lg-6 pagination-centered">
+          <img class="img-circle" src="./docs-assets/images/separation.png" alt="separation">
+          <h2>Why</h2>
+          <p>Some fearless crew from <a href="http://makewithmoto.com">Motorola ATAP</a> made a 5 month roadtrip across the US on a velcro-covered van and a VW bus full of 3d printers, hackable phones, arduinos, ioios, electronics components. 
+
+          During the <a href="https://makewithmoto.squarespace.com">roadtrip</a> we hacked together with university students and hackerspaces fellows and we realized we needed a tool for fast prototyping on Android that could access microcontrollers such us IOIO board and Arduino. We decided to start coding it during the trip. Protocoder has been developed inside cars, hotel lobbys, cafes, restaurants, parks, here and there. It's far from perfect but it's a nice beginning!</p>
+        </div><!-- /.col-lg-4 -->
+      </div><!-- /.row -->
+
+
+      <!-- START THE FEATURETTES -->
+
+      <hr class="featurette-divider">
+
+      <div class="row featurette">
+        <div class="col-md-7">
+          <h2 class="featurette-heading">Web IDE. <span class="text-muted">Bye bye cloud</span></h2>
+          <p class="lead">Protocoder its an environment that you can carry in your pocket. You might go to a different computer and you will still have the same IDE accessible from any modern web browser. 
+          And hey, we want the editor to be yours, and be accessible from any place, at any time. That's why its not a cloud-based service. Protocoder lives in your Android device, not in a computer that you don't own. 
+          </p>
+        </div>
+        <div class="col-md-5">
+          <img class="featurette-image img-responsive" src="./docs-assets/images/protocoder_ide.png" alt="Protocoder IDE">
+        </div>
+      </div>
+
+      <hr class="featurette-divider">
+
+      <div class="row featurette">
+        <div class="col-md-5">
+          <img class="featurette-image img-responsive" src="./docs-assets/images/protocoder_run.png" alt="Generic placeholder image">
+        </div>
+        <div class="col-md-7">
+          <h2 class="featurette-heading">An app that host apps. <span class="text-muted">yep! </span></h2>
+          <p class="lead">Protocoder host all your apps, you can create as many as you want and you can carry/edit/hack them with you. Do you want to share them? No problem, just zip the project and send it to whoever you want that has protocoder installed. </p>
+        </div>
+      </div>
+
+      <hr class="featurette-divider">
+
+     <div class="row featurette">
+          <div class="col-md-7">
+            <h2 class="featurette-heading">A Dashboard. <span class="text-muted">Remote control! </span></h2>
+            <p class="lead">Imagine that you want to use your phone as a brain for your robot. You have the phone between wires and cases, which might be a bit difficult to access for debugging it. 
+
+            No problem. Use the dashboard to see wirelessly information from the sensors or control it. A pieze of cake!</p>
+          </div>
+          <div class="col-md-5">
+            <img class="featurette-image img-responsive" src="./docs-assets/images/protocoder_dashboard.jpg" alt="Generic placeholder image">
+          </div>
+        </div>
+
+        <hr class="featurette-divider">
+
+
+
+      <!-- /END THE FEATURETTES -->
+
+
+     <div class="row">
+        <div class="span-12 pagination-centered">
+        <h1>Download</h1>
+            <a id = "download"></a>
+            <p>Download the apk in your phone. Dont forget to enable installing apps for unknown sources. 
+            Once you install it, connect your Android device and your computer to the same Wifi network and and input the ip address in your browser.</p>
+            <p><a class="btn btn-lg btn-primary" href="./downloads/protocoder-release.apk" role="button">Download APK</a></p>
+
+            <p>
+            If you don't have a Wifi, you can still use protocoder using the USB companion app. Right now it only works for Mac but soon will work in Linux and Windows. 
+            </p>
+            <p>
+            If you know a bit of adb trickery you can still use protocoder with USB writing this in your system console and then go to http://localhost:8585 in your browser  
+            </p>
+          <pre class="prettyprint">
+    > adb forward tcp:8585 tcp:8585
+    > adb forward tcp:8587 tcp:8587</pre>
+             </p>
+          </div>
+        </div>
+
+
+     <div class="row">
+        <div class="span-12 pagination-centered">
+        <p class="pull-right"><a href="#">Back to top</a></p>
+        </div>
+    </div>
+
+      <!-- FOOTER -->
+      <footer>
+        <span> follow protocoder news on </span>
+        <a href = "https://twitter.com/victornomad"><i class="fa fa-twitter-square fa-2x"></i></a> 
+        <a href = "http://www.youtube.com/channel/UCv_npDT0QRW9lXAzSpZDocg?feature=watch"><i class="fa fa-youtube fa-2x"></i></a>
+        <a href = "https://github.com/victordiaz/protocoder"><i class="fa fa-github-alt fa-2x"></i></a> 
+        <!-- 
+        <a href = "https://twitter.com/protocoderorg"><i class="fa fa-google-plus-square fa-2x"></i></a> 
+        -->
+        <div>
+        </div>
+      </footer>
+
+    </div><!-- /.container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="./dist/js/bootstrap.min.js"></script>
+    <script src="./docs-assets/js/holder.js"></script>
+
+     <script type="text/javascript">
+        var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+        document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+      </script>
+      <script type="text/javascript">
+        try {
+          var pageTracker = _gat._getTracker("UA-45674106-1");
+        pageTracker._trackPageview();
+        } catch(err) {}
+      </script>
+
+  </body>
+</html>
