@@ -170,6 +170,15 @@ public class JVideo extends JInterface implements JViewInterface {
 	videoFragment.getView().animate().y(y).setDuration(AppSettings.animSpeed);
 
     }
+    
+    @JavascriptInterface
+    @APIMethod(description = "", example = "camera.takePicture();")
+    @APIParam(params = { "file", "function()" })
+   // @Override
+    public void alpha(float val) {
+	videoFragment.getView().animate().alpha(val).setDuration(AppSettings.animSpeed);
+	
+    }
 
     @JavascriptInterface
     @APIMethod(description = "", example = "camera.takePicture();")
