@@ -686,6 +686,8 @@ public class AppRunnerActivity extends BaseActivity {
 
 		// get NDEF tag details
 		Ndef ndefTag = Ndef.get(tag);
+		if (ndefTag == null) { return; };
+		
 		int size = ndefTag.getMaxSize(); // tag size
 		boolean writable = ndefTag.isWritable(); // is tag writable?
 		String type = ndefTag.getType(); // tag type
@@ -702,7 +704,7 @@ public class AppRunnerActivity extends BaseActivity {
 		    for (int i = 0; i < len; i++) {
 			recTypes[i] = new String(ndefRecords[i].getType());
 			recPayloads[i] = new String(ndefRecords[i].getPayload());
-			// Log.d(TAG, "qq " + i + " " + recTypes[i] + " " + recPayloads[i]);
+			Log.d(TAG, "qq " + i + " " + recTypes[i] + " " + recPayloads[i]);
 
 		    }
 		    nfcMessage = recPayloads[0];
