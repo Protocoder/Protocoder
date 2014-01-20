@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="wrap_content"
     android:layout_margin="5dp"
-    android:background="@color/blacktransparent" >
+    android:background="@drawable/card_bg" >
 
     <TextView
         android:id="@+id/textView1"
@@ -11,25 +11,25 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:background="@color/blue"
-        android:padding="2dp"
+        android:background="#55ffffff"
+        android:padding="5dp"
+        android:shadowColor="#88FFFFFF"
+        android:shadowDx="0"
+        android:shadowDy="1"
+        android:shadowRadius="0.1"
         android:text="Small Text"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="12sp"
+        android:typeface="sans" />
 
     <LinearLayout
+        android:id="@+id/cardWidgets"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/textView1"
         android:orientation="vertical"
         android:padding="2dp" >
-
-        <Button
-            android:id="@+id/button1"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Button" />
 
     </LinearLayout>
 

@@ -36,51 +36,56 @@ import org.protocoder.views.PlotView.Plot;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.view.View;
 
 public class JPlotView extends JInterface implements JViewInterface {
 
-    private static final String TAG = "JPlotView";
-    String name;
-    private Plot plot;
-    private PlotView plotView;
+	private static final String TAG = "JPlotView";
+	String name;
+	private Plot plot;
+	private PlotView plotView;
 
-    public JPlotView(Activity a, PlotView plotView, float min, float max) {
-	super(a);
-	this.plotView = plotView;
-	plot = plotView.new Plot(Color.RED);
-	plotView.addPlot(plot);
-	plotView.setLimits(min, max);
+	public JPlotView(Activity a, PlotView plotView, float min, float max) {
+		super(a);
+		this.plotView = plotView;
+		plot = plotView.new Plot(Color.RED);
+		plotView.addPlot(plot);
+		plotView.setLimits(min, max);
 
-    }
+	}
 
-    @JavascriptInterface
-    @APIMethod(description = "", example = "")
-    public void setThickness(float r) {
-	plotView.setThickness(r);
-    }
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	public void setThickness(float r) {
+		plotView.setThickness(r);
+	}
 
-    @JavascriptInterface
-    @APIMethod(description = "", example = "")
-    public void setLimits(float min, float max) {
-	plotView.setLimits(min, max);
-    }
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	public void setLimits(float min, float max) {
+		plotView.setLimits(min, max);
+	}
 
-    @JavascriptInterface
-    @APIMethod(description = "", example = "")
-    public void update(float value) {
-	plotView.setValue(plot, value);
-    }
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	public void update(float value) {
+		plotView.setValue(plot, value);
+	}
 
-    @Override
-    public void move(float x, float y) {
-	plotView.animate().x(x).setDuration(AppSettings.animSpeed);
-	plotView.animate().y(y).setDuration(AppSettings.animSpeed);
+	@Override
+	public void move(float x, float y) {
+		plotView.animate().x(x).setDuration(AppSettings.animSpeed);
+		plotView.animate().y(y).setDuration(AppSettings.animSpeed);
 
-    }
+	}
 
-    @Override
-    public void rotate(float deg) {
-	plotView.animate().rotation(deg).setDuration(AppSettings.animSpeed);
-    }
+	@Override
+	public void rotate(float deg) {
+		plotView.animate().rotation(deg).setDuration(AppSettings.animSpeed);
+	}
+
+	public View getView() {
+		return plotView;
+	}
 
 }
