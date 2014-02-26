@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -34,46 +35,47 @@ import org.protocoder.apidoc.annotation.APIParam;
 import org.protocoder.apprunner.AppRunnerSettings;
 import org.protocoder.apprunner.JInterface;
 import org.protocoder.apprunner.JavascriptInterface;
+import org.protocoder.events.ProjectManager;
 import org.protocoder.utils.FileIO;
 
 import android.app.Activity;
 
 public class JFileIO extends JInterface {
 
-    String TAG = "JFileIO";
+	String TAG = "JFileIO";
 
-    public JFileIO(Activity a) {
-	super(a);
-    }
+	public JFileIO(Activity a) {
+		super(a);
+	}
 
-    @JavascriptInterface
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "dirName" })
-    public void createDir(String name) {
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "dirName" })
+	public void createDir(String name) {
 
-	File file = new File(AppRunnerSettings.get().project.getFolder() + File.separator + name);
-	file.mkdirs();
-    }
+		File file = new File(AppRunnerSettings.get().project.getStoragePath() + File.separator + name);
+		file.mkdirs();
+	}
 
-    @JavascriptInterface
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "fileName" })
-    public void remove(String name) {
-	FileIO.deleteDir(name);
-    }
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "fileName" })
+	public void remove(String name) {
+		FileIO.deleteFileDir(ProjectManager.getInstance().getCurrentProject().getStoragePath(), name);
+	}
 
-    @JavascriptInterface
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "fileName", "lines[]" })
-    public void saveStrings(String fileName, String[] lines) {
-	FileIO.saveStrings(fileName, lines);
-    }
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "fileName", "lines[]" })
+	public void saveStrings(String fileName, String[] lines) {
+		FileIO.saveStrings(fileName, lines);
+	}
 
-    @JavascriptInterface
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "fileName" })
-    public String[] loadStrings(String fileName) {
-	return FileIO.loadStrings(fileName);
-    }
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "fileName" })
+	public String[] loadStrings(String fileName) {
+		return FileIO.loadStrings(fileName);
+	}
 
 }

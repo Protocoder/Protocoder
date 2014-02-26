@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -35,47 +36,47 @@ import android.hardware.SensorManager;
 
 public class PressureManager extends CustomSensorManager implements WhatIsRunningInterface {
 
-    public interface PressureListener extends CustomSensorListener {
+	public interface PressureListener extends CustomSensorListener {
 
-	public void onPressureChanged(float f);
+		public void onPressureChanged(float f);
 
-    }
+	}
 
-    private final static String TAG = "Pressure";
+	private final static String TAG = "Pressure";
 
-    public PressureManager(Context c) {
-	super(c);
+	public PressureManager(Context c) {
+		super(c);
 
-	// register
-	sensor = sensormanager.getDefaultSensor(Sensor.TYPE_PRESSURE);
+		// register
+		sensor = sensormanager.getDefaultSensor(Sensor.TYPE_PRESSURE);
 
-	listener = new SensorEventListener() {
+		listener = new SensorEventListener() {
 
-	    @Override
-	    public void onSensorChanged(SensorEvent event) {
-		// listener
-		for (CustomSensorListener l : listeners) {
-		    ((PressureListener) l).onPressureChanged(event.values[0]);
-		}
+			@Override
+			public void onSensorChanged(SensorEvent event) {
+				// listener
+				for (CustomSensorListener l : listeners) {
+					((PressureListener) l).onPressureChanged(event.values[0]);
+				}
 
-	    }
+			}
 
-	    @Override
-	    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-		switch (accuracy) {
-		case SensorManager.SENSOR_STATUS_UNRELIABLE:
-		    break;
-		case SensorManager.SENSOR_STATUS_ACCURACY_LOW:
-		    break;
-		case SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM:
-		    break;
-		case SensorManager.SENSOR_STATUS_ACCURACY_HIGH:
-		    break;
-		}
-	    }
+			@Override
+			public void onAccuracyChanged(Sensor sensor, int accuracy) {
+				switch (accuracy) {
+				case SensorManager.SENSOR_STATUS_UNRELIABLE:
+					break;
+				case SensorManager.SENSOR_STATUS_ACCURACY_LOW:
+					break;
+				case SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM:
+					break;
+				case SensorManager.SENSOR_STATUS_ACCURACY_HIGH:
+					break;
+				}
+			}
 
-	};
+		};
 
-    }
+	}
 
 }

@@ -20,6 +20,11 @@
             android:key="pref_id"
             android:summary="@string/setting_id_description"
             android:title="@string/setting_id_title" />
+        <CheckBoxPreference
+            android:checked="false"
+            android:key="pref_list_mode"
+            android:summary="@string/setting_list_mode_description"
+            android:title="@string/setting_list_mode_title" />  
         <Preference
             android:key="reinstall_examples"
             android:summary="@string/setting_reinstall_description"

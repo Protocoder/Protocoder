@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -27,74 +28,18 @@
 
 package org.protocoder.apprunner.api.widgets;
 
-import org.protocoder.AppSettings;
-
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.widget.Button;
 
 public class JButton extends Button implements JViewInterface {
 
-    private int currentColor;
+	private int currentColor;
 
-    public JButton(Context context) {
-	super(context);
-	currentColor = Color.argb(255, 255, 255, 255);
+	public JButton(Context context) {
+		super(context);
+		currentColor = Color.argb(255, 255, 255, 255);
 
-    }
-
-    @Override
-    public void move(float x, float y) {
-	this.animate().x(x).setDuration(AppSettings.animSpeed);
-	this.animate().y(y).setDuration(AppSettings.animSpeed);
-    }
-
-    @Override
-    public void rotate(float deg) {
-	this.animate().rotation(deg).setDuration(AppSettings.animSpeed);
-    }
-
-    public void changeColor(int r, int g, int b) {
-	final int c = Color.argb(255, r, g, b);
-	getBackground().setColorFilter(c, PorterDuff.Mode.MULTIPLY);
-
-	// final ValueAnimator anim = ValueAnimator.ofInt(currentColor, c);
-	// anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-	//
-	// @Override
-	// public void onAnimationUpdate(ValueAnimator animation) {
-	// getBackground().setColorFilter((Integer) anim.getAnimatedValue(),
-	// PorterDuff.Mode.MULTIPLY);
-	// }
-	// });
-	//
-	// anim.addListener(new AnimatorListener() {
-	//
-	// @Override
-	// public void onAnimationStart(Animator animation) {
-	//
-	// }
-	//
-	// @Override
-	// public void onAnimationRepeat(Animator animation) {
-	//
-	// }
-	//
-	// @Override
-	// public void onAnimationEnd(Animator animation) {
-	// currentColor = c;
-	// }
-	//
-	// @Override
-	// public void onAnimationCancel(Animator animation) {
-	//
-	// }
-	// });
-	//
-	//
-	// anim.setDuration(500).start();
-
-    }
+	}
 
 }

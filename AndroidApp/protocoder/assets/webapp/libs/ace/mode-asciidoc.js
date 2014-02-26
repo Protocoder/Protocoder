@@ -28,7 +28,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-ace.define('ace/mode/asciidoc', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text', 'ace/tokenizer', 'ace/mode/asciidoc_highlight_rules', 'ace/mode/folding/asciidoc'], function(require, exports, module) {
+define('ace/mode/asciidoc', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text', 'ace/tokenizer', 'ace/mode/asciidoc_highlight_rules', 'ace/mode/folding/asciidoc'], function(require, exports, module) {
 
 
 var oop = require("../lib/oop");
@@ -38,9 +38,8 @@ var AsciidocHighlightRules = require("./asciidoc_highlight_rules").AsciidocHighl
 var AsciidocFoldMode = require("./folding/asciidoc").FoldMode;
 
 var Mode = function() {
-    var highlighter = new AsciidocHighlightRules();
+    this.HighlightRules = AsciidocHighlightRules;
     
-    this.$tokenizer = new Tokenizer(highlighter.getRules());
     this.foldingRules = new AsciidocFoldMode();    
 };
 oop.inherits(Mode, TextMode);
@@ -59,12 +58,13 @@ oop.inherits(Mode, TextMode);
             return this.$getIndent(line);
         }
     };
+    this.$id = "ace/mode/asciidoc";
 }).call(Mode.prototype);
 
 exports.Mode = Mode;
 });
 
-ace.define('ace/mode/asciidoc_highlight_rules', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
+define('ace/mode/asciidoc_highlight_rules', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
 
 
 var oop = require("../lib/oop");
@@ -259,7 +259,7 @@ oop.inherits(AsciidocHighlightRules, TextHighlightRules);
 exports.AsciidocHighlightRules = AsciidocHighlightRules;
 });
 
-ace.define('ace/mode/folding/asciidoc', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/folding/fold_mode', 'ace/range'], function(require, exports, module) {
+define('ace/mode/folding/asciidoc', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/folding/fold_mode', 'ace/range'], function(require, exports, module) {
 
 
 var oop = require("../../lib/oop");

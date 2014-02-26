@@ -33,7 +33,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-ace.define('ace/mode/prolog', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text', 'ace/tokenizer', 'ace/mode/prolog_highlight_rules', 'ace/mode/folding/cstyle'], function(require, exports, module) {
+define('ace/mode/prolog', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text', 'ace/tokenizer', 'ace/mode/prolog_highlight_rules', 'ace/mode/folding/cstyle'], function(require, exports, module) {
 
 
 var oop = require("../lib/oop");
@@ -43,21 +43,21 @@ var PrologHighlightRules = require("./prolog_highlight_rules").PrologHighlightRu
 var FoldMode = require("./folding/cstyle").FoldMode;
 
 var Mode = function() {
-    var highlighter = new PrologHighlightRules();
+    this.HighlightRules = PrologHighlightRules;
     this.foldingRules = new FoldMode();
-    this.$tokenizer = new Tokenizer(highlighter.getRules());
 };
 oop.inherits(Mode, TextMode);
 
 (function() {
-    this.lineCommentStart = "/\\*";
+    this.lineCommentStart = "%";
     this.blockComment = {start: "/*", end: "*/"};
+    this.$id = "ace/mode/prolog";
 }).call(Mode.prototype);
 
 exports.Mode = Mode;
 });
 
-ace.define('ace/mode/prolog_highlight_rules', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
+define('ace/mode/prolog_highlight_rules', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
 
 
 var oop = require("../lib/oop");
@@ -93,7 +93,7 @@ var PrologHighlightRules = function() {
            regex: '([a-z]\\w*)(\\.)' } ],
       '#builtins': 
        [ { token: 'support.function.builtin.prolog',
-           regex: '\\b(?:\n\t\t\t\t\t\tabolish|abort|ancestors|arg|ascii|assert[az]|\n\t\t\t\t\t\tatom(?:ic)?|body|char|close|conc|concat|consult|\n\t\t\t\t\t\tdefine|definition|dynamic|dump|fail|file|free|\n\t\t\t\t\t\tfree_proc|functor|getc|goal|halt|head|head|integer|\n\t\t\t\t\t\tlength|listing|match_args|member|next_clause|nl|\n\t\t\t\t\t\tnonvar|nth|number|cvars|nvars|offset|op|\n\t\t\t\t\t\tprint?|prompt|putc|quoted|ratom|read|redefine|\n\t\t\t\t\t\trename|retract(?:all)?|see|seeing|seen|skip|spy|\n\t\t\t\t\t\tstatistics|system|tab|tell|telling|term|\n\t\t\t\t\t\ttime|told|univ|unlink_clause|unspy_predicate|\n\t\t\t\t\t\tvar|write\n\t\t\t\t\t)\\b' } ],
+           regex: '\\b(?:abolish|abort|ancestors|arg|ascii|assert[az]|atom(?:ic)?|body|char|close|conc|concat|consult|define|definition|dynamic|dump|fail|file|free|free_proc|functor|getc|goal|halt|head|head|integer|length|listing|match_args|member|next_clause|nl|nonvar|nth|number|cvars|nvars|offset|op|print?|prompt|putc|quoted|ratom|read|redefine|rename|retract(?:all)?|see|seeing|seen|skip|spy|statistics|system|tab|tell|telling|term|time|told|univ|unlink_clause|unspy_predicate|var|write)\\b' } ],
       '#comment': 
        [ { token: 
             [ 'punctuation.definition.comment.prolog',
@@ -138,7 +138,7 @@ var PrologHighlightRules = function() {
             [ { token: 
                  [ 'punctuation.end.fact.parameters.prolog',
                    'punctuation.end.fact.prolog' ],
-                regex: '(\\))(\\.)',
+                regex: '(\\))(\\.?)',
                 next: 'pop' },
               { include: '#parameter' },
               { defaultToken: 'meta.fact.prolog' } ] } ],
@@ -171,7 +171,7 @@ var PrologHighlightRules = function() {
            regex: '\\b[A-Z_]\\w*\\b' },
          { token: 'punctuation.separator.parameters.prolog', regex: ',' },
          { include: '#basic_elem' },
-         { token: 'invalid.illegal.invalidchar.prolog', regex: '[^\\s]' } ],
+         { token: 'text', regex: '[^\\s]' } ],
       '#rule': 
        [ { token: 'meta.rule.prolog',
            regex: '(?=[a-z]\\w*.*:-)',
@@ -258,7 +258,7 @@ oop.inherits(PrologHighlightRules, TextHighlightRules);
 exports.PrologHighlightRules = PrologHighlightRules;
 });
 
-ace.define('ace/mode/folding/cstyle', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/range', 'ace/mode/folding/fold_mode'], function(require, exports, module) {
+define('ace/mode/folding/cstyle', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/range', 'ace/mode/folding/fold_mode'], function(require, exports, module) {
 
 
 var oop = require("../../lib/oop");
@@ -282,7 +282,7 @@ oop.inherits(FoldMode, BaseFoldMode);
     this.foldingStartMarker = /(\{|\[)[^\}\]]*$|^\s*(\/\*)/;
     this.foldingStopMarker = /^[^\[\{]*(\}|\])|^[\s\*]*(\*\/)/;
 
-    this.getFoldWidgetRange = function(session, foldStyle, row) {
+    this.getFoldWidgetRange = function(session, foldStyle, row, forceMultiline) {
         var line = session.getLine(row);
         var match = line.match(this.foldingStartMarker);
         if (match) {
@@ -290,11 +290,20 @@ oop.inherits(FoldMode, BaseFoldMode);
 
             if (match[1])
                 return this.openingBracketBlock(session, match[1], row, i);
-
-            return session.getCommentFoldRange(row, i + match[0].length, 1);
+                
+            var range = session.getCommentFoldRange(row, i + match[0].length, 1);
+            
+            if (range && !range.isMultiLine()) {
+                if (forceMultiline) {
+                    range = this.getSectionRange(session, row);
+                } else if (foldStyle != "all")
+                    range = null;
+            }
+            
+            return range;
         }
 
-        if (foldStyle !== "markbeginend")
+        if (foldStyle === "markbegin")
             return;
 
         var match = line.match(this.foldingStopMarker);
@@ -306,6 +315,38 @@ oop.inherits(FoldMode, BaseFoldMode);
 
             return session.getCommentFoldRange(row, i, -1);
         }
+    };
+    
+    this.getSectionRange = function(session, row) {
+        var line = session.getLine(row);
+        var startIndent = line.search(/\S/);
+        var startRow = row;
+        var startColumn = line.length;
+        row = row + 1;
+        var endRow = row;
+        var maxRow = session.getLength();
+        while (++row < maxRow) {
+            line = session.getLine(row);
+            var indent = line.search(/\S/);
+            if (indent === -1)
+                continue;
+            if  (startIndent > indent)
+                break;
+            var subRange = this.getFoldWidgetRange(session, "all", row);
+            
+            if (subRange) {
+                if (subRange.start.row <= startRow) {
+                    break;
+                } else if (subRange.isMultiLine()) {
+                    row = subRange.end.row;
+                } else if (startIndent == indent) {
+                    break;
+                }
+            }
+            endRow = row;
+        }
+        
+        return new Range(startRow, startColumn, endRow, session.getLine(endRow).length);
     };
 
 }).call(FoldMode.prototype);

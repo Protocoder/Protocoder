@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -31,41 +32,41 @@ import android.util.Log;
 
 public class L {
 
-    public static boolean enabled = true;
-    private static OverlayLogger overlayLogger = null;
-    private static String filter = null;
+	public static boolean enabled = true;
+	private static OverlayLogger overlayLogger = null;
+	private static String filter = null;
 
-    // TODO clean this up
-    public static void d(String TAG, String text) {
+	// TODO clean this up
+	public static void d(String TAG, String text) {
 
-	if (enabled) {
-	    if (filter == null) {
-		Log.d(TAG, text);
+		if (enabled) {
+			if (filter == null) {
+				Log.d(TAG, text);
 
-		// Log.d(TAG, "" + overlayLogger);
-		if (overlayLogger != null) {
-		    overlayLogger.addItem(text);
+				// Log.d(TAG, "" + overlayLogger);
+				if (overlayLogger != null) {
+					overlayLogger.addItem(text);
+				}
+			} else if (TAG.equals(filter)) {
+
+				Log.d(TAG, text);
+
+				// Log.d(TAG, "" + overlayLogger);
+				if (overlayLogger != null) {
+					overlayLogger.addItem(text);
+				}
+			}
+
 		}
-	    } else if (TAG.equals(filter)) {
+	}
 
-		Log.d(TAG, text);
+	public static void filterByTag(String tag) {
+		filter = tag;
+	}
 
-		// Log.d(TAG, "" + overlayLogger);
-		if (overlayLogger != null) {
-		    overlayLogger.addItem(text);
-		}
-	    }
+	public static void addLoggerWindow(OverlayLogger ol) {
+		overlayLogger = ol;
 
 	}
-    }
-
-    public static void filterByTag(String tag) {
-	filter = tag;
-    }
-
-    public static void addLoggerWindow(OverlayLogger ol) {
-	overlayLogger = ol;
-
-    }
 
 }

@@ -101,6 +101,12 @@ body {
 
 /* RESPONSIVE CSS
 -------------------------------------------------- */
+@media (max-width: 472px) {
+  .carousel-caption {
+    top: 42px !important;
+  }
+}
+
 
 @media (min-width: 768px) {
 
@@ -143,6 +149,6 @@ body {
 
 @media (min-width: 992px) {
   .featurette-heading {
-    margin-top: 50px;
+
   }
 }

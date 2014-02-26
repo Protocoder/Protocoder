@@ -16,12 +16,13 @@
         android:hint="type here your code"
         android:imeOptions="actionSend|flagNoExtractUi"
         android:inputType="textMultiLine|textFilter|textNoSuggestions"
+        android:selectAllOnFocus="false"
         android:singleLine="false"
         android:textColor="#FFFFFFFF"
-        android:textColorHighlight="#550000FF"
-        android:selectAllOnFocus="false"
+        android:textColorHighlight="#220000FF"
         android:textSize="14sp"
         android:textStyle="bold" >
+
     </EditText>
 
     <Button
@@ -44,5 +45,24 @@
         android:visibility="invisible"
         android:padding="15dp"
         android:text="+" />
+
+    <FrameLayout
+        android:id="@+id/fragmentFileManager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" >
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/fragmentWebview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" >
+
+    </FrameLayout>
+
 
 </RelativeLayout>

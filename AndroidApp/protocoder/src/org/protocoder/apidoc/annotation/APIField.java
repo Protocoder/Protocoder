@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -40,8 +41,8 @@ import java.lang.annotation.Target;
 @Inherited
 public @interface APIField {
 
-    public String description() default "";
+	public String description() default "";
 
-    public String example() default "";
+	public String example() default "";
 
 }

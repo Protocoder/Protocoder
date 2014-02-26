@@ -31,7 +31,7 @@ function setProjectList(filter, data) {
    //console.log("-->", k, project); 
    //console.log('#list_projects #'+div+" #ul");
    // console.log("binding -> " + div + " #"+project.name);
-  $('<li id ="'+project.name+'">' + project.name + '</li>').click(function () {
+  $('<li id ="'+project.name+'"><span>' + project.name + '</span></li>').click(function () {
       currentProject = project;
       currentProject.type = filter;
       protocoder.communication.fetchCode(project.name, project.type);

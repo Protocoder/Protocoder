@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -30,6 +31,6 @@ package org.protocoder.apidoc;
 import java.util.Vector;
 
 class APIManagerDoc {
-    public Vector<APIManagerClass> apiClasses = new Vector<APIManagerClass>();
+	public Vector<APIManagerClass> apiClasses = new Vector<APIManagerClass>();
 
 }

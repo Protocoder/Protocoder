@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -34,36 +35,36 @@ import android.view.View;
 import android.widget.TextView;
 
 public class TextUtils {
-    public static void changeFont(Context c, int id, View parentView, String fontName) {
-	TextView txt = (TextView) parentView.findViewById(id);
+	public static void changeFont(Context c, int id, View parentView, String fontName) {
+		TextView txt = (TextView) parentView.findViewById(id);
 
-	// Typeface font = Typeface.createFromAsset(c.getAssets(),
-	// "brownproregular.otf");
-	Typeface font = Typeface.createFromAsset(c.getAssets(), fontName);
-	txt.setTypeface(font);
-    }
+		// Typeface font = Typeface.createFromAsset(c.getAssets(),
+		// "brownproregular.otf");
+		Typeface font = Typeface.createFromAsset(c.getAssets(), fontName);
+		txt.setTypeface(font);
+	}
 
-    public static void changeFont(Context c, View txt, String fontName) {
+	public static void changeFont(Context c, View txt, String fontName) {
 
-	// Typeface font = Typeface.createFromAsset(c.getAssets(),
-	// "brownproregular.otf");
-	Typeface font = Typeface.createFromAsset(c.getAssets(), fontName);
-	((TextView) txt).setTypeface(font);
-    }
+		// Typeface font = Typeface.createFromAsset(c.getAssets(),
+		// "brownproregular.otf");
+		Typeface font = Typeface.createFromAsset(c.getAssets(), fontName);
+		((TextView) txt).setTypeface(font);
+	}
 
-    public static void changeFont(Activity activity, int id, String fontName) {
-	TextView txt = (TextView) activity.findViewById(id);
+	public static void changeFont(Activity activity, int id, String fontName) {
+		TextView txt = (TextView) activity.findViewById(id);
 
-	// Typeface font = Typeface.createFromAsset(c.getAssets(),
-	// "brownproregular.otf");
-	Typeface font = Typeface.createFromAsset(activity.getAssets(), fontName);
-	txt.setTypeface(font);
-    }
+		// Typeface font = Typeface.createFromAsset(c.getAssets(),
+		// "brownproregular.otf");
+		Typeface font = Typeface.createFromAsset(activity.getAssets(), fontName);
+		txt.setTypeface(font);
+	}
 
-    public static void changeFont(Context c, TextView txt, String fontName) {
+	public static void changeFont(Context c, TextView txt, String fontName) {
 
-	Typeface font = Typeface.createFromAsset(c.getAssets(), fontName);
-	txt.setTypeface(font);
-    }
+		Typeface font = Typeface.createFromAsset(c.getAssets(), fontName);
+		txt.setTypeface(font);
+	}
 
 }

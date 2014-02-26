@@ -1,6 +1,6 @@
 /* 
 * 	Voice recognition example 
-*	It repeates whatever is recognized 
+*	It reads back whatever is recognized 
 *	you might have internet connection on certain android versions
 *
 */ 

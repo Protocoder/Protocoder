@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -31,40 +32,40 @@ import android.os.Debug;
 import android.util.Log;
 
 public class MemoryLogger {
-    static double lastavail;
-    static double initavail;
-    static boolean first = true;
+	static double lastavail;
+	static double initavail;
+	static boolean first = true;
 
-    public static void showMemoryStats() {
-	showMemoryStats("");
-    }
-
-    public static void showMemoryStats(String message) {
-	Log.i("memory", message
-		+ "----------------------------------------------------------------------------------------");
-	double nativeUsage = Debug.getNativeHeapAllocatedSize();
-	Log.i("memory", "nativeUsage: " + (nativeUsage / 1048576d));
-	// current heap size
-	double heapSize = Runtime.getRuntime().totalMemory();
-	// Log.i("memory", "heapSize: " + (heapSize / 1048576d));
-	// amount available in heap
-	double heapRemaining = Runtime.getRuntime().freeMemory();
-	// Log.i("memory", "heapRemaining: " + (heapRemaining / 1048576d));
-	double memoryAvailable = Runtime.getRuntime().maxMemory() - (heapSize - heapRemaining) - nativeUsage;
-	Log.i("memory", "memoryAvailable: " + (memoryAvailable / 1048576d));
-
-	if (first) {
-	    initavail = memoryAvailable;
-	    first = false;
+	public static void showMemoryStats() {
+		showMemoryStats("");
 	}
-	if (lastavail > 0) {
-	    Log.i("memory", "consumed since last: " + ((lastavail - memoryAvailable) / 1048576d));
+
+	public static void showMemoryStats(String message) {
+		Log.i("memory", message
+				+ "----------------------------------------------------------------------------------------");
+		double nativeUsage = Debug.getNativeHeapAllocatedSize();
+		Log.i("memory", "nativeUsage: " + (nativeUsage / 1048576d));
+		// current heap size
+		double heapSize = Runtime.getRuntime().totalMemory();
+		// Log.i("memory", "heapSize: " + (heapSize / 1048576d));
+		// amount available in heap
+		double heapRemaining = Runtime.getRuntime().freeMemory();
+		// Log.i("memory", "heapRemaining: " + (heapRemaining / 1048576d));
+		double memoryAvailable = Runtime.getRuntime().maxMemory() - (heapSize - heapRemaining) - nativeUsage;
+		Log.i("memory", "memoryAvailable: " + (memoryAvailable / 1048576d));
+
+		if (first) {
+			initavail = memoryAvailable;
+			first = false;
+		}
+		if (lastavail > 0) {
+			Log.i("memory", "consumed since last: " + ((lastavail - memoryAvailable) / 1048576d));
+		}
+		Log.i("memory", "consumed total: " + ((initavail - memoryAvailable) / 1048576d));
+
+		lastavail = memoryAvailable;
+
+		Log.i("memory",
+				"-----------------------------------------------------------------------------------------------");
 	}
-	Log.i("memory", "consumed total: " + ((initavail - memoryAvailable) / 1048576d));
-
-	lastavail = memoryAvailable;
-
-	Log.i("memory",
-		"-----------------------------------------------------------------------------------------------");
-    }
 }

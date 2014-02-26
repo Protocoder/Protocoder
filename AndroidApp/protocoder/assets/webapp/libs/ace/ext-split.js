@@ -28,12 +28,12 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-ace.define('ace/ext/split', ['require', 'exports', 'module' , 'ace/split'], function(require, exports, module) {
+define('ace/ext/split', ['require', 'exports', 'module' , 'ace/split'], function(require, exports, module) {
 module.exports = require("../split");
 
 });
 
-ace.define('ace/split', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/lib/lang', 'ace/lib/event_emitter', 'ace/editor', 'ace/virtual_renderer', 'ace/edit_session'], function(require, exports, module) {
+define('ace/split', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/lib/lang', 'ace/lib/event_emitter', 'ace/editor', 'ace/virtual_renderer', 'ace/edit_session'], function(require, exports, module) {
 
 
 var oop = require("./lib/oop");

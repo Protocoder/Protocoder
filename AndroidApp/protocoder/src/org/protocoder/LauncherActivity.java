@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -36,39 +37,38 @@ import android.os.Bundle;
 
 public class LauncherActivity extends BaseActivity {
 
-    Intent intent = null;
+	Intent intent = null;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-	super.onCreate(savedInstanceState);
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-	// Prepare intent to exit the activity and move to the main one
-	boolean firstLaunch; // If this is the first time the
-	SharedPreferences userDetails = getSharedPreferences("org.protocoder", MODE_PRIVATE);
-	firstLaunch = userDetails.getBoolean(getResources().getString(R.string.pref_is_first_launch), true);
+		// Prepare intent to exit the activity and move to the main one
+		boolean firstLaunch; // If this is the first time the
+		SharedPreferences userDetails = getSharedPreferences("org.protocoder", MODE_PRIVATE);
+		firstLaunch = userDetails.getBoolean(getResources().getString(R.string.pref_is_first_launch), true);
 
-	if (firstLaunch) {
-	    intent = new Intent(this, WelcomeActivity.class);
-	    userDetails.edit().putString("device_id", StrUtils.generateRandomString());
-	} else {
-	    intent = new Intent(this, MainActivity.class);
+		if (firstLaunch) {
+			intent = new Intent(this, WelcomeActivity.class);
+			userDetails.edit().putString("device_id", StrUtils.generateRandomString());
+		} else {
+			intent = new Intent(this, MainActivity.class);
+		}
+
+		intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+		startActivity(intent);
+		finish();
+
 	}
 
-	intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-	startActivity(intent);
-	finish();
+	@Override
+	protected void onPause() {
+		super.onPause();
+	}
 
-    }
-
-    @Override
-    protected void onPause() {
-	super.onPause();
-    }
-
-    @Override
-    protected void onDestroy() {
-	super.onDestroy();
-    }
-
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+	}
 
 }

@@ -35,96 +35,100 @@ import java.util.ResourceBundle;
 import de.sciss.net.test.NetUtilTest;
 
 /**
- * A static class which contains information methods. In a future version it may contain more useful utility methods.
+ * A static class which contains information methods. In a future version it may
+ * contain more useful utility methods.
  * 
  * @author Hanns Holger Rutz
  */
 public class NetUtil {
-    private static final double VERSION = 1.0;
-    private static final ResourceBundle resBundle = ResourceBundle.getBundle("NetUtilStrings");
+	private static final double VERSION = 1.0;
+	private static final ResourceBundle resBundle = ResourceBundle.getBundle("NetUtilStrings");
 
-    private NetUtil() { /* empty */
-    }
-
-    /**
-     * This method gets called when one tries to start the .jar file directly. It prints copyright information and
-     * quits. It also offers to run some built-in tests.
-     */
-    public static void main(String args[]) {
-	boolean testo = false;
-
-	if (args.length == 1) {
-	    if (args[0].equals("--testTCPClient")) {
-		testo = true;
-		NetUtilTest.client(OSCChannel.TCP);
-	    } else if (args[0].equals("--testUDPClient")) {
-		testo = true;
-		NetUtilTest.client(OSCChannel.UDP);
-	    } else if (args[0].equals("--testTCPServer")) {
-		testo = true;
-		NetUtilTest.server(OSCChannel.TCP);
-	    } else if (args[0].equals("--testUDPServer")) {
-		testo = true;
-		NetUtilTest.server(OSCChannel.UDP);
-	    } else if (args[0].equals("--testCodecSpeed")) {
-		testo = true;
-		NetUtilTest.codecSpeed();
-	    } else if (args[0].equals("--testPingPong")) {
-		testo = true;
-		NetUtilTest.pingPong();
-	    }
+	private NetUtil() { /* empty */
 	}
 
-	if (!testo) {
-	    System.err.println("\nNetUtil v" + VERSION + "\n" + getCopyrightString() + "\n\n" + getCreditsString()
-		    + "\n\n  " + getResourceString("errIsALibrary"));
+	/**
+	 * This method gets called when one tries to start the .jar file directly.
+	 * It prints copyright information and quits. It also offers to run some
+	 * built-in tests.
+	 */
+	public static void main(String args[]) {
+		boolean testo = false;
 
-	    System.out.println("\nThe following demos are available:\n" + "  --testTCPClient\n" + "  --testUDPClient\n"
-		    + "  --testTCPServer\n" + "  --testUDPServer\n" + "  --testCodecSpeed\n" + "  --testPingPong\n");
-	    System.exit(1);
+		if (args.length == 1) {
+			if (args[0].equals("--testTCPClient")) {
+				testo = true;
+				NetUtilTest.client(OSCChannel.TCP);
+			} else if (args[0].equals("--testUDPClient")) {
+				testo = true;
+				NetUtilTest.client(OSCChannel.UDP);
+			} else if (args[0].equals("--testTCPServer")) {
+				testo = true;
+				NetUtilTest.server(OSCChannel.TCP);
+			} else if (args[0].equals("--testUDPServer")) {
+				testo = true;
+				NetUtilTest.server(OSCChannel.UDP);
+			} else if (args[0].equals("--testCodecSpeed")) {
+				testo = true;
+				NetUtilTest.codecSpeed();
+			} else if (args[0].equals("--testPingPong")) {
+				testo = true;
+				NetUtilTest.pingPong();
+			}
+		}
+
+		if (!testo) {
+			System.err.println("\nNetUtil v" + VERSION + "\n" + getCopyrightString() + "\n\n" + getCreditsString()
+					+ "\n\n  " + getResourceString("errIsALibrary"));
+
+			System.out.println("\nThe following demos are available:\n" + "  --testTCPClient\n" + "  --testUDPClient\n"
+					+ "  --testTCPServer\n" + "  --testUDPServer\n" + "  --testCodecSpeed\n" + "  --testPingPong\n");
+			System.exit(1);
+		}
 	}
-    }
 
-    /**
-     * Returns the library's version.
-     * 
-     * @return the current version of NetUtil
-     */
-    public static final double getVersion() {
-	return VERSION;
-    }
-
-    /**
-     * Returns a copyright information string about the library
-     * 
-     * @return text string which can be displayed in an about box
-     */
-    public static final String getCopyrightString() {
-	return NetUtil.getResourceString("copyright");
-    }
-
-    /**
-     * Returns a license and website information string about the library
-     * 
-     * @return text string which can be displayed in an about box
-     */
-    public static final String getCreditsString() {
-	return NetUtil.getResourceString("credits");
-    }
-
-    /**
-     * Returns a string from the library's string resource bundle (currently localized english and german). This is used
-     * by the classes of the library, you shouldn't use it yourself.
-     * 
-     * @param key
-     *            lookup dictionary key
-     * @return (localized) human readable string for the given key or placeholder string if the resource wasn't found
-     */
-    public static final String getResourceString(String key) {
-	try {
-	    return resBundle.getString(key);
-	} catch (MissingResourceException e1) {
-	    return ("[Missing Resource: " + key + "]");
+	/**
+	 * Returns the library's version.
+	 * 
+	 * @return the current version of NetUtil
+	 */
+	public static final double getVersion() {
+		return VERSION;
 	}
-    }
+
+	/**
+	 * Returns a copyright information string about the library
+	 * 
+	 * @return text string which can be displayed in an about box
+	 */
+	public static final String getCopyrightString() {
+		return NetUtil.getResourceString("copyright");
+	}
+
+	/**
+	 * Returns a license and website information string about the library
+	 * 
+	 * @return text string which can be displayed in an about box
+	 */
+	public static final String getCreditsString() {
+		return NetUtil.getResourceString("credits");
+	}
+
+	/**
+	 * Returns a string from the library's string resource bundle (currently
+	 * localized english and german). This is used by the classes of the
+	 * library, you shouldn't use it yourself.
+	 * 
+	 * @param key
+	 *            lookup dictionary key
+	 * @return (localized) human readable string for the given key or
+	 *         placeholder string if the resource wasn't found
+	 */
+	public static final String getResourceString(String key) {
+		try {
+			return resBundle.getString(key);
+		} catch (MissingResourceException e1) {
+			return ("[Missing Resource: " + key + "]");
+		}
+	}
 }

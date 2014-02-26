@@ -28,7 +28,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-ace.define('ace/theme/clouds', ['require', 'exports', 'module' , 'ace/lib/dom'], function(require, exports, module) {
+define('ace/theme/clouds', ['require', 'exports', 'module' , 'ace/lib/dom'], function(require, exports, module) {
 
 exports.isDark = false;
 exports.cssClass = "ace-clouds";
@@ -45,11 +45,7 @@ background-color: #FFFFFF;\
 color: #000000\
 }\
 .ace-clouds .ace_cursor {\
-border-left: 2px solid #000000\
-}\
-.ace-clouds .ace_overwrite-cursors .ace_cursor {\
-border-left: 0px;\
-border-bottom: 1px solid #000000\
+color: #000000\
 }\
 .ace-clouds .ace_marker-layer .ace_selection {\
 background: #BDD5FC\

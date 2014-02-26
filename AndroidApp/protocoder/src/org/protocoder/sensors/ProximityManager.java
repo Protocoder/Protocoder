@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -37,89 +38,89 @@ import android.hardware.SensorManager;
 
 public class ProximityManager extends CustomSensorManager implements WhatIsRunningInterface {
 
-    public interface ProximityListener {
+	public interface ProximityListener {
 
-	public void onDistanceChanged(float distance);
+		public void onDistanceChanged(float distance);
 
-    }
+	}
 
-    private final static String TAG = "Proximity";
+	private final static String TAG = "Proximity";
 
-    /** indicates whether or not Accelerometer Sensor is supported */
-    private static Boolean supported;
-    /** indicates whether or not Accelerometer Sensor is running */
-    private static boolean running = false;
+	/** indicates whether or not Accelerometer Sensor is supported */
+	private static Boolean supported;
+	/** indicates whether or not Accelerometer Sensor is running */
+	private static boolean running = false;
 
-    Vector<ProximityListener> listeners;
+	Vector<ProximityListener> listeners;
 
-    boolean proximitySupported;
+	boolean proximitySupported;
 
-    SensorManager sensormanager;
-    SensorEventListener proximityListener;
+	SensorManager sensormanager;
+	SensorEventListener proximityListener;
 
-    Sensor proximity;
+	Sensor proximity;
 
-    public ProximityManager(Context c) {
-	super(c);
-	listeners = new Vector<ProximityListener>();
+	public ProximityManager(Context c) {
+		super(c);
+		listeners = new Vector<ProximityListener>();
 
-	// register
-	sensormanager = (SensorManager) c.getSystemService(Context.SENSOR_SERVICE);
-	proximity = sensormanager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+		// register
+		sensormanager = (SensorManager) c.getSystemService(Context.SENSOR_SERVICE);
+		proximity = sensormanager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
 
-	proximityListener = new SensorEventListener() {
+		proximityListener = new SensorEventListener() {
 
-	    @Override
-	    public void onSensorChanged(SensorEvent event) {
-		// listener
-		for (ProximityListener l : listeners) {
-		    l.onDistanceChanged(event.values[0]);
-		}
+			@Override
+			public void onSensorChanged(SensorEvent event) {
+				// listener
+				for (ProximityListener l : listeners) {
+					l.onDistanceChanged(event.values[0]);
+				}
 
-	    }
+			}
 
-	    @Override
-	    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-		switch (accuracy) {
-		case SensorManager.SENSOR_STATUS_UNRELIABLE:
-		    break;
-		case SensorManager.SENSOR_STATUS_ACCURACY_LOW:
-		    break;
-		case SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM:
-		    break;
-		case SensorManager.SENSOR_STATUS_ACCURACY_HIGH:
-		    break;
-		}
-	    }
+			@Override
+			public void onAccuracyChanged(Sensor sensor, int accuracy) {
+				switch (accuracy) {
+				case SensorManager.SENSOR_STATUS_UNRELIABLE:
+					break;
+				case SensorManager.SENSOR_STATUS_ACCURACY_LOW:
+					break;
+				case SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM:
+					break;
+				case SensorManager.SENSOR_STATUS_ACCURACY_HIGH:
+					break;
+				}
+			}
 
-	};
+		};
 
-    }
+	}
 
-    @Override
-    public boolean isListening() {
-	return false;
-    }
+	@Override
+	public boolean isListening() {
+		return false;
+	}
 
-    @Override
-    public void start() {
-	running = true;
-	proximitySupported = sensormanager.registerListener(proximityListener, proximity,
-		SensorManager.SENSOR_DELAY_GAME);
-    }
+	@Override
+	public void start() {
+		running = true;
+		proximitySupported = sensormanager.registerListener(proximityListener, proximity,
+				SensorManager.SENSOR_DELAY_GAME);
+	}
 
-    @Override
-    public void stop() {
-	running = false;
-	sensormanager.unregisterListener(proximityListener);
-    }
+	@Override
+	public void stop() {
+		running = false;
+		sensormanager.unregisterListener(proximityListener);
+	}
 
-    public void addListener(ProximityListener distanceListener) {
-	listeners.add(distanceListener);
-    }
+	public void addListener(ProximityListener distanceListener) {
+		listeners.add(distanceListener);
+	}
 
-    public void removeListener(ProximityListener distanceListener) {
-	listeners.remove(distanceListener);
-    }
+	public void removeListener(ProximityListener distanceListener) {
+		listeners.remove(distanceListener);
+	}
 
 }

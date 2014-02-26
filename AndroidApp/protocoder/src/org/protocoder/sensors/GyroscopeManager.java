@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -35,47 +36,47 @@ import android.hardware.SensorManager;
 
 public class GyroscopeManager extends CustomSensorManager implements WhatIsRunningInterface {
 
-    public interface GyroscopeListener extends CustomSensorListener {
+	public interface GyroscopeListener extends CustomSensorListener {
 
-	public void onGyroscopeChanged(float x, float y, float z);
+		public void onGyroscopeChanged(float x, float y, float z);
 
-    }
+	}
 
-    private final static String TAG = "Gyroscope";
+	private final static String TAG = "Gyroscope";
 
-    public GyroscopeManager(Context c) {
-	super(c);
+	public GyroscopeManager(Context c) {
+		super(c);
 
-	// register
-	sensor = sensormanager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+		// register
+		sensor = sensormanager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
 
-	listener = new SensorEventListener() {
+		listener = new SensorEventListener() {
 
-	    @Override
-	    public void onSensorChanged(SensorEvent event) {
-		// listener
-		for (CustomSensorListener l : listeners) {
-		    ((GyroscopeListener) l).onGyroscopeChanged(event.values[0], event.values[1], event.values[2]);
-		}
+			@Override
+			public void onSensorChanged(SensorEvent event) {
+				// listener
+				for (CustomSensorListener l : listeners) {
+					((GyroscopeListener) l).onGyroscopeChanged(event.values[0], event.values[1], event.values[2]);
+				}
 
-	    }
+			}
 
-	    @Override
-	    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-		switch (accuracy) {
-		case SensorManager.SENSOR_STATUS_UNRELIABLE:
-		    break;
-		case SensorManager.SENSOR_STATUS_ACCURACY_LOW:
-		    break;
-		case SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM:
-		    break;
-		case SensorManager.SENSOR_STATUS_ACCURACY_HIGH:
-		    break;
-		}
-	    }
+			@Override
+			public void onAccuracyChanged(Sensor sensor, int accuracy) {
+				switch (accuracy) {
+				case SensorManager.SENSOR_STATUS_UNRELIABLE:
+					break;
+				case SensorManager.SENSOR_STATUS_ACCURACY_LOW:
+					break;
+				case SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM:
+					break;
+				case SensorManager.SENSOR_STATUS_ACCURACY_HIGH:
+					break;
+				}
+			}
 
-	};
+		};
 
-    }
+	}
 
 }

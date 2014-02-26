@@ -1,4 +1,4 @@
-ace.define('ace/snippets/textile', ['require', 'exports', 'module' ], function(require, exports, module) {
+define('ace/snippets/textile', ['require', 'exports', 'module' ], function(require, exports, module) {
 
 
 exports.snippetText = "# Jekyll post header\n\

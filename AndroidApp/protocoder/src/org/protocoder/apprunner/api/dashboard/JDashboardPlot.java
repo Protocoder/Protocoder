@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -41,57 +42,57 @@ import android.app.Activity;
 
 public class JDashboardPlot extends JInterface {
 
-    private static final String TAG = "JWebAppPlot";
-    String id;
+	private static final String TAG = "JWebAppPlot";
+	String id;
 
-    public JDashboardPlot(Activity a) {
-	super(a);
-    }
+	public JDashboardPlot(Activity a) {
+		super(a);
+	}
 
-    @JavascriptInterface
-    @APIMethod(description = "", example = "")
-    public void add(String name, int x, int y, int w, int h, float minLimit, float maxLimit)
-	    throws UnknownHostException, JSONException {
-	this.id = StrUtils.generateRandomString();
-	JSONObject msg = new JSONObject();
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	public void add(String name, int x, int y, int w, int h, float minLimit, float maxLimit)
+			throws UnknownHostException, JSONException {
+		this.id = StrUtils.generateRandomString();
+		JSONObject msg = new JSONObject();
 
-	msg.put("type", "widget");
-	msg.put("action", "add");
+		msg.put("type", "widget");
+		msg.put("action", "add");
 
-	JSONObject values = new JSONObject();
-	values.put("id", id);
-	values.put("name", name);
-	values.put("type", "plot");
-	values.put("x", x);
-	values.put("y", y);
-	values.put("w", w);
-	values.put("h", h);
-	values.put("minLimit", minLimit);
-	values.put("maxLimit", maxLimit);
+		JSONObject values = new JSONObject();
+		values.put("id", id);
+		values.put("name", name);
+		values.put("type", "plot");
+		values.put("x", x);
+		values.put("y", y);
+		values.put("w", w);
+		values.put("h", h);
+		values.put("minLimit", minLimit);
+		values.put("maxLimit", maxLimit);
 
-	msg.put("values", values);
+		msg.put("values", values);
 
-	CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
-	ws.send(msg);
+		CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
+		ws.send(msg);
 
-    }
+	}
 
-    @JavascriptInterface
-    @APIMethod(description = "", example = "")
-    public void update(float val) throws UnknownHostException, JSONException {
-	JSONObject msg = new JSONObject();
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	public void update(float val) throws UnknownHostException, JSONException {
+		JSONObject msg = new JSONObject();
 
-	msg.put("type", "widget");
-	msg.put("action", "update");
+		msg.put("type", "widget");
+		msg.put("action", "update");
 
-	JSONObject values = new JSONObject();
-	values.put("id", id);
-	values.put("type", "plot");
-	values.put("val", val);
-	msg.put("values", values);
+		JSONObject values = new JSONObject();
+		values.put("id", id);
+		values.put("type", "plot");
+		values.put("val", val);
+		msg.put("values", values);
 
-	CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
-	ws.send(msg);
+		CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
+		ws.send(msg);
 
-    }
+	}
 }

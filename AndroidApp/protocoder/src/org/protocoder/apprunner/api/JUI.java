@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -29,11 +30,15 @@ package org.protocoder.apprunner.api;
 
 import java.io.File;
 
+import org.protocoder.AppSettings;
 import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apidoc.annotation.APIParam;
-import org.protocoder.apprunner.AppRunnerActivity;
 import org.protocoder.apprunner.AppRunnerSettings;
 import org.protocoder.apprunner.JavascriptInterface;
+import org.protocoder.apprunner.api.other.JCamera;
+import org.protocoder.apprunner.api.other.JUIGeneric;
+import org.protocoder.apprunner.api.other.JVideo;
+import org.protocoder.apprunner.api.other.QQ;
 import org.protocoder.apprunner.api.widgets.JButton;
 import org.protocoder.apprunner.api.widgets.JCanvasView;
 import org.protocoder.apprunner.api.widgets.JCard;
@@ -41,6 +46,7 @@ import org.protocoder.apprunner.api.widgets.JCheckBox;
 import org.protocoder.apprunner.api.widgets.JEditText;
 import org.protocoder.apprunner.api.widgets.JImageButton;
 import org.protocoder.apprunner.api.widgets.JImageView;
+import org.protocoder.apprunner.api.widgets.JMap;
 import org.protocoder.apprunner.api.widgets.JPlotView;
 import org.protocoder.apprunner.api.widgets.JRadioButton;
 import org.protocoder.apprunner.api.widgets.JSeekBar;
@@ -48,12 +54,15 @@ import org.protocoder.apprunner.api.widgets.JSwitch;
 import org.protocoder.apprunner.api.widgets.JTextView;
 import org.protocoder.apprunner.api.widgets.JToggleButton;
 import org.protocoder.apprunner.api.widgets.JWebView;
-import org.protocoder.fragments.CameraFragment;
-import org.protocoder.fragments.VideoTextureFragment;
 import org.protocoder.utils.AndroidUtils;
 import org.protocoder.views.HoloCircleSeekBar;
+import org.protocoder.views.PadView;
 import org.protocoder.views.TouchAreaView;
 
+import processing.core.PApplet;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -66,7 +75,6 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.text.InputType;
 import android.util.Log;
@@ -74,6 +82,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
+import android.view.animation.CycleInterpolator;
 import android.webkit.WebSettings;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -84,6 +93,7 @@ import android.widget.Toast;
 public class JUI extends JUIGeneric {
 
 	String TAG = "JUI";
+	private String onNFCfn;
 
 	public JUI(Activity a) {
 		super(a);
@@ -91,82 +101,41 @@ public class JUI extends JUIGeneric {
 
 	@JavascriptInterface
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
-	@APIParam(params = { "function(x, y)" })
-	public void onTouch(final String callbackfn) {
-		// add a touch overlay
-		FrameLayout fl = null; // (FrameLayout) ((AppRunnerActivity) a.get())
-		// .findViewById(R.id.touchOverlay);
-
-		fl.setOnTouchListener(new View.OnTouchListener() {
-
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-
-				switch (event.getAction()) {
-				case MotionEvent.ACTION_DOWN:
-					// MainActivity.mMapIsTouched = true;
-					break;
-				case MotionEvent.ACTION_UP:
-					// MainActivity.mMapIsTouched = false;
-					break;
-
-				case MotionEvent.ACTION_MOVE:
-					int x = (int) event.getX();
-					int y = (int) event.getY();
-					Log.d(TAG, "" + x + " " + y);
-
-					callback(callbackfn, x, y);
-					// Point point = new Point(x, y);
-					// LatLng latLng =
-					// map.getProjection().fromScreenLocation(point);
-					// Point pixels =
-					// map.getProjection().toScreenLocation(latLng);;
-					// mapCustomFragment.setTouch(latLng);
-
-					// Log.d("qq2", x + " " + y + " " + latLng.latitude + " " +
-					// latLng.longitude);
-					break;
-				}
-
-				return true; // a.get().dispatchTouchEvent(event);
-			}
-		});
-	}
-
-	@JavascriptInterface
-	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
 	@APIParam(params = { "titleName" })
 	public void setTitle(String title) {
-		if (noActionBarAllowed)
+		if (noActionBarAllowed) {
 			return;
+		}
 
-		((AppRunnerActivity) a.get()).setActionBar(null, null);
-		((AppRunnerActivity) a.get()).actionBar.setTitle(title);
+		a.get().setActionBar(null, null);
+		a.get().actionBar.setTitle(title);
 	}
 
 	@JavascriptInterface
 	@APIMethod(description = " ", example = "")
 	@APIParam(params = { "subtitleName" })
 	public void setSubtitle(String title) {
-		if (noActionBarAllowed)
+		if (noActionBarAllowed) {
 			return;
+		}
 
-		((AppRunnerActivity) a.get()).setActionBar(null, null);
-		((AppRunnerActivity) a.get()).actionBar.setSubtitle(title);
+		a.get().setActionBar(null, null);
+		a.get().actionBar.setSubtitle(title);
 	}
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "boolean" })
 	public void showTitleBar(Boolean b) {
-		if (noActionBarAllowed)
+		if (noActionBarAllowed) {
 			return;
+		}
 
-		((AppRunnerActivity) a.get()).setActionBar(null, null);
-		if (b)
-			((AppRunnerActivity) a.get()).actionBar.show();
-		else {
-			((AppRunnerActivity) a.get()).actionBar.hide();
+		a.get().setActionBar(null, null);
+		if (b) {
+			a.get().actionBar.show();
+		} else {
+			a.get().actionBar.hide();
 		}
 	}
 
@@ -174,55 +143,58 @@ public class JUI extends JUIGeneric {
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "r", "g", "b" })
 	public void setTitleBgColor(int r, int g, int b) {
-		if (noActionBarAllowed)
+		if (noActionBarAllowed) {
 			return;
+		}
 		int c = Color.rgb(r, g, b);
-		((AppRunnerActivity) a.get()).setActionBar(c, null);
+		a.get().setActionBar(c, null);
 	}
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "r", "g", "b" })
 	public void setTitleTextColor(int r, int g, int b) {
-		if (noActionBarAllowed)
+		if (noActionBarAllowed) {
 			return;
+		}
 
 		int c = Color.rgb(r, g, b);
-		((AppRunnerActivity) a.get()).setActionBar(null, c);
+		a.get().setActionBar(null, c);
 	}
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "imageName" })
 	public void setTitleImage(String imagePath) {
-		if (noActionBarAllowed)
+		if (noActionBarAllowed) {
 			return;
+		}
 
-		Bitmap myBitmap = BitmapFactory.decodeFile(AppRunnerSettings.get().project.getFolder() + imagePath);
+		Bitmap myBitmap = BitmapFactory.decodeFile(AppRunnerSettings.get().project.getStoragePath() + imagePath);
 		Drawable icon = new BitmapDrawable(a.get().getResources(), myBitmap);
 
-		((AppRunnerActivity) a.get()).actionBar.setIcon(icon);
+		a.get().actionBar.setIcon(icon);
 	}
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "boolean" })
 	public void showHomeBar(boolean b) {
-		((AppRunnerActivity) a.get()).showHomeBar(b);
+		a.get().showHomeBar(b);
 	}
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
 	public void setFullscreen() {
 		noActionBarAllowed = true;
-		((AppRunnerActivity) a.get()).setFullScreen();
+		a.get().setFullScreen();
 	}
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
 	public void setImmersive() {
 		noActionBarAllowed = true;
-		((AppRunnerActivity) a.get()).setImmersive();
+		a.get().setImmersive();
 	}
 
 	@JavascriptInterface
@@ -234,13 +206,20 @@ public class JUI extends JUIGeneric {
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
 	public void setLandscape() {
-		((AppRunnerActivity) a.get()).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		a.get().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 	}
 
 	@JavascriptInterface
 	@APIMethod(description = "", example = "")
 	public void setPortrait() {
-		((AppRunnerActivity) a.get()).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		a.get().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+	}
+
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "text" })
+	public void toast(String text) {
+		Toast.makeText(a.get(), text, Toast.LENGTH_SHORT).show();
 	}
 
 	@JavascriptInterface
@@ -254,10 +233,107 @@ public class JUI extends JUIGeneric {
 	 * Set padding on the entire view
 	 * 
 	 */
+	@JavascriptInterface
 	@APIParam(params = { "left", "top", "right", "bottom" })
 	public void setPadding(int left, int top, int right, int bottom) {
 		initializeLayout();
 		uiAbsoluteLayout.setPadding(left, top, right, bottom);
+	}
+
+	@JavascriptInterface
+	@APIParam(params = { "View", "height" })
+	public void resizeView(final View v, int h) {
+		boolean animated = false;
+
+		if (!animated) {
+			v.getLayoutParams().height = h;
+			v.setLayoutParams(v.getLayoutParams());
+		} else {
+
+			int initHeight = v.getLayoutParams().height;
+			// v.setLayoutParams(v.getLayoutParams());
+
+			ValueAnimator anim = ValueAnimator.ofInt(initHeight, h);
+			anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+				@Override
+				public void onAnimationUpdate(ValueAnimator valueAnimator) {
+					int val = (Integer) valueAnimator.getAnimatedValue();
+					v.getLayoutParams().height = val;
+					v.setLayoutParams(v.getLayoutParams());
+
+				}
+			});
+			anim.setDuration(200);
+			anim.start();
+		}
+	}
+
+	@JavascriptInterface
+	@APIParam(params = { "View", "x", "y" })
+	public void move(View v, float x, float y) {
+		v.animate().x(x).setDuration(AppSettings.animSpeed);
+		v.animate().y(y).setDuration(AppSettings.animSpeed);
+
+	}
+
+	@JavascriptInterface
+	@APIParam(params = { "View" })
+	public void jump(View v) {
+
+		ValueAnimator w = ObjectAnimator.ofFloat(v, "scaleX", 1f, 0.9f, 1.2f, 1f);
+		w.setDuration(500);
+
+		ValueAnimator h = ObjectAnimator.ofFloat(v, "scaleY", 1f, 0.9f, 1.2f, 1f);
+		h.setDuration(500);
+
+		AnimatorSet animatorSet = new AnimatorSet();
+		animatorSet.play(w).with(h);
+		animatorSet.start();
+	}
+
+	@JavascriptInterface
+	@APIParam(params = { "View", "num" })
+	public void blink(View v, int num) {
+		ObjectAnimator anim = ObjectAnimator.ofFloat(v, "alpha", 1f, 0f, 1f);
+		anim.setDuration(1000);
+		anim.setInterpolator(new CycleInterpolator(1));
+		anim.setRepeatCount(num);
+		anim.start();
+	}
+
+	@JavascriptInterface
+	@APIParam(params = { "View", "degrees" })
+	public void rotate(View v, float x) {
+		v.animate().rotation(x).setDuration(AppSettings.animSpeed);
+	}
+
+	@JavascriptInterface
+	@APIParam(params = { "View", "degrees", "degrees", "degrees" })
+	public void rotate(View v, float x, float y, float z) {
+		v.animate().rotation(x).setDuration(AppSettings.animSpeed);
+		// looks weird but it works more consistent
+		v.animate().rotationX(y).setDuration(AppSettings.animSpeed);
+		v.animate().rotationY(z).setDuration(AppSettings.animSpeed);
+	}
+
+	@JavascriptInterface
+	@APIParam(params = { "View", "float" })
+	public void alpha(View v, float deg) {
+		v.animate().alpha(deg).setDuration(AppSettings.animSpeed);
+	}
+
+	@JavascriptInterface
+	@APIParam(params = { "View", "float" })
+	public void scale(View v, float x, float y) {
+		v.animate().scaleX(x).setDuration(AppSettings.animSpeed);
+		v.animate().scaleY(y).setDuration(AppSettings.animSpeed);
+	}
+
+	@JavascriptInterface
+	@APIParam(params = { "View", "float" })
+	public void scaleBy(View v, float x, float y) {
+		v.animate().scaleXBy(x).setDuration(AppSettings.animSpeed);
+		v.animate().scaleYBy(y).setDuration(AppSettings.animSpeed);
 	}
 
 	/**
@@ -285,7 +361,7 @@ public class JUI extends JUIGeneric {
 	public void backgroundImage(String imagePath) {
 		initializeLayout();
 		// Add the bg image asynchronously
-		new SetBgImageTask(bgImageView).execute(AppRunnerSettings.get().project.getFolder() + File.separator
+		new SetBgImageTask(bgImageView).execute(AppRunnerSettings.get().project.getStoragePath() + File.separator
 				+ imagePath);
 
 	}
@@ -297,8 +373,22 @@ public class JUI extends JUIGeneric {
 	@JavascriptInterface
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
 	@APIParam(params = { "label" })
-	public JCard addCard(String label) {
-		JCard c = addGenericCard(label);
+	public JCard addView(View v) {
+		JCard c = addGenericCard();
+		addViewLinear(v);
+
+		return c;
+	}
+
+	/**
+	 * Adds a card holder
+	 * 
+	 */
+	@JavascriptInterface
+	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
+	@APIParam(params = { "label" })
+	public JCard addCard() {
+		JCard c = addGenericCard();
 		addViewLinear(c);
 
 		return c;
@@ -312,7 +402,7 @@ public class JUI extends JUIGeneric {
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
 	@APIParam(params = { "label", "x", "y", "w", "h" })
 	public JCard addCard(String label, int x, int y, int w, int h) {
-		JCard c = addGenericCard(label);
+		JCard c = addGenericCard();
 		addViewAbsolute(c, x, y, w, h);
 		return c;
 	}
@@ -323,7 +413,7 @@ public class JUI extends JUIGeneric {
 	 */
 	@JavascriptInterface
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
-	@APIParam(params = { "label", "x", "y", "w", "h", "function(progress)" })
+	@APIParam(params = { "label", "x", "y", "w", "h", "function()" })
 	public JButton addButton(String label, final String callbackfn) {
 		JButton b = addGenericButton(label, callbackfn);
 		return b;
@@ -335,7 +425,7 @@ public class JUI extends JUIGeneric {
 	 */
 	@JavascriptInterface
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
-	@APIParam(params = { "label", "x", "y", "w", "h", "function(progress)" })
+	@APIParam(params = { "label", "x", "y", "w", "h", "function()" })
 	public JButton addButton(String label, int x, int y, int w, int h, final String callbackfn) {
 		JButton b = addGenericButton(label, callbackfn);
 		addViewAbsolute(b, x, y, w, h);
@@ -358,8 +448,24 @@ public class JUI extends JUIGeneric {
 	@APIParam(params = { "x", "y", "w", "h", "bShowArea", "function(touching, x, y)" })
 	public TouchAreaView addTouchArea(int x, int y, int w, int h, boolean showArea, final String callbackfn) {
 		TouchAreaView taV = addGenericTouchArea(showArea, callbackfn);
-
 		addViewAbsolute(taV, x, y, w, h);
+
+		return taV;
+	}
+
+	@JavascriptInterface
+	@APIParam(params = { "x", "y", "w", "h", "function(touching, x, y)" })
+	public PadView addXYPad(int x, int y, int w, int h, final String callbackfn) {
+		PadView taV = addPad(callbackfn);
+		addViewAbsolute(taV, x, y, w, h);
+
+		return taV;
+	}
+
+	@JavascriptInterface
+	@APIParam(params = { "function(touching, x, y)" })
+	public PadView addXYPad(final String callbackfn) {
+		PadView taV = addPad(callbackfn);
 
 		return taV;
 	}
@@ -551,7 +657,7 @@ public class JUI extends JUIGeneric {
 		return iv;
 
 	}
-	
+
 	@JavascriptInterface
 	@APIParam(params = { "min", "max" })
 	public JPlotView addPlot(int min, int max) {
@@ -559,13 +665,13 @@ public class JUI extends JUIGeneric {
 
 		return jPlotView;
 	}
-	
+
 	@JavascriptInterface
 	@APIParam(params = { "x", "y", "w", "h", "min", "max" })
 	public JPlotView addPlot(int x, int y, int w, int h, int min, int max) {
 		JPlotView jPlotView = addGenericPlot(min, max);
 		addViewAbsolute(jPlotView.getView(), x, y, w, h);
-		
+
 		return jPlotView;
 	}
 
@@ -577,11 +683,13 @@ public class JUI extends JUIGeneric {
 	 * Adds an image button with the default background
 	 * 
 	 */
+	@Override
 	@APIParam(params = { "x", "y", "w", "h", "imageName", "function()" })
 	public JImageButton addImageButton(int x, int y, int w, int h, String imagePath, final String callbackfn) {
 		return addImageButton(x, y, w, h, imagePath, "", false, callbackfn);
 	}
 
+	@Override
 	@APIParam(params = { "x", "y", "w", "h", "imageNameNotPressed", "imageNamePressed", "function()" })
 	public JImageButton addImageButton(int x, int y, int w, int h, String imgNotPressed, String imgPressed,
 			final String callbackfn) {
@@ -592,6 +700,7 @@ public class JUI extends JUIGeneric {
 	 * Adds an image with the option to hide the default background
 	 * 
 	 */
+	@Override
 	@APIParam(params = { "x", "w", "h", "imageNameNotPressed", "imagePressed", "boolean", "function()" })
 	public JImageButton addImageButton(int x, int y, int w, int h, String imgNotPressed, String imgPressed,
 			final boolean hideBackground, final String callbackfn) {
@@ -607,7 +716,7 @@ public class JUI extends JUIGeneric {
 		}
 
 		// Add image asynchronously
-		new SetImageTask(ib).execute(AppRunnerSettings.get().project.getFolder() + File.separator + imgNotPressed);
+		new SetImageTask(ib).execute(AppRunnerSettings.get().project.getStoragePath() + File.separator + imgNotPressed);
 
 		// Set on click behavior
 		ib.setOnTouchListener(new OnTouchListener() {
@@ -643,13 +752,13 @@ public class JUI extends JUIGeneric {
 
 	}
 
+	@Override
 	@JavascriptInterface
 	@APIParam(params = { "x", "y", "w", "h" })
 	public JCanvasView addCanvas(int x, int y, int w, int h) {
 		initializeLayout();
 
 		JCanvasView sv = new JCanvasView(a.get(), w, h);
-		positionView(sv, x, y, w, h);
 		// Add the view
 		addViewAbsolute(sv, x, y, w, h);
 
@@ -658,34 +767,34 @@ public class JUI extends JUIGeneric {
 
 	// private PApplet papplet;
 
-	/**
-	 * 
-	 * public PApplet addProcessing(PApplet papplet, int x, int y, int w, int h)
-	 * {
-	 * 
-	 * initializeLayout();
-	 * 
-	 * // Create the main layout. This is where all the items actually go
-	 * FrameLayout fl = new FrameLayout(a.get()); fl.setLayoutParams(new
-	 * LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-	 * fl.setId(12);
-	 * 
-	 * // Add the view positionView(fl, x, y, w, h); addView(fl);
-	 * 
-	 * //papplet = new PApplet(); Log.d("processing", "" + papplet);
-	 * 
-	 * FragmentTransaction ft = a.get().getSupportFragmentManager()
-	 * .beginTransaction(); ft.add(fl.getId(), papplet,
-	 * String.valueOf(fl.getId()));
-	 * ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-	 * ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-	 * ft.addToBackStack(null); ft.commit();
-	 * 
-	 * 
-	 * return papplet;
-	 * 
-	 * }
-	 */
+	public PApplet addProcessing(int x, int y, int w, int h) {
+
+		initializeLayout();
+
+		// Create the main layout. This is where all the items actually go
+		FrameLayout fl = new FrameLayout(a.get());
+		fl.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		fl.setId(122);
+
+		// Add the view
+		addViewAbsolute(fl, x, y, w, h);
+
+		QQ p = new QQ();
+		p.setContext(this);
+
+		// ProcessingSketchDefaultRenderer1 p = new
+		// ProcessingSketchDefaultRenderer1();
+
+		FragmentTransaction ft = a.get().getSupportFragmentManager().beginTransaction();
+		ft.add(fl.getId(), p, String.valueOf(fl.getId()));
+		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+		ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+		ft.addToBackStack(null);
+		ft.commit();
+
+		return p;
+
+	}
 
 	@APIParam(params = { "x", "y", "w", "h" })
 	public JWebView addWebView(int x, int y, int w, int h) {
@@ -728,100 +837,87 @@ public class JUI extends JUIGeneric {
 	/**
 	 * Adds an image with the option to hide the default background
 	 */
+	// @APIParam(params = { "type" })
+	// public JCamera addCameraView(int type) {
+	// // JCamera camera = addGenericCamera(type);
+	//
+	// return camera;
+	// }
+
+	/**
+	 * Adds an image with the option to hide the default background
+	 */
+	// @APIParam(params = { "type", "x", "y", "w", "h" })
+	// public JCamera addCameraView(int type, int x, int y, int w, int h) {
+	// // JCamera camera = addGenericCamera(type);
+	// FrameLayout fl = addGenericCamera(type);
+	//
+	// // Add the view
+	// addViewAbsolute(fl, x, y, w, h);
+	//
+	// JCamera jCamera = new JCamera(a.get(), cameraFragment);
+	//
+	// return camera;
+	// }
+	//
+	/**
+	 * Adds an image with the option to hide the default background
+	 */
 	@APIParam(params = { "type", "x", "y", "w", "h" })
-	public JCamera addCameraView(int type, /* int filter, */int x, int y, int w, int h) {
+	public JCamera addCameraView(int type, int x, int y, int w, int h) {
 
-		initializeLayout();
+		JCamera jCamera = addGenericCamera(type, x, y, w, h);
 
-		// Create the main layout. This is where all the items actually go
-		FrameLayout fl = new FrameLayout(a.get());
-		fl.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-		fl.setId(12345);
-
-		// Add the view
-		addViewAbsolute(fl, x, y, w, h);
-
-		CameraFragment cameraFragment = new CameraFragment();
-		Bundle bundle = new Bundle();
-		if (type == 1) {
-			bundle.putInt("camera", CameraFragment.MODE_CAMERA_FRONT);
-		} else {
-			bundle.putInt("camera", CameraFragment.MODE_CAMERA_BACK);
-		}
-
-		cameraFragment.setArguments(bundle);
-		FragmentTransaction ft = a.get().getSupportFragmentManager().beginTransaction(); // FIXME:
-		// Because we have no tagging system we need to use the int as a
-		// tag, which may cause collisions
-		ft.add(fl.getId(), cameraFragment, String.valueOf(fl.getId()));
-		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-		ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-		ft.addToBackStack(null);
-		ft.commit();
-
-		JCamera jcamera = new JCamera(a.get(), cameraFragment);
-
-		return jcamera;
-
+		return jCamera;
 	}
 
 	/**
 	 * Adds a video
 	 * 
 	 * @author victordiaz
+	 */
+	@APIParam(params = { "videoFileName" })
+	public JVideo addVideoView(final String videoFile) {
+		JVideo video = addGenericVideo(videoFile);
+
+		return video;
+	}
+
+	/**
+	 * Adds a video
 	 * 
-	 * @param x
-	 * @param y
-	 * @param w
-	 * @param h
+	 * @author victordiaz
 	 */
 	@APIParam(params = { "videoFileName", "x", "y", "w", "h" })
 	public JVideo addVideoView(final String videoFile, int x, int y, int w, int h) {
+		JVideo video = addGenericVideo(videoFile);
+		addViewAbsolute(video, x, y, w, h);
 
-		initializeLayout();
+		return video;
+	}
 
-		// Create the main layout. This is where all the items actually go
-		FrameLayout fl = new FrameLayout(a.get());
-		fl.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-		fl.setId(12345678);
+	/**
+	 * Adds a map
+	 * 
+	 * @author victordiaz
+	 */
+	@APIParam(params = { "" })
+	public JMap addMap() {
+		JMap mapView = addGenericMap();
+		return mapView;
+	}
 
-		// Add the view
-		addViewAbsolute(fl, x, y, w, h);
+	/**
+	 * Adds a map
+	 * 
+	 * @author victordiaz
+	 */
+	@APIParam(params = { "x", "y", "w", "h" })
+	public JMap addMap(int x, int y, int w, int h) {
+		JMap mapView = addGenericMap();
 
-		final VideoTextureFragment fragment = new VideoTextureFragment();
-		fragment.addListener(new VideoTextureFragment.VideoListener() {
-
-			@Override
-			public void onTimeUpdate(int ms, int totalDuration) {
-
-			}
-
-			@Override
-			public void onReady(boolean ready) {
-				fragment.loadExternalVideo(AppRunnerSettings.get().project.getFolder() + File.separator + videoFile);
-			}
-
-			@Override
-			public void onFinish(boolean finished) {
-
-			}
-		});
-
-		FragmentTransaction ft = a.get().getSupportFragmentManager().beginTransaction();
-		// FIXME: Because we have no tagging
-		// system we need to use the int as
-		// a // tag, which may cause
-		// collisions
-		ft.add(fl.getId(), fragment, String.valueOf(fl.getId()));
-		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-		ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-		ft.addToBackStack(null);
-		ft.commit();
-
-		JVideo jvideo = new JVideo(a.get(), fragment);
-
-		return jvideo;
-
+		addViewAbsolute(mapView, x, y, w, h);
+		return mapView;
 	}
 
 	/**
@@ -866,10 +962,8 @@ public class JUI extends JUIGeneric {
 		AlertDialog.Builder builder = new AlertDialog.Builder(a.get());
 		builder.setTitle(title);
 
-		// Set up the input
 		final EditText input = new EditText(a.get());
-		// Specify the type of input expected; this, for example, sets the input
-		// as a password, and will mask the text
+
 		input.setInputType(InputType.TYPE_CLASS_TEXT);
 		builder.setView(input);
 
@@ -878,7 +972,7 @@ public class JUI extends JUIGeneric {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				String text = input.getText().toString();
-				callback(callbackfn, text);
+				callback(callbackfn, "\"" + text + "\"");
 			}
 		});
 		builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -904,13 +998,6 @@ public class JUI extends JUIGeneric {
 		AlertDialog.Builder builder = new AlertDialog.Builder(a.get());
 		builder.setTitle(title);
 
-		// Set up the input
-		final EditText input = new EditText(a.get());
-		// Specify the type of input expected; this, for example, sets the input
-		// as a password, and will mask the text
-		input.setInputType(InputType.TYPE_CLASS_TEXT);
-		builder.setView(input);
-
 		// Set up the buttons
 		builder.setItems(choices, new DialogInterface.OnClickListener() {
 
@@ -926,7 +1013,12 @@ public class JUI extends JUIGeneric {
 
 	@APIParam(params = { "imageName" })
 	public void takeScreenshot(String imagePath) {
-		AndroidUtils.takeScreenshot(AppRunnerSettings.get().project.getFolder(), imagePath, uiAbsoluteLayout);
+		AndroidUtils.takeScreenshot(AppRunnerSettings.get().project.getStoragePath(), imagePath, uiAbsoluteLayout);
+	}
+
+	@APIParam(params = { "imageName", "view" })
+	public void takeScreenshot(String imagePath, View v) {
+		AndroidUtils.takeScreenshotView(AppRunnerSettings.get().project.getStoragePath(), imagePath, v);
 	}
 
 	// @JavascriptInterface

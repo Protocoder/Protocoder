@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -36,27 +37,27 @@ import android.view.View;
 @SuppressLint("NewApi")
 public class ProjectAnimations {
 
-    public static void projectRefresh(final View v) {
+	public static void projectRefresh(final View v) {
 
-	v.animate().alpha(0).setDuration(500).setListener(new AnimatorListener() {
+		v.animate().alpha(0).setDuration(500).setListener(new AnimatorListener() {
 
-	    @Override
-	    public void onAnimationStart(Animator animation) {
-	    }
+			@Override
+			public void onAnimationStart(Animator animation) {
+			}
 
-	    @Override
-	    public void onAnimationRepeat(Animator animation) {
-	    }
+			@Override
+			public void onAnimationRepeat(Animator animation) {
+			}
 
-	    @Override
-	    public void onAnimationEnd(Animator animation) {
-		v.animate().alpha(1);
-	    }
+			@Override
+			public void onAnimationEnd(Animator animation) {
+				v.animate().alpha(1);
+			}
 
-	    @Override
-	    public void onAnimationCancel(Animator animation) {
-	    }
-	});
-    }
+			@Override
+			public void onAnimationCancel(Animator animation) {
+			}
+		});
+	}
 
 }

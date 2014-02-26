@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -39,35 +40,35 @@ import android.telephony.SmsMessage;
  */
 
 public class SmsReceiver extends BroadcastReceiver {
-    @Override
-    public void onReceive(Context context, Intent intent) {
+	@Override
+	public void onReceive(Context context, Intent intent) {
 
-	Bundle extras = intent.getExtras();
-	if (extras == null)
-	    return;
+		Bundle extras = intent.getExtras();
+		if (extras == null)
+			return;
 
-	// To display a Toast whenever there is an SMS.
-	// Toast.makeText(context,"Recieved",Toast.LENGTH_LONG).show();
+		// To display a Toast whenever there is an SMS.
+		// Toast.makeText(context,"Recieved",Toast.LENGTH_LONG).show();
 
-	Object[] pdus = (Object[]) extras.get("pdus");
-	for (int i = 0; i < pdus.length; i++) {
-	    SmsMessage SMessage = SmsMessage.createFromPdu((byte[]) pdus[i]);
-	    String sender = SMessage.getOriginatingAddress();
-	    String body = SMessage.getMessageBody().toString();
+		Object[] pdus = (Object[]) extras.get("pdus");
+		for (int i = 0; i < pdus.length; i++) {
+			SmsMessage SMessage = SmsMessage.createFromPdu((byte[]) pdus[i]);
+			String sender = SMessage.getOriginatingAddress();
+			String body = SMessage.getMessageBody().toString();
 
-	    // A custom Intent that will used as another Broadcast
-	    Intent in = new Intent("SmsMessage.intent.MAIN").putExtra("get_msg", sender + ":" + body);
+			// A custom Intent that will used as another Broadcast
+			Intent in = new Intent("SmsMessage.intent.MAIN").putExtra("get_msg", sender + ":" + body);
 
-	    // You can place your check conditions here(on the SMS or the
-	    // sender)
-	    // and then send another broadcast
-	    context.sendBroadcast(in);
+			// You can place your check conditions here(on the SMS or the
+			// sender)
+			// and then send another broadcast
+			context.sendBroadcast(in);
 
-	    // This is used to abort the broadcast and can be used to silently
-	    // process incoming message and prevent it from further being
-	    // broadcasted. Avoid this, as this is not the way to program an
-	    // app.
-	    // this.abortBroadcast();
+			// This is used to abort the broadcast and can be used to silently
+			// process incoming message and prevent it from further being
+			// broadcasted. Avoid this, as this is not the way to program an
+			// app.
+			// this.abortBroadcast();
+		}
 	}
-    }
 }

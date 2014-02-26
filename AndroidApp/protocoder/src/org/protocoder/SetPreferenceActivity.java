@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -39,41 +40,42 @@ import android.view.MenuItem;
 
 public class SetPreferenceActivity extends BaseActivity {
 
-    @SuppressLint("NewApi")
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-	super.onCreate(savedInstanceState);
+	@SuppressLint("NewApi")
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-	getFragmentManager().beginTransaction().replace(android.R.id.content, new PrefsFragment()).commit();
+		getFragmentManager().beginTransaction().replace(android.R.id.content, new PrefsFragment()).commit();
 
-	// If a preference needs to be default true, we need this hack to make
-	// sure it is hard set
-	// This is to work around the Android bug:
-	// http://code.google.com/p/android/issues/detail?id=6641
-	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-	prefs.edit().putBoolean(getResources().getString(R.string.pref_curtain_notifications),
-		prefs.getBoolean(getResources().getString(R.string.pref_curtain_notifications), true)).commit();
+		// If a preference needs to be default true, we need this hack to make
+		// sure it is hard set
+		// This is to work around the Android bug:
+		// http://code.google.com/p/android/issues/detail?id=6641
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		prefs.edit()
+				.putBoolean(getResources().getString(R.string.pref_curtain_notifications),
+						prefs.getBoolean(getResources().getString(R.string.pref_curtain_notifications), true)).commit();
 
-	ActionBar actionBar = getActionBar();
-	actionBar.setDisplayHomeAsUpEnabled(true);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-	switch (item.getItemId()) {
-
-	case android.R.id.home:
-	    // Up button pressed
-	    Intent intentHome = new Intent(this, MainActivity.class);
-	    intentHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	    startActivity(intentHome);
-	    overridePendingTransition(R.anim.splash_slide_in_anim_reverse_set, R.anim.splash_slide_out_anim_reverse_set);
-	    finish();
-	    return true;
-	default:
-	    return super.onOptionsItemSelected(item);
+		ActionBar actionBar = getActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
 	}
 
-    }
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+
+		case android.R.id.home:
+			// Up button pressed
+			Intent intentHome = new Intent(this, MainActivity.class);
+			intentHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intentHome);
+			overridePendingTransition(R.anim.splash_slide_in_anim_reverse_set, R.anim.splash_slide_out_anim_reverse_set);
+			finish();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+
+	}
 
 }

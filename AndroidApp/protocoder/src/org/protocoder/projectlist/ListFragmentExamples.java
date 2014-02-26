@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -35,14 +36,14 @@ import android.os.Bundle;
 
 public class ListFragmentExamples extends ListFragmentUserProjects {
 
-    public ListFragmentExamples() {
-	super();
-	projectType = ProjectManager.PROJECT_EXAMPLE;
-    }
+	public ListFragmentExamples() {
+		super();
+		projectType = ProjectManager.PROJECT_EXAMPLE;
+	}
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-	super.onActivityCreated(savedInstanceState);
-	icon = Intent.ShortcutIconResource.fromContext(getActivity(), R.drawable.ic_script_example);
-    }
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		icon = Intent.ShortcutIconResource.fromContext(getActivity(), R.drawable.ic_script_example);
+	}
 }

@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -41,60 +42,60 @@ import android.support.v4.app.FragmentActivity;
 
 public class JConsole extends JInterface {
 
-    String TAG = "JConsole";
+	String TAG = "JConsole";
 
-    public JConsole(FragmentActivity mwmActivity) {
-	super(mwmActivity);
-    }
-
-    @JavascriptInterface
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "text" })
-    public void log(String... outputs) throws JSONException, UnknownHostException {
-
-	StringBuilder builder = new StringBuilder();
-	
-	for (String output : outputs) {
-	    builder.append(" ");
-	    builder.append(output);
+	public JConsole(FragmentActivity mwmActivity) {
+		super(mwmActivity);
 	}
 
-	JSONObject msg = new JSONObject();
-	msg.put("type", "console");
-	msg.put("action", "log");
-	JSONObject values = new JSONObject();
-	values.put("val", builder.toString());
-	msg.put("values", values);
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "text" })
+	public void log(String... outputs) throws JSONException, UnknownHostException {
 
-	CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
-	ws.send(msg);
-    }
+		StringBuilder builder = new StringBuilder();
 
-    @JavascriptInterface
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "text" })
-    public void log(String output) throws JSONException, UnknownHostException {
-	JSONObject msg = new JSONObject();
-	msg.put("type", "console");
-	msg.put("action", "log");
-	JSONObject values = new JSONObject();
-	values.put("val", output);
-	msg.put("values", values);
+		for (String output : outputs) {
+			builder.append(" ");
+			builder.append(output);
+		}
 
-	CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
-	ws.send(msg);
-    }
+		JSONObject msg = new JSONObject();
+		msg.put("type", "console");
+		msg.put("action", "log");
+		JSONObject values = new JSONObject();
+		values.put("val", builder.toString());
+		msg.put("values", values);
 
-    @JavascriptInterface
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "" })
-    public void clear() throws JSONException, UnknownHostException {
-	JSONObject msg = new JSONObject();
-	msg.put("type", "console");
-	msg.put("action", "clear");
+		CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
+		ws.send(msg);
+	}
 
-	CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
-	ws.send(msg);
-    }
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "text" })
+	public void log(String output) throws JSONException, UnknownHostException {
+		JSONObject msg = new JSONObject();
+		msg.put("type", "console");
+		msg.put("action", "log");
+		JSONObject values = new JSONObject();
+		values.put("val", output);
+		msg.put("values", values);
+
+		CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
+		ws.send(msg);
+	}
+
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "" })
+	public void clear() throws JSONException, UnknownHostException {
+		JSONObject msg = new JSONObject();
+		msg.put("type", "console");
+		msg.put("action", "clear");
+
+		CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
+		ws.send(msg);
+	}
 
 }

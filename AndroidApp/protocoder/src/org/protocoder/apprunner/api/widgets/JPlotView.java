@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -27,7 +28,6 @@
 
 package org.protocoder.apprunner.api.widgets;
 
-import org.protocoder.AppSettings;
 import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apprunner.JInterface;
 import org.protocoder.apprunner.JavascriptInterface;
@@ -42,8 +42,8 @@ public class JPlotView extends JInterface implements JViewInterface {
 
 	private static final String TAG = "JPlotView";
 	String name;
-	private Plot plot;
-	private PlotView plotView;
+	private final Plot plot;
+	private final PlotView plotView;
 
 	public JPlotView(Activity a, PlotView plotView, float min, float max) {
 		super(a);
@@ -51,7 +51,6 @@ public class JPlotView extends JInterface implements JViewInterface {
 		plot = plotView.new Plot(Color.RED);
 		plotView.addPlot(plot);
 		plotView.setLimits(min, max);
-
 	}
 
 	@JavascriptInterface
@@ -70,18 +69,6 @@ public class JPlotView extends JInterface implements JViewInterface {
 	@APIMethod(description = "", example = "")
 	public void update(float value) {
 		plotView.setValue(plot, value);
-	}
-
-	@Override
-	public void move(float x, float y) {
-		plotView.animate().x(x).setDuration(AppSettings.animSpeed);
-		plotView.animate().y(y).setDuration(AppSettings.animSpeed);
-
-	}
-
-	@Override
-	public void rotate(float deg) {
-		plotView.animate().rotation(deg).setDuration(AppSettings.animSpeed);
 	}
 
 	public View getView() {

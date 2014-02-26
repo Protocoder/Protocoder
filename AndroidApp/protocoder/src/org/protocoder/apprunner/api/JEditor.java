@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -37,38 +38,38 @@ import android.app.Activity;
 
 public class JEditor extends JInterface {
 
-    public JEditor(Activity a) {
-	super(a);
+	public JEditor(Activity a) {
+		super(a);
 
-    }
+	}
 
-    @JavascriptInterface
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "boolean" })
-    public void showConsole(boolean visible) {
-	((AppRunnerActivity) a.get()).showConsole(visible);
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "boolean" })
+	public void showConsole(boolean visible) {
+		((AppRunnerActivity) a.get()).showConsole(visible);
 
-    }
+	}
 
-    @JavascriptInterface
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "boolean" })
-    public void showEditor(boolean visible) {
-	((AppRunnerActivity) a.get()).showEditor(visible);
-    }
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "boolean" })
+	public void showEditor(boolean visible) {
+		((AppRunnerActivity) a.get()).showEditor(visible);
+	}
 
-    @JavascriptInterface
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "boolean" })
-    public void loadHTMLonSideBar(boolean visible) {
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "boolean" })
+	public void loadHTMLonSideBar(boolean visible) {
 
-    }
+	}
 
-    @JavascriptInterface
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "boolean" })
-    public void showSideBar(boolean visible) {
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "boolean" })
+	public void showSideBar(boolean visible) {
 
-    }
+	}
 
 }

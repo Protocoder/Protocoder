@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -31,34 +32,34 @@ import android.os.Build;
 
 public class AppSettings {
 
-    // == APP SETTINGS ==========
-    public static boolean debug = true;
-    public static boolean fullscreen = false;
-    public static boolean portrait = false;
-    public static boolean stayAwake = false;
-    public static boolean overrideHomeButtons = false;
-    public static boolean overrideVolumeButtons = false;
-    public static boolean hideHomeBar = false;
-    public static boolean screenAlwaysOn = false;
-    public static boolean closeWithBack = true;
-    public static boolean standAlone = false;
+	// == APP SETTINGS ==========
+	public static boolean debug = true;
+	public static boolean fullscreen = false;
+	public static boolean portrait = false;
+	public static boolean stayAwake = false;
+	public static boolean overrideHomeButtons = false;
+	public static boolean overrideVolumeButtons = false;
+	public static boolean hideHomeBar = false;
+	public static boolean screenAlwaysOn = false;
+	public static boolean closeWithBack = true;
+	public static boolean standAlone = false;
 
-    public static int MIN_SUPPORTED_VERSION = Build.VERSION_CODES.ICE_CREAM_SANDWICH;
+	public static int MIN_SUPPORTED_VERSION = Build.VERSION_CODES.ICE_CREAM_SANDWICH;
 
-    public static String appFolder = "protocoder";
-    public static String SERVER_ADDRESS = "";
-    public static int websocketPort = 8587;
-    public static long animSpeed = 500;
-    public static int httpPort = 8585;
+	public static String appFolder = "protocoder";
+	public static String SERVER_ADDRESS = "";
+	public static int websocketPort = 8587;
+	public static long animSpeed = 500;
+	public static int httpPort = 8585;
 
-    public String id;
+	public String id;
 
-    private static AppSettings instance;
+	private static AppSettings instance;
 
-    public static AppSettings get() {
-	if (instance == null)
-	    instance = new AppSettings();
-	return instance;
-    }
+	public static AppSettings get() {
+		if (instance == null)
+			instance = new AppSettings();
+		return instance;
+	}
 
 }

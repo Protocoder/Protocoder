@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -29,7 +30,7 @@ package org.protocoder.sensors;
 
 public interface WhatIsRunningInterface {
 
-    public void start();
+	public void start();
 
-    public void stop();
+	public void stop();
 }

@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -32,7 +33,13 @@ import java.lang.ref.WeakReference;
 import org.protocoder.R;
 
 import android.content.Context;
-import android.util.AttributeSet;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
+import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -41,31 +48,65 @@ import android.widget.TextView;
 
 public class ProjectItem extends LinearLayout {
 
-    private WeakReference<View> v;
-    // private Context c;
-    private WeakReference<Context> c;
+	private WeakReference<View> v;
+	// private Context c;
+	private final WeakReference<Context> c;
+	private String t;
 
-    public ProjectItem(Context context) {
-	super(context);
-	this.c = new WeakReference<Context>(context);
-	LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	this.v = new WeakReference<View>(inflater.inflate(R.layout.view_project_item, this, true));
-    }
+	public ProjectItem(Context context, boolean listMode) {
+		super(context);
+		this.c = new WeakReference<Context>(context);
+		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-    public ProjectItem(Context context, AttributeSet attributeSet) {
-	super(context, attributeSet);
+		if (listMode) {
+			this.v = new WeakReference<View>(inflater.inflate(R.layout.view_project_item_, this, true));
+		} else {
+			this.v = new WeakReference<View>(inflater.inflate(R.layout.view_project_item, this, true));
+		}
+	}
 
-    }
+	public void setImage(int resId) {
+		ImageView imageView = (ImageView) v.get().findViewById(R.id.customViewImage);
+		imageView.setImageResource(resId);
 
-    public void setImage(int resId) {
-	ImageView imageView = (ImageView) v.get().findViewById(R.id.customViewImage);
-	imageView.setImageResource(resId);
-    }
+		// drawText(imageView, t);
+	}
 
-    public void setText(String text) {
-	TextView textView = (TextView) v.get().findViewById(R.id.customViewText);
-	// TextUtils.changeFont(c.get(), textView, Fonts.MENU_TITLE);
-	textView.setText(text);
-    }
+	public void setText(String text) {
+		this.t = text;
+		TextView textView = (TextView) v.get().findViewById(R.id.customViewText);
+		// TextUtils.changeFont(c.get(), textView, Fonts.MENU_TITLE);
+		textView.setText(text);
+	}
 
+	public void drawText(ImageView imageView, String t2) {
+
+		// ImageView myImageView =
+		Bitmap myBitmap = Bitmap.createBitmap(100, 100, Config.RGB_565);
+		Paint myPaint = new Paint();
+		myPaint.setColor(Color.BLUE);
+		myPaint.setAntiAlias(true);
+		myPaint.setTextSize(80);
+
+		int x1 = 10;
+		int y1 = 80;
+		int x2 = 20;
+		int y2 = 20;
+
+		// Create a new image bitmap and attach a brand new canvas to it
+		Bitmap tempBitmap = Bitmap.createBitmap(myBitmap.getWidth(), myBitmap.getHeight(), Bitmap.Config.RGB_565);
+		Canvas tempCanvas = new Canvas(tempBitmap);
+
+		// Draw the image bitmap into the cavas
+		tempCanvas.drawBitmap(myBitmap, 0, 0, null);
+
+		// Draw everything else you want into the canvas, in this example a
+		// rectangle with rounded edges
+		tempCanvas.drawRoundRect(new RectF(x1, y1, x2, y2), 2, 2, myPaint);
+		tempCanvas.drawText(t2.substring(0, 1).toUpperCase(), x1, y1, myPaint);
+
+		// Attach the canvas to the ImageView
+		imageView.setImageDrawable(new BitmapDrawable(getResources(), tempBitmap));
+
+	}
 }

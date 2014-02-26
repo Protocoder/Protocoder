@@ -30,7 +30,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-ace.define('ace/ext/settings_menu', ['require', 'exports', 'module' , 'ace/ext/menu_tools/generate_settings_menu', 'ace/ext/menu_tools/overlay_page', 'ace/editor'], function(require, exports, module) {
+define('ace/ext/settings_menu', ['require', 'exports', 'module' , 'ace/ext/menu_tools/generate_settings_menu', 'ace/ext/menu_tools/overlay_page', 'ace/editor'], function(require, exports, module) {
 
 var generateSettingsMenu = require('./menu_tools/generate_settings_menu').generateSettingsMenu;
 var overlayPage = require('./menu_tools/overlay_page').overlayPage;
@@ -47,7 +47,7 @@ module.exports.init = function(editor) {
 };
 });
 
-ace.define('ace/ext/menu_tools/generate_settings_menu', ['require', 'exports', 'module' , 'ace/ext/menu_tools/element_generator', 'ace/ext/menu_tools/add_editor_menu_options', 'ace/ext/menu_tools/get_set_functions'], function(require, exports, module) {
+define('ace/ext/menu_tools/generate_settings_menu', ['require', 'exports', 'module' , 'ace/ext/menu_tools/element_generator', 'ace/ext/menu_tools/add_editor_menu_options', 'ace/ext/menu_tools/get_set_functions'], function(require, exports, module) {
 
 var egen = require('./element_generator');
 var addEditorMenuOptions = require('./add_editor_menu_options').addEditorMenuOptions;
@@ -166,7 +166,7 @@ module.exports.generateSettingsMenu = function generateSettingsMenu (editor) {
 
 });
 
-ace.define('ace/ext/menu_tools/element_generator', ['require', 'exports', 'module' ], function(require, exports, module) {
+define('ace/ext/menu_tools/element_generator', ['require', 'exports', 'module' ], function(require, exports, module) {
 module.exports.createOption = function createOption (obj) {
     var attribute;
     var el = document.createElement('option');
@@ -221,7 +221,7 @@ module.exports.createSelection = function createSelection (id, values, clss) {
 
 });
 
-ace.define('ace/ext/menu_tools/add_editor_menu_options', ['require', 'exports', 'module' , 'ace/ext/modelist', 'ace/ext/themelist'], function(require, exports, module) {
+define('ace/ext/menu_tools/add_editor_menu_options', ['require', 'exports', 'module' , 'ace/ext/modelist', 'ace/ext/themelist'], function(require, exports, module) {
 module.exports.addEditorMenuOptions = function addEditorMenuOptions (editor) {
     var modelist = require('../modelist');
     var themelist = require('../themelist');
@@ -252,7 +252,7 @@ module.exports.addEditorMenuOptions = function addEditorMenuOptions (editor) {
 
     editor.menuOptions.setTheme = themelist.themes.map(function(theme) {
         return {
-            'textContent' : theme.desc,
+            'textContent' : theme.caption,
             'value' : theme.theme
         };
     });
@@ -266,7 +266,8 @@ module.exports.addEditorMenuOptions = function addEditorMenuOptions (editor) {
 };
 
 
-});ace.define('ace/ext/modelist', ['require', 'exports', 'module' ], function(require, exports, module) {
+});
+define('ace/ext/modelist', ['require', 'exports', 'module' ], function(require, exports, module) {
 
 
 var modes = [];
@@ -303,17 +304,18 @@ Mode.prototype.supportsFile = function(filename) {
 };
 var supportedModes = {
     ABAP:        ["abap"],
-    ADA:         ["ada|adb"],
     ActionScript:["as"],
+    ADA:         ["ada|adb"],
+    Apache_Conf: ["^htaccess|^htgroups|^htpasswd|^conf|htaccess|htgroups|htpasswd"],
     AsciiDoc:    ["asciidoc"],
     Assembly_x86:["asm"],
     AutoHotKey:  ["ahk"],
     BatchFile:   ["bat|cmd"],
     C9Search:    ["c9search_results"],
-    C_Cpp:       ["c|cc|cpp|cxx|h|hh|hpp"],
+    C_Cpp:       ["cpp|c|cc|cxx|h|hh|hpp"],
     Clojure:     ["clj"],
-    Cobol:       ["^CBL|COB"],
-    coffee:      ["^Cakefile|coffee|cf|cson"],
+    Cobol:       ["CBL|COB"],
+    coffee:      ["coffee|cf|cson|^Cakefile"],
     ColdFusion:  ["cfm"],
     CSharp:      ["cs"],
     CSS:         ["css"],
@@ -330,20 +332,22 @@ var supportedModes = {
     golang:      ["go"],
     Groovy:      ["groovy"],
     HAML:        ["haml"],
+    Handlebars:  ["hbs|handlebars|tpl|mustache"],
     Haskell:     ["hs"],
     haXe:        ["hx"],
-    HTML:        ["htm|html|xhtml"],
+    HTML:        ["html|htm|xhtml"],
     HTML_Ruby:   ["erb|rhtml|html.erb"],
-    Ini:         ["Ini|conf"],
+    INI:         ["ini|conf|cfg|prefs"],
+    Jack:        ["jack"],
     Jade:        ["jade"],
     Java:        ["java"],
-    JavaScript:  ["js"],
+    JavaScript:  ["js|jsm"],
     JSON:        ["json"],
     JSONiq:      ["jq"],
     JSP:         ["jsp"],
     JSX:         ["jsx"],
     Julia:       ["jl"],
-    LaTeX:       ["latex|tex|ltx|bib"],
+    LaTeX:       ["tex|latex|ltx|bib"],
     LESS:        ["less"],
     Liquid:      ["liquid"],
     Lisp:        ["lisp"],
@@ -353,9 +357,10 @@ var supportedModes = {
     Lua:         ["lua"],
     LuaPage:     ["lp"],
     Lucene:      ["lucene"],
-    Makefile:    ["^GNUmakefile|^makefile|^Makefile|^OCamlMakefile|make"],
+    Makefile:    ["^Makefile|^GNUmakefile|^makefile|^OCamlMakefile|make"],
     MATLAB:      ["matlab"],
     Markdown:    ["md|markdown"],
+    MEL:         ["mel"],
     MySQL:       ["mysql"],
     MUSHCode:    ["mc|mush"],
     Nix:         ["nix"],
@@ -373,15 +378,18 @@ var supportedModes = {
     R:           ["r"],
     RDoc:        ["Rd"],
     RHTML:       ["Rhtml"],
-    Ruby:        ["ru|gemspec|rake|rb"],
+    Ruby:        ["rb|ru|gemspec|rake|^Guardfile|^Rakefile|^Gemfile"],
     Rust:        ["rs"],
     SASS:        ["sass"],
     SCAD:        ["scad"],
     Scala:       ["scala"],
     Scheme:      ["scm|rkt"],
     SCSS:        ["scss"],
-    SH:          ["sh|bash"],
+    SH:          ["sh|bash|^.bashrc"],
+    SJS:         ["sjs"],
+    Space:       ["space"],
     snippets:    ["snippets"],
+    Soy_Template:["soy"],
     SQL:         ["sql"],
     Stylus:      ["styl|stylus"],
     SVG:         ["svg"],
@@ -391,12 +399,13 @@ var supportedModes = {
     Textile:     ["textile"],
     Toml:        ["toml"],
     Twig:        ["twig"],
-    Typescript:  ["typescript|ts|str"],
+    Typescript:  ["ts|typescript|str"],
     VBScript:    ["vbs"],
     Velocity:    ["vm"],
+    Verilog:     ["v|vh|sv|svh"],
     XML:         ["xml|rdf|rss|wsdl|xslt|atom|mathml|mml|xul|xbl"],
     XQuery:      ["xq"],
-    YAML:        ["yaml"]
+    YAML:        ["yaml|yml"]
 };
 
 var nameOverrides = {
@@ -411,7 +420,7 @@ var nameOverrides = {
 var modesByName = {};
 for (var name in supportedModes) {
     var data = supportedModes[name];
-    var displayName = nameOverrides[name] || name;
+    var displayName = (nameOverrides[name] || name).replace(/_/g, " ");
     var filename = name.toLowerCase();
     var mode = new Mode(filename, displayName, data[0]);
     modesByName[filename] = mode;
@@ -426,66 +435,61 @@ module.exports = {
 
 });
 
-ace.define('ace/ext/themelist', ['require', 'exports', 'module' , 'ace/ext/themelist_utils/themes'], function(require, exports, module) {
-module.exports.themes = require('ace/ext/themelist_utils/themes').themes;
-module.exports.ThemeDescription = function(name) {
-    this.name = name;
-    this.desc = name.split('_'
-        ).map(
-            function(namePart) {
-                return namePart[0].toUpperCase() + namePart.slice(1);
-            }
-        ).join(' ');
-    this.theme = "ace/theme/" + name;
-};
+define('ace/ext/themelist', ['require', 'exports', 'module' ], function(require, exports, module) {
 
-module.exports.themesByName = {};
 
-module.exports.themes = module.exports.themes.map(function(name) {
-    module.exports.themesByName[name] = new module.exports.ThemeDescription(name);
-    return module.exports.themesByName[name];
+var themeData = [
+    ["Chrome"         ],
+    ["Clouds"         ],
+    ["Crimson Editor" ],
+    ["Dawn"           ],
+    ["Dreamweaver"    ],
+    ["Eclipse"        ],
+    ["GitHub"         ],
+    ["Solarized Light"],
+    ["TextMate"       ],
+    ["Tomorrow"       ],
+    ["XCode"          ],
+    ["Kuroir"],
+    ["KatzenMilch"],
+    ["Ambiance"             ,"ambiance"                ,  "dark"],
+    ["Chaos"                ,"chaos"                   ,  "dark"],
+    ["Clouds Midnight"      ,"clouds_midnight"         ,  "dark"],
+    ["Cobalt"               ,"cobalt"                  ,  "dark"],
+    ["idle Fingers"         ,"idle_fingers"            ,  "dark"],
+    ["krTheme"              ,"kr_theme"                ,  "dark"],
+    ["Merbivore"            ,"merbivore"               ,  "dark"],
+    ["Merbivore Soft"       ,"merbivore_soft"          ,  "dark"],
+    ["Mono Industrial"      ,"mono_industrial"         ,  "dark"],
+    ["Monokai"              ,"monokai"                 ,  "dark"],
+    ["Pastel on dark"       ,"pastel_on_dark"          ,  "dark"],
+    ["Solarized Dark"       ,"solarized_dark"          ,  "dark"],
+    ["Terminal"             ,"terminal"                ,  "dark"],
+    ["Tomorrow Night"       ,"tomorrow_night"          ,  "dark"],
+    ["Tomorrow Night Blue"  ,"tomorrow_night_blue"     ,  "dark"],
+    ["Tomorrow Night Bright","tomorrow_night_bright"   ,  "dark"],
+    ["Tomorrow Night 80s"   ,"tomorrow_night_eighties" ,  "dark"],
+    ["Twilight"             ,"twilight"                ,  "dark"],
+    ["Vibrant Ink"          ,"vibrant_ink"             ,  "dark"]
+]
+
+
+exports.themesByName = {};
+exports.themes = themeData.map(function(data) {
+    var name = data[1] || data[0].replace(/ /g, "_").toLowerCase();
+    var theme = {
+         caption: data[0],
+         theme: "ace/theme/" + name,
+         isDark: data[2] == "dark",
+         name: name
+    };
+    exports.themesByName[name] = theme;
+    return theme;
 });
 
 });
 
-ace.define('ace/ext/themelist_utils/themes', ['require', 'exports', 'module' ], function(require, exports, module) {
-
-module.exports.themes = [
-    "ambiance",
-    "chaos",
-    "chrome",
-    "clouds",
-    "clouds_midnight",
-    "cobalt",
-    "crimson_editor",
-    "dawn",
-    "dreamweaver",
-    "eclipse",
-    "github",
-    "idle_fingers",
-    "kr_theme",
-    "merbivore",
-    "merbivore_soft",
-    "mono_industrial",
-    "monokai",
-    "pastel_on_dark",
-    "solarized_dark",
-    "solarized_light",
-    "terminal",
-    "textmate",
-    "tomorrow",
-    "tomorrow_night",
-    "tomorrow_night_blue",
-    "tomorrow_night_bright",
-    "tomorrow_night_eighties",
-    "twilight",
-    "vibrant_ink",
-    "xcode"
-];
-
-});
-
-ace.define('ace/ext/menu_tools/get_set_functions', ['require', 'exports', 'module' ], function(require, exports, module) {
+define('ace/ext/menu_tools/get_set_functions', ['require', 'exports', 'module' ], function(require, exports, module) {
 module.exports.getSetFunctions = function getSetFunctions (editor) {
     var out = [];
     var my = {
@@ -526,7 +530,7 @@ module.exports.getSetFunctions = function getSetFunctions (editor) {
 
 });
 
-ace.define('ace/ext/menu_tools/overlay_page', ['require', 'exports', 'module' , 'ace/lib/dom'], function(require, exports, module) {
+define('ace/ext/menu_tools/overlay_page', ['require', 'exports', 'module' , 'ace/lib/dom'], function(require, exports, module) {
 
 var dom = require("../../lib/dom");
 var cssText = "#ace_settingsmenu, #kbshortcutmenu {\

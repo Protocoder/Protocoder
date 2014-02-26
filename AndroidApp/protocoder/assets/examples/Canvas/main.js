@@ -1,6 +1,7 @@
 /*
 *	draw on a canvas!
-*
+*   This example imports native Android classes (Paint and Color) 
+*   and uses them 
 */
 
 var Paint = Packages.android.graphics.Paint;

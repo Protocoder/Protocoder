@@ -12,6 +12,8 @@ Reference.prototype.parseHelp = function (docString) {
 	var ds = docString;
 	var doc = JSON.parse(docString).apiClasses;
 
+	var countReturns = 0;
+
 	//iterate through classes 
 	$.each(doc, function(k, v) {
 	    //all
@@ -20,7 +22,7 @@ Reference.prototype.parseHelp = function (docString) {
 	    //class
 	    var className = v.name.substr(1, v.name.length).toLowerCase();
 	   // console.log(className);
-	    $("#reference").append('<div id = "class_'+ className+'" class = "card APIclass"> <h1>' + className + '</h1>  <div class = "methods"> </div>');
+	    $("#reference").append('<div id = "class_'+ className+'" class = "card APIclass"> <h2>' + className + '</h2>  <div class = "methods"> </div>');
 
 	    //iterate through api methods 
 	    $.each (v.apiMethods, function(m, n) {
@@ -28,7 +30,8 @@ Reference.prototype.parseHelp = function (docString) {
 	        var method = n;
 
 	        //className 
-	        $("#reference #class_"+className + " .methods").append('<div id ="method_'+ method.name +'" class = "APImethod"></div>');
+	        var m = $('<div id ="method_'+ method.name +'" class = "APImethod"></div>');
+	        $("#reference #class_"+className + " .methods").append(m);
 	      
 			//method [return] methodName [parameters]      
 			var parameters = "";
@@ -39,7 +42,7 @@ Reference.prototype.parseHelp = function (docString) {
 			//if return type is void dont show it 
 			if (method.returnType == "void") method.returnType = "";
 
-	        $("#reference #class_"+className + " #method_"+method.name).append('<h2><i>'+  method.returnType + " </i><strong>" + className + "." + method.name + "</strong><i>(" + parameters + ")</i></h2>");
+	        $("#reference #class_"+className + " #method_"+method.name).append('<h3><span id = "returnType">'+  method.returnType + " </span><strong>" + className + "." + method.name + '</strong><i>(<span id = "params">' +  parameters + '</span>)</i></h3>');
 	        
 	        //add description if exist 
 	        if (method.description != undefined) { 
@@ -62,12 +65,33 @@ Reference.prototype.parseHelp = function (docString) {
 
 	        $("#class_" + className).find(".methods").not(':animated').slideToggle()
 
+ 			//when click on reference insert text 
+	        m.click(function() { 
+	        	var returnType = "";
+	        	if (method.returnType != "") {
+	        		returnType = "var var" + countReturns++ + " = ";
+	        	}
+
+	        	// add curly braces when insert a callback
+	        	var p = parameters.split(",");
+	        	for (var q in p) { 
+	        		console.log(p[q].indexOf("function")); 
+
+	        		if (p[q].indexOf("function") == 1) { 
+	        			console.log("hola");
+	        			p[q] = p[q] + " { " + '\n' + '\n' + "}"
+	        		}
+	        	} 
+	        	p.join(",");
+
+	        	protocoder.editor.editor.insert(returnType + "" + className + "." + method.name + "(" + p + ");"+'\n\n')
+	        });
 	       // console.log(method.name, method.description, method.example);
 	    });
 	});
 
 	//foldable reference 
-	$('.card h1').click(function(e){
+	$('.card h2').click(function(e){
 		e.preventDefault();
 		$(this).closest('.card').find('.methods').not(':animated').slideToggle();
 	});
