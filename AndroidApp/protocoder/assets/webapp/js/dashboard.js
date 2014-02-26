@@ -93,13 +93,15 @@ Dashboard.prototype.addImage = function(element, url, posx, posy, w, h) {
 }
 
 Dashboard.prototype.addSlider = function(element, name, posx, posy, w, h, min, max) {
-  $('<input type="range" min="'+ min +'" max="'+ max +'" class ="widget" id = "slider_' + element +'">'+' </input>')
+  $('<div class = "slider" id = "slider_' + element +'"> <span>'+ name + '</span> </div>')
           .appendTo("#overlay #container")
-          .css({"width": w+"px", "height":h+"px","top":posy+"px","left":posx+"px"})
+        //  .css({"width": w+"px", "height":h+"px","top":posy+"px","left":posx+"px"})
+          .css({"top":posy+"px","left":posx+"px"});
+      
+  $('<input type="range" min="'+ min +'" max="'+ max +'" class ="widget"> </input>').appendTo("#slider_" + element)
           .change(function() {
             ws.send('{type:slider, id:'+ element +', val:'+this.value+'}');
           });
-
 } 
 
 Dashboard.prototype.addButton = function(element, name, posx, posy, w, h) {
@@ -107,7 +109,6 @@ Dashboard.prototype.addButton = function(element, name, posx, posy, w, h) {
           .appendTo("#overlay #container")
           .css({"width": w+"px", "height":h+"px","top":posy+"px","left":posx+"px"})
           .click(function() {
-
             ws.send('{type:button, id:'+ element +'}');
           });
 

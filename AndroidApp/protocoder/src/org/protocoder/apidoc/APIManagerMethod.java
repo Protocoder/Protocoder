@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -28,10 +29,10 @@
 package org.protocoder.apidoc;
 
 class APIManagerMethod {
-    public String name;
-    public String description;
-    public String example;
-    public String[] paramsType;
-    public String[] parametersName;
-    public String returnType;
+	public String name;
+	public String description;
+	public String example;
+	public String[] paramsType;
+	public String[] parametersName;
+	public String returnType;
 }

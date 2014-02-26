@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -34,32 +35,32 @@ import android.hardware.SensorEventListener;
 
 public class OrientationManager extends CustomSensorManager implements WhatIsRunningInterface {
 
-    public interface OrientationListener extends CustomSensorListener {
+	public interface OrientationListener extends CustomSensorListener {
+		public void onOrientation(float pitch, float roll, float z);
+	}
 
-	public void onOrientation(float pitch, float roll, float z);
-    }
+	@SuppressWarnings("deprecation")
+	public OrientationManager(Context c) {
+		super(c);
 
-    public OrientationManager(Context c) {
-	super(c);
+		sensor = sensormanager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
 
-	sensor = sensormanager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+		listener = new SensorEventListener() {
 
-	listener = new SensorEventListener() {
+			@Override
+			public void onSensorChanged(SensorEvent event) {
 
-	    @Override
-	    public void onSensorChanged(SensorEvent event) {
+				for (CustomSensorListener l : listeners) {
+					((OrientationListener) l).onOrientation(event.values[0], event.values[1], event.values[2]);
 
-		for (CustomSensorListener l : listeners) {
-		    ((OrientationListener) l).onOrientation(event.values[0], event.values[1], event.values[2]);
+				}
+			}
 
-		}
-	    }
+			@Override
+			public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
-	    @Override
-	    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-	    }
-	};
-    }
+			}
+		};
+	}
 
 }

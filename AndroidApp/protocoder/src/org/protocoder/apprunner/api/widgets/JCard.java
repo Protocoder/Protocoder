@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -27,28 +28,26 @@
 
 package org.protocoder.apprunner.api.widgets;
 
-import org.apache.commons.net.io.Util;
-import org.protocoder.AppSettings;
 import org.protocoder.R;
-import org.protocoder.utils.AndroidUtils;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.Space;
+import android.widget.TextView;
 
 public class JCard extends LinearLayout implements JViewInterface {
 
 	private int currentColor;
 	private int viewCount = 0;
 	private Context c;
+	LinearLayout cardLl;
+	TextView title;
 
 	public JCard(Context context) {
-		super(context); 
+		super(context);
 		c = context;
 		currentColor = Color.argb(255, 255, 255, 255);
 
@@ -57,35 +56,50 @@ public class JCard extends LinearLayout implements JViewInterface {
 
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inflater.inflate(R.layout.view_card_view_holder, this, true);
-		
-		//TextView title = (TextView) getChildAt(0);
-		//title.setText(titleText);
+
+		title = (TextView) findViewById(R.id.cardTitle);
+		cardLl = (LinearLayout) findViewById(R.id.cardWidgets);
+
 	}
 
-	public void addWidget(View v) { 
+	public void addWidget(View v) {
+		v.setAlpha(0);
+		v.animate().alpha(1).setDuration(500).setStartDelay((long) (100 * (1 + viewCount)));
+
+		// v.setPadding(0, 0, 0, AndroidUtils.pixelsToDp(c, 3));
+		cardLl.addView(v);
+	}
+
+	public JRow addRow(int n) {
+		JRow row = new JRow(c, cardLl, n);
+
+		return row;
+	}
+
+	public void setTitle(String text) {
+		title.setVisibility(View.VISIBLE);
+		title.setText(text);
+	}
+
+	public void setTitleColor(int color) {
+		title.setBackgroundColor(color);
+	}
+
+	public void setHorizontal() {
 		LinearLayout ll = (LinearLayout) findViewById(R.id.cardWidgets);
-		v.setAlpha(0);	
-		v.animate().alpha(1).setDuration(500).setStartDelay((long) (100 * (1 + viewCount )));
-	
-		v.setPadding(0, 0, 0, AndroidUtils.pixelsToDp(c, 3));
-		ll.addView(v);
-	}
-	
-	@Override
-	public void move(float x, float y) {
-		this.animate().x(x).setDuration(AppSettings.animSpeed);
-		this.animate().y(y).setDuration(AppSettings.animSpeed);
+		ll.setOrientation(LinearLayout.HORIZONTAL);
 	}
 
-	@Override
-	public void rotate(float deg) {
-		this.animate().rotation(deg).setDuration(AppSettings.animSpeed);
+	public void setVertical() {
+		LinearLayout ll = (LinearLayout) findViewById(R.id.cardWidgets);
+		ll.setOrientation(LinearLayout.VERTICAL);
 	}
 
-	public void changeColor(int r, int g, int b) {
-		final int c = Color.argb(255, r, g, b);
-		getBackground().setColorFilter(c, PorterDuff.Mode.MULTIPLY);
-
+	public void hide() {
+		this.setVisibility(View.GONE);
 	}
 
+	public void show() {
+		this.setVisibility(View.VISIBLE);
+	}
 }

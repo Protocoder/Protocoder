@@ -28,7 +28,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-ace.define('ace/mode/textile', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text', 'ace/tokenizer', 'ace/mode/textile_highlight_rules', 'ace/mode/matching_brace_outdent'], function(require, exports, module) {
+define('ace/mode/textile', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text', 'ace/tokenizer', 'ace/mode/textile_highlight_rules', 'ace/mode/matching_brace_outdent'], function(require, exports, module) {
 
 
 var oop = require("../lib/oop");
@@ -38,7 +38,7 @@ var TextileHighlightRules = require("./textile_highlight_rules").TextileHighligh
 var MatchingBraceOutdent = require("./matching_brace_outdent").MatchingBraceOutdent;
 
 var Mode = function() {
-    this.$tokenizer = new Tokenizer(new TextileHighlightRules().getRules());
+    this.HighlightRules = TextileHighlightRules;
     this.$outdent = new MatchingBraceOutdent();
 };
 oop.inherits(Mode, TextMode);
@@ -59,13 +59,14 @@ oop.inherits(Mode, TextMode);
         this.$outdent.autoOutdent(doc, row);
     };
     
+    this.$id = "ace/mode/textile";
 }).call(Mode.prototype);
 
 exports.Mode = Mode;
 
 });
 
-ace.define('ace/mode/textile_highlight_rules', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
+define('ace/mode/textile_highlight_rules', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
 
 
 var oop = require("../lib/oop");
@@ -129,7 +130,7 @@ exports.TextileHighlightRules = TextileHighlightRules;
 
 });
 
-ace.define('ace/mode/matching_brace_outdent', ['require', 'exports', 'module' , 'ace/range'], function(require, exports, module) {
+define('ace/mode/matching_brace_outdent', ['require', 'exports', 'module' , 'ace/range'], function(require, exports, module) {
 
 
 var Range = require("../range").Range;

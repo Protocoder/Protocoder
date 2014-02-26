@@ -28,7 +28,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-ace.define('ace/theme/solarized_dark', ['require', 'exports', 'module' , 'ace/lib/dom'], function(require, exports, module) {
+define('ace/theme/solarized_dark', ['require', 'exports', 'module' , 'ace/lib/dom'], function(require, exports, module) {
 
 exports.isDark = true;
 exports.cssClass = "ace-solarized-dark";
@@ -48,12 +48,9 @@ color: #93A1A1\
 .ace-solarized-dark .ace_storage {\
 color: #93A1A1\
 }\
-.ace-solarized-dark .ace_cursor {\
-border-left: 2px solid #D30102\
-}\
-.ace-solarized-dark .ace_overwrite-cursors .ace_cursor {\
-border-left: 0px;\
-border-bottom: 1px solid #D30102\
+.ace-solarized-dark .ace_cursor,\
+.ace-solarized-dark .ace_string.ace_regexp {\
+color: #D30102\
 }\
 .ace-solarized-dark .ace_marker-layer .ace_active-line,\
 .ace-solarized-dark .ace_marker-layer .ace_selection {\
@@ -109,15 +106,12 @@ color: #268BD2\
 .ace-solarized-dark .ace_string {\
 color: #2AA198\
 }\
-.ace-solarized-dark .ace_string.ace_regexp {\
-color: #D30102\
-}\
 .ace-solarized-dark .ace_comment {\
 font-style: italic;\
 color: #657B83\
 }\
 .ace-solarized-dark .ace_indent-guide {\
-background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNg0Db1ZVCxc/sPAAd4AlUHlLenAAAAAElFTkSuQmCC) right repeat-y;\
+background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNg0Db1ZVCxc/sPAAd4AlUHlLenAAAAAElFTkSuQmCC) right repeat-y\
 }";
 
 var dom = require("../lib/dom");

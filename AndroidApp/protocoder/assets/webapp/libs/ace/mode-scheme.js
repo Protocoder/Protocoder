@@ -33,7 +33,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-ace.define('ace/mode/scheme', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text', 'ace/tokenizer', 'ace/mode/scheme_highlight_rules'], function(require, exports, module) {
+define('ace/mode/scheme', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text', 'ace/tokenizer', 'ace/mode/scheme_highlight_rules'], function(require, exports, module) {
 
 
 var oop = require("../lib/oop");
@@ -42,9 +42,7 @@ var Tokenizer = require("../tokenizer").Tokenizer;
 var SchemeHighlightRules = require("./scheme_highlight_rules").SchemeHighlightRules;
 
 var Mode = function() {
-    var highlighter = new SchemeHighlightRules();
-    
-    this.$tokenizer = new Tokenizer(highlighter.getRules());
+    this.HighlightRules = SchemeHighlightRules;
 };
 oop.inherits(Mode, TextMode);
 
@@ -52,12 +50,13 @@ oop.inherits(Mode, TextMode);
        
     this.lineCommentStart = ";";
     
+    this.$id = "ace/mode/scheme";
 }).call(Mode.prototype);
 
 exports.Mode = Mode;
 });
 
-ace.define('ace/mode/scheme_highlight_rules', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
+define('ace/mode/scheme_highlight_rules', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
 
 
 var oop = require("../lib/oop");

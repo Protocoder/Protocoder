@@ -28,7 +28,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-ace.define('ace/theme/tomorrow', ['require', 'exports', 'module' , 'ace/lib/dom'], function(require, exports, module) {
+define('ace/theme/tomorrow', ['require', 'exports', 'module' , 'ace/lib/dom'], function(require, exports, module) {
 
 exports.isDark = false;
 exports.cssClass = "ace-tomorrow";
@@ -45,11 +45,7 @@ background-color: #FFFFFF;\
 color: #4D4D4C\
 }\
 .ace-tomorrow .ace_cursor {\
-border-left: 2px solid #AEAFAD\
-}\
-.ace-tomorrow .ace_overwrite-cursors .ace_cursor {\
-border-left: 0px;\
-border-bottom: 1px solid #AEAFAD\
+color: #AEAFAD\
 }\
 .ace-tomorrow .ace_marker-layer .ace_selection {\
 background: #D6D6D6\
@@ -120,6 +116,7 @@ color: #4271AE\
 color: #C99E00\
 }\
 .ace-tomorrow .ace_heading,\
+.ace-tomorrow .ace_markup.ace_heading,\
 .ace-tomorrow .ace_string {\
 color: #718C00\
 }\

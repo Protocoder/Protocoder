@@ -1,4 +1,4 @@
-ace.define('ace/snippets/makefile', ['require', 'exports', 'module' ], function(require, exports, module) {
+define('ace/snippets/makefile', ['require', 'exports', 'module' ], function(require, exports, module) {
 
 
 exports.snippetText = "snippet ifeq\n\

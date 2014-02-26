@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -35,47 +36,47 @@ import android.hardware.SensorManager;
 
 public class MagneticManager extends CustomSensorManager implements WhatIsRunningInterface {
 
-    public interface MagneticListener extends CustomSensorListener {
+	public interface MagneticListener extends CustomSensorListener {
 
-	public void onMagneticChanged(float f);
+		public void onMagneticChanged(float f);
 
-    }
+	}
 
-    private final static String TAG = "Magnetic";
+	private final static String TAG = "Magnetic";
 
-    public MagneticManager(Context c) {
-	super(c);
+	public MagneticManager(Context c) {
+		super(c);
 
-	// register
-	sensor = sensormanager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+		// register
+		sensor = sensormanager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
-	listener = new SensorEventListener() {
+		listener = new SensorEventListener() {
 
-	    @Override
-	    public void onSensorChanged(SensorEvent event) {
-		// listener
-		for (CustomSensorListener l : listeners) {
-		    ((MagneticListener) l).onMagneticChanged(event.values[0]);
-		}
+			@Override
+			public void onSensorChanged(SensorEvent event) {
+				// listener
+				for (CustomSensorListener l : listeners) {
+					((MagneticListener) l).onMagneticChanged(event.values[0]);
+				}
 
-	    }
+			}
 
-	    @Override
-	    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-		switch (accuracy) {
-		case SensorManager.SENSOR_STATUS_UNRELIABLE:
-		    break;
-		case SensorManager.SENSOR_STATUS_ACCURACY_LOW:
-		    break;
-		case SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM:
-		    break;
-		case SensorManager.SENSOR_STATUS_ACCURACY_HIGH:
-		    break;
-		}
-	    }
+			@Override
+			public void onAccuracyChanged(Sensor sensor, int accuracy) {
+				switch (accuracy) {
+				case SensorManager.SENSOR_STATUS_UNRELIABLE:
+					break;
+				case SensorManager.SENSOR_STATUS_ACCURACY_LOW:
+					break;
+				case SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM:
+					break;
+				case SensorManager.SENSOR_STATUS_ACCURACY_HIGH:
+					break;
+				}
+			}
 
-	};
+		};
 
-    }
+	}
 
 }

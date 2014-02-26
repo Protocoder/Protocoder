@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -34,29 +35,29 @@ import android.support.v4.app.Fragment;
 @SuppressLint("NewApi")
 public class BaseFragment extends Fragment {
 
-    private static final String TAG = "BaseFragment";
+	private static final String TAG = "BaseFragment";
 
-    public interface FragmentListener {
-	public void onReady();
+	public interface FragmentListener {
+		public void onReady();
 
-	public void onFinish(boolean finished);
-    }
-
-    FragmentListener fragmentListener;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-	super.onCreate(savedInstanceState);
-
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-	super.onActivityCreated(savedInstanceState);
-
-	if (fragmentListener != null) {
-	    fragmentListener.onReady();
+		public void onFinish(boolean finished);
 	}
-    }
+
+	FragmentListener fragmentListener;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+	}
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+
+		if (fragmentListener != null) {
+			fragmentListener.onReady();
+		}
+	}
 
 }

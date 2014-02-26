@@ -28,7 +28,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-ace.define('ace/keyboard/vim', ['require', 'exports', 'module' , 'ace/keyboard/vim/commands', 'ace/keyboard/vim/maps/util', 'ace/lib/useragent'], function(require, exports, module) {
+define('ace/keyboard/vim', ['require', 'exports', 'module' , 'ace/keyboard/vim/commands', 'ace/keyboard/vim/maps/util', 'ace/lib/useragent'], function(require, exports, module) {
 
 
 var cmds = require("./vim/commands");
@@ -187,7 +187,7 @@ exports.onCursorMove = function(e) {
 
 });
  
-ace.define('ace/keyboard/vim/commands', ['require', 'exports', 'module' , 'ace/lib/lang', 'ace/keyboard/vim/maps/util', 'ace/keyboard/vim/maps/motions', 'ace/keyboard/vim/maps/operators', 'ace/keyboard/vim/maps/aliases', 'ace/keyboard/vim/registers'], function(require, exports, module) {
+define('ace/keyboard/vim/commands', ['require', 'exports', 'module' , 'ace/lib/lang', 'ace/keyboard/vim/maps/util', 'ace/keyboard/vim/maps/motions', 'ace/keyboard/vim/maps/operators', 'ace/keyboard/vim/maps/aliases', 'ace/keyboard/vim/registers'], function(require, exports, module) {
 
 "never use strict";
 
@@ -757,7 +757,7 @@ var handleCursorMove = exports.onCursorMove = function(editor, e) {
     }
 };
 });
-ace.define('ace/keyboard/vim/maps/util', ['require', 'exports', 'module' , 'ace/keyboard/vim/registers', 'ace/lib/dom'], function(require, exports, module) {
+define('ace/keyboard/vim/maps/util', ['require', 'exports', 'module' , 'ace/keyboard/vim/registers', 'ace/lib/dom'], function(require, exports, module) {
 var registers = require("../registers");
 
 var dom = require("../../../lib/dom");
@@ -887,7 +887,7 @@ module.exports = {
 };
 });
 
-ace.define('ace/keyboard/vim/registers', ['require', 'exports', 'module' ], function(require, exports, module) {
+define('ace/keyboard/vim/registers', ['require', 'exports', 'module' ], function(require, exports, module) {
 
 "never use strict";
 
@@ -901,7 +901,7 @@ module.exports = {
 });
 
 
-ace.define('ace/keyboard/vim/maps/motions', ['require', 'exports', 'module' , 'ace/keyboard/vim/maps/util', 'ace/search', 'ace/range'], function(require, exports, module) {
+define('ace/keyboard/vim/maps/motions', ['require', 'exports', 'module' , 'ace/keyboard/vim/maps/util', 'ace/search', 'ace/range'], function(require, exports, module) {
 
 
 var util = require("./util");
@@ -1530,7 +1530,7 @@ module.exports.pageup = module.exports["ctrl-u"];
 
 });
  
-ace.define('ace/keyboard/vim/maps/operators', ['require', 'exports', 'module' , 'ace/keyboard/vim/maps/util', 'ace/keyboard/vim/registers'], function(require, exports, module) {
+define('ace/keyboard/vim/maps/operators', ['require', 'exports', 'module' , 'ace/keyboard/vim/maps/util', 'ace/keyboard/vim/registers'], function(require, exports, module) {
 
 
 
@@ -1695,7 +1695,7 @@ module.exports = {
  
 "use strict"
 
-ace.define('ace/keyboard/vim/maps/aliases', ['require', 'exports', 'module' ], function(require, exports, module) {
+define('ace/keyboard/vim/maps/aliases', ['require', 'exports', 'module' ], function(require, exports, module) {
 module.exports = {
     "x": {
         operator: {

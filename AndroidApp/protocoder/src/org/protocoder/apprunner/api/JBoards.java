@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -38,30 +39,30 @@ import android.app.Activity;
 
 public class JBoards extends JInterface {
 
-    private String TAG = "JBoards";
+	private String TAG = "JBoards";
 
-    public JBoards(Activity a) {
-	super(a);
-    }
+	public JBoards(Activity a) {
+		super(a);
+	}
 
-    @JavascriptInterface
-    @APIMethod(description = "initializes ioio board", example = "")
-    @APIParam(params = { "function()" })
-    public JIOIO startIOIO(String callbackfn) {
-	JIOIO ioio = new JIOIO(a.get());
-	ioio.start(callbackfn);
+	@JavascriptInterface
+	@APIMethod(description = "initializes ioio board", example = "")
+	@APIParam(params = { "function()" })
+	public JIOIO startIOIO(String callbackfn) {
+		JIOIO ioio = new JIOIO(a.get());
+		ioio.start(callbackfn);
 
-	return ioio;
-    }
+		return ioio;
+	}
 
-    @JavascriptInterface
-    @APIMethod(description = "initializes makr board", example = "")
-    @APIParam(params = { "function()" })
-    public JMakr startMAKR(String callbackfn) {
-	JMakr makr = new JMakr(a.get());
-	makr.start(callbackfn);
+	@JavascriptInterface
+	@APIMethod(description = "initializes makr board", example = "")
+	@APIParam(params = { "function()" })
+	public JMakr startMAKR(String callbackfn) {
+		JMakr makr = new JMakr(a.get());
+		makr.start(callbackfn);
 
-	return makr;
-    }
+		return makr;
+	}
 
 }

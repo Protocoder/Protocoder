@@ -4,7 +4,7 @@
 *   Sergio Galan and Victor Diaz 
 */ 
 
-var video = ui.addVideoView("cityfireflies.m4v", 50, 0, 600, 600);
+var video = ui.addVideoView("cityfireflies.m4v", 50, 50, 480, 360);
 
 ui.addButton("Play", 0, 500, ui.screenWidth, 100, function() { 
     video.play();

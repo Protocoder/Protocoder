@@ -1,6 +1,10 @@
 /* 
 *	Communication with the dashboard  
 *
+*   Dashboard is an element in the Web Editor where you 
+*   can add widgets that interact with your device 
+*   
+*   You can remote control it!
 */ 
 
 var plot;
@@ -32,8 +36,9 @@ ui.addButton("adios", 0, 400, 500, 100, function(){
     label.setText("adios");
 });
 
-slider = dashboard.addSlider("name", 0, 100, 200, 100, 0, 100, function(val) {
+slider = dashboard.addSlider("name", 50, 500, 200, 100, 0, 100, function(val) {
     console.log(val);
+    android.vibrate(100);
 });
 
 //add a button on the webpapp and when clicked will execute the inner function

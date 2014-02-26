@@ -3,23 +3,29 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
+    android:layout_marginTop="12dp"
+    android:paddingTop="0dp"
     android:background="@drawable/card_bg" >
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/cardTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:background="#55ffffff"
-        android:padding="5dp"
-        android:shadowColor="#88FFFFFF"
+        android:background="@drawable/drawable_blue"
+        android:padding="2dp"
+        android:shadowColor="#88000000"
         android:shadowDx="0"
         android:shadowDy="1"
+        android:layout_marginRight="15dp"
         android:shadowRadius="0.1"
-        android:text="Small Text"
+        android:text=""
+        android:visibility="gone"
+        android:textAllCaps="true"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textSize="12sp"
+        android:textColor="@color/white"
+        android:textSize="8sp"
         android:typeface="sans" />
 
     <LinearLayout
@@ -28,6 +34,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/textView1"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="15dp"
+        android:background="@color/transparent"
         android:orientation="vertical"
         android:padding="2dp" >
 

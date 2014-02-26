@@ -1,4 +1,4 @@
-ace.define('ace/snippets/java', ['require', 'exports', 'module' ], function(require, exports, module) {
+define('ace/snippets/java', ['require', 'exports', 'module' ], function(require, exports, module) {
 
 
 exports.snippetText = "## Access Modifiers\n\

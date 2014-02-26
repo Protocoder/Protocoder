@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -31,29 +32,27 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 public class StrUtils {
 
-    public static String generateRandomString() {
-	// String uuid = UUID.randomUUID().toString().replaceAll("-", "");
+	public static String generateRandomString() {
+		String id = RandomStringUtils.randomAlphabetic(8);
 
-	String id = RandomStringUtils.randomAlphanumeric(8);
-
-	return id;
-    }
-
-    public static String bytetostring(byte[] b) {
-	int j = 0, in = 0;
-	String[] hex = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F" };
-	String out = "";
-
-	for (int i = 0; i < b.length; ++i) {
-	    in = (int) b[i] & 0x0f;
-	    j = (in >> 4) & 0x0f;
-	    out += hex[j];
-	    j = in & 0xf;
-	    out += hex[j];
-
+		return id;
 	}
 
-	return out;
-    }
+	public static String bytetostring(byte[] b) {
+		int j = 0, in = 0;
+		String[] hex = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F" };
+		String out = "";
+
+		for (byte element : b) {
+			in = element & 0x0f;
+			j = (in >> 4) & 0x0f;
+			out += hex[j];
+			j = in & 0xf;
+			out += hex[j];
+
+		}
+
+		return out;
+	}
 
 }

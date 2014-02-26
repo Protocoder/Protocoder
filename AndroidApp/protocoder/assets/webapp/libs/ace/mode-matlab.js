@@ -28,7 +28,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-ace.define('ace/mode/matlab', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text', 'ace/tokenizer', 'ace/mode/matlab_highlight_rules', 'ace/range'], function(require, exports, module) {
+define('ace/mode/matlab', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text', 'ace/tokenizer', 'ace/mode/matlab_highlight_rules', 'ace/range'], function(require, exports, module) {
 
 
 var oop = require("../lib/oop");
@@ -38,7 +38,7 @@ var MatlabHighlightRules = require("./matlab_highlight_rules").MatlabHighlightRu
 var Range = require("../range").Range;
 
 var Mode = function() {
-    this.$tokenizer = new Tokenizer(new MatlabHighlightRules().getRules());
+    this.HighlightRules = MatlabHighlightRules;
 };
 oop.inherits(Mode, TextMode);
 
@@ -47,13 +47,14 @@ oop.inherits(Mode, TextMode);
     this.lineCommentStart = "%";
     this.blockComment = {start: "%{", end: "%}"};
 
+    this.$id = "ace/mode/matlab";
 }).call(Mode.prototype);
 
 exports.Mode = Mode;
 
 });
 
-ace.define('ace/mode/matlab_highlight_rules', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
+define('ace/mode/matlab_highlight_rules', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
 
 
 var oop = require("../lib/oop");

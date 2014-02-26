@@ -28,7 +28,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-ace.define('ace/theme/mono_industrial', ['require', 'exports', 'module' , 'ace/lib/dom'], function(require, exports, module) {
+define('ace/theme/mono_industrial', ['require', 'exports', 'module' , 'ace/lib/dom'], function(require, exports, module) {
 
 exports.isDark = true;
 exports.cssClass = "ace-mono-industrial";
@@ -45,11 +45,7 @@ background-color: #222C28;\
 color: #FFFFFF\
 }\
 .ace-mono-industrial .ace_cursor {\
-border-left: 2px solid #FFFFFF\
-}\
-.ace-mono-industrial .ace_overwrite-cursors .ace_cursor {\
-border-left: 0px;\
-border-bottom: 1px solid #FFFFFF\
+color: #FFFFFF\
 }\
 .ace-mono-industrial .ace_marker-layer .ace_selection {\
 background: rgba(145, 153, 148, 0.40)\
@@ -134,7 +130,7 @@ color: #909993\
 color: #A65EFF\
 }\
 .ace-mono-industrial .ace_indent-guide {\
-background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNQ1NbwZfALD/4PAAlTArlEC4r/AAAAAElFTkSuQmCC) right repeat-y;\
+background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNQ1NbwZfALD/4PAAlTArlEC4r/AAAAAElFTkSuQmCC) right repeat-y\
 }";
 
 var dom = require("../lib/dom");

@@ -28,7 +28,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-ace.define('ace/theme/chrome', ['require', 'exports', 'module' , 'ace/lib/dom'], function(require, exports, module) {
+define('ace/theme/chrome', ['require', 'exports', 'module' , 'ace/lib/dom'], function(require, exports, module) {
 
 exports.isDark = false;
 exports.cssClass = "ace-chrome";
@@ -45,11 +45,7 @@ background: #e8e8e8;\
 background-color: #FFFFFF;\
 }\
 .ace-chrome .ace_cursor {\
-border-left: 2px solid black;\
-}\
-.ace-chrome .ace_overwrite-cursors .ace_cursor {\
-border-left: 0px;\
-border-bottom: 1px solid black;\
+color: black;\
 }\
 .ace-chrome .ace_invisible {\
 color: rgb(191, 191, 191);\

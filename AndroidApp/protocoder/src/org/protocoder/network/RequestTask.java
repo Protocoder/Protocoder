@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -42,35 +43,35 @@ import android.os.AsyncTask;
 
 public class RequestTask extends AsyncTask<String, String, String> {
 
-    @Override
-    protected String doInBackground(String... uri) {
-	HttpClient httpclient = new DefaultHttpClient();
-	HttpResponse response;
-	String responseString = null;
-	try {
-	    response = httpclient.execute(new HttpGet(uri[0]));
-	    StatusLine statusLine = response.getStatusLine();
-	    if (statusLine.getStatusCode() == HttpStatus.SC_OK) {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		response.getEntity().writeTo(out);
-		out.close();
-		responseString = out.toString();
-	    } else {
-		// Closes the connection.
-		response.getEntity().getContent().close();
-		throw new IOException(statusLine.getReasonPhrase());
-	    }
-	} catch (ClientProtocolException e) {
-	    // TODO Handle problems..
-	} catch (IOException e) {
-	    // TODO Handle problems..
+	@Override
+	protected String doInBackground(String... uri) {
+		HttpClient httpclient = new DefaultHttpClient();
+		HttpResponse response;
+		String responseString = null;
+		try {
+			response = httpclient.execute(new HttpGet(uri[0]));
+			StatusLine statusLine = response.getStatusLine();
+			if (statusLine.getStatusCode() == HttpStatus.SC_OK) {
+				ByteArrayOutputStream out = new ByteArrayOutputStream();
+				response.getEntity().writeTo(out);
+				out.close();
+				responseString = out.toString();
+			} else {
+				// Closes the connection.
+				response.getEntity().getContent().close();
+				throw new IOException(statusLine.getReasonPhrase());
+			}
+		} catch (ClientProtocolException e) {
+			// TODO Handle problems..
+		} catch (IOException e) {
+			// TODO Handle problems..
+		}
+		return responseString;
 	}
-	return responseString;
-    }
 
-    @Override
-    protected void onPostExecute(String result) {
-	super.onPostExecute(result);
-	// Do anything with response..
-    }
+	@Override
+	protected void onPostExecute(String result) {
+		super.onPostExecute(result);
+		// Do anything with response..
+	}
 }

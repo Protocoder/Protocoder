@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -29,14 +30,14 @@ package org.protocoder.utils;
 
 public class Fonts {
 
-    public static final String MENU_TITLE = "agaramond_italic.otf";
-    public static final String MENU_SPLASH = "agaramond_regular.otf";
-    public static final String MENU_DURATION = "brownproregular.otf";
-    public static final String MENU_INFORMATION = "brownproregular.otf";
-    public static final String MENU_TITLE_8 = "regulatormdium.otf";
-    public static final String CODE = "Inconsolata.otf";
-    public static final String MENU_LANGUAGE_TITLE = "brownproregular.otf";
-    public static final String MENU_LANGUAGE_DESCRIPTION = "brownproregular.otf";
-    public static final String MENU_LANGUAGE_BUTTON = "brownproregular.otf";
+	public static final String MENU_TITLE = "agaramond_italic.otf";
+	public static final String MENU_SPLASH = "agaramond_regular.otf";
+	public static final String MENU_DURATION = "brownproregular.otf";
+	public static final String MENU_INFORMATION = "brownproregular.otf";
+	public static final String MENU_TITLE_8 = "regulatormdium.otf";
+	public static final String CODE = "Inconsolata.otf";
+	public static final String MENU_LANGUAGE_TITLE = "brownproregular.otf";
+	public static final String MENU_LANGUAGE_DESCRIPTION = "brownproregular.otf";
+	public static final String MENU_LANGUAGE_BUTTON = "brownproregular.otf";
 
 }

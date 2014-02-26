@@ -1,14 +1,23 @@
-var q = new Array();
-q.push("hello 1");
-q.push("hello 2");
-q.push("hello 3");
-q.push("hello 4");
-q.push("hello 5");
+/* 
+*	Simple File Input and Output operations 
+*   
+*/ 
 
-fileio.saveStrings("file.txt", q);
+// create an Arrary with the data we want to save 
+var data = new Array();
+data.push("hello 1");
+data.push("hello 2");
+data.push("hello 3");
+data.push("hello 4");
+data.push("hello 5");
 
-var read = fileio.loadStrings("file.txt");
+//saving data in file.txt 
+fileio.saveStrings("file.txt", data);
 
-for(var i = 0; i < read.length; i++) { 
-  console.log(read[i]);  
+//read data and store it in readData
+var readData = fileio.loadStrings("file.txt");
+
+//show in the console the data
+for(var i = 0; i < readData.length; i++) { 
+  console.log(readData[i]);  
 } 

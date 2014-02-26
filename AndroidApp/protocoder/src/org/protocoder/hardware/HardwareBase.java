@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -28,28 +29,28 @@
 package org.protocoder.hardware;
 
 public class HardwareBase {
-    protected HardwareCallback callback_;
+	protected HardwareCallback callback_;
 
-    public HardwareBase(HardwareCallback callback) {
-	this.callback_ = callback;
-    }
+	public HardwareBase(HardwareCallback callback) {
+		this.callback_ = callback;
+	}
 
-    /**
-     * Power on the hardware board
-     */
-    public void powerOn() {
-    }
+	/**
+	 * Power on the hardware board
+	 */
+	public void powerOn() {
+	}
 
-    /**
-     * Power off the hardware board
-     */
-    public void powerOff() {
-    }
+	/**
+	 * Power off the hardware board
+	 */
+	public void powerOff() {
+	}
 
-    /**
-     * Erase internal memory of the board
-     */
-    public void erase() {
-    }
+	/**
+	 * Erase internal memory of the board
+	 */
+	public void erase() {
+	}
 
 }

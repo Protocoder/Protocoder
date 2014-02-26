@@ -28,7 +28,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-ace.define('ace/ext/textarea', ['require', 'exports', 'module' , 'ace/lib/event', 'ace/lib/useragent', 'ace/lib/net', 'ace/ace', 'ace/theme/textmate', 'ace/mode/text'], function(require, exports, module) {
+define('ace/ext/textarea', ['require', 'exports', 'module' , 'ace/lib/event', 'ace/lib/useragent', 'ace/lib/net', 'ace/ace', 'ace/theme/textmate', 'ace/mode/text'], function(require, exports, module) {
 
 
 var event = require("../lib/event");
@@ -64,7 +64,7 @@ function applyStyles(elm, styles) {
 
 function setupContainer(element, getValue) {
     if (element.type != 'textarea') {
-        throw "Textarea required!";
+        throw new Error("Textarea required!");
     }
 
     var parentNode = element.parentNode;

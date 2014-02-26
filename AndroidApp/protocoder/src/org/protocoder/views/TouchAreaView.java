@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -32,177 +33,194 @@ package org.protocoder.views;
  * add values to it 
  * 
  */
+import java.util.ArrayList;
+
+import org.protocoder.utils.AndroidUtils;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
 public class TouchAreaView extends View {
-    private static final String TAG = "TouchAreaView";
-    // paint
-    private Paint mPaint = new Paint();
-    private Canvas mCanvas = new Canvas();
-    private Bitmap bitmap; // Cache
+	private static final String TAG = "TouchAreaView";
+	// paint
+	private Paint mPaint = new Paint();
+	private Canvas mCanvas = new Canvas();
+	private Bitmap bitmap; // Cache
 
-    // widget size
-    private float mWidth;
-    private float mHeight;
-    private float xPointer;
-    private float yPointer;
-    private boolean touching = false;
-    private OnTouchAreaListener mOnTouchAreaListener;
-    private boolean showArea;
+	// widget size
+	private float mWidth;
+	private float mHeight;
+	private float xPointer;
+	private float yPointer;
+	private boolean touching = false;
+	private OnTouchAreaListener mOnTouchAreaListener;
+	private boolean showArea;
 
-    public TouchAreaView(Context context, boolean showArea) {
-	super(context);
+	public TouchAreaView(Context context, boolean showArea) {
+		super(context);
 
-	this.showArea = showArea;
-	init();
-    }
-
-    public TouchAreaView(Context context) {
-	super(context);
-	init();
-    }
-
-    public void init() {
-	mPaint.setStrokeWidth(1.0f);
-	// mPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
-
-	if (isInEditMode()) {
-	    loadDemoValues();
-	}
-    }
-
-    public void loadDemoValues() {
-
-    }
-
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-	mWidth = w - 1;
-	mHeight = h - 1;
-
-	// create a bitmap for caching what was drawn
-	if (bitmap != null) {
-	    bitmap.recycle();
+		this.showArea = showArea;
+		init();
 	}
 
-	mCanvas = new Canvas();
-	bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-	mCanvas.setBitmap(bitmap);
+	public TouchAreaView(Context context) {
+		super(context);
+		init();
+	}
 
+	public void init() {
+		mPaint.setStrokeWidth(1.0f);
+		// mPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
 
-	super.onSizeChanged(w, h, oldw, oldh);
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-
-	synchronized (this) {
-
-	    // saved
-	    canvas.drawBitmap(bitmap, new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight()), new Rect(0, 0, bitmap
-		    .getWidth(), bitmap.getHeight()), null);
-
-	    // paint
-	    // mPaint.setStyle(Style.STROKE);
-
-	    if (showArea) {
-		mPaint.setColor(0x88FFFFFF);
-		mPaint.setStyle(Style.STROKE);
-
-		mCanvas.drawRect(new RectF(0, 0, mWidth, mHeight), mPaint);
-		
-		if (touching) {
-		    mPaint.setStyle(Paint.Style.FILL);
-		    mPaint.setColor(0x880000FF);
-		    mCanvas.drawRect(new RectF(0, 0, mWidth, mHeight), mPaint);
-		} else {
-		    mPaint.setStyle(Paint.Style.STROKE);
-		    mCanvas.drawColor(0, Mode.CLEAR);
-		    mPaint.setColor(0x88000000);
-		    mCanvas.drawRect(new RectF(0, 0, mWidth, mHeight), mPaint);
+		if (isInEditMode()) {
+			loadDemoValues();
 		}
-	    }
 	}
-    }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-	// Convert coordinates to our internal coordinate system
-	xPointer = event.getX();
-	yPointer = event.getY();
-	Log.d(TAG, xPointer + " " + yPointer);
-
-	switch (event.getActionMasked()) {
-	case MotionEvent.ACTION_CANCEL:
-	    touching = false;
-	    break;
-
-	case MotionEvent.ACTION_DOWN:
-	    touching = true;
-	    break;
-
-	case MotionEvent.ACTION_UP:
-	    touching = false;
-	    break;
-
-	case MotionEvent.ACTION_MOVE:
-	    if (xPointer > 0 && xPointer < mWidth && yPointer > 0 && yPointer < mHeight) {
-		touching = true;
-	    } else {
-		touching = false;
-	    }
-	    break;
+	public void loadDemoValues() {
 
 	}
 
-	mOnTouchAreaListener.onTouch(this, touching, xPointer, yPointer);
+	@Override
+	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+		mWidth = w - 1;
+		mHeight = h - 1;
 
-	invalidate();
-	return touching;
-    }
+		// create a bitmap for caching what was drawn
+		if (bitmap != null) {
+			bitmap.recycle();
+		}
 
-    public void destroy() {
-	if (bitmap != null) {
-	    bitmap.recycle();
+		mCanvas = new Canvas();
+		bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+		mCanvas.setBitmap(bitmap);
+
+		super.onSizeChanged(w, h, oldw, oldh);
 	}
-    }
 
-    public void setTouchAreaListener(OnTouchAreaListener l) {
-	mOnTouchAreaListener = l;
-    }
+	@Override
+	protected void onDraw(Canvas canvas) {
 
-    public interface OnTouchAreaListener {
+		synchronized (this) {
 
-	public abstract void onTouch(TouchAreaView touchAreaView, boolean touching, float xPointer, float yPointer);
+			// saved
+			canvas.drawBitmap(bitmap, new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight()),
+					new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight()), null);
 
-    }
+			// paint
+			// mPaint.setStyle(Style.STROKE);
 
-    void printSamples(MotionEvent ev) {
-	final int historySize = ev.getHistorySize();
-	final int pointerCount = ev.getPointerCount();
-	for (int h = 0; h < historySize; h++) {
-	    System.out.printf("At time %d:", ev.getHistoricalEventTime(h));
-	    for (int p = 0; p < pointerCount; p++) {
-		System.out.printf("  pointer %d: (%f,%f)", ev.getPointerId(p), ev.getHistoricalX(p, h), ev
-			.getHistoricalY(p, h));
-	    }
+			if (showArea) {
+				mPaint.setColor(0x88FFFFFF);
+				mPaint.setStyle(Style.STROKE);
+
+				mCanvas.drawRect(new RectF(0, 0, mWidth, mHeight), mPaint);
+
+				if (touching) {
+					mPaint.setStyle(Paint.Style.FILL);
+					mPaint.setColor(0x880000FF);
+					mCanvas.drawRect(new RectF(0, 0, mWidth, mHeight), mPaint);
+				} else {
+					mPaint.setStyle(Paint.Style.STROKE);
+					mCanvas.drawColor(0, Mode.CLEAR);
+					mPaint.setColor(0x88000000);
+					mCanvas.drawRect(new RectF(0, 0, mWidth, mHeight), mPaint);
+				}
+			}
+		}
 	}
-	System.out.printf("At time %d:", ev.getEventTime());
-	for (int p = 0; p < pointerCount; p++) {
-	    System.out.printf("  pointer %d: (%f,%f)", ev.getPointerId(p), ev.getX(p), ev.getY(p));
+
+	public class TouchEvent {
+		String type;
+		int num;
+		int action;
+		int x;
+		int y;
+
+		public TouchEvent(String type, int pointerId, int action2, int x, int y) {
+			this.type = type;
+			this.num = pointerId;
+			this.action = action2;
+			this.x = x;
+			this.y = y;
+		}
+
 	}
-    }
+
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		// Convert coordinates to our internal coordinate system
+		xPointer = event.getX();
+		yPointer = event.getY();
+		// Log.d(TAG, xPointer + " " + yPointer);
+
+		switch (event.getActionMasked()) {
+		case MotionEvent.ACTION_CANCEL:
+			touching = false;
+			break;
+
+		case MotionEvent.ACTION_DOWN:
+			touching = true;
+			break;
+
+		case MotionEvent.ACTION_UP:
+			touching = false;
+			break;
+
+		case MotionEvent.ACTION_MOVE:
+			if (xPointer > 0 && xPointer < mWidth && yPointer > 0 && yPointer < mHeight) {
+				touching = true;
+			} else {
+				touching = false;
+			}
+			break;
+
+		}
+
+		mOnTouchAreaListener.onTouch(this, touching, xPointer, yPointer);
+
+		invalidate();
+		// return touching;
+		return super.onTouchEvent(event);
+	}
+
+	public void destroy() {
+		if (bitmap != null) {
+			bitmap.recycle();
+		}
+	}
+
+	public void setTouchAreaListener(OnTouchAreaListener l) {
+		mOnTouchAreaListener = l;
+	}
+
+	public interface OnTouchAreaListener {
+		public abstract void onTouch(TouchAreaView touchAreaView, boolean touching, float xPointer, float yPointer);
+	}
+
+	void printSamples(MotionEvent ev) {
+		final int historySize = ev.getHistorySize();
+		final int pointerCount = ev.getPointerCount();
+		for (int h = 0; h < historySize; h++) {
+			System.out.printf("At time %d:", ev.getHistoricalEventTime(h));
+			for (int p = 0; p < pointerCount; p++) {
+				System.out.printf("  pointer %d: (%f,%f)", ev.getPointerId(p), ev.getHistoricalX(p, h),
+						ev.getHistoricalY(p, h));
+			}
+		}
+		System.out.printf("At time %d:", ev.getEventTime());
+		for (int p = 0; p < pointerCount; p++) {
+			System.out.printf("  pointer %d: (%f,%f)", ev.getPointerId(p), ev.getX(p), ev.getY(p));
+		}
+	}
 
 }

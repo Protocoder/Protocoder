@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -27,28 +28,19 @@
 
 package org.protocoder.apprunner.api.widgets;
 
-import org.protocoder.AppSettings;
-
 import android.content.Context;
+import android.text.Html;
 import android.widget.TextView;
 
 public class JTextView extends TextView implements JViewInterface {
 
-    public JTextView(Context context) {
-	super(context);
-	// TODO Auto-generated constructor stub
-    }
+	public JTextView(Context context) {
+		super(context);
+		// TODO Auto-generated constructor stub
+	}
 
-    @Override
-    public void move(float x, float y) {
-	this.animate().x(x).setDuration(AppSettings.animSpeed);
-	this.animate().y(y).setDuration(AppSettings.animSpeed);
-
-    }
-
-    @Override
-    public void rotate(float deg) {
-	this.animate().rotation(deg).setDuration(AppSettings.animSpeed);
-    }
+	public void setHTMLText(String text) {
+		this.setText(Html.fromHtml(text));
+	}
 
 }

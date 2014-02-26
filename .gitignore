@@ -48,15 +48,10 @@ proguard/
 *.iws
 .idea/
 
-webapp/public/assets
-skinnyapp/public/assets
-android_scripting/MakeWithMoto/bin/dexedLib
-
 #damm .Ds_store
 .DS_Store
-android_scripting/MakeWithMoto/bin/dexedLibs
-android_scripting/.DS_Store
 .settings
-android_scripting/MakeWithMoto/assets/assets/
-android_scripting/MakeWithMotoAppRunner/assets/assets/
-android_scripting/MakeWithMoto/libs/makewithmotoapprunner.jar
+
+AndroidApp/protocoder/tool_release.sh
+AndroidApp/protocoder/tool_verify_signature.sh
+AndroidApp/protocoder/key_release.keystore

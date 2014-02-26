@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -27,25 +28,33 @@
 
 package org.protocoder.apprunner.api.widgets;
 
-import org.protocoder.AppSettings;
+import java.io.File;
+
+import org.protocoder.apprunner.AppRunnerSettings;
+import org.protocoder.apprunner.api.other.JUIGeneric.DownloadImageTask;
+import org.protocoder.apprunner.api.other.JUIGeneric.SetImageTask;
 
 import android.content.Context;
 import android.widget.ImageView;
 
 public class JImageView extends ImageView implements JViewInterface {
 
-    public JImageView(Context context) {
-	super(context);
-    }
+	public JImageView(Context context) {
+		super(context);
+	}
 
-    @Override
-    public void move(float x, float y) {
-	this.animate().x(x).setDuration(AppSettings.animSpeed);
-	this.animate().y(y).setDuration(AppSettings.animSpeed);
-    }
+	public void setImage(String imagePath) {
 
-    @Override
-    public void rotate(float deg) {
-	this.animate().rotation(deg).setDuration(AppSettings.animSpeed);
-    }
+		if (imagePath.startsWith("http")) {
+			// Add image asynchronously
+			new DownloadImageTask(this).execute(imagePath);
+		} else {
+			// Add the image from file
+			new SetImageTask(this).execute(AppRunnerSettings.get().project.getStoragePath() + File.separator
+					+ imagePath);
+
+		}
+
+	}
+
 }

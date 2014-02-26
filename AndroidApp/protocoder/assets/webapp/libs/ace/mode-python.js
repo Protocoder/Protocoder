@@ -28,7 +28,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-ace.define('ace/mode/python', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text', 'ace/tokenizer', 'ace/mode/python_highlight_rules', 'ace/mode/folding/pythonic', 'ace/range'], function(require, exports, module) {
+define('ace/mode/python', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text', 'ace/tokenizer', 'ace/mode/python_highlight_rules', 'ace/mode/folding/pythonic', 'ace/range'], function(require, exports, module) {
 
 
 var oop = require("../lib/oop");
@@ -39,9 +39,7 @@ var PythonFoldMode = require("./folding/pythonic").FoldMode;
 var Range = require("../range").Range;
 
 var Mode = function() {
-    var highlighter = new PythonHighlightRules();
-    this.$tokenizer = new Tokenizer(highlighter.getRules());
-    this.$keywordList = highlighter.$keywordList;
+    this.HighlightRules = PythonHighlightRules;
     this.foldingRules = new PythonFoldMode("\\:");
 };
 oop.inherits(Mode, TextMode);
@@ -53,7 +51,7 @@ oop.inherits(Mode, TextMode);
     this.getNextLineIndent = function(state, line, tab) {
         var indent = this.$getIndent(line);
 
-        var tokenizedLine = this.$tokenizer.getLineTokens(line, state);
+        var tokenizedLine = this.getTokenizer().getLineTokens(line, state);
         var tokens = tokenizedLine.tokens;
 
         if (tokens.length && tokens[tokens.length-1].type == "comment") {
@@ -82,7 +80,7 @@ oop.inherits(Mode, TextMode);
         if (input !== "\r\n" && input !== "\r" && input !== "\n")
             return false;
 
-        var tokens = this.$tokenizer.getLineTokens(line.trim(), state).tokens;
+        var tokens = this.getTokenizer().getLineTokens(line.trim(), state).tokens;
         
         if (!tokens)
             return false;
@@ -105,12 +103,13 @@ oop.inherits(Mode, TextMode);
             doc.remove(new Range(row, indent.length-tab.length, row, indent.length));
     };
 
+    this.$id = "ace/mode/python";
 }).call(Mode.prototype);
 
 exports.Mode = Mode;
 });
 
-ace.define('ace/mode/python_highlight_rules', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
+define('ace/mode/python_highlight_rules', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
 
 
 var oop = require("../lib/oop");
@@ -266,7 +265,7 @@ oop.inherits(PythonHighlightRules, TextHighlightRules);
 exports.PythonHighlightRules = PythonHighlightRules;
 });
 
-ace.define('ace/mode/folding/pythonic', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/folding/fold_mode'], function(require, exports, module) {
+define('ace/mode/folding/pythonic', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/folding/fold_mode'], function(require, exports, module) {
 
 
 var oop = require("../../lib/oop");

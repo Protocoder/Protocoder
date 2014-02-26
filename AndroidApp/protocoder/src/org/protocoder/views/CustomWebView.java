@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -44,34 +45,34 @@ import android.webkit.WebView;
 
 public class CustomWebView extends WebView {
 
-    private WeakReference<AppRunnerActivity> a;
+	private WeakReference<AppRunnerActivity> a;
 
-    public CustomWebView(Context context) {
-	super(context);
-	this.a = new WeakReference<AppRunnerActivity>((AppRunnerActivity) context);
-    }
+	public CustomWebView(Context context) {
+		super(context);
+		this.a = new WeakReference<AppRunnerActivity>((AppRunnerActivity) context);
+	}
 
-    public CustomWebView(Context context, AttributeSet attrs) {
-	super(context, attrs);
-    }
+	public CustomWebView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+	}
 
-    public CustomWebView(Context context, AttributeSet attrs, int defStyle) {
-	super(context, attrs, defStyle);
-    }
+	public CustomWebView(Context context, AttributeSet attrs, int defStyle) {
+		super(context, attrs, defStyle);
+	}
 
-    public void loadData(String content) {
-	this.loadData(content, "text/html", "utf-8");
+	public void loadData(String content) {
+		this.loadData(content, "text/html", "utf-8");
 
-    }
+	}
 
-    public void loadHTMLFile(String fileName) {
-	String path = AppRunnerSettings.get().project.getFolder() + File.separator + fileName;
-	loadUrl("file://" + path);
-    }
+	public void loadHTMLFile(String fileName) {
+		String path = AppRunnerSettings.get().project.getStoragePath() + File.separator + fileName;
+		loadUrl("file://" + path);
+	}
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-	requestDisallowInterceptTouchEvent(true);
-	return super.onTouchEvent(event);
-    }
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		requestDisallowInterceptTouchEvent(true);
+		return super.onTouchEvent(event);
+	}
 }

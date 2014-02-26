@@ -1,4 +1,4 @@
-ace.define('ace/snippets/php', ['require', 'exports', 'module' ], function(require, exports, module) {
+define('ace/snippets/php', ['require', 'exports', 'module' ], function(require, exports, module) {
 
 
 exports.snippetText = "snippet <?\n\
@@ -157,7 +157,7 @@ snippet doc_d\n\
 	/**\n\
 	 * ${3:undocumented constant}\n\
 	 */\n\
-	ace.define(${1}, ${2});${4}\n\
+	define(${1}, ${2});${4}\n\
 # Function - post doc\n\
 snippet doc_fp\n\
 	/**\n\
@@ -225,9 +225,9 @@ snippet class\n\
 			${8:// code...}\n\
 		}\n\
 	}\n\
-# ace.define(...)\n\
+# define(...)\n\
 snippet def\n\
-	ace.define('${1}'${2});${3}\n\
+	define('${1}'${2});${3}\n\
 # defined(...)\n\
 snippet def?\n\
 	${1}defined('${2}')${3}\n\

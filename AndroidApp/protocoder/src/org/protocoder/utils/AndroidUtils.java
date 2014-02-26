@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -35,9 +36,13 @@ import java.io.OutputStream;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 
 public class AndroidUtils {
+
+	private static final String TAG = "AndroidUtils";
 
 	public static void takeScreenshot(String where, String name, View v) {
 
@@ -57,7 +62,38 @@ public class AndroidUtils {
 
 		try {
 			fout = new FileOutputStream(imageFile);
-			bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fout);
+			bitmap.compress(Bitmap.CompressFormat.PNG, 90, fout);
+			fout.flush();
+			fout.close();
+
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	public static void takeScreenshotView(String where, String name, View v) {
+
+		// image naming and path to include sd card appending name you choose
+		// for file
+		String mPath = where + "/" + name;
+
+		// create bitmap screen capture
+		Bitmap bitmap;
+		v.setDrawingCacheEnabled(true);
+		bitmap = Bitmap.createBitmap(v.getDrawingCache());
+		v.setDrawingCacheEnabled(false);
+
+		OutputStream fout = null;
+		File imageFile = new File(mPath);
+
+		try {
+			fout = new FileOutputStream(imageFile);
+			bitmap.compress(Bitmap.CompressFormat.PNG, 90, fout);
 			fout.flush();
 			fout.close();
 
@@ -78,5 +114,30 @@ public class AndroidUtils {
 		int padding_in_px = (int) (padding_in_dp * scale + 0.5f);
 
 		return padding_in_px;
+	}
+
+	/** Show an event in the LogCat view, for debugging */
+	public static void dumpMotionEvent(MotionEvent event) {
+		String names[] = { "DOWN", "UP", "MOVE", "CANCEL", "OUTSIDE", "POINTER_DOWN", "POINTER_UP", "7?", "8?", "9?" };
+		StringBuilder sb = new StringBuilder();
+		int action = event.getAction();
+		int actionCode = action & MotionEvent.ACTION_MASK;
+		sb.append("event ACTION_").append(names[actionCode]);
+		if (actionCode == MotionEvent.ACTION_POINTER_DOWN || actionCode == MotionEvent.ACTION_POINTER_UP) {
+			sb.append("(pid ").append(action >> MotionEvent.ACTION_POINTER_INDEX_SHIFT);
+			sb.append(")");
+		}
+		sb.append("[");
+		for (int i = 0; i < event.getPointerCount(); i++) {
+			sb.append("#").append(i);
+			sb.append("(pid ").append(event.getPointerId(i));
+			sb.append(")=").append((int) event.getX(i));
+			sb.append(",").append((int) event.getY(i));
+			if (i + 1 < event.getPointerCount()) {
+				sb.append(";");
+			}
+		}
+		sb.append("]");
+		Log.d(TAG, sb.toString());
 	}
 }

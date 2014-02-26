@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -33,62 +34,67 @@ import org.protocoder.base.BaseMainApp;
 
 public class Project {
 
-    public final static String TYPE = "projectType";
-    public final static String NAME = "projectName";
-    public final static String URL = "projectUrl";
-    
-    
-    public String name;
-    public String url;
-    public int type;
-    public boolean containsReadme;
-    public boolean containsTutorial;
+	public final static String TYPE = "projectType";
+	public final static String NAME = "projectName";
+	public final static String URL = "projectUrl";
 
-    public Project(String projectName, String projectURL, int type, boolean containsReadme, boolean containsTutorial) {
-	this.name = projectName;
-	this.url = projectURL;
-	this.type = type;
+	public String name;
+	public String storagePath;
+	public int type;
+	public boolean containsReadme;
+	public boolean containsTutorial;
 
-	this.containsReadme = containsReadme;
-	this.containsTutorial = containsTutorial;
-    }
+	public Project(String projectName, String storagePath, int type, boolean containsReadme, boolean containsTutorial) {
+		this.name = projectName;
+		this.storagePath = storagePath;
+		this.type = type;
 
-    public Project(String projectName, int type) {
-	this.name = projectName;
-
-	if (type == ProjectManager.PROJECT_USER_MADE) {
-	    this.url = BaseMainApp.projectsDir + File.separator + projectName;
-	} else {
-	    this.url = BaseMainApp.examplesDir + File.separator + projectName;
+		this.containsReadme = containsReadme;
+		this.containsTutorial = containsTutorial;
 	}
-	this.type = type;
 
-    }
+	public Project(String projectName, int type) {
+		this.name = projectName;
 
-    public Project(String name, String projecURL, int projectType) {
-	this(name, projecURL, projectType, false, false);
-    }
+		if (type == ProjectManager.PROJECT_USER_MADE) {
+			this.storagePath = BaseMainApp.projectsDir + File.separator + projectName;
+		} else {
+			this.storagePath = BaseMainApp.examplesDir + File.separator + projectName;
+		}
+		this.type = type;
 
-    public String getName() {
-	return this.name;
-    }
-
-    public String getFolder() {
-	return this.url;
-    }
-
-    public int getType() {
-	return this.type;
-    }
-
-    public String getTypeString() {
-	String rtn;
-	if (type == ProjectManager.PROJECT_USER_MADE) {
-	    rtn = BaseMainApp.typeProjectStr;
-	} else {
-	    rtn = BaseMainApp.typeExampleStr;
 	}
-	return rtn;
-    }
+
+	public Project(String name, String projecURL, int projectType) {
+		this(name, projecURL, projectType, false, false);
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public String getStoragePath() {
+		return this.storagePath;
+	}
+
+	public String getServingURL() {
+		String url = "http://" + ProjectManager.getInstance().getRemoteIP();
+		url += "apps/" + this.getTypeString() + "/" + this.getName() + "/";
+		return url;
+	}
+
+	public int getType() {
+		return this.type;
+	}
+
+	public String getTypeString() {
+		String rtn;
+		if (type == ProjectManager.PROJECT_USER_MADE) {
+			rtn = BaseMainApp.typeProjectStr;
+		} else {
+			rtn = BaseMainApp.typeExampleStr;
+		}
+		return rtn;
+	}
 
 }

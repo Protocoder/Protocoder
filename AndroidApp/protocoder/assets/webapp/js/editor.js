@@ -23,7 +23,7 @@ Editor.prototype.initEditor = function() {
 	ace.require("ace/undomanager");
    	ace.require("ace/marker");
    	ace.require("ace/range");
- 
+   	ace.require("ace/ext/emmet");  
 
 	var dom = ace.require("ace/lib/dom");
 	var net = ace.require("ace/lib/net");
@@ -32,6 +32,8 @@ Editor.prototype.initEditor = function() {
 	var Range = ace.require('ace/range').Range;
 	var event = ace.require("ace/lib/event");
 	var theme = ace.require("ace/theme/textmate");
+	ace.require("ace/ext/language_tools");
+
 	//editor.setTheme("ace/theme/chrome");
 
 	var renderer = editor.renderer;
@@ -42,6 +44,13 @@ Editor.prototype.initEditor = function() {
 	editor.setPrintMarginColumn(false);
 	editor.setFontSize(14);
 	renderer.setPadding(8);
+
+	editor.setOptions({
+		enableBasicAutocompletion: true
+	});
+
+	editor.setOption("enableEmmet", true);
+
 
 	//------------------------------------------------- 
 	//keybinding 
@@ -179,6 +188,7 @@ Editor.prototype.highlight = function(range) {
 Editor.prototype.showErrors = function () { 
 	this.session.setAnnotations([{row:1 ,column: 0, text: "message",type:"error"}]); 
 }
+
 
 
 //set Code 

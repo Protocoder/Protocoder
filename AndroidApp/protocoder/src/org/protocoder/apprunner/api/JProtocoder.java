@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -30,46 +31,88 @@ package org.protocoder.apprunner.api;
 import org.protocoder.PrefsFragment;
 import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apidoc.annotation.APIParam;
+import org.protocoder.apidoc.annotation.APIRequires;
+import org.protocoder.apidoc.annotation.APIVersion;
 import org.protocoder.apprunner.AppRunnerActivity;
 import org.protocoder.apprunner.JInterface;
 import org.protocoder.apprunner.JavascriptInterface;
+import org.protocoder.events.ProjectManager;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 
 public class JProtocoder extends JInterface {
 
-    public String id;
+	public String id;
 
-    public JProtocoder(Activity a) {
-	super(a);
+	public JProtocoder(Activity a) {
+		super(a);
 
-	// get apprunner settings
-	SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(a);
-	id = sharedPrefs.getString("pref_id", "-1");
-    }
+		// get apprunner settings
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(a);
+		id = sharedPrefs.getString("pref_id", "-1");
+	}
 
-    @android.webkit.JavascriptInterface
-    @JavascriptInterface
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "code" })
-    public void eval(String code) {
-	((AppRunnerActivity) a.get()).interp.eval(code);
-    }
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	public String getId() {
+		return PrefsFragment.getId(a.get());
 
-    @JavascriptInterface
-    @APIMethod(description = "", example = "")
-    public String getId() {
-	return PrefsFragment.getId(a.get());
+	}
 
-    }
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "id" })
+	public void setId(String id) {
+		PrefsFragment.setId(a.get(), id);
+	}
 
-    @JavascriptInterface
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "id" })
-    public void setId(String id) {
-	PrefsFragment.setId(a.get(), id);
-    }
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "name", "type" })
+	@APIVersion(minLevel = "2")
+	@APIRequires("android.permission.INTERNET")
+	public void launchScript(String name, String typeString) {
+		Intent intent = new Intent(a.get(), AppRunnerActivity.class);
+		intent.putExtra("projectName", name);
+
+		int type = -1;
+		if (typeString.equals("examples")) {
+			type = ProjectManager.PROJECT_EXAMPLE;
+		} else if (typeString.equals("projects")) {
+			type = ProjectManager.PROJECT_USER_MADE;
+		}
+		intent.putExtra("projectType", type);
+		// a.get().startActivity(intent);
+		// String code = StrUtils.generateRandomString();
+		a.get().startActivityForResult(intent, 22);
+	}
+
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	@APIVersion(minLevel = "2")
+	@APIRequires("android.permission.INTERNET")
+	public void returnValueToScript(String returnValue) {
+		Intent output = new Intent();
+		output.putExtra("return", returnValue);
+		a.get().setResult(22, output);
+		a.get().finish();
+	}
+
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	public void returnResult(String data) {
+
+		Bundle conData = new Bundle();
+		conData.putString("param_result", data);
+		Intent intent = new Intent();
+		intent.putExtras(conData);
+		a.get().setResult(a.get().RESULT_OK, intent);
+		a.get().finish();
+
+	}
 
 }

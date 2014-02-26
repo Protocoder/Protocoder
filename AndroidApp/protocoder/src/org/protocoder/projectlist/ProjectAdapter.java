@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -43,76 +44,78 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 public class ProjectAdapter extends BaseAdapter {
-    private WeakReference<Context> mContext;
+	private final WeakReference<Context> mContext;
 
-    ArrayList<Project> projects;
-    private int projectType;
+	ArrayList<Project> projects;
+	private final int projectType;
+	private final boolean listMode;
 
-    public ProjectAdapter(Context c, ArrayList<Project> projects, int projectType) {
-	mContext = new WeakReference<Context>(c);
-	this.projects = projects;
-	this.projectType = projectType;
-    }
-
-    @Override
-    public int getCount() {
-	return projects.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-	return projects.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-	return position;
-    }
-
-    // create a new ImageView for each item referenced by the Adapter
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-	final ProjectItem customView;
-
-	if (convertView == null) { // if it's not recycled, initialize some
-				   // attributes
-	    customView = new ProjectItem(mContext.get());
-
-	    if (projectType == ProjectManager.PROJECT_USER_MADE) {
-		customView.setImage(R.drawable.ic_script);
-	    } else {
-		customView.setImage(R.drawable.ic_script_example);
-	    }
-
-	    customView.setText(projects.get(position).getName());
-	    ImageView imageView = (ImageView) customView.findViewById(R.id.card_menu_button);
-	    imageView.setOnClickListener(new OnClickListener() {
-		@Override
-		public void onClick(View v) {
-		    customView.showContextMenu();
-		}
-	    });
-	    imageView.setOnLongClickListener(new OnLongClickListener() {
-		@Override
-		public boolean onLongClick(View v) {
-		    customView.showContextMenu();
-		    return true;
-		}
-	    });
-
-	} else {
-	    customView = (ProjectItem) convertView;
-	    customView.setText(projects.get(position).getName());
-	}
-	customView.setTag(projects.get(position).getName());
-
-	if (getCount() - 1 == position) {
-	    customView.setPadding(0, 0, 0, 100);
-	} else {
-	    customView.setPadding(0, 0, 0, 0);
+	public ProjectAdapter(Context c, ArrayList<Project> projects, int projectType, boolean listMode) {
+		mContext = new WeakReference<Context>(c);
+		this.projects = projects;
+		this.projectType = projectType;
+		this.listMode = listMode;
 	}
 
-	return customView;
-    }
+	@Override
+	public int getCount() {
+		return projects.size();
+	}
 
+	@Override
+	public Object getItem(int position) {
+		return projects.get(position);
+	}
+
+	@Override
+	public long getItemId(int position) {
+		return position;
+	}
+
+	// create a new ImageView for each item referenced by the Adapter
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		final ProjectItem customView;
+
+		if (convertView == null) { // if it's not recycled, initialize some
+			// attributes
+			customView = new ProjectItem(mContext.get(), listMode);
+
+			customView.setText(projects.get(position).getName());
+
+			if (projectType == ProjectManager.PROJECT_USER_MADE) {
+				customView.setImage(R.drawable.ic_script);
+			} else {
+				customView.setImage(R.drawable.ic_script_example);
+			}
+
+			ImageView imageView = (ImageView) customView.findViewById(R.id.card_menu_button);
+			imageView.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					customView.showContextMenu();
+				}
+			});
+			imageView.setOnLongClickListener(new OnLongClickListener() {
+				@Override
+				public boolean onLongClick(View v) {
+					customView.showContextMenu();
+					return true;
+				}
+			});
+
+		} else {
+			customView = (ProjectItem) convertView;
+			customView.setText(projects.get(position).getName());
+		}
+		customView.setTag(projects.get(position).getName());
+
+		if (getCount() - 1 == position) {
+			customView.setPadding(0, 0, 0, 100);
+		} else {
+			customView.setPadding(0, 0, 0, 0);
+		}
+
+		return customView;
+	}
 }

@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -28,11 +29,11 @@
 package org.protocoder.hardware;
 
 public interface HardwareCallback {
-    public void onConnect(Object obj);
+	public void onConnect(Object obj);
 
-    public void setup();
+	public void setup();
 
-    public void loop();
+	public void loop();
 
-    public void onComplete();
+	public void onComplete();
 }

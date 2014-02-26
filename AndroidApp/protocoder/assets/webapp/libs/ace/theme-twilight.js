@@ -28,7 +28,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-ace.define('ace/theme/twilight', ['require', 'exports', 'module' , 'ace/lib/dom'], function(require, exports, module) {
+define('ace/theme/twilight', ['require', 'exports', 'module' , 'ace/lib/dom'], function(require, exports, module) {
 
 exports.isDark = true;
 exports.cssClass = "ace-twilight";
@@ -45,11 +45,7 @@ background-color: #141414;\
 color: #F8F8F8\
 }\
 .ace-twilight .ace_cursor {\
-border-left: 2px solid #A7A7A7\
-}\
-.ace-twilight .ace_overwrite-cursors .ace_cursor {\
-border-left: 0px;\
-border-bottom: 1px solid #A7A7A7\
+color: #A7A7A7\
 }\
 .ace-twilight .ace_marker-layer .ace_selection {\
 background: rgba(221, 240, 255, 0.20)\
@@ -86,6 +82,7 @@ color: #CDA869\
 .ace-twilight .ace_constant.ace_character.ace_escape,\
 .ace-twilight .ace_constant.ace_other,\
 .ace-twilight .ace_heading,\
+.ace-twilight .ace_markup.ace_heading,\
 .ace-twilight .ace_support.ace_constant {\
 color: #CF6A4C\
 }\
@@ -109,6 +106,7 @@ border-color: #F8F8F8\
 color: #DAD085\
 }\
 .ace-twilight .ace_list,\
+.ace-twilight .ace_markup.ace_list,\
 .ace-twilight .ace_storage {\
 color: #F9EE98\
 }\
@@ -134,7 +132,7 @@ color: #7587A6\
 color: #494949\
 }\
 .ace-twilight .ace_indent-guide {\
-background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWMQERFpYLC1tf0PAAgOAnPnhxyiAAAAAElFTkSuQmCC) right repeat-y;\
+background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWMQERFpYLC1tf0PAAgOAnPnhxyiAAAAAElFTkSuQmCC) right repeat-y\
 }";
 
 var dom = require("../lib/dom");

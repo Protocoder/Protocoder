@@ -11,6 +11,7 @@
     -->
     <title>protocoder | Hardware and software prototyping for Android devices</title>
 
+
     <!-- Bootstrap core CSS -->
     <link href="./dist/css/bootstrap.css" rel="stylesheet">
 
@@ -26,7 +27,9 @@
     <!-- Custom styles for this template -->
     <link href="./docs-assets/css/template.css" rel="stylesheet">
     <link href="./docs-assets/css/custom.css" rel="stylesheet"> 
-    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+  
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900,900italic|Roboto+Condensed:300italic,400italic,700italic,400,300,700|Roboto+Slab:400,700,100,300' rel='stylesheet' type='text/css'>
 
 
     <link href="docs-assets/libs/prettify/prettify.css" type="text/css" rel="stylesheet" />
@@ -56,6 +59,8 @@
                 <li class="active"><a href="#">Home</a></li>
                 <li><a href="https://github.com/victordiaz/protocoder/wiki">Contribute</a></li>
                 <li><a href="#download">Download</a></li>
+                <li><a href="https://groups.google.com/forum/?hl=es#!forum/protocoder">Forum</a></li>
+
                 <!--
                 <li><a href="#about">About</a></li>
                 -->
@@ -93,6 +98,8 @@
         <li data-target="#myCarousel" data-slide-to="2"></li>
       </ol>
       -->
+
+      <div class = "darken"> </div>
       <div class="carousel-inner">
         <div class="item active" id = "bg-header">
           <div class="container">
@@ -122,9 +129,14 @@
           <p>Protocoder is a coding environment + Javascript framework for quick prototyping on Android devices having some emphasis on rapid hardware hacking. Just download the app on your phone and you are ready to code. 
 
           </p>
+
+          <img class = "" style="max-width: 100%;" src = "./docs-assets/images/explanation_diagram.png"> </img>
+
+          <!-- 
           <div class = "flex-video widescreen">
           <iframe src="//www.youtube.com/embed/dNHltOhTs2o" frameborder="0" allowfullscreen></iframe>
           </div>
+        --> 
         </div><!-- /.col-lg-4 -->
        </div>
 
@@ -141,7 +153,7 @@
     console.log(x + " " + " " + y + " " + z); 
   }
 
-  //send and sms
+  //send a sms
   android.sendSMS(number, "text");
 
   //play a video
@@ -153,18 +165,22 @@
           </p>
 
         </div><!-- /.col-lg-4 -->
+
+
         <div class="col-lg-6 pagination-centered">
           <img class="img-circle" src="./docs-assets/images/separation.png" alt="separation">
           <h2>Why</h2>
-          <p>Some fearless crew from <a href="http://makewithmoto.com">Motorola ATAP</a> made a 5 month roadtrip across the US on a velcro-covered van and a VW bus full of 3d printers, hackable phones, arduinos, ioios, electronics components. 
-
-          During the <a href="https://makewithmoto.squarespace.com">roadtrip</a> we hacked together with university students and hackerspaces fellows and we realized we needed a tool for fast prototyping on Android that could access microcontrollers such us IOIO board and Arduino. We decided to start coding it during the trip. Protocoder has been developed inside cars, hotel lobbys, cafes, restaurants, parks, here and there. It's far from perfect but it's a nice beginning!</p>
+          <p>
+          Android tools are getting really mature for developing market ready apps. Still, there is a big need for a fast way of prototyping ideas and interactions without having to wait long times to set up environments or wait eternities to compile things.  
+          </p>
+          <p>
+          In Protocoder you can see your changes in seconds, no more delays, no more distractions, feel the flow baby.
+          </p>
         </div><!-- /.col-lg-4 -->
       </div><!-- /.row -->
 
 
       <!-- START THE FEATURETTES -->
-
       <hr class="featurette-divider">
 
       <div class="row featurette">
@@ -187,7 +203,7 @@
         </div>
         <div class="col-md-7">
           <h2 class="featurette-heading">An app that host apps. <span class="text-muted">yep! </span></h2>
-          <p class="lead">Protocoder host all your apps, you can create as many as you want and you can carry/edit/hack them with you. Do you want to share them? No problem, just zip the project and send it to whoever you want that has protocoder installed. </p>
+          <p class="lead">Protocoder host all your apps, you can create as many as you want and you can carry / edit / hack them with you. Do you want to share them? No problem, just zip the project and send it to whoever you want that has protocoder installed. </p>
         </div>
       </div>
 
@@ -218,13 +234,22 @@
             <a id = "download"></a>
             <p>Download the apk in your phone. Dont forget to enable installing apps for unknown sources. 
             Once you install it, connect your Android device and your computer to the same Wifi network and and input the ip address in your browser.</p>
-            <p><a class="btn btn-lg btn-primary" href="./downloads/protocoder-release.apk" role="button">Download APK</a></p>
+            <a class="btn btn-lg btn-primary" href="./downloads/protocoder-release-0_8.apk" role="button">Download APK v0.8</a>
+         
+            <!--
+            <a class="btn btn-lg btn-primary" href="./downloads/protocoder-release-0_8.apk" role="button">Get it from the Play Store</a>
+            -->
 
+            <br />
+
+            <br />
+            <!-- 
             <p>
             If you don't have a Wifi, you can still use protocoder using the USB companion app. Right now it only works for Mac but soon will work in Linux and Windows. 
             </p>
+            -->  
             <p>
-            If you know a bit of adb trickery you can still use protocoder with USB writing this in your system console and then go to http://localhost:8585 in your browser  
+            If you know a bit of adb trickery you can still use protocoder with USB cable. Just write this command line in your system console and then go to http://localhost:8585 in your browser. Please note that you need to install adb in your system. 
             </p>
           <pre class="prettyprint">
     > adb forward tcp:8585 tcp:8585
@@ -232,6 +257,17 @@
              </p>
           </div>
         </div>
+
+      <div class="row">
+          <div class="span-12 pagination-centered">
+          <img class="img-circle" src="./docs-assets/images/separation.png" alt="separation">
+          <h2>How it all started</h2>
+          <p>Some fearless crew from Motorola ATAP (now Googlyfied) made a 5 month roadtrip across the US on a velcro-covered van and a VW bus full of 3d printers, hackable phones, arduinos, ioios, electronics components. 
+          </p>
+          <p>
+          During the <a href="https://makewithmoto.squarespace.com">roadtrip</a> we hacked together with university students and hackerspaces fellows and we realized we needed a tool for fast prototyping on Android that could access microcontrollers such us IOIO board and Arduino. We decided to start coding it during the trip. Protocoder has been developed inside cars, hotel lobbys, cafes, restaurants, parks, here and there. It's far from perfect but it's a nice beginning!</p>
+        </div><!-- /.col-lg-4 -->
+      </div><!-- /.row -->
 
 
      <div class="row">

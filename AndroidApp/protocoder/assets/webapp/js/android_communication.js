@@ -5,12 +5,14 @@
 *
 */
 
-var Communication = function() { 
+var Communication = function(useWebsockets) { 
   this.remoteIP = window.location.hostname;  
   //this.remoteIP = 'localhost';
   this.remoteWSPORT = '8587';
   this.self = this;
-  this.initWebsockets();
+  if (useWebsockets) { 
+    this.initWebsockets();
+  }
 }
 
 //listing apps in the future we might filter the listing
@@ -120,6 +122,7 @@ Communication.prototype.runApp = function (project) {
 	obj.cmd = "run_app";
 	obj.name = project.name;
 	obj.url = project.url;
+  obj.remoteIP = this.remoteIP;
 	obj.type = project.type;
 	$.get(this.remoteIP + "cmd="+JSON.stringify(obj), function(data) {
  		//alert('Load was performed. ' + data);

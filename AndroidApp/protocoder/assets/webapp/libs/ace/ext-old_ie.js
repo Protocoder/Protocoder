@@ -28,7 +28,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-ace.define('ace/ext/old_ie', ['require', 'exports', 'module' , 'ace/lib/useragent', 'ace/tokenizer', 'ace/ext/searchbox'], function(require, exports, module) {
+define('ace/ext/old_ie', ['require', 'exports', 'module' , 'ace/lib/useragent', 'ace/tokenizer', 'ace/ext/searchbox'], function(require, exports, module) {
 
 var MAX_TOKEN_COUNT = 1000;
 var useragent = require("../lib/useragent");
@@ -107,7 +107,7 @@ useragent.isOldIE = true;
 
 });
 
-ace.define('ace/ext/searchbox', ['require', 'exports', 'module' , 'ace/lib/dom', 'ace/lib/lang', 'ace/lib/event', 'ace/keyboard/hash_handler', 'ace/lib/keys'], function(require, exports, module) {
+define('ace/ext/searchbox', ['require', 'exports', 'module' , 'ace/lib/dom', 'ace/lib/lang', 'ace/lib/event', 'ace/keyboard/hash_handler', 'ace/lib/keys'], function(require, exports, module) {
 
 
 var dom = require("../lib/dom");
@@ -130,6 +130,7 @@ padding-bottom: 0;\
 position: absolute;\
 top: 0px;\
 z-index: 99;\
+white-space: normal;\
 }\
 .ace_search.left {\
 border-left: 0 none;\

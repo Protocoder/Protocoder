@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -41,54 +42,54 @@ import android.app.Activity;
 
 public class JDashboardLabel extends JInterface {
 
-    private static final String TAG = "JWebAppLabel";
-    String id;
+	private static final String TAG = "JWebAppLabel";
+	String id;
 
-    public JDashboardLabel(Activity a) {
-	super(a);
-    }
+	public JDashboardLabel(Activity a) {
+		super(a);
+	}
 
-    @JavascriptInterface
-    @APIMethod(description = "", example = "")
-    public void add(String name, int x, int y, int size, String color) throws UnknownHostException, JSONException {
-	this.id = StrUtils.generateRandomString();
-	JSONObject msg = new JSONObject();
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	public void add(String name, int x, int y, int size, String color) throws UnknownHostException, JSONException {
+		this.id = StrUtils.generateRandomString();
+		JSONObject msg = new JSONObject();
 
-	msg.put("type", "widget");
-	msg.put("action", "add");
+		msg.put("type", "widget");
+		msg.put("action", "add");
 
-	JSONObject values = new JSONObject();
-	values.put("id", id);
-	values.put("name", name);
-	values.put("type", "label");
-	values.put("x", x);
-	values.put("y", y);
-	values.put("size", size);
-	values.put("color", color);
+		JSONObject values = new JSONObject();
+		values.put("id", id);
+		values.put("name", name);
+		values.put("type", "label");
+		values.put("x", x);
+		values.put("y", y);
+		values.put("size", size);
+		values.put("color", color);
 
-	msg.put("values", values);
+		msg.put("values", values);
 
-	CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
-	ws.send(msg);
+		CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
+		ws.send(msg);
 
-    }
+	}
 
-    @JavascriptInterface
-    @APIMethod(description = "", example = "")
-    public void setText(String text) throws UnknownHostException, JSONException {
-	JSONObject msg = new JSONObject();
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	public void setText(String text) throws UnknownHostException, JSONException {
+		JSONObject msg = new JSONObject();
 
-	msg.put("type", "widget");
-	msg.put("action", "setLabelText");
+		msg.put("type", "widget");
+		msg.put("action", "setLabelText");
 
-	JSONObject values = new JSONObject();
-	values.put("id", id);
-	values.put("type", "label");
-	values.put("val", text);
-	msg.put("values", values);
+		JSONObject values = new JSONObject();
+		values.put("id", id);
+		values.put("type", "label");
+		values.put("val", text);
+		msg.put("values", values);
 
-	CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
-	ws.send(msg);
+		CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
+		ws.send(msg);
 
-    }
+	}
 }

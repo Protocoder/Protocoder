@@ -39,7 +39,7 @@ Ui.prototype.initUI = function() {
 	                //this.owner.content('main', target);
 	            }
 	        } },
-	        { type: 'bottom', size: "100px", resizable: true, hidden: false, style: pstyle, content: '<div id = "console_wrapper"> <div id = "console"></div> </div>' }
+	        { type: 'bottom', size: "100px", resizable: true, hidden: false, style: pstyle, content: '<div id = "console_wrapper"> <div id = "console"></div><div id = "console_input"><span>></span> <input type="text" name="fname" style=""> </div> </div>' }
 	    ]
 	});
 
@@ -89,6 +89,16 @@ Ui.prototype.initUI = function() {
 		//console.log(eventData); 
 		eventData.onComplete = function() { 
 			protocoder.editor.editor.resize();
+			$("#start_curtain h1").addClass("fadein");
+
+			setTimeout(function() {
+				$("#start_curtain h1").addClass("fadeout");
+			}, 700);	
+
+			setTimeout(function() {
+				//$("#start_curtain h1").removeClass("fade");
+				$("#start_curtain").fadeOut();
+			}, 1200);
 		}
 	});
 
@@ -135,6 +145,21 @@ Ui.prototype.initUI = function() {
 	            $('#w2ui-popup #form').w2render('foo');
 	        }
 	    });
+	}
+
+	//http://w2ui.com/web/docs/w2tabs.add 
+	function addTab() {
+		var q = w2ui['code_editor'];
+		var q2 = q.get("main");
+		q2.tabs.add([{id : "tab2", caption : "Tab 2"}]);
+	}
+
+	function removeTab() {
+		var q = w2ui['code_editor'];
+		var q2 = q.get("main");
+
+		q2.tabs.remove("tab7");
+
 	}
 
 		
@@ -287,17 +312,51 @@ Ui.prototype.initUI = function() {
 	        e.preventDefault();
 	        e.stopPropagation();
 	    });
+
+
+		$("#console_wrapper input").keydown(function(e){ 
+   			var code = e.which; // recommended to use e.which, it's normalized across browsers
+    		if(code==13) {
+				console.log("enter");
+				var cmd = $("#console_wrapper input").val();
+				consoleInputHistory.push(cmd);
+				protocoder.communication.executeCode(cmd);
+				$("#console_wrapper input").val("");
+				currentHistoryEntry = consoleInputHistory.length;
+				e.preventDefault();
+			}
+
+    	    if (code==38) {
+		    	console.log("up");
+		    	if (currentHistoryEntry > 0) {
+		    		currentHistoryEntry--;
+		    	} 
+		    	$("#console_wrapper input").val(consoleInputHistory[currentHistoryEntry]);
+		    } 
+		    if (code == 40) {
+		    	console.log("down");
+		    	if (currentHistoryEntry < consoleInputHistory.length) {
+		    		currentHistoryEntry++;
+		    	}
+		    	$("#console_wrapper input").val(consoleInputHistory[currentHistoryEntry]);
+		    }
+		});
  	}, 2000);
 
 }
+
+var consoleInputHistory = new Array();
+var currentHistoryEntry;
 
 Ui.prototype.showProjectsStatus = false; 
 
 Ui.prototype.showProjects = function() {
 	if (this.showProjectsStatus == false) { 
-		$("#list_projects").fadeIn(300);
+		//$("#list_projects").fadeIn(300);
+		$("#list_projects").addClass("show");
 	} else { 
-		$("#list_projects").fadeOut(300);
+		//$("#list_projects").fadeOut(300);
+		$("#list_projects").removeClass("show");
 	} 
 
 	this.showProjectsStatus ^= true;
@@ -413,10 +472,6 @@ Ui.prototype.initUpload = function() {
 		});
 		
 		var template = '<div class="preview">'+
-							'<span class="imageHolder">'+
-								'<img />'+
-								'<span class="uploaded"></span>'+
-							'</span>'+
 							'<div class="progressHolder">'+
 								'<div class="progress"></div>'+
 							'</div>'+
@@ -425,21 +480,21 @@ Ui.prototype.initUpload = function() {
 		
 		function createImage(file){
 
-			var preview = $(template), 
-				image = $('img', preview);
+			var preview = $(template);
+				//image = $('img', preview);
 				
 			var reader = new FileReader();
 			
-			image.width = 100;
-			image.height = 100;
+			//image.width = 100;
+			//image.height = 100;
 			
-			reader.onload = function(e){
+			//reader.onload = function(e){
 				
 				// e.target.result holds the DataURL which
 				// can be used as a source of the image:
 				
-				image.attr('src',e.target.result);
-			};
+				// image.attr('src',e.target.result);
+			//};
 			
 			// Reading the file as a DataURL. When finished,
 			// this will trigger the onload function above:
@@ -450,8 +505,7 @@ Ui.prototype.initUpload = function() {
 			
 			// Associating a preview container
 			// with the file, using jQuery's $.data():
-			
-			$.data(file,preview);
+			$.data(file, preview);
 		}
 
 		function showMessage(msg){

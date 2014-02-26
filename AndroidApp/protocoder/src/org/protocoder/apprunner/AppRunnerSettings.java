@@ -2,7 +2,8 @@
  * Protocoder 
  * A prototyping platform for Android devices 
  * 
- * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -31,15 +32,15 @@ import org.protocoder.events.Project;
 
 public class AppRunnerSettings {
 
-    private static AppRunnerSettings instance;
+	private static AppRunnerSettings instance;
 
-    public static AppRunnerSettings get() {
-	if (instance == null)
-	    instance = new AppRunnerSettings();
+	public static AppRunnerSettings get() {
+		if (instance == null)
+			instance = new AppRunnerSettings();
 
-	return instance;
-    }
+		return instance;
+	}
 
-    public Project project;
+	public Project project;
 
 }
