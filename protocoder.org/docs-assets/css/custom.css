@@ -103,11 +103,38 @@ p {
 	border: 0px;
 	border-radius: 2px;
 
-}ba
+}
 
 .btn-primary:hover { 
-	background-color: rgba(232, 61, 0, 0.8) !important;
+	background-color: rgba(247, 65, 0, 1) !important;
+
+
 }
+
+#bg-header { 
+	transition: all 1s ease-in-out !important;
+	-ms-transition: all 1s ease-in-out !important;
+	-moz-transition: all 1s ease-in-out !important;
+	-o-transition: all 1s ease-in-out !important;
+	-webkit-transition: all 1s ease-in-out !important;
+}
+
+.home { 
+
+}
+
+.contribute { 
+	background-position: 0px -50px !important;
+}
+
+.download_protocoder { 
+	background-position: 0px -100px !important;
+}
+
+.forum { 
+	background-position: 0px -150px !important;
+}
+
 
 footer { 
 	margin-top: 58px;

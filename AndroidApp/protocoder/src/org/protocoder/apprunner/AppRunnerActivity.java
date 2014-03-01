@@ -37,11 +37,11 @@ import org.protocoder.AppSettings;
 import org.protocoder.MainActivity;
 import org.protocoder.R;
 import org.protocoder.apprunner.AppRunnerInterpreter.InterpreterInfo;
-import org.protocoder.apprunner.api.JDevice;
 import org.protocoder.apprunner.api.JApp;
 import org.protocoder.apprunner.api.JBoards;
 import org.protocoder.apprunner.api.JConsole;
 import org.protocoder.apprunner.api.JDashboard;
+import org.protocoder.apprunner.api.JDevice;
 import org.protocoder.apprunner.api.JEditor;
 import org.protocoder.apprunner.api.JFileIO;
 import org.protocoder.apprunner.api.JMedia;
@@ -120,7 +120,7 @@ public class AppRunnerActivity extends BaseActivity {
 	// listeners in the main activity that will pass the info to the API classes
 	public static final int VOICE_RECOGNITION_REQUEST_CODE = 55;
 	private JApp.onAppStatus onAppStatusListener;
-	private JDevice.onKeyListener onKeyListener;
+	private JUI.onKeyListener onKeyListener;
 	private JDevice.onSmsReceivedListener onSmsReceivedListener;
 	private JSensors.onNFCListener onNFCListener;
 	private JSensors.onNFCWrittenListener onNFCWrittenListener;
@@ -428,7 +428,7 @@ public class AppRunnerActivity extends BaseActivity {
 
 	}
 
-	public void addOnKeyListener(JDevice.onKeyListener onKeyListener2) {
+	public void addOnKeyListener(JUI.onKeyListener onKeyListener2) {
 		onKeyListener = onKeyListener2;
 
 	}

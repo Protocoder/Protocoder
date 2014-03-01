@@ -1,57 +1,38 @@
 
 
 Today 
-	OK - poner OK y CANCEL boton crear script 
-	OK - quitar logo motorola icono 
-	OK - animacion de archivos 
-	OK - clear maps cache 
-	OK - bug plot dashboard 
-	OK - eliminar una de las pestanyas 
-	OK - update version 
-	OK - image set image networked 
-	OK - cambiado de android a device 
-	OK - cambiar launch script de numero a string 
-	OK - arreglar drag and drop 
-	OK - UI cambiar imagenes 
-	OK - set html text en text view 
-	OK - clean examples 
-	OK - ioioboard
-	OK - makr_board 
-	OK - keyevents 
-	OK - launchproject, 
-	OK - maps
+OK - modulo evento de sketch 
+OK - sketchs trigeando eventos 
+OK - programming interface css load 
+- cambiar listeners en canvas 
+1h - hacer merge con la parte de telefonos y opencv 
+2h - emulador telefonos y camara en main 
 
 
-Protocoder 
-
-
-	OK - compilar ultima version de protocoder y subirla a la web (para darles preferencia a la penya esta)
-		30m - email mit 
-	- email o'shiny 
-	- email bq 
-
-	- enviar email mami 
 	- email italia con factura 
-
-
+	- agreement blast theory 
+	- maquinita banco holandes 
+	- taxes holanda 
+	
+	
 Programa la plaza 
-	OK - pasar codigo a cherrypy 
+	2h - nodejs admin 
+	1h - ver info blobs 
+	1h - ayuda 
 
-	- hacer merge con la parte de telefonos y opencv 
+	30 mins - landing page css mess 
+		20 min - logo programa la plaza 
+		10 min - colores hover botones 
 	
 	- mando a distancia 
-	- nodejs admin 
 
 
 ------------------------------------------------------ 
 
 Protocoder 
-	- c++ app launch adb 
-	30m - email makespace 
-	30m - email google creative labs 
-	- fix network.get
 
-
+	- icono 
+	- prepare mediakit  
 	** - show list with schedules and launch on broadcast 
 	- 
 		scriptName 	timer			when		repetition?	turnOnPhone
@@ -59,10 +40,16 @@ Protocoder
 		scriptName	onphonecall
 
 
+	M - arduino 
+	- fix network.get 
+
+	- c++ app launch adb 
+	30m - email makespace 
+	30m - email google creative labs 
+
+
 	https://a.tiles.mapbox.com/v3/biquillo.h8c46o8i/page.html?secure=1#12/51.9312/4.4695
-	- icono 
 	- playstore 
-	- prepare media 
 	- list to contact 
 		Create Digital Sound, Creative Applications, HackADay, MakeMagazine, 
 
@@ -70,7 +57,6 @@ Protocoder
 	- icono dashboard 
 	MM - protocoder card interface
 	1h M - touch and mouse events 
-	M - arduino 
 	2h  - add automatically .java 
 	- sidebar widgets 
 	- arreglar la companion app 
@@ -79,11 +65,16 @@ Protocoder
 	MM - pestanyas protocoder 
 	- add list of crons 
 	- androidsvg
-	- emmet 
 
+Protocoder 15 dias 
+	- music machine with controller 
+	- makey makey game 
+	- phones play music same time 
+	- nfc hidden game 
+	- time lapse camera 
+	- 
 
 Programa la plaza 
-	2h - emulador telefonos y camara 	
 	- visualizador (edit inputs )
 	- arreglar la ayuda  
 	- logo programalaplaza 
@@ -93,7 +84,6 @@ Programa la plaza
 	M - galeria 
 
 - taxes eeuu 
-- taxes holanda 
 
 
 

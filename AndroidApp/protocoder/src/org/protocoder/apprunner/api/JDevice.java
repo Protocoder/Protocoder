@@ -45,26 +45,11 @@ import android.util.Log;
 
 public class JDevice extends JInterface {
 
-	private String onKeyDownfn;
-	private String onKeyUpfn;
 	private String onSmsReceivedfn;
 
 	public JDevice(Activity a) {
 		super(a);
 		WhatIsRunning.getInstance().add(this);
-
-		((AppRunnerActivity) a).addOnKeyListener(new onKeyListener() {
-
-			@Override
-			public void onKeyUp(int keyCode) {
-				callback(onKeyDownfn, keyCode);
-			}
-
-			@Override
-			public void onKeyDown(int keyCode) {
-				callback(onKeyUpfn, keyCode);
-			}
-		});
 
 		((AppRunnerActivity) a).addOnSmsReceivedListener(new onSmsReceivedListener() {
 
@@ -73,7 +58,6 @@ public class JDevice extends JInterface {
 				callback(onSmsReceivedfn, number, "\"" + msg + "\"");
 			}
 		});
-
 	}
 
 	@JavascriptInterface
@@ -171,28 +155,8 @@ public class JDevice extends JInterface {
 		Intents.webSearch(a.get(), text);
 	}
 
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "function(keyNumber)" })
-	public void onKeyDown(final String fn) {
-		onKeyDownfn = fn;
-	}
-
-	@JavascriptInterface
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "function(keyNumber)" })
-	public void onKeyUp(final String fn) {
-		onKeyUpfn = fn;
-	}
-
 	public void stop() {
 
-	}
-
-	public interface onKeyListener {
-		public void onKeyDown(int keyCode);
-
-		public void onKeyUp(int keyCode);
 	}
 
 	public interface onSmsReceivedListener {

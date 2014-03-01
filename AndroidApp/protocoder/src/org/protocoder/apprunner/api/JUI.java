@@ -33,6 +33,7 @@ import java.io.File;
 import org.protocoder.AppSettings;
 import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apidoc.annotation.APIParam;
+import org.protocoder.apprunner.AppRunnerActivity;
 import org.protocoder.apprunner.AppRunnerSettings;
 import org.protocoder.apprunner.JavascriptInterface;
 import org.protocoder.apprunner.api.other.JCamera;
@@ -54,6 +55,7 @@ import org.protocoder.apprunner.api.widgets.JSwitch;
 import org.protocoder.apprunner.api.widgets.JTextView;
 import org.protocoder.apprunner.api.widgets.JToggleButton;
 import org.protocoder.apprunner.api.widgets.JWebView;
+import org.protocoder.sensors.WhatIsRunning;
 import org.protocoder.utils.AndroidUtils;
 import org.protocoder.views.HoloCircleSeekBar;
 import org.protocoder.views.PadView;
@@ -95,8 +97,26 @@ public class JUI extends JUIGeneric {
 	String TAG = "JUI";
 	private String onNFCfn;
 
+	private String onKeyDownfn;
+	private String onKeyUpfn;
+
 	public JUI(Activity a) {
 		super(a);
+		WhatIsRunning.getInstance().add(this);
+
+		((AppRunnerActivity) a).addOnKeyListener(new onKeyListener() {
+
+			@Override
+			public void onKeyUp(int keyCode) {
+				callback(onKeyDownfn, keyCode);
+			}
+
+			@Override
+			public void onKeyDown(int keyCode) {
+				callback(onKeyUpfn, keyCode);
+			}
+		});
+
 	}
 
 	@JavascriptInterface
@@ -1019,6 +1039,26 @@ public class JUI extends JUIGeneric {
 	@APIParam(params = { "imageName", "view" })
 	public void takeScreenshot(String imagePath, View v) {
 		AndroidUtils.takeScreenshotView(AppRunnerSettings.get().project.getStoragePath(), imagePath, v);
+	}
+
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "function(keyNumber)" })
+	public void onKeyDown(final String fn) {
+		onKeyDownfn = fn;
+	}
+
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "function(keyNumber)" })
+	public void onKeyUp(final String fn) {
+		onKeyUpfn = fn;
+	}
+
+	public interface onKeyListener {
+		public void onKeyDown(int keyCode);
+
+		public void onKeyUp(int keyCode);
 	}
 
 	// @JavascriptInterface
