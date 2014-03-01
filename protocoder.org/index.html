@@ -56,10 +56,10 @@
             </div>
             <div class="navbar-collapse collapse">
               <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="https://github.com/victordiaz/protocoder/wiki">Contribute</a></li>
-                <li><a href="#download">Download</a></li>
-                <li><a href="https://groups.google.com/forum/?hl=es#!forum/protocoder">Forum</a></li>
+                <li id = "home" class="active"><a href="#">Home</a></li>
+                <li id = "contribute"><a href="https://github.com/victordiaz/protocoder/wiki">Contribute</a></li>
+                <li id = "download_protocoder"><a href="#download">Download</a></li>
+                <li id = "forum"><a href="https://groups.google.com/forum/?hl=es#!forum/protocoder">Forum</a></li>
 
                 <!--
                 <li><a href="#about">About</a></li>
@@ -227,11 +227,10 @@
 
       <!-- /END THE FEATURETTES -->
 
-
      <div class="row">
         <div class="span-12 pagination-centered">
         <h1>Download</h1>
-            <a id = "download"></a>
+            <a name = "download" id = "download"></a>
             <p>Download the apk in your phone. Dont forget to enable installing apps for unknown sources. 
             Once you install it, connect your Android device and your computer to the same Wifi network and and input the ip address in your browser.</p>
             <a class="btn btn-lg btn-primary" href="./downloads/protocoder-release-0_8.apk" role="button">Download APK v0.8</a>
@@ -265,7 +264,7 @@
           <p>Some fearless crew from Motorola ATAP (now Googlyfied) made a 5 month roadtrip across the US on a velcro-covered van and a VW bus full of 3d printers, hackable phones, arduinos, ioios, electronics components. 
           </p>
           <p>
-          During the <a href="https://makewithmoto.squarespace.com">roadtrip</a> we hacked together with university students and hackerspaces fellows and we realized we needed a tool for fast prototyping on Android that could access microcontrollers such us IOIO board and Arduino. We decided to start coding it during the trip. Protocoder has been developed inside cars, hotel lobbys, cafes, restaurants, parks, here and there. It's far from perfect but it's a nice beginning!</p>
+          During the <a href="https://makewithmoto.squarespace.com">roadtrip</a> we hacked together with university students and hackerspaces fellows and we realized we needed a tool for fast prototyping on Android that could access microcontrollers such as IOIO board and Arduino. We decided to start coding it during the trip. Protocoder has been developed inside cars, hotel lobbys, cafes, restaurants, parks, here and there. It's far from perfect but it's a nice beginning!</p>
         </div><!-- /.col-lg-4 -->
       </div><!-- /.row -->
 
@@ -299,6 +298,34 @@
     <script src="./dist/js/bootstrap.min.js"></script>
     <script src="./docs-assets/js/holder.js"></script>
 
+     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+  
+  <script type="text/javascript">
+
+  function addAnimMenu(item) { 
+
+    //drawOverlay();
+    $("#" + item).hover(function() {
+      console.log("hola");
+      $("#bg-header").addClass(item);
+    }, function() { 
+      $("#bg-header").removeClass(item);
+    });
+
+
+
+  }
+
+
+  $(document).ready(function() {
+    addAnimMenu("home");
+    addAnimMenu("contribute");
+    addAnimMenu("download_protocoder");
+    addAnimMenu("forum");
+  });
+  
+  
+  </script> 
      <script type="text/javascript">
         var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
         document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
