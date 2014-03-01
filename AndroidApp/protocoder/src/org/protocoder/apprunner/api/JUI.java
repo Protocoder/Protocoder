@@ -1061,6 +1061,10 @@ public class JUI extends JUIGeneric {
 		public void onKeyUp(int keyCode);
 	}
 
+	public void stop() {
+
+	}
+
 	// @JavascriptInterface
 	// @APIParam( params = {"milliseconds", "function()"} )
 	// public void startTrackingTouches(String b) {
