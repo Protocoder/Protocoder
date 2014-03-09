@@ -30,7 +30,7 @@ package org.protocoder.apprunner.api.widgets;
 
 import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apprunner.JInterface;
-import org.protocoder.apprunner.JavascriptInterface;
+import org.protocoder.apprunner.ProtocoderScript;
 import org.protocoder.views.PlotView;
 import org.protocoder.views.PlotView.Plot;
 
@@ -53,19 +53,19 @@ public class JPlotView extends JInterface implements JViewInterface {
 		plotView.setLimits(min, max);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void setThickness(float r) {
 		plotView.setThickness(r);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void setLimits(float min, float max) {
 		plotView.setLimits(min, max);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void update(float value) {
 		plotView.setValue(plot, value);

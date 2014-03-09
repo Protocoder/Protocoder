@@ -30,12 +30,12 @@ package org.protocoder.apprunner.api.other;
 
 import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apidoc.annotation.APIParam;
-import org.protocoder.apprunner.JavascriptInterface;
+import org.protocoder.apprunner.ProtocoderScript;
 import org.puredata.core.PdBase;
 
 public class JPureData {
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "message", "value" })
 	public void sendMessage(String message, String value) {
@@ -48,28 +48,28 @@ public class JPureData {
 		}
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "name" })
 	public void sendBang(String name) {
 		PdBase.sendBang(name);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "name", "value" })
 	public void sendFloat(String name, int value) {
 		PdBase.sendFloat(name, value);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "name", "pitch, velocity" })
 	public void sendNoteOn(int channel, int pitch, int velocity) {
 		PdBase.sendNoteOn(channel, pitch, velocity);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "port", "value" })
 	public void sendFloat(int port, int value) {

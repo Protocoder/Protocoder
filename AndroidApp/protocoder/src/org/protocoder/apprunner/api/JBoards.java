@@ -31,7 +31,7 @@ package org.protocoder.apprunner.api;
 import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apidoc.annotation.APIParam;
 import org.protocoder.apprunner.JInterface;
-import org.protocoder.apprunner.JavascriptInterface;
+import org.protocoder.apprunner.ProtocoderScript;
 import org.protocoder.apprunner.api.boards.JIOIO;
 import org.protocoder.apprunner.api.boards.JMakr;
 
@@ -45,7 +45,7 @@ public class JBoards extends JInterface {
 		super(a);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "initializes ioio board", example = "")
 	@APIParam(params = { "function()" })
 	public JIOIO startIOIO(String callbackfn) {
@@ -55,7 +55,7 @@ public class JBoards extends JInterface {
 		return ioio;
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "initializes makr board", example = "")
 	@APIParam(params = { "function()" })
 	public JMakr startMAKR(String callbackfn) {

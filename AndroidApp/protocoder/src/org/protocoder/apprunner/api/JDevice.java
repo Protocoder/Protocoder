@@ -32,7 +32,7 @@ import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apidoc.annotation.APIParam;
 import org.protocoder.apprunner.AppRunnerActivity;
 import org.protocoder.apprunner.JInterface;
-import org.protocoder.apprunner.JavascriptInterface;
+import org.protocoder.apprunner.ProtocoderScript;
 import org.protocoder.sensors.WhatIsRunning;
 import org.protocoder.utils.Intents;
 
@@ -60,7 +60,7 @@ public class JDevice extends JInterface {
 		});
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "makes the phone vibrate", example = "android.vibrate(500);")
 	@APIParam(params = { "duration" })
 	public void vibrate(String duration) {
@@ -70,7 +70,7 @@ public class JDevice extends JInterface {
 
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "Change brightness", example = "")
 	@APIParam(params = { "number", "message" })
 	public void smsSend(String number, String msg) {
@@ -80,33 +80,33 @@ public class JDevice extends JInterface {
 
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "function(number, message)" })
 	public void onSmsReceived(final String fn) {
 		onSmsReceivedfn = fn;
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "Set brightness", example = "")
 	@APIParam(params = { "brightness" })
 	public void setBrightness(float val) {
 		a.get().setBrightness(val);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "Change brightness", example = "")
 	public float getBrightness() {
 		return a.get().getCurrentBrightness();
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void screenAlwaysOn() {
 		a.get().setScreenAlwaysOn();
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "recepient", "subject", "message" })
 	public void launchIntent(String intent) {
@@ -114,41 +114,41 @@ public class JDevice extends JInterface {
 		a.get().startActivity(market_intent);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "recepient", "subject", "message" })
 	public void openEmailApp(String recepient, String subject, String msg) {
 		Intents.sendEmail(a.get(), recepient, subject, msg);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "longitue", "latitude" })
 	public void openMapApp(double longitude, double latitude) {
 		Intents.openMap(a.get(), longitude, latitude);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void openDial() {
 		Intents.openDial(a.get());
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "number" })
 	public void call(String number) {
 		Intents.call(a.get(), number);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "url" })
 	public void openWebApp(String url) {
 		Intents.openWeb(a.get(), url);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "text" })
 	public void openWebSearch(String text) {

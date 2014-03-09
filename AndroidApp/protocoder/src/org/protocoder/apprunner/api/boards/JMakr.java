@@ -30,7 +30,7 @@ package org.protocoder.apprunner.api.boards;
 
 import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apprunner.JInterface;
-import org.protocoder.apprunner.JavascriptInterface;
+import org.protocoder.apprunner.ProtocoderScript;
 import org.protocoder.hardware.MAKRBoard;
 
 import android.app.Activity;
@@ -51,7 +51,7 @@ public class JMakr extends JInterface {
 		makr = new MAKRBoard();
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "initializes makr board", example = "makr.start();")
 	public void start(final String callbackfn) {
 
@@ -68,7 +68,7 @@ public class JMakr extends JInterface {
 
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "clean up and poweroff makr board", example = "makr.stop();")
 	public void stop() {
 		if (isStarted) {
@@ -110,7 +110,7 @@ public class JMakr extends JInterface {
 		}
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "sends commands to makr board", example = "makr.writeSerial(\"LEDON\");")
 	public void writeSerial(String cmd) {
 		if (isStarted) {
@@ -118,13 +118,13 @@ public class JMakr extends JInterface {
 		}
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "resumes makr activity", example = "makr.resume();")
 	public void resume() {
 		makr.resume();
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "pause makr activity", example = "makr.pause();")
 	public void pause() {
 		makr.pause();

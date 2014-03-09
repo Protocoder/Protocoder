@@ -35,7 +35,7 @@ import org.protocoder.apidoc.annotation.APIRequires;
 import org.protocoder.apidoc.annotation.APIVersion;
 import org.protocoder.apprunner.AppRunnerActivity;
 import org.protocoder.apprunner.JInterface;
-import org.protocoder.apprunner.JavascriptInterface;
+import org.protocoder.apprunner.ProtocoderScript;
 import org.protocoder.events.ProjectManager;
 
 import android.app.Activity;
@@ -56,21 +56,21 @@ public class JProtocoder extends JInterface {
 		id = sharedPrefs.getString("pref_id", "-1");
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public String getId() {
 		return PrefsFragment.getId(a.get());
 
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "id" })
 	public void setId(String id) {
 		PrefsFragment.setId(a.get(), id);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "name", "type" })
 	@APIVersion(minLevel = "2")
@@ -91,7 +91,7 @@ public class JProtocoder extends JInterface {
 		a.get().startActivityForResult(intent, 22);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIVersion(minLevel = "2")
 	@APIRequires("android.permission.INTERNET")
@@ -102,7 +102,7 @@ public class JProtocoder extends JInterface {
 		a.get().finish();
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void returnResult(String data) {
 

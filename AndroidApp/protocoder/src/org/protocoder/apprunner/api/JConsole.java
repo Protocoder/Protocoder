@@ -35,7 +35,7 @@ import org.json.JSONObject;
 import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apidoc.annotation.APIParam;
 import org.protocoder.apprunner.JInterface;
-import org.protocoder.apprunner.JavascriptInterface;
+import org.protocoder.apprunner.ProtocoderScript;
 import org.protocoder.network.CustomWebsocketServer;
 
 import android.support.v4.app.FragmentActivity;
@@ -48,7 +48,7 @@ public class JConsole extends JInterface {
 		super(mwmActivity);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "text" })
 	public void log(String... outputs) throws JSONException, UnknownHostException {
@@ -71,7 +71,7 @@ public class JConsole extends JInterface {
 		ws.send(msg);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "text" })
 	public void log(String output) throws JSONException, UnknownHostException {
@@ -86,7 +86,7 @@ public class JConsole extends JInterface {
 		ws.send(msg);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "" })
 	public void clear() throws JSONException, UnknownHostException {

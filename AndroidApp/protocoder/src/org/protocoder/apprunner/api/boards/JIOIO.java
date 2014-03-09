@@ -37,7 +37,7 @@ import ioio.lib.api.exception.ConnectionLostException;
 
 import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apprunner.JInterface;
-import org.protocoder.apprunner.JavascriptInterface;
+import org.protocoder.apprunner.ProtocoderScript;
 import org.protocoder.hardware.HardwareCallback;
 import org.protocoder.hardware.IOIOBoard;
 import org.protocoder.sensors.WhatIsRunning;
@@ -63,7 +63,7 @@ public class JIOIO extends JInterface implements HardwareCallback {
 		super(a);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "initializes ioio board", example = "ioio.start();")
 	public void start(String callbackfn) {
 		moiocallbackfn = callbackfn;
@@ -79,7 +79,7 @@ public class JIOIO extends JInterface implements HardwareCallback {
 		return ioio;
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "clean up and poweroff makr board", example = "ioio.stop();")
 	public void stop() {
 		isStarted = false;
@@ -87,7 +87,7 @@ public class JIOIO extends JInterface implements HardwareCallback {
 		board = null;
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public DigitalOutput openDigitalOutput(int pinNum) throws ConnectionLostException {
 		return ioio.openDigitalOutput(pinNum, false); // start with the on board
@@ -95,40 +95,40 @@ public class JIOIO extends JInterface implements HardwareCallback {
 
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public DigitalInput openDigitalInput(int pinNum) throws ConnectionLostException {
 		return ioio.openDigitalInput(pinNum, DigitalInput.Spec.Mode.PULL_UP);
 
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public AnalogInput openAnalogInput(int pinNum) throws ConnectionLostException {
 		return ioio.openAnalogInput(pinNum);
 
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public PwmOutput openPWMOutput(int pinNum, int freq) throws ConnectionLostException {
 		return ioio.openPwmOutput(pinNum, freq);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void setDigitalPin(int num, boolean status) throws ConnectionLostException {
 		led.write(status);
 
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void resume() {
 		// makr.resume();
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void pause() {
 		// makr.pause();

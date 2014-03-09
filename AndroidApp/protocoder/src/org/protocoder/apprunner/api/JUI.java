@@ -35,7 +35,7 @@ import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apidoc.annotation.APIParam;
 import org.protocoder.apprunner.AppRunnerActivity;
 import org.protocoder.apprunner.AppRunnerSettings;
-import org.protocoder.apprunner.JavascriptInterface;
+import org.protocoder.apprunner.ProtocoderScript;
 import org.protocoder.apprunner.api.other.JCamera;
 import org.protocoder.apprunner.api.other.JUIGeneric;
 import org.protocoder.apprunner.api.other.JVideo;
@@ -121,7 +121,7 @@ public class JUI extends JUIGeneric {
 
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
 	@APIParam(params = { "titleName" })
 	public void setTitle(String title) {
@@ -133,7 +133,7 @@ public class JUI extends JUIGeneric {
 		a.get().actionBar.setTitle(title);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = " ", example = "")
 	@APIParam(params = { "subtitleName" })
 	public void setSubtitle(String title) {
@@ -145,7 +145,7 @@ public class JUI extends JUIGeneric {
 		a.get().actionBar.setSubtitle(title);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "boolean" })
 	public void showTitleBar(Boolean b) {
@@ -161,7 +161,7 @@ public class JUI extends JUIGeneric {
 		}
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "r", "g", "b" })
 	public void setTitleBgColor(int r, int g, int b) {
@@ -172,7 +172,7 @@ public class JUI extends JUIGeneric {
 		a.get().setActionBar(c, null);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "r", "g", "b" })
 	public void setTitleTextColor(int r, int g, int b) {
@@ -184,7 +184,7 @@ public class JUI extends JUIGeneric {
 		a.get().setActionBar(null, c);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "imageName" })
 	public void setTitleImage(String imagePath) {
@@ -198,53 +198,53 @@ public class JUI extends JUIGeneric {
 		a.get().actionBar.setIcon(icon);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "boolean" })
 	public void showHomeBar(boolean b) {
 		a.get().showHomeBar(b);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void setFullscreen() {
 		noActionBarAllowed = true;
 		a.get().setFullScreen();
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void setImmersive() {
 		noActionBarAllowed = true;
 		a.get().setImmersive();
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void setLightsOut() {
 		a.get().lightsOutMode();
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void setLandscape() {
 		a.get().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void setPortrait() {
 		a.get().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "text" })
 	public void toast(String text) {
 		Toast.makeText(a.get(), text, Toast.LENGTH_SHORT).show();
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "text", "duration" })
 	public void toast(String text, int duration) {
@@ -255,14 +255,14 @@ public class JUI extends JUIGeneric {
 	 * Set padding on the entire view
 	 * 
 	 */
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIParam(params = { "left", "top", "right", "bottom" })
 	public void setPadding(int left, int top, int right, int bottom) {
 		initializeLayout();
 		uiAbsoluteLayout.setPadding(left, top, right, bottom);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIParam(params = { "View", "height" })
 	public void resizeView(final View v, int h) {
 		boolean animated = false;
@@ -290,7 +290,7 @@ public class JUI extends JUIGeneric {
 		}
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIParam(params = { "View", "x", "y" })
 	public void move(View v, float x, float y) {
 		v.animate().x(x).setDuration(AppSettings.animSpeed);
@@ -298,7 +298,7 @@ public class JUI extends JUIGeneric {
 
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIParam(params = { "View" })
 	public void jump(View v) {
 
@@ -313,7 +313,7 @@ public class JUI extends JUIGeneric {
 		animatorSet.start();
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIParam(params = { "View", "num" })
 	public void blink(View v, int num) {
 		ObjectAnimator anim = ObjectAnimator.ofFloat(v, "alpha", 1f, 0f, 1f);
@@ -323,13 +323,13 @@ public class JUI extends JUIGeneric {
 		anim.start();
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIParam(params = { "View", "degrees" })
 	public void rotate(View v, float x) {
 		v.animate().rotation(x).setDuration(AppSettings.animSpeed);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIParam(params = { "View", "degrees", "degrees", "degrees" })
 	public void rotate(View v, float x, float y, float z) {
 		v.animate().rotation(x).setDuration(AppSettings.animSpeed);
@@ -338,20 +338,20 @@ public class JUI extends JUIGeneric {
 		v.animate().rotationY(z).setDuration(AppSettings.animSpeed);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIParam(params = { "View", "float" })
 	public void alpha(View v, float deg) {
 		v.animate().alpha(deg).setDuration(AppSettings.animSpeed);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIParam(params = { "View", "float" })
 	public void scale(View v, float x, float y) {
 		v.animate().scaleX(x).setDuration(AppSettings.animSpeed);
 		v.animate().scaleY(y).setDuration(AppSettings.animSpeed);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIParam(params = { "View", "float" })
 	public void scaleBy(View v, float x, float y) {
 		v.animate().scaleXBy(x).setDuration(AppSettings.animSpeed);
@@ -392,7 +392,7 @@ public class JUI extends JUIGeneric {
 	 * Adds a card holder
 	 * 
 	 */
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
 	@APIParam(params = { "label" })
 	public JCard addView(View v) {
@@ -406,7 +406,7 @@ public class JUI extends JUIGeneric {
 	 * Adds a card holder
 	 * 
 	 */
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
 	@APIParam(params = { "label" })
 	public JCard addCard() {
@@ -420,7 +420,7 @@ public class JUI extends JUIGeneric {
 	 * Adds a card holder
 	 * 
 	 */
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
 	@APIParam(params = { "label", "x", "y", "w", "h" })
 	public JCard addCard(String label, int x, int y, int w, int h) {
@@ -433,7 +433,7 @@ public class JUI extends JUIGeneric {
 	 * Adds a button to the view
 	 * 
 	 */
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
 	@APIParam(params = { "label", "x", "y", "w", "h", "function()" })
 	public JButton addButton(String label, final String callbackfn) {
@@ -445,7 +445,7 @@ public class JUI extends JUIGeneric {
 	 * Adds a button to the view
 	 * 
 	 */
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
 	@APIParam(params = { "label", "x", "y", "w", "h", "function()" })
 	public JButton addButton(String label, int x, int y, int w, int h, final String callbackfn) {
@@ -458,7 +458,7 @@ public class JUI extends JUIGeneric {
 	 * Adds a touch area
 	 * 
 	 */
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIParam(params = { "bShowArea", "function(touching, x, y)" })
 	public TouchAreaView addTouchArea(boolean showArea, final String callbackfn) {
 		TouchAreaView taV = addGenericTouchArea(showArea, callbackfn);
@@ -466,7 +466,7 @@ public class JUI extends JUIGeneric {
 		return taV;
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIParam(params = { "x", "y", "w", "h", "bShowArea", "function(touching, x, y)" })
 	public TouchAreaView addTouchArea(int x, int y, int w, int h, boolean showArea, final String callbackfn) {
 		TouchAreaView taV = addGenericTouchArea(showArea, callbackfn);
@@ -475,7 +475,7 @@ public class JUI extends JUIGeneric {
 		return taV;
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIParam(params = { "x", "y", "w", "h", "function(touching, x, y)" })
 	public PadView addXYPad(int x, int y, int w, int h, final String callbackfn) {
 		PadView taV = addPad(callbackfn);
@@ -484,7 +484,7 @@ public class JUI extends JUIGeneric {
 		return taV;
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIParam(params = { "function(touching, x, y)" })
 	public PadView addXYPad(final String callbackfn) {
 		PadView taV = addPad(callbackfn);
@@ -497,7 +497,7 @@ public class JUI extends JUIGeneric {
 	 * 
 	 */
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIParam(params = { "function(progress)" })
 	public HoloCircleSeekBar addKnob(final String callbackfn) {
 		HoloCircleSeekBar pkr = addGenericKnob(callbackfn);
@@ -505,7 +505,7 @@ public class JUI extends JUIGeneric {
 		return pkr;
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIParam(params = { "x", "y", "w", "h, function(progress)" })
 	public HoloCircleSeekBar addKnob(int x, int y, int w, int h, final String callbackfn) {
 		HoloCircleSeekBar pkr = addGenericKnob(callbackfn);
@@ -518,7 +518,7 @@ public class JUI extends JUIGeneric {
 	 * Adds a seekbar with a callback function
 	 * 
 	 */
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIParam(params = { "max", "progress", "function(progress)" })
 	public JSeekBar addSlider(int max, int progress, final String callbackfn) {
 		JSeekBar sb = addGenericSlider(max, progress, callbackfn);
@@ -526,7 +526,7 @@ public class JUI extends JUIGeneric {
 
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIParam(params = { "x", "y", "w", "h", "max", "progress", "function(progress)" })
 	public JSeekBar addSlider(int x, int y, int w, int h, int max, int progress, final String callbackfn) {
 		JSeekBar sb = addGenericSlider(max, progress, callbackfn);
@@ -539,7 +539,7 @@ public class JUI extends JUIGeneric {
 	 * Adds a TextView. Note that the user doesn't specify font size
 	 * 
 	 */
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIParam(params = { "label" })
 	public JTextView addLabel(String label) {
 		JTextView tv = addLabelGeneric(label);
@@ -547,7 +547,7 @@ public class JUI extends JUIGeneric {
 		return tv;
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIParam(params = { "label", "x", "y", "w", "h" })
 	public JTextView addLabel(String label, int x, int y, int w, int h) {
 		JTextView tv = addLabelGeneric(label);
@@ -578,7 +578,7 @@ public class JUI extends JUIGeneric {
 	 * Adds a toggle button
 	 * 
 	 */
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIParam(params = { "label", "checked", "function(checked)" })
 	public JToggleButton addToggle(final String label, boolean initstate, final String callbackfn) {
 
@@ -587,7 +587,7 @@ public class JUI extends JUIGeneric {
 		return tb;
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIParam(params = { "label", "x", "y", "w", "h", "checked", "function(checked)" })
 	public JToggleButton addToggle(final String label, int x, int y, int w, int h, boolean initstate,
 			final String callbackfn) {
@@ -680,7 +680,7 @@ public class JUI extends JUIGeneric {
 
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIParam(params = { "min", "max" })
 	public JPlotView addPlot(int min, int max) {
 		JPlotView jPlotView = addGenericPlot(min, max);
@@ -688,7 +688,7 @@ public class JUI extends JUIGeneric {
 		return jPlotView;
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIParam(params = { "x", "y", "w", "h", "min", "max" })
 	public JPlotView addPlot(int x, int y, int w, int h, int min, int max) {
 		JPlotView jPlotView = addGenericPlot(min, max);
@@ -775,7 +775,7 @@ public class JUI extends JUIGeneric {
 	}
 
 	@Override
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIParam(params = { "x", "y", "w", "h" })
 	public JCanvasView addCanvas(int x, int y, int w, int h) {
 		initializeLayout();
@@ -1058,7 +1058,7 @@ public class JUI extends JUIGeneric {
 		}
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "boolean" })
 	public void showVirtualKeys(boolean show) {
@@ -1074,14 +1074,14 @@ public class JUI extends JUIGeneric {
 		}
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "function(keyNumber)" })
 	public void onKeyDown(final String fn) {
 		onKeyDownfn = fn;
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "function(keyNumber)" })
 	public void onKeyUp(final String fn) {

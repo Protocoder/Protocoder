@@ -31,7 +31,7 @@ package org.protocoder.apprunner.api.other;
 import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apidoc.annotation.APIParam;
 import org.protocoder.apprunner.JInterface;
-import org.protocoder.apprunner.JavascriptInterface;
+import org.protocoder.apprunner.ProtocoderScript;
 
 import android.app.Activity;
 
@@ -46,7 +46,7 @@ public class SignalUtils extends JInterface {
 		return null;
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "function()" })
 	public void fft(boolean visible) {

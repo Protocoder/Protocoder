@@ -45,7 +45,7 @@ import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apidoc.annotation.APIParam;
 import org.protocoder.apprunner.AppRunnerSettings;
 import org.protocoder.apprunner.JInterface;
-import org.protocoder.apprunner.JavascriptInterface;
+import org.protocoder.apprunner.ProtocoderScript;
 import org.protocoder.apprunner.api.widgets.JButton;
 import org.protocoder.apprunner.api.widgets.JCanvasView;
 import org.protocoder.apprunner.api.widgets.JCard;
@@ -202,14 +202,14 @@ public class JUIGeneric extends JInterface {
 		}
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
 	@APIParam(params = { "boolean" })
 	public void setAbsoluteLayout(boolean absoluteLayout) {
 		this.absoluteLayout = absoluteLayout;
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
 	@APIParam(params = { "boolean" })
 	public void allowScroll(boolean scroll) {
@@ -267,7 +267,7 @@ public class JUIGeneric extends JInterface {
 		v.setLayoutParams(params);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "Uses a DARK / BLUE / NONE theme for some widgets", example = "ui.setTheme(\"DARK\"); ")
 	@APIParam(params = { "themeName" })
 	public void setTheme(String theme) {
