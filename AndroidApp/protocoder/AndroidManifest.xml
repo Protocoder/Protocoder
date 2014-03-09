@@ -9,10 +9,12 @@
 
     <uses-feature
         android:glEsVersion="0x00020000"
-        android:required="true" />
+        android:required="false" />
     <uses-feature
         android:name="android.hardware.nfc"
         android:required="false" />
+    <uses-feature android:name="android.hardware.camera" 
+        android:required="false"/>
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -33,10 +35,8 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETINGS" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.RECORD_VIDEO" />
-    <uses-permission android:name="android.permission.CALL_PHONE" >
-    </uses-permission>
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
-    <uses-feature android:name="android.hardware.camera" />
 
     <application
         android:name="org.protocoder.MainApp"
