@@ -34,7 +34,7 @@ import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apidoc.annotation.APIParam;
 import org.protocoder.apprunner.AppRunnerSettings;
 import org.protocoder.apprunner.JInterface;
-import org.protocoder.apprunner.JavascriptInterface;
+import org.protocoder.apprunner.ProtocoderScript;
 import org.protocoder.events.ProjectManager;
 import org.protocoder.utils.FileIO;
 
@@ -48,7 +48,7 @@ public class JFileIO extends JInterface {
 		super(a);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "dirName" })
 	public void createDir(String name) {
@@ -57,21 +57,21 @@ public class JFileIO extends JInterface {
 		file.mkdirs();
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "fileName" })
 	public void remove(String name) {
 		FileIO.deleteFileDir(ProjectManager.getInstance().getCurrentProject().getStoragePath(), name);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "fileName", "lines[]" })
 	public void saveStrings(String fileName, String[] lines) {
 		FileIO.saveStrings(fileName, lines);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "fileName" })
 	public String[] loadStrings(String fileName) {

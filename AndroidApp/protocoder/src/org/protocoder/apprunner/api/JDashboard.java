@@ -35,7 +35,7 @@ import org.json.JSONObject;
 import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apidoc.annotation.APIParam;
 import org.protocoder.apprunner.JInterface;
-import org.protocoder.apprunner.JavascriptInterface;
+import org.protocoder.apprunner.ProtocoderScript;
 import org.protocoder.apprunner.api.dashboard.JDashboardButton;
 import org.protocoder.apprunner.api.dashboard.JDashboardHTML;
 import org.protocoder.apprunner.api.dashboard.JDashboardImage;
@@ -55,7 +55,7 @@ public class JDashboard extends JInterface {
 		super(a);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "name", "x", "y", "w", "h", "minLimit", "maxLimit" })
 	public JDashboardPlot addPlot(String name, int x, int y, int w, int h, float minLimit, float maxLimit)
@@ -67,7 +67,7 @@ public class JDashboard extends JInterface {
 		return jWebAppPlot;
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "html", "x", "y" })
 	public JDashboardHTML addHTML(String html, int x, int y) throws UnknownHostException, JSONException {
@@ -78,7 +78,7 @@ public class JDashboard extends JInterface {
 		return jWebAppHTML;
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "name", "x", "y", "w", "h", "function()" })
 	public JDashboardButton addButton(String name, int x, int y, int w, int h, final String callbackfn)
@@ -91,7 +91,7 @@ public class JDashboard extends JInterface {
 		return jWebAppButton;
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "name", "x", "y", "w", "h", "min", "max" })
 	public JDashboardSlider addSlider(String name, int x, int y, int w, int h, int min, int max, final String callbackfn)
@@ -104,7 +104,7 @@ public class JDashboard extends JInterface {
 		return jWebAppSlider;
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "name", "x", "y", "size", "hexColor" })
 	public JDashboardLabel addLabel(String name, int x, int y, int size, String color) throws UnknownHostException,
@@ -116,7 +116,7 @@ public class JDashboard extends JInterface {
 		return jWebAppLabel;
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "url", "x", "y", "w", "h" })
 	public JDashboardImage addImage(String url, int x, int y, int w, int h) throws UnknownHostException, JSONException {
@@ -127,7 +127,7 @@ public class JDashboard extends JInterface {
 		return jWebAppImage;
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "r", "g", "b", "alpha" })
 	public void setBackgroundColor(int r, int g, int b, float alpha) {
@@ -156,7 +156,7 @@ public class JDashboard extends JInterface {
 
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "boolean" })
 	public void show(boolean b) {

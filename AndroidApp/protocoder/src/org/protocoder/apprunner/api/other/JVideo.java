@@ -34,7 +34,7 @@ import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apidoc.annotation.APIParam;
 import org.protocoder.apprunner.AppRunnerActivity;
 import org.protocoder.apprunner.AppRunnerSettings;
-import org.protocoder.apprunner.JavascriptInterface;
+import org.protocoder.apprunner.ProtocoderScript;
 import org.protocoder.apprunner.api.widgets.JViewInterface;
 import org.protocoder.fragments.CustomVideoTextureView;
 
@@ -49,39 +49,39 @@ public class JVideo extends CustomVideoTextureView implements JViewInterface {
 		this.a = a;
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void play() {
 		super.play();
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "milliseconds" })
 	public void seekTo(int ms) {
 		super.seekTo(ms);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void pause() {
 		super.pause();
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void stop() {
 		super.stop();
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "fileName" })
 	public void load(String videoFile) {
 		super.loadExternalVideo(AppRunnerSettings.get().project.getStoragePath() + File.separator + videoFile);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "camera.takePicture();")
 	@APIParam(params = { "function(milliseconds, totalDuration)" })
 	public void onUpdate(final String callbackfn) {
@@ -105,56 +105,56 @@ public class JVideo extends CustomVideoTextureView implements JViewInterface {
 		});
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "camera.takePicture();")
 	@APIParam(params = { "file", "function()" })
 	public void setVolume(int vol) {
 		super.setVolume(vol);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "camera.takePicture();")
 	@APIParam(params = { "file", "function()" })
 	public void getVideoWidth() {
 		super.getVideoWidth();
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "camera.takePicture();")
 	@APIParam(params = { "file", "function()" })
 	public void getVideoHeight() {
 		super.getVideoHeight();
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "camera.takePicture();")
 	@APIParam(params = { "file", "function()" })
 	public void setLoop(boolean b) {
 		super.setLoop(b);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "camera.takePicture();")
 	@APIParam(params = { "file", "function()" })
 	public int getDuration() {
 		return super.getDuration();
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "camera.takePicture();")
 	@APIParam(params = { "file", "function()" })
 	public int getCurrentPosition() {
 		return super.getCurrentPosition();
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "camera.takePicture();")
 	@APIParam(params = { "milliseconds", "function()" })
 	public void fadeAudioIn(int time) {
 		super.fadeAudio(time, 1.0f);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "camera.takePicture();")
 	@APIParam(params = { "milliseconds", "function()" })
 	public void fadeAudioOut(int time) {

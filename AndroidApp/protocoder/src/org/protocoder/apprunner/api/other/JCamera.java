@@ -35,7 +35,7 @@ import org.protocoder.apidoc.annotation.APIParam;
 import org.protocoder.apprunner.AppRunnerActivity;
 import org.protocoder.apprunner.AppRunnerSettings;
 import org.protocoder.apprunner.JInterface;
-import org.protocoder.apprunner.JavascriptInterface;
+import org.protocoder.apprunner.ProtocoderScript;
 import org.protocoder.apprunner.api.widgets.JViewInterface;
 import org.protocoder.fragments.CameraFragment;
 import org.protocoder.fragments.CameraFragment.CameraListener;
@@ -54,7 +54,7 @@ public class JCamera extends JInterface implements JViewInterface {
 		this.cameraFragment = cameraFragment;
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIParam(params = { "file", "function()" })
 	@APIMethod(description = "", example = "camera.takePicture();")
 	// @APIRequires()
@@ -76,13 +76,13 @@ public class JCamera extends JInterface implements JViewInterface {
 		});
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void recordVideo(String file) {
 		cameraFragment.recordVideo(AppRunnerSettings.get().project.getStoragePath() + File.separator + file);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void stopRecordingVideo(final String callbackfn) {
 		// cameraFragment.recordVideo(((AppRunnerActivity)

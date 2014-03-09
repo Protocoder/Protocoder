@@ -32,7 +32,7 @@ import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apidoc.annotation.APIParam;
 import org.protocoder.apprunner.AppRunnerActivity;
 import org.protocoder.apprunner.JInterface;
-import org.protocoder.apprunner.JavascriptInterface;
+import org.protocoder.apprunner.ProtocoderScript;
 import org.protocoder.sensors.AccelerometerManager;
 import org.protocoder.sensors.AccelerometerManager.AccelerometerListener;
 import org.protocoder.sensors.GPSManager;
@@ -90,7 +90,7 @@ public class JSensors extends JInterface {
 
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "function(x, y, z)" })
 	public void startAccelerometer(final String callbackfn) {
@@ -117,7 +117,7 @@ public class JSensors extends JInterface {
 		}
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "" })
 	public void stopAccelerometer() {
@@ -129,7 +129,7 @@ public class JSensors extends JInterface {
 		}
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "", "function(x, y, z)" })
 	public void startGyroscope(final String callbackfn) {
@@ -150,7 +150,7 @@ public class JSensors extends JInterface {
 		}
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "" })
 	public void stopGyroscope() {
@@ -161,7 +161,7 @@ public class JSensors extends JInterface {
 		}
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "function(lat, lon, alt, speed, bearing)" })
 	public void startGPS(final String callbackfn) {
@@ -205,7 +205,7 @@ public class JSensors extends JInterface {
 		}
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "" })
 	public void stopGPS() {
@@ -217,28 +217,28 @@ public class JSensors extends JInterface {
 		}
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "" })
 	public Location getLastKnownLocation() {
 		return gpsManager.getLastKnownLocation();
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "latitude", "longitude" })
 	public String getLocationName(double lat, double lon) {
 		return gpsManager.getLocationName(lat, lon);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "endLatitude", "endLongitude", "endLatitude", "endLongitude" })
 	public double getDistance(double startLatitude, double startLongitude, double endLatitude, double endLongitude) {
 		return gpsManager.getDistance(startLatitude, startLongitude, endLatitude, endLongitude);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "function(id, data)" })
 	public void onNFC(final String fn) {
@@ -247,7 +247,7 @@ public class JSensors extends JInterface {
 		onNFCfn = fn;
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "function()" })
 	public void writeNFC(String data, final String fn) {
@@ -290,7 +290,7 @@ public class JSensors extends JInterface {
 		public void onNewTag(String id, String nfcMessage);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "function(msg)" })
 	public void nfcWrite(final String fn) {
@@ -299,7 +299,7 @@ public class JSensors extends JInterface {
 		onNFCfn = fn;
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "function(pitch, roll, yaw)" })
 	public void startOrientation(final String callbackfn) {
@@ -318,7 +318,7 @@ public class JSensors extends JInterface {
 
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "" })
 	public void stopOrientation() {
@@ -326,7 +326,7 @@ public class JSensors extends JInterface {
 		orientationManager.stop();
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "function(intensity)" })
 	public void startLightIntensity(final String callbackfn) {
@@ -346,7 +346,7 @@ public class JSensors extends JInterface {
 
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "" })
 	public void stopLightIntensity() {
@@ -354,7 +354,7 @@ public class JSensors extends JInterface {
 		lightManager.stop();
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "function(proximity)" })
 	public void startProximity(final String callbackfn) {
@@ -374,14 +374,14 @@ public class JSensors extends JInterface {
 
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void stopProximity() {
 		proximityManager.removeListener(lightListener);
 		proximityManager.stop();
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "function(value)" })
 	public void startMagnetic(final String callbackfn) {
@@ -401,14 +401,14 @@ public class JSensors extends JInterface {
 
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void stopMagnetic() {
 		magneticManager.removeListener(magneticListener);
 		magneticManager.stop();
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "function(value)" })
 	public void startBarometer(final String callbackfn) {
@@ -428,7 +428,7 @@ public class JSensors extends JInterface {
 
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void stopPressure() {
 		pressureManager.removeListener(pressureListener);

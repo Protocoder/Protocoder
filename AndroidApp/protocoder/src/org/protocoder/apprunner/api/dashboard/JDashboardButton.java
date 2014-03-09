@@ -34,7 +34,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apprunner.JInterface;
-import org.protocoder.apprunner.JavascriptInterface;
+import org.protocoder.apprunner.ProtocoderScript;
 import org.protocoder.network.CustomWebsocketServer;
 import org.protocoder.network.CustomWebsocketServer.WebSocketListener;
 import org.protocoder.utils.StrUtils;
@@ -51,7 +51,7 @@ public class JDashboardButton extends JInterface {
 		super(a);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void add(String name, int x, int y, int w, int h, final String callbackfn) throws JSONException,
 			UnknownHostException {
@@ -86,7 +86,7 @@ public class JDashboardButton extends JInterface {
 
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void update(boolean pressed) throws JSONException, UnknownHostException {
 		JSONObject msg = new JSONObject();

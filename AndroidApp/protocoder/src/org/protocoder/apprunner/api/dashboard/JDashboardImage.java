@@ -34,7 +34,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apprunner.JInterface;
-import org.protocoder.apprunner.JavascriptInterface;
+import org.protocoder.apprunner.ProtocoderScript;
 import org.protocoder.network.CustomWebsocketServer;
 import org.protocoder.utils.StrUtils;
 
@@ -50,7 +50,7 @@ public class JDashboardImage extends JInterface {
 		super(a);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void add(String url, int x, int y, int w, int h) throws UnknownHostException, JSONException {
 		this.id = StrUtils.generateRandomString();
@@ -77,7 +77,7 @@ public class JDashboardImage extends JInterface {
 
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void changeImage(String url) throws JSONException, UnknownHostException {
 		JSONObject msg = new JSONObject();

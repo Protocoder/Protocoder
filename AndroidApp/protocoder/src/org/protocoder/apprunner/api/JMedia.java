@@ -38,7 +38,7 @@ import org.protocoder.apidoc.annotation.APIParam;
 import org.protocoder.apprunner.AppRunnerActivity;
 import org.protocoder.apprunner.AppRunnerSettings;
 import org.protocoder.apprunner.JInterface;
-import org.protocoder.apprunner.JavascriptInterface;
+import org.protocoder.apprunner.ProtocoderScript;
 import org.protocoder.apprunner.api.other.JPureData;
 import org.protocoder.media.Audio;
 import org.protocoder.media.AudioService;
@@ -80,7 +80,7 @@ public class JMedia extends JInterface {
 
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "plays a sound", example = "media.playSound(fileName);")
 	@APIParam(params = { "fileName" })
 	public void playSound(String url) {
@@ -91,7 +91,7 @@ public class JMedia extends JInterface {
 		Audio.playSound(url, 100);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "routes the audio through the speakers", example = "media.playSound(fileName);")
 	@APIParam(params = { "" })
 	public void setAudioOnSpeakers() {
@@ -100,14 +100,14 @@ public class JMedia extends JInterface {
 		audioManager.setSpeakerphoneOn(true);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "routes the audio through the speakers", example = "media.playSound(fileName);")
 	@APIParam(params = { "volume" })
 	public void setVolume(int volume) {
 		a.get().setVolume(volume);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "fileName", "function(objectType, value)" })
 	public JPureData initPDPatch(String fileName, final String callbackfn) {
@@ -209,7 +209,7 @@ public class JMedia extends JInterface {
 	ProgressDialog mProgressDialog;
 	boolean showProgress = false;
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "fileName", "showProgressBoolean" })
 	public void recordAudio(String fileName, boolean showProgress) {
@@ -272,21 +272,21 @@ public class JMedia extends JInterface {
 		}
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "" })
 	public void stopAudio() {
 
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "text to speech", example = "media.textToSpeech('hello world');")
 	@APIParam(params = { "text" })
 	public void textToSpeech(String text) {
 		Audio.speak(a.get(), text, Locale.getDefault());
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "start voice recognition", example = "media.startVoiceRecognition(function(text) { console.log(text) } );")
 	@APIParam(params = { "function(recognizedText)" })
 	public void startVoiceRecognition(final String callbackfn) {

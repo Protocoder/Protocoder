@@ -34,7 +34,7 @@ import java.util.Iterator;
 import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apidoc.annotation.APIParam;
 import org.protocoder.apprunner.JInterface;
-import org.protocoder.apprunner.JavascriptInterface;
+import org.protocoder.apprunner.ProtocoderScript;
 import org.protocoder.sensors.WhatIsRunning;
 
 import android.app.Activity;
@@ -73,21 +73,21 @@ public class JUtil extends JInterface {
 			rl.add(task);
 		}
 
-		@JavascriptInterface
+		@ProtocoderScript
 		@APIMethod(description = "", example = "")
 		@APIParam(params = { "duration" })
 		public void setDelay(int duration) {
 			this.delay = duration;
 		}
 
-		@JavascriptInterface
+		@ProtocoderScript
 		@APIMethod(description = "", example = "")
 		public void stop() {
 			handler.removeCallbacks(task);
 		}
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "milliseconds", "function()" })
 	public Looper loop(final int duration, final String callbackkfn) {
@@ -95,7 +95,7 @@ public class JUtil extends JInterface {
 		return new Looper(duration, callbackkfn);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "milliseconds", "function()" })
 	public void delay(final int duration, final String fn) {

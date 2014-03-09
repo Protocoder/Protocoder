@@ -32,7 +32,7 @@ import org.protocoder.PrefsFragment;
 import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apidoc.annotation.APIParam;
 import org.protocoder.apprunner.JInterface;
-import org.protocoder.apprunner.JavascriptInterface;
+import org.protocoder.apprunner.ProtocoderScript;
 import org.protocoder.events.ProjectManager;
 
 import android.app.Activity;
@@ -55,13 +55,13 @@ public class JApp extends JInterface {
 
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void setDelayedAlarm(int id, int message, int delay) {
 
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void close() {
 		a.get().finish();
@@ -69,21 +69,21 @@ public class JApp extends JInterface {
 	}
 
 	@android.webkit.JavascriptInterface
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "code" })
 	public void eval(String code) {
 		a.get().interp.eval(code);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "id" })
 	public void setId(String id) {
 		PrefsFragment.setId(a.get(), id);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public String getProjectURL() {
 		String url = ProjectManager.getInstance().getCurrentProject().getServingURL();

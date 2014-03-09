@@ -32,7 +32,7 @@ import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apidoc.annotation.APIParam;
 import org.protocoder.apprunner.AppRunnerActivity;
 import org.protocoder.apprunner.JInterface;
-import org.protocoder.apprunner.JavascriptInterface;
+import org.protocoder.apprunner.ProtocoderScript;
 
 import android.app.Activity;
 
@@ -43,7 +43,7 @@ public class JEditor extends JInterface {
 
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "boolean" })
 	public void showConsole(boolean visible) {
@@ -51,21 +51,21 @@ public class JEditor extends JInterface {
 
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "boolean" })
 	public void showEditor(boolean visible) {
 		((AppRunnerActivity) a.get()).showEditor(visible);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "boolean" })
 	public void loadHTMLonSideBar(boolean visible) {
 
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "boolean" })
 	public void showSideBar(boolean visible) {

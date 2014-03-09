@@ -57,7 +57,7 @@ import org.json.JSONObject;
 import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apidoc.annotation.APIParam;
 import org.protocoder.apprunner.JInterface;
-import org.protocoder.apprunner.JavascriptInterface;
+import org.protocoder.apprunner.ProtocoderScript;
 import org.protocoder.network.NetworkUtils;
 import org.protocoder.network.NetworkUtils.DownloadTask.DownloadListener;
 import org.protocoder.network.OSC;
@@ -83,7 +83,7 @@ public class JNetwork extends JInterface {
 
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "url", "fileName", "function(progress)" })
 	public void downloadFile(String url, String fileName, final String callbackfn) {
@@ -128,14 +128,14 @@ public class JNetwork extends JInterface {
 
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "" })
 	public String getIP() {
 		return NetworkUtils.getLocalIpAddress(a.get());
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "port", "function(jsonData)" })
 	public OSC.Server startOSCServer(String port, final String callbackfn) {
@@ -182,7 +182,7 @@ public class JNetwork extends JInterface {
 		return server;
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "address", "port" })
 	public OSC.Client connectOSC(String address, int port) {
@@ -193,7 +193,7 @@ public class JNetwork extends JInterface {
 		return client;
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "port", "function(status, remoteAddress, jsonData)" })
 	public WebSocketServer startWebsocketServer(int port, final String callbackfn) {
@@ -229,7 +229,7 @@ public class JNetwork extends JInterface {
 
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "uri", "function(type, data)" })
 	public org.java_websocket.client.WebSocketClient connectWebsocket(String uri, final String callbackfn) {
@@ -265,7 +265,7 @@ public class JNetwork extends JInterface {
 		return webSocketClient;
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "uri", "function(type, data)" })
 	public SocketIOClient connectSocketIO(String uri, final String callbackfn) {
@@ -307,7 +307,7 @@ public class JNetwork extends JInterface {
 		return socketIOClient;
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "url", "function(data)" })
 	public void sendEmail() {
@@ -329,7 +329,7 @@ public class JNetwork extends JInterface {
 
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "url", "function(data)" })
 	public void getRequest(String url, final String callbackfn) {
@@ -384,7 +384,7 @@ public class JNetwork extends JInterface {
 	// BTConnect (function(msg))
 	// BTDisconnect
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "function(name, macAddress, strength)" })
 	public void scanBTNetworks(final String callbackfn) {

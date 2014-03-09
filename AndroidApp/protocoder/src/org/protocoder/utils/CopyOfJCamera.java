@@ -36,7 +36,7 @@ import org.protocoder.apidoc.annotation.APIParam;
 import org.protocoder.apprunner.AppRunnerActivity;
 import org.protocoder.apprunner.AppRunnerSettings;
 import org.protocoder.apprunner.JInterface;
-import org.protocoder.apprunner.JavascriptInterface;
+import org.protocoder.apprunner.ProtocoderScript;
 import org.protocoder.apprunner.api.widgets.JViewInterface;
 import org.protocoder.views.CustomCameraView;
 import org.protocoder.views.CustomCameraView.CameraListener;
@@ -56,7 +56,7 @@ public class CopyOfJCamera extends CustomCameraView implements JViewInterface {
 		this.cameraView = new CustomCameraView(a, id);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIParam(params = { "file", "function()" })
 	@APIMethod(description = "", example = "camera.takePicture();")
 	// @APIRequires()
@@ -78,13 +78,13 @@ public class CopyOfJCamera extends CustomCameraView implements JViewInterface {
 		});
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void recordVideo(String file) {
 		cameraView.recordVideo(AppRunnerSettings.get().project.getStoragePath() + File.separator + file);
 	}
 
-	@JavascriptInterface
+	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void stopRecordingVideo(final String callbackfn) {
 		// cameraFragment.recordVideo(((AppRunnerActivity)
