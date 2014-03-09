@@ -1,20 +1,16 @@
 
 
 Today 
-OK - modulo evento de sketch 
-OK - sketchs trigeando eventos 
-OK - programming interface css load 
-- cambiar listeners en canvas 
-1h - hacer merge con la parte de telefonos y opencv 
-2h - emulador telefonos y camara en main 
+
+- examples 
+MM - volume keys 
+OK - camera optional 
 
 
-	- email italia con factura 
-	- agreement blast theory 
-	- maquinita banco holandes 
-	- taxes holanda 
-	
-	
+- maquinita banco holandes 
+- taxes holanda 
+
+
 Programa la plaza 
 	2h - nodejs admin 
 	1h - ver info blobs 
@@ -29,7 +25,9 @@ Programa la plaza
 
 ------------------------------------------------------ 
 
-Protocoder 
+Protocoder (March) 
+	MM - show keyboard programatically 
+	MM - load font 
 
 	- icono 
 	- prepare mediakit  
@@ -39,9 +37,16 @@ Protocoder
 		scriptName	onboot
 		scriptName	onphonecall
 
-
 	M - arduino 
 	- fix network.get 
+
+	MM - pestanyas protocoder 
+	- bluetooth 
+	- cambiar plotview para que retorne view 
+	2h  - add automatically .java 
+
+
+
 
 	- c++ app launch adb 
 	30m - email makespace 
@@ -55,15 +60,11 @@ Protocoder
 
 	- list view states 
 	- icono dashboard 
-	MM - protocoder card interface
 	1h M - touch and mouse events 
-	2h  - add automatically .java 
 	- sidebar widgets 
 	- arreglar la companion app 
-	- cambiar plotview para que retorne view 
-
-	MM - pestanyas protocoder 
-	- add list of crons 
+	- sqlite 
+	- camera facedetector 
 	- androidsvg
 
 Protocoder 15 dias 
@@ -74,7 +75,13 @@ Protocoder 15 dias
 	- time lapse camera 
 	- 
 
+
 Programa la plaza 
+	- cambiar listeners en canvas 
+	1h - hacer merge con la parte de telefonos y opencv 
+	MM - emulador telefonos y camara en main 
+	- debug en emulation 
+
 	- visualizador (edit inputs )
 	- arreglar la ayuda  
 	- logo programalaplaza 

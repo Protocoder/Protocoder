@@ -74,6 +74,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -85,6 +86,7 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.CycleInterpolator;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebSettings;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -1039,6 +1041,37 @@ public class JUI extends JUIGeneric {
 	@APIParam(params = { "imageName", "view" })
 	public void takeScreenshot(String imagePath, View v) {
 		AndroidUtils.takeScreenshotView(AppRunnerSettings.get().project.getStoragePath(), imagePath, v);
+	}
+
+	@APIParam(params = { "imageName", "view" })
+	public Typeface loadFont(String fontName) {
+		return Typeface.createFromAsset(a.get().getAssets(), fontName);
+	}
+
+	@APIParam(params = { "imageName", "view" })
+	public void setFont(View v, Typeface f) {
+
+		if (v instanceof JButton) {
+			((JButton) v).setTypeface(f);
+		} else if (v instanceof JTextView) {
+			((JTextView) v).setTypeface(f);
+		}
+	}
+
+	@JavascriptInterface
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "boolean" })
+	public void showVirtualKeys(boolean show) {
+		InputMethodManager imm = (InputMethodManager) a.get().getSystemService(a.get().INPUT_METHOD_SERVICE);
+
+		if (show) {
+			imm.showSoftInput(a.get().getCurrentFocus(), InputMethodManager.SHOW_FORCED);
+			uiAbsoluteLayout.setFocusable(true);
+			uiAbsoluteLayout.setFocusableInTouchMode(true);
+
+		} else {
+			imm.hideSoftInputFromWindow(a.get().getCurrentFocus().getWindowToken(), 0);
+		}
 	}
 
 	@JavascriptInterface
