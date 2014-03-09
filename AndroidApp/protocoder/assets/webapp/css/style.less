@@ -478,14 +478,17 @@ body {
 
 			li:hover { 
 				background: rgba(255, 187, 51, 0.3);
-
+			}
+		
+			li:active { 
+				background: rgba(255, 187, 51, 1);
 			}
 
 			li span {
-			float: left;
-			width: 100%;
-			height: auto;
-			position: absolute;
+				float: left;
+				width: 100%;
+				height: auto;
+				position: absolute;
 				padding: 8px 5px 8px 12px;
 
 				-webkit-transition: all 0.2s ease;
@@ -638,6 +641,17 @@ body {
 
 		}
 
+		li:hover{ 
+			border: 0px solid #aaaaaa;
+			background-color: rgba(51, 181, 229, 0.2);
+		}
+
+		li:active{ 
+			background-color: rgba(51, 181, 229, 0.8);
+		}
+
+		
+
 		.icon {
 			float: left;
 			width: 20px;
@@ -674,14 +688,6 @@ body {
 		#sideBarBtn {
 			float: right;
 			margin-right: 121px;
-		}
-
-
-
-		li:hover{ 
-			border: 0px solid #aaaaaa;
-			background-color: rgba(51, 181, 229, 0.2);
-
 		}
 
 		#separator {
