@@ -139,6 +139,9 @@ public class AppRunnerActivity extends BaseActivity {
 
 	private TextView consoleText;
 
+	private final boolean keyVolumeEnabled = false;
+	private final boolean keyBackEnabled = true;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -411,7 +414,12 @@ public class AppRunnerActivity extends BaseActivity {
 		if (onKeyListener != null) {
 			onKeyListener.onKeyDown(keyCode);
 		}
-		return super.onKeyDown(keyCode, event);
+
+		if (checkBackKey(keyCode) || checkVolumeKeys(keyCode)) {
+			return super.onKeyDown(keyCode, event);
+		}
+
+		return true;
 	}
 
 	@Override
@@ -420,7 +428,36 @@ public class AppRunnerActivity extends BaseActivity {
 			onKeyListener.onKeyUp(keyCode);
 		}
 
-		return super.onKeyUp(keyCode, event);
+		if (checkBackKey(keyCode) || checkVolumeKeys(keyCode)) {
+			return super.onKeyDown(keyCode, event);
+		}
+
+		return true;
+	}
+
+	public boolean checkBackKey(int keyCode) {
+		boolean r;
+
+		if (keyBackEnabled && keyCode == KeyEvent.KEYCODE_BACK) {
+			r = true;
+		} else {
+			r = false;
+		}
+
+		return r;
+	}
+
+	public boolean checkVolumeKeys(int keyCode) {
+		boolean r;
+
+		if (keyVolumeEnabled && (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
+			r = true;
+		} else {
+			r = false;
+		}
+
+		return r;
+
 	}
 
 	public void addOnAppStatusListener(JApp.onAppStatus onAppStatus) {
