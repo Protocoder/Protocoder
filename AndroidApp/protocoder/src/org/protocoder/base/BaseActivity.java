@@ -209,9 +209,11 @@ public class BaseActivity extends FragmentActivity {
 
 	public void setVolume(int value) {
 		AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-		value = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) * value / 100;
+		int maxValue = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+		float val = (float) (value / 100.0 * maxValue);
 
-		audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, value, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
+		audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, Math.round(val),
+				AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
 	}
 
 	public void setWakeLock(boolean b) {

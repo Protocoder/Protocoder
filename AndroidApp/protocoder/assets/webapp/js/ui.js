@@ -145,22 +145,7 @@ Ui.prototype.initUI = function() {
 	            $('#w2ui-popup #form').w2render('foo');
 	        }
 	    });
-	}
-
-	//http://w2ui.com/web/docs/w2tabs.add 
-	function addTab() {
-		var q = w2ui['code_editor'];
-		var q2 = q.get("main");
-		q2.tabs.add([{id : "tab2", caption : "Tab 2"}]);
-	}
-
-	function removeTab() {
-		var q = w2ui['code_editor'];
-		var q2 = q.get("main");
-
-		q2.tabs.remove("tab7");
-
-	}
+	}  
 
 		
 	// Prevent the backspace key from navigating back.
@@ -412,6 +397,23 @@ Ui.prototype.loadHTMLRightBar = function(filePath) {
 	//w2ui['layout'].load('right', filePath, 'slide-left');
 	$("#reference_container #content").load(filePath).fadeIn('500');
 }
+
+
+//http://w2ui.com/web/docs/w2tabs.add 
+Ui.prototype.addTab = function(name) {
+	var q = w2ui['code_editor'];
+	var q2 = q.get("main");
+	q2.tabs.add([{id : "tab2", caption : name}]);
+}
+
+Ui.prototype.removeTab = function() {
+	var q = w2ui['code_editor'];
+	var q2 = q.get("main");
+
+	q2.tabs.remove("tab7");
+
+}
+
 
 
 Ui.prototype.initUpload = function() {

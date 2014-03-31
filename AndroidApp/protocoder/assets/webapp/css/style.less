@@ -710,6 +710,59 @@ body {
 	color: rgb(120, 120, 120);
 }
 
+#layout_code_editor_panel_main { 
+
+	#tabMenu { 
+		position: absolute;
+		top: 21px;
+		right: 8px;
+		z-index: 2;
+
+		#menu {
+			/* display: none; */
+			padding: 2px;
+			background: white;
+			border-radius: 2px;
+			box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.47);
+
+			ul {
+				cursor: pointer;
+				text-decoration: none;
+				list-style-type: none;
+				padding: 22px 5px 0px 5px;
+				margin: 0;
+				font-size: 0.9em;
+				font-family: Roboto-Condensed-Regular, verdana, sans-serif;
+				color: rgb(130, 127, 127);
+				font-weight: 100;
+				
+				li {
+					padding: 4px 0px;
+					border-top: 1px dotted rgba(0, 0, 0, 0.06);
+				}
+
+				li:hover { 
+					color: black;
+				}
+			}
+		}
+
+	}
+	#addTab { 
+		padding: 3px 8px;
+		background: rgba(255, 255, 255, 0.52);
+		border-radius: 2px;
+		color: rgb(159, 159, 159);
+		float: right;
+	}
+
+	#addTab:hover { 
+		background: white;
+		color:black;
+	}
+
+}
+
 #toolbar {
 	padding: 0px !important; 
 	border: 0px !important;
@@ -891,13 +944,27 @@ body {
 }
 
 .w2ui-form .w2ui-buttons input[type="button"] { 
-	border-radius: 1px;
-	background: rgb(175, 175, 175);
+	background: #DCD9D9;
 	border: 0px;
+	outline: none;
 	padding: 7px;
-	color: white;
-	text-shadow: black 1px 1px 1px;
+	color: rgb(110, 107, 107);
+	border-radius: 1px;
 }
+
+.w2ui-form .w2ui-buttons input[type="button"]:hover { 
+	background: #E7E7E7;
+	color: white;
+}
+
+.w2ui-form .w2ui-buttons input[type="button"]:active { 
+	background: #A3A3A3;
+	color: white;
+}
+
+
+
+
 
 #layout_code_editor_panel_bottom > .w2ui-panel-content { 
 	overflow: hidden;
