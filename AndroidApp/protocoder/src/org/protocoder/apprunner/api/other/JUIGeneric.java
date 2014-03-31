@@ -68,7 +68,6 @@ import org.protocoder.views.HoloCircleSeekBar;
 import org.protocoder.views.HoloCircleSeekBar.OnCircleSeekBarChangeListener;
 import org.protocoder.views.PadView;
 import org.protocoder.views.PadView.TouchEvent;
-import org.protocoder.views.PlotView;
 import org.protocoder.views.TouchAreaView;
 import org.protocoder.views.TouchAreaView.OnTouchAreaListener;
 
@@ -111,7 +110,7 @@ public class JUIGeneric extends JInterface {
 	int viewCount = 0;
 	boolean isMainLayoutSetup = false;
 	protected FrameLayout uiAbsoluteLayout;
-	LinearLayout uiLinearLayout;
+	protected LinearLayout uiLinearLayout;
 	protected RelativeLayout holderLayout;
 	protected ImageView bgImageView;
 
@@ -591,9 +590,8 @@ public class JUIGeneric extends JInterface {
 
 	public JPlotView addGenericPlot(int min, int max) {
 		initializeLayout();
-		PlotView plotView = new PlotView(a.get());
-
-		JPlotView jPlotView = new JPlotView(a.get(), plotView, min, max);
+		JPlotView jPlotView = new JPlotView(a.get());
+		jPlotView.setLimits(min, max);
 
 		return jPlotView;
 	}

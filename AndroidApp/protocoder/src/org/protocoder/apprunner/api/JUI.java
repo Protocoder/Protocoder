@@ -692,7 +692,7 @@ public class JUI extends JUIGeneric {
 	@APIParam(params = { "x", "y", "w", "h", "min", "max" })
 	public JPlotView addPlot(int x, int y, int w, int h, int min, int max) {
 		JPlotView jPlotView = addGenericPlot(min, max);
-		addViewAbsolute(jPlotView.getView(), x, y, w, h);
+		addViewAbsolute(jPlotView, x, y, w, h);
 
 		return jPlotView;
 	}
@@ -1043,12 +1043,12 @@ public class JUI extends JUIGeneric {
 		AndroidUtils.takeScreenshotView(AppRunnerSettings.get().project.getStoragePath(), imagePath, v);
 	}
 
-	@APIParam(params = { "imageName", "view" })
+	@APIParam(params = { "fontFile" })
 	public Typeface loadFont(String fontName) {
-		return Typeface.createFromAsset(a.get().getAssets(), fontName);
+		return Typeface.createFromFile(AppRunnerSettings.get().project.getStoragePath() + File.separator + fontName);
 	}
 
-	@APIParam(params = { "imageName", "view" })
+	@APIParam(params = { "View", "Typeface" })
 	public void setFont(View v, Typeface f) {
 
 		if (v instanceof JButton) {
@@ -1058,6 +1058,8 @@ public class JUI extends JUIGeneric {
 		}
 	}
 
+	// it only works with absolute layout and only when
+	// a layout is been used
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "boolean" })

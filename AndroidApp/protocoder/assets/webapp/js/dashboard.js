@@ -18,7 +18,6 @@ Dashboard.prototype.show = function () {
 }
 
 
-
 Dashboard.prototype.addWidget = function(widget) { 
   this.widgets.push(widget.id);
 

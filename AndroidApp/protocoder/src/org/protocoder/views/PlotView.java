@@ -33,6 +33,9 @@ package org.protocoder.views;
  * add values to it 
  * 
  */
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Vector;
 
 import android.content.Context;
@@ -49,11 +52,11 @@ import android.view.View;
 public class PlotView extends View {
 	private static final String TAG = "PlotView";
 	// paint
-	private Paint mPaint = new Paint();
+	private final Paint mPaint = new Paint();
 	private Canvas mCanvas = new Canvas();
 	private Bitmap bitmap; // Cache
 
-	Vector<Plot> plots = new Vector<PlotView.Plot>();
+	HashMap<String, Plot> plots = new HashMap<String, PlotView.Plot>();
 
 	// util data
 	private float mLastX;
@@ -64,8 +67,8 @@ public class PlotView extends View {
 	private float mWidth;
 	private float mHeight;
 	private int mNumPoints;
-	private int mCurrentPosition = 0;
-	private int mDefinition = 5;
+	private final int mCurrentPosition = 0;
+	private int mDefinition = 2;
 	private float mMinBoundary;
 	private float mMaxBoundary;
 	private boolean mReady = false;
@@ -84,7 +87,7 @@ public class PlotView extends View {
 	public void init() {
 		mDefinition = 5;
 
-		mPaint.setStrokeWidth(1.0f);
+		mPaint.setStrokeWidth(thickness);
 		// mPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
 
 		if (isInEditMode()) {
@@ -95,15 +98,15 @@ public class PlotView extends View {
 
 	public void loadDemoValues() {
 		Plot plot1 = new Plot(Color.RED);
-		addPlot(plot1);
+		addPlot("", plot1);
 		mNumPoints = 1000; // (int)(getWidth() / mDefinition);
 		for (int i = 0; i < mNumPoints; i++) {
 			plot1.plotValues.add(((float) Math.random() * 220));
 		}
 	}
 
-	public void addPlot(Plot plot) {
-		plots.add(plot);
+	public void addPlot(String plotName, Plot plot) {
+		plots.put(plotName, plot);
 	}
 
 	@Override
@@ -114,7 +117,12 @@ public class PlotView extends View {
 		mNumPoints = (int) (mWidth / mDefinition);
 
 		// zeroed the plot
-		for (Plot p : plots) {
+		Iterator it = plots.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry m = (Map.Entry) it.next();
+			// System.out.println(pairs.getKey() + " = " + pairs.getValue());
+			// it.remove(); // avoids a ConcurrentModificationException
+			Plot p = (Plot) m.getValue();
 			p.zero();
 		}
 
@@ -164,7 +172,10 @@ public class PlotView extends View {
 			canvas.drawBitmap(bitmap, new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight()),
 					new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight()), null);
 
-			for (Plot p : plots) {
+			Iterator it = plots.entrySet().iterator();
+			while (it.hasNext()) {
+				Map.Entry m = (Map.Entry) it.next();
+				Plot p = (Plot) m.getValue();
 
 				// canvas.save(Canvas.MATRIX_SAVE_FLAG);
 				mPaint.setStyle(Style.STROKE);
@@ -180,15 +191,20 @@ public class PlotView extends View {
 				int i = 0;
 
 				float y = 0;
+				float y0 = 0;
 				for (int x = 0; x < mWidth; x += mDefinition) {
 
-					y = CanvasUtils.map((float) p.plotValues.get(i), (float) mMinBoundary, (float) mMaxBoundary,
-							(float) mHeight, 0f);
+					y = CanvasUtils.map(p.plotValues.get(i), mMinBoundary, mMaxBoundary, mHeight, 0f);
 
 					// Log.d(TAG, mMinBoundary + " " + mMaxBoundary + " " + y);
 					// canvas.drawPoint(x, y, mPaint);
 
-					canvas.drawCircle(x, y, thickness, mPaint);
+					// canvas.drawCircle(x, y, thickness, mPaint);
+
+					if (i > 1) {
+						y0 = CanvasUtils.map(p.plotValues.get(i - 1), mMinBoundary, mMaxBoundary, mHeight, 0f);
+					}
+					canvas.drawLine(x - mDefinition, y0, x, y, mPaint);
 
 					if (i < mNumPoints - 1) {
 						i++;
@@ -198,8 +214,10 @@ public class PlotView extends View {
 
 				// show value
 				// mPaint.setColor(Color.BLACK);
-				float lastVal = p.plotValues.get(plots.get(0).plotValues.size() - 1);
-				canvas.drawText("" + lastVal, mWidth - 20, y, mPaint);
+
+				// float lastVal =
+				// p.plotValues.get(plots.get(0).plotValues.size() - 1);
+				// canvas.drawText("" + lastVal, mWidth - 20, y, mPaint);
 
 			}
 
@@ -212,18 +230,26 @@ public class PlotView extends View {
 		}
 	}
 
-	public void setValue(Plot p, float v1) {
+	public void setValue(String plotName, float v1) {
 
 		if (mReady) {
+
+			if (plots.containsKey(plotName) == false) {
+				plots.put(plotName, new Plot(Color.BLUE));
+			}
+
 			// shift points
+			Plot p = plots.get(plotName);
 			p.plotValues.remove(0);
 			p.plotValues.add(v1);
 
 			// check if is min or max
-			if (v1 >= mMaxValue)
+			if (v1 >= mMaxValue) {
 				mMaxValue = v1;
-			if (v1 < mMinValue)
+			}
+			if (v1 < mMinValue) {
 				mMinValue = v1;
+			}
 
 			invalidate();
 		}
@@ -268,7 +294,11 @@ public class PlotView extends View {
 	}
 
 	public void setThickness(float r) {
-		thickness = r;
+		thickness = r; // when dot
+		mPaint.setStrokeWidth(thickness); // when line
+	}
+
+	public void changeColor(int r, int g, int b) {
 
 	}
 

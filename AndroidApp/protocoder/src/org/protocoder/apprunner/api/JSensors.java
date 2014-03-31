@@ -52,6 +52,7 @@ import org.protocoder.sensors.ProximityManager;
 import org.protocoder.sensors.ProximityManager.ProximityListener;
 import org.protocoder.sensors.WhatIsRunning;
 
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.util.Log;
 
@@ -77,11 +78,14 @@ public class JSensors extends JInterface {
 	private MagneticListener magneticListener;
 	private PressureManager pressureManager;
 	private PressureListener pressureListener;
+	private final int speed;
 
 	public JSensors(AppRunnerActivity mwmActivity) {
 		super(mwmActivity);
 
-		((AppRunnerActivity) a.get()).addNFCReadListener(new onNFCListener() {
+		speed = SensorManager.SENSOR_DELAY_NORMAL;
+
+		a.get().addNFCReadListener(new onNFCListener() {
 			@Override
 			public void onNewTag(String id, String data) {
 				callback(onNFCfn, "\"" + id + "\"", "\"" + data + "\"");
@@ -110,7 +114,7 @@ public class JSensors extends JInterface {
 				}
 			};
 			accelerometerManager.addListener(accelerometerListener);
-			accelerometerManager.start();
+			accelerometerManager.start(speed);
 			WhatIsRunning.getInstance().add(accelerometerManager);
 
 			accelerometerStarted = true;
@@ -143,7 +147,7 @@ public class JSensors extends JInterface {
 				}
 			};
 			gyroscopeManager.addListener(gyroscopeListener);
-			gyroscopeManager.start();
+			gyroscopeManager.start(speed);
 			WhatIsRunning.getInstance().add(gyroscopeManager);
 
 			gyroscopeStarted = true;
@@ -242,7 +246,7 @@ public class JSensors extends JInterface {
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "function(id, data)" })
 	public void onNFC(final String fn) {
-		((AppRunnerActivity) a.get()).initializeNFC();
+		a.get().initializeNFC();
 
 		onNFCfn = fn;
 	}
@@ -252,7 +256,7 @@ public class JSensors extends JInterface {
 	@APIParam(params = { "function()" })
 	public void writeNFC(String data, final String fn) {
 		NFCUtil.nfcMsg = data;
-		((AppRunnerActivity) a.get()).initializeNFC();
+		a.get().initializeNFC();
 
 		a.get().addNFCWrittenListener(new onNFCWrittenListener() {
 
@@ -294,7 +298,7 @@ public class JSensors extends JInterface {
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "function(msg)" })
 	public void nfcWrite(final String fn) {
-		((AppRunnerActivity) a.get()).initializeNFC();
+		a.get().initializeNFC();
 
 		onNFCfn = fn;
 	}
@@ -313,7 +317,7 @@ public class JSensors extends JInterface {
 			}
 		};
 		orientationManager.addListener(orientationListener);
-		orientationManager.start();
+		orientationManager.start(speed);
 		WhatIsRunning.getInstance().add(orientationManager);
 
 	}
@@ -341,7 +345,7 @@ public class JSensors extends JInterface {
 		};
 
 		lightManager.addListener(lightListener);
-		lightManager.start();
+		lightManager.start(speed);
 		WhatIsRunning.getInstance().add(lightManager);
 
 	}
@@ -369,7 +373,7 @@ public class JSensors extends JInterface {
 		};
 
 		proximityManager.addListener(proximityListener);
-		proximityManager.start();
+		proximityManager.start(speed);
 		WhatIsRunning.getInstance().add(proximityManager);
 
 	}
@@ -396,7 +400,7 @@ public class JSensors extends JInterface {
 		};
 
 		magneticManager.addListener(magneticListener);
-		magneticManager.start();
+		magneticManager.start(speed);
 		WhatIsRunning.getInstance().add(magneticManager);
 
 	}
@@ -423,7 +427,7 @@ public class JSensors extends JInterface {
 		};
 
 		pressureManager.addListener(pressureListener);
-		pressureManager.start();
+		pressureManager.start(speed);
 		WhatIsRunning.getInstance().add(pressureManager);
 
 	}

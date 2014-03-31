@@ -103,10 +103,9 @@ public class ProximityManager extends CustomSensorManager implements WhatIsRunni
 	}
 
 	@Override
-	public void start() {
+	public void start(int speed) {
 		running = true;
-		proximitySupported = sensormanager.registerListener(proximityListener, proximity,
-				SensorManager.SENSOR_DELAY_GAME);
+		proximitySupported = sensormanager.registerListener(proximityListener, proximity, speed);
 	}
 
 	@Override
