@@ -60,7 +60,7 @@ Editor.prototype.initEditor = function() {
 	    name: 'save_command',
 	    bindKey: {
 	        win: 'Ctrl-S',
-	        mac: 'Ctrl-S',
+	        mac: 'Command-S',
 	        sender: 'mmeditor'
 	    },
 	    exec: function(env, args, request) {
@@ -74,7 +74,7 @@ Editor.prototype.initEditor = function() {
 	    name: 'run_command',
 	    bindKey: {
 	        win: 'Ctrl-R',
-	        mac: 'Ctrl-R',
+	        mac: 'Command-R',
 	        sender: 'mmeditor'
 	    },
 	    exec: function(env, args, request) {
