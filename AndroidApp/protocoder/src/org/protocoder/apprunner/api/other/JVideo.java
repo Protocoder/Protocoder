@@ -49,12 +49,14 @@ public class JVideo extends CustomVideoTextureView implements JViewInterface {
 		this.a = a;
 	}
 
+	@Override
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void play() {
 		super.play();
 	}
 
+	@Override
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "milliseconds" })
@@ -62,12 +64,14 @@ public class JVideo extends CustomVideoTextureView implements JViewInterface {
 		super.seekTo(ms);
 	}
 
+	@Override
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void pause() {
 		super.pause();
 	}
 
+	@Override
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void stop() {
@@ -107,56 +111,61 @@ public class JVideo extends CustomVideoTextureView implements JViewInterface {
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "camera.takePicture();")
-	@APIParam(params = { "file", "function()" })
+	@APIParam(params = { "int" })
 	public void setVolume(int vol) {
 		super.setVolume(vol);
 	}
 
+	@Override
 	@ProtocoderScript
 	@APIMethod(description = "", example = "camera.takePicture();")
-	@APIParam(params = { "file", "function()" })
+	@APIParam(params = { "" })
 	public void getVideoWidth() {
 		super.getVideoWidth();
 	}
 
+	@Override
 	@ProtocoderScript
 	@APIMethod(description = "", example = "camera.takePicture();")
-	@APIParam(params = { "file", "function()" })
+	@APIParam(params = { "" })
 	public void getVideoHeight() {
 		super.getVideoHeight();
 	}
 
+	@Override
 	@ProtocoderScript
 	@APIMethod(description = "", example = "camera.takePicture();")
-	@APIParam(params = { "file", "function()" })
+	@APIParam(params = { "boolean" })
 	public void setLoop(boolean b) {
 		super.setLoop(b);
 	}
 
+	@Override
 	@ProtocoderScript
 	@APIMethod(description = "", example = "camera.takePicture();")
-	@APIParam(params = { "file", "function()" })
+	@APIParam(params = { "" })
 	public int getDuration() {
 		return super.getDuration();
 	}
 
+	@Override
 	@ProtocoderScript
 	@APIMethod(description = "", example = "camera.takePicture();")
-	@APIParam(params = { "file", "function()" })
+	@APIParam(params = { "" })
 	public int getCurrentPosition() {
 		return super.getCurrentPosition();
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "camera.takePicture();")
-	@APIParam(params = { "milliseconds", "function()" })
+	@APIParam(params = { "milliseconds" })
 	public void fadeAudioIn(int time) {
 		super.fadeAudio(time, 1.0f);
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "camera.takePicture();")
-	@APIParam(params = { "milliseconds", "function()" })
+	@APIParam(params = { "milliseconds" })
 	public void fadeAudioOut(int time) {
 		super.fadeAudio(time, 0.0f);
 	}

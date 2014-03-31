@@ -29,50 +29,50 @@
 package org.protocoder.apprunner.api.widgets;
 
 import org.protocoder.apidoc.annotation.APIMethod;
-import org.protocoder.apprunner.JInterface;
 import org.protocoder.apprunner.ProtocoderScript;
 import org.protocoder.views.PlotView;
-import org.protocoder.views.PlotView.Plot;
 
-import android.app.Activity;
-import android.graphics.Color;
-import android.view.View;
+import android.content.Context;
 
-public class JPlotView extends JInterface implements JViewInterface {
+public class JPlotView extends PlotView implements JViewInterface {
 
 	private static final String TAG = "JPlotView";
-	String name;
-	private final Plot plot;
-	private final PlotView plotView;
 
-	public JPlotView(Activity a, PlotView plotView, float min, float max) {
-		super(a);
-		this.plotView = plotView;
-		plot = plotView.new Plot(Color.RED);
-		plotView.addPlot(plot);
-		plotView.setLimits(min, max);
+	public JPlotView(Context context) {
+		super(context);
 	}
 
+	@Override
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void setThickness(float r) {
-		plotView.setThickness(r);
+		super.setThickness(r);
 	}
 
+	@Override
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	public void setDefinition(int definition) {
+		super.setDefinition(definition);
+	}
+
+	@Override
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void setLimits(float min, float max) {
-		plotView.setLimits(min, max);
+		super.setLimits(min, max);
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void update(float value) {
-		plotView.setValue(plot, value);
+		super.setValue("default", value);
 	}
 
-	public View getView() {
-		return plotView;
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	public void update(String plotName, float value) {
+		super.setValue(plotName, value);
 	}
 
 }

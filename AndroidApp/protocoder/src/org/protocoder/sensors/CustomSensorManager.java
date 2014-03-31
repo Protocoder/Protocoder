@@ -62,9 +62,9 @@ public class CustomSensorManager {
 		return false;
 	}
 
-	public void start() {
+	public void start(int speed) {
 		running = true;
-		sensorSupported = sensormanager.registerListener(listener, sensor, SensorManager.SENSOR_DELAY_GAME);
+		sensorSupported = sensormanager.registerListener(listener, sensor, speed);
 	}
 
 	public void stop() {

@@ -51,7 +51,7 @@ public class ActivityBT extends FragmentActivity {
 
 		final PlotView graphView = (PlotView) findViewById(R.id.plotView1);
 		final Plot p1 = graphView.new Plot(Color.RED);
-		graphView.addPlot(p1);
+		// graphView.addPlot(p1);
 
 		simpleBT = new SimpleBT(this);
 		simpleBT.startDeviceListActivity();
@@ -73,7 +73,7 @@ public class ActivityBT extends FragmentActivity {
 
 				df.adapter.addRightItem(cmd + " " + value);
 				float val = Float.parseFloat(value);
-				graphView.setValue(p1, val);
+				// graphView.setValue(p1, val);
 
 			}
 		});
