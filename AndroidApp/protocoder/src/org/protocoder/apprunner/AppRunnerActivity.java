@@ -139,8 +139,8 @@ public class AppRunnerActivity extends BaseActivity {
 
 	private TextView consoleText;
 
-	private final boolean keyVolumeEnabled = true;
-	private final boolean keyBackEnabled = true;
+	public boolean keyVolumeEnabled = true;
+	public boolean keyBackEnabled = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
