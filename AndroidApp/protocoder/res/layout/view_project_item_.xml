@@ -5,7 +5,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="0dp"
-        android:background="@color/transparent"
+        android:background="@drawable/item_menu_list"
         android:gravity="center" >
 
         <RelativeLayout

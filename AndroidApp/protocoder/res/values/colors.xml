@@ -8,6 +8,8 @@
     <color name="black">#000000</color>
     <color name="blacktransparent">#88000000</color>
     <color name="transparent">#00000000</color>
+    <color name="transparent_focused">#22000000</color>
+    <color name="transparent_pressed">#55000000</color>
     <color name="light_grey">#ffeeeeee</color>
 
     

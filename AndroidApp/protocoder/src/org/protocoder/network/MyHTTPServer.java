@@ -41,10 +41,10 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.protocoder.apidoc.APIManager;
-import org.protocoder.apprunner.api.JDevice;
 import org.protocoder.apprunner.api.JBoards;
 import org.protocoder.apprunner.api.JConsole;
 import org.protocoder.apprunner.api.JDashboard;
+import org.protocoder.apprunner.api.JDevice;
 import org.protocoder.apprunner.api.JEditor;
 import org.protocoder.apprunner.api.JFileIO;
 import org.protocoder.apprunner.api.JMedia;
@@ -174,11 +174,11 @@ public class MyHTTPServer extends NanoHTTPD {
 				String projectFolder = "/" + p.getTypeString() + "/" + p.getName();
 				Log.d("qq", "project folder is " + projectFolder);
 				if (uri.replace(projectURLPrefix, "").contains(projectFolder)) {
-					Log.d("qq", "inside project");
+					// Log.d("qq", "inside project");
 					return serveFile(uri.substring(uri.lastIndexOf('/') + 1, uri.length()), header,
 							new File(p.getStoragePath()), false);
 				} else {
-					Log.d("qq", "outside project");
+					// Log.d("qq", "outside project");
 					new Response(HTTP_NOTFOUND, MIME_HTML, "resource not found");
 				}
 
@@ -201,8 +201,9 @@ public class MyHTTPServer extends NanoHTTPD {
 
 				File src = new File(files.getProperty("pic").toString());
 				File dst = new File(p.getStoragePath() + "/" + parms.getProperty("pic").toString());
-				Log.d("qwqw", p.getStoragePath() + "/" + parms.getProperty("pic").toString());
-				Log.d(TAG, " " + src.toString() + " " + dst.toString());
+				// Log.d("qwqw", p.getStoragePath() + "/" +
+				// parms.getProperty("pic").toString());
+				// Log.d(TAG, " " + src.toString() + " " + dst.toString());
 
 				FileIO.copyFile(src, dst);
 

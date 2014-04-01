@@ -72,6 +72,51 @@ Ui.prototype.initUI = function() {
 	    url: '',
 	    onRender: function() { 
 	        gridRendered = true;
+	        //add tabs button 
+	        $("#layout_code_editor_panel_main").append('<div id="tabMenu"><div id="showHideMenu">+</div> <div id="menu"><ul> <li id = "addTab">New tab</li><li id = "renameTab">Rename selected tab</li><li id = "deleteTab"> Delete selected tab</li></ul></div></div>');
+	    	
+
+	        jQuery.fn.btnToggle = function(cb1, cb2) {
+    			var o = $(this[0]) // It's your element
+
+    			function handle1 () { 
+    				cb1();
+    				o.one('click', handle2);
+    			} 
+
+    			function handle2 () {
+    				cb2(); 
+    				o.one('click', handle1);
+    			}
+    			o.one('click', handle1);
+
+			};
+
+	    	//bind ui
+	    	$("#tabMenu #showHideMenu").btnToggle(function() {
+	    		$("#tabMenu #menu").fadeIn();
+	    		console.log("show");
+	    	}, function() {
+	    		$("#tabMenu #menu").fadeOut();
+	    		console.log("hide");
+	    	}); 
+
+	    	$("#tabMenu #addTab").click(function() { 
+	    		protocoder.ui.addTab("qq");
+	    	}); 
+
+	    	/* 
+	    	$(document).mouseup(function (e) {
+   				var container = $("#tabMenu #menu");
+
+			    if (!container.is(e.target) // if the target of the click isn't the container...
+			        && container.has(e.target).length === 0) // ... nor a descendant of the container
+			    {
+     				container.hide();
+  				}
+			}); 
+			*/
+
 	    },
 	    columns: [              
 	        { field: 'file_name', caption: 'File Name', size: '70%' },

@@ -62,7 +62,7 @@
     <string name="setting_about">About</string>
     <string name="setting_opensource_title">Open Source Licenses</string>
     <string name="setting_opensource_description">License Details for open source software</string>
-    <string name="setting_list_mode_title">List</string>
+    <string name="setting_list_mode_title">Use List Mode</string>
     <string name="setting_list_mode_description">Switch between grid or list mode in the main screen, list mode is nice for wearable devices</string>
     <string name="setting_reinstall_title">Reinstall examples</string>
     <string name="setting_reinstall_description">Ovewrite all the examples with the default ones</string>
