@@ -1090,6 +1090,20 @@ public class JUI extends JUIGeneric {
 		onKeyUpfn = fn;
 	}
 
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "boolean" })
+	public void enableVolumeKeys(boolean b) {
+		a.get().keyVolumeEnabled = b;
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "boolean" })
+	public void enableBackKey(boolean b) {
+		a.get().keyBackEnabled = b;
+	}
+
 	public interface onKeyListener {
 		public void onKeyDown(int keyCode);
 
