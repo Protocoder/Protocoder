@@ -29,6 +29,8 @@
 package org.protocoder.apprunner.api.other;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -64,6 +66,7 @@ import org.protocoder.base.BaseActivity;
 import org.protocoder.fragments.CameraFragment;
 import org.protocoder.fragments.CustomVideoTextureView;
 import org.protocoder.utils.AndroidUtils;
+import org.protocoder.utils.FileIO;
 import org.protocoder.views.HoloCircleSeekBar;
 import org.protocoder.views.HoloCircleSeekBar.OnCircleSeekBarChangeListener;
 import org.protocoder.views.PadView;
@@ -77,6 +80,8 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.PictureDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -99,6 +104,9 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+
+import com.caverock.androidsvg.SVG;
+import com.caverock.androidsvg.SVGParseException;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class JUIGeneric extends JInterface {
@@ -810,30 +818,61 @@ public class JUIGeneric extends JInterface {
 	 * @author ncbq76
 	 * 
 	 */
-	public static class SetImageTask extends AsyncTask<String, Void, Bitmap> {
+	public static class SetImageTask extends AsyncTask<String, Void, Object> {
 		ImageView bgImage;
+		String imagePath;
+		private String fileExtension;
 
 		public SetImageTask(ImageView bmImage) {
 			this.bgImage = bmImage;
 		}
 
 		@Override
-		protected Bitmap doInBackground(String... paths) {
-			String imagePath = paths[0];
+		protected Object doInBackground(String... paths) {
+			imagePath = paths[0];
 			File imgFile = new File(imagePath);
+			Log.d("svg", "imagePath " + imagePath);
 			if (imgFile.exists()) {
-				// Get the bitmap with appropriate options
-				final BitmapFactory.Options options = new BitmapFactory.Options();
-				options.inPurgeable = true;
-				Bitmap bmp = BitmapFactory.decodeFile(imagePath, options);
-				return bmp;
+				fileExtension = FileIO.getFileExtension(imagePath);
+				Log.d("svg", "fileExtension " + fileExtension);
+				if (fileExtension.equals("svg")) {
+					try {
+						Log.d("svg", "is SVG 1");
+						File file = new File(imagePath);
+						FileInputStream fileInputStream = new FileInputStream(file);
+						Log.d("svg", "input " + fileInputStream);
+
+						SVG svg = SVG.getFromInputStream(fileInputStream);
+						Log.d("svg", "svg " + svg);
+						Drawable drawable = new PictureDrawable(svg.renderToPicture());
+						Log.d("svg", "drawable " + drawable);
+
+						return drawable;
+					} catch (SVGParseException e) {
+						e.printStackTrace();
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					}
+				} else {
+					// Get the bitmap with appropriate options
+					final BitmapFactory.Options options = new BitmapFactory.Options();
+					options.inPurgeable = true;
+					Bitmap bmp = BitmapFactory.decodeFile(imagePath, options);
+					return bmp;
+				}
 			}
 			return null;
 		}
 
 		@Override
-		protected void onPostExecute(Bitmap result) {
-			bgImage.setImageBitmap(result);
+		protected void onPostExecute(Object result) {
+			if (fileExtension.equals("svg")) {
+				Log.d("svg", "is SVG 2 " + result);
+				bgImage.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+				bgImage.setImageDrawable((Drawable) result);
+			} else {
+				bgImage.setImageBitmap((Bitmap) result);
+			}
 		}
 	}
 
