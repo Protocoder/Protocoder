@@ -13,12 +13,12 @@ var listProjects;
 
 //set projects in project list 
 function setProjectList(filter, data) { 
-	console.log(data.projects);
+	//console.log(data.projects);
 
 	var div = filter;
-	if (filter == "example") { 
+	if (filter == "examples") { 
     listExamples = data.projects;
-	} else if (filter == "user") {
+	} else if (filter == "projects") {
     listProjects = data.projects;
 	} 
 

@@ -172,7 +172,7 @@ public class MyHTTPServer extends NanoHTTPD {
 				Project p = ProjectManager.getInstance().getCurrentProject();
 
 				String projectFolder = "/" + p.getTypeString() + "/" + p.getName();
-				Log.d("qq", "project folder is " + projectFolder);
+				// Log.d("qq", "project folder is " + projectFolder);
 				if (uri.replace(projectURLPrefix, "").contains(projectFolder)) {
 					// Log.d("qq", "inside project");
 					return serveFile(uri.substring(uri.lastIndexOf('/') + 1, uri.length()), header,
@@ -244,9 +244,9 @@ public class MyHTTPServer extends NanoHTTPD {
 					name = obj.getString("name");
 					type = obj.getString("type");
 
-					if (type.equals("user")) {
+					if (type.equals("projects")) {
 						projectType = ProjectManager.PROJECT_USER_MADE;
-					} else if (type.equals("example")) {
+					} else if (type.equals("examples")) {
 						projectType = ProjectManager.PROJECT_EXAMPLE;
 					}
 
@@ -261,9 +261,9 @@ public class MyHTTPServer extends NanoHTTPD {
 
 					type = obj.getString("filter");
 
-					if (type.equals("user")) {
+					if (type.equals("projects")) {
 						projectType = ProjectManager.PROJECT_USER_MADE;
-					} else if (type.equals("example")) {
+					} else if (type.equals("examples")) {
 						projectType = ProjectManager.PROJECT_EXAMPLE;
 					}
 					ArrayList<Project> projects = ProjectManager.getInstance().list(projectType);
@@ -281,9 +281,9 @@ public class MyHTTPServer extends NanoHTTPD {
 					name = obj.getString("name");
 					type = obj.getString("type");
 
-					if (type.equals("user")) {
+					if (type.equals("projecs")) {
 						projectType = ProjectManager.PROJECT_USER_MADE;
-					} else if (type.equals("example")) {
+					} else if (type.equals("examples")) {
 						projectType = ProjectManager.PROJECT_EXAMPLE;
 					}
 
@@ -315,9 +315,9 @@ public class MyHTTPServer extends NanoHTTPD {
 
 					type = parms.get("type").toString();
 
-					if (type.equals("user")) {
+					if (type.equals("projects")) {
 						projectType = ProjectManager.PROJECT_USER_MADE;
-					} else if (type.equals("example")) {
+					} else if (type.equals("examples")) {
 						projectType = ProjectManager.PROJECT_EXAMPLE;
 					}
 
@@ -336,9 +336,9 @@ public class MyHTTPServer extends NanoHTTPD {
 					name = obj.getString("name");
 					type = obj.getString("type");
 
-					if (type.equals("user")) {
+					if (type.equals("projects")) {
 						projectType = ProjectManager.PROJECT_USER_MADE;
-					} else if (type.equals("list_examples")) {
+					} else if (type.equals("examples")) {
 						projectType = ProjectManager.PROJECT_EXAMPLE;
 					}
 
