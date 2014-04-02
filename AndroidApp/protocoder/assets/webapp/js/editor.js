@@ -66,6 +66,7 @@ Editor.prototype.initEditor = function() {
 	    exec: function(env, args, request) {
 	    	currentProject.code = session.getValue();
 	    	protocoder.communication.pushCode(currentProject);
+	    	protocoder.ui.toolbarFeedback("save");
 	    }
 	});
 
@@ -82,7 +83,22 @@ Editor.prototype.initEditor = function() {
 	    	protocoder.communication.pushCode(currentProject);
 	    	protocoder.dashboard.removeWidgets();
 	    	protocoder.communication.runApp(currentProject);
+	    	protocoder.ui.toolbarFeedback("run");
 
+	    }
+	});
+
+	//dashboard 
+	editor.commands.addCommand({
+	    name: 'show_hide_dashboard',
+	    bindKey: {
+	        win: 'Ctrl-Shift-D',
+	        mac: 'Command-Shift-D',
+	        sender: 'mmeditor'
+	    },
+	    exec: function(env, args, request) {
+	    	console.log("dashboard");
+	    	protocoder.dashboard.toggle();
 	    }
 	});
 
@@ -138,8 +154,8 @@ Editor.prototype.initEditor = function() {
 	editor.commands.addCommand({
 	    name: '',
 	    bindKey: {
-	        win: 'Ctrl-Q',
-	        mac: 'Ctrl-Q',
+	        win: 'Ctrl-Shift-X',
+	        mac: 'Command-Shift-X',
 	        sender: 'mmeditor'
 	    },
 	    exec: function(env, args, request) {
@@ -189,10 +205,34 @@ Editor.prototype.showErrors = function () {
 	this.session.setAnnotations([{row:1 ,column: 0, text: "message",type:"error"}]); 
 }
 
+//set Code and Type
+Editor.prototype.setTypeAndCode = function (type, code) { 
+	this.setCode(code); 
+	this.setType(type); 
+}
 
 
 //set Code 
 Editor.prototype.setCode = function (code) { 
 	this.session.setValue(code); 
+}
+
+
+//set Code 
+Editor.prototype.setType = function (fileName) { 
+	var fileExtension = fileName.split('.').pop();
+
+	switch(fileExtension) { 
+		case 'js': 
+			this.session.setMode("ace/mode/javascript");
+			break;
+		case 'html': 
+			this.session.setMode("ace/mode/html");
+			break;
+		case 'htm': 
+			this.session.setMode("ace/mode/html");
+			break;
+			
+	}
 }
 

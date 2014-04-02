@@ -76,13 +76,14 @@ Communication.prototype.fetchCode = function(pName, pType) {
 	obj.cmd = "fetch_code";
 	obj.name = pName;
 	obj.type = pType;
-  var self = this;
+ 	var self = this;
   try {
   	$.get(this.remoteIP + "cmd="+JSON.stringify(obj), function(data) {
   		var code = JSON.parse(data);
   		protocoder.editor.setCode(unescape(code.code));
   		currentProject.name = pName;
   		currentProject.type = pType;
+  		currentProject.url = location.href + "apps/" + pType + "/" + pName + "/";
   		document.title = " protocoder | " + pName;
   		var tabs = w2ui['code_editor'].get("main").tabs;
   		tabs.get("tab1").caption = pName;
@@ -102,16 +103,14 @@ Communication.prototype.listFilesInProject = function (pName, pType) {
 
   try {
   	$.get(this.remoteIP + "cmd="+JSON.stringify(obj), function(data) {
-  		w2ui['grid'].clear();
+  		protocoder.ui.clearFileElements();
   		//console.log(data);
 
   		$.each(JSON.parse(data).files, function(k, v) {
   			//console.log(v); 
   			v.recid = k;
-  			w2ui['grid'].add( v );
+  			protocoder.ui.addFileElement(v);
   		});
-
-  		protocoder.ui.initUpload();
 
   	});
   } catch (e) {};
@@ -122,7 +121,7 @@ Communication.prototype.runApp = function (project) {
 	obj.cmd = "run_app";
 	obj.name = project.name;
 	obj.url = project.url;
-  obj.remoteIP = this.remoteIP;
+    obj.remoteIP = this.remoteIP;
 	obj.type = project.type;
 	$.get(this.remoteIP + "cmd="+JSON.stringify(obj), function(data) {
  		//alert('Load was performed. ' + data);
@@ -140,8 +139,8 @@ Communication.prototype.createNewProject = function (new_name) {
   var self = this;
 	$.get(this.remoteIP + "cmd="+JSON.stringify(obj), function(data) {
  		//alert('Load was performed. ' + data);
- 	  self.listApps("user");
- 		self.fetchCode(obj.name, "user");
+ 	  	self.listApps("projects");
+ 		self.fetchCode(obj.name, "projects");
 	});
 }
 
@@ -224,18 +223,18 @@ Communication.prototype.initWebsockets = function () {
 
     //get_code 
     if (result.code != null) { 
-      console.log(result.code);
+      //console.log(result.code);
       protocoder.editor.setCode(result.code);
     }
 
     //get_new_code or save_file 
     if (result.project != null) {
-      console.log(result.project);
+      //console.log(result.project);
     }
 
     if (result.type == "error") { 
       currentError = result.values; 
-      console.log("error "  + currentError);
+      //console.log("error "  + currentError);
 
       $("#console_wrapper #console").empty();
       $("#console_wrapper #console").append("<p> " + currentError + " </p>");
@@ -306,7 +305,7 @@ var reconnectionInterval;
 //text-decoration: underline;
 
 Communication.prototype.connected = function () { 
-  console.log('connected');
+  //console.log('connected');
   clearInterval(reconnectionInterval); //removes the reconnection 
   protocoder.ui.appConnected(true);
 }
@@ -315,11 +314,11 @@ Communication.prototype.disconnected = function () {
   var self = this;
   protocoder.ui.appConnected(false);
 
-  console.log('disconnected');
+  //console.log('disconnected');
 
   //try to reconnect 
   reconnectionInterval = setTimeout(function() {
-    console.log("trying to reconnect");
+    //console.log("trying to reconnect");
     self.initWebsockets();
   }, 1000);
 }
@@ -328,7 +327,7 @@ var currentProject = [];
 
 Communication.prototype.getCodeFor = function (projectName) {
    //get project 
-   console.log("get project --> " + projectName);
+   //console.log("get project --> " + projectName);
    ws.send('{type:get_code, name:"'+projectName+'"}');
 }
 
@@ -340,7 +339,7 @@ Communication.prototype.saveCode = function (name) {
   json["name"] = currentProject.name;
   json["code"] = unescape(editor.getValue());
 
-  console.log(json);
+  //console.log(json);
 
   ws.send(JSON.stringify(json));
 

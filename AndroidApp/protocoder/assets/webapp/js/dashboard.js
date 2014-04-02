@@ -5,16 +5,33 @@
 
 var Dashboard = function() { 
   this.widgets = new Array();
+  this.status = false;
 
 }
 
 
 Dashboard.prototype.hide = function () { 
-  $("#overlay #container").fadeOut(200);
+  $("#overlay > #container").removeClass("on");
+  this.status = false;
+  $("#overlay #toggle").removeClass("on");
+  $("body > #container").removeClass("off");
+  $("body > #toolbar").removeClass("off");
 } 
 
 Dashboard.prototype.show = function () { 
-  $("#overlay #container").fadeIn(300);
+  $("#overlay > #container").addClass("on");
+  $("body > #container").addClass("off");
+  $("body > #toolbar").addClass("off");
+  $("#overlay #toggle").addClass("on");
+  this.status = true;
+}
+
+Dashboard.prototype.toggle = function() {
+  if (this.status == false) { 
+    this.show();
+  } else {
+    this.hide();
+  }
 }
 
 

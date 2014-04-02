@@ -19,7 +19,7 @@
 
    <!-- <script src="./libs/require.js"></script> --> 
     <script src="./libs/less-1.4.1.min.js" type="text/javascript"></script>
-    <script type="text/javascript" src="./libs/dat.gui.min.js"></script> 
+   <!-- <script type="text/javascript" src="./libs/dat.gui.min.js"></script> -->
     <script type="text/javascript" src="./libs/jquery-1.10.2.min.js"></script> 
     <script src="./libs/jquery.mousewheel.js" type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript" src="./libs/jquery-ui-1.10/js/jquery-ui-1.10.3.custom.js"></script>
@@ -53,8 +53,8 @@ $(document).ready(function() {
 </head>
 
 <body> 
-<div id = "start_curtain"> <h1> Protocoder </h1></div>
-<div id = "container">
+
+<!-- <div id = "start_curtain"> <h1> Protocoder </h1></div> -->
 <div id="toolbar">
     <ul>
     <li id = "newProjectBtn"><div class="icon"></div><span>new project</span></li>
@@ -76,12 +76,14 @@ $(document).ready(function() {
 
 </div>
 
+<div id = "container">
+
 
 <div id = "list_projects"> 
 
     <div id = "container">
 
-    <div class = "project_list" id = "example"> 
+    <div class = "project_list" id = "examples"> 
     <h1> Examples </h1>
     <ul> 
      <li> <span> No examples installed </span> </li>
@@ -89,14 +91,12 @@ $(document).ready(function() {
     </div>
 
     
-    <div class = "project_list" id = "user"> 
-    <h1> Projects </h1>
+    <div class = "project_list" id = "projecs"> 
+    <h1> My Projects </h1>
     <ul> 
         <li> <span> No projects created </span> </li>
     </ul>
-    </div>
-
-    
+    </div>    
 
     </div>
 

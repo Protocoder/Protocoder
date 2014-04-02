@@ -3,23 +3,28 @@
 */
 
 var Ui = function() { 
-	var dropboxEnabled = false;
-	this.initUI();
+	this.dropboxEnabled = true; 
+	this.gridRendered = false;
+	this.init();
+	this.tabs = {}; //[name] -> id , code 
+	this.tabId = 0;
 }
 
 
-Ui.prototype.initUI = function() { 
+Ui.prototype.init = function() { 
+	var that = this;
 
-	var pstyle = 'border: 0px solid #dfdfdf; padding: 0px;';
+
 
 
 	$('#layout').w2layout({
 	    name: 'layout',
 	    panels: [
-	        { type: 'main', style: pstyle, content: 'main' },
-	        { type: 'right', size: 300, style: pstyle, content: 'right', resizable: true, hidden: false}
+	        { type: 'main', content: 'main' },
+	        { type: 'right', size: 300, content: 'right', resizable: true, hidden: false}
 
-	    ]
+	    ],
+	    onRender: function() { }
 	});
 
 	//w2ui['layout'].hide('right', false);
@@ -28,26 +33,27 @@ Ui.prototype.initUI = function() {
 	$().w2layout({
 	    name: 'code_editor',
 	    panels: [
-	       { type: 'main', style: pstyle, content: 'main', tabs: {
+	       { type: 'main', content: 'main', tabs: {
 	            active: 'tab1',
 	            name: 'tabs',
 	            tabs: [
-	                { id: 'tab1', caption: 'Code' },
+	                { id: 'tab1', caption: 'Main' },
 	            ],
 	            onClick: function (target, data) {
-	            
-	                //this.owner.content('main', target);
+	            	console.log(target);
+	            	console.log(data);
+	            	that.setTab(target);
 	            }
 	        } },
-	        { type: 'bottom', size: "100px", resizable: true, hidden: false, style: pstyle, content: '<div id = "console_wrapper"> <div id = "console"></div><div id = "console_input"><span>></span> <input type="text" name="fname" style=""> </div> </div>' }
+	        { type: 'bottom', size: "100px", resizable: true, hidden: false, content: '<div id = "console_wrapper"> <div id = "console"></div><div id = "console_input"><span>></span> <input type="text" name="fname" style=""> </div> </div>' }
 	    ]
 	});
 
 	$().w2layout({
 	    name: 'right_bar',
 	    panels: [
-	        { type: 'main', size: '70%', resizable: true, style: pstyle, content: '<div id = "reference_container" style="background:#dfdfdf"> <div id = "reference"><h1 style="color:#777777; font-size:1.25em; margin-bottom: 24px; font-style:normal; font-weight:500; text-shadow: 2px 2px #eeeeee; vertical-align:middle;"> QUICK REFERENCE</h1> <div id ="content"> </div></div> </div>' },
-	        { type: 'bottom', size: '30%', resizable: true, hidden: false, style: pstyle, content: 'bottom', 
+	        { type: 'main', size: '70%', resizable: true, content: '<div id = "reference_container" style="background:#dfdfdf"> <div id = "reference"><h1> QUICK REFERENCE</h1> <div id ="content"> </div></div> </div>' },
+	        { type: 'bottom', size: '30%', resizable: true, hidden: false, content: 'bottom', 
 	      	/* TODO add toolbar */ 
 	        /*
 	        	toolbar: {
@@ -65,46 +71,45 @@ Ui.prototype.initUI = function() {
 		}
 	    ]
 	});
-
-	var gridRendered = false; 
 	$('#grid').w2grid({ 
 	    name: 'grid', 
 	    url: '',
 	    onRender: function() { 
-	        gridRendered = true;
-	        //add tabs button 
-	        $("#layout_code_editor_panel_main").append('<div id="tabMenu"><div id="showHideMenu">+</div> <div id="menu"><ul> <li id = "addTab">New tab</li><li id = "renameTab">Rename selected tab</li><li id = "deleteTab"> Delete selected tab</li></ul></div></div>');
-	    	
+	        if (that.gridRendered == false) {
+	        	//this.gridRendered = true;
+		        //add tabs button 
+		        //$("#layout_code_editor_panel_main").append('<div id="tabMenu"><div id="showHideMenu">+</div> <div id="menu"><ul> <li id = "addTab">New tab</li><li id = "renameTab">Rename selected tab</li><li id = "deleteTab"> Delete selected tab</li></ul></div></div>');
+		        $("#layout_code_editor_panel_main").append('<div id="tabMenu"><div id="addTab">+</div></div>');
+	
 
-	        jQuery.fn.btnToggle = function(cb1, cb2) {
-    			var o = $(this[0]) // It's your element
+		        jQuery.fn.btnToggle = function(cb1, cb2) {
+	    			var o = $(this[0]) // It's your element
 
-    			function handle1 () { 
-    				cb1();
-    				o.one('click', handle2);
-    			} 
+	    			function handle1 () { 
+	    				cb1();
+	    				o.one('click', handle2);
+	    			} 
 
-    			function handle2 () {
-    				cb2(); 
-    				o.one('click', handle1);
-    			}
-    			o.one('click', handle1);
+	    			function handle2 () {
+	    				cb2(); 
+	    				o.one('click', handle1);
+	    			}
+	    			o.one('click', handle1);
 
-			};
+				};
 
-	    	//bind ui
-	    	$("#tabMenu #showHideMenu").btnToggle(function() {
-	    		$("#tabMenu #menu").fadeIn();
-	    		console.log("show");
-	    	}, function() {
-	    		$("#tabMenu #menu").fadeOut();
-	    		console.log("hide");
-	    	}); 
+		    	//bind ui
+		    	$("#tabMenu #addTab").btnToggle(function() {
+		    	//	$("#tabMenu #menu").fadeIn();
+		    	}, function() {
+		    	//	$("#tabMenu #menu").fadeOut();
+		    	}); 
 
-	    	$("#tabMenu #addTab").click(function() { 
-	    		protocoder.ui.addTab("qq");
-	    	}); 
+		    	//$("#tabMenu #addTab").click(function() { 
+		    		//protocoder.ui.addTab("qq");
+		    	//}); 
 
+		    }
 	    	/* 
 	    	$(document).mouseup(function (e) {
    				var container = $("#tabMenu #menu");
@@ -121,7 +126,21 @@ Ui.prototype.initUI = function() {
 	    columns: [              
 	        { field: 'file_name', caption: 'File Name', size: '70%' },
 	        { field: 'file_size', caption: 'File Size', size: '30%' },
-	    ]
+	    ], 
+
+	    onClick: function(t, e) {
+	    	console.log(t);
+	    	console.log(e);
+
+	    	var prefix = currentProject.url;
+	    	var fileName = w2ui['grid']['records'][e.recid].file_name;
+	    	var url = prefix + fileName;
+	
+			$.get(url, function(data) {
+				that.addTabAndCode(fileName, data);
+			}, "text");
+	    },
+
 	});
 
 
@@ -134,16 +153,20 @@ Ui.prototype.initUI = function() {
 		//console.log(eventData); 
 		eventData.onComplete = function() { 
 			protocoder.editor.editor.resize();
-			$("#start_curtain h1").addClass("fadein");
 
 			setTimeout(function() {
-				$("#start_curtain h1").addClass("fadeout");
-			}, 700);	
+				$("#toolbar").addClass("show"); 
+			}, 500);	
 
 			setTimeout(function() {
-				//$("#start_curtain h1").removeClass("fade");
-				$("#start_curtain").fadeOut();
-			}, 1200);
+				$("#overlay #toggle").addClass("show");
+			}, 1000);
+
+			setTimeout(function() {
+				$("#container").addClass("on");
+			//	//$("#start_curtain h1").removeClass("fade");
+			//	$("#start_curtain").fadeOut();
+			}, 700);
 		}
 	});
 
@@ -313,10 +336,11 @@ Ui.prototype.initUI = function() {
 	
 	setTimeout(function() { 
 	    $("#grid_grid_records").on('dragenter', function(e) {
+	    	console.log("lalallaala")
 	        console.log(e.target);
 
-	        if (dropboxEnabled == false) {
-	            initUpload();
+	        if (that.dropboxEnabled == true) {
+	            that.initUpload();
 	            e.preventDefault();
 	            e.stopPropagation();
 	        }
@@ -334,14 +358,11 @@ Ui.prototype.initUI = function() {
 
 	    
 
-	     $("#grid_grid_records").on('dragend', function(e) {
-	        console.log(e.target); 
-	        dropboxEnabled = false;
-	      	$("#dropbox").remove();
-	        //initUpload();
-	        e.preventDefault();
-	        e.stopPropagation();
-	    });
+	    $("#grid_grid_records").on('dragend', function(e) {
+	    	console.log("lalalalalal");
+	   
+
+	   });
 
 
 		$("#console_wrapper input").keydown(function(e){ 
@@ -401,15 +422,29 @@ Ui.prototype.showProjectsStatus = false;
 
 Ui.prototype.showProjects = function() {
 	if (this.showProjectsStatus == false) { 
-		//$("#list_projects").fadeIn(300);
 		$("#list_projects").addClass("show");
+		$("#toolbar #projectsBtn").addClass("on");
 	} else { 
-		//$("#list_projects").fadeOut(300);
 		$("#list_projects").removeClass("show");
+		$("#toolbar #projectsBtn").removeClass("on");
 	} 
 
 	this.showProjectsStatus ^= true;
 } 
+
+Ui.prototype.toolbarFeedback = function(action) {
+	var div;
+	if (action === "save") {
+		div = "#saveBtn";
+	} else if (action === "run") {
+		div = "#runBtn";
+	}
+	$("#toolbar " + div).addClass("on")
+	setTimeout(function() {
+		$("#toolbar " + div).removeClass("on")
+	}, 500);
+}
+
 
 Ui.prototype.appRunningStatus = false; 
 Ui.prototype.appRunning = function(b) {
@@ -445,10 +480,32 @@ Ui.prototype.loadHTMLRightBar = function(filePath) {
 
 
 //http://w2ui.com/web/docs/w2tabs.add 
-Ui.prototype.addTab = function(name) {
+Ui.prototype.addTabAndCode = function(name, code) {
+	console.log("called");
 	var q = w2ui['code_editor'];
 	var q2 = q.get("main");
-	q2.tabs.add([{id : "tab2", caption : name}]);
+	q2.tabs.add([{id : this.tabId, caption : name, closable: true }]);
+	//q2.tabs.active = this.tabId;
+	//q2.tabs.refresh();
+	protocoder.editor.setTypeAndCode(name, code);
+
+	this.tabs[name] = {};
+	this.tabs[name].id = this.tabId;
+	this.tabId++;
+	this.tabs[name].code = code;
+}
+
+Ui.prototype.getTabNameById = function(id) {
+	for (i in protocoder.ui.tabs) { 
+	  if (protocoder.ui.tabs[i].id == id) { 
+	    return i; 
+	  } 
+	}; 
+}
+
+Ui.prototype.textChanged = function() {
+
+
 }
 
 Ui.prototype.removeTab = function() {
@@ -459,11 +516,34 @@ Ui.prototype.removeTab = function() {
 
 }
 
+Ui.prototype.setTab = function(id) {
+	var q = w2ui['code_editor'];
+	var q2 = q.get("main");
+
+	//q2.tabs.active = id;
+	//q2.tabs.refresh();  
+	var name = this.getTabNameById(id);
+	console.log(id + " " + name);
+	protocoder.editor.setTypeAndCode(name, this.tabs[name].code);
+
+};
+
+
+Ui.prototype.clearFileElements = function() {
+  	w2ui['grid'].clear();
+}
+
+Ui.prototype.addFileElement = function(f) {
+  	w2ui['grid'].add( f );
+}
 
 
 Ui.prototype.initUpload = function() {
-	dropboxEnabled = true;
+	that = this;
+	//console.log("initUpload");
+	this.dropboxEnabled = false;
 
+	$("#dropbox").remove();
 	if (currentProject.name != "undefined") { 
 		$("#grid_grid_records").append('<div id = "dropbox"> </div>');
 
@@ -483,7 +563,9 @@ Ui.prototype.initUpload = function() {
 				$.data(file).addClass('done');
 				protocoder.communication.listFilesInProject(currentProject.name, currentProject.type);
 				// response is the JSON object that post_file.php returns
-				$('#dropbox').css("background-color", "rgba(0, 0, 0, 0.1);");
+				//$('#dropbox').css("background-color", "rgba(0, 0, 0, 0.1);");
+				$("#dropbox").remove();
+				that.dropboxEnabled = true;
 
 			},
 			
