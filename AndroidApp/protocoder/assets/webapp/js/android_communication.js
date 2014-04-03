@@ -80,14 +80,13 @@ Communication.prototype.fetchCode = function(pName, pType) {
   try {
   	$.get(this.remoteIP + "cmd="+JSON.stringify(obj), function(data) {
   		var code = JSON.parse(data);
-  		protocoder.editor.setCode(unescape(code.code));
   		currentProject.name = pName;
   		currentProject.type = pType;
   		currentProject.url = location.href + "apps/" + pType + "/" + pName + "/";
   		document.title = " protocoder | " + pName;
-  		var tabs = w2ui['code_editor'].get("main").tabs;
-  		tabs.get("tab1").caption = pName;
-  		tabs.refresh();
+
+  		var code = unescape(code.code);
+  		protocoder.ui.setMainTab(pName, code); 
 
   		self.listFilesInProject(pName, pType);
   	});
