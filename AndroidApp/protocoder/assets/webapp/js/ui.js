@@ -14,9 +14,6 @@ var Ui = function() {
 Ui.prototype.init = function() { 
 	var that = this;
 
-
-
-
 	$('#layout').w2layout({
 	    name: 'layout',
 	    panels: [
@@ -37,12 +34,12 @@ Ui.prototype.init = function() {
 	            active: 'tab1',
 	            name: 'tabs',
 	            tabs: [
-	                { id: 'tab1', caption: 'Main' },
+	                { id: 'tab0', caption: 'Main' },
 	            ],
 	            onClick: function (target, data) {
 	            	console.log(target);
 	            	console.log(data);
-	            	that.setTab(target);
+	            	that.setActiveTab(target);
 	            }
 	        } },
 	        { type: 'bottom', size: "100px", resizable: true, hidden: false, content: '<div id = "console_wrapper"> <div id = "console"></div><div id = "console_input"><span>></span> <input type="text" name="fname" style=""> </div> </div>' }
@@ -478,19 +475,30 @@ Ui.prototype.loadHTMLRightBar = function(filePath) {
 	$("#reference_container #content").load(filePath).fadeIn('500');
 }
 
+Ui.prototype.resetTabs = function() {
+	var q = w2ui['code_editor'];
+	var q2 = q.get("main");
+
+	q2.tabs.add([{id : "tab0", caption : 'Main', closable: false }]);
+	this.tabs = {};
+	this.tabId = 0;
+}
 
 //http://w2ui.com/web/docs/w2tabs.add 
 Ui.prototype.addTabAndCode = function(name, code) {
-	console.log("called");
+
 	var q = w2ui['code_editor'];
 	var q2 = q.get("main");
-	q2.tabs.add([{id : this.tabId, caption : name, closable: true }]);
-	//q2.tabs.active = this.tabId;
-	//q2.tabs.refresh();
+
+	q2.tabs.add([{id : "tab"+this.tabId, caption : name, closable: true }]);
+	
+	q2.tabs.active = "tab" + this.tabId;
+	q2.tabs.refresh();
+	
 	protocoder.editor.setTypeAndCode(name, code);
 
 	this.tabs[name] = {};
-	this.tabs[name].id = this.tabId;
+	this.tabs[name].id = "tab"+this.tabId;
 	this.tabId++;
 	this.tabs[name].code = code;
 }
@@ -508,23 +516,70 @@ Ui.prototype.textChanged = function() {
 
 }
 
-Ui.prototype.removeTab = function() {
+Ui.prototype.removeTab = function(id) {
+	var q = w2ui['code_editor'];
+	var q2 = q.get("main");
+	q2.tabs.remove(id);
+}
+
+Ui.prototype.removeAllTabs = function() {
 	var q = w2ui['code_editor'];
 	var q2 = q.get("main");
 
-	q2.tabs.remove("tab7");
+	for (i in protocoder.ui.tabs) { 
+		var id = protocoder.ui.tabs[i].id;
+
+		if (id != 'tab0') { 
+			q2.tabs.remove(id); 
+		}
+	};
 
 }
 
-Ui.prototype.setTab = function(id) {
+Ui.prototype.setMainTab = function(name, code) {
+	this.removeAllTabs();
+
+	var tabs = w2ui['code_editor'].get("main").tabs;
+	tabs.get("tab0").caption = name;
+	tabs.active = "tab0";
+
+	tabs.refresh();
+	this.tabs = {};
+
+	this.tabId = 0;
+	this.tabs[name] = {};
+
+	protocoder.editor.setTypeAndCode("main.js", code);
+	this.tabs[name].id = "tab"+this.tabId;
+	this.tabId++;
+	this.tabs[name].code = code;
+}
+
+Ui.prototype.setActiveTab = function(id) {
 	var q = w2ui['code_editor'];
 	var q2 = q.get("main");
 
-	//q2.tabs.active = id;
-	//q2.tabs.refresh();  
-	var name = this.getTabNameById(id);
+	q2.tabs.active = id;
+	q2.tabs.refresh();  
+
+	var name;
+	var code;
+
+	name = this.getTabNameById(id);
 	console.log(id + " " + name);
-	protocoder.editor.setTypeAndCode(name, this.tabs[name].code);
+
+	if ( !(this.tabs[name]) )  {
+		code = "";
+	} else {
+		console.log("lala");
+		code = this.tabs[name].code;
+	}
+
+	if (id === "tab0") {
+		name = "Main.js";
+	}
+
+	protocoder.editor.setTypeAndCode(name, code);
 
 };
 

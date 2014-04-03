@@ -109,7 +109,7 @@ Dashboard.prototype.addImage = function(element, url, posx, posy, w, h) {
 }
 
 Dashboard.prototype.addSlider = function(element, name, posx, posy, w, h, min, max) {
-  $('<div class = "slider" id = "slider_' + element +'"> <span>'+ name + '</span> </div>')
+  $('<div class = "widget slider" id = "slider_' + element +'"> <span>'+ name + '</span> </div>')
           .appendTo("#overlay #container")
         //  .css({"width": w+"px", "height":h+"px","top":posy+"px","left":posx+"px"})
           .css({"top":posy+"px","left":posx+"px"});
@@ -120,6 +120,20 @@ Dashboard.prototype.addSlider = function(element, name, posx, posy, w, h, min, m
           });
 } 
 
+
+Dashboard.prototype.addInput = function(element, name, posx, posy, w, h) {
+  $('<div class = "widget text_input" id = "text_input_' + element +'"> <span>'+ name + '</span> </div>')
+          .appendTo("#overlay #container")
+        //  .css({"width": w+"px", "height":h+"px","top":posy+"px","left":posx+"px"})
+          .css({"top":posy+"px","left":posx+"px"});
+      
+  $('<input class ="widget"> </input><button><i class = "fa fa-circle-o"></i></button>').appendTo("#text_input_" + element)
+          .change(function() {
+            ws.send('{type:text_input, id:'+ element +', val:'+this.value+'}');
+          });
+} 
+
+
 Dashboard.prototype.addButton = function(element, name, posx, posy, w, h) {
   $('<button class ="widget" id = "button_' + element +'">'+ name +' </button>')
           .appendTo("#overlay #container")
@@ -129,6 +143,9 @@ Dashboard.prototype.addButton = function(element, name, posx, posy, w, h) {
           });
 
 } 
+
+
+
 
 Dashboard.prototype.setBackgroundColor = function(r, g, b, a) { 
   $("#overlay #container").css("background", "rgba("+r+","+g+","+b+","+a+")");
