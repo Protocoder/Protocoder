@@ -43,6 +43,7 @@ import org.protocoder.apprunner.api.other.JPureData;
 import org.protocoder.media.Audio;
 import org.protocoder.media.AudioService;
 import org.protocoder.sensors.WhatIsRunning;
+import org.protocoder.utils.MLog;
 import org.puredata.android.service.PdService;
 import org.puredata.android.utils.PdUiDispatcher;
 import org.puredata.core.PdBase;
@@ -63,7 +64,7 @@ import android.util.Log;
 public class JMedia extends JInterface {
 
 	String TAG = "JMedia";
-	String onVoiceRecognitionfn;
+	startVoiceRecognitionCB onVoiceRecognitionfn;
 
 	public JMedia(AppRunnerActivity a) {
 		super(a);
@@ -72,8 +73,8 @@ public class JMedia extends JInterface {
 
 			@Override
 			public void onNewResult(String text) {
-				Log.d(TAG, "" + text);
-				callback(onVoiceRecognitionfn, "\"" + text + "\"");
+				MLog.d(TAG, "" + text);
+				onVoiceRecognitionfn.event(text);
 			}
 
 		});
@@ -107,54 +108,63 @@ public class JMedia extends JInterface {
 		a.get().setVolume(volume);
 	}
 
+	// --------- initPDPatch ---------//
+	interface initPDPatchCB {
+		void event(String string, String responseString);
+
+		void event(String source, float x);
+
+		void event(String source, JSONArray jsonArray);
+	}
+
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "fileName", "function(objectType, value)" })
-	public JPureData initPDPatch(String fileName, final String callbackfn) {
+	public JPureData initPDPatch(String fileName, final initPDPatchCB callbackfn) {
 		String filePath = AppRunnerSettings.get().project.getStoragePath() + File.separator + fileName;
 
 		PdReceiver receiver = new PdReceiver() {
 
 			@Override
 			public void print(String s) {
-				Log.d(TAG, "pd >>" + s);
-				callback(callbackfn, "print", s);
+				MLog.d(TAG, "pd >>" + s);
+				callbackfn.event("print", s);
 			}
 
 			@Override
 			public void receiveBang(String source) {
-				Log.d(TAG, "bang");
-				callback(callbackfn, "bang", source);
+				MLog.d(TAG, "bang");
+				callbackfn.event("bang", source);
 			}
 
 			@Override
 			public void receiveFloat(String source, float x) {
-				Log.d(TAG, "float: " + x);
-				callback(callbackfn, source, x);
+				MLog.d(TAG, "float: " + x);
+				callbackfn.event(source, x);
 			}
 
 			@Override
 			public void receiveList(String source, Object... args) {
-				Log.d(TAG, "list: " + Arrays.toString(args));
+				MLog.d(TAG, "list: " + Arrays.toString(args));
 
 				JSONArray jsonArray = new JSONArray();
 				for (Object arg : args) {
 					jsonArray.put(arg);
 				}
 
-				callback(callbackfn, source, jsonArray);
+				callbackfn.event(source, jsonArray);
 			}
 
 			@Override
 			public void receiveMessage(String source, String symbol, Object... args) {
-				Log.d(TAG, "message: " + Arrays.toString(args));
-				callback(callbackfn, source, symbol);
+				MLog.d(TAG, "message: " + Arrays.toString(args));
+				callbackfn.event(source, symbol);
 			}
 
 			@Override
 			public void receiveSymbol(String source, String symbol) {
-				Log.d(TAG, "symbol: " + symbol);
-				callback(callbackfn, source, symbol);
+				MLog.d(TAG, "symbol: " + symbol);
+				callbackfn.event(source, symbol);
 			}
 
 			public void stop() {
@@ -286,10 +296,15 @@ public class JMedia extends JInterface {
 		Audio.speak(a.get(), text, Locale.getDefault());
 	}
 
+	// --------- startVoiceRecognition ---------//
+	interface startVoiceRecognitionCB {
+		void event(String responseString);
+	}
+
 	@ProtocoderScript
 	@APIMethod(description = "start voice recognition", example = "media.startVoiceRecognition(function(text) { console.log(text) } );")
 	@APIParam(params = { "function(recognizedText)" })
-	public void startVoiceRecognition(final String callbackfn) {
+	public void startVoiceRecognition(final startVoiceRecognitionCB callbackfn) {
 		onVoiceRecognitionfn = callbackfn;
 
 		Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);

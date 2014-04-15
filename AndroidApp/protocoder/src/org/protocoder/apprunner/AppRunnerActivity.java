@@ -61,6 +61,7 @@ import org.protocoder.network.CustomWebsocketServer;
 import org.protocoder.network.IDEcommunication;
 import org.protocoder.sensors.NFCUtil;
 import org.protocoder.sensors.WhatIsRunning;
+import org.protocoder.utils.MLog;
 import org.protocoder.utils.StrUtils;
 import org.protocoder.views.PadView.TouchEvent;
 
@@ -69,8 +70,6 @@ import android.animation.Animator.AnimatorListener;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.PendingIntent;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -90,7 +89,6 @@ import android.os.Bundle;
 import android.os.FileObserver;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -144,6 +142,8 @@ public class AppRunnerActivity extends BaseActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		// setTheme(R.style.ProtocoderDark_Theme);
+		getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 		super.onCreate(savedInstanceState);
 
 		interp = new AppRunnerInterpreter(this);
@@ -163,10 +163,10 @@ public class AppRunnerActivity extends BaseActivity {
 		interp.addInterface(JUtil.class);
 
 		try {
-			Log.d(TAG, "starting websocket server");
+			MLog.d(TAG, "starting websocket server");
 			ws = CustomWebsocketServer.getInstance(this);
 		} catch (UnknownHostException e) {
-			Log.d(TAG, "cannot start websocket server");
+			MLog.d(TAG, "cannot start websocket server");
 			e.printStackTrace();
 		}
 
@@ -175,7 +175,7 @@ public class AppRunnerActivity extends BaseActivity {
 
 			@Override
 			public void onError(String message) {
-				Log.d(TAG, "error " + message);
+				MLog.d(TAG, "error " + message);
 				showConsole(message);
 
 				// send to web ide
@@ -199,10 +199,10 @@ public class AppRunnerActivity extends BaseActivity {
 			int projectType = intent.getIntExtra(Project.TYPE, -1);
 			boolean wakeUpScreen = intent.getBooleanExtra("wakeUpScreen", false);
 
-			Log.d(TAG, " " + projectName + " " + projectType);
+			MLog.d(TAG, " " + projectName + " " + projectType);
 			currentProject = ProjectManager.getInstance().get(projectName, projectType);
 			ProjectManager.getInstance().setCurrentProject(currentProject);
-			Log.d(TAG, "launching " + projectName + " " + projectType);
+			MLog.d(TAG, "launching " + projectName + " " + projectType);
 
 			AppRunnerSettings.get().project = currentProject;
 			String script = ProjectManager.getInstance().getCode(currentProject);
@@ -255,7 +255,7 @@ public class AppRunnerActivity extends BaseActivity {
 	}
 
 	public void onEventMainThread(ProjectEvent evt) {
-		Log.d(TAG, "event -> " + evt.getAction());
+		MLog.d(TAG, "event -> " + evt.getAction());
 
 		if (evt.getAction() == "run") {
 			finish();
@@ -263,7 +263,7 @@ public class AppRunnerActivity extends BaseActivity {
 	}
 
 	public void onEventMainThread(Events.ExecuteCodeEvent evt) {
-		Log.d(TAG, "event -> " + evt.getCode());
+		MLog.d(TAG, "event -> " + evt.getCode());
 
 		interp.eval(evt.getCode());
 
@@ -598,10 +598,10 @@ public class AppRunnerActivity extends BaseActivity {
 
 			@Override
 			public void run() {
-				Log.d(TAG, "showing console");
+				MLog.d(TAG, "showing console");
 				showConsole(true);
 				consoleText.setText(message);
-				Log.d(TAG, "msg text");
+				MLog.d(TAG, "msg text");
 
 			}
 		});
@@ -631,10 +631,10 @@ public class AppRunnerActivity extends BaseActivity {
 					e.printStackTrace();
 				}
 				if ((FileObserver.CREATE & event) != 0) {
-					Log.d(TAG, "created " + file);
+					MLog.d(TAG, "created " + file);
 
 				} else if ((FileObserver.DELETE & event) != 0) {
-					Log.d(TAG, "deleted file " + file);
+					MLog.d(TAG, "deleted file " + file);
 
 				}
 			}
@@ -665,7 +665,7 @@ public class AppRunnerActivity extends BaseActivity {
 			}
 
 			// cuando esta en foreground
-			Log.d(TAG, "Starting NFC");
+			MLog.d(TAG, "Starting NFC");
 			mAdapter = NfcAdapter.getDefaultAdapter(this);
 			/*
 			 * mAdapter.setNdefPushMessageCallback(new
@@ -700,10 +700,10 @@ public class AppRunnerActivity extends BaseActivity {
 
 	@Override
 	public void onNewIntent(Intent intent) {
-		Log.d(TAG, "New intent " + intent);
+		MLog.d(TAG, "New intent " + intent);
 
 		if (intent.getAction() != null) {
-			Log.d(TAG, "Discovered tag with intent: " + intent);
+			MLog.d(TAG, "Discovered tag with intent: " + intent);
 			// mText.setText("Discovered tag " + ++mCount + " with intent: " +
 			// intent);
 
@@ -713,7 +713,7 @@ public class AppRunnerActivity extends BaseActivity {
 
 			// if there is a message waiting to be written
 			if (NFCUtil.nfcMsg != null) {
-				Log.d(TAG, "->" + NFCUtil.nfcMsg);
+				MLog.d(TAG, "->" + NFCUtil.nfcMsg);
 				NFCUtil.writeTag(this, tag, NFCUtil.nfcMsg);
 				onNFCWrittenListener.onNewTag();
 				onNFCWrittenListener = null;
@@ -747,7 +747,7 @@ public class AppRunnerActivity extends BaseActivity {
 					for (int i = 0; i < len; i++) {
 						recTypes[i] = new String(ndefRecords[i].getType());
 						recPayloads[i] = new String(ndefRecords[i].getPayload());
-						Log.d(TAG, "qq " + i + " " + recTypes[i] + " " + recPayloads[i]);
+						MLog.d(TAG, "qq " + i + " " + recTypes[i] + " " + recPayloads[i]);
 
 					}
 					nfcMessage = recPayloads[0];
@@ -776,29 +776,6 @@ public class AppRunnerActivity extends BaseActivity {
 
 	}
 
-	public void scanBluetooth() {
-		BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
-		mBluetoothAdapter.startDiscovery();
-		BroadcastReceiver mReceiver = new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				String action = intent.getAction();
-				if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-					BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-
-					int rssi = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI, Short.MIN_VALUE);
-
-					onBluetoothListener.onDeviceFound(device.getName(), device.getAddress(), rssi);
-					Log.d(TAG, device.getName() + "\n" + device.getAddress() + " " + rssi);
-				}
-			}
-		};
-
-		IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-		registerReceiver(mReceiver, filter);
-	}
-
 	/**
 	 * Handle the results from the recognition activity.
 	 */
@@ -810,7 +787,7 @@ public class AppRunnerActivity extends BaseActivity {
 			ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 
 			for (String _string : matches) {
-				Log.d(TAG, "" + _string);
+				MLog.d(TAG, "" + _string);
 
 			}
 			onVoiceRecognitionListener.onNewResult(matches.get(0));
@@ -820,6 +797,9 @@ public class AppRunnerActivity extends BaseActivity {
 			interp.callJsFunction("onResult", result);
 		}
 
+		if (onBluetoothListener != null) {
+			onBluetoothListener.onActivityResult(requestCode, resultCode, data);
+		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
@@ -833,7 +813,7 @@ public class AppRunnerActivity extends BaseActivity {
 	}
 
 	public void setActionBar(Integer colorBg, Integer colorText) {
-		Log.d(TAG, "" + actionBarSet + " " + actionBar);
+		MLog.d(TAG, "" + actionBarSet + " " + actionBar);
 
 		actionBarSet = true;
 		// Set up the actionbar

@@ -32,28 +32,33 @@ import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apprunner.JInterface;
 import org.protocoder.apprunner.ProtocoderScript;
 import org.protocoder.hardware.MAKRBoard;
+import org.protocoder.utils.MLog;
 
 import android.app.Activity;
-import android.util.Log;
 
 public class JMakr extends JInterface {
 
 	private ReadThread mReadThread;
 	private String receivedData;
-	private MAKRBoard makr;
-	private String TAG = "JMakr";
+	private final MAKRBoard makr;
+	private final String TAG = "JMakr";
 
 	boolean isStarted = false;
-	private String callbackfn;
+	private startCB callbackfn;
 
 	public JMakr(Activity a) {
 		super(a);
 		makr = new MAKRBoard();
 	}
 
+	// --------- getRequest ---------//
+	public interface startCB {
+		void event(String responseString);
+	}
+
 	@ProtocoderScript
 	@APIMethod(description = "initializes makr board", example = "makr.start();")
-	public void start(final String callbackfn) {
+	public void start(final startCB callbackfn2) {
 
 		if (!isStarted) {
 			/* Create a receiving thread */
@@ -63,7 +68,7 @@ public class JMakr extends JInterface {
 			makr.start();
 
 			isStarted = true;
-			this.callbackfn = callbackfn;
+			this.callbackfn = callbackfn2;
 		}
 
 	}
@@ -73,8 +78,9 @@ public class JMakr extends JInterface {
 	public void stop() {
 		if (isStarted) {
 			isStarted = false;
-			if (mReadThread != null)
+			if (mReadThread != null) {
 				mReadThread.interrupt();
+			}
 			makr.stop();
 		}
 	}
@@ -91,18 +97,19 @@ public class JMakr extends JInterface {
 					receivedData = makr.readSerial().trim();
 				}
 
-				Log.d("MAKr", "" + receivedData);
+				MLog.d("MAKr", "" + receivedData);
 
 				if (receivedData != "") {
 					a.get().runOnUiThread(new Runnable() {
+						@Override
 						public void run() {
 
-							Log.d(TAG, "Got data: " + receivedData);
-							Log.d(TAG, "callback " + callbackfn);
+							MLog.d(TAG, "Got data: " + receivedData);
+							MLog.d(TAG, "callback " + callbackfn);
 
 							// previous callback
 							// callback("OnSerialRead("+receivedData+");");
-							callback(callbackfn, "\"" + receivedData + "\"");
+							callbackfn.event(receivedData);
 						}
 					});
 				}

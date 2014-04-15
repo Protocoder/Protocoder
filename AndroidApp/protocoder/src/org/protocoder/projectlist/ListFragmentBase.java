@@ -40,6 +40,7 @@ import org.protocoder.events.Events.ProjectEvent;
 import org.protocoder.events.Project;
 import org.protocoder.events.ProjectManager;
 import org.protocoder.fragments.EditorFragment;
+import org.protocoder.utils.MLog;
 
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
@@ -51,7 +52,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Intent.ShortcutIconResource;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -96,7 +96,7 @@ public class ListFragmentBase extends BaseFragment {
 		projects = ProjectManager.getInstance().list(projectType);
 		boolean listMode = PrefsFragment.getListPreference(getActivity());
 		projectAdapter = new ProjectAdapter(getActivity(), projects, projectType, listMode);
-		Log.d("mode", "" + listMode);
+		MLog.d("mode", "" + listMode);
 		if (listMode) {
 			gridView.setNumColumns(1);
 		}

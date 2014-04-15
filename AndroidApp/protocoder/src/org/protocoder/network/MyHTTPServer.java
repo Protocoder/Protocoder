@@ -84,10 +84,10 @@ import org.protocoder.events.Events.ProjectEvent;
 import org.protocoder.events.Project;
 import org.protocoder.events.ProjectManager;
 import org.protocoder.utils.FileIO;
+import org.protocoder.utils.MLog;
 
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.util.Log;
 import de.greenrobot.event.EventBus;
 
 /**
@@ -131,13 +131,13 @@ public class MyHTTPServer extends NanoHTTPD {
 	private static MyHTTPServer instance;
 
 	public static MyHTTPServer getInstance(Context aCtx, int port) {
-		Log.d(TAG, "launching web server...");
+		MLog.d(TAG, "launching web server...");
 		if (instance == null) {
 			try {
-				Log.d(TAG, "ok...");
+				MLog.d(TAG, "ok...");
 				instance = new MyHTTPServer(aCtx, port);
 			} catch (IOException e) {
-				Log.d(TAG, "nop :(...");
+				MLog.d(TAG, "nop :(...");
 				e.printStackTrace();
 			}
 		}
@@ -150,9 +150,9 @@ public class MyHTTPServer extends NanoHTTPD {
 		ctx = new WeakReference<Context>(aCtx);
 		String ip = NetworkUtils.getLocalIpAddress(aCtx);
 		if (ip == null) {
-			Log.d(TAG, "No IP found. Please connect to a newwork and try again");
+			MLog.d(TAG, "No IP found. Please connect to a newwork and try again");
 		} else {
-			Log.d(TAG, "Launched server at http://" + ip.toString() + ":" + port);
+			MLog.d(TAG, "Launched server at http://" + ip.toString() + ":" + port);
 		}
 	}
 
@@ -163,7 +163,7 @@ public class MyHTTPServer extends NanoHTTPD {
 
 		try {
 
-			Log.d(TAG, "received String" + uri + " " + method + " " + header + " " + " " + parms + " " + files);
+			MLog.d(TAG, "received String" + uri + " " + method + " " + header + " " + " " + parms + " " + files);
 
 			if (uri.startsWith(projectURLPrefix)) {
 
@@ -172,13 +172,13 @@ public class MyHTTPServer extends NanoHTTPD {
 				Project p = ProjectManager.getInstance().getCurrentProject();
 
 				String projectFolder = "/" + p.getTypeString() + "/" + p.getName();
-				// Log.d("qq", "project folder is " + projectFolder);
+				// MLog.d("qq", "project folder is " + projectFolder);
 				if (uri.replace(projectURLPrefix, "").contains(projectFolder)) {
-					// Log.d("qq", "inside project");
+					// MLog.d("qq", "inside project");
 					return serveFile(uri.substring(uri.lastIndexOf('/') + 1, uri.length()), header,
 							new File(p.getStoragePath()), false);
 				} else {
-					// Log.d("qq", "outside project");
+					// MLog.d("qq", "outside project");
 					new Response(HTTP_NOTFOUND, MIME_HTML, "resource not found");
 				}
 
@@ -201,9 +201,9 @@ public class MyHTTPServer extends NanoHTTPD {
 
 				File src = new File(files.getProperty("pic").toString());
 				File dst = new File(p.getStoragePath() + "/" + parms.getProperty("pic").toString());
-				// Log.d("qwqw", p.getStoragePath() + "/" +
+				// MLog.d("qwqw", p.getStoragePath() + "/" +
 				// parms.getProperty("pic").toString());
-				// Log.d(TAG, " " + src.toString() + " " + dst.toString());
+				// MLog.d(TAG, " " + src.toString() + " " + dst.toString());
 
 				FileIO.copyFile(src, dst);
 
@@ -225,7 +225,7 @@ public class MyHTTPServer extends NanoHTTPD {
 			if (m.length > 1) {
 				params = m[1];
 			}
-			Log.d(TAG, "cmd " + userCmd);
+			MLog.d(TAG, "cmd " + userCmd);
 
 			if (userCmd.contains("cmd")) {
 				JSONObject obj = new JSONObject(params);
@@ -235,12 +235,12 @@ public class MyHTTPServer extends NanoHTTPD {
 				String type;
 				int projectType = -1;
 
-				Log.d(TAG, "params " + obj.toString(2));
+				MLog.d(TAG, "params " + obj.toString(2));
 
 				String cmd = obj.getString("cmd");
 				// fetch code
 				if (cmd.equals("fetch_code")) {
-					Log.d(TAG, "--> fetch code");
+					MLog.d(TAG, "--> fetch code");
 					name = obj.getString("name");
 					type = obj.getString("type");
 
@@ -257,7 +257,7 @@ public class MyHTTPServer extends NanoHTTPD {
 
 					// list apps
 				} else if (cmd.equals("list_apps")) {
-					Log.d(TAG, "--> list apps");
+					MLog.d(TAG, "--> list apps");
 
 					type = obj.getString("filter");
 
@@ -275,13 +275,13 @@ public class MyHTTPServer extends NanoHTTPD {
 
 					// run app
 				} else if (cmd.equals("run_app")) {
-					Log.d(TAG, "--> run app");
+					MLog.d(TAG, "--> run app");
 
 					// Save and run
 					name = obj.getString("name");
 					type = obj.getString("type");
 
-					if (type.equals("projecs")) {
+					if (type.equals("projects")) {
 						projectType = ProjectManager.PROJECT_USER_MADE;
 					} else if (type.equals("examples")) {
 						projectType = ProjectManager.PROJECT_EXAMPLE;
@@ -291,27 +291,27 @@ public class MyHTTPServer extends NanoHTTPD {
 					ProjectManager.getInstance().setRemoteIP(obj.getString("remoteIP"));
 					ProjectEvent evt = new ProjectEvent(p, "run");
 					EventBus.getDefault().post(evt);
-					ALog.i("Running...");
+					MLog.i(TAG, "Running...");
 
 					// run app
 				} else if (cmd.equals("execute_code")) {
-					Log.d(TAG, "--> execute code");
+					MLog.d(TAG, "--> execute code");
 
 					// Save and run
 					String code = parms.get("codeToSend").toString();
 
 					Events.ExecuteCodeEvent evt = new Events.ExecuteCodeEvent(code);
 					EventBus.getDefault().post(evt);
-					ALog.i("Execute...");
+					MLog.i(TAG, "Execute...");
 
 					// save_code
 				} else if (cmd.equals("push_code")) {
-					Log.d(TAG, "--> push code " + method + " " + header);
-					Log.d(TAG, "---->" + parms.toString() + " " + files.toString());
-					Log.d(TAG, "" + parms.get("code"));
+					MLog.d(TAG, "--> push code " + method + " " + header);
+					MLog.d(TAG, "---->" + parms.toString() + " " + files.toString());
+					MLog.d(TAG, "" + parms.get("code"));
 					name = parms.get("name").toString();
 					newCode = parms.get("code").toString();
-					Log.d("ww", newCode);
+					MLog.d("ww", newCode);
 
 					type = parms.get("type").toString();
 
@@ -328,11 +328,11 @@ public class MyHTTPServer extends NanoHTTPD {
 					ProjectEvent evt = new ProjectEvent(p, "save");
 					EventBus.getDefault().post(evt);
 
-					ALog.i("Saved");
+					MLog.i(TAG, "Saved");
 
 					// list files in project
 				} else if (cmd.equals("list_files_in_project")) {
-					Log.d(TAG, "--> create new project");
+					MLog.d(TAG, "--> create new project");
 					name = obj.getString("name");
 					type = obj.getString("type");
 
@@ -349,7 +349,7 @@ public class MyHTTPServer extends NanoHTTPD {
 					// EventBus.getDefault().post(evt);
 
 				} else if (cmd.equals("create_new_project")) {
-					Log.d(TAG, "--> create new project");
+					MLog.d(TAG, "--> create new project");
 
 					name = obj.getString("name");
 					Project p = new Project(name, "", ProjectManager.PROJECT_USER_MADE);
@@ -361,11 +361,11 @@ public class MyHTTPServer extends NanoHTTPD {
 
 					// remove app
 				} else if (cmd.equals("remove_app")) {
-					Log.d(TAG, "--> remove app");
+					MLog.d(TAG, "--> remove app");
 
 					// get help
 				} else if (cmd.equals("get_documentation")) {
-					Log.d(TAG, "--> get documentation");
+					MLog.d(TAG, "--> get documentation");
 
 					// TODO do it automatically
 					APIManager.getInstance().clear();
@@ -428,7 +428,7 @@ public class MyHTTPServer extends NanoHTTPD {
 			}
 
 		} catch (Exception e) {
-			Log.d(TAG, "response error " + e.toString());
+			MLog.d(TAG, "response error " + e.toString());
 		}
 
 		// return serveFile(uri, header, servingFolder, true);
@@ -441,12 +441,12 @@ public class MyHTTPServer extends NanoHTTPD {
 
 		// Clean up uri
 		uri = uri.trim().replace(File.separatorChar, '/');
-		Log.d(TAG, uri);
+		MLog.d(TAG, uri);
 
 		// have the object build the directory structure, if needed.
 		AssetManager am = ctx.get().getAssets();
 		try {
-			Log.d(TAG, WEBAPP_DIR + uri);
+			MLog.d(TAG, WEBAPP_DIR + uri);
 			InputStream fi = am.open(WEBAPP_DIR + uri);
 
 			// Get MIME type from file name extension, if possible
@@ -462,7 +462,7 @@ public class MyHTTPServer extends NanoHTTPD {
 			res = new Response(HTTP_OK, mime, fi);
 		} catch (IOException e) {
 			e.printStackTrace();
-			ALog.d(TAG, e.getStackTrace().toString());
+			MLog.d(TAG, e.getStackTrace().toString());
 			res = new Response(HTTP_INTERNALERROR, "text/html", "ERROR: " + e.getMessage());
 		}
 
@@ -473,12 +473,12 @@ public class MyHTTPServer extends NanoHTTPD {
 	private Response sendWebAppFile(String uri, String method, Properties header, Properties parms, Properties files) {
 		Response res = null;
 
-		Log.d(TAG, "" + method + " '" + uri + " " + /* header + */" " + parms);
+		MLog.d(TAG, "" + method + " '" + uri + " " + /* header + */" " + parms);
 
 		String escapedCode = parms.getProperty("code");
 		String unescapedCode = StringEscapeUtils.unescapeEcmaScript(escapedCode);
-		Log.d("HTTP Code", "" + escapedCode);
-		Log.d("HTTP Code", "" + unescapedCode);
+		MLog.d("HTTP Code", "" + escapedCode);
+		MLog.d("HTTP Code", "" + unescapedCode);
 
 		// Clean up uri
 		uri = uri.trim().replace(File.separatorChar, '/');
@@ -499,7 +499,7 @@ public class MyHTTPServer extends NanoHTTPD {
 		// have the object build the directory structure, if needed.
 		AssetManager am = ctx.get().getAssets();
 		try {
-			Log.d(TAG, WEBAPP_DIR + uri);
+			MLog.d(TAG, WEBAPP_DIR + uri);
 			InputStream fi = am.open(WEBAPP_DIR + uri);
 
 			// Get MIME type from file name extension, if possible
@@ -515,7 +515,7 @@ public class MyHTTPServer extends NanoHTTPD {
 			res = new Response(HTTP_OK, mime, fi);
 		} catch (IOException e) {
 			e.printStackTrace();
-			ALog.d(TAG, e.getStackTrace().toString());
+			MLog.d(TAG, e.getStackTrace().toString());
 			res = new Response(HTTP_INTERNALERROR, "text/html", "ERROR: " + e.getMessage());
 		}
 

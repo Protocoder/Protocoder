@@ -1,7 +1,1 @@
-define('ace/snippets/powershell', ['require', 'exports', 'module' ], function(require, exports, module) {
-
-
-exports.snippetText = "";
-exports.scope = "powershell";
-
-});
+ace.define("ace/snippets/powershell",["require","exports","module"],function(e,t,n){t.snippetText="",t.scope="powershell"})

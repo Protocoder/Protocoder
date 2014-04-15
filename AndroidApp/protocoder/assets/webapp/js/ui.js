@@ -285,8 +285,7 @@ Ui.prototype.init = function() {
 	//save file
 	$("#toolbar #saveBtn").click(function() { 
 		if (currentProject.length != 'undefined') { 
-			currentProject.code = session.getValue();
-			protocoder.communication.pushCode(currentProject);
+			protocoder.editor.saveCode();
 		} else { 
 			openPopup();
 		}
@@ -591,6 +590,11 @@ Ui.prototype.clearFileElements = function() {
 Ui.prototype.addFileElement = function(f) {
   	w2ui['grid'].add( f );
 }
+
+Ui.prototype.setTabFeedback = function(f) {
+
+}
+
 
 
 Ui.prototype.initUpload = function() {

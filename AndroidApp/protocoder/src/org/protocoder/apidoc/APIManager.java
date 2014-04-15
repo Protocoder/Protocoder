@@ -36,8 +36,7 @@ import java.util.Map;
 
 import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apidoc.annotation.APIParam;
-
-import android.util.Log;
+import org.protocoder.utils.MLog;
 
 import com.google.gson.Gson;
 
@@ -79,18 +78,18 @@ public class APIManager {
 			// api docs
 			APIManagerClass apiClass = new APIManagerClass();
 			apiClass.name = c.getSimpleName();
-			Log.d(TAG, "" + c.getName());
+			MLog.d(TAG, "" + c.getName());
 
 			// getting all the methods
 			Method m[] = c.getDeclaredMethods();
-			for (int i = 0; i < m.length; i++) {
+			for (Method element : m) {
 
 				// get method
 				APIManagerMethod apiMethod = new APIManagerMethod();
-				apiMethod.name = m[i].getName();
+				apiMethod.name = element.getName();
 
 				// get parameter types
-				Class<?>[] param = m[i].getParameterTypes();
+				Class<?>[] param = element.getParameterTypes();
 				String[] paramsType = new String[param.length];
 
 				for (int j = 0; j < param.length; j++) {
@@ -100,11 +99,11 @@ public class APIManager {
 				apiMethod.paramsType = paramsType;
 
 				// return type
-				apiMethod.returnType = m[i].getReturnType().getSimpleName().toString();
+				apiMethod.returnType = element.getReturnType().getSimpleName().toString();
 
 				// get method information
 				if (apiMethod.name.contains("$") == false) {
-					Annotation[] annotations = m[i].getDeclaredAnnotations();
+					Annotation[] annotations = element.getDeclaredAnnotations();
 					// check if annotation exist and add apidocs
 					for (Annotation annotation2 : annotations) {
 
@@ -118,7 +117,7 @@ public class APIManager {
 						// get parameters names
 						if (annotation2.annotationType().getSimpleName().equals(APIParam.class.getSimpleName())) {
 							apiMethod.parametersName = ((APIParam) annotation2).params();
-							Log.d(TAG, "getting names " + apiMethod.parametersName);
+							MLog.d(TAG, "getting names " + apiMethod.parametersName);
 						}
 
 					}
@@ -153,19 +152,19 @@ public class APIManager {
 
 			for (Method m : methods) {
 				// get class and method
-				Log.d(TAG, pairs.getKey() + " = " + m.getName());
+				MLog.d(TAG, pairs.getKey() + " = " + m.getName());
 
 				Annotation[] annotations = m.getDeclaredAnnotations();
 
 				for (Annotation annotation2 : annotations) {
 
-					Log.d(TAG, annotation2.toString() + " " + annotation2.annotationType().getSimpleName() + " "
+					MLog.d(TAG, annotation2.toString() + " " + annotation2.annotationType().getSimpleName() + " "
 							+ APIMethod.class.getSimpleName());
 
 					if (annotation2.annotationType().getSimpleName().equals(APIMethod.class.getSimpleName())) {
 						String desc = ((APIMethod) annotation2).description();
 						String example = ((APIMethod) annotation2).example();
-						Log.d(TAG, desc);
+						MLog.d(TAG, desc);
 					}
 				}
 

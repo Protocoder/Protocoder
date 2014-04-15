@@ -28,7 +28,7 @@
 
 package org.protocoder.apprunner.logger;
 
-import android.util.Log;
+import org.protocoder.utils.MLog;
 
 public class L {
 
@@ -41,17 +41,17 @@ public class L {
 
 		if (enabled) {
 			if (filter == null) {
-				Log.d(TAG, text);
+				MLog.d(TAG, text);
 
-				// Log.d(TAG, "" + overlayLogger);
+				// MLog.d(TAG, "" + overlayLogger);
 				if (overlayLogger != null) {
 					overlayLogger.addItem(text);
 				}
 			} else if (TAG.equals(filter)) {
 
-				Log.d(TAG, text);
+				MLog.d(TAG, text);
 
-				// Log.d(TAG, "" + overlayLogger);
+				// MLog.d(TAG, "" + overlayLogger);
 				if (overlayLogger != null) {
 					overlayLogger.addItem(text);
 				}

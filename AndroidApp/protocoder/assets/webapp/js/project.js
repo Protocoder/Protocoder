@@ -31,20 +31,29 @@ function setProjectList(filter, data) {
    //console.log("-->", k, project); 
    //console.log('#list_projects #'+div+" #ul");
    // console.log("binding -> " + div + " #"+project.name);
-  $('<li id ="'+project.name+'"><span>' + project.name + '</span></li>').click(function () {
+  $('<li id ="'+project.name+'"><span>' + project.name + '</span><div id ="actions"> <div id ="cont"> <i id = "rename" class="fa fa-play"></i> <i id = "delete" class="fa fa-play"> </i>   </div> </div> </li>').click(function () {
       currentProject = project;
       currentProject.type = filter;
       protocoder.communication.fetchCode(project.name, project.type);
       protocoder.ui.showProjects(false);
+
+      $("#list_project #" + project.name + " #rename").click(function() { 
+        console.log("rename");
+      });
+
+      $("#list_project #" + project.name + " #delete").click(function() { 
+        console.log("delete");
+      });
+
+      
+
+
     }).appendTo('#list_projects #'+div+" ul");
     obj.items.push(project.name);
   });
 
   currentObject = obj;
 
-  //setting the toolbar
-  //console.log("setting ", obj, "in", div);
-  //w2ui['toolbar'].set(div, obj);
 
 };
 

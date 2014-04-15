@@ -1,7 +1,8 @@
 package org.protocoder.views;
 
+import org.protocoder.utils.MLog;
+
 import android.content.Context;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
 
@@ -27,14 +28,14 @@ public class TouchableWrapper extends FrameLayout {
 		case MotionEvent.ACTION_MOVE:
 			int x = (int) event.getX();
 			int y = (int) event.getY();
-			Log.d(TAG, "" + x + " " + y);
+			MLog.d(TAG, "" + x + " " + y);
 
 			// Point point = new Point(x, y);
 			// LatLng latLng = map.getProjection().fromScreenLocation(point);
 			// Point pixels = map.getProjection().toScreenLocation(latLng);;
 			// mapCustomFragment.setTouch(latLng);
 
-			// Log.d("qq2", x + " " + y + " " + latLng.latitude + " " +
+			// MLog.d("qq2", x + " " + y + " " + latLng.latitude + " " +
 			// latLng.longitude);
 			break;
 		}

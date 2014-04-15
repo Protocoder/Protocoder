@@ -42,7 +42,7 @@ var content =
     <body>
         <script>
         function vibrate() {
-            protocoder.eval(
+            app.eval(
                 "android.vibrate(500)"); }
         </script>
         <h1>HTML example!</h1>

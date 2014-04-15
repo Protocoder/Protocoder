@@ -34,6 +34,7 @@ import java.util.Locale;
 import java.util.Vector;
 
 import org.protocoder.apprunner.logger.L;
+import org.protocoder.utils.MLog;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
@@ -51,7 +52,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.provider.Settings;
-import android.util.Log;
 
 @TargetApi(Build.VERSION_CODES.GINGERBREAD)
 public class GPSManager {
@@ -71,7 +71,7 @@ public class GPSManager {
 	}
 
 	protected static final String TAG = "GPSManager";
-	private Context c;
+	private final Context c;
 	LocationManager locationManager;
 	String provider;
 	Vector<GPSListener> listeners;
@@ -98,16 +98,16 @@ public class GPSManager {
 
 	// gps
 	public void start() {
-		Log.d(TAG, "starting GPS");
+		MLog.d(TAG, "starting GPS");
 
 		// criteria.setSpeedRequired(true);
 		locationManager = (LocationManager) c.getSystemService(Context.LOCATION_SERVICE);
 
 		if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) == false) {
-			Log.d(TAG, "GPS not enabled");
+			MLog.d(TAG, "GPS not enabled");
 			showSettingsAlert();
 		} else {
-			Log.d(TAG, "GPS enabled");
+			MLog.d(TAG, "GPS enabled");
 
 		}
 		running = true;
@@ -132,8 +132,9 @@ public class GPSManager {
 				// TODO add a listener to see when the GPS is on or not
 				switch (status) {
 				case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
-					if (mLastLocation != null)
+					if (mLastLocation != null) {
 						isGPSFix = (SystemClock.elapsedRealtime() - mLastLocationMillis) < 3000;
+					}
 
 					if (isGPSFix) { // A fix has been acquired.
 						// Do something.
@@ -167,15 +168,16 @@ public class GPSManager {
 
 			@Override
 			public void onLocationChanged(Location location) {
-				Log.d(TAG, "updated ");
+				MLog.d(TAG, "updated ");
 
 				for (CustomSensorListener l : listeners) {
 					((GPSListener) l).onLocationChanged(location.getLatitude(), location.getLongitude(),
 							location.getAltitude(), location.getSpeed(), location.getAccuracy());
 				}
 
-				if (location == null)
+				if (location == null) {
 					return;
+				}
 
 				mLastLocationMillis = SystemClock.elapsedRealtime();
 				mLastLocation = location;
@@ -224,6 +226,7 @@ public class GPSManager {
 
 		// On pressing Settings button
 		alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
 				c.startActivity(intent);
@@ -232,6 +235,7 @@ public class GPSManager {
 
 		// on pressing cancel button
 		alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.cancel();
 			}

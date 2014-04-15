@@ -29,12 +29,12 @@
 package org.protocoder;
 
 import org.protocoder.base.BaseActivity;
+import org.protocoder.utils.MLog;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 
 @SuppressLint("NewApi")
@@ -61,7 +61,7 @@ public class AboutActivity extends BaseActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Log.d(TAG, "onResume");
+		MLog.d(TAG, "onResume");
 	}
 
 	/**

@@ -4,8 +4,7 @@
     android:versionCode="9"
     android:versionName="0.8" >
 
-    <uses-sdk
-        android:minSdkVersion="14" />
+    <uses-sdk android:minSdkVersion="16" />
 
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -13,8 +12,9 @@
     <uses-feature
         android:name="android.hardware.nfc"
         android:required="false" />
-    <uses-feature android:name="android.hardware.camera" 
-        android:required="false"/>
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -36,7 +36,6 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.RECORD_VIDEO" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
-
 
     <application
         android:name="org.protocoder.MainApp"
@@ -95,6 +94,11 @@
             android:noHistory="true" >
         </activity>
         <activity
+            android:name="org.protocoder.network.bt.DeviceListActivity"
+            android:label="@string/activity_name"
+            android:logo="@drawable/protocoder_icon" >
+        </activity>
+        <activity
             android:name="org.protocoder.beam.BeamActivity"
             android:label="@string/beam" >
             <intent-filter>
@@ -151,7 +155,6 @@
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
-        
         <receiver
             android:name="org.protocoder.services.AlarmReceiver"
             android:process=":remote" >

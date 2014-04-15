@@ -67,6 +67,7 @@ import org.protocoder.fragments.CameraFragment;
 import org.protocoder.fragments.CustomVideoTextureView;
 import org.protocoder.utils.AndroidUtils;
 import org.protocoder.utils.FileIO;
+import org.protocoder.utils.MLog;
 import org.protocoder.views.HoloCircleSeekBar;
 import org.protocoder.views.HoloCircleSeekBar.OnCircleSeekBarChangeListener;
 import org.protocoder.views.PadView;
@@ -303,7 +304,12 @@ public class JUIGeneric extends JInterface {
 		return card;
 	}
 
-	public JButton addGenericButton(String label, final String callbackfn) {
+	// --------- addGenericButton ---------//
+	public interface addGenericButtonCB {
+		void event();
+	}
+
+	public JButton addGenericButton(String label, final addGenericButtonCB callbackfn) {
 		initializeLayout();
 
 		// Create the button
@@ -314,18 +320,19 @@ public class JUIGeneric extends JInterface {
 		b.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				callback(callbackfn);
+				callbackfn.event();
 			}
 		});
 
 		return b;
 	}
 
-	/**
-	 * Adds a touch area
-	 * 
-	 */
-	public TouchAreaView addGenericTouchArea(boolean showArea, final String callbackfn) {
+	// --------- TouchAreaView ---------//
+	public interface addGenericTouchAreaCB {
+		void event(boolean touching, float x, float y);
+	}
+
+	public TouchAreaView addGenericTouchArea(boolean showArea, final addGenericTouchAreaCB callbackfn) {
 		initializeLayout();
 
 		TouchAreaView taV = new TouchAreaView(a.get(), showArea);
@@ -333,18 +340,19 @@ public class JUIGeneric extends JInterface {
 
 			@Override
 			public void onTouch(TouchAreaView touchAreaView, boolean touching, float x, float y) {
-				callback(callbackfn, touching, x, y);
+				callbackfn.event(touching, x, y);
 			}
 		});
 
 		return taV;
 	}
 
-	/**
-	 * Adds a touch area
-	 * 
-	 */
-	public PadView addPad(final String callbackfn) {
+	// --------- addPad (Touch Area) ---------//
+	public interface addPadCB {
+		void event(JSONArray array);
+	}
+
+	public PadView addPad(final addPadCB callbackfn) {
 		initializeLayout();
 
 		PadView taV = new PadView(a.get());
@@ -372,18 +380,19 @@ public class JUIGeneric extends JInterface {
 					array.put(o);
 				}
 
-				callback(callbackfn, array);
+				callbackfn.event(array);
 			}
 		});
 
 		return taV;
 	}
 
-	/**
-	 * Adds a circular seekbar
-	 * 
-	 */
-	public HoloCircleSeekBar addGenericKnob(final String callbackfn) {
+	// --------- HoloCircleSeekBar ---------//
+	public interface addGenericKnobCB {
+		void eval(int progress);
+	}
+
+	public HoloCircleSeekBar addGenericKnob(final addGenericKnobCB callbackfn) {
 		initializeLayout();
 
 		HoloCircleSeekBar pkr = new HoloCircleSeekBar(a.get());
@@ -395,20 +404,21 @@ public class JUIGeneric extends JInterface {
 			public void onProgressChanged(HoloCircleSeekBar seekBar, int progress, boolean fromUser) {
 
 				// TODO Callback should capture the checked state
-				callback(callbackfn, progress);
+				callbackfn.eval(progress);
 			}
 		});
 
 		return pkr;
 	}
 
-	/**
-	 * Adds a seekbar with a callback function
-	 * 
-	 */
+	// --------- seekbar ---------//
+	public interface addGenericSliderCB {
+		void eval(int progress);
+	}
+
 	// We'll add in the circular view as a nice to have later once all the other
 	// widgets are handled.
-	public JSeekBar addGenericSlider(int max, int progress, final String callbackfn) {
+	public JSeekBar addGenericSlider(int max, int progress, final addGenericSliderCB callbackfn) {
 
 		initializeLayout();
 		// Create the position the view
@@ -429,7 +439,7 @@ public class JUIGeneric extends JInterface {
 
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-				callback(callbackfn, progress);
+				callbackfn.eval(progress);
 			}
 		});
 
@@ -453,11 +463,12 @@ public class JUIGeneric extends JInterface {
 		return tv;
 	}
 
-	/**
-	 * Adds an Input dialog
-	 * 
-	 */
-	public JEditText addGenericInput(String label, final String callbackfn) {
+	// --------- getRequest ---------//
+	public interface addGenericInputCB {
+		void event();
+	}
+
+	public JEditText addGenericInput(String label, final addGenericInputCB callbackfn) {
 
 		initializeLayout();
 		// Create view
@@ -469,7 +480,7 @@ public class JUIGeneric extends JInterface {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
 				if (!hasFocus) {
-					callback(callbackfn);
+					callbackfn.event();
 				}
 			}
 		});
@@ -481,11 +492,12 @@ public class JUIGeneric extends JInterface {
 
 	}
 
-	/**
-	 * Adds a toggle button
-	 * 
-	 */
-	public JToggleButton addGenericToggle(final String label, boolean initstate, final String callbackfn) {
+	// --------- Toggle ---------//
+	public interface addGenericToggleCB {
+		void event(boolean isChecked);
+	}
+
+	public JToggleButton addGenericToggle(final String label, boolean initstate, final addGenericToggleCB callbackfn) {
 		initializeLayout();
 		// Create the view
 		JToggleButton tb = new JToggleButton(a.get());
@@ -496,17 +508,19 @@ public class JUIGeneric extends JInterface {
 		tb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				callback(callbackfn, isChecked);
+				callbackfn.event(new Boolean(isChecked));
 			}
 		});
 
 		return tb;
 	}
 
-	/**
-	 * Adds a checkbox
-	 */
-	public JCheckBox addGenericCheckbox(String label, boolean initstate, final String callbackfn) {
+	// --------- checkbox ---------//
+	public interface addGenericCheckboxCB {
+		void event(boolean isChecked);
+	}
+
+	public JCheckBox addGenericCheckbox(String label, boolean initstate, final addGenericCheckboxCB callbackfn) {
 
 		initializeLayout();
 		// Adds a checkbox and set the initial state as initstate. if the button
@@ -519,8 +533,7 @@ public class JUIGeneric extends JInterface {
 		cb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				// TODO Callback should capture the checked state
-				callback(callbackfn, isChecked);
+				callbackfn.event(isChecked);
 			}
 		});
 
@@ -535,7 +548,11 @@ public class JUIGeneric extends JInterface {
 	 * Adds a switch
 	 * 
 	 */
-	public JSwitch addGenericSwitch(boolean initstate, final String callbackfn) {
+	public interface addGenericSwitchCB {
+		void event(boolean isChecked);
+	}
+
+	public JSwitch addGenericSwitch(boolean initstate, final addGenericSwitchCB callbackfn) {
 
 		initializeLayout();
 		// Adds a switch. If the state changes, we'll call the callback function
@@ -546,8 +563,7 @@ public class JUIGeneric extends JInterface {
 		s.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				// TODO Callback should capture the checked state
-				callback(callbackfn, isChecked);
+				callbackfn.event(isChecked);
 			}
 		});
 
@@ -558,7 +574,12 @@ public class JUIGeneric extends JInterface {
 	 * Adds a radiobutton
 	 * 
 	 */
-	public JRadioButton addGenericRadioButton(String label, boolean initstate, final String callbackfn) {
+	// --------- getRequest ---------//
+	public interface addGenericRadioButtonCB {
+		void event(boolean isChecked);
+	}
+
+	public JRadioButton addGenericRadioButton(String label, boolean initstate, final addGenericRadioButtonCB callbackfn) {
 
 		initializeLayout();
 		// Create and position the radio button
@@ -570,8 +591,7 @@ public class JUIGeneric extends JInterface {
 		rb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				// TODO Callback should capture the checked state
-				callback(callbackfn, isChecked);
+				callbackfn.event(isChecked);
 			}
 		});
 
@@ -612,12 +632,12 @@ public class JUIGeneric extends JInterface {
 	 * Adds an image button with the default background
 	 * 
 	 */
-	public JImageButton addImageButton(int x, int y, int w, int h, String imagePath, final String callbackfn) {
+	public JImageButton addImageButton(int x, int y, int w, int h, String imagePath, final addImageButtonCB callbackfn) {
 		return addImageButton(x, y, w, h, imagePath, "", false, callbackfn);
 	}
 
 	public JImageButton addImageButton(int x, int y, int w, int h, String imgNotPressed, String imgPressed,
-			final String callbackfn) {
+			final addImageButtonCB callbackfn) {
 		return addImageButton(x, y, w, h, imgNotPressed, imgPressed, false, callbackfn);
 	}
 
@@ -625,8 +645,14 @@ public class JUIGeneric extends JInterface {
 	 * Adds an image with the option to hide the default background
 	 * 
 	 */
+
+	public// --------- getRequest ---------//
+	interface addImageButtonCB {
+		void event();
+	}
+
 	public JImageButton addImageButton(int x, int y, int w, int h, String imgNotPressed, String imgPressed,
-			final boolean hideBackground, final String callbackfn) {
+			final boolean hideBackground, final addImageButtonCB callbackfn) {
 
 		initializeLayout();
 		// Create and position the image button
@@ -646,18 +672,18 @@ public class JUIGeneric extends JInterface {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				Log.d(TAG, "" + event.getAction());
+				MLog.d(TAG, "" + event.getAction());
 				int action = event.getAction();
 				if (action == MotionEvent.ACTION_DOWN) {
-					Log.d(TAG, "down");
+					MLog.d(TAG, "down");
 					if (hideBackground) {
 						ib.getDrawable().setColorFilter(0xDD00CCFC, PorterDuff.Mode.MULTIPLY);
 
 					}
-					callback(callbackfn);
+					callbackfn.event();
 
 				} else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
-					Log.d(TAG, "up");
+					MLog.d(TAG, "up");
 					if (hideBackground) {
 						ib.getDrawable().setColorFilter(0xFFFFFFFF, PorterDuff.Mode.MULTIPLY);
 
@@ -696,7 +722,7 @@ public class JUIGeneric extends JInterface {
 			@Override
 			public boolean onZoom(final ZoomEvent e) {
 				// do something
-				Log.d("map", "zoom " + e.getZoomLevel());
+				MLog.d("map", "zoom " + e.getZoomLevel());
 				return true;
 			}
 
@@ -831,21 +857,21 @@ public class JUIGeneric extends JInterface {
 		protected Object doInBackground(String... paths) {
 			imagePath = paths[0];
 			File imgFile = new File(imagePath);
-			Log.d("svg", "imagePath " + imagePath);
+			MLog.d("svg", "imagePath " + imagePath);
 			if (imgFile.exists()) {
 				fileExtension = FileIO.getFileExtension(imagePath);
-				Log.d("svg", "fileExtension " + fileExtension);
+				MLog.d("svg", "fileExtension " + fileExtension);
 				if (fileExtension.equals("svg")) {
 					try {
-						Log.d("svg", "is SVG 1");
+						MLog.d("svg", "is SVG 1");
 						File file = new File(imagePath);
 						FileInputStream fileInputStream = new FileInputStream(file);
-						Log.d("svg", "input " + fileInputStream);
+						MLog.d("svg", "input " + fileInputStream);
 
 						SVG svg = SVG.getFromInputStream(fileInputStream);
-						Log.d("svg", "svg " + svg);
+						MLog.d("svg", "svg " + svg);
 						Drawable drawable = new PictureDrawable(svg.renderToPicture());
-						Log.d("svg", "drawable " + drawable);
+						MLog.d("svg", "drawable " + drawable);
 
 						return drawable;
 					} catch (SVGParseException e) {
@@ -867,7 +893,7 @@ public class JUIGeneric extends JInterface {
 		@Override
 		protected void onPostExecute(Object result) {
 			if (fileExtension.equals("svg")) {
-				Log.d("svg", "is SVG 2 " + result);
+				MLog.d("svg", "is SVG 2 " + result);
 				bgImage.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 				bgImage.setImageDrawable((Drawable) result);
 			} else {

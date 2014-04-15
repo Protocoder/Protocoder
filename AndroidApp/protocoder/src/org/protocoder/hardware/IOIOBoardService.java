@@ -32,10 +32,12 @@ import ioio.lib.api.exception.ConnectionLostException;
 import ioio.lib.util.BaseIOIOLooper;
 import ioio.lib.util.IOIOLooper;
 import ioio.lib.util.android.IOIOService;
+
+import org.protocoder.utils.MLog;
+
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-import android.util.Log;
 
 public class IOIOBoardService extends IOIOService {
 	public static final int SET_CALLBACK = 1;
@@ -53,11 +55,11 @@ public class IOIOBoardService extends IOIOService {
 
 	@Override
 	protected IOIOLooper createIOIOLooper() {
-		Log.d(TAG, "createIOIOLooper");
+		MLog.d(TAG, "createIOIOLooper");
 		return new BaseIOIOLooper() {
 			@Override
 			protected void setup() throws ConnectionLostException, InterruptedException {
-				Log.d(TAG, "Setup in IOIOLooper");
+				MLog.d(TAG, "Setup in IOIOLooper");
 				callback_.onConnect(ioio_);
 				callback_.setup();
 				// abort_ = (resp != null && resp != true);
@@ -77,7 +79,7 @@ public class IOIOBoardService extends IOIOService {
 			@Override
 			public void disconnected() {
 				super.disconnected();
-				Log.d("IOIOBoardService", "-----> Disconnecting <-----");
+				MLog.d("IOIOBoardService", "-----> Disconnecting <-----");
 				ioio_.disconnect();
 			}
 		};
@@ -85,7 +87,7 @@ public class IOIOBoardService extends IOIOService {
 
 	@Override
 	public void onStart(Intent intent, int startId) {
-		Log.d(TAG, "onSTART");
+		MLog.d(TAG, "onSTART");
 		super.onStart(intent, startId);
 	}
 
@@ -95,12 +97,12 @@ public class IOIOBoardService extends IOIOService {
 	}
 
 	public void setCallback(HardwareCallback cb) {
-		Log.d(TAG, "setCallback");
+		MLog.d(TAG, "setCallback");
 		callback_ = cb;
 	}
 
 	public void start(Intent in) {
-		Log.d(TAG, "START WITH INTENT");
+		MLog.d(TAG, "START WITH INTENT");
 		startService(in);
 	}
 }

@@ -57,6 +57,7 @@ import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 
 import org.protocoder.apprunner.AppRunnerSettings;
+import org.protocoder.utils.MLog;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -236,9 +237,9 @@ public class NetworkUtils {
 		} catch (SocketException ex) {
 			Log.e("LOG_TAG", ex.toString());
 		}
-		Log.d(TAG, "ifconfig " + IFCONFIG.toString());
+		MLog.d(TAG, "ifconfig " + IFCONFIG.toString());
 
-		Log.d(TAG, "hotspot address is " + address);
+		MLog.d(TAG, "hotspot address is " + address);
 
 	}
 
@@ -282,7 +283,7 @@ public class NetworkUtils {
 		// }
 		// }
 		// } catch (SocketException ex) {
-		// Log.d(TAG, ex.toString());
+		// MLog.d(TAG, ex.toString());
 		// }
 		// return null;
 

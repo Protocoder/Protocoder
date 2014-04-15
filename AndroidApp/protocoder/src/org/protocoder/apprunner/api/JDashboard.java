@@ -39,13 +39,13 @@ import org.protocoder.apprunner.ProtocoderScript;
 import org.protocoder.apprunner.api.dashboard.JDashboardButton;
 import org.protocoder.apprunner.api.dashboard.JDashboardHTML;
 import org.protocoder.apprunner.api.dashboard.JDashboardImage;
+import org.protocoder.apprunner.api.dashboard.JDashboardInput;
 import org.protocoder.apprunner.api.dashboard.JDashboardLabel;
 import org.protocoder.apprunner.api.dashboard.JDashboardPlot;
 import org.protocoder.apprunner.api.dashboard.JDashboardSlider;
 import org.protocoder.network.CustomWebsocketServer;
 
 import android.app.Activity;
-import android.util.Log;
 
 public class JDashboard extends JInterface {
 
@@ -81,9 +81,9 @@ public class JDashboard extends JInterface {
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "name", "x", "y", "w", "h", "function()" })
-	public JDashboardButton addButton(String name, int x, int y, int w, int h, final String callbackfn)
-			throws UnknownHostException, JSONException {
-		Log.d(TAG, "callback " + callbackfn);
+	public JDashboardButton addButton(String name, int x, int y, int w, int h,
+			final JDashboardButton.jDashboardAddCB callbackfn) throws UnknownHostException, JSONException {
+		// MLog.d(TAG, "callback " + callbackfn);
 
 		JDashboardButton jWebAppButton = new JDashboardButton(a.get());
 		jWebAppButton.add(name, x, y, w, h, callbackfn);
@@ -93,10 +93,10 @@ public class JDashboard extends JInterface {
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	@APIParam(params = { "name", "x", "y", "w", "h", "min", "max" })
-	public JDashboardSlider addSlider(String name, int x, int y, int w, int h, int min, int max, final String callbackfn)
-			throws UnknownHostException, JSONException {
-		Log.d(TAG, "callback " + callbackfn);
+	@APIParam(params = { "name", "x", "y", "w", "h", "min", "max", "callback(num)" })
+	public JDashboardSlider addSlider(String name, int x, int y, int w, int h, int min, int max,
+			final JDashboardSlider.jDashboardSliderAddCB callbackfn) throws UnknownHostException, JSONException {
+		// MLog.d(TAG, "callback " + callbackfn);
 
 		JDashboardSlider jWebAppSlider = new JDashboardSlider(a.get());
 		jWebAppSlider.add(name, x, y, w, h, min, max, callbackfn);
@@ -106,12 +106,25 @@ public class JDashboard extends JInterface {
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
+	@APIParam(params = { "name", "x", "y", "w", "h", "callback(text)" })
+	public JDashboardInput addInput(String name, int x, int y, int w, int h, final JDashboardInput.jDashboardInputCB callbackfn)
+			throws UnknownHostException, JSONException {
+		// MLog.d(TAG, "callback " + callbackfn);
+
+		JDashboardInput jWebAppInput = new JDashboardInput(a.get());
+		jWebAppInput.add(name, x, y, w, h, callbackfn);
+
+		return jWebAppInput;
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
 	@APIParam(params = { "name", "x", "y", "size", "hexColor" })
-	public JDashboardLabel addLabel(String name, int x, int y, int size, String color) throws UnknownHostException,
-			JSONException {
+	public JDashboardLabel addLabel(String name, int x, int y, int width, int height, int size, String color)
+			throws UnknownHostException, JSONException {
 
 		JDashboardLabel jWebAppLabel = new JDashboardLabel(a.get());
-		jWebAppLabel.add(name, x, y, size, color);
+		jWebAppLabel.add(name, x, y, width, height, size, color);
 
 		return jWebAppLabel;
 	}

@@ -155,7 +155,7 @@ public class MAKRBoard {
 			} else {
 				receivedData = "";
 			}
-			// Log.d(TAG,"Rx data : "+receivedData);
+			// MLog.d(TAG,"Rx data : "+receivedData);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return "";

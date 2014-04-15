@@ -30,11 +30,11 @@ package org.protocoder.fragments;
 
 import org.protocoder.R;
 import org.protocoder.base.BaseFragment;
+import org.protocoder.utils.MLog;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,7 +66,7 @@ public class BaseWebviewFragment extends BaseFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 
-		Log.d("WEBVIEW", "LOADED BaseWebView");
+		MLog.d("WEBVIEW", "LOADED BaseWebView");
 		v = inflater.inflate(R.layout.webview, container, false);
 
 		return v;
@@ -91,9 +91,9 @@ public class BaseWebviewFragment extends BaseFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		Log.d("WEBVIEW", "onActivityCreated");
+		MLog.d("WEBVIEW", "onActivityCreated");
 		webView = (WebView) v.findViewById(R.id.webView1);
-		Log.d("WEBVIEW", "Loaded WebView");
+		MLog.d("WEBVIEW", "Loaded WebView");
 
 		webView.setHorizontalScrollBarEnabled(false);
 		webView.setVerticalScrollBarEnabled(false);

@@ -35,6 +35,7 @@ import org.protocoder.events.Events.ProjectEvent;
 import org.protocoder.events.Project;
 import org.protocoder.events.ProjectManager;
 import org.protocoder.utils.Fonts;
+import org.protocoder.utils.MLog;
 import org.protocoder.utils.TextUtils;
 
 import android.annotation.SuppressLint;
@@ -43,7 +44,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GestureDetectorCompat;
 import android.text.Editable;
 import android.text.Selection;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -133,7 +133,7 @@ public class EditorFragment extends BaseFragment {
 		if (bundle != null) {
 			String projectName = bundle.getString(Project.NAME);
 			int projectType = bundle.getInt(Project.TYPE, -1);
-			Log.d("mm", projectName);
+			MLog.d("mm", projectName);
 			if (projectName != "") {
 				loadProject(ProjectManager.getInstance().get(projectName, projectType));
 			}
@@ -142,7 +142,7 @@ public class EditorFragment extends BaseFragment {
 		edit.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Log.d("qq", "" + getCurrentCursorLine(edit.getEditableText()));
+				MLog.d("qq", "" + getCurrentCursorLine(edit.getEditableText()));
 				if (listener != null) {
 					listener.onLineTouched();
 				}
@@ -157,35 +157,35 @@ public class EditorFragment extends BaseFragment {
 
 			@Override
 			public boolean onSingleTapUp(MotionEvent e) {
-				Log.d(TAG, "singleTapUp");
+				MLog.d(TAG, "singleTapUp");
 				return false;
 			}
 
 			@Override
 			public void onShowPress(MotionEvent e) {
-				Log.d(TAG, "showPress");
+				MLog.d(TAG, "showPress");
 			}
 
 			@Override
 			public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-				Log.d(TAG, "onScroll");
+				MLog.d(TAG, "onScroll");
 				return false;
 			}
 
 			@Override
 			public void onLongPress(MotionEvent e) {
-				Log.d(TAG, "onLongPress");
+				MLog.d(TAG, "onLongPress");
 			}
 
 			@Override
 			public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-				Log.d(TAG, "onFling");
+				MLog.d(TAG, "onFling");
 				return false;
 			}
 
 			@Override
 			public boolean onDown(MotionEvent e) {
-				Log.d(TAG, "onDown");
+				MLog.d(TAG, "onDown");
 				return false;
 			}
 		});

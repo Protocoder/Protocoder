@@ -161,7 +161,7 @@ public class TouchAreaView extends View {
 		// Convert coordinates to our internal coordinate system
 		xPointer = event.getX();
 		yPointer = event.getY();
-		// Log.d(TAG, xPointer + " " + yPointer);
+		// MLog.d(TAG, xPointer + " " + yPointer);
 
 		switch (event.getActionMasked()) {
 		case MotionEvent.ACTION_CANCEL:

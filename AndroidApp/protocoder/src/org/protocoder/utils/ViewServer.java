@@ -151,7 +151,7 @@ public class ViewServer implements Runnable {
 				try {
 					sServer.start();
 				} catch (IOException e) {
-					Log.d("LocalViewServer", "Error:", e);
+					MLog.d("LocalViewServer", "Error: " + e);
 				}
 			}
 		} else {
@@ -541,7 +541,7 @@ public class ViewServer implements Runnable {
 	}
 
 	private class ViewServerWorker implements Runnable, WindowListener {
-		private Socket mClient;
+		private final Socket mClient;
 		private boolean mNeedWindowListUpdate;
 		private boolean mNeedFocusedWindowUpdate;
 

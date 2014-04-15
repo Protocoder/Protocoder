@@ -36,7 +36,7 @@ public class QQ extends PApplet {
 			Looper.prepare();
 			// tell activity Processing is ready
 		} else {
-			jui.callback(drawfn);
+			// jui.callback(drawfn);
 			line(12, 12, 125, 125);
 		}
 	}

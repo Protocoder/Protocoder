@@ -64,11 +64,17 @@ import org.protocoder.network.OSC;
 import org.protocoder.network.OSC.Client;
 import org.protocoder.network.OSC.OSCServerListener;
 import org.protocoder.network.OSC.Server;
+import org.protocoder.network.bt.DeviceListActivity;
+import org.protocoder.network.bt.SimpleBT;
+import org.protocoder.network.bt.SimpleBT.SimpleBTListener;
 import org.protocoder.sensors.WhatIsRunning;
+import org.protocoder.utils.MLog;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothDevice;
+import android.content.Intent;
 import android.os.AsyncTask;
-import android.util.Log;
+import android.widget.Toast;
 
 import com.codebutler.android_websockets.SocketIOClient;
 
@@ -83,10 +89,15 @@ public class JNetwork extends JInterface {
 
 	}
 
+	// --------- download file ---------//
+	interface downloadFileCB {
+		void event(int eventType);
+	}
+
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "url", "fileName", "function(progress)" })
-	public void downloadFile(String url, String fileName, final String callbackfn) {
+	public void downloadFile(String url, String fileName, final downloadFileCB callbackfn) {
 
 		NetworkUtils.DownloadTask downloadTask = new NetworkUtils.DownloadTask(a.get(), fileName);
 		downloadTask.execute(url);
@@ -94,7 +105,7 @@ public class JNetwork extends JInterface {
 
 			@Override
 			public void onUpdate(int progress) {
-				callback(callbackfn, progress);
+				callbackfn.event(progress);
 			}
 		});
 
@@ -135,10 +146,15 @@ public class JNetwork extends JInterface {
 		return NetworkUtils.getLocalIpAddress(a.get());
 	}
 
+	// --------- OSC Server ---------//
+	interface startOSCServerCB {
+		void event(String string, JSONArray jsonArray);
+	}
+
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "port", "function(jsonData)" })
-	public OSC.Server startOSCServer(String port, final String callbackfn) {
+	public OSC.Server startOSCServer(String port, final startOSCServerCB callbackfn) {
 		OSC osc = new OSC();
 		Server server = osc.new Server();
 
@@ -146,7 +162,7 @@ public class JNetwork extends JInterface {
 
 			@Override
 			public void onMessage(OSCMessage msg) {
-				Log.d(TAG, "message received " + msg);
+				MLog.d(TAG, "message received " + msg);
 
 				JSONArray jsonArray = new JSONArray();
 				for (int i = 0; i < msg.getArgCount(); i++) {
@@ -165,13 +181,13 @@ public class JNetwork extends JInterface {
 				//
 
 				try {
-					Log.d(TAG, msg.getName() + " " + jsonArray.toString(2));
+					MLog.d(TAG, msg.getName() + " " + jsonArray.toString(2));
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				// callback(callbackfn, "\"" + msg.getName() + "\"", str);
-				callback(callbackfn, "\"" + msg.getName() + "\"", jsonArray);
+				callbackfn.event(msg.getName(), jsonArray);
 			}
 
 		});
@@ -193,10 +209,15 @@ public class JNetwork extends JInterface {
 		return client;
 	}
 
+	// --------- webSocket Server ---------//
+	interface startWebSocketServerCB {
+		void event(String string, String string2, String arg1);
+	}
+
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "port", "function(status, remoteAddress, jsonData)" })
-	public WebSocketServer startWebsocketServer(int port, final String callbackfn) {
+	public WebSocketServer startWebsocketServer(int port, final startWebSocketServerCB callbackfn) {
 
 		InetSocketAddress inetSocket = new InetSocketAddress(port);
 		Draft d = new Draft_17();
@@ -204,23 +225,22 @@ public class JNetwork extends JInterface {
 
 			@Override
 			public void onClose(WebSocket arg0, int arg1, String arg2, boolean arg3) {
-				callback(callbackfn, "\"" + "close" + "\"", "", arg0.getRemoteSocketAddress().toString(), "");
+				callbackfn.event("close", arg0.getRemoteSocketAddress().toString(), "");
 			}
 
 			@Override
 			public void onError(WebSocket arg0, Exception arg1) {
-				callback(callbackfn, "\"" + "error" + "\"", arg0.getRemoteSocketAddress().toString(), "");
+				callbackfn.event("error", arg0.getRemoteSocketAddress().toString(), "");
 			}
 
 			@Override
 			public void onMessage(WebSocket arg0, String arg1) {
-				callback(callbackfn, "\"" + "message" + "\"", arg0.getRemoteSocketAddress().toString(), "\"" + arg1
-						+ "\"");
+				callbackfn.event("message", arg0.getRemoteSocketAddress().toString(), arg1);
 			}
 
 			@Override
 			public void onOpen(WebSocket arg0, ClientHandshake arg1) {
-				callback(callbackfn, "\"" + "open" + "\"", arg0.getRemoteSocketAddress().toString(), "");
+				callbackfn.event("open", arg0.getRemoteSocketAddress().toString(), "");
 			}
 		};
 		websocketServer.start();
@@ -229,10 +249,15 @@ public class JNetwork extends JInterface {
 
 	}
 
+	// --------- connect websocket ---------//
+	interface connectWebsocketCB {
+		void event(String string, String string2);
+	}
+
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "uri", "function(type, data)" })
-	public org.java_websocket.client.WebSocketClient connectWebsocket(String uri, final String callbackfn) {
+	public org.java_websocket.client.WebSocketClient connectWebsocket(String uri, final connectWebsocketCB callbackfn) {
 
 		org.java_websocket.client.WebSocketClient webSocketClient = null;
 		try {
@@ -240,35 +265,42 @@ public class JNetwork extends JInterface {
 
 				@Override
 				public void onOpen(ServerHandshake arg0) {
-					callback(callbackfn, "open", "\"" + arg0 + "\"");
+					callbackfn.event("open", "");
 				}
 
 				@Override
 				public void onMessage(String arg0) {
-					callback(callbackfn, "message", "\"" + arg0 + "\"");
+					callbackfn.event("message", arg0);
 				}
 
 				@Override
 				public void onError(Exception arg0) {
-					callback(callbackfn, "error");
+					callbackfn.event("error", "");
 				}
 
 				@Override
 				public void onClose(int arg0, String arg1, boolean arg2) {
-					callback(callbackfn, "close");
+					callbackfn.event("close", "");
 				}
 			};
 		} catch (URISyntaxException e) {
-			callback(callbackfn, "error " + "\"" + e.toString() + "\"");
+			callbackfn.event("error ", e.toString());
 			e.printStackTrace();
 		}
 		return webSocketClient;
 	}
 
+	// --------- connectSocketIO ---------//
+	interface connectSocketIOCB {
+		void event(String string, String reason, String string2);
+
+		void event(String string, String event, JSONArray arguments);
+	}
+
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "uri", "function(type, data)" })
-	public SocketIOClient connectSocketIO(String uri, final String callbackfn) {
+	public SocketIOClient connectSocketIO(String uri, final connectSocketIOCB callbackfn) {
 		SocketIOClient socketIOClient = new SocketIOClient(URI.create(uri), new SocketIOClient.Handler() {
 
 			@Override
@@ -283,23 +315,23 @@ public class JNetwork extends JInterface {
 
 			@Override
 			public void onError(Exception error) {
-				callback(callbackfn, "error");
+				callbackfn.event("error", "", "");
 			}
 
 			@Override
 			public void onDisconnect(int code, String reason) {
-				callback(callbackfn, "disconnect", "\"" + reason + "\"");
+				callbackfn.event("disconnect", reason, "");
 			}
 
 			@Override
 			public void onConnect() {
-				callback(callbackfn, "connected");
+				callbackfn.event("connected", "", "");
 
 			}
 
 			@Override
 			public void on(String event, JSONArray arguments) {
-				callback(callbackfn, "onmessage", event, "\"" + arguments + "\"");
+				callbackfn.event("onmessage", event, arguments);
 
 			}
 		});
@@ -329,20 +361,26 @@ public class JNetwork extends JInterface {
 
 	}
 
+	// --------- getRequest ---------//
+	interface getRequestCB {
+		void event(int eventType, String responseString);
+	}
+
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	@APIParam(params = { "url", "function(data)" })
-	public void getRequest(String url, final String callbackfn) {
+	@APIParam(params = { "url", "function(eventType, responseString)" })
+	public void getRequest(String url, final getRequestCB callbackfn) {
+
 		class RequestTask extends AsyncTask<String, String, String> {
+			String responseString = null;
 
 			@Override
 			protected String doInBackground(String... uri) {
 				HttpClient httpclient = new DefaultHttpClient();
 				HttpResponse response;
-				String responseString = null;
 				try {
 					response = httpclient.execute(new HttpGet(uri[0]));
-					StatusLine statusLine = response.getStatusLine();
+					final StatusLine statusLine = response.getStatusLine();
 					if (statusLine.getStatusCode() == HttpStatus.SC_OK) {
 						ByteArrayOutputStream out = new ByteArrayOutputStream();
 						response.getEntity().writeTo(out);
@@ -353,7 +391,15 @@ public class JNetwork extends JInterface {
 						response.getEntity().getContent().close();
 						throw new IOException(statusLine.getReasonPhrase());
 					}
-					callback(callbackfn, statusLine.getStatusCode(), "\"" + responseString + "\"");
+
+					a.get().runOnUiThread(new Runnable() {
+
+						@Override
+						public void run() {
+							callbackfn.event(statusLine.getStatusCode(), responseString);
+						}
+					});
+
 				} catch (ClientProtocolException e) {
 
 				} catch (IOException e) {
@@ -369,36 +415,174 @@ public class JNetwork extends JInterface {
 			}
 		}
 
-		Log.d(TAG, "" + new RequestTask().execute(url));
-		callback(callbackfn);
+		MLog.d(TAG, "" + new RequestTask().execute(url));
 	}
 
-	private String onBluetoothfn;
+	// --------- Bluetooth ---------//
+	private scanBTNetworksCB onBluetoothfn;
+	private SimpleBT simpleBT;
 
 	public interface onBluetoothListener {
 		public void onDeviceFound(String name, String macAddress, float strength);
+
+		public void onActivityResult(int requestCode, int resultCode, Intent data);
 	}
 
-	// BTScanNetworks
-	// BTchooseDialog
-	// BTConnect (function(msg))
-	// BTDisconnect
+	interface scanBTNetworksCB {
+		void event(String name, String macAddress, float strength);
+	}
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "function(name, macAddress, strength)" })
-	public void scanBTNetworks(final String callbackfn) {
+	public void scanBTNetworks(final scanBTNetworksCB callbackfn) {
 		onBluetoothfn = callbackfn;
 
-		a.get().scanBluetooth();
+		simpleBT.scanBluetooth();
 
-		a.get().addBluetoothListener(new onBluetoothListener() {
+		simpleBT.addBluetoothScanListener(new onBluetoothListener() {
 
 			@Override
 			public void onDeviceFound(String name, String macAddress, float strength) {
-				callback(onBluetoothfn, "\"" + name + "\"", "\"" + macAddress + "\"", "\"" + strength + "\"");
+				onBluetoothfn.event(name, macAddress, strength);
+			}
+
+			@Override
+			public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
 			}
 		});
 
 	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "function(name, macAddress, strength)" })
+	public SimpleBT startBluetooth() {
+		simpleBT = new SimpleBT(a.get());
+		simpleBT.start();
+		(a.get()).addBluetoothListener(new onBluetoothListener() {
+
+			@Override
+			public void onDeviceFound(String name, String macAddress, float strength) {
+			}
+
+			@Override
+			public void onActivityResult(int requestCode, int resultCode, Intent data) {
+				simpleBT.onActivityResult(requestCode, resultCode, data);
+
+				switch (requestCode) {
+				case SimpleBT.REQUEST_CONNECT_DEVICE:
+					// When DeviceListActivity returns with a device to connect
+					if (resultCode == Activity.RESULT_OK) {
+						// Get the device MAC address
+						String address = data.getExtras().getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
+						// Get the BLuetoothDevice object
+						BluetoothDevice device = simpleBT.getAdapter().getRemoteDevice(address);
+						// Attempt to connect to the device
+						simpleBT.getSerialService().connect(device);
+						MLog.d(TAG, "connected");
+					}
+					break;
+				case SimpleBT.REQUEST_ENABLE_BT:
+					// When the request to enable Bluetooth returns
+					if (resultCode == Activity.RESULT_OK) {
+						MLog.d(TAG, "enabling BT");
+						// Bluetooth is now enabled, so set up a Bluetooth
+						// session
+						simpleBT.startBTService();
+					} else {
+						// User did not enable Bluetooth or an error occurred
+						MLog.d(TAG, "BT not enabled");
+						Toast.makeText(a.get().getApplicationContext(), "BT not enabled, leaving", Toast.LENGTH_SHORT)
+								.show();
+
+						// TODO show error
+						// finish();
+					}
+				}
+			}
+		});
+
+		WhatIsRunning.getInstance().add(simpleBT);
+		return simpleBT;
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "function(name, macAddress, strength)" })
+	public void connectBluetoothByUI(final String callbackfn) {
+		simpleBT.startDeviceListActivity();
+	}
+
+	// --------- connectBluetooth ---------//
+	interface connectBluetoothCB {
+		void event(String data);
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "function(name, macAddress, strength)" })
+	public void connectBluetoothByMac(String mac, final connectBluetoothCB callbackfn) {
+		simpleBT.connectByMac(mac);
+		simpleBT.addListener(new SimpleBTListener() {
+
+			@Override
+			public void onRawDataReceived(byte[] buffer, int size) {
+			}
+
+			@Override
+			public void onMessageReceived(final String data) {
+				if (data != "") {
+					a.get().runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							MLog.d(TAG, "Got data: " + data);
+							callbackfn.event(data);
+						}
+					});
+				}
+			}
+
+			@Override
+			public void onConnected() {
+			}
+		});
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "name, function()" })
+	public void connectBluetoothByName(String name, final String callbackfn) {
+		simpleBT.connectByName(name);
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "string" })
+	public void sendBluetoothSerial(String string) {
+		simpleBT.send(string);
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "" })
+	public void disconnectBluetooth() {
+		simpleBT.disconnect();
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "" })
+	public void disableBluetooth() {
+		simpleBT.disable();
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "" })
+	public void enableBluetooth() {
+		simpleBT.start();
+	}
+
 }

@@ -116,6 +116,7 @@ Communication.prototype.listFilesInProject = function (pName, pType) {
 } 
 
 Communication.prototype.runApp = function (project) {
+	console.log(project);
 	var obj = {};
 	obj.cmd = "run_app";
 	obj.name = project.name;

@@ -39,7 +39,6 @@ import org.protocoder.events.Events.ProjectEvent;
 import org.protocoder.events.Project;
 import org.protocoder.events.ProjectManager;
 import org.protocoder.fragments.NewProjectDialogFragment;
-import org.protocoder.network.ALog;
 import org.protocoder.network.CustomWebsocketServer;
 import org.protocoder.network.IDEcommunication;
 import org.protocoder.network.MyHTTPServer;
@@ -47,6 +46,7 @@ import org.protocoder.network.NetworkUtils;
 import org.protocoder.projectlist.ListFragmentExamples;
 import org.protocoder.projectlist.ListFragmentUserProjects;
 import org.protocoder.utils.ColorUtils;
+import org.protocoder.utils.MLog;
 import org.protocoder.views.ProjectSelectorStrip;
 
 import android.animation.AnimatorSet;
@@ -177,13 +177,13 @@ public class MainActivity extends BaseActivity implements NewProjectDialogFragme
 			public void onEvent(int event, String file) {
 				if ((FileObserver.CREATE & event) != 0) {
 
-					Log.d(TAG, "File created [" + BaseMainApp.projectsDir + "/" + file + "]");
+					MLog.d(TAG, "File created [" + BaseMainApp.projectsDir + "/" + file + "]");
 
 					// check if its a "create" and not equal to probe because
 					// thats created every time camera is
 					// launched
 				} else if ((FileObserver.DELETE & event) != 0) {
-					Log.d(TAG, "File deleted [" + BaseMainApp.projectsDir + "/" + file + "]");
+					MLog.d(TAG, "File deleted [" + BaseMainApp.projectsDir + "/" + file + "]");
 
 				}
 			}
@@ -199,7 +199,7 @@ public class MainActivity extends BaseActivity implements NewProjectDialogFragme
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Log.d(TAG, "Registering as an EventBus listener in MainActivity");
+		MLog.d(TAG, "Registering as an EventBus listener in MainActivity");
 		EventBus.getDefault().register(this);
 
 		mStopServerReceiver = new BroadcastReceiver() {
@@ -275,7 +275,7 @@ public class MainActivity extends BaseActivity implements NewProjectDialogFragme
 		 * final String action = intent.getAction(); if
 		 * (action.equals(WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION)) { if
 		 * (intent.getBooleanExtra( WifiManager.EXTRA_SUPPLICANT_CONNECTED,
-		 * false)) { Log.d(TAG, "wifi connection on"); } else { Log.d(TAG,
+		 * false)) { MLog.d(TAG, "wifi connection on"); } else { MLog.d(TAG,
 		 * "wifi connection lost"); } }
 		 * 
 		 * } }, intentFilter);
@@ -408,7 +408,7 @@ public class MainActivity extends BaseActivity implements NewProjectDialogFragme
 	// TODO call intent and kill it in an appropiate way
 	public void onEventMainThread(ProjectEvent evt) {
 		// Using transaction so the view blocks
-		Log.d(TAG, "event -> " + evt.getAction());
+		MLog.d(TAG, "event -> " + evt.getAction());
 
 		if (evt.getAction() == "run") {
 			if (currentProjectApplicationIntent != null) {
@@ -425,11 +425,11 @@ public class MainActivity extends BaseActivity implements NewProjectDialogFragme
 
 				startActivityForResult(currentProjectApplicationIntent, mProjectRequestCode);
 			} catch (Exception e) {
-				Log.d(TAG, "Error launching script");
+				MLog.d(TAG, "Error launching script");
 			}
 
 		} else if (evt.getAction() == "save") {
-			Log.d(TAG, "saving project " + evt.getProject().getName());
+			MLog.d(TAG, "saving project " + evt.getProject().getName());
 
 			if (evt.getProject().getType() == ProjectManager.PROJECT_EXAMPLE) {
 				if (exampleListFragment != null) {
@@ -442,7 +442,7 @@ public class MainActivity extends BaseActivity implements NewProjectDialogFragme
 			}
 
 		} else if (evt.getAction() == "new") {
-			Log.d(TAG, "creating new project " + evt.getProject().getName());
+			MLog.d(TAG, "creating new project " + evt.getProject().getName());
 			newProject(evt.getProject().getName());
 		}
 
@@ -520,11 +520,11 @@ public class MainActivity extends BaseActivity implements NewProjectDialogFragme
 	 */
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent evt) {
-		ALog.d("BACK BUTTON", "Back button was pressed");
+		MLog.d("BACK BUTTON", "Back button was pressed");
 		if (keyCode == 4) {
 			Fragment fragment = getSupportFragmentManager().findFragmentByTag("editorFragment");
 			if (fragment != null && fragment.isVisible()) {
-				ALog.d("Removing editor");
+				MLog.d(TAG, "Removing editor");
 				removeFragment(fragment);
 				return true;
 			} else {
@@ -543,7 +543,7 @@ public class MainActivity extends BaseActivity implements NewProjectDialogFragme
 			int keyCode = event.getKeyCode();
 			switch (keyCode) {
 			case KeyEvent.KEYCODE_R:
-				Log.d(TAG, "run app");
+				MLog.d(TAG, "run app");
 				break;
 
 			default:

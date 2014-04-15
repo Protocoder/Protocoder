@@ -43,9 +43,9 @@ import org.json.JSONObject;
 import org.protocoder.AppSettings;
 import org.protocoder.base.BaseMainApp;
 import org.protocoder.utils.FileIO;
+import org.protocoder.utils.MLog;
 
 import android.content.Context;
-import android.util.Log;
 
 //TODO take out the file reading to FileIO 
 public class ProjectManager {
@@ -148,7 +148,7 @@ public class ProjectManager {
 		ArrayList<Project> projects = new ArrayList<Project>();
 		File dir = null;
 
-		// Log.d(TAG, "project type" + type + " " + PROJECT_USER_MADE + " " +
+		// MLog.d(TAG, "project type" + type + " " + PROJECT_USER_MADE + " " +
 		// PROJECT_EXAMPLE);
 
 		switch (type) {
@@ -176,7 +176,7 @@ public class ProjectManager {
 		for (File file : all_projects) {
 			String projectURL = file.getAbsolutePath();
 			String projectName = file.getName();
-			// Log.d("PROJECT", "Adding project named " + projectName);
+			// MLog.d("PROJECT", "Adding project named " + projectName);
 			boolean containsReadme = false;
 			boolean containsTutorial = false;
 			projects.add(new Project(projectName, projectURL, type, containsReadme, containsTutorial));
@@ -186,7 +186,7 @@ public class ProjectManager {
 	}
 
 	public Project get(String name, int type) {
-		Log.d(TAG, "looking for project " + name + " " + type);
+		MLog.d(TAG, "looking for project " + name + " " + type);
 		ArrayList<Project> projects = list(type);
 		for (Project project : projects) {
 			if (name.equals(project.getName())) {
@@ -228,7 +228,7 @@ public class ProjectManager {
 
 		File f = new File(p.getStoragePath());
 		File file[] = f.listFiles();
-		Log.d("Files", "Size: " + file.length);
+		MLog.d("Files", "Size: " + file.length);
 
 		JSONArray array = new JSONArray();
 		for (File element : file) {
@@ -242,7 +242,7 @@ public class ProjectManager {
 			}
 
 			array.put(jsonObject);
-			Log.d("Files", "FileName:" + element.getName());
+			MLog.d("Files", "FileName:" + element.getName());
 		}
 
 		return array;

@@ -40,6 +40,7 @@ import org.mozilla.javascript.RhinoException;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.commonjs.module.Require;
+import org.protocoder.utils.MLog;
 
 import android.app.Activity;
 import android.util.Log;
@@ -56,7 +57,7 @@ public class AppRunnerInterpreter {
 
 	static ScriptContextFactory contextFactory;
 	public Interpreter interpreter;
-	private WeakReference<AppRunnerActivity> a;
+	private final WeakReference<AppRunnerActivity> a;
 	private InterpreterInfo listener;
 
 	static String scriptPrefix = "//Prepend text for all scripts \n" + "var window = this; \n";
@@ -150,7 +151,7 @@ public class AppRunnerInterpreter {
 					+ (error.sourceName() != null ? " " + error.sourceName() : "")
 					+ (error.lineSource() != null ? " " + error.lineSource() : "") + "\n" + error.getScriptStackTrace();
 
-			Log.d(TAG, "lallala");
+			MLog.d(TAG, "lallala");
 
 			listener.onError(message);
 
@@ -277,6 +278,7 @@ public class AppRunnerInterpreter {
 			// Creates and enters a Context. The Context stores information
 			// about the execution environment of a script.
 			context = Context.enter();
+			context.getWrapFactory().setJavaPrimitiveWrap(false);
 			context.setOptimizationLevel(-1);
 
 			// Initialize the standard objects (Object, Function, etc.)
@@ -311,7 +313,7 @@ public class AppRunnerInterpreter {
 		}
 
 		public Object callJsFunction(String funName, Object... args) throws Throwable {
-			Log.d(TAG, "calling " + funName);
+			MLog.d(TAG, "calling " + funName);
 			Object fun = scope.get(funName, scope);
 			if (fun instanceof Function) {
 				Log.i(TAG, "Calling JsFun " + funName);
@@ -327,7 +329,7 @@ public class AppRunnerInterpreter {
 
 	public static class ScriptContextFactory extends ContextFactory {
 		AppRunnerActivity activity;
-		private AppRunnerInterpreter appRunnerInterpreter;
+		private final AppRunnerInterpreter appRunnerInterpreter;
 
 		ScriptContextFactory(AppRunnerInterpreter appRunnerInterpreter) {
 			this.appRunnerInterpreter = appRunnerInterpreter;

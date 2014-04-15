@@ -51,10 +51,10 @@ import org.protocoder.sensors.PressureManager.PressureListener;
 import org.protocoder.sensors.ProximityManager;
 import org.protocoder.sensors.ProximityManager.ProximityListener;
 import org.protocoder.sensors.WhatIsRunning;
+import org.protocoder.utils.MLog;
 
 import android.hardware.SensorManager;
 import android.location.Location;
-import android.util.Log;
 
 public class JSensors extends JInterface {
 
@@ -70,7 +70,7 @@ public class JSensors extends JInterface {
 	private boolean gpsStarted = false;
 	private GPSManager gpsManager;
 	private GPSListener gpsListener;
-	private String onNFCfn;
+	private onNFCCB onNFCfn;
 	private boolean gyroscopeStarted = false;
 	private GyroscopeManager gyroscopeManager;
 	private GyroscopeListener gyroscopeListener;
@@ -88,16 +88,21 @@ public class JSensors extends JInterface {
 		a.get().addNFCReadListener(new onNFCListener() {
 			@Override
 			public void onNewTag(String id, String data) {
-				callback(onNFCfn, "\"" + id + "\"", "\"" + data + "\"");
+				onNFCfn.event(id, data);
 			}
 		});
 
 	}
 
+	// --------- accelerometer ---------//
+	interface startAccelerometerCB {
+		void event(float x, float y, float z);
+	}
+
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "function(x, y, z)" })
-	public void startAccelerometer(final String callbackfn) {
+	public void startAccelerometer(final startAccelerometerCB callbackfn) {
 		if (!accelerometerStarted) {
 			accelerometerManager = new AccelerometerManager(a.get());
 			accelerometerListener = new AccelerometerListener() {
@@ -109,7 +114,7 @@ public class JSensors extends JInterface {
 
 				@Override
 				public void onAccelerometerChanged(float x, float y, float z) {
-					callback(callbackfn, x, y, z);
+					callbackfn.event(x, y, z);
 
 				}
 			};
@@ -125,7 +130,7 @@ public class JSensors extends JInterface {
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "" })
 	public void stopAccelerometer() {
-		Log.d(TAG, "Called stopAccelerometer");
+		MLog.d(TAG, "Called stopAccelerometer");
 		if (accelerometerStarted) {
 			accelerometerManager.removeListener(accelerometerListener);
 			accelerometerManager.stop();
@@ -133,17 +138,22 @@ public class JSensors extends JInterface {
 		}
 	}
 
+	// --------- gyroscope ---------//
+	interface startGyroscopeCB {
+		void event(float x, float y, float z);
+	}
+
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "", "function(x, y, z)" })
-	public void startGyroscope(final String callbackfn) {
+	public void startGyroscope(final startGyroscopeCB callbackfn) {
 		if (!gyroscopeStarted) {
 			gyroscopeManager = new GyroscopeManager(a.get());
 			gyroscopeListener = new GyroscopeManager.GyroscopeListener() {
 
 				@Override
 				public void onGyroscopeChanged(float x, float y, float z) {
-					callback(callbackfn, x, y, z);
+					callbackfn.event(x, y, z);
 				}
 			};
 			gyroscopeManager.addListener(gyroscopeListener);
@@ -165,10 +175,15 @@ public class JSensors extends JInterface {
 		}
 	}
 
+	// --------- gps ---------//
+	interface startGPSCB {
+		void event(double lat, double lon, double alt, float speed, float bearing);
+	}
+
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "function(lat, lon, alt, speed, bearing)" })
-	public void startGPS(final String callbackfn) {
+	public void startGPS(final startGPSCB callbackfn) {
 
 		if (!gpsStarted) {
 
@@ -184,7 +199,7 @@ public class JSensors extends JInterface {
 				@Override
 				public void onLocationChanged(double lat, double lon, double alt, float speed, float bearing) {
 
-					callback(callbackfn, lat, lon, alt, speed, bearing);
+					callbackfn.event(lat, lon, alt, speed, bearing);
 
 				}
 
@@ -213,7 +228,7 @@ public class JSensors extends JInterface {
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "" })
 	public void stopGPS() {
-		Log.d(TAG, "Called stopGPS");
+		MLog.d(TAG, "Called stopGPS");
 		if (gpsStarted) {
 			gpsManager.removeListener(gpsListener);
 			gpsManager.stop();
@@ -242,19 +257,29 @@ public class JSensors extends JInterface {
 		return gpsManager.getDistance(startLatitude, startLongitude, endLatitude, endLongitude);
 	}
 
+	// --------- onNFC ---------//
+	interface onNFCCB {
+		void event(String id, String responseString);
+	}
+
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "function(id, data)" })
-	public void onNFC(final String fn) {
+	public void onNFC(final onNFCCB fn) {
 		a.get().initializeNFC();
 
 		onNFCfn = fn;
 	}
 
+	// --------- nfc ---------//
+	interface writeNFCCB {
+		void event(boolean b);
+	}
+
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "function()" })
-	public void writeNFC(String data, final String fn) {
+	public void writeNFC(String data, final writeNFCCB fn) {
 		NFCUtil.nfcMsg = data;
 		a.get().initializeNFC();
 
@@ -262,7 +287,7 @@ public class JSensors extends JInterface {
 
 			@Override
 			public void onNewTag() {
-				callback(fn, true);
+				fn.event(true);
 			}
 		});
 
@@ -297,23 +322,28 @@ public class JSensors extends JInterface {
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "function(msg)" })
-	public void nfcWrite(final String fn) {
+	public void nfcWrite(final onNFCCB fn) {
 		a.get().initializeNFC();
 
 		onNFCfn = fn;
 	}
 
+	// --------- orientation ---------//
+	interface startOrientationCB {
+		void event(float pitch, float roll, float yaw);
+	}
+
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "function(pitch, roll, yaw)" })
-	public void startOrientation(final String callbackfn) {
+	public void startOrientation(final startOrientationCB callbackfn) {
 		orientationManager = new OrientationManager(a.get());
 
 		orientationListener = new OrientationListener() {
 
 			@Override
 			public void onOrientation(float pitch, float roll, float yaw) {
-				callback(callbackfn, pitch, roll, yaw);
+				callbackfn.event(pitch, roll, yaw);
 			}
 		};
 		orientationManager.addListener(orientationListener);
@@ -330,17 +360,22 @@ public class JSensors extends JInterface {
 		orientationManager.stop();
 	}
 
+	// --------- light ---------//
+	interface startLightIntensityCB {
+		void event(float f);
+	}
+
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "function(intensity)" })
-	public void startLightIntensity(final String callbackfn) {
+	public void startLightIntensity(final startLightIntensityCB callbackfn) {
 		lightManager = new LightManager(a.get());
 
 		lightListener = new LightListener() {
 
 			@Override
 			public void onLightChanged(float f) {
-				callback(callbackfn, f);
+				callbackfn.event(f);
 			}
 		};
 
@@ -358,17 +393,22 @@ public class JSensors extends JInterface {
 		lightManager.stop();
 	}
 
+	// --------- proximity ---------//
+	interface startProximityCB {
+		void event(float distance);
+	}
+
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "function(proximity)" })
-	public void startProximity(final String callbackfn) {
+	public void startProximity(final startProximityCB callbackfn) {
 		proximityManager = new ProximityManager(a.get());
 
 		proximityListener = new ProximityListener() {
 
 			@Override
 			public void onDistanceChanged(float distance) {
-				callback(callbackfn, distance);
+				callbackfn.event(distance);
 			}
 		};
 
@@ -385,17 +425,22 @@ public class JSensors extends JInterface {
 		proximityManager.stop();
 	}
 
+	// --------- magnetic ---------//
+	interface startMagneticCB {
+		void event(float f);
+	}
+
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "function(value)" })
-	public void startMagnetic(final String callbackfn) {
+	public void startMagnetic(final startMagneticCB callbackfn) {
 		magneticManager = new MagneticManager(a.get());
 
 		magneticListener = new MagneticManager.MagneticListener() {
 
 			@Override
 			public void onMagneticChanged(float f) {
-				callback(callbackfn, f);
+				callbackfn.event(f);
 			}
 		};
 
@@ -412,17 +457,22 @@ public class JSensors extends JInterface {
 		magneticManager.stop();
 	}
 
+	// --------- barometer ---------//
+	interface startBarometerCB {
+		void event(float f);
+	}
+
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "function(value)" })
-	public void startBarometer(final String callbackfn) {
+	public void startBarometer(final startBarometerCB callbackfn) {
 		pressureManager = new PressureManager(a.get());
 
 		pressureListener = new PressureManager.PressureListener() {
 
 			@Override
 			public void onPressureChanged(float f) {
-				callback(callbackfn, f);
+				callbackfn.event(f);
 			}
 		};
 

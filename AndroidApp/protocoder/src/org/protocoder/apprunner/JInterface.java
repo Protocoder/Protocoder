@@ -42,9 +42,9 @@ public class JInterface {
 		this.a = new WeakReference<AppRunnerActivity>((AppRunnerActivity) appActivity);
 	}
 
-	public <T> void callback(String fn, T... args) {
-		a.get().interp.callback(fn, args);
-	}
+	// public <T> void callback(String fn, T... args) {
+	// a.get().interp.callback(fn, args);
+	// }
 
 	public void destroy() {
 	}

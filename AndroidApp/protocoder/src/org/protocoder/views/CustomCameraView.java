@@ -32,11 +32,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.List;
 import java.util.Vector;
 
-import org.protocoder.utils.TimeUtils;
+import org.protocoder.utils.MLog;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -52,12 +51,9 @@ import android.hardware.Camera.Size;
 import android.media.AudioManager;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
-import android.net.Uri;
 import android.os.Build;
-import android.util.Log;
 import android.view.TextureView;
 import android.view.View;
-import android.widget.Toast;
 
 @TargetApi(Build.VERSION_CODES.GINGERBREAD)
 @SuppressLint("NewApi")
@@ -80,8 +76,8 @@ public class CustomCameraView extends TextureView {
 	private String _fileName;
 	private String _path;
 
-	private Vector<CameraListener> listeners;
-	private Context c;
+	private final Vector<CameraListener> listeners;
+	private final Context c;
 
 	public interface CameraListener {
 
@@ -134,48 +130,49 @@ public class CustomCameraView extends TextureView {
 
 				if (modeCamera == MODE_CAMERA_FRONT) {
 					int cameraId = getFrontCameraId();
-					Log.d(TAG, "" + cameraId);
-					if (cameraId == -1)
-						Log.d(TAG, "there is no camera");
+					MLog.d(TAG, "" + cameraId);
+					if (cameraId == -1) {
+						MLog.d(TAG, "there is no camera");
+					}
 					mCamera = Camera.open(cameraId);
 
 				} else {
 					mCamera = Camera.open();
 				}
 
-				Log.d("qq", "qq1 " + mCamera);
+				MLog.d("qq", "qq1 " + mCamera);
 				try {
 
 					Camera.Parameters parameters = mCamera.getParameters();
-					Log.d("qq", "qq2 " + mCamera);
+					MLog.d("qq", "qq2 " + mCamera);
 
 					if (modeColor == MODE_COLOR_BW && parameters.getSupportedColorEffects() != null) {
 						// parameters.setColorEffect(Camera.Parameters.EFFECT_MONO);
 					}
-					Log.d("qq", "qq3 " + mCamera);
+					MLog.d("qq", "qq3 " + mCamera);
 
 					if (c.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
 						// parameters.set("orientation", "portrait"); // For
 						// Android Version 2.2 and above
-						Log.d("qq", "qq4 " + mCamera);
+						MLog.d("qq", "qq4 " + mCamera);
 						mCamera.setDisplayOrientation(90);
-						Log.d("qq", "qq5" + mCamera);
+						MLog.d("qq", "qq5" + mCamera);
 						// For Android Version 2.0 and above
 						parameters.setRotation(90);
-						Log.d("qq", "qq6" + mCamera);
+						MLog.d("qq", "qq6" + mCamera);
 					} else if (modeCamera == MODE_CAMERA_FRONT) {
 
 					}
 
-					Log.d("qq", "qq 7" + mCamera);
+					MLog.d("qq", "qq 7" + mCamera);
 					List<Size> supportedPreviewSizes = mCamera.getParameters().getSupportedPreviewSizes();
 					parameters.setPreviewSize(supportedPreviewSizes.get(0).width, supportedPreviewSizes.get(0).height);
 
 					mCamera.setParameters(parameters);
 					mCamera.setPreviewTexture(surface);
-					Log.d("qq", "primer mCamera " + mCamera);
+					MLog.d("qq", "primer mCamera " + mCamera);
 				} catch (IOException exception) {
-					Log.d("qq", "camara released");
+					MLog.d("qq", "camara released");
 					mCamera.release();
 				}
 
@@ -187,7 +184,7 @@ public class CustomCameraView extends TextureView {
 	}
 
 	protected void stopCamera() {
-		Log.d("qq", "segunda mCamera " + mCamera);
+		MLog.d("qq", "segunda mCamera " + mCamera);
 
 		if (mCamera != null) {
 			mCamera.stopPreview();
@@ -218,7 +215,7 @@ public class CustomCameraView extends TextureView {
 		// AudioManager.STREAM_NOTIFICATION, 0);
 		// final int shutterSound = soundPool.load(this, R.raw.camera_click, 0);
 
-		Log.d("qq", "tercera mCamera " + mCamera);
+		MLog.d("qq", "tercera mCamera " + mCamera);
 
 		// System.gc();
 		mCamera.setPreviewCallback(null);
@@ -226,8 +223,8 @@ public class CustomCameraView extends TextureView {
 
 			@Override
 			public void onPictureTaken(byte[] data, Camera camera) {
-				Log.d("qq", "" + data.length);
-				Log.d("qq", "" + camera);
+				MLog.d("qq", "" + data.length);
+				MLog.d("qq", "" + camera);
 
 				Bitmap bitmapPicture = BitmapFactory.decodeByteArray(data, 0, data.length);
 
@@ -242,7 +239,7 @@ public class CustomCameraView extends TextureView {
 					outStream.write(data);
 					outStream.flush();
 					outStream.close();
-					Log.d(TAG, "onPictureTaken - wrote bytes: " + data.length);
+					MLog.d(TAG, "onPictureTaken - wrote bytes: " + data.length);
 
 					for (CameraListener l : listeners) {
 						l.onPicTaken();
@@ -255,7 +252,7 @@ public class CustomCameraView extends TextureView {
 				} finally {
 				}
 
-				Log.d(TAG, "onPictureTaken - jpeg");
+				MLog.d(TAG, "onPictureTaken - jpeg");
 
 				camera.startPreview();
 				// latch.countDown();
@@ -313,13 +310,13 @@ public class CustomCameraView extends TextureView {
 			recorder.stop();
 			recorder.release();
 			recording = false;
-			Log.d(TAG, "Recording Stopped");
+			MLog.d(TAG, "Recording Stopped");
 			// Let's initRecorder so we can record again
 			// prepareRecorder();
 		} else {
 			recording = true;
 			recorder.start();
-			Log.d(TAG, "Recording Started");
+			MLog.d(TAG, "Recording Started");
 		}
 
 	}
@@ -368,8 +365,9 @@ public class CustomCameraView extends TextureView {
 		CameraInfo ci = new CameraInfo();
 		for (int i = 0; i < Camera.getNumberOfCameras(); i++) {
 			Camera.getCameraInfo(i, ci);
-			if (ci.facing == CameraInfo.CAMERA_FACING_FRONT)
+			if (ci.facing == CameraInfo.CAMERA_FACING_FRONT) {
 				return i;
+			}
 		}
 		return -1; // No front-facing camera found
 	}

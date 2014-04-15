@@ -34,6 +34,7 @@ import java.io.IOException;
 import org.protocoder.R;
 import org.protocoder.apprunner.AppRunnerActivity;
 import org.protocoder.apprunner.logger.L;
+import org.protocoder.utils.MLog;
 import org.puredata.android.io.AudioParameters;
 import org.puredata.android.service.PdService;
 import org.puredata.core.PdBase;
@@ -43,7 +44,6 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import android.util.Log;
 
 public class AudioService {
 
@@ -56,7 +56,7 @@ public class AudioService {
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			pdService = ((PdService.PdBinder) service).getService();
 
-			Log.d("qq", "service connected");
+			MLog.d("qq", "service connected");
 
 			try {
 				initPd();
@@ -73,7 +73,7 @@ public class AudioService {
 		}
 
 		public void stop() {
-			Log.d("qq", "stoping audio");
+			MLog.d("qq", "stoping audio");
 			pdService.stopAudio();
 			try {
 				pdService.unbindService(pdConnection);
@@ -115,7 +115,7 @@ public class AudioService {
 
 	protected static void triggerNote(int value) {
 		int m = (int) (Math.random() * 5);
-		Log.d("qq", "" + m);
+		MLog.d("qq", "" + m);
 		PdBase.sendFloat("midinote", value); // m);
 		PdBase.sendBang("trigger");
 	}
@@ -137,7 +137,7 @@ public class AudioService {
 		File dir = pdService.getFilesDir();
 		IoUtils.extractZipResource(pdService.getResources().openRawResource(R.raw.tuner), dir, true);
 		File patchFile = new File(dir, "tuner/sampleplay.pd");
-		Log.d("qq", patchFile.getAbsolutePath());
+		MLog.d("qq", patchFile.getAbsolutePath());
 		PdBase.openPatch(patchFile.getAbsolutePath());
 
 	}

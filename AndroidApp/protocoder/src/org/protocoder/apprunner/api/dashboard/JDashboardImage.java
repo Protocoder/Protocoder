@@ -36,10 +36,10 @@ import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apprunner.JInterface;
 import org.protocoder.apprunner.ProtocoderScript;
 import org.protocoder.network.CustomWebsocketServer;
+import org.protocoder.utils.MLog;
 import org.protocoder.utils.StrUtils;
 
 import android.app.Activity;
-import android.util.Log;
 
 public class JDashboardImage extends JInterface {
 
@@ -70,7 +70,7 @@ public class JDashboardImage extends JInterface {
 
 		msg.put("values", values);
 
-		Log.d(TAG, "added widget ");
+		MLog.d(TAG, "added widget ");
 
 		CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
 		ws.send(msg);
