@@ -34,7 +34,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Vector;
 
-import android.util.Log;
+import org.protocoder.utils.MLog;
 
 public class APIManagerList {
 
@@ -60,18 +60,18 @@ public class APIManagerList {
 
 		apis = new Vector<API>();
 		// PackageUtils.getClasseNamesInPackage(jarName, packageName);
-		// Log.d(TAG, "" + java.lang.Class.class.getClasses().toString());
+		// MLog.d(TAG, "" + java.lang.Class.class.getClasses().toString());
 	}
 
 	public void addObject(Object obj) {
 
 		Class cls = obj.getClass();
 
-		Log.d(TAG, " -- adding new object with Class " + cls.getName() + " " + cls.getSimpleName());
+		MLog.d(TAG, " -- adding new object with Class " + cls.getName() + " " + cls.getSimpleName());
 
 		// searching fields with annotations
 		Field attr[] = cls.getDeclaredFields();
-		Log.d(TAG, "Declared annotations " + cls.getDeclaredAnnotations());
+		MLog.d(TAG, "Declared annotations " + cls.getDeclaredAnnotations());
 
 		for (int i = 0; i < attr.length; i++) {
 
@@ -115,7 +115,7 @@ public class APIManagerList {
 
 				if (objectName.equals(methodAnnotationName)) {
 
-					Log.d(TAG, "annotation method: " + method + " " + name);
+					MLog.d(TAG, "annotation method: " + method + " " + name);
 
 					// save object reference
 					API qq = new API(cls, obj, name, method);

@@ -1,7 +1,1 @@
-define('ace/snippets/ftl', ['require', 'exports', 'module' ], function(require, exports, module) {
-
-
-exports.snippetText = "";
-exports.scope = "ftl";
-
-});
+ace.define("ace/snippets/ftl",["require","exports","module"],function(e,t,n){t.snippetText="",t.scope="ftl"})

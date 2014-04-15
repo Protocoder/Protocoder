@@ -57,6 +57,7 @@ import org.protocoder.apprunner.api.widgets.JToggleButton;
 import org.protocoder.apprunner.api.widgets.JWebView;
 import org.protocoder.sensors.WhatIsRunning;
 import org.protocoder.utils.AndroidUtils;
+import org.protocoder.utils.MLog;
 import org.protocoder.views.HoloCircleSeekBar;
 import org.protocoder.views.PadView;
 import org.protocoder.views.TouchAreaView;
@@ -80,7 +81,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.app.FragmentTransaction;
 import android.text.InputType;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -99,8 +99,8 @@ public class JUI extends JUIGeneric {
 	String TAG = "JUI";
 	private String onNFCfn;
 
-	private String onKeyDownfn;
-	private String onKeyUpfn;
+	private onKeyDownCB onKeyDownfn;
+	private onKeyUpCB onKeyUpfn;
 
 	public JUI(Activity a) {
 		super(a);
@@ -110,12 +110,16 @@ public class JUI extends JUIGeneric {
 
 			@Override
 			public void onKeyUp(int keyCode) {
-				callback(onKeyDownfn, keyCode);
+				if (onKeyDownfn != null) {
+					onKeyDownfn.event(keyCode);
+				}
 			}
 
 			@Override
 			public void onKeyDown(int keyCode) {
-				callback(onKeyUpfn, keyCode);
+				if (onKeyUpfn != null) {
+					onKeyUpfn.event(keyCode);
+				}
 			}
 		});
 
@@ -436,7 +440,7 @@ public class JUI extends JUIGeneric {
 	@ProtocoderScript
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
 	@APIParam(params = { "label", "x", "y", "w", "h", "function()" })
-	public JButton addButton(String label, final String callbackfn) {
+	public JButton addButton(String label, final addGenericButtonCB callbackfn) {
 		JButton b = addGenericButton(label, callbackfn);
 		return b;
 	}
@@ -448,7 +452,7 @@ public class JUI extends JUIGeneric {
 	@ProtocoderScript
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
 	@APIParam(params = { "label", "x", "y", "w", "h", "function()" })
-	public JButton addButton(String label, int x, int y, int w, int h, final String callbackfn) {
+	public JButton addButton(String label, int x, int y, int w, int h, final addGenericButtonCB callbackfn) {
 		JButton b = addGenericButton(label, callbackfn);
 		addViewAbsolute(b, x, y, w, h);
 		return b;
@@ -460,7 +464,7 @@ public class JUI extends JUIGeneric {
 	 */
 	@ProtocoderScript
 	@APIParam(params = { "bShowArea", "function(touching, x, y)" })
-	public TouchAreaView addTouchArea(boolean showArea, final String callbackfn) {
+	public TouchAreaView addTouchArea(boolean showArea, final addGenericTouchAreaCB callbackfn) {
 		TouchAreaView taV = addGenericTouchArea(showArea, callbackfn);
 
 		return taV;
@@ -468,7 +472,8 @@ public class JUI extends JUIGeneric {
 
 	@ProtocoderScript
 	@APIParam(params = { "x", "y", "w", "h", "bShowArea", "function(touching, x, y)" })
-	public TouchAreaView addTouchArea(int x, int y, int w, int h, boolean showArea, final String callbackfn) {
+	public TouchAreaView addTouchArea(int x, int y, int w, int h, boolean showArea,
+			final addGenericTouchAreaCB callbackfn) {
 		TouchAreaView taV = addGenericTouchArea(showArea, callbackfn);
 		addViewAbsolute(taV, x, y, w, h);
 
@@ -477,7 +482,7 @@ public class JUI extends JUIGeneric {
 
 	@ProtocoderScript
 	@APIParam(params = { "x", "y", "w", "h", "function(touching, x, y)" })
-	public PadView addXYPad(int x, int y, int w, int h, final String callbackfn) {
+	public PadView addXYPad(int x, int y, int w, int h, final addPadCB callbackfn) {
 		PadView taV = addPad(callbackfn);
 		addViewAbsolute(taV, x, y, w, h);
 
@@ -486,7 +491,7 @@ public class JUI extends JUIGeneric {
 
 	@ProtocoderScript
 	@APIParam(params = { "function(touching, x, y)" })
-	public PadView addXYPad(final String callbackfn) {
+	public PadView addXYPad(final addPadCB callbackfn) {
 		PadView taV = addPad(callbackfn);
 
 		return taV;
@@ -499,7 +504,7 @@ public class JUI extends JUIGeneric {
 
 	@ProtocoderScript
 	@APIParam(params = { "function(progress)" })
-	public HoloCircleSeekBar addKnob(final String callbackfn) {
+	public HoloCircleSeekBar addKnob(final addGenericKnobCB callbackfn) {
 		HoloCircleSeekBar pkr = addGenericKnob(callbackfn);
 
 		return pkr;
@@ -507,7 +512,7 @@ public class JUI extends JUIGeneric {
 
 	@ProtocoderScript
 	@APIParam(params = { "x", "y", "w", "h, function(progress)" })
-	public HoloCircleSeekBar addKnob(int x, int y, int w, int h, final String callbackfn) {
+	public HoloCircleSeekBar addKnob(int x, int y, int w, int h, final addGenericKnobCB callbackfn) {
 		HoloCircleSeekBar pkr = addGenericKnob(callbackfn);
 		addViewAbsolute(pkr, x, y, w, h);
 
@@ -520,7 +525,7 @@ public class JUI extends JUIGeneric {
 	 */
 	@ProtocoderScript
 	@APIParam(params = { "max", "progress", "function(progress)" })
-	public JSeekBar addSlider(int max, int progress, final String callbackfn) {
+	public JSeekBar addSlider(int max, int progress, final addGenericSliderCB callbackfn) {
 		JSeekBar sb = addGenericSlider(max, progress, callbackfn);
 		return sb;
 
@@ -528,7 +533,7 @@ public class JUI extends JUIGeneric {
 
 	@ProtocoderScript
 	@APIParam(params = { "x", "y", "w", "h", "max", "progress", "function(progress)" })
-	public JSeekBar addSlider(int x, int y, int w, int h, int max, int progress, final String callbackfn) {
+	public JSeekBar addSlider(int x, int y, int w, int h, int max, int progress, final addGenericSliderCB callbackfn) {
 		JSeekBar sb = addGenericSlider(max, progress, callbackfn);
 		addViewAbsolute(sb, x, y, w, -1);
 		return sb;
@@ -560,14 +565,14 @@ public class JUI extends JUIGeneric {
 	 * Adds an Input dialog
 	 */
 	@APIParam(params = { "label", "function()" })
-	public JEditText addInput(String label, final String callbackfn) {
+	public JEditText addInput(String label, final addGenericInputCB callbackfn) {
 		JEditText et = addGenericInput(label, callbackfn);
 
 		return et;
 	}
 
 	@APIParam(params = { "label", "x", "y", "w", "h", "function()" })
-	public JEditText addInput(String label, int x, int y, int w, int h, final String callbackfn) {
+	public JEditText addInput(String label, int x, int y, int w, int h, final addGenericInputCB callbackfn) {
 		JEditText et = addGenericInput(label, callbackfn);
 		addViewAbsolute(et, x, y, w, h);
 
@@ -580,9 +585,9 @@ public class JUI extends JUIGeneric {
 	 */
 	@ProtocoderScript
 	@APIParam(params = { "label", "checked", "function(checked)" })
-	public JToggleButton addToggle(final String label, boolean initstate, final String callbackfn) {
+	public JToggleButton addToggle(final String label, boolean initstate, final addGenericToggleCB callbackfn) {
 
-		JToggleButton tb = new JToggleButton(a.get());
+		JToggleButton tb = addGenericToggle(label, initstate, callbackfn);
 
 		return tb;
 	}
@@ -590,7 +595,7 @@ public class JUI extends JUIGeneric {
 	@ProtocoderScript
 	@APIParam(params = { "label", "x", "y", "w", "h", "checked", "function(checked)" })
 	public JToggleButton addToggle(final String label, int x, int y, int w, int h, boolean initstate,
-			final String callbackfn) {
+			final addGenericToggleCB callbackfn) {
 
 		JToggleButton tb = addGenericToggle(label, initstate, callbackfn);
 		addViewAbsolute(tb, x, y, w, h);
@@ -603,14 +608,15 @@ public class JUI extends JUIGeneric {
 	 * 
 	 */
 	@APIParam(params = { "label", "checked", "function(checked)" })
-	public JCheckBox addCheckbox(String label, boolean initstate, final String callbackfn) {
+	public JCheckBox addCheckbox(String label, boolean initstate, final addGenericCheckboxCB callbackfn) {
 		JCheckBox cb = addGenericCheckbox(label, initstate, callbackfn);
 
 		return cb;
 	}
 
 	@APIParam(params = { "label", "x", "y", "w", "h", "checked", "function(checked)" })
-	public JCheckBox addCheckbox(String label, int x, int y, int w, int h, boolean initstate, final String callbackfn) {
+	public JCheckBox addCheckbox(String label, int x, int y, int w, int h, boolean initstate,
+			final addGenericCheckboxCB callbackfn) {
 		JCheckBox cb = addGenericCheckbox(label, initstate, callbackfn);
 		addViewAbsolute(cb, x, y, w, h);
 
@@ -622,14 +628,14 @@ public class JUI extends JUIGeneric {
 	 * 
 	 */
 	@APIParam(params = { "checked", "function(checked)" })
-	public JSwitch addSwitch(boolean initstate, final String callbackfn) {
+	public JSwitch addSwitch(boolean initstate, final addGenericSwitchCB callbackfn) {
 		JSwitch s = addGenericSwitch(initstate, callbackfn);
 
 		return s;
 	}
 
 	@APIParam(params = { "x", "y", "w", "h", "checked", "function(checked)" })
-	public JSwitch addSwitch(int x, int y, int w, int h, boolean initstate, final String callbackfn) {
+	public JSwitch addSwitch(int x, int y, int w, int h, boolean initstate, final addGenericSwitchCB callbackfn) {
 
 		JSwitch s = addGenericSwitch(initstate, callbackfn);
 		addViewAbsolute(s, x, y, w, h);
@@ -642,7 +648,7 @@ public class JUI extends JUIGeneric {
 	 * 
 	 */
 	@APIParam(params = { "label", "checked", "function(checked)" })
-	public JRadioButton addRadioButton(String label, boolean initstate, final String callbackfn) {
+	public JRadioButton addRadioButton(String label, boolean initstate, final addGenericRadioButtonCB callbackfn) {
 		JRadioButton rb = addGenericRadioButton(label, initstate, callbackfn);
 
 		return rb;
@@ -650,7 +656,7 @@ public class JUI extends JUIGeneric {
 
 	@APIParam(params = { "label", "x", "y", "w", "h", "checked", "function(checked)" })
 	public JRadioButton addRadioButton(String label, int x, int y, int w, int h, boolean initstate,
-			final String callbackfn) {
+			final addGenericRadioButtonCB callbackfn) {
 
 		JRadioButton rb = addGenericRadioButton(label, initstate, callbackfn);
 		addViewAbsolute(rb, x, y, w, h);
@@ -707,14 +713,14 @@ public class JUI extends JUIGeneric {
 	 */
 	@Override
 	@APIParam(params = { "x", "y", "w", "h", "imageName", "function()" })
-	public JImageButton addImageButton(int x, int y, int w, int h, String imagePath, final String callbackfn) {
+	public JImageButton addImageButton(int x, int y, int w, int h, String imagePath, final addImageButtonCB callbackfn) {
 		return addImageButton(x, y, w, h, imagePath, "", false, callbackfn);
 	}
 
 	@Override
 	@APIParam(params = { "x", "y", "w", "h", "imageNameNotPressed", "imageNamePressed", "function()" })
 	public JImageButton addImageButton(int x, int y, int w, int h, String imgNotPressed, String imgPressed,
-			final String callbackfn) {
+			final addImageButtonCB callbackfn) {
 		return addImageButton(x, y, w, h, imgNotPressed, imgPressed, false, callbackfn);
 	}
 
@@ -725,7 +731,7 @@ public class JUI extends JUIGeneric {
 	@Override
 	@APIParam(params = { "x", "w", "h", "imageNameNotPressed", "imagePressed", "boolean", "function()" })
 	public JImageButton addImageButton(int x, int y, int w, int h, String imgNotPressed, String imgPressed,
-			final boolean hideBackground, final String callbackfn) {
+			final boolean hideBackground, final addImageButtonCB callbackfn) {
 
 		initializeLayout();
 		// Create and position the image button
@@ -745,18 +751,18 @@ public class JUI extends JUIGeneric {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				Log.d(TAG, "" + event.getAction());
+				MLog.d(TAG, "" + event.getAction());
 				int action = event.getAction();
 				if (action == MotionEvent.ACTION_DOWN) {
-					Log.d(TAG, "down");
+					MLog.d(TAG, "down");
 					if (hideBackground) {
 						ib.getDrawable().setColorFilter(0xDD00CCFC, PorterDuff.Mode.MULTIPLY);
 
 					}
-					callback(callbackfn);
+					callbackfn.event();
 
 				} else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
-					Log.d(TAG, "up");
+					MLog.d(TAG, "up");
 					if (hideBackground) {
 						ib.getDrawable().setColorFilter(0xFFFFFFFF, PorterDuff.Mode.MULTIPLY);
 
@@ -847,7 +853,7 @@ public class JUI extends JUIGeneric {
 			}
 		});
 
-		webView.addJavascriptInterface(new JProtocoder(a.get()), "protocoder");
+		webView.addJavascriptInterface(new JApp(a.get()), "app");
 
 		addViewAbsolute(webView, x, y, w, h);
 		// webview.loadData(content, "text/html", "utf-8");
@@ -949,8 +955,14 @@ public class JUI extends JUIGeneric {
 	 * 
 	 * @param msg
 	 */
+
+	// --------- yesno dialog ---------//
+	interface yesnoDialogCB {
+		void event(boolean b);
+	}
+
 	@APIParam(params = { "title", "function(boolean)" })
-	public void yesnoDialog(String title, final String callbackfn) {
+	public void yesnoDialog(String title, final yesnoDialogCB callbackfn) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(a.get());
 		builder.setTitle(title);
 
@@ -958,14 +970,14 @@ public class JUI extends JUIGeneric {
 		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				callback(callbackfn, true);
+				callbackfn.event(true);
 			}
 		});
 		builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.cancel();
-				callback(callbackfn, false);
+				callbackfn.event(false);
 			}
 		});
 
@@ -979,8 +991,14 @@ public class JUI extends JUIGeneric {
 	 * 
 	 * @param title
 	 */
+
+	// --------- inputDialog ---------//
+	interface inputDialogCB {
+		void event(String text);
+	}
+
 	@APIParam(params = { "title", "function(text)" })
-	public void inputDialog(String title, final String callbackfn) {
+	public void inputDialog(String title, final inputDialogCB callbackfn) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(a.get());
 		builder.setTitle(title);
 
@@ -994,7 +1012,7 @@ public class JUI extends JUIGeneric {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				String text = input.getText().toString();
-				callback(callbackfn, "\"" + text + "\"");
+				callbackfn.event(text);
 			}
 		});
 		builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -1015,8 +1033,14 @@ public class JUI extends JUIGeneric {
 	 * @param title
 	 * @param choices
 	 */
+
+	// --------- choiceDialog ---------//
+	interface choiceDialogCB {
+		void event(String string);
+	}
+
 	@APIParam(params = { "title", "arrayStrings", "function(text)" })
-	public void choiceDialog(String title, final String[] choices, final String callbackfn) {
+	public void choiceDialog(String title, final String[] choices, final choiceDialogCB callbackfn) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(a.get());
 		builder.setTitle(title);
 
@@ -1025,7 +1049,7 @@ public class JUI extends JUIGeneric {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				callback(callbackfn, "\"" + choices[which] + "\"");
+				callbackfn.event(choices[which]);
 
 			}
 		});
@@ -1076,17 +1100,27 @@ public class JUI extends JUIGeneric {
 		}
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "function(keyNumber)" })
-	public void onKeyDown(final String fn) {
-		onKeyDownfn = fn;
+	// --------- onKeyDown ---------//
+	interface onKeyDownCB {
+		void event(int eventType);
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "function(keyNumber)" })
-	public void onKeyUp(final String fn) {
+	public void onKeyDown(final onKeyDownCB fn) {
+		onKeyDownfn = fn;
+	}
+
+	// --------- onKeyUp ---------//
+	interface onKeyUpCB {
+		void event(int eventType);
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "function(keyNumber)" })
+	public void onKeyUp(final onKeyUpCB fn) {
 		onKeyUpfn = fn;
 	}
 

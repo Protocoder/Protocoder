@@ -38,16 +38,17 @@ import ioio.lib.api.exception.ConnectionLostException;
 import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apprunner.JInterface;
 import org.protocoder.apprunner.ProtocoderScript;
+import org.protocoder.apprunner.api.JBoards;
 import org.protocoder.hardware.HardwareCallback;
 import org.protocoder.hardware.IOIOBoard;
 import org.protocoder.sensors.WhatIsRunning;
+import org.protocoder.utils.MLog;
 
 import android.app.Activity;
-import android.util.Log;
 
 public class JIOIO extends JInterface implements HardwareCallback {
 
-	private String TAG = "JIOIO";
+	private final String TAG = "JIOIO";
 
 	private IOIOBoard board;
 
@@ -57,15 +58,20 @@ public class JIOIO extends JInterface implements HardwareCallback {
 
 	private DigitalOutput led;
 
-	private String moiocallbackfn;
+	private startCB moiocallbackfn;
 
 	public JIOIO(Activity a) {
 		super(a);
 	}
 
+	// --------- getRequest ---------//
+	public interface startCB {
+		void event();
+	}
+
 	@ProtocoderScript
 	@APIMethod(description = "initializes ioio board", example = "ioio.start();")
-	public void start(String callbackfn) {
+	public void start(startCB callbackfn) {
 		moiocallbackfn = callbackfn;
 		if (!isStarted) {
 			this.board = new IOIOBoard(a.get(), this);
@@ -137,8 +143,8 @@ public class JIOIO extends JInterface implements HardwareCallback {
 	@Override
 	public void onConnect(Object obj) {
 		this.ioio = (IOIO) obj;
-		Log.d(TAG, "MOIO Connected");
-		callback(moiocallbackfn);
+		MLog.d(TAG, "MOIO Connected");
+		moiocallbackfn.event();
 
 		isStarted = true;
 		this.a.get().runOnUiThread(new Runnable() {

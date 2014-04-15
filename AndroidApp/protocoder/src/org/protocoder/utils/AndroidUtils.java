@@ -138,6 +138,6 @@ public class AndroidUtils {
 			}
 		}
 		sb.append("]");
-		Log.d(TAG, sb.toString());
+		MLog.d(TAG, sb.toString());
 	}
 }

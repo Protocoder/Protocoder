@@ -35,17 +35,17 @@ import org.protocoder.apprunner.JInterface;
 import org.protocoder.apprunner.ProtocoderScript;
 import org.protocoder.sensors.WhatIsRunning;
 import org.protocoder.utils.Intents;
+import org.protocoder.utils.MLog;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Vibrator;
 import android.telephony.SmsManager;
-import android.util.Log;
 
 public class JDevice extends JInterface {
 
-	private String onSmsReceivedfn;
+	private onSmsReceivedCB onSmsReceivedfn;
 
 	public JDevice(Activity a) {
 		super(a);
@@ -55,7 +55,7 @@ public class JDevice extends JInterface {
 
 			@Override
 			public void onSmsReceived(String number, String msg) {
-				callback(onSmsReceivedfn, number, "\"" + msg + "\"");
+				onSmsReceivedfn.event(number, msg);
 			}
 		});
 	}
@@ -64,7 +64,7 @@ public class JDevice extends JInterface {
 	@APIMethod(description = "makes the phone vibrate", example = "android.vibrate(500);")
 	@APIParam(params = { "duration" })
 	public void vibrate(String duration) {
-		Log.d("TAG", "vibrate...");
+		MLog.d("TAG", "vibrate...");
 		Vibrator v = (Vibrator) a.get().getSystemService(Context.VIBRATOR_SERVICE);
 		v.vibrate(Integer.parseInt(duration));
 
@@ -80,10 +80,15 @@ public class JDevice extends JInterface {
 
 	}
 
+	// --------- onSmsReceived ---------//
+	interface onSmsReceivedCB {
+		void event(String number, String responseString);
+	}
+
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "function(number, message)" })
-	public void onSmsReceived(final String fn) {
+	public void onSmsReceived(final onSmsReceivedCB fn) {
 		onSmsReceivedfn = fn;
 	}
 

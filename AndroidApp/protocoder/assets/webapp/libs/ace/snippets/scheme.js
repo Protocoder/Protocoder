@@ -1,7 +1,1 @@
-define('ace/snippets/scheme', ['require', 'exports', 'module' ], function(require, exports, module) {
-
-
-exports.snippetText = "";
-exports.scope = "scheme";
-
-});
+ace.define("ace/snippets/scheme",["require","exports","module"],function(e,t,n){t.snippetText="",t.scope="scheme"})

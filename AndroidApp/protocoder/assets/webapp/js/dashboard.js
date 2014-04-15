@@ -45,7 +45,9 @@ Dashboard.prototype.addWidget = function(widget) {
   } else if (widget.type == "slider") {
     return this.addSlider(widget.id, widget.name, widget.x, widget.y, widget.w, widget.h, widget.min, widget.max);
   } else if (widget.type == "label") { 
-    return this.addLabel(widget.id, widget.name, widget.x, widget.y, widget.size, widget.color);
+    return this.addLabel(widget.id, widget.name, widget.x, widget.y, widget.w, widget.h, widget.size, widget.color);
+  } else if (widget.type == "input") { 
+    return this.addInput(widget.id, widget.name, widget.x, widget.y, widget.w, widget.h);
   } else if (widget.type == "image") { 
     return this.addImage(widget.id, widget.url, widget.x, widget.y, widget.w, widget.h);
   } else if (widget.type == "html") { 
@@ -75,10 +77,10 @@ Dashboard.prototype.addHTML = function(element, html, posx, posy) {
 }
 
 
-Dashboard.prototype.addLabel = function(element, name, posx, posy, size, color) { 
+Dashboard.prototype.addLabel = function(element, name, posx, posy, w, h, size, color) { 
    $('<div class ="widget label" id = "label_' + element +'">'+ name +' </div>')
           .appendTo("#overlay #container")
-          .css({"font-size": size+"px", "color":color, "top":posy+"px","left":posx+"px"})
+          .css({"font-size": size+"px", "color":color, "top":posy+"px","left":posx+"px", "width":w+"px", "height":h+"px" })
           .draggable();
 }
 
@@ -113,6 +115,7 @@ Dashboard.prototype.addSlider = function(element, name, posx, posy, w, h, min, m
           .appendTo("#overlay #container")
         //  .css({"width": w+"px", "height":h+"px","top":posy+"px","left":posx+"px"})
           .css({"top":posy+"px","left":posx+"px"});
+  $("#overlay #container #slider_"+element + " input").css({"width":w+"px", "height":h+"px"});
       
   $('<input type="range" min="'+ min +'" max="'+ max +'" class ="widget"> </input>').appendTo("#slider_" + element)
           .change(function() {
@@ -126,11 +129,25 @@ Dashboard.prototype.addInput = function(element, name, posx, posy, w, h) {
           .appendTo("#overlay #container")
         //  .css({"width": w+"px", "height":h+"px","top":posy+"px","left":posx+"px"})
           .css({"top":posy+"px","left":posx+"px"});
-      
-  $('<input class ="widget"> </input><button><i class = "fa fa-circle-o"></i></button>').appendTo("#text_input_" + element)
-          .change(function() {
-            ws.send('{type:text_input, id:'+ element +', val:'+this.value+'}');
-          });
+  $("#overlay #container #text_input_"+element + " input").css({"width":w+"px", "height":h+"px"});
+  
+  $("#container #text_input_"+element + " input").on('keypress', function(e) {
+    if ((e.keyCode || e.which) == 13) {
+      sendAndClear();
+    }
+  });    
+
+  $('<input class ="widget"> </input><button><i class = "fa fa-circle-o"></i></button>').appendTo("#text_input_" + element);
+
+  $("#container #text_input_"+element + " button").click(function() {
+    sendAndClear();
+  });
+  function sendAndClear() {
+    var value = $("#container #text_input_"+element + " input").val();
+    console.log(value);
+    ws.send('{type:text_input, id:'+ element +', val:'+ value +'}');
+    $("#container #text_input_"+element + " input").val("");
+  }
 } 
 
 

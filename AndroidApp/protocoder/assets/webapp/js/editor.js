@@ -11,24 +11,24 @@ var Editor = function() {
 
 
 Editor.prototype.initEditor = function() { 
+	var that = this;
 	var editor = ace.edit("editor");
 	this.editor = editor;
 	var session = editor.getSession();
 	this.session = session;
-	session.setMode("ace/mode/javascript");
-
 	ace.require("ace/lib/fixoldbrowsers");
+	session.setMode("ace/mode/javascript");
 	var config = ace.require("ace/config");
 	ace.require("ace/edit_session");
 	ace.require("ace/undomanager");
    	ace.require("ace/marker");
    	ace.require("ace/range");
-   	ace.require("ace/ext/emmet");  
+   	//ace.require("ace/ext/emmet");  
 
-	var dom = ace.require("ace/lib/dom");
-	var net = ace.require("ace/lib/net");
-	var lang = ace.require("ace/lib/lang");
-	var useragent = ace.require("ace/lib/useragent");
+	//var dom = ace.require("ace/lib/dom");
+	//var net = ace.require("ace/lib/net");
+	//var lang = ace.require("ace/lib/lang");
+	//var useragent = ace.require("ace/lib/useragent");
 	var Range = ace.require('ace/range').Range;
 	var event = ace.require("ace/lib/event");
 	var theme = ace.require("ace/theme/textmate");
@@ -49,7 +49,18 @@ Editor.prototype.initEditor = function() {
 		enableBasicAutocompletion: true
 	});
 
-	editor.setOption("enableEmmet", true);
+	//editor.setOption("enableEmmet", true);
+
+
+	//evento cuando cambia el codigo	
+	session.on('change', function() {
+		//var cursorPosition = editor.getCursorPosition();
+		
+		if (that.isSaved != false ) {
+			protocoder.ui.setTabFeedback(true);	
+			that.isSaved = true;
+		}
+	});
 
 
 	//------------------------------------------------- 
@@ -61,11 +72,10 @@ Editor.prototype.initEditor = function() {
 	    bindKey: {
 	        win: 'Ctrl-S',
 	        mac: 'Command-S',
-	        sender: 'mmeditor'
+	        sender: 'editor|cli'
 	    },
 	    exec: function(env, args, request) {
-	    	currentProject.code = session.getValue();
-	    	protocoder.communication.pushCode(currentProject);
+	    	that.saveCode();
 	    	protocoder.ui.toolbarFeedback("save");
 	    }
 	});
@@ -76,7 +86,7 @@ Editor.prototype.initEditor = function() {
 	    bindKey: {
 	        win: 'Ctrl-R',
 	        mac: 'Command-R',
-	        sender: 'mmeditor'
+	        sender: 'editor|cli'
 	    },
 	    exec: function(env, args, request) {
 	    	currentProject.code = session.getValue();
@@ -94,7 +104,7 @@ Editor.prototype.initEditor = function() {
 	    bindKey: {
 	        win: 'Ctrl-Shift-D',
 	        mac: 'Command-Shift-D',
-	        sender: 'mmeditor'
+	        sender: 'editor'
 	    },
 	    exec: function(env, args, request) {
 	    	console.log("dashboard");
@@ -217,6 +227,14 @@ Editor.prototype.setCode = function (code) {
 	this.session.setValue(code); 
 }
 
+
+
+//set Code 
+Editor.prototype.saveCode = function () { 
+	currentProject.code = this.session.getValue();
+	protocoder.communication.pushCode(currentProject);
+	this.isSaved = true;
+}
 
 //set Code 
 Editor.prototype.setType = function (fileName) { 

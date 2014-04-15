@@ -32,6 +32,7 @@ import java.util.ArrayList;
 
 import org.protocoder.AppSettings;
 import org.protocoder.media.Audio;
+import org.protocoder.utils.MLog;
 
 import android.R;
 import android.annotation.SuppressLint;
@@ -48,7 +49,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
@@ -137,7 +137,7 @@ public class BaseActivity extends FragmentActivity {
 		rootView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
 			@Override
 			public void onSystemUiVisibilityChange(int visibility) {
-				Log.d(TAG, "" + visibility);
+				MLog.d(TAG, "" + visibility);
 				rootView.setSystemUiVisibility(View.STATUS_BAR_VISIBLE);
 				rootView.setSystemUiVisibility(View.STATUS_BAR_HIDDEN);
 			}
@@ -249,7 +249,7 @@ public class BaseActivity extends FragmentActivity {
 			ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 
 			for (String _string : matches) {
-				Log.d(TAG, "" + _string);
+				MLog.d(TAG, "" + _string);
 			}
 
 		}
@@ -261,7 +261,7 @@ public class BaseActivity extends FragmentActivity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 
-		Log.d(TAG, "" + keyCode);
+		MLog.d(TAG, "" + keyCode);
 
 		if (AppSettings.overrideVolumeButtons
 				&& (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP)) {

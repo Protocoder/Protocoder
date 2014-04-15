@@ -51,9 +51,14 @@ public class JDashboardButton extends JInterface {
 		super(a);
 	}
 
+	// --------- JDashboard add ---------//
+	public interface jDashboardAddCB {
+		void event();
+	}
+
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	public void add(String name, int x, int y, int w, int h, final String callbackfn) throws JSONException,
+	public void add(String name, int x, int y, int w, int h, final jDashboardAddCB callbackfn) throws JSONException,
 			UnknownHostException {
 		this.id = StrUtils.generateRandomString();
 		this.name = name;
@@ -80,7 +85,7 @@ public class JDashboardButton extends JInterface {
 
 			@Override
 			public void onUpdated(JSONObject jsonObject) {
-				callback(callbackfn);
+				callbackfn.event();
 			}
 		});
 

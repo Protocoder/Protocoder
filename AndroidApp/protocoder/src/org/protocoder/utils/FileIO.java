@@ -51,7 +51,6 @@ import java.util.zip.ZipOutputStream;
 
 import org.protocoder.apprunner.AppRunnerSettings;
 import org.protocoder.base.BaseMainApp;
-import org.protocoder.network.ALog;
 
 import android.app.Activity;
 import android.content.Context;
@@ -154,17 +153,17 @@ public class FileIO {
 			out = buf.toString();
 		} catch (IOException e) {
 			e.printStackTrace();
-			ALog.e(TAG, e.toString());
+			MLog.e(TAG, e.toString());
 		}
 		return out;
 	}
 
 	// Write a string to a file
 	public static String writeStringToFile(String url, String name, String code) {
-		Log.d(TAG, "Writing string to file name: " + name + " code: " + code);
+		MLog.d(TAG, "Writing string to file name: " + name + " code: " + code);
 		String filename = name.replaceAll("[^a-zA-Z0-9-_\\. ]", "_");
 		String baseDir = url + File.separator + filename;
-		Log.d(TAG, "The base directory is:" + baseDir);
+		MLog.d(TAG, "The base directory is:" + baseDir);
 		File dir = new File(baseDir);
 		dir.mkdirs();
 		File f = new File(dir.getAbsoluteFile() + File.separator + "main.js");
@@ -172,9 +171,9 @@ public class FileIO {
 		try {
 			if (!f.exists()) {
 				f.createNewFile();
-				Log.d(TAG, "New file is being created!");
+				MLog.d(TAG, "New file is being created!");
 			} else {
-				Log.d(TAG, "The file already exists!");
+				MLog.d(TAG, "The file already exists!");
 				// We should probably do something here to handle multiple file
 				// cases
 			}
@@ -184,12 +183,12 @@ public class FileIO {
 			fo.flush();
 			fo.close();
 		} catch (FileNotFoundException ex) {
-			ALog.e(TAG, ex.toString());
+			MLog.e(TAG, ex.toString());
 		} catch (IOException e) {
 			e.printStackTrace();
-			ALog.e(TAG, e.toString());
+			MLog.e(TAG, e.toString());
 		}
-		Log.d(TAG, "Absolute path of new file: " + f.getAbsolutePath());
+		MLog.d(TAG, "Absolute path of new file: " + f.getAbsolutePath());
 		return f.getAbsolutePath();
 	}
 
@@ -305,37 +304,37 @@ public class FileIO {
 
 	public static void deleteFileDir(String path, String name) {
 		String fullPath = path + "/" + name;
-		Log.d(TAG, "deleting directory " + fullPath);
+		MLog.d(TAG, "deleting directory " + fullPath);
 		File dir = new File(fullPath);
 
 		if (dir.isDirectory()) {
-			Log.d(TAG, "deleting directory " + dir.getAbsolutePath());
+			MLog.d(TAG, "deleting directory " + dir.getAbsolutePath());
 			String[] children = dir.list();
 			for (String element : children) {
 				File f = new File(dir, element);
 				f.delete();
-				Log.d(TAG, "deleting directory done" + f.getAbsolutePath());
+				MLog.d(TAG, "deleting directory done" + f.getAbsolutePath());
 			}
 		} else {
 			dir.delete();
 		}
-		Log.d(TAG, "deleting directory done" + name);
+		MLog.d(TAG, "deleting directory done" + name);
 	}
 
 	public static void deleteDir(File dir) {
-		Log.d("DeleteRecursive", "DELETEPREVIOUS TOP" + dir.getPath());
+		MLog.d("DeleteRecursive", "DELETEPREVIOUS TOP" + dir.getPath());
 		if (dir.isDirectory()) {
 			String[] children = dir.list();
 			for (String element : children) {
 				File temp = new File(dir, element);
 				if (temp.isDirectory()) {
-					Log.d("DeleteRecursive", "Recursive Call" + temp.getPath());
+					MLog.d("DeleteRecursive", "Recursive Call" + temp.getPath());
 					deleteDir(temp);
 				} else {
-					Log.d("DeleteRecursive", "Delete File" + temp.getPath());
+					MLog.d("DeleteRecursive", "Delete File" + temp.getPath());
 					boolean b = temp.delete();
 					if (b == false) {
-						Log.d("DeleteRecursive", "DELETE FAIL");
+						MLog.d("DeleteRecursive", "DELETE FAIL");
 					}
 				}
 			}

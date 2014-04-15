@@ -36,6 +36,7 @@ import java.io.OutputStream;
 import java.util.Vector;
 
 import org.protocoder.R;
+import org.protocoder.utils.MLog;
 import org.protocoder.utils.TimeUtils;
 
 import android.annotation.SuppressLint;
@@ -162,9 +163,9 @@ public class CameraFragment extends Fragment {
 
 				if (modeCamera == MODE_CAMERA_FRONT) {
 					int cameraId = getFrontCameraId();
-					Log.d(TAG, "" + cameraId);
+					MLog.d(TAG, "" + cameraId);
 					if (cameraId == -1) {
-						Log.d(TAG, "there is no camera");
+						MLog.d(TAG, "there is no camera");
 					}
 					mCamera = Camera.open(cameraId);
 				} else {
@@ -213,7 +214,7 @@ public class CameraFragment extends Fragment {
 					v.setX(event.getX());
 					v.setY(event.getY());
 
-					Log.d(TAG, "" + event.getX());
+					MLog.d(TAG, "" + event.getX());
 					break;
 
 				}
@@ -278,7 +279,7 @@ public class CameraFragment extends Fragment {
 					outStream.write(data);
 					outStream.flush();
 					outStream.close();
-					Log.d(TAG, "onPictureTaken - wrote bytes: " + data.length);
+					MLog.d(TAG, "onPictureTaken - wrote bytes: " + data.length);
 
 					for (CameraListener l : listeners) {
 						l.onPicTaken();
@@ -291,7 +292,7 @@ public class CameraFragment extends Fragment {
 				} finally {
 				}
 
-				Log.d(TAG, "onPictureTaken - jpeg");
+				MLog.d(TAG, "onPictureTaken - jpeg");
 
 				camera.startPreview();
 				// latch.countDown();
@@ -349,13 +350,13 @@ public class CameraFragment extends Fragment {
 			recorder.stop();
 			recorder.release();
 			recording = false;
-			Log.d(TAG, "Recording Stopped");
+			MLog.d(TAG, "Recording Stopped");
 			// Let's initRecorder so we can record again
 			// prepareRecorder();
 		} else {
 			recording = true;
 			recorder.start();
-			Log.d(TAG, "Recording Started");
+			MLog.d(TAG, "Recording Started");
 		}
 
 	}

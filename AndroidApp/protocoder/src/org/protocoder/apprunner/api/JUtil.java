@@ -42,11 +42,8 @@ import android.os.Handler;
 
 public class JUtil extends JInterface {
 
-	private Handler handler;
+	private final Handler handler;
 	ArrayList<Runnable> rl = new ArrayList<Runnable>();
-	private String onKeyDownfn;
-	private String onKeyUpfn;
-	private String onSmsReceivedfn;
 
 	public JUtil(Activity a) {
 		super(a);
@@ -55,16 +52,21 @@ public class JUtil extends JInterface {
 
 	}
 
+	// --------- getRequest ---------//
+	interface getRequestCB {
+		void event(int eventType, String responseString);
+	}
+
 	public class Looper {
 		Runnable task;
 		public int delay;
 
-		Looper(final int duration, final String callbackfn) {
+		Looper(final int duration, final LooperCB callbackkfn) {
 			delay = duration;
 			task = new Runnable() {
 				@Override
 				public void run() {
-					callback(callbackfn);
+					callbackkfn.event();
 					handler.postDelayed(this, delay);
 				}
 			};
@@ -87,24 +89,34 @@ public class JUtil extends JInterface {
 		}
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "milliseconds", "function()" })
-	public Looper loop(final int duration, final String callbackkfn) {
-
-		return new Looper(duration, callbackkfn);
+	// --------- Looper ---------//
+	interface LooperCB {
+		void event();
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "milliseconds", "function()" })
-	public void delay(final int duration, final String fn) {
+	public Looper loop(final int duration, final LooperCB callbackkfn) {
+
+		return new Looper(duration, callbackkfn);
+	}
+
+	// --------- delay ---------//
+	interface delayCB {
+		void event();
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "milliseconds", "function()" })
+	public void delay(final int duration, final delayCB fn) {
 
 		Runnable task = new Runnable() {
 			@Override
 			public void run() {
 				// handler.postDelayed(this, duration);
-				callback(fn);
+				fn.event();
 				handler.removeCallbacks(this);
 				rl.remove(this);
 			}

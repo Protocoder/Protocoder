@@ -31,6 +31,7 @@ package org.protocoder.hardware;
 import ioio.lib.api.IOIO;
 
 import org.protocoder.hardware.IOIOBoardService.IOIOServiceBinder;
+import org.protocoder.utils.MLog;
 import org.protocoder.utils.SysFs;
 
 import android.app.Activity;
@@ -39,24 +40,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import android.util.Log;
 
 public class IOIOBoard extends HardwareBase {
 
 	private static String TAG = "IOIOBoard";
 
-	private Activity activity_;
+	private final Activity activity_;
 	private IOIOBoardService service_;
 	private Intent serviceIntent_;
 	private Boolean serviceBound = false;
 	protected IOIO ioio;
 
-	private ServiceConnection connection_ = new ServiceConnection() {
+	private final ServiceConnection connection_ = new ServiceConnection() {
 
 		@Override
 		public void onServiceDisconnected(ComponentName name) {
 			serviceBound = false;
-			Log.d(TAG, "onServiceDisconnected");
+			MLog.d(TAG, "onServiceDisconnected");
 		}
 
 		@Override
@@ -66,7 +66,7 @@ public class IOIOBoard extends HardwareBase {
 			service_.setCallback(callback_);
 			service_.start(serviceIntent_);
 			serviceBound = true;
-			Log.d(TAG, "onServiceConnected");
+			MLog.d(TAG, "onServiceConnected");
 		}
 	};
 
@@ -87,11 +87,11 @@ public class IOIOBoard extends HardwareBase {
 		SysFs.write("/sys/class/gpio/gpio43/direction", "out");
 		SysFs.write("/sys/class/gpio/gpio43/value", "1");
 
-		Log.d(TAG, "Setting up intent");
+		MLog.d(TAG, "Setting up intent");
 		serviceIntent_ = new Intent(activity_, IOIOBoardService.class);
-		Log.d(TAG, "Binding service...");
+		MLog.d(TAG, "Binding service...");
 		activity_.bindService(serviceIntent_, connection_, Context.BIND_AUTO_CREATE);
-		Log.d(TAG, "Service bound with connection");
+		MLog.d(TAG, "Service bound with connection");
 	}
 
 	/**
@@ -104,7 +104,7 @@ public class IOIOBoard extends HardwareBase {
 	@Override
 	public void powerOff() {
 		if (serviceBound) {
-			Log.d(TAG, "Aborting thread...");
+			MLog.d(TAG, "Aborting thread...");
 			service_.stopSelf();
 			activity_.unbindService(connection_);
 			serviceBound = false;
@@ -116,7 +116,7 @@ public class IOIOBoard extends HardwareBase {
 	}
 
 	public void stop() {
-		Log.d(TAG, "IOIOBoard stop called");
+		MLog.d(TAG, "IOIOBoard stop called");
 		powerOff();
 		if (serviceIntent_ != null) {
 			activity_.stopService(serviceIntent_);

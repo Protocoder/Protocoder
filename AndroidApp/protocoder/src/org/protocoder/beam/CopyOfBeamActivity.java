@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.protocoder.R;
+import org.protocoder.utils.MLog;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -43,7 +44,6 @@ import android.nfc.NfcAdapter.OnNdefPushCompleteCallback;
 import android.nfc.NfcEvent;
 import android.os.Bundle;
 import android.provider.MediaStore.MediaColumns;
-import android.util.Log;
 import android.view.MenuItem;
 import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
@@ -52,7 +52,7 @@ import android.widget.TextView;
 @SuppressLint("NewApi")
 public class CopyOfBeamActivity extends Activity implements OnNdefPushCompleteCallback {
 
-	private String TAG = "BEAM";
+	private final String TAG = "BEAM";
 
 	public static long getFileSize(String pathToFile) {
 		File f = new File(pathToFile);
@@ -72,8 +72,9 @@ public class CopyOfBeamActivity extends Activity implements OnNdefPushCompleteCa
 
 	public static String humanReadableByteCount(long bytes, boolean si) {
 		int unit = si ? 1024 : 1000;
-		if (bytes < unit)
+		if (bytes < unit) {
 			return bytes + " B";
+		}
 		int exp = (int) (Math.log(bytes) / Math.log(unit));
 		String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1) + (si ? "" : "i");
 		return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
@@ -193,7 +194,7 @@ public class CopyOfBeamActivity extends Activity implements OnNdefPushCompleteCa
 		Bundle extras = intent.getExtras();
 		String action = intent.getAction();
 
-		Log.d(TAG, "keyset " + extras.keySet().toString());
+		MLog.d(TAG, "keyset " + extras.keySet().toString());
 
 		NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 		if (nfcAdapter == null) {
@@ -207,12 +208,12 @@ public class CopyOfBeamActivity extends Activity implements OnNdefPushCompleteCa
 
 		// if this is from the share menu
 		if (Intent.ACTION_SEND.equals(action)) {
-			Log.d(TAG, "action " + action);
+			MLog.d(TAG, "action " + action);
 
 			if (extras.containsKey(Intent.EXTRA_STREAM)) {
 				Uri fileUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
 
-				Log.d("FileBeam", fileUri.toString());
+				MLog.d("FileBeam", fileUri.toString());
 
 				setTextForAllFields(getHumanReadableFileSize(fileUri.getPath()), getFileNameByUri(fileUri),
 						intent.getType());
@@ -235,7 +236,7 @@ public class CopyOfBeamActivity extends Activity implements OnNdefPushCompleteCa
 
 				setTextForAllFields("", text, "plain/text");
 				setBeamingText(getString(R.string.beaming_text));
-				Log.d(TAG, "BEAM " + text);
+				MLog.d(TAG, "BEAM " + text);
 
 				NdefRecord.createApplicationRecord("com.makewithmoto.beam");
 
@@ -245,7 +246,7 @@ public class CopyOfBeamActivity extends Activity implements OnNdefPushCompleteCa
 
 					NdefRecord uriRecord = new NdefRecord(NdefRecord.TNF_ABSOLUTE_URI, text.getBytes(Charset
 							.forName("US-ASCII")), new byte[0], new byte[0]);
-					uriRecord.createApplicationRecord("com.makewithmoto.beam");
+					NdefRecord.createApplicationRecord("com.makewithmoto.beam");
 
 					message = new NdefMessage(uriRecord);
 				} catch (MalformedURLException e) {
@@ -262,7 +263,7 @@ public class CopyOfBeamActivity extends Activity implements OnNdefPushCompleteCa
 
 			long size = 0;
 			for (Uri uri : fileUris) {
-				Log.d("FileBeam", uri.toString());
+				MLog.d("FileBeam", uri.toString());
 				size = size + getFileSize(uri.getPath());
 			}
 

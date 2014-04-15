@@ -33,6 +33,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Locale;
 
+import org.protocoder.utils.MLog;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -51,7 +53,7 @@ public class Audio {
 	private static final String TAG = "AudioPlayer";
 
 	public static MediaPlayer playSound(String url, int volume) {
-		Log.d(TAG, "playing " + url);
+		MLog.d(TAG, "playing " + url);
 
 		final MediaPlayer mMediaPlayer = new MediaPlayer();
 		mMediaPlayer.setLooping(false);
@@ -59,7 +61,7 @@ public class Audio {
 
 			@Override
 			public void onPrepared(MediaPlayer mp) {
-				Log.d(TAG, "prepared");
+				MLog.d(TAG, "prepared");
 				mMediaPlayer.start();
 
 			}
@@ -69,7 +71,7 @@ public class Audio {
 
 			@Override
 			public void onBufferingUpdate(MediaPlayer mp, int percent) {
-				Log.d(TAG, "" + percent);
+				MLog.d(TAG, "" + percent);
 			}
 		});
 
@@ -77,7 +79,7 @@ public class Audio {
 
 			@Override
 			public void onCompletion(MediaPlayer mp) {
-				Log.d(TAG, "completed");
+				MLog.d(TAG, "completed");
 				mMediaPlayer.reset();
 			}
 		});
@@ -105,7 +107,7 @@ public class Audio {
 
 	public static void setVolume(MediaPlayer mMediaPlayer, int value) {
 		float volume = (float) (value) / 100;
-		Log.d(TAG, "" + volume);
+		MLog.d(TAG, "" + volume);
 		mMediaPlayer.setVolume(volume, volume);
 
 	}

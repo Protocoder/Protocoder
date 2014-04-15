@@ -1,12 +1,12 @@
 package org.protocoder.services;
 
 import org.protocoder.apprunner.AppRunnerActivity;
+import org.protocoder.utils.MLog;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 public class AlarmReceiver extends BroadcastReceiver {
@@ -25,16 +25,16 @@ public class AlarmReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context c, Intent intent) {
-		Log.d(TAG, "alarm started");
+		MLog.d(TAG, "alarm started");
 
 		try {
 			Bundle bundle = intent.getExtras();
 			int message = bundle.getInt("alarm_message");
-			Log.d(TAG, "alarma para: " + message);
+			MLog.d(TAG, "alarma para: " + message);
 			startComponent(c, message, intent);
 
 		} catch (Exception e) {
-			Log.d(TAG, "error on the alarm");
+			MLog.d(TAG, "error on the alarm");
 			Toast.makeText(c, "There was an error somewhere, but we still received an alarm", Toast.LENGTH_SHORT)
 					.show();
 			e.printStackTrace();

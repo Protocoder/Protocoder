@@ -36,7 +36,8 @@ import java.net.UnknownHostException;
 import java.nio.channels.DatagramChannel;
 import java.util.Vector;
 
-import android.util.Log;
+import org.protocoder.utils.MLog;
+
 import de.sciss.net.OSCListener;
 import de.sciss.net.OSCMessage;
 import de.sciss.net.OSCReceiver;
@@ -92,7 +93,7 @@ public class OSC {
 				rcv.startListening();
 
 			} catch (IOException e2) {
-				Log.d(TAG, e2.getLocalizedMessage());
+				MLog.d(TAG, e2.getLocalizedMessage());
 			}
 		}
 
@@ -134,13 +135,13 @@ public class OSC {
 
 		public void connectOSC(String address, int port) {
 
-			Log.d(TAG, "connecting to " + address + " in " + port);
+			MLog.d(TAG, "connecting to " + address + " in " + port);
 			try {
 				addr2 = new InetSocketAddress(InetAddress.getByName(address), port);
 				dch2 = DatagramChannel.open();
 				dch2.socket().bind(null);
 				trns2 = OSCTransmitter.newUsing(dch2);
-				Log.d(TAG, "connected to " + address + " in " + port);
+				MLog.d(TAG, "connected to " + address + " in " + port);
 				oscConnected = true;
 			} catch (NumberFormatException e) {
 				e.printStackTrace();
@@ -167,12 +168,12 @@ public class OSC {
 					public void run() {
 						// Object[] o = new Object[1];
 						// o[0] = content;
-						Log.d(TAG, "sending");
+						MLog.d(TAG, "sending");
 						try {
-							Log.d(TAG, "sent");
+							MLog.d(TAG, "sent");
 							trns2.send(new OSCMessage(msg, o), addr2);
 						} catch (IOException e) {
-							Log.d(TAG, "not sent");
+							MLog.d(TAG, "not sent");
 							e.printStackTrace();
 						}
 

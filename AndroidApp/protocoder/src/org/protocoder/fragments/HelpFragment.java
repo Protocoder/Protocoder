@@ -30,8 +30,8 @@ package org.protocoder.fragments;
 
 import java.io.IOException;
 
-import org.protocoder.network.ALog;
 import org.protocoder.utils.FileIO;
+import org.protocoder.utils.MLog;
 
 import android.annotation.TargetApi;
 import android.os.Build;
@@ -66,7 +66,7 @@ public class HelpFragment extends BaseWebviewFragment {
 	@Override
 	public void loadViewFromFile(String filename) {
 		filename = "file://" + filename;
-		ALog.d(TAG, "loading " + filename);
+		MLog.d(TAG, "loading " + filename);
 		getWebview().loadUrl(filename);
 	}
 

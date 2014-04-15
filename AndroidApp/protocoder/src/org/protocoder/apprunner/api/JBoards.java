@@ -39,7 +39,7 @@ import android.app.Activity;
 
 public class JBoards extends JInterface {
 
-	private String TAG = "JBoards";
+	private final String TAG = "JBoards";
 
 	public JBoards(Activity a) {
 		super(a);
@@ -48,7 +48,7 @@ public class JBoards extends JInterface {
 	@ProtocoderScript
 	@APIMethod(description = "initializes ioio board", example = "")
 	@APIParam(params = { "function()" })
-	public JIOIO startIOIO(String callbackfn) {
+	public JIOIO startIOIO(JIOIO.startCB callbackfn) {
 		JIOIO ioio = new JIOIO(a.get());
 		ioio.start(callbackfn);
 
@@ -58,7 +58,7 @@ public class JBoards extends JInterface {
 	@ProtocoderScript
 	@APIMethod(description = "initializes makr board", example = "")
 	@APIParam(params = { "function()" })
-	public JMakr startMAKR(String callbackfn) {
+	public JMakr startMAKR(JMakr.startCB callbackfn) {
 		JMakr makr = new JMakr(a.get());
 		makr.start(callbackfn);
 

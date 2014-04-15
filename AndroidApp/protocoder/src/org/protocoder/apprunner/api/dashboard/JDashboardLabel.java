@@ -51,7 +51,8 @@ public class JDashboardLabel extends JInterface {
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	public void add(String name, int x, int y, int size, String color) throws UnknownHostException, JSONException {
+	public void add(String name, int x, int y, int width, int height, int size, String color)
+			throws UnknownHostException, JSONException {
 		this.id = StrUtils.generateRandomString();
 		JSONObject msg = new JSONObject();
 
@@ -64,6 +65,8 @@ public class JDashboardLabel extends JInterface {
 		values.put("type", "label");
 		values.put("x", x);
 		values.put("y", y);
+		values.put("w", width);
+		values.put("h", height);
 		values.put("size", size);
 		values.put("color", color);
 

@@ -31,6 +31,8 @@ package org.protocoder.fragments;
 import java.io.IOException;
 import java.util.Vector;
 
+import org.protocoder.utils.MLog;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.SurfaceTexture;
@@ -41,7 +43,6 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.media.MediaPlayer.OnVideoSizeChangedListener;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Surface;
 import android.view.TextureView;
 
@@ -263,7 +264,7 @@ public class CustomVideoTextureView extends TextureView implements TextureView.S
 
 	public void fadeAudio(int time, float finalVolume) {
 
-		Log.d(TAG, "->" + finalVolume + " " + time);
+		MLog.d(TAG, "->" + finalVolume + " " + time);
 
 		final float incr = (finalVolume - currentVolume) / time;
 
@@ -271,9 +272,9 @@ public class CustomVideoTextureView extends TextureView implements TextureView.S
 			@Override
 			public void run() {
 				currentVolume += incr;
-				Log.d(TAG, "" + currentVolume + " " + incr);
+				MLog.d(TAG, "" + currentVolume + " " + incr);
 				if (currentVolume >= 0.0f || currentVolume <= 1.0f) {
-					Log.d(TAG, "qq");
+					MLog.d(TAG, "qq");
 					mMediaPlayer.setVolume(currentVolume, currentVolume);
 					handler.post(this);
 				} else {

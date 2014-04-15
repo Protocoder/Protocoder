@@ -29,6 +29,7 @@
 package org.protocoder.fragments;
 
 import org.protocoder.R;
+import org.protocoder.utils.MLog;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -36,7 +37,6 @@ import android.graphics.Picture;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -229,7 +229,7 @@ public class WebViewFragment extends BaseWebviewFragment {
 
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
-			Log.d("", "override url loading");
+			MLog.d("", "override url loading");
 
 			if (url.contains("MP4")) {
 				// Intents.openWeb(getApplicationContext(), url);
@@ -242,18 +242,18 @@ public class WebViewFragment extends BaseWebviewFragment {
 
 		@Override
 		public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-			Log.d("", errorCode + " " + description);
+			MLog.d("", errorCode + " " + description);
 		}
 
 		@Override
 		public void onPageStarted(WebView view, String url, Bitmap favicon) {
-			Log.d("", "Loading web");
+			MLog.d("", "Loading web");
 
 		}
 
 		@Override
 		public void onPageFinished(WebView view, String url) {
-			Log.d("", "Loading web");
+			MLog.d("", "Loading web");
 
 			// capture webview
 			Picture p = view.capturePicture();

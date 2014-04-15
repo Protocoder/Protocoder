@@ -16,11 +16,11 @@ import org.osmdroid.views.overlay.OverlayItem.HotspotPlace;
 import org.osmdroid.views.overlay.PathOverlay;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import org.protocoder.R;
+import org.protocoder.utils.MLog;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 public class JMap extends MapView {
 
@@ -47,13 +47,13 @@ public class JMap extends MapView {
 
 					@Override
 					public boolean onItemLongPress(int arg0, OverlayItem arg1) {
-						Log.d(TAG, "long press");
+						MLog.d(TAG, "long press");
 						return false;
 					}
 
 					@Override
 					public boolean onItemSingleTapUp(int arg0, OverlayItem arg1) {
-						Log.d(TAG, "single press");
+						MLog.d(TAG, "single press");
 						return false;
 					}
 				}, new DefaultResourceProxyImpl(c.getApplicationContext()));

@@ -36,6 +36,7 @@ import org.protocoder.base.BaseActivity;
 import org.protocoder.base.BaseMainApp;
 import org.protocoder.events.ProjectManager;
 import org.protocoder.events.ProjectManager.InstallListener;
+import org.protocoder.utils.MLog;
 import org.protocoder.utils.StrUtils;
 
 import android.annotation.SuppressLint;
@@ -44,7 +45,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -79,7 +79,7 @@ public class WelcomeActivity extends BaseActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Log.d(TAG, "onResume");
+		MLog.d(TAG, "onResume");
 	}
 
 	/**

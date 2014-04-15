@@ -30,23 +30,16 @@ package org.protocoder.fragments;
 
 import java.util.Vector;
 
-import org.protocoder.R;
+import org.protocoder.utils.MLog;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
-import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
@@ -59,7 +52,7 @@ public class VideoPlayerFragment extends VideoView {
 	Runnable r;
 	protected Handler handler;
 	protected MediaPlayer mp_;
-	private Context c;
+	private final Context c;
 
 	public interface VideoListener {
 
@@ -87,7 +80,7 @@ public class VideoPlayerFragment extends VideoView {
 				// fl.animate().scaleX(0.5f).scaleY(0.5f).setDuration(5000);
 			}
 		});
-		Log.d("mm", "onCreateView");
+		MLog.d("mm", "onCreateView");
 
 		handler = new Handler();
 
@@ -181,6 +174,7 @@ public class VideoPlayerFragment extends VideoView {
 
 		mVideoView.setOnCompletionListener(new OnCompletionListener() {
 
+			@Override
 			public void onCompletion(MediaPlayer mp) {
 
 				// finish();
@@ -210,6 +204,7 @@ public class VideoPlayerFragment extends VideoView {
 
 	}
 
+	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
 
@@ -225,14 +220,17 @@ public class VideoPlayerFragment extends VideoView {
 		listeners.remove(videoListener);
 	}
 
+	@Override
 	public void seekTo(int ms) {
 		mp_.seekTo(ms);
 	}
 
+	@Override
 	public int getDuration() {
 		return mp_.getDuration();
 	}
 
+	@Override
 	public int getCurrentPosition() {
 		return mp_.getCurrentPosition();
 	}
@@ -249,6 +247,7 @@ public class VideoPlayerFragment extends VideoView {
 		mp_.start();
 	}
 
+	@Override
 	public void pause() {
 		mp_.pause();
 	}

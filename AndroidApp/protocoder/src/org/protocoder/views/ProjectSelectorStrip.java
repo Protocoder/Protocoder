@@ -16,10 +16,11 @@ package org.protocoder.views;
  * limitations under the License.
  */
 
+import org.protocoder.utils.MLog;
+
 import android.content.Context;
 import android.support.v4.view.PagerTitleStrip;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -48,7 +49,7 @@ public class ProjectSelectorStrip extends PagerTitleStrip {
 		final float x = ev.getX();
 		final float y = ev.getY();
 
-		Log.d(TAG, x + " " + y);
+		MLog.d(TAG, x + " " + y);
 		switch (action) {
 
 		case MotionEvent.ACTION_MOVE:

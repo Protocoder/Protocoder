@@ -41,16 +41,16 @@ import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.protocoder.utils.MLog;
 
 import android.content.Context;
-import android.util.Log;
 
 public class CustomWebsocketServer extends WebSocketServer {
 	private static CustomWebsocketServer inst;
 	private static int counter = 0;
 	private static final String TAG = "WebSocketServer";
 	private static Context ctx;
-	private List<WebSocket> connections = new ArrayList<WebSocket>();
+	private final List<WebSocket> connections = new ArrayList<WebSocket>();
 	private static HashMap<String, WebSocketListener> listeners = new HashMap<String, WebSocketListener>();;
 
 	public interface WebSocketListener {
@@ -78,7 +78,7 @@ public class CustomWebsocketServer extends WebSocketServer {
 	public CustomWebsocketServer(Context aCtx, int port, Draft d) throws UnknownHostException {
 		super(new InetSocketAddress(port), Collections.singletonList(d));
 		ctx = aCtx;
-		Log.d(TAG, "Launched websocket server at on port " + aCtx);
+		MLog.d(TAG, "Launched websocket server at on port " + aCtx);
 	}
 
 	public CustomWebsocketServer(InetSocketAddress address, Draft d) {
@@ -88,35 +88,36 @@ public class CustomWebsocketServer extends WebSocketServer {
 	@Override
 	public void onOpen(WebSocket aConn, ClientHandshake handshake) {
 		counter++;
-		Log.d(TAG, "New websocket connection " + counter);
+		MLog.d(TAG, "New websocket connection " + counter);
 		connections.add(aConn);
 
 	}
 
 	@Override
 	public void onClose(WebSocket conn, int code, String reason, boolean remote) {
-		Log.d(TAG, "closed");
+		MLog.d(TAG, "closed");
 		connections.remove(conn);
 	}
 
 	@Override
 	public void onError(WebSocket conn, Exception ex) {
-		Log.d(TAG, "Error:");
+		MLog.d(TAG, "Error:");
 		ex.printStackTrace();
 	}
 
 	public void send(JSONObject obj) {
 
 		for (WebSocket sock : connections) {
-			if (sock.isOpen())
+			if (sock.isOpen()) {
 				sock.send(obj.toString());
+			}
 		}
 
 	}
 
 	@Override
 	public void onMessage(WebSocket conn, String message) {
-		ALog.d(TAG, "Received message " + message);
+		MLog.d(TAG, "Received message " + message);
 		JSONObject json, res;
 		try {
 			json = new JSONObject(message);
@@ -124,7 +125,7 @@ public class CustomWebsocketServer extends WebSocketServer {
 			res = handleMessage(type, json);
 		} catch (JSONException e) {
 			e.printStackTrace();
-			ALog.e(TAG, "Error in handleMessage" + e.toString());
+			MLog.e(TAG, "Error in handleMessage" + e.toString());
 			res = new JSONObject();
 			try {
 				res = res.put("Error", e.toString());

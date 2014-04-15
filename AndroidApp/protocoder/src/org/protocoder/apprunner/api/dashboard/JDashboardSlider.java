@@ -40,7 +40,6 @@ import org.protocoder.network.CustomWebsocketServer.WebSocketListener;
 import org.protocoder.utils.StrUtils;
 
 import android.app.Activity;
-import android.util.Log;
 
 public class JDashboardSlider extends JInterface {
 
@@ -51,9 +50,14 @@ public class JDashboardSlider extends JInterface {
 		super(a);
 	}
 
+	// --------- JDashboardSlider add ---------//
+	public interface jDashboardSliderAddCB {
+		void event(double val);
+	}
+
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	public void add(String name, int x, int y, int w, int h, int min, int max, final String callbackfn)
+	public void add(String name, int x, int y, int w, int h, int min, int max, final jDashboardSliderAddCB callbackfn)
 			throws UnknownHostException, JSONException {
 		this.id = StrUtils.generateRandomString();
 		JSONObject msg = new JSONObject();
@@ -81,12 +85,9 @@ public class JDashboardSlider extends JInterface {
 			@Override
 			public void onUpdated(JSONObject jsonObject) {
 				try {
-					Log.d(TAG, "" + jsonObject.toString(2));
 					double val = jsonObject.getDouble("val");
-					Log.d(TAG, "" + val);
-					callback(callbackfn, val);
+					callbackfn.event(val);
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
