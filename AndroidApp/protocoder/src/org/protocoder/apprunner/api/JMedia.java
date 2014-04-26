@@ -4,6 +4,7 @@
  * 
  * Victor Diaz Barrales victormdb@gmail.com
  *
+ * Copyright (C) 2014 Victor Diaz
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -110,11 +111,14 @@ public class JMedia extends JInterface {
 
 	// --------- initPDPatch ---------//
 	interface initPDPatchCB {
-		void event(String string, String responseString);
+		void event(PDReturn o);
+	}
 
-		void event(String source, float x);
+	class PDReturn {
+		String type;
+		protected String source;
+		protected Object data;
 
-		void event(String source, JSONArray jsonArray);
 	}
 
 	@ProtocoderScript
@@ -128,19 +132,35 @@ public class JMedia extends JInterface {
 			@Override
 			public void print(String s) {
 				MLog.d(TAG, "pd >>" + s);
-				callbackfn.event("print", s);
+
+				PDReturn o = new PDReturn();
+				o.type = "print";
+				o.data = s;
+
+				callbackfn.event(o);
 			}
 
 			@Override
 			public void receiveBang(String source) {
 				MLog.d(TAG, "bang");
-				callbackfn.event("bang", source);
+
+				PDReturn o = new PDReturn();
+				o.type = "bang";
+				o.source = source;
+
+				callbackfn.event(o);
 			}
 
 			@Override
 			public void receiveFloat(String source, float x) {
 				MLog.d(TAG, "float: " + x);
-				callbackfn.event(source, x);
+
+				PDReturn o = new PDReturn();
+				o.type = "float";
+				o.source = source;
+				o.data = x;
+
+				callbackfn.event(o);
 			}
 
 			@Override
@@ -152,19 +172,41 @@ public class JMedia extends JInterface {
 					jsonArray.put(arg);
 				}
 
-				callbackfn.event(source, jsonArray);
+				PDReturn o = new PDReturn();
+				o.type = "list";
+				o.source = source;
+				o.data = jsonArray;
+
+				callbackfn.event(o);
 			}
 
 			@Override
 			public void receiveMessage(String source, String symbol, Object... args) {
 				MLog.d(TAG, "message: " + Arrays.toString(args));
-				callbackfn.event(source, symbol);
+
+				JSONArray jsonArray = new JSONArray();
+				for (Object arg : args) {
+					jsonArray.put(arg);
+				}
+
+				PDReturn o = new PDReturn();
+				o.type = "message";
+				o.source = source;
+				o.data = jsonArray;
+
+				callbackfn.event(o);
 			}
 
 			@Override
 			public void receiveSymbol(String source, String symbol) {
 				MLog.d(TAG, "symbol: " + symbol);
-				callbackfn.event(source, symbol);
+
+				PDReturn o = new PDReturn();
+				o.type = "symbol";
+				o.source = source;
+				o.data = symbol;
+
+				callbackfn.event(o);
 			}
 
 			public void stop() {

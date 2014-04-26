@@ -4,6 +4,7 @@
  * 
  * Victor Diaz Barrales victormdb@gmail.com
  *
+ * Copyright (C) 2014 Victor Diaz
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -46,4 +47,5 @@ public class ListFragmentExamples extends ListFragmentUserProjects {
 		super.onActivityCreated(savedInstanceState);
 		icon = Intent.ShortcutIconResource.fromContext(getActivity(), R.drawable.ic_script_example);
 	}
+
 }

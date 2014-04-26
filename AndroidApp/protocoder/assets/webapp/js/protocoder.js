@@ -1,5 +1,4 @@
 var Protocoder = function () { 
-	this.init();
 } 
 
 Protocoder.prototype.init = function () { 

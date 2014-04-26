@@ -4,6 +4,7 @@
  * 
  * Victor Diaz Barrales victormdb@gmail.com
  *
+ * Copyright (C) 2014 Victor Diaz
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -444,6 +445,15 @@ public class MainActivity extends BaseActivity implements NewProjectDialogFragme
 		} else if (evt.getAction() == "new") {
 			MLog.d(TAG, "creating new project " + evt.getProject().getName());
 			newProject(evt.getProject().getName());
+		} else if (evt.getAction() == "update") {
+			MLog.d(TAG, "update list" + evt.getProject().getName());
+			if (exampleListFragment != null) {
+				exampleListFragment.refreshProjects();
+			}
+
+			if (userProjectListFragment != null) {
+				userProjectListFragment.refreshProjects();
+			}
 		}
 
 	}

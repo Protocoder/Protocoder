@@ -4,6 +4,7 @@
  * 
  * Victor Diaz Barrales victormdb@gmail.com
  *
+ * Copyright (C) 2014 Victor Diaz
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -303,7 +304,7 @@ public class EditorFragment extends BaseFragment {
 	}
 
 	public void save() {
-		ProjectManager.getInstance().writeNewCode(currentProject, getCode());
+		ProjectManager.getInstance().writeNewCode(currentProject, getCode(), "main.js");
 		Toast.makeText(getActivity(), "Saving " + currentProject.getName() + "...", Toast.LENGTH_SHORT).show();
 
 	}

@@ -4,6 +4,7 @@
  * 
  * Victor Diaz Barrales victormdb@gmail.com
  *
+ * Copyright (C) 2014 Victor Diaz
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -191,9 +192,10 @@ public class MyHTTPServer extends NanoHTTPD {
 				String fileType = parms.getProperty("fileType").toString();
 
 				int projectType = -1;
-				if (fileType.equals("user")) {
+
+				if (fileType.equals("projects")) {
 					projectType = ProjectManager.PROJECT_USER_MADE;
-				} else if (fileType.equals("example")) {
+				} else if (fileType.equals("examples")) {
 					projectType = ProjectManager.PROJECT_EXAMPLE;
 				}
 
@@ -277,7 +279,6 @@ public class MyHTTPServer extends NanoHTTPD {
 				} else if (cmd.equals("run_app")) {
 					MLog.d(TAG, "--> run app");
 
-					// Save and run
 					name = obj.getString("name");
 					type = obj.getString("type");
 
@@ -293,7 +294,7 @@ public class MyHTTPServer extends NanoHTTPD {
 					EventBus.getDefault().post(evt);
 					MLog.i(TAG, "Running...");
 
-					// run app
+					// execute app
 				} else if (cmd.equals("execute_code")) {
 					MLog.d(TAG, "--> execute code");
 
@@ -307,11 +308,11 @@ public class MyHTTPServer extends NanoHTTPD {
 					// save_code
 				} else if (cmd.equals("push_code")) {
 					MLog.d(TAG, "--> push code " + method + " " + header);
-					MLog.d(TAG, "---->" + parms.toString() + " " + files.toString());
-					MLog.d(TAG, "" + parms.get("code"));
 					name = parms.get("name").toString();
+					String fileName = parms.get("fileName").toString();
 					newCode = parms.get("code").toString();
-					MLog.d("ww", newCode);
+					MLog.d(TAG, "fileName -> " + fileName);
+					// MLog.d(TAG, "code -> " + newCode);
 
 					type = parms.get("type").toString();
 
@@ -323,7 +324,7 @@ public class MyHTTPServer extends NanoHTTPD {
 
 					// add type
 					Project p = ProjectManager.getInstance().get(name, projectType);
-					ProjectManager.getInstance().writeNewCode(p, newCode);
+					ProjectManager.getInstance().writeNewCode(p, newCode, fileName);
 					data.put("project", ProjectManager.getInstance().toJson(p));
 					ProjectEvent evt = new ProjectEvent(p, "save");
 					EventBus.getDefault().post(evt);
@@ -362,6 +363,23 @@ public class MyHTTPServer extends NanoHTTPD {
 					// remove app
 				} else if (cmd.equals("remove_app")) {
 					MLog.d(TAG, "--> remove app");
+					name = obj.getString("name");
+					type = obj.getString("type");
+
+					if (type.equals("projects")) {
+						projectType = ProjectManager.PROJECT_USER_MADE;
+					} else if (type.equals("examples")) {
+						projectType = ProjectManager.PROJECT_EXAMPLE;
+					}
+
+					Project p = new Project(name, projectType);
+					ProjectManager.getInstance().deleteProject(p);
+					ProjectEvent evt = new ProjectEvent(p, "update");
+					EventBus.getDefault().post(evt);
+
+					// rename app
+				} else if (cmd.equals("rename_app")) {
+					MLog.d(TAG, "--> rename app");
 
 					// get help
 				} else if (cmd.equals("get_documentation")) {

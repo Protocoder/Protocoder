@@ -8,8 +8,8 @@
 * 	with the sendFloat, sendBang methods 
 */
 
-var pd = media.initPDPatch("sinwave.pd", function(type, data) { 
-    console.log(type, data);
+var pd = media.initPDPatch("sinwave.pd", function(data) { 
+    console.log(data);
 });
 
 //add plot setting the limits from -12 to 12 

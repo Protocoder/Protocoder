@@ -43,13 +43,12 @@ var content =
         <script>
         function vibrate() {
             app.eval(
-                "android.vibrate(500)"); }
+                "device.vibrate(500)"); }
         </script>
         <h1>HTML example!</h1>
         <button onclick="vibrate()">brrrbrbrbr</button>
     </body>
 </html>""";
-
 
 //load the content 
 var webview = ui.addWebView(0, 0, ui.screenWidth, 500);
