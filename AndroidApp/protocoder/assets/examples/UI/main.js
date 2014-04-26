@@ -2,9 +2,12 @@
 *   And example with widgets that can be used 
 *
 */ 
-ui.setTitle("UI examples");
+//ui.setTitle("UI examples");
 ui.setTitleBgColor(0, 255, 0);
-ui.showTitleBar(true);
+//ui.showTitleBar(true);
+ui.backgroundColor(0, 255, 0);
+
+//ui.showVirtualKeys(true);
 
 //Set up the canvas with padding all around and a white background
 ui.setPadding(16, 16, 16, 16);
@@ -60,3 +63,29 @@ ui.addImage(0, 1400, 500, 500, "http://www.protocoder.org/images/patata.png");
 ui.addSwitch(0, 2000, 500, 100, true, function(val){ 
     console.log(val);
 });
+
+var htmlText = ui.addLabel("lala", 0, 2100, 500, 100);
+htmlText.setHTMLText("This is a <strong> HTML </strong> text");
+
+var font = ui.loadFont("visitor2.ttf");
+var label = ui.addLabel("hola fonts", 0, 2200, 300, 200); 
+label.setTextSize(50);
+ui.setFont(label, font);
+
+var font2 = ui.loadFont("fontawesome-webfont.ttf");
+var label2 = ui.addLabel('ooo', 50, 2850, 300, 500); 
+ui.setFont(label2, font2);
+label2.setText('&#xf03b;');
+label2.setTextSize(150);
+for(var i = 0; i < 100; i++) {
+    console.log(i.toString(16));
+}
+
+var i = 0; 
+util.loop(10, function() {
+    var num = i.toString(16);
+    label2.setHTMLText('<font color=blue> &#x'+ num +";</font>");
+    i++;
+});
+ 
+var img = ui.addImage(0, 2300, 500, 500, "awesome_tiger.svg");

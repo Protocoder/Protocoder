@@ -6,14 +6,13 @@
 * 
 */ 
 
-var accelerometer = ui.addLabel("", 20, 20, 600, 100);
-var orientation = ui.addLabel("", 20, 120, 600, 100);
-var light = ui.addLabel("", 20, 220, 600, 100);
-var gyroscope = ui.addLabel("", 20, 320, 600, 100);
-var magnetic = ui.addLabel("", 20, 420, 600, 100);
-var barometer = ui.addLabel("", 20, 520, 600, 100);
-var proximity = ui.addLabel("", 20, 620, 600, 100);
-
+var accelerometer   = ui.addLabel("", 20, 20, 600, 100);
+var orientation     = ui.addLabel("", 20, 120, 600, 100);
+var light           = ui.addLabel("", 20, 220, 600, 100);
+var gyroscope       = ui.addLabel("", 20, 320, 600, 100);
+var magnetic        = ui.addLabel("", 20, 420, 600, 100);
+var barometer       = ui.addLabel("", 20, 520, 600, 100);
+var proximity       = ui.addLabel("", 20, 620, 600, 100);
 
 sensors.startAccelerometer(function(x, y, z) {
     accelerometer.setText("acc: " + x + ", " + y + ", " + z);

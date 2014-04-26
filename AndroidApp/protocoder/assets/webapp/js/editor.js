@@ -4,13 +4,11 @@
 */
 
 var Editor = function() { 
-	this.initEditor();
-	this.self = this;
-
+	this.init();
 }
 
 
-Editor.prototype.initEditor = function() { 
+Editor.prototype.init = function() { 
 	var that = this;
 	var editor = ace.edit("editor");
 	this.editor = editor;
@@ -202,11 +200,11 @@ Editor.prototype.initEditor = function() {
 
 
 Editor.prototype.highlight = function(range) { 
-	var self = this;
-	var marker = self.session.addMarker( range, "run_code", "fullLine" );
+	var that = this;
+	var marker = that.session.addMarker( range, "run_code", "fullLine" );
 
 	setTimeout(function() { 
-		self.session.removeMarker(marker);
+		that.session.removeMarker(marker);
 	}, 500); 
 }
 
@@ -232,8 +230,15 @@ Editor.prototype.setCode = function (code) {
 //set Code 
 Editor.prototype.saveCode = function () { 
 	currentProject.code = this.session.getValue();
-	protocoder.communication.pushCode(currentProject);
-	this.isSaved = true;
+	var tab = protocoder.ui.getActiveTab();
+	console.log(tab.name);
+	//no tab
+	if (!tab) {
+
+	} else {
+		protocoder.communication.pushCode(currentProject, tab.name);
+		this.isSaved = true;
+	}
 }
 
 //set Code 

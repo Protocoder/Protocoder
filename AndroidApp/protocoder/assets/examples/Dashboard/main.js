@@ -7,9 +7,10 @@
 *   You can remote control it!
 */ 
 
-var plot;
+//---------- PHONE UI ---------------------
 
 //add a plot on the dashboard 
+var plot;
 ui.addButton("Add plot", 0, 0,500,100, function(){
     plot = dashboard.addPlot("name", 600, 100, 200, 100, 0, 10);
 });
@@ -20,32 +21,45 @@ ui.addButton("Update plot randomly", 0, 100, 500, 100, function(){
 });
 
 //show and hide the dashboard 
-ui.addToggle("Show Hide dashboard", 0, 200, 500, 100,false, function(b){
+ui.addToggle("Show Hide dashboard", 0, 200, 500, 100, false, function(b){
+    
+    //console.log(b == true);
     dashboard.show(b);
 });
 
-//labels need an unique id in order to be identified in the dashboard
-var label = dashboard.addLabel("default_value", 100, 100, 28, "#FFFFFF");
-
 //change the label text 
 ui.addButton("hola", 0, 300, 500, 100, function(){
-    label.setText("hola");
+    labelChange.setText("hola");
 });
 
 ui.addButton("adios", 0, 400, 500, 100, function(){
-    label.setText("adios");
+    labelChange.setText("adios");
 });
 
-slider = dashboard.addSlider("name", 50, 500, 200, 100, 0, 100, function(val) {
+
+
+//---------- DASHBOARD UI ---------------------
+
+//labels need an unique id in order to be identified in the dashboard
+var label = dashboard.addLabel("Use the Dashboard to see information and interact remotely with your device", 50, 50, 200, 100, 28, "#FFFFFF");
+var labelChange = dashboard.addLabel("This label can change", 50, 250, 200, 100, 28, "#FF00FF");
+
+slider = dashboard.addSlider("name", 50, 400, 200, 100, 0, 100, function(val) {
     console.log(val);
-    android.vibrate(100);
+    device.vibrate(100);
+});
+
+input = dashboard.addInput("say it", 50, 450, 200, 100, function(val) {
+    console.log(val);
+    media.textToSpeech(val);
+    device.vibrate(100);
 });
 
 //add a button on the webpapp and when clicked will execute the inner function
-var webbutton = dashboard.addButton("hola", 400, 100, 100, 100, function() {
+var webbutton = dashboard.addButton("hola", 310, 100, 150, 50, function() {
     ui.toast("hola", 200);
-    android.vibrate(500);
+    device.vibrate(500);
 });
 
 //add custom html
-dashboard.addHTML("<a href = 'http://www.slashdot.com' style='font-size:50px'> This is a link to Slashdot! </a>", 100, 200);
+dashboard.addHTML("<a href = 'http://www.protocoder.org' style='font-size:20px'> This is a link to Protocoder! </a>", 280, 280);

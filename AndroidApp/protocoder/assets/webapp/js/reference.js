@@ -14,15 +14,17 @@ Reference.prototype.parseHelp = function (docString) {
 
 	var countReturns = 0;
 
+	$("#sidebar_container").append('<div id="reference"></div>');
+
 	//iterate through classes 
 	$.each(doc, function(k, v) {
 	    //all
 	    //console.log(v);
 
-	    //class
+	    //class 
 	    var className = v.name.substr(1, v.name.length).toLowerCase();
 	   // console.log(className);
-	    $("#reference").append('<div id = "class_'+ className+'" class = "card APIclass"> <h2>' + className + '</h2>  <div class = "methods"> </div>');
+	    $("#sidebar_container #reference").append('<div id = "class_'+ className+'" class = "card APIclass"> <h2>' + className + '</h2>  <div class = "methods"> </div>');
 
 	    //iterate through api methods 
 	    $.each (v.apiMethods, function(m, n) {
@@ -31,7 +33,7 @@ Reference.prototype.parseHelp = function (docString) {
 
 	        //className 
 	        var m = $('<div id ="method_'+ method.name +'" class = "APImethod"></div>');
-	        $("#reference #class_"+className + " .methods").append(m);
+	        $("#sidebar_container #reference #class_"+className + " .methods").append(m);
 	      
 			//method [return] methodName [parameters]      
 			var parameters = "";
@@ -42,7 +44,7 @@ Reference.prototype.parseHelp = function (docString) {
 			//if return type is void dont show it 
 			if (method.returnType == "void") method.returnType = "";
 
-	        $("#reference #class_"+className + " #method_"+method.name).append('<h3><span id = "returnType">'+  method.returnType + " </span><strong>" + className + "." + method.name + '</strong><i>(<span id = "params">' +  parameters + '</span>)</i></h3>');
+	        $("#sidebar_container #reference #class_"+className + " #method_"+method.name).append('<h3><span id = "returnType">'+  method.returnType + " </span><strong>" + className + "." + method.name + '</strong><i>(<span id = "params">' +  parameters + '</span>)</i></h3>');
 	        
 	        //add description if exist 
 	        if (method.description != undefined) { 

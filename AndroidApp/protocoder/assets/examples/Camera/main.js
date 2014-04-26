@@ -8,10 +8,10 @@
 var camera;
 
 //add camera 
-camera = ui.addCameraView(0, 50, 50, 200, 200);
+camera = ui.addCameraView(0, 0, 0, 500, 500);
 
 //take a picture and save it 
-ui.addButton("Take pic", 0, 300, 500, 100, function() { 
+ui.addButton("Take pic", 0, 500, 500, 100, function() { 
     camera.takePicture("picture.png", function() {
         console.log('<img src="' + app.getProjectURL() + 'picture.png"/>');
     });

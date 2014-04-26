@@ -9,7 +9,8 @@ var plot2 = ui.addPlot(0, 480, ui.screenWidth, 200, -12, 12);
 
 //add webplot 
 var webPlot = dashboard.addPlot("accelerometer x", 400, 100, 250, 100, -12, 12);
-
+//plot.setThickness(15);
+plot.setDefinition(2);
 
 //start button, when press add plots and start accelerometer 
 ui.addButton("Start Accelerometer", 0, 0, ui.screenWidth, 100, function() {
@@ -18,8 +19,8 @@ ui.addButton("Start Accelerometer", 0, 0, ui.screenWidth, 100, function() {
         sensors.startAccelerometer(function(x,y,z) {
             //update plots
             webPlot.update(x);
-            plot.update(x);
-            plot2.update(y);
+            plot.update("x", x);
+            plot2.update("y", y);
           }
        );
 });

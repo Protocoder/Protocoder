@@ -4,6 +4,7 @@
  * 
  * Victor Diaz Barrales victormdb@gmail.com
  *
+ * Copyright (C) 2014 Victor Diaz
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -109,8 +110,9 @@ public class ProjectManager {
 		return out;
 	}
 
-	public void writeNewCode(Project p, String code) {
-		writeNewFile(p.getStoragePath() + File.separator + mainFileStr, code);
+	public void writeNewCode(Project p, String code, String fileName) {
+		MLog.d(TAG, "--> " + fileName);
+		writeNewFile(p.getStoragePath() + File.separator + fileName, code);
 	}
 
 	public void writeNewFile(String file, String code) {
@@ -278,6 +280,18 @@ public class ProjectManager {
 		}
 
 		return url;
+	}
+
+	public void deleteProject(Project p) {
+		File dir = new File(p.getStoragePath());
+
+		if (dir.isDirectory()) {
+			String[] children = dir.list();
+			for (String element : children) {
+				new File(dir, element).delete();
+			}
+		}
+		dir.delete();
 	}
 
 }

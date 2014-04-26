@@ -5,9 +5,10 @@
 var Ui = function() { 
 	this.dropboxEnabled = true; 
 	this.gridRendered = false;
-	this.init();
 	this.tabs = {}; //[name] -> id , code 
+	this.activeTab = null;
 	this.tabId = 0;
+	this.init();
 }
 
 
@@ -21,59 +22,9 @@ Ui.prototype.init = function() {
 	        { type: 'right', size: 300, content: 'right', resizable: true, hidden: false}
 
 	    ],
-	    onRender: function() { }
-	});
-
-	//w2ui['layout'].hide('right', false);
-
-
-	$().w2layout({
-	    name: 'code_editor',
-	    panels: [
-	       { type: 'main', content: 'main', tabs: {
-	            active: 'tab1',
-	            name: 'tabs',
-	            tabs: [
-	                { id: 'tab0', caption: 'Main' },
-	            ],
-	            onClick: function (target, data) {
-	            	console.log(target);
-	            	console.log(data);
-	            	that.setActiveTab(target);
-	            }
-	        } },
-	        { type: 'bottom', size: "100px", resizable: true, hidden: false, content: '<div id = "console_wrapper"> <div id = "console"></div><div id = "console_input"><span>></span> <input type="text" name="fname" style=""> </div> </div>' }
-	    ]
-	});
-
-	$().w2layout({
-	    name: 'right_bar',
-	    panels: [
-	        { type: 'main', size: '70%', resizable: true, content: '<div id = "reference_container" style="background:#dfdfdf"> <div id = "reference"><h1> QUICK REFERENCE</h1> <div id ="content"> </div></div> </div>' },
-	        { type: 'bottom', size: '30%', resizable: true, hidden: false, content: 'bottom', 
-	      	/* TODO add toolbar */ 
-	        /*
-	        	toolbar: {
-				items: [
-					{ type: 'button',  id: 'upload',  caption: 'Upload', img: 'icon-save', hint: 'Hint for item 5' },
-					{ type: 'button',  id: 'rename',  caption: 'Rename', img: 'icon-save', hint: 'Hint for item 5' },
-					{ type: 'button',  id: 'delete',  caption: 'Delete', img: 'icon-save', hint: 'Hint for item 5' }
-
-				],
-				onClick: function (target, data) {
-					this.owner.content('main', target);
-				}
-			}
-			*/
-		}
-	    ]
-	});
-	$('#grid').w2grid({ 
-	    name: 'grid', 
-	    url: '',
 	    onRender: function() { 
-	        if (that.gridRendered == false) {
-	        	//this.gridRendered = true;
+  			if (that.gridRendered == false) {
+	        	that.gridRendered = true;
 		        //add tabs button 
 		        //$("#layout_code_editor_panel_main").append('<div id="tabMenu"><div id="showHideMenu">+</div> <div id="menu"><ul> <li id = "addTab">New tab</li><li id = "renameTab">Rename selected tab</li><li id = "deleteTab"> Delete selected tab</li></ul></div></div>');
 		        $("#layout_code_editor_panel_main").append('<div id="tabMenu"><div id="addTab">+</div></div>');
@@ -102,23 +53,43 @@ Ui.prototype.init = function() {
 		    	//	$("#tabMenu #menu").fadeOut();
 		    	}); 
 
-		    	//$("#tabMenu #addTab").click(function() { 
-		    		//protocoder.ui.addTab("qq");
-		    	//}); 
-
 		    }
-	    	/* 
-	    	$(document).mouseup(function (e) {
-   				var container = $("#tabMenu #menu");
 
-			    if (!container.is(e.target) // if the target of the click isn't the container...
-			        && container.has(e.target).length === 0) // ... nor a descendant of the container
-			    {
-     				container.hide();
-  				}
-			}); 
-			*/
+	    }
+	});
 
+	$().w2layout({
+	    name: 'code_editor',
+	    panels: [
+	       { type: 'main', content: 'main', tabs: {
+	            active: 'tab1',
+	            name: 'tabs',
+	            tabs: [
+	                { id: 'tab0', caption: 'Main' },
+	            ],
+	            onClick: function (target, data) {
+	            	//console.log(target);
+	            	//console.log(data);
+	            	that.setActiveTab(target);
+	            }
+	        } },
+	        { type: 'bottom', size: "100px", resizable: true, hidden: false, content: '<div id = "console_wrapper"> <div id = "console"></div><div id = "console_input"><span>></span> <input type="text" name="fname" style=""> </div> </div>' }
+	    ]
+	});
+
+	$().w2layout({
+	    name: 'right_bar',
+	    panels: [
+	        { type: 'main', size: '70%', resizable: true, content: '<div id = "sidebar_container"><h1> QUICK REFERENCE</h1></div>' },
+	        { type: 'bottom', size: '30%', resizable: true, hidden: false, content: 'bottom', 
+	 
+		}
+	    ]
+	});
+	$('#grid').w2grid({ 
+	    name: 'grid', 
+	    url: '',
+	    onRender: function() { 
 	    },
 	    columns: [              
 	        { field: 'file_name', caption: 'File Name', size: '70%' },
@@ -126,8 +97,8 @@ Ui.prototype.init = function() {
 	    ], 
 
 	    onClick: function(t, e) {
-	    	console.log(t);
-	    	console.log(e);
+	    	//console.log(t);
+	    	//console.log(e);
 
 	    	var prefix = currentProject.url;
 	    	var fileName = w2ui['grid']['records'][e.recid].file_name;
@@ -146,10 +117,12 @@ Ui.prototype.init = function() {
 	w2ui['layout'].content('right', w2ui['right_bar']);
 	w2ui['code_editor'].content('main', '<pre id="editor"></pre>');
 	w2ui['code_editor'].on('resize', function(target, eventData) { 
+		//var that = this;
 		//console.log(target); 
 		//console.log(eventData); 
 		eventData.onComplete = function() { 
 			protocoder.editor.editor.resize();
+			//that.bindUpload();
 
 			setTimeout(function() {
 				$("#toolbar").addClass("show"); 
@@ -161,13 +134,12 @@ Ui.prototype.init = function() {
 
 			setTimeout(function() {
 				$("#container").addClass("on");
-			//	//$("#start_curtain h1").removeClass("fade");
-			//	$("#start_curtain").fadeOut();
 			}, 700);
 		}
 	});
 
 
+	//popup create project 
 	function openPopup () {
 	    $().w2form({
 	        name: 'foo',
@@ -274,8 +246,10 @@ Ui.prototype.init = function() {
 
 	}(jQuery));
 
-	/* 
+	/*
+	*  
 	* Binding UI 
+	*
 	*/
 	var overlayShow = false;
 	$("#toolbar #newProjectBtn").click(function() { 
@@ -309,8 +283,6 @@ Ui.prototype.init = function() {
 		//this.text("hola");
 	});
 	
-
-
 	$("#overlay #toggle").click(function() { 
 		if (overlayShow) {
 			protocoder.dashboard.hide();
@@ -321,74 +293,48 @@ Ui.prototype.init = function() {
 		overlayShow ^= true;
 	});
 
-
 	$("#toolbar #projectsBtn").click(function() { 
 		protocoder.ui.showProjects();
 	});
 
+	//shortcut dashboard 
 	if (location.hash.indexOf("#dashboard") != -1) {
 		protocoder.dashboard.show();
 	}
-	
-	setTimeout(function() { 
-	    $("#grid_grid_records").on('dragenter', function(e) {
-	    	console.log("lalallaala")
-	        console.log(e.target);
 
-	        if (that.dropboxEnabled == true) {
-	            that.initUpload();
-	            e.preventDefault();
-	            e.stopPropagation();
-	        }
-	    });
+	//shorcut project 
+	if (location.hash.indexOf("#project") != -1) {
 
-	    $("#grid_grid_records").on('dragover', function(e) {
-	            e.preventDefault();
-	            e.stopPropagation();
-	    });
+	}
 
-	      $("#grid_grid_records").on('drop', function(e) {
-	            e.preventDefault();
-	            e.stopPropagation();
-	    });
+   //console input 
+	$("#console_wrapper input").keydown(function(e){ 
+			var code = e.which; // recommended to use e.which, it's normalized across browsers
+		if(code==13) {
+			console.log("enter");
+			var cmd = $("#console_wrapper input").val();
+			consoleInputHistory.push(cmd);
+			protocoder.communication.executeCode(cmd);
+			$("#console_wrapper input").val("");
+			currentHistoryEntry = consoleInputHistory.length;
+			e.preventDefault();
+		}
 
-	    
-
-	    $("#grid_grid_records").on('dragend', function(e) {
-	    	console.log("lalalalalal");
-	   
-
-	   });
-
-
-		$("#console_wrapper input").keydown(function(e){ 
-   			var code = e.which; // recommended to use e.which, it's normalized across browsers
-    		if(code==13) {
-				console.log("enter");
-				var cmd = $("#console_wrapper input").val();
-				consoleInputHistory.push(cmd);
-				protocoder.communication.executeCode(cmd);
-				$("#console_wrapper input").val("");
-				currentHistoryEntry = consoleInputHistory.length;
-				e.preventDefault();
-			}
-
-    	    if (code==38) {
-		    	console.log("up");
-		    	if (currentHistoryEntry > 0) {
-		    		currentHistoryEntry--;
-		    	} 
-		    	$("#console_wrapper input").val(consoleInputHistory[currentHistoryEntry]);
-		    } 
-		    if (code == 40) {
-		    	console.log("down");
-		    	if (currentHistoryEntry < consoleInputHistory.length) {
-		    		currentHistoryEntry++;
-		    	}
-		    	$("#console_wrapper input").val(consoleInputHistory[currentHistoryEntry]);
-		    }
-		});
- 	}, 2000);
+	    if (code==38) {
+	    	console.log("up");
+	    	if (currentHistoryEntry > 0) {
+	    		currentHistoryEntry--;
+	    	} 
+	    	$("#console_wrapper input").val(consoleInputHistory[currentHistoryEntry]);
+	    } 
+	    if (code == 40) {
+	    	console.log("down");
+	    	if (currentHistoryEntry < consoleInputHistory.length) {
+	    		currentHistoryEntry++;
+	    	}
+	    	$("#console_wrapper input").val(consoleInputHistory[currentHistoryEntry]);
+	    }
+	});
 
 	// Prevent the backspace key from navigating back.
 	$(document).unbind('keydown').bind('keydown', function (event) {
@@ -409,6 +355,37 @@ Ui.prototype.init = function() {
 	    }
 	});
 
+}
+
+//upload 
+Ui.prototype.bindUpload = function() {
+	var that = this;
+	
+    $("#layout_right_bar_panel_bottom #grid_grid_records").on('dragenter', function(e) {
+    	console.log("lalallaala")
+        console.log(e.target);
+
+        if (that.dropboxEnabled == true) {
+            that.initUpload();
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    });
+
+    $("#grid_grid_records").on('dragover', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    });
+
+    $("#grid_grid_records").on('drop', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    });
+    
+
+    $("#grid_grid_records").on('dragend', function(e) {
+    	//console.log("lalalalalal");
+    });
 }
 
 var consoleInputHistory = new Array();
@@ -552,6 +529,8 @@ Ui.prototype.setMainTab = function(name, code) {
 	this.tabs[name].id = "tab"+this.tabId;
 	this.tabId++;
 	this.tabs[name].code = code;
+	this.tabs[name].name = "main.js";
+	this.activeTab = this.tabs[name];
 }
 
 Ui.prototype.setActiveTab = function(id) {
@@ -561,30 +540,44 @@ Ui.prototype.setActiveTab = function(id) {
 	q2.tabs.active = id;
 	q2.tabs.refresh();  
 
-	var name;
+	var name = this.getTabNameById(id);
 	var code;
 
-	name = this.getTabNameById(id);
-	console.log(id + " " + name);
+	//console.log(id + " " + name);
 
 	if ( !(this.tabs[name]) )  {
 		code = "";
 	} else {
-		console.log("lala");
+		this.activeTab = this.tabs[name];
 		code = this.tabs[name].code;
+		this.tabs[name].name = name;
+
+		if (id === "tab0") {
+			//console.log(this.tabs);
+			this.tabs[name].name = "main.js";
+		}
 	}
 
-	if (id === "tab0") {
-		name = "Main.js";
-	}
 
 	protocoder.editor.setTypeAndCode(name, code);
 
-};
+}; 
 
+Ui.prototype.getActiveTab = function() {
+	return this.activeTab;
+}
+
+Ui.prototype.getOpenTabs = function() {
+	return this.tabs;
+}
 
 Ui.prototype.clearFileElements = function() {
+	var that = this;
   	w2ui['grid'].clear();
+  	setTimeout(function() {
+  	  	that.bindUpload();
+
+  	}, 500);
 }
 
 Ui.prototype.addFileElement = function(f) {
@@ -594,8 +587,6 @@ Ui.prototype.addFileElement = function(f) {
 Ui.prototype.setTabFeedback = function(f) {
 
 }
-
-
 
 Ui.prototype.initUpload = function() {
 	that = this;
@@ -623,7 +614,7 @@ Ui.prototype.initUpload = function() {
 				protocoder.communication.listFilesInProject(currentProject.name, currentProject.type);
 				// response is the JSON object that post_file.php returns
 				//$('#dropbox').css("background-color", "rgba(0, 0, 0, 0.1);");
-				$("#dropbox").remove();
+				$("#grid_grid_records #dropbox").remove();
 				that.dropboxEnabled = true;
 
 			},
@@ -638,6 +629,9 @@ Ui.prototype.initUpload = function() {
 
 			dragLeave: function() { 
 				$('#dropbox').css("background-color", "rgba(0, 0, 0, 0.1);");
+				$("#grid_grid_records #dropbox").remove();
+				that.dropboxEnabled = true;
+
 			},
 	    	error: function(err, file) {
 				switch(err) {
@@ -696,10 +690,8 @@ Ui.prototype.initUpload = function() {
 			//image.height = 100;
 			
 			//reader.onload = function(e){
-				
 				// e.target.result holds the DataURL which
 				// can be used as a source of the image:
-				
 				// image.attr('src',e.target.result);
 			//};
 			

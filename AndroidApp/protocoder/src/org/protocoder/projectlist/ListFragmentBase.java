@@ -4,6 +4,7 @@
  * 
  * Victor Diaz Barrales victormdb@gmail.com
  *
+ * Copyright (C) 2014 Victor Diaz
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -28,7 +29,6 @@
 
 package org.protocoder.projectlist;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import org.protocoder.MainActivity;
@@ -77,6 +77,7 @@ public class ListFragmentBase extends BaseFragment {
 	protected ProjectAdapter projectAdapter;
 	protected GridView gridView;
 	int projectType;
+	boolean listMode;
 
 	public ListFragmentBase() {
 	}
@@ -93,18 +94,15 @@ public class ListFragmentBase extends BaseFragment {
 
 		// Get GridView and set adapter
 		gridView = (GridView) v.findViewById(R.id.gridview);
-		projects = ProjectManager.getInstance().list(projectType);
-		boolean listMode = PrefsFragment.getListPreference(getActivity());
-		projectAdapter = new ProjectAdapter(getActivity(), projects, projectType, listMode);
+		listMode = PrefsFragment.getListPreference(getActivity());
+
 		MLog.d("mode", "" + listMode);
 		if (listMode) {
 			gridView.setNumColumns(1);
 		}
 		// set the empty state
 		gridView.setEmptyView(v.findViewById(R.id.empty_grid_view));
-		gridView.setAdapter(projectAdapter);
-
-		notifyAddedProject();
+		refreshProjects();
 
 		registerForContextMenu(gridView);
 
@@ -152,17 +150,16 @@ public class ListFragmentBase extends BaseFragment {
 		return v;
 	}
 
+	public void refreshProjects() {
+		projects = ProjectManager.getInstance().list(projectType);
+		projectAdapter = new ProjectAdapter(getActivity(), projects, projectType, listMode);
+		gridView.setAdapter(projectAdapter);
+		notifyAddedProject();
+	}
+
 	protected void deleteProject(int position) {
-
-		File dir = new File(projects.get(position).getStoragePath());
-
-		if (dir.isDirectory()) {
-			String[] children = dir.list();
-			for (String element : children) {
-				new File(dir, element).delete();
-			}
-		}
-		dir.delete();
+		Project p = projects.get(position);
+		ProjectManager.getInstance().deleteProject(p);
 
 		projects.remove(position);
 

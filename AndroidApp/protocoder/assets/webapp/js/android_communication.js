@@ -27,7 +27,7 @@ Communication.prototype.listApps = function (filter) {
 }
 
 //push the code
-Communication.prototype.pushCode = function (project) { 
+Communication.prototype.pushCode = function (project, fileName) { 
 	var obj = {};
 	obj.cmd = "push_code";
 
@@ -36,6 +36,12 @@ Communication.prototype.pushCode = function (project) {
 	o.url = project.url;
 	o.code = project.code;
 	o.type = project.type;
+
+	if (!fileName) {
+		o.fileName = "main.js";
+	} else { 
+		o.fileName = fileName;
+	}
 
 	$.ajax({
 		url:this.remoteIP + "cmd="+JSON.stringify(obj),
@@ -77,23 +83,23 @@ Communication.prototype.fetchCode = function(pName, pType) {
 	obj.name = pName;
 	obj.type = pType;
  	var self = this;
-  try {
-  	$.get(this.remoteIP + "cmd="+JSON.stringify(obj), function(data) {
-  		var code = JSON.parse(data);
-  		currentProject.name = pName;
-  		currentProject.type = pType;
-  		currentProject.url = location.href + "apps/" + pType + "/" + pName + "/";
-  		document.title = " protocoder | " + pName;
+	try {
+	  	$.get(this.remoteIP + "cmd="+JSON.stringify(obj), function(data) {
+	  		var code = JSON.parse(data);
+	  		currentProject.name = pName;
+	  		currentProject.type = pType;
+	  		currentProject.url = location.href + "apps/" + pType + "/" + pName + "/";
+	  		document.title = " protocoder | " + pName;
 
-  		var code = unescape(code.code);
-  		protocoder.ui.setMainTab(pName, code); 
+	  		var code = unescape(code.code);
+	  		protocoder.ui.setMainTab(pName, code); 
 
-  		self.listFilesInProject(pName, pType);
-  	});
-  } catch (e) {} 
+	  		self.listFilesInProject(pName, pType);
+	  	});
+	} catch (e) {} 
 }
 
-//fetch the code
+//list files in project 
 Communication.prototype.listFilesInProject = function (pName, pType) { 
 	var obj = {};
 	obj.cmd = "list_files_in_project";
@@ -123,9 +129,12 @@ Communication.prototype.runApp = function (project) {
 	obj.url = project.url;
     obj.remoteIP = this.remoteIP;
 	obj.type = project.type;
-	$.get(this.remoteIP + "cmd="+JSON.stringify(obj), function(data) {
- 		//alert('Load was performed. ' + data);
-	});
+  	try {
+		$.get(this.remoteIP + "cmd="+JSON.stringify(obj), function(data) {
+ 			//alert('Load was performed. ' + data);
+		});
+	} catch (e) {};
+
 	$("#console_wrapper #console").empty();
 
 }
@@ -136,23 +145,53 @@ Communication.prototype.createNewProject = function (new_name) {
 	obj.cmd = "create_new_project";
 	obj.name = new_name;
 	console.log(obj);
-  var self = this;
+ 	var self = this;
+
+ 	try {
+
 	$.get(this.remoteIP + "cmd="+JSON.stringify(obj), function(data) {
  		//alert('Load was performed. ' + data);
  	  	self.listApps("projects");
  		self.fetchCode(obj.name, "projects");
 	});
+
+	} catch (e) {};
+
 }
 
-Communication.prototype.removeApp = function (id) {
+Communication.prototype.removeApp = function (project) {
 	var obj = {};
 	obj.cmd = "remove_app";
+	obj.name = project.name;
+	obj.type = project.type;
+	
+	try {
 
-	obj.remove_app = name;
 	$.get(this.remoteIP + "cmd="+JSON.stringify(obj), function(data) {
- 		alert('Load was performed. ' + data);
+ 	    protocoder.communication.listApps("projects");
+ 		alert('app removed ' + data);
 	});
+
+	} catch (e) {};
+
 }
+
+
+Communication.prototype.renameApp = function (project) {
+	var obj = {};
+	obj.cmd = "rename_app";
+	obj.name = project.name;
+	obj.type = project.type;
+ 
+ 	try {
+
+	$.get(this.remoteIP + "cmd="+JSON.stringify(obj), function(data) {
+ 		alert('rename' + data);
+	});
+	} catch (e) {};
+
+}
+
 
 Communication.prototype.getReference = function (id) {
 	var obj = {};

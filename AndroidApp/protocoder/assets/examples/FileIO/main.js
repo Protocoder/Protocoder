@@ -3,6 +3,8 @@
 *   
 */ 
 
+ui.toast("saving and loading data");
+
 // create an Arrary with the data we want to save 
 var data = new Array();
 data.push("hello 1");

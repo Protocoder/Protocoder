@@ -4,6 +4,7 @@
  * 
  * Victor Diaz Barrales victormdb@gmail.com
  *
+ * Copyright (C) 2014 Victor Diaz
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -60,14 +61,19 @@ public class JUtil extends JInterface {
 	public class Looper {
 		Runnable task;
 		public int delay;
+		boolean paused = false;
 
 		Looper(final int duration, final LooperCB callbackkfn) {
 			delay = duration;
+
 			task = new Runnable() {
+
 				@Override
 				public void run() {
 					callbackkfn.event();
-					handler.postDelayed(this, delay);
+					if (!paused) {
+						handler.postDelayed(this, delay);
+					}
 				}
 			};
 			handler.post(task);
@@ -80,6 +86,16 @@ public class JUtil extends JInterface {
 		@APIParam(params = { "duration" })
 		public void setDelay(int duration) {
 			this.delay = duration;
+		}
+
+		@ProtocoderScript
+		@APIMethod(description = "", example = "")
+		@APIParam(params = { "boolean" })
+		public void pause(boolean b) {
+			this.paused = b;
+			if (b == false) {
+				handler.postDelayed(task, delay);
+			}
 		}
 
 		@ProtocoderScript

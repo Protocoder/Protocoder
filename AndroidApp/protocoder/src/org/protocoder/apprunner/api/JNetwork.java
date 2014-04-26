@@ -4,6 +4,7 @@
  * 
  * Victor Diaz Barrales victormdb@gmail.com
  *
+ * Copyright (C) 2014 Victor Diaz
  * Copyright (C) 2013 Motorola Mobility LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -30,10 +31,12 @@ package org.protocoder.apprunner.api;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collections;
+import java.util.List;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
@@ -72,8 +75,12 @@ import org.protocoder.utils.MLog;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.codebutler.android_websockets.SocketIOClient;
@@ -583,6 +590,99 @@ public class JNetwork extends JInterface {
 	@APIParam(params = { "" })
 	public void enableBluetooth() {
 		simpleBT.start();
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "boolean" })
+	public void enableWifi(boolean enabled) {
+		WifiManager wifiManager = (WifiManager) a.get().getSystemService(Context.WIFI_SERVICE);
+		wifiManager.setWifiEnabled(enabled);
+
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = {})
+	public boolean isWifiEnabled() {
+		WifiManager wifiManager = (WifiManager) a.get().getSystemService(Context.WIFI_SERVICE);
+		return wifiManager.isWifiEnabled();
+	}
+
+	// http://stackoverflow.com/questions/8818290/how-to-connect-to-a-specific-wifi-network-in-android-programmatically
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "ssidName", "type", "password" })
+	public void connectWifi(String networkSSID, String type, String networkPass) {
+
+		WifiConfiguration conf = new WifiConfiguration();
+		conf.SSID = "\"" + networkSSID + "\""; // Please note the quotes. String
+												// should contain ssid in quotes
+
+		if (type.equals("wep")) {
+			// wep
+			conf.wepKeys[0] = "\"" + networkPass + "\"";
+			conf.wepTxKeyIndex = 0;
+			conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+			conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
+		} else if (type.equals("wpa")) {
+			// wpa
+			conf.preSharedKey = "\"" + networkPass + "\"";
+		} else if (type.equals("open")) {
+			// open
+			conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+		}
+
+		WifiManager wifiManager = (WifiManager) a.get().getSystemService(Context.WIFI_SERVICE);
+		wifiManager.addNetwork(conf);
+
+		List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
+		for (WifiConfiguration i : list) {
+			if (i.SSID != null && i.SSID.equals("\"" + networkSSID + "\"")) {
+				wifiManager.disconnect();
+				wifiManager.enableNetwork(i.networkId, true);
+				wifiManager.reconnect();
+
+				break;
+			}
+		}
+
+	}
+
+	private Object mIsWifiAPEnabled = true;
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "boolean, apName" })
+	public void wifiAP(boolean enabled, String wifiName) {
+
+		WifiManager wifi = (WifiManager) a.get().getSystemService(a.get().WIFI_SERVICE);
+		Method[] wmMethods = wifi.getClass().getDeclaredMethods();
+		Log.d(TAG, "enableMobileAP methods " + wmMethods.length);
+		for (Method method : wmMethods) {
+			Log.d(TAG, "enableMobileAP method.getName() " + method.getName());
+			if (method.getName().equals("setWifiApEnabled")) {
+				WifiConfiguration netConfig = new WifiConfiguration();
+				netConfig.SSID = wifiName;
+				netConfig.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
+				netConfig.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
+				netConfig.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
+				netConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+
+				//
+				try {
+					Log.d(TAG, "enableMobileAP try: ");
+					method.invoke(wifi, netConfig, enabled);
+					if (netConfig.wepKeys != null && netConfig.wepKeys.length >= 1) {
+						Log.d(TAG, "enableMobileAP key : " + netConfig.wepKeys[0]);
+					}
+					Log.d(TAG, "enableMobileAP enabled: ");
+					mIsWifiAPEnabled = enabled;
+				} catch (Exception e) {
+					Log.e(TAG, "enableMobileAP failed: ", e);
+				}
+			}
+		}
 	}
 
 }

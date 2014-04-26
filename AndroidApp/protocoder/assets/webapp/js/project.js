@@ -31,21 +31,24 @@ function setProjectList(filter, data) {
    //console.log("-->", k, project); 
    //console.log('#list_projects #'+div+" #ul");
    // console.log("binding -> " + div + " #"+project.name);
-  $('<li id ="'+project.name+'"><span>' + project.name + '</span><div id ="actions"> <div id ="cont"> <i id = "rename" class="fa fa-play"></i> <i id = "delete" class="fa fa-play"> </i>   </div> </div> </li>').click(function () {
+  $('<li id ="'+project.name+'"><span>' + project.name + '</span><div id ="actions"> <div id ="cont"> <i id = "rename" class="fa fa-pencil"></i> <i id = "delete" class="fa fa-trash-o"> </i>   </div> </div> </li>').click(function () {
       currentProject = project;
       currentProject.type = filter;
       protocoder.communication.fetchCode(project.name, project.type);
       protocoder.ui.showProjects(false);
 
-      $("#list_project #" + project.name + " #rename").click(function() { 
+      $("#list_projects #" + project.name + " #rename").click(function(e) { 
         console.log("rename");
+        protocoder.communication.renameProject(project);
+        e.stopPropagation();
+
       });
 
-      $("#list_project #" + project.name + " #delete").click(function() { 
+      $("#list_projects #" + project.name + " #delete").click(function(e) { 
         console.log("delete");
+        protocoder.communication.removeApp(project);
+        e.stopPropagation();
       });
-
-      
 
 
     }).appendTo('#list_projects #'+div+" ul");

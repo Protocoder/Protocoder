@@ -3,13 +3,13 @@
 *	devices / softwares together 
 */ 
 
-network.startOSCServer(12345, function(name, data) { 
+network.startOSCServer(9000, function(name, data) { 
     console.log(name + " " + data);
 }); 
 
 var client;
 ui.addButton("Connect", 0, 0, 500, 100, function() { 
-    client = network.connectOSC("192.168.43.17", 12002);
+    client = network.connectOSC("127.0.0.1", 9000);
 });
 
 
