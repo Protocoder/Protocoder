@@ -56,6 +56,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.speech.RecognizerIntent;
 import android.telephony.PhoneStateListener;
@@ -85,12 +86,14 @@ public class JMedia extends JInterface {
 	@ProtocoderScript
 	@APIMethod(description = "plays a sound", example = "media.playSound(fileName);")
 	@APIParam(params = { "fileName" })
-	public void playSound(String url) {
+	public MediaPlayer playSound(String url) {
 
 		if (url.startsWith("http://") == false) {
 			url = AppRunnerSettings.get().project.getStoragePath() + File.separator + url;
 		}
-		Audio.playSound(url, 100);
+		MediaPlayer player = Audio.playSound(url, 100);
+		WhatIsRunning.getInstance().add(player);
+		return player;
 	}
 
 	@ProtocoderScript

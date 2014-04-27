@@ -113,7 +113,7 @@ public class JUtil extends JInterface {
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "milliseconds", "function()" })
-	public Looper loop(final int duration, final LooperCB callbackkfn) {
+	public Looper loop(final LooperCB callbackkfn, final int duration) {
 
 		return new Looper(duration, callbackkfn);
 	}
@@ -126,7 +126,7 @@ public class JUtil extends JInterface {
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "milliseconds", "function()" })
-	public void delay(final int duration, final delayCB fn) {
+	public void delay(final delayCB fn, final int duration) {
 
 		Runnable task = new Runnable() {
 			@Override
