@@ -33,8 +33,10 @@ import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apidoc.annotation.APIParam;
 import org.protocoder.apprunner.JInterface;
 import org.protocoder.apprunner.ProtocoderScript;
+import org.protocoder.apprunner.api.boards.JArduino;
 import org.protocoder.apprunner.api.boards.JIOIO;
 import org.protocoder.apprunner.api.boards.JMakr;
+import org.protocoder.sensors.WhatIsRunning;
 
 import android.app.Activity;
 
@@ -64,6 +66,17 @@ public class JBoards extends JInterface {
 		makr.start(callbackfn);
 
 		return makr;
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "initializes makr board", example = "")
+	@APIParam(params = { "function()" })
+	public JArduino startArduino(int baud, JArduino.startCB callbackfn) {
+		JArduino arduino = new JArduino(a.get());
+		arduino.start(baud, callbackfn);
+		WhatIsRunning.getInstance().add(arduino);
+
+		return arduino;
 	}
 
 }

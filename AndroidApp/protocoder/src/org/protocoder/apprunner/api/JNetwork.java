@@ -168,24 +168,13 @@ public class JNetwork extends JInterface {
 		server.addListener(new OSCServerListener() {
 
 			@Override
-			public void onMessage(OSCMessage msg) {
+			public void onMessage(final OSCMessage msg) {
 				MLog.d(TAG, "message received " + msg);
 
-				JSONArray jsonArray = new JSONArray();
+				final JSONArray jsonArray = new JSONArray();
 				for (int i = 0; i < msg.getArgCount(); i++) {
 					jsonArray.put(msg.getArg(i));
 				}
-
-				// String[] str = null;
-				// try {
-				// str = new String[msg.getSize()];
-				// for (int i = 0; i < msg.getArgCount(); i++) {
-				// str[i] = "" + msg.getArg(i);
-				// }
-				// } catch (IOException e) {
-				// e.printStackTrace();
-				// }
-				//
 
 				try {
 					MLog.d(TAG, msg.getName() + " " + jsonArray.toString(2));
@@ -194,7 +183,15 @@ public class JNetwork extends JInterface {
 					e.printStackTrace();
 				}
 				// callback(callbackfn, "\"" + msg.getName() + "\"", str);
-				callbackfn.event(msg.getName(), jsonArray);
+				// Log.d(TAG, msg.g)
+				a.get().runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						// MLog.d(TAG, "receiver");
+						callbackfn.event(msg.getName(), jsonArray);
+					}
+				});
 			}
 
 		});
