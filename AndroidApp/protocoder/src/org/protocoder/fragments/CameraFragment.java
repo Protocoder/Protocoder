@@ -51,7 +51,6 @@ import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.hardware.Camera.PictureCallback;
 import android.media.AudioManager;
-import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
 import android.media.SoundPool;
 import android.net.Uri;
@@ -79,6 +78,7 @@ public class CameraFragment extends Fragment {
 	public static final int MODE_CAMERA_BACK = 3;
 	int modeColor;
 	int modeCamera;
+	private int cameraId;
 
 	protected String TAG = "Camera";
 
@@ -163,13 +163,14 @@ public class CameraFragment extends Fragment {
 			public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
 
 				if (modeCamera == MODE_CAMERA_FRONT) {
-					int cameraId = getFrontCameraId();
+					cameraId = getFrontCameraId();
 					MLog.d(TAG, "" + cameraId);
 					if (cameraId == -1) {
 						MLog.d(TAG, "there is no camera");
 					}
 					mCamera = Camera.open(cameraId);
 				} else {
+					// cameraId = 0;
 					mCamera = Camera.open();
 				}
 
@@ -313,22 +314,44 @@ public class CameraFragment extends Fragment {
 	private MediaRecorder recorder;
 	private boolean recording = false;
 
+	public void stopRecordingVideo() {
+		recorder.stop();
+		recorder.release();
+		mCamera.lock();
+		recording = false;
+		MLog.d(TAG, "Recording Stopped");
+	}
+
 	public void recordVideo(String file) {
 
-		Camera.Parameters parameters = mCamera.getParameters();
-		parameters.setColorEffect(Camera.Parameters.EFFECT_MONO);
-		mCamera.setParameters(parameters);
+		MLog.d(TAG, "mCamera " + mCamera);
+		// Camera.Parameters parameters = mCamera.getParameters();
+		// MLog.d(TAG, "parameters " + parameters);
+		// parameters.setColorEffect(Camera.Parameters.EFFECT_MONO);
+		// mCamera.setParameters(parameters);
 
 		recorder = new MediaRecorder();
+		MLog.d(TAG, "recorder " + recorder);
 
-		recorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
+		mCamera.unlock();
+		recorder.setCamera(mCamera);
+		// recorder.setVideoFrameRate(15);
+		recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
 		recorder.setVideoSource(MediaRecorder.VideoSource.DEFAULT);
 
-		CamcorderProfile cpHigh = CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH);
-		recorder.setProfile(cpHigh);
+		MLog.d(TAG, "setting profile ");
+		// CamcorderProfile cpHigh = CamcorderProfile.get(cameraId,
+		// CamcorderProfile.QUALITY_HIGH);
+		// MLog.d(TAG, "profile set " + cpHigh);
+		// recorder.setProfile(cpHigh);
+		MLog.d(TAG, "profile set 1 " + file);
+		recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+		recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+		recorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
 		recorder.setOutputFile(file);
-		recorder.setMaxDuration(5000 * 1000); // 50 seconds
-		recorder.setMaxFileSize(5000 * 1000000); // Approximately 5 megabytes
+		MLog.d(TAG, "profile set 2");
+		// recorder.setMaxDuration(5000 * 1000); // 50 seconds
+		// recorder.setMaxFileSize(5000 * 1000000); // Approximately 5 megabytes
 
 		// CamcorderProfile camcorderProfile =
 		// CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH);
@@ -336,9 +359,13 @@ public class CameraFragment extends Fragment {
 
 		// recorder.setPreviewDisplay(mTextureView.getSurfaceTexture());
 		// recorder.setPreviewDisplay(holder.getSurface());
+		// recorder.setP
 
 		try {
+			MLog.d(TAG, "preparing ");
 			recorder.prepare();
+			MLog.d(TAG, "prepare ");
+
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
 			// finish();
@@ -348,10 +375,7 @@ public class CameraFragment extends Fragment {
 		}
 
 		if (recording) {
-			recorder.stop();
-			recorder.release();
-			recording = false;
-			MLog.d(TAG, "Recording Stopped");
+			stopRecordingVideo();
 			// Let's initRecorder so we can record again
 			// prepareRecorder();
 		} else {

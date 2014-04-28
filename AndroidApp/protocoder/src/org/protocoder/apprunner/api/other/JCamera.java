@@ -85,7 +85,9 @@ public class JCamera extends JInterface implements JViewInterface {
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	public void stopRecordingVideo(final String callbackfn) {
+	public void stopRecordingVideo() {
+		cameraFragment.stopRecordingVideo();
+
 		// cameraFragment.recordVideo(((AppRunnerActivity)
 		// a.get()).getCurrentDir() + File.separator + file);
 		// cameraFragment.addListener(new CameraListener() {
