@@ -37,6 +37,7 @@ import org.protocoder.utils.MLog;
 
 import android.R;
 import android.annotation.SuppressLint;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -45,6 +46,7 @@ import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.provider.Settings;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -145,8 +147,45 @@ public class BaseActivity extends FragmentActivity {
 		});
 	}
 
-	public void setScreenAlwaysOn() {
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+	public void setScreenAlwaysOn(boolean b) {
+		if (b) {
+			getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		} else {
+			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		}
+	}
+
+	public boolean isScreenOn() {
+		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+		return pm.isScreenOn();
+
+	}
+
+	public void goToSleep() {
+		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+		pm.goToSleep(100);
+
+	}
+
+	public boolean isAirplaneMode() {
+		return Settings.System.getInt(getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 0) != 0;
+	}
+
+	public boolean isUSBMassStorageEnabled() {
+		return Settings.System.getInt(getContentResolver(), Settings.Global.USB_MASS_STORAGE_ENABLED, 0) != 0;
+	}
+
+	public boolean isADBEnabled() {
+		return Settings.System.getInt(getContentResolver(), Settings.Global.ADB_ENABLED, 0) != 0;
+	}
+
+	public void setEnableSoundEffects(boolean b) {
+		if (b) {
+			Settings.System.putInt(getContentResolver(), Settings.System.SOUND_EFFECTS_ENABLED, 1);
+		} else {
+			Settings.System.putInt(getContentResolver(), Settings.System.SOUND_EFFECTS_ENABLED, 0);
+
+		}
 	}
 
 	public void changeFragment(int id, Fragment fragment) {
@@ -198,6 +237,7 @@ public class BaseActivity extends FragmentActivity {
 
 	public void setBrightness(float f) {
 		WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		layoutParams.screenBrightness = f;
 		getWindow().setAttributes(layoutParams);
 	}
@@ -217,17 +257,40 @@ public class BaseActivity extends FragmentActivity {
 				AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
 	}
 
+	PowerManager.WakeLock wl;
+
 	public void setWakeLock(boolean b) {
 
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-		PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "My Tag");
-
-		if (b) {
-			wl.acquire();
+		if (wl == null) {
+			wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
+			if (b) {
+				wl.acquire();
+			}
 		} else {
-			wl.release();
+			if (!b) {
+				wl.release();
+			}
 		}
 
+	}
+
+	public void setGlobalBrightness(int brightness) {
+
+		// constrain the value of brightness
+		if (brightness < 0) {
+			brightness = 0;
+		} else if (brightness > 255) {
+			brightness = 255;
+		}
+
+		ContentResolver cResolver = this.getApplicationContext().getContentResolver();
+		Settings.System.putInt(cResolver, Settings.System.SCREEN_BRIGHTNESS, brightness);
+
+	}
+
+	public void setScreenTimeout(int time) {
+		Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, time);
 	}
 
 	// override home buttons

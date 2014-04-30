@@ -37,6 +37,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -52,6 +53,7 @@ import java.util.zip.ZipOutputStream;
 
 import org.protocoder.apprunner.AppRunnerSettings;
 import org.protocoder.base.BaseMainApp;
+import org.protocoder.events.ProjectManager;
 
 import android.app.Activity;
 import android.content.Context;
@@ -565,6 +567,17 @@ public class FileIO {
 		}
 	}
 
+	public static File[] listFiles(final String extension) {
+		File f = new File(AppRunnerSettings.get().project.getStoragePath() + File.separator);
+		return f.listFiles(new FilenameFilter() {
+
+			@Override
+			public boolean accept(File dir, String fileName) {
+				return fileName.endsWith(extension);
+			}
+		});
+	}
+
 	public static String getFileExtension(String fileName) {
 		String extension = "";
 
@@ -574,5 +587,28 @@ public class FileIO {
 		}
 
 		return extension;
+	}
+
+	public static void appendStrings(String fileName, String[] lines) {
+		try {
+			String fileUrl = ProjectManager.getInstance().getCurrentProject().getStoragePath() + File.separator
+					+ fileName;
+			File f = new File(fileUrl);
+			if (!f.exists()) {
+				f.createNewFile();
+			}
+			FileOutputStream fo = new FileOutputStream(f, true);
+
+			for (String line : lines) {
+				fo.write(line.getBytes());
+
+			}
+			fo.flush();
+			fo.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

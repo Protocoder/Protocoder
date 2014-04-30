@@ -421,6 +421,7 @@ public class MainActivity extends BaseActivity implements NewProjectDialogFragme
 				currentProjectApplicationIntent = new Intent(MainActivity.this, AppRunnerActivity.class);
 
 				Project p = evt.getProject();
+				currentProjectApplicationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				currentProjectApplicationIntent.putExtra(Project.NAME, p.getName());
 				currentProjectApplicationIntent.putExtra(Project.TYPE, p.getType());
 

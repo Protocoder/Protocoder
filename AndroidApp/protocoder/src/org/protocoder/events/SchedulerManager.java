@@ -80,7 +80,7 @@ public class SchedulerManager {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.SECOND, delay);
 
-		setAlarm(p, cal, wakeUpScreen, delay);
+		setAlarm(p, cal, delay, alarmRepeat, wakeUpScreen);
 	}
 
 	/*
@@ -92,19 +92,19 @@ public class SchedulerManager {
 	 * setAlarm(p, cal, false, wakeUpScren, -1); }
 	 */
 
-	public void setAlarm(Project p, int hourOfDay, int minute, int second, int delay, boolean wakeUpScren) {
+	public void setAlarm(Project p, int hourOfDay, int minute, int second, boolean wakeUpScren) {
 		Calendar cal = Calendar.getInstance();
 		cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), hourOfDay, minute,
 				second);
 
-		setAlarm(p, cal, wakeUpScren, delay);
+		setAlarm(p, cal, 0, false, wakeUpScren);
 	}
 
-	public void setAlarm(Project p, Calendar cal, boolean wakeUpScreen, int delay) {
+	public void setAlarm(Project p, Calendar cal, int delay, boolean repeating, boolean wakeUpScreen) {
 		int id = (int) Math.round((999999999 * Math.random()));
 
 		// add to a global alarm thingie
-		tasks.add(new Task(id, p, cal, delay, wakeUpScreen));
+		tasks.add(new Task(id, p, cal, delay, repeating, wakeUpScreen));
 
 		String message = "";
 
@@ -124,7 +124,7 @@ public class SchedulerManager {
 		// Get the AlarmManager service
 		AlarmManager am = (AlarmManager) (c).getSystemService(Context.ALARM_SERVICE);
 
-		if (delay > 0) {
+		if (repeating) {
 			am.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), delay, sender);
 
 		} else {
@@ -146,7 +146,7 @@ public class SchedulerManager {
 		int delay;
 		boolean wakeUpScreen;
 
-		public Task(int id, Project p, Calendar time, int delay, boolean wakeUpScreen) {
+		public Task(int id, Project p, Calendar time, int delay, boolean repeating, boolean wakeUpScreen) {
 			this.id = id;
 			this.p = p;
 			this.time = time;

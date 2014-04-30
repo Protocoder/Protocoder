@@ -68,6 +68,29 @@ public class JFileIO extends JInterface {
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "fileName", "lines[]" })
+	public void saveString(String fileName, String line) {
+		String[] lines = { line };
+		FileIO.saveStrings(fileName, lines);
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "fileName", "lines[]" })
+	public void appendString(String fileName, String[] lines) {
+		FileIO.appendStrings(fileName, lines);
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "fileName", "line" })
+	public void appendString(String fileName, String line) {
+		String[] lines = { line };
+		FileIO.appendStrings(fileName, lines);
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "fileName", "lines[]" })
 	public void saveStrings(String fileName, String[] lines) {
 		FileIO.saveStrings(fileName, lines);
 	}
@@ -79,4 +102,24 @@ public class JFileIO extends JInterface {
 		return FileIO.loadStrings(fileName);
 	}
 
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "fileName" })
+	public File[] listFiles() {
+		return null; // FileIO.listFiles();
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "fileName" })
+	public File[] listFiles(String filter) {
+		return FileIO.listFiles(filter);
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "fileName" })
+	public String[] listFilesInDir() {
+		return null;
+	}
 }
