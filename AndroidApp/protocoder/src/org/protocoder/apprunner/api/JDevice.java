@@ -102,14 +102,57 @@ public class JDevice extends JInterface {
 
 	@ProtocoderScript
 	@APIMethod(description = "Change brightness", example = "")
+	public void setGlobalBrightness(int b) {
+		a.get().setGlobalBrightness(b);
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "Change brightness", example = "")
 	public float getBrightness() {
 		return a.get().getCurrentBrightness();
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	public void screenAlwaysOn() {
-		a.get().setScreenAlwaysOn();
+	public void screenAlwaysOn(boolean b) {
+		a.get().setScreenAlwaysOn(b);
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	public boolean isScreenOn() {
+		return a.get().isScreenOn();
+	}
+
+	// @ProtocoderScript
+	// @APIMethod(description = "", example = "")
+	public void goToSleep() {
+		a.get().goToSleep();
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	public void setScreenTimeout(int time) {
+		a.get().setScreenTimeout(time);
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	public boolean isAirplaneMode() {
+		return a.get().isAirplaneMode();
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	public void enableSoundEffects(boolean b) {
+		a.get().setEnableSoundEffects(b);
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	public void setWakeLock(boolean b) {
+		a.get().setWakeLock(b);
+
 	}
 
 	@ProtocoderScript

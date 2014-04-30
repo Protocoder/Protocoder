@@ -81,6 +81,7 @@ public class JMedia extends JInterface {
 
 		});
 
+		WhatIsRunning.getInstance().add(this);
 	}
 
 	@ProtocoderScript
@@ -314,9 +315,12 @@ public class JMedia extends JInterface {
 
 	public void stopRecording() {
 		try {
-			recorder.stop();
-			recorder.reset();
-			recorder.release();
+			if (recorder != null) {
+				recorder.stop();
+				recorder.reset();
+				recorder.release();
+				recorder = null;
+			}
 		} catch (Exception e) {
 
 		}
@@ -361,6 +365,10 @@ public class JMedia extends JInterface {
 
 	public interface onVoiceRecognitionListener {
 		public void onNewResult(String text);
+	}
+
+	public void stop() {
+		stopRecording();
 	}
 
 }

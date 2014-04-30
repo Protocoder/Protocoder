@@ -586,6 +586,10 @@ Ui.prototype.addFileElement = function(f) {
 
 Ui.prototype.setTabFeedback = function(f) {
 
+} 
+
+Ui.prototype.openNewWindow = function(f) {
+	window.open("http://192.168.1.47:8585", "_blank", "toolbar=no, location=no, status=no, resizable=yes, width=500, height=500, left=10, top=10");
 }
 
 Ui.prototype.initUpload = function() {
@@ -605,8 +609,8 @@ Ui.prototype.initUpload = function() {
 			// The name of the $_FILES entry:
 			paramname:'pic',
 			
-			maxfiles: 10,
-	    	maxfilesize: 5,
+			maxfiles: 100,
+	    	maxfilesize: 25,
 			url: './?' + 'name=' + currentProject.name + '&fileType=' + currentProject.type,
 			
 			uploadFinished:function(i,file,response){

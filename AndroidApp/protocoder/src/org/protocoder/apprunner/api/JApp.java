@@ -34,7 +34,9 @@ import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apidoc.annotation.APIParam;
 import org.protocoder.apprunner.JInterface;
 import org.protocoder.apprunner.ProtocoderScript;
+import org.protocoder.events.Project;
 import org.protocoder.events.ProjectManager;
+import org.protocoder.events.SchedulerManager;
 
 import android.app.Activity;
 
@@ -58,8 +60,23 @@ public class JApp extends JInterface {
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	public void setDelayedAlarm(int id, int message, int delay) {
+	public void setDelayedAlarm(int delay, boolean alarmRepeat, boolean wakeUpScreen) {
+		Project p = ProjectManager.getInstance().getCurrentProject();
+		SchedulerManager.getInstance(a.get()).setAlarmDelayed(p, delay, alarmRepeat, wakeUpScreen);
+	}
 
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	public void setDelayedAlarm(int hour, int minute, int second, boolean wakeUpScreen) {
+		Project p = ProjectManager.getInstance().getCurrentProject();
+		SchedulerManager.getInstance(a.get()).setAlarm(p, hour, minute, second, wakeUpScreen);
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	public void setExactAlarm(int hour, int minute, int second, boolean wakeUpScreen) {
+		Project p = ProjectManager.getInstance().getCurrentProject();
+		SchedulerManager.getInstance(a.get()).setAlarm(p, hour, minute, second, wakeUpScreen);
 	}
 
 	@ProtocoderScript
