@@ -27,60 +27,56 @@
  * 
  */
 
-package org.protocoder.apprunner.api.other;
+package org.protocoder.apprunner.api;
 
 import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apidoc.annotation.APIParam;
 import org.protocoder.apprunner.PInterface;
 import org.protocoder.apprunner.ProtocoderScript;
+import org.protocoder.apprunner.api.boards.PArduino;
+import org.protocoder.apprunner.api.boards.PIOIO;
+import org.protocoder.apprunner.api.boards.PMakr;
+import org.protocoder.sensors.WhatIsRunning;
 
 import android.app.Activity;
 
-public class SignalUtils extends PInterface {
+public class PBoards extends PInterface {
 
-	public SignalUtils(Activity a) {
+	private final String TAG = "JBoards";
+
+	public PBoards(Activity a) {
 		super(a);
-
-	}
-
-	public LowPass lowpass() {
-		return null;
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "initializes ioio board", example = "")
 	@APIParam(params = { "function()" })
-	public void fft(boolean visible) {
+	public PIOIO startIOIO(PIOIO.startCB callbackfn) {
+		PIOIO ioio = new PIOIO(a.get());
+		ioio.start(callbackfn);
 
-		// FFT fft = new FFT(10);
-		// fft.fft(re, im);
+		return ioio;
 	}
 
-	class LowPass {
-		int n;
-		float[] vals;
-		float sum = 0.0f;
+	@ProtocoderScript
+	@APIMethod(description = "initializes makr board", example = "")
+	@APIParam(params = { "function()" })
+	public PMakr startMAKR(PMakr.startCB callbackfn) {
+		PMakr makr = new PMakr(a.get());
+		makr.start(callbackfn);
 
-		public LowPass(int n) {
-			this.n = n;
-			vals = new float[n];
-		}
+		return makr;
+	}
 
-		public float smooth(float newVal) {
+	@ProtocoderScript
+	@APIMethod(description = "initializes makr board", example = "")
+	@APIParam(params = { "function()" })
+	public PArduino startArduino(int baud, PArduino.startCB callbackfn) {
+		PArduino arduino = new PArduino(a.get());
+		arduino.start(baud, callbackfn);
+		WhatIsRunning.getInstance().add(arduino);
 
-			for (int i = 0; i < vals.length; i++) {
-				sum = +vals[i];
-
-				// shift to the left
-				if (i < vals.length - 1) {
-					vals[i] = vals[i + 1];
-				} else {
-					vals[i] = newVal;
-				}
-			}
-			return sum / n;
-		}
-
+		return arduino;
 	}
 
 }

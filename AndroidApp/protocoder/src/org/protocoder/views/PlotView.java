@@ -299,8 +299,14 @@ public class PlotView extends View {
 		mPaint.setStrokeWidth(thickness); // when line
 	}
 
-	public void changeColor(int r, int g, int b) {
+	public void setColor(String plotName, String rgb) {
+		new Color();
+		int c = Color.parseColor(rgb);
 
+		Plot p = plots.get(plotName);
+		if (p != null) {
+			p.color = c;
+		}
 	}
 
 }

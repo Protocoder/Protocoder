@@ -27,60 +27,17 @@
  * 
  */
 
-package org.protocoder.apprunner.api.other;
+package org.protocoder.apprunner.api.widgets;
 
-import org.protocoder.apidoc.annotation.APIMethod;
-import org.protocoder.apidoc.annotation.APIParam;
-import org.protocoder.apprunner.PInterface;
-import org.protocoder.apprunner.ProtocoderScript;
+import org.protocoder.views.CanvasView;
 
-import android.app.Activity;
+import android.content.Context;
 
-public class SignalUtils extends PInterface {
+public class PCanvasView extends CanvasView implements PViewInterface {
 
-	public SignalUtils(Activity a) {
-		super(a);
-
-	}
-
-	public LowPass lowpass() {
-		return null;
-	}
-
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "function()" })
-	public void fft(boolean visible) {
-
-		// FFT fft = new FFT(10);
-		// fft.fft(re, im);
-	}
-
-	class LowPass {
-		int n;
-		float[] vals;
-		float sum = 0.0f;
-
-		public LowPass(int n) {
-			this.n = n;
-			vals = new float[n];
-		}
-
-		public float smooth(float newVal) {
-
-			for (int i = 0; i < vals.length; i++) {
-				sum = +vals[i];
-
-				// shift to the left
-				if (i < vals.length - 1) {
-					vals[i] = vals[i + 1];
-				} else {
-					vals[i] = newVal;
-				}
-			}
-			return sum / n;
-		}
-
+	public PCanvasView(Context context, int w, int h) {
+		super(context, w, h);
+		// TODO Auto-generated constructor stub
 	}
 
 }

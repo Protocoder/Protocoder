@@ -27,60 +27,15 @@
  * 
  */
 
-package org.protocoder.apprunner.api.other;
+package org.protocoder.apprunner.api.widgets;
 
-import org.protocoder.apidoc.annotation.APIMethod;
-import org.protocoder.apidoc.annotation.APIParam;
-import org.protocoder.apprunner.PInterface;
-import org.protocoder.apprunner.ProtocoderScript;
+import org.protocoder.views.CustomWebView;
 
-import android.app.Activity;
+import android.content.Context;
 
-public class SignalUtils extends PInterface {
+public class PWebView extends CustomWebView implements PViewInterface {
 
-	public SignalUtils(Activity a) {
-		super(a);
-
+	public PWebView(Context context) {
+		super(context);
 	}
-
-	public LowPass lowpass() {
-		return null;
-	}
-
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "function()" })
-	public void fft(boolean visible) {
-
-		// FFT fft = new FFT(10);
-		// fft.fft(re, im);
-	}
-
-	class LowPass {
-		int n;
-		float[] vals;
-		float sum = 0.0f;
-
-		public LowPass(int n) {
-			this.n = n;
-			vals = new float[n];
-		}
-
-		public float smooth(float newVal) {
-
-			for (int i = 0; i < vals.length; i++) {
-				sum = +vals[i];
-
-				// shift to the left
-				if (i < vals.length - 1) {
-					vals[i] = vals[i + 1];
-				} else {
-					vals[i] = newVal;
-				}
-			}
-			return sum / n;
-		}
-
-	}
-
 }

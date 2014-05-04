@@ -51,6 +51,7 @@ import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.hardware.Camera.PictureCallback;
 import android.media.AudioManager;
+import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
 import android.media.SoundPool;
 import android.net.Uri;
@@ -338,16 +339,18 @@ public class CameraFragment extends Fragment {
 		// recorder.setVideoFrameRate(15);
 		recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
 		recorder.setVideoSource(MediaRecorder.VideoSource.DEFAULT);
-
+		// mCamera.getParameters().
+		CamcorderProfile profile = CamcorderProfile.get(cameraId, CamcorderProfile.QUALITY_HIGH);
+		recorder.setProfile(profile);
 		MLog.d(TAG, "setting profile ");
 		// CamcorderProfile cpHigh = CamcorderProfile.get(cameraId,
 		// CamcorderProfile.QUALITY_HIGH);
 		// MLog.d(TAG, "profile set " + cpHigh);
 		// recorder.setProfile(cpHigh);
 		MLog.d(TAG, "profile set 1 " + file);
-		recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-		recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-		recorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
+		// recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+		// recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+		// recorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
 		recorder.setOutputFile(file);
 		MLog.d(TAG, "profile set 2");
 		// recorder.setMaxDuration(5000 * 1000); // 50 seconds
