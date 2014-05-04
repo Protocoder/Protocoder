@@ -3,7 +3,7 @@ package org.protocoder.network.bt;
 import java.util.Set;
 import java.util.Vector;
 
-import org.protocoder.apprunner.api.JNetwork;
+import org.protocoder.apprunner.api.PNetwork;
 import org.protocoder.sensors.WhatIsRunningInterface;
 
 import android.app.Activity;
@@ -137,9 +137,9 @@ public class SimpleBT implements WhatIsRunningInterface {
 		}
 	}
 
-	private JNetwork.onBluetoothListener onBluetoothListener;
+	private PNetwork.onBluetoothListener onBluetoothListener;
 
-	public void addBluetoothScanListener(JNetwork.onBluetoothListener onBluetoothListener2) {
+	public void addBluetoothScanListener(PNetwork.onBluetoothListener onBluetoothListener2) {
 		onBluetoothListener = onBluetoothListener2;
 
 	}

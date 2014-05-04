@@ -37,19 +37,19 @@ import org.protocoder.AppSettings;
 import org.protocoder.MainActivity;
 import org.protocoder.R;
 import org.protocoder.apprunner.AppRunnerInterpreter.InterpreterInfo;
-import org.protocoder.apprunner.api.JApp;
-import org.protocoder.apprunner.api.JBoards;
-import org.protocoder.apprunner.api.JConsole;
-import org.protocoder.apprunner.api.JDashboard;
-import org.protocoder.apprunner.api.JDevice;
-import org.protocoder.apprunner.api.JEditor;
-import org.protocoder.apprunner.api.JFileIO;
-import org.protocoder.apprunner.api.JMedia;
-import org.protocoder.apprunner.api.JNetwork;
-import org.protocoder.apprunner.api.JProtocoder;
-import org.protocoder.apprunner.api.JSensors;
-import org.protocoder.apprunner.api.JUI;
-import org.protocoder.apprunner.api.JUtil;
+import org.protocoder.apprunner.api.PApp;
+import org.protocoder.apprunner.api.PBoards;
+import org.protocoder.apprunner.api.PConsole;
+import org.protocoder.apprunner.api.PDashboard;
+import org.protocoder.apprunner.api.PDevice;
+import org.protocoder.apprunner.api.PEditor;
+import org.protocoder.apprunner.api.PFileIO;
+import org.protocoder.apprunner.api.PMedia;
+import org.protocoder.apprunner.api.PNetwork;
+import org.protocoder.apprunner.api.PProtocoder;
+import org.protocoder.apprunner.api.PSensors;
+import org.protocoder.apprunner.api.PUI;
+import org.protocoder.apprunner.api.PUtil;
 import org.protocoder.base.BaseActivity;
 import org.protocoder.events.Events;
 import org.protocoder.events.Events.ProjectEvent;
@@ -109,6 +109,8 @@ public class AppRunnerActivity extends BaseActivity {
 
 	private static final String TAG = "AppRunner";
 
+	private static ArrayList<Class> classes = new ArrayList<Class>();
+
 	private CustomWebsocketServer ws;
 	private BroadcastReceiver mIntentReceiver;
 	public AppRunnerInterpreter interp;
@@ -117,13 +119,13 @@ public class AppRunnerActivity extends BaseActivity {
 
 	// listeners in the main activity that will pass the info to the API classes
 	public static final int VOICE_RECOGNITION_REQUEST_CODE = 55;
-	private JApp.onAppStatus onAppStatusListener;
-	private JUI.onKeyListener onKeyListener;
-	private JDevice.onSmsReceivedListener onSmsReceivedListener;
-	private JSensors.onNFCListener onNFCListener;
-	private JSensors.onNFCWrittenListener onNFCWrittenListener;
-	private JNetwork.onBluetoothListener onBluetoothListener;
-	private JMedia.onVoiceRecognitionListener onVoiceRecognitionListener;
+	private PApp.onAppStatus onAppStatusListener;
+	private PUI.onKeyListener onKeyListener;
+	private PDevice.onSmsReceivedListener onSmsReceivedListener;
+	private PSensors.onNFCListener onNFCListener;
+	private PSensors.onNFCWrittenListener onNFCWrittenListener;
+	private PNetwork.onBluetoothListener onBluetoothListener;
+	private PMedia.onVoiceRecognitionListener onVoiceRecognitionListener;
 
 	// Layout
 	private final int EDITOR_ID = 1231212345;
@@ -143,24 +145,25 @@ public class AppRunnerActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// setTheme(R.style.ProtocoderDark_Theme);
-		getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+		// getWindow().setBackgroundDrawable(new
+		// ColorDrawable(android.graphics.Color.TRANSPARENT));
 		super.onCreate(savedInstanceState);
 
 		interp = new AppRunnerInterpreter(this);
 
-		interp.addInterface(JApp.class);
-		interp.addInterface(JDevice.class);
-		interp.addInterface(JBoards.class);
-		interp.addInterface(JConsole.class);
-		interp.addInterface(JDashboard.class);
-		interp.addInterface(JEditor.class);
-		interp.addInterface(JFileIO.class);
-		interp.addInterface(JMedia.class);
-		interp.addInterface(JNetwork.class);
-		interp.addInterface(JProtocoder.class);
-		interp.addInterface(JSensors.class);
-		interp.addInterface(JUI.class);
-		interp.addInterface(JUtil.class);
+		interp.addInterface(PApp.class);
+		interp.addInterface(PDevice.class);
+		interp.addInterface(PBoards.class);
+		interp.addInterface(PConsole.class);
+		interp.addInterface(PDashboard.class);
+		interp.addInterface(PEditor.class);
+		interp.addInterface(PFileIO.class);
+		interp.addInterface(PMedia.class);
+		interp.addInterface(PNetwork.class);
+		interp.addInterface(PProtocoder.class);
+		interp.addInterface(PSensors.class);
+		interp.addInterface(PUI.class);
+		interp.addInterface(PUtil.class);
 
 		try {
 			MLog.d(TAG, "starting websocket server");
@@ -460,17 +463,17 @@ public class AppRunnerActivity extends BaseActivity {
 
 	}
 
-	public void addOnAppStatusListener(JApp.onAppStatus onAppStatus) {
+	public void addOnAppStatusListener(PApp.onAppStatus onAppStatus) {
 		onAppStatus = onAppStatus;
 
 	}
 
-	public void addOnKeyListener(JUI.onKeyListener onKeyListener2) {
+	public void addOnKeyListener(PUI.onKeyListener onKeyListener2) {
 		onKeyListener = onKeyListener2;
 
 	}
 
-	public void addOnSmsReceivedListener(JDevice.onSmsReceivedListener onSmsReceivedListener2) {
+	public void addOnSmsReceivedListener(PDevice.onSmsReceivedListener onSmsReceivedListener2) {
 		onSmsReceivedListener = onSmsReceivedListener2;
 
 	}
@@ -761,17 +764,17 @@ public class AppRunnerActivity extends BaseActivity {
 
 	}
 
-	public void addNFCReadListener(JSensors.onNFCListener onNFCListener2) {
+	public void addNFCReadListener(PSensors.onNFCListener onNFCListener2) {
 		onNFCListener = onNFCListener2;
 
 	}
 
-	public void addNFCWrittenListener(JSensors.onNFCWrittenListener onNFCWrittenListener2) {
+	public void addNFCWrittenListener(PSensors.onNFCWrittenListener onNFCWrittenListener2) {
 		onNFCWrittenListener = onNFCWrittenListener2;
 
 	}
 
-	public void addBluetoothListener(JNetwork.onBluetoothListener onBluetoothListener2) {
+	public void addBluetoothListener(PNetwork.onBluetoothListener onBluetoothListener2) {
 		onBluetoothListener = onBluetoothListener2;
 
 	}
@@ -807,7 +810,7 @@ public class AppRunnerActivity extends BaseActivity {
 
 	}
 
-	public void addVoiceRecognitionListener(JMedia.onVoiceRecognitionListener onVoiceRecognitionListener2) {
+	public void addVoiceRecognitionListener(PMedia.onVoiceRecognitionListener onVoiceRecognitionListener2) {
 
 		onVoiceRecognitionListener = onVoiceRecognitionListener2;
 	}

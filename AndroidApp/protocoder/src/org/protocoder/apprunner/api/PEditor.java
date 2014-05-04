@@ -27,59 +27,49 @@
  * 
  */
 
-package org.protocoder.apprunner.api.other;
+package org.protocoder.apprunner.api;
 
 import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apidoc.annotation.APIParam;
+import org.protocoder.apprunner.AppRunnerActivity;
 import org.protocoder.apprunner.PInterface;
 import org.protocoder.apprunner.ProtocoderScript;
 
 import android.app.Activity;
 
-public class SignalUtils extends PInterface {
+public class PEditor extends PInterface {
 
-	public SignalUtils(Activity a) {
+	public PEditor(Activity a) {
 		super(a);
 
 	}
 
-	public LowPass lowpass() {
-		return null;
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "boolean" })
+	public void showConsole(boolean visible) {
+		((AppRunnerActivity) a.get()).showConsole(visible);
+
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	@APIParam(params = { "function()" })
-	public void fft(boolean visible) {
-
-		// FFT fft = new FFT(10);
-		// fft.fft(re, im);
+	@APIParam(params = { "boolean" })
+	public void showEditor(boolean visible) {
+		((AppRunnerActivity) a.get()).showEditor(visible);
 	}
 
-	class LowPass {
-		int n;
-		float[] vals;
-		float sum = 0.0f;
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "boolean" })
+	public void loadHTMLonSideBar(boolean visible) {
 
-		public LowPass(int n) {
-			this.n = n;
-			vals = new float[n];
-		}
+	}
 
-		public float smooth(float newVal) {
-
-			for (int i = 0; i < vals.length; i++) {
-				sum = +vals[i];
-
-				// shift to the left
-				if (i < vals.length - 1) {
-					vals[i] = vals[i + 1];
-				} else {
-					vals[i] = newVal;
-				}
-			}
-			return sum / n;
-		}
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "boolean" })
+	public void showSideBar(boolean visible) {
 
 	}
 

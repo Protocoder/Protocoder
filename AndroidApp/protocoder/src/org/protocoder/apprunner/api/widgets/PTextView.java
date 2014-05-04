@@ -27,60 +27,21 @@
  * 
  */
 
-package org.protocoder.apprunner.api.other;
+package org.protocoder.apprunner.api.widgets;
 
-import org.protocoder.apidoc.annotation.APIMethod;
-import org.protocoder.apidoc.annotation.APIParam;
-import org.protocoder.apprunner.PInterface;
-import org.protocoder.apprunner.ProtocoderScript;
+import android.content.Context;
+import android.text.Html;
+import android.widget.TextView;
 
-import android.app.Activity;
+public class PTextView extends TextView implements PViewInterface {
 
-public class SignalUtils extends PInterface {
-
-	public SignalUtils(Activity a) {
-		super(a);
-
+	public PTextView(Context context) {
+		super(context);
+		// TODO Auto-generated constructor stub
 	}
 
-	public LowPass lowpass() {
-		return null;
-	}
-
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "function()" })
-	public void fft(boolean visible) {
-
-		// FFT fft = new FFT(10);
-		// fft.fft(re, im);
-	}
-
-	class LowPass {
-		int n;
-		float[] vals;
-		float sum = 0.0f;
-
-		public LowPass(int n) {
-			this.n = n;
-			vals = new float[n];
-		}
-
-		public float smooth(float newVal) {
-
-			for (int i = 0; i < vals.length; i++) {
-				sum = +vals[i];
-
-				// shift to the left
-				if (i < vals.length - 1) {
-					vals[i] = vals[i + 1];
-				} else {
-					vals[i] = newVal;
-				}
-			}
-			return sum / n;
-		}
-
+	public void setHTMLText(String text) {
+		this.setText(Html.fromHtml(text));
 	}
 
 }

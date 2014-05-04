@@ -27,58 +27,33 @@
  * 
  */
 
-package org.protocoder.apprunner.api.other;
+package org.protocoder.apprunner.api.widgets;
 
-import org.protocoder.apidoc.annotation.APIMethod;
-import org.protocoder.apidoc.annotation.APIParam;
-import org.protocoder.apprunner.PInterface;
-import org.protocoder.apprunner.ProtocoderScript;
+import java.io.File;
 
-import android.app.Activity;
+import org.protocoder.apprunner.AppRunnerSettings;
+import org.protocoder.apprunner.api.widgets.PUIGeneric.DownloadImageTask;
+import org.protocoder.apprunner.api.widgets.PUIGeneric.SetImageTask;
 
-public class SignalUtils extends PInterface {
+import android.content.Context;
+import android.widget.ImageView;
 
-	public SignalUtils(Activity a) {
-		super(a);
+public class PImageView extends ImageView implements PViewInterface {
 
+	public PImageView(Context context) {
+		super(context);
 	}
 
-	public LowPass lowpass() {
-		return null;
-	}
+	public void setImage(String imagePath) {
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "function()" })
-	public void fft(boolean visible) {
+		if (imagePath.startsWith("http")) {
+			// Add image asynchronously
+			new DownloadImageTask(this).execute(imagePath);
+		} else {
+			// Add the image from file
+			new SetImageTask(this).execute(AppRunnerSettings.get().project.getStoragePath() + File.separator
+					+ imagePath);
 
-		// FFT fft = new FFT(10);
-		// fft.fft(re, im);
-	}
-
-	class LowPass {
-		int n;
-		float[] vals;
-		float sum = 0.0f;
-
-		public LowPass(int n) {
-			this.n = n;
-			vals = new float[n];
-		}
-
-		public float smooth(float newVal) {
-
-			for (int i = 0; i < vals.length; i++) {
-				sum = +vals[i];
-
-				// shift to the left
-				if (i < vals.length - 1) {
-					vals[i] = vals[i + 1];
-				} else {
-					vals[i] = newVal;
-				}
-			}
-			return sum / n;
 		}
 
 	}

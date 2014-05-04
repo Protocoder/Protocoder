@@ -27,60 +27,28 @@
  * 
  */
 
-package org.protocoder.apprunner.api.other;
+package org.protocoder.apprunner;
 
-import org.protocoder.apidoc.annotation.APIMethod;
-import org.protocoder.apidoc.annotation.APIParam;
-import org.protocoder.apprunner.PInterface;
-import org.protocoder.apprunner.ProtocoderScript;
+import java.lang.ref.WeakReference;
 
 import android.app.Activity;
 
-public class SignalUtils extends PInterface {
+public class PInterface {
 
-	public SignalUtils(Activity a) {
-		super(a);
+	protected String TAG = getClass().getSimpleName();
 
+	public WeakReference<AppRunnerActivity> a;
+
+	public PInterface(Activity appActivity) {
+		super();
+		this.a = new WeakReference<AppRunnerActivity>((AppRunnerActivity) appActivity);
 	}
 
-	public LowPass lowpass() {
-		return null;
-	}
+	// public <T> void callback(String fn, T... args) {
+	// a.get().interp.callback(fn, args);
+	// }
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "function()" })
-	public void fft(boolean visible) {
-
-		// FFT fft = new FFT(10);
-		// fft.fft(re, im);
-	}
-
-	class LowPass {
-		int n;
-		float[] vals;
-		float sum = 0.0f;
-
-		public LowPass(int n) {
-			this.n = n;
-			vals = new float[n];
-		}
-
-		public float smooth(float newVal) {
-
-			for (int i = 0; i < vals.length; i++) {
-				sum = +vals[i];
-
-				// shift to the left
-				if (i < vals.length - 1) {
-					vals[i] = vals[i + 1];
-				} else {
-					vals[i] = newVal;
-				}
-			}
-			return sum / n;
-		}
-
+	public void destroy() {
 	}
 
 }

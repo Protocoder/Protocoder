@@ -181,7 +181,6 @@ public class FileManagerFragment extends BaseFragment {
 
 		int itemId = item.getItemId();
 		if (itemId == R.id.menu_project_list_run) {
-
 			return true;
 		} else if (itemId == R.id.menu_project_list_view) {
 			viewFile(index);

@@ -34,12 +34,8 @@ package org.protocoder.views;
  * add values to it 
  * 
  */
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.json.JSONObject;
-import org.protocoder.utils.AndroidUtils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -49,21 +45,20 @@ import android.graphics.Paint.Style;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
 public class PadView extends View {
 	private static final String TAG = "TouchAreaView";
 	// paint
-	private Paint mPaint = new Paint();
+	private final Paint mPaint = new Paint();
 	private Canvas mCanvas = new Canvas();
 	private Bitmap bitmap; // Cache
 
 	// widget size
 	private float mWidth;
 	private float mHeight;
-	private boolean touching = false;
+	private boolean lastTouch = false;
 	private OnTouchAreaListener mOnTouchAreaListener;
 	HashMap<Integer, TouchEvent> t = new HashMap<Integer, PadView.TouchEvent>();
 
@@ -120,19 +115,13 @@ public class PadView extends View {
 
 			mCanvas.drawRoundRect(new RectF(0, 0, mWidth, mHeight), 5, 5, mPaint);
 
-			if (touching) {
-				mPaint.setStyle(Paint.Style.FILL);
-				mPaint.setColor(0x880000FF);
-				mCanvas.drawRoundRect(new RectF(0, 0, mWidth, mHeight), 5, 5, mPaint);
-			} else {
-				mPaint.setStyle(Paint.Style.STROKE);
-				mCanvas.drawColor(0, Mode.CLEAR);
-				mPaint.setColor(0x88000000);
-				mCanvas.drawRoundRect(new RectF(0, 0, mWidth, mHeight), 5, 5, mPaint);
-			}
+			mPaint.setStyle(Paint.Style.STROKE);
+			mCanvas.drawColor(0, Mode.CLEAR);
+			mPaint.setColor(0x88000000);
+			mCanvas.drawRoundRect(new RectF(0, 0, mWidth, mHeight), 5, 5, mPaint);
 
 			for (Map.Entry<Integer, PadView.TouchEvent> t1 : t.entrySet()) {
-				int key = (Integer) t1.getKey();
+				int key = t1.getKey();
 				TouchEvent value = t1.getValue();
 
 				mPaint.setColor(0x550000FF);
@@ -149,6 +138,19 @@ public class PadView extends View {
 		}
 
 		t.clear();
+
+		if (lastTouch) {
+			lastTouch = false;
+			invalidate();
+		}
+
+		/*
+		 * Runnable task = new Runnable() {
+		 * 
+		 * @Override public void run() { // handler.postDelayed(this, duration);
+		 * handler.removeCallbacks(this); rl.remove(this); } };
+		 * handler.postDelayed(task, 200);
+		 */
 
 	}
 
@@ -171,47 +173,43 @@ public class PadView extends View {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		AndroidUtils.dumpMotionEvent(event);
+		// AndroidUtils.dumpMotionEvent(event);
 
 		int action = event.getAction();
 		int actionCode = event.getActionMasked();
 
 		// get positions per finger
-		for (int i = 0; i < event.getPointerCount(); i++) {
+		int numPoints = event.getPointerCount();
+		for (int i = 0; i < numPoints; i++) {
 			int id = event.getPointerId(i);
 			TouchEvent o = new TouchEvent("finger", id, "move", (int) event.getX(i), (int) event.getY(i));
 			t.put(id, o);
-
-			// if (event.getX(i) > 0 && event.getX(i) < mWidth && event.getY(i)
-			// > 0 && event.getY(i) < mHeight) {
-			// touching = true;
-			// } else {
-			// touching = false;
-			// }
 		}
 
 		// check finger if down or up
 		int p = action >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
-		if (actionCode == MotionEvent.ACTION_POINTER_DOWN) {
-			t.get(p).action = "down";
-		} else if (actionCode == MotionEvent.ACTION_POINTER_UP) {
-			t.get(p).action = "up";
-		}
+		TouchEvent te = t.get(p);
+		if (te != null) {
+			if (actionCode == MotionEvent.ACTION_POINTER_DOWN) {
+				te.action = "down";
+			} else if (actionCode == MotionEvent.ACTION_POINTER_UP) {
+				te.action = "up";
+				if (numPoints == 1) {
+					lastTouch = true;
+				}
+			}
 
-		// if last finger up clear array
-		if (actionCode == MotionEvent.ACTION_UP) {
-			// t.get(0).action = "up";
-		}
-		// if last finger up clear array
-		if (actionCode == MotionEvent.ACTION_DOWN) {
-			t.get(0).action = "down";
-		}
+			// if last finger up clear array
+			if (actionCode == MotionEvent.ACTION_UP) {
+				// t.get(0).action = "up";
+				lastTouch = true;
+			}
 
-		mOnTouchAreaListener.onGenericTouch(t);
+			mOnTouchAreaListener.onGenericTouch(t);
+		}
 
 		invalidate();
 
-		// return touching;
 		return true;
 	}
 

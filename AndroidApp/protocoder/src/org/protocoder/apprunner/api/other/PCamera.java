@@ -27,11 +27,10 @@
  * 
  */
 
-package org.protocoder.utils;
+package org.protocoder.apprunner.api.other;
 
 import java.io.File;
 
-import org.protocoder.AppSettings;
 import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apidoc.annotation.APIParam;
 import org.protocoder.apprunner.AppRunnerActivity;
@@ -39,22 +38,21 @@ import org.protocoder.apprunner.AppRunnerSettings;
 import org.protocoder.apprunner.PInterface;
 import org.protocoder.apprunner.ProtocoderScript;
 import org.protocoder.apprunner.api.widgets.PViewInterface;
-import org.protocoder.views.CustomCameraView;
-import org.protocoder.views.CustomCameraView.CameraListener;
+import org.protocoder.fragments.CameraFragment;
+import org.protocoder.fragments.CameraFragment.CameraListener;
 
 import android.app.Activity;
-import android.util.Log;
 
-public class CopyOfJCamera extends CustomCameraView implements PViewInterface {
+public class PCamera extends PInterface implements PViewInterface {
 
-	private CustomCameraView cameraView;
+	private final CameraFragment cameraFragment;
 	protected Activity a;
 
-	public CopyOfJCamera(Activity a, int id) {
-		super(a, id);
+	public PCamera(Activity a, CameraFragment cameraFragment) {
+		super(a);
 		this.a = a;
 
-		this.cameraView = new CustomCameraView(a, id);
+		this.cameraFragment = cameraFragment;
 	}
 
 	@ProtocoderScript
@@ -63,8 +61,8 @@ public class CopyOfJCamera extends CustomCameraView implements PViewInterface {
 	// @APIRequires()
 	public void takePicture(String file, final String callbackfn) {
 
-		cameraView.takePic(AppRunnerSettings.get().project.getStoragePath() + File.separator + file);
-		cameraView.addListener(new CameraListener() {
+		cameraFragment.takePic(AppRunnerSettings.get().project.getStoragePath() + File.separator + file);
+		cameraFragment.addListener(new CameraListener() {
 
 			@Override
 			public void onVideoRecorded() {
@@ -74,7 +72,7 @@ public class CopyOfJCamera extends CustomCameraView implements PViewInterface {
 			@Override
 			public void onPicTaken() {
 				((AppRunnerActivity) a).interp.callback(callbackfn);
-				cameraView.removeListener(this);
+				cameraFragment.removeListener(this);
 			}
 		});
 	}
@@ -82,12 +80,14 @@ public class CopyOfJCamera extends CustomCameraView implements PViewInterface {
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void recordVideo(String file) {
-		cameraView.recordVideo(AppRunnerSettings.get().project.getStoragePath() + File.separator + file);
+		cameraFragment.recordVideo(AppRunnerSettings.get().project.getStoragePath() + File.separator + file);
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	public void stopRecordingVideo(final String callbackfn) {
+	public void stopRecordingVideo() {
+		cameraFragment.stopRecordingVideo();
+
 		// cameraFragment.recordVideo(((AppRunnerActivity)
 		// a.get()).getCurrentDir() + File.separator + file);
 		// cameraFragment.addListener(new CameraListener() {

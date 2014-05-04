@@ -31,56 +31,50 @@ package org.protocoder.apprunner.api.other;
 
 import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apidoc.annotation.APIParam;
-import org.protocoder.apprunner.PInterface;
 import org.protocoder.apprunner.ProtocoderScript;
+import org.puredata.core.PdBase;
 
-import android.app.Activity;
+public class PPureData {
 
-public class SignalUtils extends PInterface {
-
-	public SignalUtils(Activity a) {
-		super(a);
-
-	}
-
-	public LowPass lowpass() {
-		return null;
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "message", "value" })
+	public void sendMessage(String message, String value) {
+		if (value.isEmpty()) {
+			PdBase.sendBang(message);
+		} else if (value.matches("[0-9]+")) {
+			PdBase.sendFloat(message, Float.parseFloat(value));
+		} else {
+			PdBase.sendSymbol(message, value);
+		}
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	@APIParam(params = { "function()" })
-	public void fft(boolean visible) {
-
-		// FFT fft = new FFT(10);
-		// fft.fft(re, im);
+	@APIParam(params = { "name" })
+	public void sendBang(String name) {
+		PdBase.sendBang(name);
 	}
 
-	class LowPass {
-		int n;
-		float[] vals;
-		float sum = 0.0f;
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "name", "value" })
+	public void sendFloat(String name, int value) {
+		PdBase.sendFloat(name, value);
+	}
 
-		public LowPass(int n) {
-			this.n = n;
-			vals = new float[n];
-		}
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "name", "pitch, velocity" })
+	public void sendNoteOn(int channel, int pitch, int velocity) {
+		PdBase.sendNoteOn(channel, pitch, velocity);
+	}
 
-		public float smooth(float newVal) {
-
-			for (int i = 0; i < vals.length; i++) {
-				sum = +vals[i];
-
-				// shift to the left
-				if (i < vals.length - 1) {
-					vals[i] = vals[i + 1];
-				} else {
-					vals[i] = newVal;
-				}
-			}
-			return sum / n;
-		}
-
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "port", "value" })
+	public void sendFloat(int port, int value) {
+		PdBase.sendMidiByte(port, value);
 	}
 
 }
