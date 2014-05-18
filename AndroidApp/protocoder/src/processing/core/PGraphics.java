@@ -27,7 +27,6 @@ import java.util.HashMap;
 
 import processing.opengl.PGL;
 import processing.opengl.PShader;
-
 import android.graphics.Bitmap;
 import android.graphics.Color;
 
@@ -339,7 +338,7 @@ public class PGraphics extends PImage implements PConstants {
 	// //////////////////////////////////////////////////////////
 
 	/** Last background color that was set, zero if an image */
-	public int backgroundColor = 0x00CCCCCC;
+	public int backgroundColor = 0x55CCCCCC;
 
 	protected boolean backgroundAlpha;
 	protected float backgroundR, backgroundG, backgroundB, backgroundA;
@@ -659,8 +658,9 @@ public class PGraphics extends PImage implements PConstants {
 	}
 
 	protected void checkSettings() {
-		if (!settingsInited)
+		if (!settingsInited) {
 			defaultSettings();
+		}
 	}
 
 	/**
@@ -731,8 +731,9 @@ public class PGraphics extends PImage implements PConstants {
 	 */
 	protected void reapplySettings() {
 		// System.out.println("attempting reapplySettings()");
-		if (!settingsInited)
+		if (!settingsInited) {
 			return; // if this is the initial setup, no need to reapply
+		}
 
 		// System.out.println("  doing reapplySettings");
 		// new Exception().printStackTrace(System.out);
@@ -1163,8 +1164,8 @@ public class PGraphics extends PImage implements PConstants {
 					+ "using u and v coordinates with vertex()");
 		}
 		if (textureMode == IMAGE) {
-			u /= (float) textureImage.width;
-			v /= (float) textureImage.height;
+			u /= textureImage.width;
+			v /= textureImage.height;
 		}
 
 		textureU = u;
@@ -1665,14 +1666,18 @@ public class PGraphics extends PImage implements PConstants {
 		}
 
 		float maxRounding = PApplet.min((c - a) / 2, (d - b) / 2);
-		if (tl > maxRounding)
+		if (tl > maxRounding) {
 			tl = maxRounding;
-		if (tr > maxRounding)
+		}
+		if (tr > maxRounding) {
 			tr = maxRounding;
-		if (br > maxRounding)
+		}
+		if (br > maxRounding) {
 			br = maxRounding;
-		if (bl > maxRounding)
+		}
+		if (bl > maxRounding) {
 			bl = maxRounding;
+		}
 
 		rectImpl(a, b, c, d, tl, tr, br, bl);
 	}
@@ -1784,10 +1789,12 @@ public class PGraphics extends PImage implements PConstants {
 		}
 
 		// make sure this loop will exit before starting while
-		if (Float.isInfinite(start) || Float.isInfinite(stop))
+		if (Float.isInfinite(start) || Float.isInfinite(stop)) {
 			return;
-		while (stop < start)
+		}
+		while (stop < start) {
 			stop += TWO_PI;
+		}
 
 		arcImpl(x, y, w, h, start, stop);
 	}
@@ -1882,12 +1889,15 @@ public class PGraphics extends PImage implements PConstants {
 	 * version from davbol [080801].
 	 */
 	public void sphereDetail(int ures, int vres) {
-		if (ures < 3)
+		if (ures < 3) {
 			ures = 3; // force a minimum res
-		if (vres < 2)
+		}
+		if (vres < 2) {
 			vres = 2; // force a minimum res
-		if ((ures == sphereDetailU) && (vres == sphereDetailV))
+		}
+		if ((ures == sphereDetailU) && (vres == sphereDetailV)) {
 			return;
+		}
 
 		float delta = (float) SINCOS_LENGTH / ures;
 		float[] cx = new float[ures];
@@ -2345,12 +2355,14 @@ public class PGraphics extends PImage implements PConstants {
 	public void image(PImage image, float x, float y) {
 		// Starting in release 0144, image errors are simply ignored.
 		// loadImageAsync() sets width and height to -1 when loading fails.
-		if (image.width == -1 || image.height == -1)
+		if (image.width == -1 || image.height == -1) {
 			return;
+		}
 
 		// If not loaded yet, don't try to draw
-		if (image.width == 0 || image.height == 0)
+		if (image.width == 0 || image.height == 0) {
 			return;
+		}
 
 		if (imageMode == CORNER || imageMode == CORNERS) {
 			imageImpl(image, x, y, x + image.width, y + image.height, 0, 0, image.width, image.height);
@@ -2374,8 +2386,9 @@ public class PGraphics extends PImage implements PConstants {
 	public void image(PImage image, float a, float b, float c, float d, int u1, int v1, int u2, int v2) {
 		// Starting in release 0144, image errors are simply ignored.
 		// loadImageAsync() sets width and height to -1 when loading fails.
-		if (image.width == -1 || image.height == -1)
+		if (image.width == -1 || image.height == -1) {
 			return;
+		}
 
 		if (imageMode == CORNER) {
 			if (c < 0) { // reset a negative width
@@ -2405,10 +2418,12 @@ public class PGraphics extends PImage implements PConstants {
 
 		} else if (imageMode == CENTER) {
 			// c and d are width/height
-			if (c < 0)
+			if (c < 0) {
 				c = -c;
-			if (d < 0)
+			}
+			if (d < 0) {
 				d = -d;
+			}
 			float x1 = a - c / 2;
 			float y1 = b - d / 2;
 
@@ -2805,14 +2820,16 @@ public class PGraphics extends PImage implements PConstants {
 		// throw new RuntimeException(msg);
 		// }
 
-		if (z != 0)
+		if (z != 0) {
 			translate(0, 0, z); // slowness, badness
+		}
 
 		text(c, x, y);
 		// textZ = z;
 
-		if (z != 0)
+		if (z != 0) {
 			translate(0, 0, -z);
+		}
 	}
 
 	// /**
@@ -2886,14 +2903,16 @@ public class PGraphics extends PImage implements PConstants {
 		// throw new RuntimeException(msg);
 		// }
 
-		if (z != 0)
+		if (z != 0) {
 			translate(0, 0, z); // slow!
+		}
 
 		text(str, x, y);
 		// textZ = z;
 
-		if (z != 0)
+		if (z != 0) {
 			translate(0, 0, -z);
+		}
 	}
 
 	/**
@@ -2976,8 +2995,9 @@ public class PGraphics extends PImage implements PConstants {
 				// currentY = textSentence(textBuffer, sentenceStart, i,
 				// lineX, boxWidth, currentY, y2, spaceWidth);
 				boolean legit = textSentence(textBuffer, sentenceStart, i, boxWidth, spaceWidth);
-				if (!legit)
+				if (!legit) {
 					break;
+				}
 				// if (Float.isNaN(currentY)) break; // word too big (or error)
 				// if (currentY > y2) break; // past the box
 				sentenceStart = i + 1;
@@ -4151,6 +4171,10 @@ public class PGraphics extends PImage implements PConstants {
 		backgroundFromCalc();
 	}
 
+	public void bg(int b, int a) {
+		// ba
+	}
+
 	/**
 	 * Set the background to a grayscale value, based on the current colorMode.
 	 */
@@ -4412,15 +4436,19 @@ public class PGraphics extends PImage implements PConstants {
 	}
 
 	protected void colorCalc(float gray, float alpha) {
-		if (gray > colorModeX)
+		if (gray > colorModeX) {
 			gray = colorModeX;
-		if (alpha > colorModeA)
+		}
+		if (alpha > colorModeA) {
 			alpha = colorModeA;
+		}
 
-		if (gray < 0)
+		if (gray < 0) {
 			gray = 0;
-		if (alpha < 0)
+		}
+		if (alpha < 0) {
 			alpha = 0;
+		}
 
 		calcR = colorModeScale ? (gray / colorModeX) : gray;
 		calcG = calcR;
@@ -4440,23 +4468,31 @@ public class PGraphics extends PImage implements PConstants {
 	}
 
 	protected void colorCalc(float x, float y, float z, float a) {
-		if (x > colorModeX)
+		if (x > colorModeX) {
 			x = colorModeX;
-		if (y > colorModeY)
+		}
+		if (y > colorModeY) {
 			y = colorModeY;
-		if (z > colorModeZ)
+		}
+		if (z > colorModeZ) {
 			z = colorModeZ;
-		if (a > colorModeA)
+		}
+		if (a > colorModeA) {
 			a = colorModeA;
+		}
 
-		if (x < 0)
+		if (x < 0) {
 			x = 0;
-		if (y < 0)
+		}
+		if (y < 0) {
 			y = 0;
-		if (z < 0)
+		}
+		if (z < 0) {
 			z = 0;
-		if (a < 0)
+		}
+		if (a < 0) {
 			a = 0;
+		}
 
 		switch (colorMode) {
 		case RGB:
@@ -4555,10 +4591,10 @@ public class PGraphics extends PImage implements PConstants {
 		calcRi = (argb >> 16) & 0xff;
 		calcGi = (argb >> 8) & 0xff;
 		calcBi = argb & 0xff;
-		calcA = (float) calcAi / 255.0f;
-		calcR = (float) calcRi / 255.0f;
-		calcG = (float) calcGi / 255.0f;
-		calcB = (float) calcBi / 255.0f;
+		calcA = calcAi / 255.0f;
+		calcR = calcRi / 255.0f;
+		calcG = calcGi / 255.0f;
+		calcB = calcBi / 255.0f;
 		calcAlpha = (calcAi != 255);
 	}
 
@@ -4579,10 +4615,11 @@ public class PGraphics extends PImage implements PConstants {
 			if (colorModeDefault) {
 				// bounds checking to make sure the numbers aren't to high or
 				// low
-				if (gray > 255)
+				if (gray > 255) {
 					gray = 255;
-				else if (gray < 0)
+				} else if (gray < 0) {
 					gray = 0;
+				}
 				return 0xff000000 | (gray << 16) | (gray << 8) | gray;
 			} else {
 				colorCalc(gray);
@@ -4605,14 +4642,16 @@ public class PGraphics extends PImage implements PConstants {
 	public final int color(int gray, int alpha) { // ignore
 		if (colorModeDefault) {
 			// bounds checking to make sure the numbers aren't to high or low
-			if (gray > 255)
+			if (gray > 255) {
 				gray = 255;
-			else if (gray < 0)
+			} else if (gray < 0) {
 				gray = 0;
-			if (alpha > 255)
+			}
+			if (alpha > 255) {
 				alpha = 255;
-			else if (alpha < 0)
+			} else if (alpha < 0) {
 				alpha = 0;
+			}
 
 			return ((alpha & 0xff) << 24) | (gray << 16) | (gray << 8) | gray;
 		}
@@ -4641,18 +4680,21 @@ public class PGraphics extends PImage implements PConstants {
 	public final int color(int x, int y, int z) { // ignore
 		if (colorModeDefault) {
 			// bounds checking to make sure the numbers aren't to high or low
-			if (x > 255)
+			if (x > 255) {
 				x = 255;
-			else if (x < 0)
+			} else if (x < 0) {
 				x = 0;
-			if (y > 255)
+			}
+			if (y > 255) {
 				y = 255;
-			else if (y < 0)
+			} else if (y < 0) {
 				y = 0;
-			if (z > 255)
+			}
+			if (z > 255) {
 				z = 255;
-			else if (z < 0)
+			} else if (z < 0) {
 				z = 0;
+			}
 
 			return 0xff000000 | (x << 16) | (y << 8) | z;
 		}
@@ -4668,22 +4710,26 @@ public class PGraphics extends PImage implements PConstants {
 	public final int color(int x, int y, int z, int a) { // ignore
 		if (colorModeDefault) {
 			// bounds checking to make sure the numbers aren't to high or low
-			if (a > 255)
+			if (a > 255) {
 				a = 255;
-			else if (a < 0)
+			} else if (a < 0) {
 				a = 0;
-			if (x > 255)
+			}
+			if (x > 255) {
 				x = 255;
-			else if (x < 0)
+			} else if (x < 0) {
 				x = 0;
-			if (y > 255)
+			}
+			if (y > 255) {
 				y = 255;
-			else if (y < 0)
+			} else if (y < 0) {
 				y = 0;
-			if (z > 255)
+			}
+			if (z > 255) {
 				z = 255;
-			else if (z < 0)
+			} else if (z < 0) {
 				z = 0;
+			}
 
 			return (a << 24) | (x << 16) | (y << 8) | z;
 		}
@@ -4704,29 +4750,33 @@ public class PGraphics extends PImage implements PConstants {
 
 	public final float alpha(int what) {
 		float c = (what >> 24) & 0xff;
-		if (colorModeA == 255)
+		if (colorModeA == 255) {
 			return c;
+		}
 		return (c / 255.0f) * colorModeA;
 	}
 
 	public final float red(int what) {
 		float c = (what >> 16) & 0xff;
-		if (colorModeDefault)
+		if (colorModeDefault) {
 			return c;
+		}
 		return (c / 255.0f) * colorModeX;
 	}
 
 	public final float green(int what) {
 		float c = (what >> 8) & 0xff;
-		if (colorModeDefault)
+		if (colorModeDefault) {
 			return c;
+		}
 		return (c / 255.0f) * colorModeY;
 	}
 
 	public final float blue(int what) {
 		float c = (what) & 0xff;
-		if (colorModeDefault)
+		if (colorModeDefault) {
 			return c;
+		}
 		return (c / 255.0f) * colorModeZ;
 	}
 

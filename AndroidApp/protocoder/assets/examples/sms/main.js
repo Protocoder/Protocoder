@@ -10,5 +10,6 @@ device.onSmsReceived(function(number, msg) {
    console.log(number + " " + msg); 
 });
 
-var phoneNumber = "12345"
-device.smsSend(phoneNumber, "hello");
+//uncomment this lines to send sms  
+//var phoneNumber = "12345"
+//device.smsSend(phoneNumber, "hello");

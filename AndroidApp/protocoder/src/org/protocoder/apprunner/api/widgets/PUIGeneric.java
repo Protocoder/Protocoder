@@ -78,7 +78,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -149,17 +148,10 @@ public class PUIGeneric extends PInterface {
 			// [scrollview] if (isScrollLayout)
 			// [uiAbsoluteLayout] if (!isScrollLayout)
 
-			// set the parent
-			RelativeLayout parentLayout = new RelativeLayout(a.get());
-			parentLayout.setLayoutParams(layoutParams);
-			parentLayout.setGravity(Gravity.BOTTOM);
-			parentLayout.setBackgroundColor(a.get().getResources().getColor(R.color.transparent));
-
 			// set the holder
 			holderLayout = new RelativeLayout(a.get());
 			holderLayout.setLayoutParams(layoutParams);
 			holderLayout.setBackgroundColor(a.get().getResources().getColor(R.color.transparent));
-			parentLayout.addView(holderLayout);
 
 			// We need to let the view scroll, so we're creating a scroll
 			// view
@@ -193,7 +185,7 @@ public class PUIGeneric extends PInterface {
 
 			// set the layout
 			a.get().initLayout();
-			a.get().addScriptedLayout(parentLayout);
+			a.get().addScriptedLayout(holderLayout);
 			holderLayout.addView(sv);
 
 			isMainLayoutSetup = true;

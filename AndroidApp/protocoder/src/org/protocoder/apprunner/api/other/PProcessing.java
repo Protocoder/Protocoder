@@ -39,7 +39,7 @@ public class PProcessing extends PApplet {
 			// tell activity Processing is ready
 		} else {
 			// jui.callback(drawfn);
-			line(12, 12, 125, 125);
+			// /line(12, 12, 125, 125);
 			if (pfnDraw != null) {
 				pfnDraw.draw(this);
 			}

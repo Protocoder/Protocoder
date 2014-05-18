@@ -17,7 +17,7 @@ sensors.startAccelerometer(function(x, y, z) {
    y1 = y;
 });
 
-util.loop(35, function() { 
+util.loop(function() { 
     paint.setColor(new Color().argb(15, 255, 0, 0));
     canvas.getCanvas().drawRect(0, 0, 500, 500, paint); 
     paint.setColor(Color.BLUE);
@@ -27,4 +27,4 @@ util.loop(35, function() {
 
     canvas.getCanvas().drawCircle(mx, my, 50, paint); 
     canvas.invalidate();
-});
+}, 35);

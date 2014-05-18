@@ -32,6 +32,7 @@ package org.protocoder.apprunner.api;
 import java.io.File;
 
 import org.protocoder.AppSettings;
+import org.protocoder.R;
 import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apidoc.annotation.APIParam;
 import org.protocoder.apprunner.AppRunnerActivity;
@@ -47,6 +48,7 @@ import org.protocoder.apprunner.api.widgets.PCheckBox;
 import org.protocoder.apprunner.api.widgets.PEditText;
 import org.protocoder.apprunner.api.widgets.PImageButton;
 import org.protocoder.apprunner.api.widgets.PImageView;
+import org.protocoder.apprunner.api.widgets.PList;
 import org.protocoder.apprunner.api.widgets.PMap;
 import org.protocoder.apprunner.api.widgets.PPlotView;
 import org.protocoder.apprunner.api.widgets.PRadioButton;
@@ -841,24 +843,10 @@ public class PUI extends PUIGeneric {
 		return sv;
 	}
 
-	// private PApplet papplet;
+	public PList addList(int x, int y, int w, int h) {
+		PList plist = new PList(a.get());
+		return plist;
 
-	public void addProcessing2(PApplet p, int x, int y, int w, int h) {
-		initializeLayout();
-		// Create the main layout. This is where all the items actually go
-		FrameLayout fl = new FrameLayout(a.get());
-		fl.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-		fl.setId(122);
-
-		// Add the view
-		addViewAbsolute(fl, x, y, w, h);
-
-		FragmentTransaction ft = a.get().getSupportFragmentManager().beginTransaction();
-		ft.add(fl.getId(), p, String.valueOf(fl.getId()));
-		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-		ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-		ft.addToBackStack(null);
-		ft.commit();
 	}
 
 	public PApplet addProcessing(int x, int y, int w, int h) {
@@ -869,6 +857,7 @@ public class PUI extends PUIGeneric {
 		FrameLayout fl = new FrameLayout(a.get());
 		fl.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 		fl.setId(122);
+		fl.setBackgroundResource(R.color.transparent);
 
 		// Add the view
 		addViewAbsolute(fl, x, y, w, h);
@@ -877,8 +866,9 @@ public class PUI extends PUIGeneric {
 
 		FragmentTransaction ft = a.get().getSupportFragmentManager().beginTransaction();
 		ft.add(fl.getId(), p, String.valueOf(fl.getId()));
-		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-		ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+		// ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+		// ft.setCustomAnimations(android.R.anim.fade_in,
+		// android.R.anim.fade_out);
 		ft.addToBackStack(null);
 		ft.commit();
 
@@ -1159,6 +1149,16 @@ public class PUI extends PUIGeneric {
 
 		} else {
 			imm.hideSoftInputFromWindow(a.get().getCurrentFocus().getWindowToken(), 0);
+		}
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "boolean" })
+	public void showCodeExecuted(boolean b) {
+		if (b) {
+			a.get().isCodeExecutedShown = true;
+		} else {
 		}
 	}
 
