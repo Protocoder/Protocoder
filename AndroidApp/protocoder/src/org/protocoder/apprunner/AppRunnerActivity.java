@@ -63,10 +63,16 @@ import org.protocoder.sensors.NFCUtil;
 import org.protocoder.sensors.WhatIsRunning;
 import org.protocoder.utils.MLog;
 import org.protocoder.utils.StrUtils;
+import org.protocoder.utils.TextUtils;
 import org.protocoder.views.PadView.TouchEvent;
 
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.LayoutTransition;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.PendingIntent;
@@ -87,6 +93,7 @@ import android.nfc.tech.Ndef;
 import android.nfc.tech.NfcF;
 import android.os.Bundle;
 import android.os.FileObserver;
+import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.Fragment;
 import android.view.ContextMenu;
@@ -100,6 +107,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import de.greenrobot.event.EventBus;
@@ -132,7 +140,12 @@ public class AppRunnerActivity extends BaseActivity {
 	public ActionBar actionBar;
 	private boolean actionBarSet;
 	private RelativeLayout mainLayout;
+	private RelativeLayout parentScriptedLayout;
 	private RelativeLayout consoleRLayout;
+	private LinearLayout liveRLayout;
+	float liveTextY = 0;
+
+	private TextView liveText;
 
 	// store currentProject reference
 	private Project currentProject;
@@ -265,10 +278,68 @@ public class AppRunnerActivity extends BaseActivity {
 		}
 	}
 
-	public void onEventMainThread(Events.ExecuteCodeEvent evt) {
-		MLog.d(TAG, "event -> " + evt.getCode());
+	boolean hidingLiveText = true;
+	Handler h = new Handler();
+	Runnable r = new Runnable() {
 
-		interp.eval(evt.getCode());
+		@Override
+		public void run() {
+			liveRLayout.animate().alpha(0.0f).setListener(new AnimatorListener() {
+
+				@Override
+				public void onAnimationStart(Animator animation) {
+				}
+
+				@Override
+				public void onAnimationRepeat(Animator animation) {
+				}
+
+				@Override
+				public void onAnimationEnd(Animator animation) {
+					// liveRLayout.setVisibility(View.GONE);
+					MLog.d("qq", "anim stop");
+				}
+
+				@Override
+				public void onAnimationCancel(Animator animation) {
+				}
+			});
+		}
+	};
+
+	// execute lines
+	public void onEventMainThread(Events.ExecuteCodeEvent evt) {
+		String code = evt.getCode(); // .trim();
+		MLog.d(TAG, "event -> " + code);
+
+		// cancel handler
+		if (hidingLiveText) {
+			liveRLayout.setVisibility(View.VISIBLE);
+			liveRLayout.animate().alpha(1.0f);
+			h.removeCallbacks(r);
+			h.postDelayed(r, 3000);
+		}
+
+		if (liveText != null) {
+			liveRLayout.removeView(liveText);
+		}
+
+		liveText = new TextView(this);
+		RelativeLayout.LayoutParams liveTextLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
+				LayoutParams.WRAP_CONTENT);
+		liveTextLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+		liveTextLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+		liveText.setLayoutParams(liveTextLayoutParams);
+		liveText.setBackgroundColor(0x00000000);
+		liveText.setPadding(5, 5, 2, 2);
+		liveText.setTextColor(0xFFFFFFFF);
+		liveText.setTextSize(12);
+		liveText.setShadowLayer(2, 1, 1, 0x55000000);
+		TextUtils.changeFont(this, liveText, "Inconsolata.otf");
+
+		liveText.setText(code);
+		liveRLayout.addView(liveText);
+		interp.eval(code);
 
 	}
 
@@ -479,7 +550,7 @@ public class AppRunnerActivity extends BaseActivity {
 	}
 
 	public void addScriptedLayout(RelativeLayout scriptedUILayout) {
-		mainLayout.addView(scriptedUILayout);
+		parentScriptedLayout.addView(scriptedUILayout);
 	}
 
 	public void initLayout() {
@@ -493,6 +564,13 @@ public class AppRunnerActivity extends BaseActivity {
 			mainLayout.setGravity(Gravity.BOTTOM);
 			// mainLayout.setBackgroundColor(getResources().getColor(R.color.transparent));
 			mainLayout.setBackgroundColor(getResources().getColor(R.color.light_grey));
+
+			// set the parent
+			parentScriptedLayout = new RelativeLayout(this);
+			parentScriptedLayout.setLayoutParams(layoutParams);
+			parentScriptedLayout.setGravity(Gravity.BOTTOM);
+			parentScriptedLayout.setBackgroundColor(this.getResources().getColor(R.color.transparent));
+			mainLayout.addView(parentScriptedLayout);
 
 			// editor layout
 			FrameLayout editorLayout = new FrameLayout(this);
@@ -516,13 +594,53 @@ public class AppRunnerActivity extends BaseActivity {
 
 			// Create the text view to add to the control
 			consoleText = new TextView(this);
-			LayoutParams textParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+			LayoutParams consoleTextParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 			consoleText.setBackgroundColor(getResources().getColor(R.color.transparent));
 			consoleText.setTextColor(getResources().getColor(R.color.white));
-			consoleText.setLayoutParams(textParams);
+			consoleText.setLayoutParams(consoleTextParams);
 			int textPadding = getResources().getDimensionPixelSize(R.dimen.apprunner_console_text_padding);
 			consoleText.setPadding(textPadding, textPadding, textPadding, textPadding);
 			consoleRLayout.addView(consoleText);
+
+			// live execution layout
+			liveRLayout = new LinearLayout(this);
+			RelativeLayout.LayoutParams liveLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
+					LayoutParams.MATCH_PARENT);
+			liveLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+			liveLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+			liveRLayout.setLayoutParams(liveLayoutParams);
+			liveRLayout.setGravity(Gravity.BOTTOM);
+			liveRLayout.setBackgroundColor(0x55000000);
+			liveRLayout.setPadding(10, 10, 10, 10);
+			liveRLayout.setVisibility(View.GONE);
+			// liveRLayout.setLayoutTransition(transition)
+
+			// Animation spinin = AnimationUtils.loadAnimation(this,
+			// R.anim.slide_in_left);
+			// liveRLayout.setLayoutAnimation(new
+			// LayoutAnimationController(spinin));
+
+			LayoutTransition l = new LayoutTransition();
+			l.enableTransitionType(LayoutTransition.CHANGING);
+
+			Animator appearingAnimation = ObjectAnimator.ofFloat(null, "translationY", 20, 0);
+			appearingAnimation.addListener(new AnimatorListenerAdapter() {
+				@Override
+				public void onAnimationEnd(Animator anim) {
+					View view = (View) ((ObjectAnimator) anim).getTarget();
+					view.setTranslationX(0f);
+				}
+			});
+
+			AnimatorSet as = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.live_code);
+			// as.se
+			l.setAnimator(LayoutTransition.APPEARING, as);
+			l.setDuration(LayoutTransition.APPEARING, 300);
+			l.setStartDelay(LayoutTransition.APPEARING, 0);
+
+			liveRLayout.setLayoutTransition(l);
+
+			mainLayout.addView(liveRLayout);
 
 			setContentView(mainLayout);
 			isMainLayoutSetup = true;
@@ -656,6 +774,7 @@ public class AppRunnerActivity extends BaseActivity {
 	private String[][] mTechLists;
 	private boolean nfcSupported;
 	private boolean nfcInit = false;
+	public boolean isCodeExecutedShown;
 
 	public void initializeNFC() {
 
@@ -730,7 +849,6 @@ public class AppRunnerActivity extends BaseActivity {
 				if (ndefTag == null) {
 					return;
 				}
-				;
 
 				int size = ndefTag.getMaxSize(); // tag size
 				boolean writable = ndefTag.isWritable(); // is tag writable?
@@ -847,6 +965,10 @@ public class AppRunnerActivity extends BaseActivity {
 				textTitleView.setTextColor(colorText);
 			}
 		}
+
+	}
+
+	public void showCodeExecuted() {
 
 	}
 

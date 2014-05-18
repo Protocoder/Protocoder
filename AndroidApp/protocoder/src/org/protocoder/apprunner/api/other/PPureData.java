@@ -77,4 +77,28 @@ public class PPureData {
 		PdBase.sendMidiByte(port, value);
 	}
 
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "port", "value" })
+	public float[] getArray(String source, int n) {
+		// public void getArray(float[] destination, int destOffset, String
+		// source, int srcOffset, int n) {
+		// PdBase.readArray(destination, destOffset, source, srcOffset, n);
+
+		float[] destination = new float[n];
+		PdBase.readArray(destination, 0, source, 0, n);
+
+		return destination;
+	}
+
+	/*
+	 * @ProtocoderScript
+	 * 
+	 * @APIMethod(description = "", example = "")
+	 * 
+	 * @APIParam(params = { "port", "value" }) public void sendArray(String
+	 * destination, int destOffset, float[] source, int srcOffset, int n) {
+	 * PdBase.writeArray(destination, destOffset, source, srcOffset, n); }
+	 */
+
 }

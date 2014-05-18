@@ -5,6 +5,12 @@
 
 var Editor = function() { 
 	this.init();
+
+	this.liveExecRec = {
+		liveExecHistory : [],
+		firstTime : null 
+	};
+
 }
 
 
@@ -27,7 +33,7 @@ Editor.prototype.init = function() {
 	//var net = ace.require("ace/lib/net");
 	//var lang = ace.require("ace/lib/lang");
 	//var useragent = ace.require("ace/lib/useragent");
-	var Range = ace.require('ace/range').Range;
+	this.Range = ace.require('ace/range').Range;
 	var event = ace.require("ace/lib/event");
 	var theme = ace.require("ace/theme/textmate");
 	ace.require("ace/ext/language_tools");
@@ -158,9 +164,10 @@ Editor.prototype.init = function() {
     }
 	});
 
+
 	//save
 	editor.commands.addCommand({
-	    name: '',
+	    name: 'liveExecution',
 	    bindKey: {
 	        win: 'Ctrl-Shift-X',
 	        mac: 'Command-Shift-X',
@@ -170,38 +177,122 @@ Editor.prototype.init = function() {
 
 			var range = editor.getSelection().getRange(); 
 	    	var selectedText = session.getTextRange(range); 
+	    	var liveExec = {};
+	    	var now = new Date().getTime();
+	    	liveExec.time = now;
 
+	    	if (that.liveExecRec.firstTime == null) {
+	    		console.log("qq");
+	    		that.liveExecRec.firstTime = now;
+	    	}
+
+ 	    	liveExec.selectedText = selectedText; 
+	    	
 	    	//get the code selected or the whole row 
 	    	if (selectedText.length > 0) { 
-	    		protocoder.communication.executeCode(selectedText);
-	    		protocoder.editor.highlight(range);
-
+	    		liveExec.range = range;
 	    	} else { 
 	    		var cursorPosition = editor.getCursorPosition();
-	    		var numLine = cursorPosition['row'];
-
-	    		currentLine = session.getDocument().$lines[numLine]; 
-	    		var range_line = new Range(numLine, 0, numLine, currentLine.length);
-			
-
-	    		if (currentLine.length > 0) { 
-	    			console.log("the text is " + currentLine);
-	    			protocoder.communication.executeCode(currentLine);
-	    			protocoder.editor.highlight(range_line);
-	    		}
-
+    			var numLine = cursorPosition['row'];
+    	
+	    		liveExec.numLine = numLine;
 	    	}
+	    	that.runLiveExec(liveExec);
+	    	that.liveExecRec.liveExecHistory.push(liveExec);
+
 	    }
 	});
 
+	//play live execution history 
+	editor.commands.addCommand({
+	    name: 'playLiveExec',
+	    bindKey: {
+	        win: 'Ctrl-Shift-1',
+	        mac: 'Command-Shift-1',
+	        sender: 'mmeditor'
+	    },
 
+	    exec: function() { that.playLiveExec(false) },
+	});
 
+	//play live execution history 
+	editor.commands.addCommand({
+	    name: 'playLiveExec',
+	    bindKey: {
+	        win: 'Ctrl-Shift-2',
+	        mac: 'Command-Shift-2',
+	        sender: 'mmeditor'
+	    },
+
+	    exec: function() { that.playLiveExec(true) },
+	});
+
+	
+
+	//play live execution history 
+	editor.commands.addCommand({
+	    name: 'playLiveExec',
+	    bindKey: {
+	        win: 'Ctrl-Shift-0',
+	        mac: 'Command-Shift-0',
+	        sender: 'mmeditor'
+	    },
+
+	    exec: that.clearLiveExecRec,
+	});
+
+	
 }
 
 
+Editor.prototype.runLiveExec = function(liveExec) {
+	console.log(liveExec);
+
+   	//get the code selected or the whole row 
+	if (liveExec.selectedText.length > 0) { 
+		protocoder.communication.executeCode(liveExec.selectedText);
+		protocoder.editor.highlight(liveExec.range);
+	} else { 
+		var currentLine = this.session.getDocument().$lines[liveExec.numLine]; 
+		console.log(liveExec.numLine + " " + currentLine + " " + currentLine.length);
+		var range_line = new this.Range(liveExec.numLine, 0, liveExec.numLine, currentLine.length);
+
+
+		if (currentLine.length > 0) { 
+			protocoder.communication.executeCode(currentLine);
+			protocoder.editor.highlight(range_line);
+		}
+
+	}
+}
+
+Editor.prototype.clearLiveExecRec = function() { 
+	this.liveExecRec.firstTime = null;
+	this.liveExecRec.liveExecHistory = [];
+}
+
+Editor.prototype.playLiveExec = function(b) { 
+	//console.log(this);
+	var history = protocoder.editor.liveExecRec.liveExecHistory;
+	var firstTime = protocoder.editor.liveExecRec.firstTime;
+
+	for (var i = 0; i < history.length; i++) {
+	
+		(function(i) { 
+			var delay = Math.abs(firstTime - history[i].time);
+			console.log(delay);
+			setTimeout(function() {
+				protocoder.editor.runLiveExec(history[i]);
+			}, delay);
+		})(i);
+
+	};
+
+}
+
 Editor.prototype.highlight = function(range) { 
 	var that = this;
-	var marker = that.session.addMarker( range, "run_code", "fullLine" );
+	var marker = this.session.addMarker( range, "run_code", "fullLine" );
 
 	setTimeout(function() { 
 		that.session.removeMarker(marker);

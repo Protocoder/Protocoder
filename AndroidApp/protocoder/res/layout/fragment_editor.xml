@@ -6,24 +6,29 @@
     android:background="@color/blacktransparent"
     android:orientation="vertical" >
 
-    <EditText
-        android:id="@+id/editText1"
-        style="@style/editor"
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:background="#BB000000"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="top|left"
-        android:hint="type here your code"
-        android:imeOptions="actionSend|flagNoExtractUi"
-        android:inputType="textMultiLine|textFilter|textNoSuggestions"
-        android:selectAllOnFocus="false"
-        android:singleLine="false"
-        android:textColor="#FFFFFFFF"
-        android:textColorHighlight="#220000FF"
-        android:textSize="14sp"
-        android:textStyle="bold" >
+        android:layout_height="match_parent" >
 
-    </EditText>
+        <EditText
+            android:id="@+id/editText1"
+            style="@style/editor"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="top|left"
+            android:hint="type here your code"
+            android:imeOptions="actionSend|flagNoExtractUi"
+            android:inputType="textMultiLine|textFilter|textNoSuggestions"
+            android:selectAllOnFocus="false"
+            android:singleLine="false"
+            android:textColor="#FFFFFFFF"
+            android:textColorHighlight="#220000FF"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+    </ScrollView>
 
     <Button
         android:id="@+id/decreaseSize"
@@ -63,6 +68,5 @@
         android:layout_alignParentTop="true" >
 
     </FrameLayout>
-
 
 </RelativeLayout>

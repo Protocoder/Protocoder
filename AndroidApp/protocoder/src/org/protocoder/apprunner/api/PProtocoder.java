@@ -37,6 +37,7 @@ import org.protocoder.apidoc.annotation.APIVersion;
 import org.protocoder.apprunner.AppRunnerActivity;
 import org.protocoder.apprunner.PInterface;
 import org.protocoder.apprunner.ProtocoderScript;
+import org.protocoder.apprunner.api.other.PProtocoderFeedback;
 import org.protocoder.events.ProjectManager;
 
 import android.app.Activity;
@@ -69,6 +70,13 @@ public class PProtocoder extends PInterface {
 	@APIParam(params = { "id" })
 	public void setId(String id) {
 		PrefsFragment.setId(a.get(), id);
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "id" })
+	public PProtocoderFeedback startFeedback() {
+		return new PProtocoderFeedback(a.get());
 	}
 
 	@ProtocoderScript

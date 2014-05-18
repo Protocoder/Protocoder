@@ -79,6 +79,7 @@ import android.content.res.AssetManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.PixelFormat;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.opengl.GLSurfaceView;
@@ -95,6 +96,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -462,8 +464,9 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 		super.onCreateView(inflater, container, savedInstanceState);
 		// println("PApplet.onCreate()");
 
-		if (DEBUG)
+		if (DEBUG) {
 			println("onCreate() happening here: " + Thread.currentThread().getName());
+		}
 
 		// commented to use fragments
 		/*
@@ -485,8 +488,9 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 		displayHeight = dm.heightPixels;
 		// println("density is " + dm.density);
 		// println("densityDpi is " + dm.densityDpi);
-		if (DEBUG)
+		if (DEBUG) {
 			println("display metrics: " + dm);
+		}
 
 		// println("screen size is " + screenWidth + "x" + screenHeight);
 
@@ -547,8 +551,8 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 			// you
 			// can keep your "talentless hack" comments to yourself. Ahem.)
 			RelativeLayout overallLayout = new RelativeLayout(this.getActivity());
-			RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
-					RelativeLayout.LayoutParams.WRAP_CONTENT);
+			RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
+					LayoutParams.WRAP_CONTENT);
 			lp.addRule(RelativeLayout.CENTER_IN_PARENT);
 
 			LinearLayout layout = new LinearLayout(this.getActivity());
@@ -632,24 +636,28 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 		return surfaceView;
 	}
 
+	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		System.out.println("configuration changed: " + newConfig);
 		super.onConfigurationChanged(newConfig);
 	}
 
+	@Override
 	public void onResume() {
 		super.onResume();
 
 		// TODO need to bring back app state here!
 		// surfaceView.onResume();
-		if (DEBUG)
+		if (DEBUG) {
 			System.out.println("PApplet.onResume() called");
+		}
 		paused = false;
 		// start(); // kick the thread back on
 		resume();
 		// surfaceView.onResume();
 	}
 
+	@Override
 	public void onPause() {
 		super.onPause();
 
@@ -677,6 +685,7 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 	public void resume() {
 	}
 
+	@Override
 	public void onDestroy() {
 		// stop();
 		dispose();
@@ -749,15 +758,18 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 		// }
 
 		// part of SurfaceHolder.Callback
+		@Override
 		public void surfaceCreated(SurfaceHolder holder) {
 		}
 
 		// part of SurfaceHolder.Callback
+		@Override
 		public void surfaceDestroyed(SurfaceHolder holder) {
 			// g2.dispose();
 		}
 
 		// part of SurfaceHolder.Callback
+		@Override
 		public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
 			if (DEBUG) {
 				System.out.println("SketchSurfaceView2D.surfaceChanged() " + w + " " + h);
@@ -846,8 +858,12 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 			// Tells the default EGLContextFactory and EGLConfigChooser to
 			// create an GLES2 context.
 			setEGLContextClientVersion(2);
+			setZOrderOnTop(true);
+			setEGLConfigChooser(8, 8, 8, 8, 16, 0);
+			getHolder().setFormat(PixelFormat.RGBA_8888);
 
 			// The renderer can be set only once.
+
 			setRenderer(g3.pgl.getRenderer());
 			setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 
@@ -864,6 +880,7 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 		}
 
 		// part of SurfaceHolder.Callback
+		@Override
 		public void surfaceCreated(SurfaceHolder holder) {
 			super.surfaceCreated(holder);
 			if (DEBUG) {
@@ -872,6 +889,7 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 		}
 
 		// part of SurfaceHolder.Callback
+		@Override
 		public void surfaceDestroyed(SurfaceHolder holder) {
 			super.surfaceDestroyed(holder);
 			if (DEBUG) {
@@ -1080,7 +1098,7 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 	 * moving between pages), though.
 	 */
 	public void destroy() {
-		((PApplet) this).exit();
+		this.exit();
 	}
 
 	/**
@@ -1660,6 +1678,7 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 	/**
 	 * Main method for the primary animation thread.
 	 */
+	@Override
 	public void run() { // not good to make this synchronized, locks things up
 		long beforeTime = System.nanoTime();
 		long overSleepTime = 0L;
@@ -1688,10 +1707,11 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 			// }
 
 			// render a single frame
-			if (g != null)
+			if (g != null) {
 				g.requestDraw();
-			// g.requestDraw();
-			// surfaceView.requestDraw();
+				// g.requestDraw();
+				// surfaceView.requestDraw();
+			}
 
 			// removed in android
 			// if (frameCount == 1) {
@@ -1727,7 +1747,7 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 				// System.out.println("  oversleep is " + overSleepTime);
 
 			} else { // sleepTime <= 0; the frame took longer than the period
-			// excess -= sleepTime; // store excess time value
+				// excess -= sleepTime; // store excess time value
 				overSleepTime = 0L;
 
 				if (noDelays > NO_DELAYS_PER_YIELD) {
@@ -2653,8 +2673,9 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 	 * Same as above but with an exception. Also needs work.
 	 */
 	public void die(String what, Exception e) {
-		if (e != null)
+		if (e != null) {
 			e.printStackTrace();
+		}
 		die(what);
 	}
 
@@ -2707,13 +2728,15 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 		finished = true; // let the sketch know it is shut down time
 
 		// don't run stop and disposers twice
-		if (thread == null)
+		if (thread == null) {
 			return;
+		}
 		thread = null;
 
 		// call to shut down renderer, in case it needs it (pdf does)
-		if (g != null)
+		if (g != null) {
 			g.dispose();
+		}
 
 		disposeMethods.handle();
 	}
@@ -2756,6 +2779,7 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 	 */
 	public void thread(final String name) {
 		Thread later = new Thread() {
+			@Override
 			public void run() {
 				method(name);
 			}
@@ -3143,8 +3167,9 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 		}
 		int max = list[0];
 		for (int i = 1; i < list.length; i++) {
-			if (list[i] > max)
+			if (list[i] > max) {
 				max = list[i];
+			}
 		}
 		return max;
 	}
@@ -3163,8 +3188,9 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 		}
 		float max = list[0];
 		for (int i = 1; i < list.length; i++) {
-			if (list[i] > max)
+			if (list[i] > max) {
 				max = list[i];
+			}
 		}
 		return max;
 	}
@@ -3199,8 +3225,9 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 		}
 		int min = list[0];
 		for (int i = 1; i < list.length; i++) {
-			if (list[i] < min)
+			if (list[i] < min) {
 				min = list[i];
+			}
 		}
 		return min;
 	}
@@ -3219,8 +3246,9 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 		}
 		float min = list[0];
 		for (int i = 1; i < list.length; i++) {
-			if (list[i] < min)
+			if (list[i] < min) {
 				min = list[i];
+			}
 		}
 		return min;
 	}
@@ -3278,7 +3306,7 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 	}
 
 	static public final int round(float what) {
-		return (int) Math.round(what);
+		return Math.round(what);
 	}
 
 	static public final float mag(float a, float b) {
@@ -3336,12 +3364,14 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 		// so a check was added to avoid the inclusion of 'howbig'
 
 		// avoid an infinite loop
-		if (howbig == 0)
+		if (howbig == 0) {
 			return 0;
+		}
 
 		// internal random number object
-		if (internalRandom == null)
+		if (internalRandom == null) {
 			internalRandom = new Random();
+		}
 
 		float value = 0;
 		do {
@@ -3362,16 +3392,18 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 	 * useful.. better idea?)
 	 */
 	public final float random(float howsmall, float howbig) {
-		if (howsmall >= howbig)
+		if (howsmall >= howbig) {
 			return howsmall;
+		}
 		float diff = howbig - howsmall;
 		return random(diff) + howsmall;
 	}
 
 	public final void randomSeed(long what) {
 		// internal random number object
-		if (internalRandom == null)
+		if (internalRandom == null) {
 			internalRandom = new Random();
+		}
 		internalRandom.setSeed(what);
 	}
 
@@ -3442,17 +3474,20 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 			perlin_PI >>= 1;
 		}
 
-		if (x < 0)
+		if (x < 0) {
 			x = -x;
-		if (y < 0)
+		}
+		if (y < 0) {
 			y = -y;
-		if (z < 0)
+		}
+		if (z < 0) {
 			z = -z;
+		}
 
 		int xi = (int) x, yi = (int) y, zi = (int) z;
-		float xf = (float) (x - xi);
-		float yf = (float) (y - yi);
-		float zf = (float) (z - zi);
+		float xf = x - xi;
+		float yf = y - yi;
+		float zf = z - zi;
 		float rxf, ryf;
 
 		float r = 0;
@@ -3520,20 +3555,24 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 	// smoother results as higher octaves are surpressed
 
 	public void noiseDetail(int lod) {
-		if (lod > 0)
+		if (lod > 0) {
 			perlin_octaves = lod;
+		}
 	}
 
 	public void noiseDetail(int lod, float falloff) {
-		if (lod > 0)
+		if (lod > 0) {
 			perlin_octaves = lod;
-		if (falloff > 0)
+		}
+		if (falloff > 0) {
 			perlin_amp_falloff = falloff;
+		}
 	}
 
 	public void noiseSeed(long what) {
-		if (perlinRandom == null)
+		if (perlinRandom == null) {
 			perlinRandom = new Random();
+		}
 		perlinRandom.setSeed(what);
 		// force table reset after changing the random number seed [0122]
 		perlin = null;
@@ -3653,6 +3692,7 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 			this.vessel = vessel;
 		}
 
+		@Override
 		public void run() {
 			while (requestImageCount == requestImageMax) {
 				try {
@@ -4070,8 +4110,9 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 		// http://developer.android.com/guide/topics/resources/resources-i18n.html
 		InputStream stream = null;
 
-		if (filename == null)
+		if (filename == null) {
 			return null;
+		}
 
 		if (filename.length() == 0) {
 			// an error will be called by the parent function
@@ -4092,7 +4133,7 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 				HttpGet httpRequest = null;
 				httpRequest = new HttpGet(URI.create(filename));
 				HttpClient httpclient = new DefaultHttpClient();
-				HttpResponse response = (HttpResponse) httpclient.execute(httpRequest);
+				HttpResponse response = httpclient.execute(httpRequest);
 				HttpEntity entity = response.getEntity();
 				return entity.getContent();
 				// can't use BufferedHttpEntity because it may try to allocate a
@@ -4244,8 +4285,9 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 
 	public byte[] loadBytes(String filename) {
 		InputStream is = createInput(filename);
-		if (is != null)
+		if (is != null) {
 			return loadBytes(is);
+		}
 
 		System.err.println("The file \"" + filename + "\" " + "is missing or inaccessible, make sure "
 				+ "the URL is valid or that the file has been " + "added to your sketch and is readable.");
@@ -4278,8 +4320,9 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 
 	static public String[] loadStrings(File file) {
 		InputStream is = createInput(file);
-		if (is != null)
+		if (is != null) {
 			return loadStrings(is);
+		}
 		return null;
 	}
 
@@ -4296,8 +4339,9 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 	 */
 	public String[] loadStrings(String filename) {
 		InputStream is = createInput(filename);
-		if (is != null)
+		if (is != null) {
 			return loadStrings(is);
+		}
 
 		System.err.println("The file \"" + filename + "\" " + "is missing or inaccessible, make sure "
 				+ "the URL is valid or that the file has been " + "added to your sketch and is readable.");
@@ -4525,8 +4569,8 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 		try {
 			OutputStreamWriter osw = new OutputStreamWriter(output, "UTF-8");
 			PrintWriter writer = new PrintWriter(osw);
-			for (int i = 0; i < strings.length; i++) {
-				writer.println(strings[i]);
+			for (String string : strings) {
+				writer.println(string);
 			}
 			writer.flush();
 		} catch (UnsupportedEncodingException e) {
@@ -4562,8 +4606,9 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 		// to the local disk using the sketch path, so this is safe here.
 		// for 0120, added a try/catch anyways.
 		try {
-			if (new File(where).isAbsolute())
+			if (new File(where).isAbsolute()) {
 				return where;
+			}
 		} catch (Exception e) {
 		}
 
@@ -4589,8 +4634,9 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 	 * <TT>saveXxxx("data/blah.dat")</TT>.
 	 */
 	public String savePath(String where) {
-		if (where == null)
+		if (where == null) {
 			return null;
+		}
 		// System.out.println("filename before sketchpath is " + where);
 		String filename = sketchPath(where);
 		// System.out.println("filename after sketchpath is " + filename);
@@ -4619,8 +4665,9 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 	public String dataPath(String where) {
 		// isAbsolute() could throw an access exception, but so will writing
 		// to the local disk using the sketch path, so this is safe here.
-		if (new File(where).isAbsolute())
+		if (new File(where).isAbsolute()) {
 			return where;
+		}
 
 		return sketchPath + File.separator + "data" + File.separator + where;
 	}
@@ -4647,8 +4694,9 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 			String parent = file.getParent();
 			if (parent != null) {
 				File unit = new File(parent);
-				if (!unit.exists())
+				if (!unit.exists()) {
 					unit.mkdirs();
+				}
 			}
 		} catch (SecurityException se) {
 			System.err.println("You don't have permissions to create " + file.getAbsolutePath());
@@ -5305,8 +5353,9 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 	static public String join(String str[], String separator) {
 		StringBuffer buffer = new StringBuffer();
 		for (int i = 0; i < str.length; i++) {
-			if (i != 0)
+			if (i != 0) {
 				buffer.append(separator);
+			}
 			buffer.append(str[i]);
 		}
 		return buffer.toString();
@@ -5373,15 +5422,17 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 	static public String[] split(String what, char delim) {
 		// do this so that the exception occurs inside the user's
 		// program, rather than appearing to be a bug inside split()
-		if (what == null)
+		if (what == null) {
 			return null;
-		// return split(what, String.valueOf(delim)); // huh
+			// return split(what, String.valueOf(delim)); // huh
+		}
 
 		char chars[] = what.toCharArray();
 		int splitCount = 0; // 1;
-		for (int i = 0; i < chars.length; i++) {
-			if (chars[i] == delim)
+		for (char c : chars) {
+			if (c == delim) {
 				splitCount++;
+			}
 		}
 		// make sure that there is something in the input string
 		// if (chars.length > 0) {
@@ -5506,7 +5557,7 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 		}
 		String[][] matches = new String[results.size()][count];
 		for (int i = 0; i < matches.length; i++) {
-			matches[i] = (String[]) results.get(i);
+			matches[i] = results.get(i);
 		}
 		return matches;
 	}
@@ -5863,7 +5914,7 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 	 * rules for upgrading values.
 	 */
 	static final public float parseFloat(int what) { // also handles byte
-		return (float) what;
+		return what;
 	}
 
 	static final public float parseFloat(String what) {
@@ -5949,36 +6000,41 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 
 	static final public String[] str(boolean x[]) {
 		String s[] = new String[x.length];
-		for (int i = 0; i < x.length; i++)
+		for (int i = 0; i < x.length; i++) {
 			s[i] = String.valueOf(x[i]);
+		}
 		return s;
 	}
 
 	static final public String[] str(byte x[]) {
 		String s[] = new String[x.length];
-		for (int i = 0; i < x.length; i++)
+		for (int i = 0; i < x.length; i++) {
 			s[i] = String.valueOf(x[i]);
+		}
 		return s;
 	}
 
 	static final public String[] str(char x[]) {
 		String s[] = new String[x.length];
-		for (int i = 0; i < x.length; i++)
+		for (int i = 0; i < x.length; i++) {
 			s[i] = String.valueOf(x[i]);
+		}
 		return s;
 	}
 
 	static final public String[] str(int x[]) {
 		String s[] = new String[x.length];
-		for (int i = 0; i < x.length; i++)
+		for (int i = 0; i < x.length; i++) {
 			s[i] = String.valueOf(x[i]);
+		}
 		return s;
 	}
 
 	static final public String[] str(float x[]) {
 		String s[] = new String[x.length];
-		for (int i = 0; i < x.length; i++)
+		for (int i = 0; i < x.length; i++) {
 			s[i] = String.valueOf(x[i]);
+		}
 		return s;
 	}
 
@@ -6095,8 +6151,9 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 		float_nf.setGroupingUsed(false);
 		float_nf_commas = false;
 
-		if (left != 0)
+		if (left != 0) {
 			float_nf.setMinimumIntegerDigits(left);
+		}
 		if (right != 0) {
 			float_nf.setMinimumFractionDigits(right);
 			float_nf.setMaximumFractionDigits(right);
@@ -6281,10 +6338,11 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 
 	public final int color(int gray) {
 		if (g == null) {
-			if (gray > 255)
+			if (gray > 255) {
 				gray = 255;
-			else if (gray < 0)
+			} else if (gray < 0) {
 				gray = 0;
+			}
 			return 0xff000000 | (gray << 16) | (gray << 8) | gray;
 		}
 		return g.color(gray);
@@ -6293,10 +6351,11 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 	public final int color(float fgray) {
 		if (g == null) {
 			int gray = (int) fgray;
-			if (gray > 255)
+			if (gray > 255) {
 				gray = 255;
-			else if (gray < 0)
+			} else if (gray < 0) {
 				gray = 0;
+			}
 			return 0xff000000 | (gray << 16) | (gray << 8) | gray;
 		}
 		return g.color(fgray);
@@ -6307,10 +6366,11 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 	 */
 	public final int color(int gray, int alpha) {
 		if (g == null) {
-			if (alpha > 255)
+			if (alpha > 255) {
 				alpha = 255;
-			else if (alpha < 0)
+			} else if (alpha < 0) {
 				alpha = 0;
+			}
 			if (gray > 255) {
 				// then assume this is actually a #FF8800
 				return (alpha << 24) | (gray & 0xFFFFFF);
@@ -6326,14 +6386,16 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 		if (g == null) {
 			int gray = (int) fgray;
 			int alpha = (int) falpha;
-			if (gray > 255)
+			if (gray > 255) {
 				gray = 255;
-			else if (gray < 0)
+			} else if (gray < 0) {
 				gray = 0;
-			if (alpha > 255)
+			}
+			if (alpha > 255) {
 				alpha = 255;
-			else if (alpha < 0)
+			} else if (alpha < 0) {
 				alpha = 0;
+			}
 			return 0xff000000 | (gray << 16) | (gray << 8) | gray;
 		}
 		return g.color(fgray, falpha);
@@ -6341,18 +6403,21 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 
 	public final int color(int x, int y, int z) {
 		if (g == null) {
-			if (x > 255)
+			if (x > 255) {
 				x = 255;
-			else if (x < 0)
+			} else if (x < 0) {
 				x = 0;
-			if (y > 255)
+			}
+			if (y > 255) {
 				y = 255;
-			else if (y < 0)
+			} else if (y < 0) {
 				y = 0;
-			if (z > 255)
+			}
+			if (z > 255) {
 				z = 255;
-			else if (z < 0)
+			} else if (z < 0) {
 				z = 0;
+			}
 
 			return 0xff000000 | (x << 16) | (y << 8) | z;
 		}
@@ -6361,18 +6426,21 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 
 	public final int color(float x, float y, float z) {
 		if (g == null) {
-			if (x > 255)
+			if (x > 255) {
 				x = 255;
-			else if (x < 0)
+			} else if (x < 0) {
 				x = 0;
-			if (y > 255)
+			}
+			if (y > 255) {
 				y = 255;
-			else if (y < 0)
+			} else if (y < 0) {
 				y = 0;
-			if (z > 255)
+			}
+			if (z > 255) {
 				z = 255;
-			else if (z < 0)
+			} else if (z < 0) {
 				z = 0;
+			}
 
 			return 0xff000000 | ((int) x << 16) | ((int) y << 8) | (int) z;
 		}
@@ -6381,22 +6449,26 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 
 	public final int color(int x, int y, int z, int a) {
 		if (g == null) {
-			if (a > 255)
+			if (a > 255) {
 				a = 255;
-			else if (a < 0)
+			} else if (a < 0) {
 				a = 0;
-			if (x > 255)
+			}
+			if (x > 255) {
 				x = 255;
-			else if (x < 0)
+			} else if (x < 0) {
 				x = 0;
-			if (y > 255)
+			}
+			if (y > 255) {
 				y = 255;
-			else if (y < 0)
+			} else if (y < 0) {
 				y = 0;
-			if (z > 255)
+			}
+			if (z > 255) {
 				z = 255;
-			else if (z < 0)
+			} else if (z < 0) {
 				z = 0;
+			}
 
 			return (a << 24) | (x << 16) | (y << 8) | z;
 		}
@@ -6405,22 +6477,26 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 
 	public final int color(float x, float y, float z, float a) {
 		if (g == null) {
-			if (a > 255)
+			if (a > 255) {
 				a = 255;
-			else if (a < 0)
+			} else if (a < 0) {
 				a = 0;
-			if (x > 255)
+			}
+			if (x > 255) {
 				x = 255;
-			else if (x < 0)
+			} else if (x < 0) {
 				x = 0;
-			if (y > 255)
+			}
+			if (y > 255) {
 				y = 255;
-			else if (y < 0)
+			} else if (y < 0) {
 				y = 0;
-			if (z > 255)
+			}
+			if (z > 255) {
 				z = 255;
-			else if (z < 0)
+			} else if (z < 0) {
 				z = 0;
+			}
 
 			return ((int) a << 24) | ((int) x << 16) | ((int) y << 8) | (int) z;
 		}
@@ -8759,7 +8835,7 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 	 * </P>
 	 */
 	static public int blendColor(int c1, int c2, int mode) {
-		return PGraphics.blendColor(c1, c2, mode);
+		return PImage.blendColor(c1, c2, mode);
 	}
 
 	/**
