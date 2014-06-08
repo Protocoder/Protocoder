@@ -69,11 +69,23 @@ public class PMap extends MapView {
 		// myLocationOverlay.enableMyLocation();
 		// myLocationOverlay.setDrawAccuracyEnabled(true);
 
-		PathOverlay line = new PathOverlay(Color.RED, c);
-		line.addPoint(new GeoPoint(51.2, 0.1));
-		line.addPoint(new GeoPoint(51.7, 0.3));
+	}
+
+	public PathOverlay addPath(String color) {
+		int color1 = Color.parseColor(color);
+		PathOverlay line = new PathOverlay(color1, c);
 		mapView.getOverlays().add(line);
 
+		return line;
+	}
+
+	public void addPointToPath(PathOverlay p, double lat, double lon) {
+		p.addPoint(new GeoPoint(lat, lon));
+		mapView.invalidate();
+	}
+
+	public void clearPath(PathOverlay p, double lat, double lon) {
+		p.clearPath();
 	}
 
 	public void setTileSource(String url) {
@@ -89,10 +101,10 @@ public class PMap extends MapView {
 
 	public OverlayItem addPoint(String title, String text, double lat, double lon) {
 
-		OverlayItem olItem = new OverlayItem("Here", "SampleDescription", new GeoPoint(lat, lon));
-		Drawable newMarker = c.getResources().getDrawable(R.drawable.icon);
+		OverlayItem olItem = new OverlayItem(title, text, new GeoPoint(lat, lon));
+		Drawable newMarker = c.getResources().getDrawable(R.drawable.marker);
 		olItem.setMarker(newMarker);
-		olItem.setMarkerHotspot(HotspotPlace.CENTER);
+		olItem.setMarkerHotspot(HotspotPlace.BOTTOM_CENTER);
 		markerList.add(olItem);
 		iconOverlay.addItem(olItem);
 		this.invalidate();

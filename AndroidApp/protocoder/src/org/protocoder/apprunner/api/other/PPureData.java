@@ -32,9 +32,14 @@ package org.protocoder.apprunner.api.other;
 import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apidoc.annotation.APIParam;
 import org.protocoder.apprunner.ProtocoderScript;
+import org.protocoder.sensors.WhatIsRunning;
 import org.puredata.core.PdBase;
 
 public class PPureData {
+
+	public PPureData() {
+		WhatIsRunning.getInstance().add(this);
+	}
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
@@ -91,14 +96,14 @@ public class PPureData {
 		return destination;
 	}
 
-	/*
-	 * @ProtocoderScript
-	 * 
-	 * @APIMethod(description = "", example = "")
-	 * 
-	 * @APIParam(params = { "port", "value" }) public void sendArray(String
-	 * destination, int destOffset, float[] source, int srcOffset, int n) {
-	 * PdBase.writeArray(destination, destOffset, source, srcOffset, n); }
-	 */
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "port", "value" })
+	public void sendArray(String destination, float[] source, int n) {
+		PdBase.writeArray(destination, 0, source, 0, n);
+	}
 
+	private void stop() {
+		// PdBase.release();
+	}
 }

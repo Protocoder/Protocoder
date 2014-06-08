@@ -50,6 +50,7 @@ import org.protocoder.utils.ColorUtils;
 import org.protocoder.utils.MLog;
 import org.protocoder.views.ProjectSelectorStrip;
 
+import processing.core.PApplet;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
@@ -69,6 +70,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -79,11 +81,16 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.view.Window;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.processingfragment.example1.ProcessingSketchDefaultRenderer1;
+
 import de.greenrobot.event.EventBus;
 
 @SuppressLint("NewApi")
@@ -119,12 +126,33 @@ public class MainActivity extends BaseActivity implements NewProjectDialogFragme
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		// set action bar overlay
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+			requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+		}
+
 		setContentView(R.layout.activity_forfragments);
 		c = this;
 
 		// Create the action bar programmatically
 		ActionBar actionBar = getActionBar();
 		actionBar.setHomeButtonEnabled(true);
+		// getWindow().setBackgroundDrawable(new
+		// ColorDrawable(android.graphics.Color.TRANSPARENT));
+		// getActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.transparent));
+
+		// bg
+		PApplet p = new ProcessingSketchDefaultRenderer1();
+		addFragment(p, R.id.bgProcessing, false);
+
+		// set action bar padding
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+			RelativeLayout contentHolder = (RelativeLayout) findViewById(R.id.contentHolder);
+			TypedValue tv = new TypedValue();
+			getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true);
+			int actionBarHeight = (int) getResources().getDimension(tv.resourceId);
+			contentHolder.setPadding(0, actionBarHeight, 0, 0);
+		}
 
 		// Instantiate fragments
 		userProjectListFragment = new ListFragmentUserProjects();

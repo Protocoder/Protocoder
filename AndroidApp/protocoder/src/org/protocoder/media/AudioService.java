@@ -76,6 +76,7 @@ public class AudioService {
 		public void stop() {
 			MLog.d("qq", "stoping audio");
 			pdService.stopAudio();
+			PdBase.release();
 			try {
 				pdService.unbindService(pdConnection);
 			} catch (IllegalArgumentException e) {

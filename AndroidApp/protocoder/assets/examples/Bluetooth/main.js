@@ -4,6 +4,9 @@
 * The methods are commented out, feel free to experiment and 
 * dont forget to give feedback in github! :D
 *
+* If you want to connect a bluetooth module to Arduino this is a 
+* good start 
+* https://learn.sparkfun.com/tutorials/using-the-bluesmirf/all
 */
 
 network.startBluetooth();

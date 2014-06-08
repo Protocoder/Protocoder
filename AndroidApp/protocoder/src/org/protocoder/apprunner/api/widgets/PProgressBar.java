@@ -29,47 +29,22 @@
 
 package org.protocoder.apprunner.api.widgets;
 
-import java.lang.ref.WeakReference;
-
 import org.protocoder.apprunner.AppRunnerActivity;
-import org.protocoder.apprunner.api.PApp;
-import org.protocoder.views.CustomWebView;
 
-import android.view.MotionEvent;
-import android.view.View;
-import android.webkit.WebSettings;
+import android.content.Context;
+import android.widget.ProgressBar;
 
-public class PWebView extends CustomWebView implements PViewInterface {
+public class PProgressBar extends ProgressBar implements PViewInterface {
 
-	public PWebView(WeakReference<AppRunnerActivity> a) {
-		super(a.get());
+	public PProgressBar(Context context) {
+		super(context);
 
-		WebSettings webSettings = this.getSettings();
-		webSettings.setJavaScriptEnabled(true);
-		webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
-		this.setFocusable(true);
-		this.setFocusableInTouchMode(true);
+		// setProgressDrawable(getResources().getDrawable(R.drawable.ui_seekbar_progress));
+	}
 
-		this.clearCache(false);
-		this.setBackgroundColor(0x00000000);
+	public PProgressBar(AppRunnerActivity a, int style) {
+		super(a, null, style);
 
-		this.requestFocus(View.FOCUS_DOWN);
-		this.setOnTouchListener(new View.OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				switch (event.getAction()) {
-				case MotionEvent.ACTION_DOWN:
-				case MotionEvent.ACTION_UP:
-					if (!v.hasFocus()) {
-						v.requestFocus();
-					}
-					break;
-				}
-				return false;
-			}
-		});
-
-		this.addJavascriptInterface(new PApp(a.get()), "app");
-
+		this.setProgress(0);
 	}
 }

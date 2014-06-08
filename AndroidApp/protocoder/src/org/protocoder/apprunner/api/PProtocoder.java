@@ -29,6 +29,11 @@
 
 package org.protocoder.apprunner.api;
 
+import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.protocoder.PrefsFragment;
 import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apidoc.annotation.APIParam;
@@ -37,14 +42,24 @@ import org.protocoder.apidoc.annotation.APIVersion;
 import org.protocoder.apprunner.AppRunnerActivity;
 import org.protocoder.apprunner.PInterface;
 import org.protocoder.apprunner.ProtocoderScript;
+import org.protocoder.apprunner.api.other.ApplicationInfo;
 import org.protocoder.apprunner.api.other.PProtocoderFeedback;
 import org.protocoder.events.ProjectManager;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 public class PProtocoder extends PInterface {
 
@@ -75,8 +90,13 @@ public class PProtocoder extends PInterface {
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "id" })
-	public PProtocoderFeedback startFeedback() {
-		return new PProtocoderFeedback(a.get());
+	public PProtocoderFeedback liveCoding() {
+		a.get().initLayout();
+
+		PProtocoderFeedback l = a.get().liveCoding;
+		l.enable = true;
+
+		return l;
 	}
 
 	@ProtocoderScript
@@ -102,6 +122,13 @@ public class PProtocoder extends PInterface {
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
+	@APIParam(params = { "code" })
+	public void eval(String code) {
+		a.get().interp.eval(code);
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
 	@APIVersion(minLevel = "2")
 	@APIRequires("android.permission.INTERNET")
 	public void returnValueToScript(String returnValue) {
@@ -122,6 +149,85 @@ public class PProtocoder extends PInterface {
 		a.get().setResult(a.get().RESULT_OK, intent);
 		a.get().finish();
 
+	}
+
+	public String getVersionName() {
+		PackageInfo pInfo = null;
+		try {
+			pInfo = a.get().getPackageManager().getPackageInfo(a.get().getPackageName(), 0);
+		} catch (NameNotFoundException e) {
+			e.printStackTrace();
+		}
+		return pInfo.versionName;
+	}
+
+	public int getVersionCode() {
+		PackageInfo pInfo = null;
+		try {
+			pInfo = a.get().getPackageManager().getPackageInfo(a.get().getPackageName(), 0);
+		} catch (NameNotFoundException e) {
+			e.printStackTrace();
+		}
+		return pInfo.versionCode;
+	}
+
+	public static ArrayList<ApplicationInfo> mApplications;
+
+	/**
+	 * Loads the list of installed applications in mApplications.
+	 */
+	private void loadApplications(boolean isLaunching) {
+		if (isLaunching && mApplications != null) {
+			return;
+		}
+
+		PackageManager manager = a.get().getPackageManager();
+
+		Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+		mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+
+		final List<ResolveInfo> apps = manager.queryIntentActivities(mainIntent, 0);
+		Collections.sort(apps, new ResolveInfo.DisplayNameComparator(manager));
+
+		if (apps != null) {
+			final int count = apps.size();
+
+			if (mApplications == null) {
+				mApplications = new ArrayList<ApplicationInfo>(count);
+			}
+			mApplications.clear();
+
+			for (int i = 0; i < count; i++) {
+				ApplicationInfo application = new ApplicationInfo();
+				ResolveInfo info = apps.get(i);
+
+				application.title = info.loadLabel(manager);
+				application.packageName = info.activityInfo.packageName;
+				Log.d("qq", "qq " + application.packageName);
+				application.setActivity(new ComponentName(info.activityInfo.applicationInfo.packageName,
+						info.activityInfo.name), Intent.FLAG_ACTIVITY_NEW_TASK
+						| Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+				application.icon = info.activityInfo.loadIcon(manager);
+
+				Bitmap bitmap = ((BitmapDrawable) application.icon).getBitmap();
+
+				// Bitmap icon =
+				// BitmapFactory.decodeResource(this.getResources(),
+				// application.icon);
+
+				String path = Environment.getExternalStorageDirectory().toString();
+				application.iconURL = path + "/" + application.packageName + ".png";
+
+				try {
+					FileOutputStream out = new FileOutputStream(application.iconURL);
+					bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				mApplications.add(application);
+			}
+		}
 	}
 
 }

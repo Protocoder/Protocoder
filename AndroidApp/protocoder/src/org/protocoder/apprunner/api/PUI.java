@@ -31,6 +31,8 @@ package org.protocoder.apprunner.api;
 
 import java.io.File;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.protocoder.AppSettings;
 import org.protocoder.R;
 import org.protocoder.apidoc.annotation.APIMethod;
@@ -41,6 +43,7 @@ import org.protocoder.apprunner.ProtocoderScript;
 import org.protocoder.apprunner.api.other.PCamera;
 import org.protocoder.apprunner.api.other.PProcessing;
 import org.protocoder.apprunner.api.other.PVideo;
+import org.protocoder.apprunner.api.widgets.PFakeAbsoluteLayoutLayout;
 import org.protocoder.apprunner.api.widgets.PButton;
 import org.protocoder.apprunner.api.widgets.PCanvasView;
 import org.protocoder.apprunner.api.widgets.PCard;
@@ -51,6 +54,7 @@ import org.protocoder.apprunner.api.widgets.PImageView;
 import org.protocoder.apprunner.api.widgets.PList;
 import org.protocoder.apprunner.api.widgets.PMap;
 import org.protocoder.apprunner.api.widgets.PPlotView;
+import org.protocoder.apprunner.api.widgets.PProgressBar;
 import org.protocoder.apprunner.api.widgets.PRadioButton;
 import org.protocoder.apprunner.api.widgets.PSeekBar;
 import org.protocoder.apprunner.api.widgets.PSwitch;
@@ -85,13 +89,13 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.app.FragmentTransaction;
 import android.text.InputType;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.CycleInterpolator;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.WebSettings;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView.ScaleType;
@@ -299,6 +303,18 @@ public class PUI extends PUIGeneric {
 	}
 
 	@ProtocoderScript
+	@APIParam(params = { "View" })
+	public void hide(View v) {
+		v.setVisibility(View.GONE);
+	}
+
+	@ProtocoderScript
+	@APIParam(params = { "View" })
+	public void show(View v) {
+		v.setVisibility(View.VISIBLE);
+	}
+
+	@ProtocoderScript
 	@APIParam(params = { "View", "x", "y" })
 	public void move(View v, float x, float y) {
 		v.animate().x(x).setDuration(AppSettings.animSpeed);
@@ -412,6 +428,87 @@ public class PUI extends PUIGeneric {
 		v.animate().scaleYBy(y).setDuration(AppSettings.animSpeed);
 	}
 
+	class GestureDetectorReturn {
+		public String type;
+		public JSONObject data;
+
+	}
+
+	// --------- addGenericButton ---------//
+	public interface addGestureDetectorCB {
+		void event(GestureDetectorReturn g);
+	}
+
+	public void gestureDetector(View v, final addGestureDetectorCB cb) {
+		final GestureDetectorReturn g = new GestureDetectorReturn();
+
+		final GestureDetector gestureDetector = new GestureDetector(a.get(), new GestureDetector.OnGestureListener() {
+
+			@Override
+			public boolean onSingleTapUp(MotionEvent e) {
+
+				g.type = "up";
+				cb.event(g);
+				return false;
+			}
+
+			@Override
+			public void onShowPress(MotionEvent e) {
+				g.type = "showpress";
+				cb.event(g);
+			}
+
+			@Override
+			public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+				g.type = "scroll";
+				g.data = new JSONObject();
+				try {
+					g.data.put("distanceX", distanceX);
+					g.data.put("distanceY", distanceY);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				cb.event(g);
+				return true;
+			}
+
+			@Override
+			public void onLongPress(MotionEvent e) {
+				g.type = "longpress";
+				cb.event(g);
+			}
+
+			@Override
+			public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+				g.type = "fling";
+				g.data = new JSONObject();
+				try {
+					g.data.put("velocityX", velocityX);
+					g.data.put("velocityY", velocityY);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				cb.event(g);
+				return true;
+			}
+
+			@Override
+			public boolean onDown(MotionEvent e) {
+				g.type = "down";
+				cb.event(g);
+				return true;
+			}
+		});
+
+		v.setOnTouchListener(new OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				return gestureDetector.onTouchEvent(event);
+			}
+		});
+	}
+
 	/**
 	 * Set background color for the main layout via int
 	 * 
@@ -463,6 +560,34 @@ public class PUI extends PUIGeneric {
 	@ProtocoderScript
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
 	@APIParam(params = { "label" })
+	public PFakeAbsoluteLayoutLayout addAbsoluteLayout() {
+		PFakeAbsoluteLayoutLayout al = new PFakeAbsoluteLayoutLayout(a.get());
+		addViewLinear(al);
+
+		return al;
+	}
+
+	/**
+	 * Adds a card holder
+	 * 
+	 */
+	@ProtocoderScript
+	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
+	@APIParam(params = { "x", "y", "w", "h" })
+	public PFakeAbsoluteLayoutLayout addAbsoluteLayout(int x, int y, int w, int h) {
+		PFakeAbsoluteLayoutLayout al = new PFakeAbsoluteLayoutLayout(a.get());
+		addViewAbsolute(al, x, y, w, h);
+
+		return al;
+	}
+
+	/**
+	 * Adds a card holder
+	 * 
+	 */
+	@ProtocoderScript
+	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
+	@APIParam(params = { "label" })
 	public PCard addCard() {
 		PCard c = addGenericCard();
 		addViewLinear(c);
@@ -479,6 +604,8 @@ public class PUI extends PUIGeneric {
 	@APIParam(params = { "label", "x", "y", "w", "h" })
 	public PCard addCard(String label, int x, int y, int w, int h) {
 		PCard c = addGenericCard();
+		c.setTitle(label);
+
 		addViewAbsolute(c, x, y, w, h);
 		return c;
 	}
@@ -587,6 +714,27 @@ public class PUI extends PUIGeneric {
 		PSeekBar sb = addGenericSlider(max, progress, callbackfn);
 		addViewAbsolute(sb, x, y, w, -1);
 		return sb;
+
+	}
+
+	/**
+	 * Adds a progress bar
+	 * 
+	 */
+	@ProtocoderScript
+	@APIParam(params = { "max" })
+	public PProgressBar addProgressBar(int max) {
+		PProgressBar pb = addGenericProgress(max);
+		return pb;
+
+	}
+
+	@ProtocoderScript
+	@APIParam(params = { "x", "y", "w", "h", "max" })
+	public PProgressBar addProgressBar(int x, int y, int w, int h, int max) {
+		PProgressBar pb = addGenericProgress(max);
+		addViewAbsolute(pb, x, y, w, -1);
+		return pb;
 
 	}
 
@@ -879,33 +1027,7 @@ public class PUI extends PUIGeneric {
 	@APIParam(params = { "x", "y", "w", "h" })
 	public PWebView addWebView(int x, int y, int w, int h) {
 		initializeLayout();
-		PWebView webView = new PWebView(a.get());
-		WebSettings webSettings = webView.getSettings();
-		webSettings.setJavaScriptEnabled(true);
-		webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
-		webView.setFocusable(true);
-		webView.setFocusableInTouchMode(true);
-
-		webView.clearCache(false);
-		webView.setBackgroundColor(0x00000000);
-
-		webView.requestFocus(View.FOCUS_DOWN);
-		webView.setOnTouchListener(new View.OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				switch (event.getAction()) {
-				case MotionEvent.ACTION_DOWN:
-				case MotionEvent.ACTION_UP:
-					if (!v.hasFocus()) {
-						v.requestFocus();
-					}
-					break;
-				}
-				return false;
-			}
-		});
-
-		webView.addJavascriptInterface(new PApp(a.get()), "app");
+		PWebView webView = new PWebView(a);
 
 		addViewAbsolute(webView, x, y, w, h);
 		// webview.loadData(content, "text/html", "utf-8");
@@ -1009,29 +1131,38 @@ public class PUI extends PUIGeneric {
 	 */
 
 	// --------- yesno dialog ---------//
-	interface yesnoDialogCB {
+	interface popupCB {
 		void event(boolean b);
 	}
 
 	@APIParam(params = { "title", "function(boolean)" })
-	public void yesnoDialog(String title, final yesnoDialogCB callbackfn) {
+	public void popup(String title, String ok, String cancel, final popupCB callbackfn) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(a.get());
 		builder.setTitle(title);
 
-		// Set up the buttons
-		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				callbackfn.event(true);
-			}
-		});
-		builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.cancel();
-				callbackfn.event(false);
-			}
-		});
+		if (!ok.isEmpty()) {
+			// Set up the buttons
+			builder.setPositiveButton(ok, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					if (callbackfn != null) {
+						callbackfn.event(true);
+					}
+				}
+			});
+		}
+
+		if (!cancel.isEmpty()) {
+			builder.setNegativeButton(cancel, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.cancel();
+					if (callbackfn != null) {
+						callbackfn.event(false);
+					}
+				}
+			});
+		}
 
 		builder.show();
 	}
@@ -1109,21 +1240,36 @@ public class PUI extends PUIGeneric {
 		builder.show();
 	}
 
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
 	@APIParam(params = { "imageName" })
 	public void takeScreenshot(String imagePath) {
 		AndroidUtils.takeScreenshot(AppRunnerSettings.get().project.getStoragePath(), imagePath, uiAbsoluteLayout);
 	}
 
-	@APIParam(params = { "imageName", "view" })
-	public void takeScreenshot(String imagePath, View v) {
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "view", "imageName" })
+	public void takeViewScreenshot(View v, String imagePath) {
 		AndroidUtils.takeScreenshotView(AppRunnerSettings.get().project.getStoragePath(), imagePath, v);
 	}
 
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "view" })
+	public Bitmap takeViewScreenshot(View v) {
+		return AndroidUtils.takeScreenshotView("", "", v);
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
 	@APIParam(params = { "fontFile" })
 	public Typeface loadFont(String fontName) {
 		return Typeface.createFromFile(AppRunnerSettings.get().project.getStoragePath() + File.separator + fontName);
 	}
 
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
 	@APIParam(params = { "View", "Typeface" })
 	public void setFont(View v, Typeface f) {
 

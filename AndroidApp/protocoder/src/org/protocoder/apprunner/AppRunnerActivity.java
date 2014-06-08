@@ -50,6 +50,7 @@ import org.protocoder.apprunner.api.PProtocoder;
 import org.protocoder.apprunner.api.PSensors;
 import org.protocoder.apprunner.api.PUI;
 import org.protocoder.apprunner.api.PUtil;
+import org.protocoder.apprunner.api.other.PProtocoderFeedback;
 import org.protocoder.base.BaseActivity;
 import org.protocoder.events.Events;
 import org.protocoder.events.Events.ProjectEvent;
@@ -63,16 +64,10 @@ import org.protocoder.sensors.NFCUtil;
 import org.protocoder.sensors.WhatIsRunning;
 import org.protocoder.utils.MLog;
 import org.protocoder.utils.StrUtils;
-import org.protocoder.utils.TextUtils;
 import org.protocoder.views.PadView.TouchEvent;
 
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
-import android.animation.AnimatorInflater;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
-import android.animation.LayoutTransition;
-import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.PendingIntent;
@@ -93,7 +88,6 @@ import android.nfc.tech.Ndef;
 import android.nfc.tech.NfcF;
 import android.os.Bundle;
 import android.os.FileObserver;
-import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.Fragment;
 import android.view.ContextMenu;
@@ -107,7 +101,6 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import de.greenrobot.event.EventBus;
@@ -142,11 +135,6 @@ public class AppRunnerActivity extends BaseActivity {
 	private RelativeLayout mainLayout;
 	private RelativeLayout parentScriptedLayout;
 	private RelativeLayout consoleRLayout;
-	private LinearLayout liveRLayout;
-	float liveTextY = 0;
-
-	private TextView liveText;
-
 	// store currentProject reference
 	private Project currentProject;
 
@@ -154,6 +142,8 @@ public class AppRunnerActivity extends BaseActivity {
 
 	public boolean keyVolumeEnabled = true;
 	public boolean keyBackEnabled = true;
+
+	public PProtocoderFeedback liveCoding;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -165,10 +155,10 @@ public class AppRunnerActivity extends BaseActivity {
 		interp = new AppRunnerInterpreter(this);
 
 		interp.addInterface(PApp.class);
-		interp.addInterface(PDevice.class);
 		interp.addInterface(PBoards.class);
 		interp.addInterface(PConsole.class);
 		interp.addInterface(PDashboard.class);
+		interp.addInterface(PDevice.class);
 		interp.addInterface(PEditor.class);
 		interp.addInterface(PFileIO.class);
 		interp.addInterface(PMedia.class);
@@ -278,69 +268,15 @@ public class AppRunnerActivity extends BaseActivity {
 		}
 	}
 
-	boolean hidingLiveText = true;
-	Handler h = new Handler();
-	Runnable r = new Runnable() {
-
-		@Override
-		public void run() {
-			liveRLayout.animate().alpha(0.0f).setListener(new AnimatorListener() {
-
-				@Override
-				public void onAnimationStart(Animator animation) {
-				}
-
-				@Override
-				public void onAnimationRepeat(Animator animation) {
-				}
-
-				@Override
-				public void onAnimationEnd(Animator animation) {
-					// liveRLayout.setVisibility(View.GONE);
-					MLog.d("qq", "anim stop");
-				}
-
-				@Override
-				public void onAnimationCancel(Animator animation) {
-				}
-			});
-		}
-	};
-
 	// execute lines
 	public void onEventMainThread(Events.ExecuteCodeEvent evt) {
 		String code = evt.getCode(); // .trim();
 		MLog.d(TAG, "event -> " + code);
 
-		// cancel handler
-		if (hidingLiveText) {
-			liveRLayout.setVisibility(View.VISIBLE);
-			liveRLayout.animate().alpha(1.0f);
-			h.removeCallbacks(r);
-			h.postDelayed(r, 3000);
+		if (liveCoding != null) {
+			liveCoding.write(code);
 		}
-
-		if (liveText != null) {
-			liveRLayout.removeView(liveText);
-		}
-
-		liveText = new TextView(this);
-		RelativeLayout.LayoutParams liveTextLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
-				LayoutParams.WRAP_CONTENT);
-		liveTextLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-		liveTextLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-		liveText.setLayoutParams(liveTextLayoutParams);
-		liveText.setBackgroundColor(0x00000000);
-		liveText.setPadding(5, 5, 2, 2);
-		liveText.setTextColor(0xFFFFFFFF);
-		liveText.setTextSize(12);
-		liveText.setShadowLayer(2, 1, 1, 0x55000000);
-		TextUtils.changeFont(this, liveText, "Inconsolata.otf");
-
-		liveText.setText(code);
-		liveRLayout.addView(liveText);
 		interp.eval(code);
-
 	}
 
 	@Override
@@ -602,45 +538,8 @@ public class AppRunnerActivity extends BaseActivity {
 			consoleText.setPadding(textPadding, textPadding, textPadding, textPadding);
 			consoleRLayout.addView(consoleText);
 
-			// live execution layout
-			liveRLayout = new LinearLayout(this);
-			RelativeLayout.LayoutParams liveLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
-					LayoutParams.MATCH_PARENT);
-			liveLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-			liveLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-			liveRLayout.setLayoutParams(liveLayoutParams);
-			liveRLayout.setGravity(Gravity.BOTTOM);
-			liveRLayout.setBackgroundColor(0x55000000);
-			liveRLayout.setPadding(10, 10, 10, 10);
-			liveRLayout.setVisibility(View.GONE);
-			// liveRLayout.setLayoutTransition(transition)
-
-			// Animation spinin = AnimationUtils.loadAnimation(this,
-			// R.anim.slide_in_left);
-			// liveRLayout.setLayoutAnimation(new
-			// LayoutAnimationController(spinin));
-
-			LayoutTransition l = new LayoutTransition();
-			l.enableTransitionType(LayoutTransition.CHANGING);
-
-			Animator appearingAnimation = ObjectAnimator.ofFloat(null, "translationY", 20, 0);
-			appearingAnimation.addListener(new AnimatorListenerAdapter() {
-				@Override
-				public void onAnimationEnd(Animator anim) {
-					View view = (View) ((ObjectAnimator) anim).getTarget();
-					view.setTranslationX(0f);
-				}
-			});
-
-			AnimatorSet as = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.live_code);
-			// as.se
-			l.setAnimator(LayoutTransition.APPEARING, as);
-			l.setDuration(LayoutTransition.APPEARING, 300);
-			l.setStartDelay(LayoutTransition.APPEARING, 0);
-
-			liveRLayout.setLayoutTransition(l);
-
-			mainLayout.addView(liveRLayout);
+			liveCoding = new PProtocoderFeedback(this);
+			mainLayout.addView(liveCoding.add());
 
 			setContentView(mainLayout);
 			isMainLayoutSetup = true;

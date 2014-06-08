@@ -86,8 +86,14 @@ public class PDashboardSlider extends PInterface {
 			@Override
 			public void onUpdated(JSONObject jsonObject) {
 				try {
-					double val = jsonObject.getDouble("val");
-					callbackfn.event(val);
+					final double val = jsonObject.getDouble("val");
+					a.get().runOnUiThread(new Runnable() {
+
+						@Override
+						public void run() {
+							callbackfn.event(val);
+						}
+					});
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}

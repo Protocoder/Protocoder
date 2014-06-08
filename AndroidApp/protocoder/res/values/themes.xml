@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="ProtocoderTheme" parent="@android:style/Theme.Holo.Light">
         <item name="android:actionBarStyle">@style/ProtocoderTheme.ActionBarStyle</item>
+        <item name="android:background">@color/transparent</item>
     </style>
+<!--         <item name="android:windowActionBarOverlay">true</item> -->
 
     <style name="ProtocoderLaunchTheme" parent="@android:style/Theme.Holo.Light.NoActionBar"></style>
 
     <style name="ProtocoderTheme.ActionBarStyle" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:background">@color/transparent</item>
         <item name="android:titleTextStyle">@style/ProtocoderTheme.ActionBar.TitleTextStyle</item>
-        <item name="android:background">@color/white</item>
         <item name="android:selectableItemBackground">@drawable/actionbar_highlight</item>
         <item name="android:actionOverflowButtonStyle">@style/OverFlow</item>
         <item name="android:displayOptions">showHome|homeAsUp|showTitle</item>

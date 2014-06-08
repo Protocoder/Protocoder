@@ -118,7 +118,7 @@ public class IOIOBoard extends HardwareBase {
 
 	public void stop() {
 		MLog.d(TAG, "IOIOBoard stop called");
-		powerOff();
+		// powerOff();
 		if (serviceIntent_ != null) {
 			activity_.stopService(serviceIntent_);
 		}

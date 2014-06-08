@@ -37,7 +37,6 @@ import java.io.OutputStream;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -77,7 +76,7 @@ public class AndroidUtils {
 
 	}
 
-	public static void takeScreenshotView(String where, String name, View v) {
+	public static Bitmap takeScreenshotView(String where, String name, View v) {
 
 		// image naming and path to include sd card appending name you choose
 		// for file
@@ -89,22 +88,28 @@ public class AndroidUtils {
 		bitmap = Bitmap.createBitmap(v.getDrawingCache());
 		v.setDrawingCacheEnabled(false);
 
-		OutputStream fout = null;
-		File imageFile = new File(mPath);
+		// save if path is given
+		if (name.equals("") != true) {
+			MLog.d("qq", mPath + "entra");
+			OutputStream fout = null;
+			File imageFile = new File(mPath);
 
-		try {
-			fout = new FileOutputStream(imageFile);
-			bitmap.compress(Bitmap.CompressFormat.PNG, 90, fout);
-			fout.flush();
-			fout.close();
+			try {
+				fout = new FileOutputStream(imageFile);
+				bitmap.compress(Bitmap.CompressFormat.PNG, 90, fout);
+				fout.flush();
+				fout.close();
 
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
+
+		return bitmap;
 
 	}
 
