@@ -30,13 +30,17 @@
 package org.protocoder.apprunner.api;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
@@ -47,7 +51,15 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.ContentBody;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
 import org.java_websocket.WebSocket;
 import org.java_websocket.drafts.Draft;
 import org.java_websocket.drafts.Draft_17;
@@ -61,6 +73,7 @@ import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apidoc.annotation.APIParam;
 import org.protocoder.apprunner.PInterface;
 import org.protocoder.apprunner.ProtocoderScript;
+import org.protocoder.events.ProjectManager;
 import org.protocoder.network.NetworkUtils;
 import org.protocoder.network.NetworkUtils.DownloadTask.DownloadListener;
 import org.protocoder.network.OSC;
@@ -84,6 +97,9 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.codebutler.android_websockets.SocketIOClient;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 
 import de.sciss.net.OSCMessage;
 
@@ -314,8 +330,7 @@ public class PNetwork extends PInterface {
 
 	// --------- connectSocketIO ---------//
 	interface connectSocketIOCB {
-		void event(String string, String reason, String string2);
-
+		// void event(String string, String reason, String string2);
 		void event(String string, String event, JSONArray arguments);
 	}
 
@@ -327,7 +342,8 @@ public class PNetwork extends PInterface {
 
 			@Override
 			public void onMessage(String message) {
-
+				callbackfn.event("onMessage", null, null);
+				MLog.d("qq", "onMessage");
 			}
 
 			@Override
@@ -337,26 +353,29 @@ public class PNetwork extends PInterface {
 
 			@Override
 			public void onError(Exception error) {
-				callbackfn.event("error", "", "");
+				callbackfn.event("error", null, null);
 			}
 
 			@Override
 			public void onDisconnect(int code, String reason) {
-				callbackfn.event("disconnect", reason, "");
+				callbackfn.event("disconnect", reason, null);
+				MLog.d("qq", "disconnected");
 			}
 
 			@Override
 			public void onConnect() {
-				callbackfn.event("connected", "", "");
-
+				callbackfn.event("connected", null, null);
+				MLog.d("qq", "connected");
 			}
 
 			@Override
 			public void on(String event, JSONArray arguments) {
 				callbackfn.event("onmessage", event, arguments);
+				MLog.d("qq", "onmessage");
 
 			}
 		});
+		socketIOClient.connect();
 
 		return socketIOClient;
 	}
@@ -384,14 +403,14 @@ public class PNetwork extends PInterface {
 	}
 
 	// --------- getRequest ---------//
-	interface getRequestCB {
+	interface HttpGetCB {
 		void event(int eventType, String responseString);
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "url", "function(eventType, responseString)" })
-	public void getRequest(String url, final getRequestCB callbackfn) {
+	public void httpGet(String url, final HttpGetCB callbackfn) {
 
 		class RequestTask extends AsyncTask<String, String, String> {
 			String responseString = null;
@@ -438,6 +457,79 @@ public class PNetwork extends PInterface {
 		}
 
 		MLog.d(TAG, "" + new RequestTask().execute(url));
+	}
+
+	// --------- getRequest ---------//
+	interface HttpPostCB {
+		void event(String string);
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "url", "params", "function(responseString)" })
+	public void httpPost(String url, Object object, final HttpPostCB callbackfn) {
+		final HttpClient httpClient = new DefaultHttpClient();
+		final HttpContext localContext = new BasicHttpContext();
+		final HttpPost httpPost = new HttpPost(url);
+
+		Gson g = new Gson();
+		JsonArray q = g.toJsonTree(object).getAsJsonArray();
+
+		MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+
+		for (int i = 0; i < q.size(); i++) {
+			Set<Entry<String, JsonElement>> set = q.get(i).getAsJsonObject().entrySet();
+
+			// go through elements
+			String name = "";
+			String content = "";
+			String type = "";
+			for (Object element : set) {
+				Entry<String, JsonElement> entry = (Entry<String, JsonElement>) element;
+				if (entry.getKey().equals("name")) {
+					name = entry.getValue().getAsString();
+				} else if (entry.getKey().equals("content")) {
+					content = entry.getValue().getAsString();
+				} else if (entry.getKey().equals("type")) {
+					type = entry.getValue().getAsString();
+				}
+			}
+
+			MLog.d("qq", i + " " + name + " " + content);
+
+			// create the multipart
+			if (type.contains("file")) {
+				MLog.d("qq", "mm");
+				File f = new File(ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/" + content);
+				MLog.d("qq", f.getAbsolutePath());
+				ContentBody cbFile = new FileBody(f);
+				entity.addPart(name, cbFile);
+			} else if (type.contains("text")) { // Normal string data
+				try {
+					entity.addPart(name, new StringBody(content));
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		// send
+		httpPost.setEntity(entity);
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					HttpResponse response = httpClient.execute(httpPost, localContext);
+					MLog.d("qq", "" + response.getStatusLine());
+					callbackfn.event(response.getStatusLine().toString());
+				} catch (ClientProtocolException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}).start();
 	}
 
 	// --------- Bluetooth ---------//

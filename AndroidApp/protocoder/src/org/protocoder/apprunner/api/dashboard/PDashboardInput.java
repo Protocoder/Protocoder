@@ -84,10 +84,17 @@ public class PDashboardInput extends PInterface {
 			@Override
 			public void onUpdated(JSONObject jsonObject) {
 				try {
-					// MLog.d(TAG, "" + jsonObject.toString(2));
-					String val = jsonObject.getString("val");
-					// MLog.d(TAG, "" + val);
-					callbackfn.event(val);
+
+					final String val = jsonObject.getString("val");
+					a.get().runOnUiThread(new Runnable() {
+
+						@Override
+						public void run() {
+							// MLog.d(TAG, "" + jsonObject.toString(2));
+							// MLog.d(TAG, "" + val);
+							callbackfn.event(val);
+						}
+					});
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

@@ -3582,6 +3582,13 @@ public class PApplet extends Fragment implements PConstants, Runnable {
 
 	// protected String[] loadImageFormats;
 
+	public PImage loadImageBitmap(Bitmap bmp) {
+		PImage pImage = new PImage(bmp);
+		pImage.loadPixels();
+
+		return pImage;
+	}
+
 	public PImage loadImage(String filename) {
 		return loadImage(filename, null);
 	}

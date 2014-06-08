@@ -39,14 +39,27 @@ import org.protocoder.utils.Intents;
 import org.protocoder.utils.MLog;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.BatteryManager;
+import android.os.Build;
 import android.os.Vibrator;
+import android.provider.Settings.Secure;
 import android.telephony.SmsManager;
+import android.telephony.TelephonyManager;
+import android.util.DisplayMetrics;
+import android.util.Log;
+
+import com.google.gson.Gson;
 
 public class PDevice extends PInterface {
 
 	private onSmsReceivedCB onSmsReceivedfn;
+	private BroadcastReceiver batteryReceiver;
 
 	public PDevice(Activity a) {
 		super(a);
@@ -144,6 +157,12 @@ public class PDevice extends PInterface {
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
+	public boolean isTablet() {
+		return a.get().isTablet();
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
 	public void enableSoundEffects(boolean b) {
 		a.get().setEnableSoundEffects(b);
 	}
@@ -204,8 +223,166 @@ public class PDevice extends PInterface {
 		Intents.webSearch(a.get(), text);
 	}
 
-	public void stop() {
+	// --------- battery ---------//
+	interface StartBateryListenerCB {
+		void event(BatteryReturn o);
+	}
 
+	class BatteryReturn {
+		public int level;
+		public int temperature;
+		public boolean connected;
+	}
+
+	public void setClipboard(String label, String text) {
+		ClipboardManager clipboard = (ClipboardManager) a.get().getSystemService(Context.CLIPBOARD_SERVICE);
+		clipboard.setPrimaryClip(ClipData.newPlainText(label, text));
+	}
+
+	public String getClipboard(String label, String text) {
+		ClipboardManager clipboard = (ClipboardManager) a.get().getSystemService(Context.CLIPBOARD_SERVICE);
+		return clipboard.getPrimaryClip().getItemAt(clipboard.getPrimaryClip().getItemCount()).getText().toString();
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "" })
+	public void startBatteryListener(final StartBateryListenerCB cb) {
+		WhatIsRunning.getInstance().add(this);
+		batteryReceiver = new BroadcastReceiver() {
+			int scale = -1;
+			int level = -1;
+			int voltage = -1;
+			int temp = -1;
+			boolean isConnected = false;
+			private int status;
+			private final boolean alreadyKilled = false;
+
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+				scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+				temp = intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, -1);
+				voltage = intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, -1);
+				// isCharging =
+				// intent.getBooleanExtra(BatteryManager.EXTRA_PLUGGED, false);
+				// status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+				status = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
+
+				if (status == BatteryManager.BATTERY_PLUGGED_AC) {
+					isConnected = true;
+				} else if (status == BatteryManager.BATTERY_PLUGGED_USB) {
+					isConnected = true;
+				} else {
+					isConnected = false;
+				}
+
+				BatteryReturn o = new BatteryReturn();
+
+				o.level = level;
+				o.temperature = temp;
+				o.connected = isConnected;
+
+				// plugConnected = isConnected;
+				cb.event(o);
+				Log.d("BATTERY", "level is " + level + " is connected " + isConnected);
+			}
+		};
+
+		IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+		a.get().registerReceiver(batteryReceiver, filter);
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "" })
+	public float getBatteryLevel() {
+		Intent batteryIntent = a.get().registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+		int level = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+		int scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+
+		// Error checking that probably isn't needed but I added just in case.
+		if (level == -1 || scale == -1) {
+			return 50.0f;
+		}
+
+		return ((float) level / (float) scale) * 100.0f;
+	}
+
+	class DeviceInfo {
+		public int screenDpi;
+		public String androidId;
+		public String imei;
+		public String versionRelease;
+		public String sdk;
+		public String board;
+		public String brand;
+		public String device;
+		public String host;
+		public String fingerPrint;
+		public String id;
+		public String cpuAbi;
+		public String cpuAbi2;
+
+		public String toJSON() {
+			return new Gson().toJson(this);
+		}
+
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "" })
+	public DeviceInfo getInfo() {
+		DeviceInfo deviceInfo = new DeviceInfo();
+
+		// density dpi
+		DisplayMetrics metrics = new DisplayMetrics();
+		a.get().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		deviceInfo.screenDpi = metrics.densityDpi;
+
+		// id
+		deviceInfo.androidId = Secure.getString(a.get().getContentResolver(), Secure.ANDROID_ID);
+
+		// imei
+		deviceInfo.imei = ((TelephonyManager) a.get().getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
+
+		deviceInfo.versionRelease = Build.VERSION.RELEASE;
+		deviceInfo.versionRelease = Build.VERSION.INCREMENTAL;
+		deviceInfo.sdk = Build.VERSION.SDK;
+		deviceInfo.board = Build.BOARD;
+		deviceInfo.brand = Build.BRAND;
+		deviceInfo.device = Build.DEVICE;
+		deviceInfo.fingerPrint = Build.FINGERPRINT;
+		deviceInfo.host = Build.HOST;
+		deviceInfo.id = Build.ID;
+		deviceInfo.cpuAbi = Build.CPU_ABI;
+		deviceInfo.cpuAbi2 = Build.CPU_ABI2;
+
+		return deviceInfo;
+	}
+
+	class Memory {
+		public long total;
+		public long used;
+		public long max;
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "" })
+	public Memory getMemory() {
+		Memory mem = new Memory();
+
+		mem.total = Runtime.getRuntime().totalMemory();
+		mem.used = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+		mem.max = Runtime.getRuntime().maxMemory();
+
+		return mem;
+	}
+
+	public void stop() {
+		a.get().unregisterReceiver(batteryReceiver);
 	}
 
 	public interface onSmsReceivedListener {

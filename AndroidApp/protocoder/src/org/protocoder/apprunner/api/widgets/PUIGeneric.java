@@ -38,8 +38,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.osmdroid.events.DelayedMapListener;
 import org.osmdroid.events.MapListener;
 import org.osmdroid.events.ScrollEvent;
@@ -107,7 +105,7 @@ public class PUIGeneric extends PInterface {
 	View viewArray[] = new View[MAXVIEW];
 	int viewCount = 0;
 	boolean isMainLayoutSetup = false;
-	protected FrameLayout uiAbsoluteLayout;
+	protected PFakeAbsoluteLayoutLayout uiAbsoluteLayout;
 	protected LinearLayout uiLinearLayout;
 	protected RelativeLayout holderLayout;
 	protected ImageView bgImageView;
@@ -165,7 +163,7 @@ public class PUIGeneric extends PInterface {
 			if (absoluteLayout) {
 				// Create the main layout. This is where all the items actually
 				// go
-				uiAbsoluteLayout = new FrameLayout(a.get());
+				uiAbsoluteLayout = new PFakeAbsoluteLayoutLayout(a.get());
 				uiAbsoluteLayout.setLayoutParams(layoutParams);
 				uiAbsoluteLayout.setBackgroundColor(a.get().getResources().getColor(R.color.transparent));
 				sv.addView(uiAbsoluteLayout);
@@ -203,25 +201,26 @@ public class PUIGeneric extends PInterface {
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
 	@APIParam(params = { "boolean" })
 	public void allowScroll(boolean scroll) {
-		if (scroll) {
-			sv.setOnTouchListener(null);
-		} else {
-			sv.setOnTouchListener(new OnTouchListener() {
+		if (sv != null) {
+			if (scroll) {
+				sv.setOnTouchListener(null);
+			} else {
+				sv.setOnTouchListener(new OnTouchListener() {
 
-				@Override
-				public boolean onTouch(View v, MotionEvent event) {
+					@Override
+					public boolean onTouch(View v, MotionEvent event) {
 
-					return true;
-				}
-			});
+						return true;
+					}
+				});
+			}
 		}
 		isScrollLayout = scroll;
 	}
 
 	protected void addViewAbsolute(View v, int x, int y, int w, int h) {
-		positionView(v, x, y, w, h);
 		addViewGeneric(v);
-		uiAbsoluteLayout.addView(v);
+		uiAbsoluteLayout.addView(v, x, y, w, h);
 	}
 
 	protected void addViewLinear(View v) {
@@ -239,22 +238,6 @@ public class PUIGeneric extends PInterface {
 	public void removeAll() {
 		uiAbsoluteLayout.removeAllViews();
 		uiLinearLayout.removeAllViews();
-	}
-
-	/**
-	 * This is what we use to actually position and size the views
-	 */
-	protected void positionView(View v, int x, int y, int w, int h) {
-		if (w == -1) {
-			w = LayoutParams.WRAP_CONTENT;
-		}
-		if (h == -1) {
-			h = LayoutParams.WRAP_CONTENT;
-		}
-		FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(w, h);
-		params.leftMargin = x;
-		params.topMargin = y;
-		v.setLayoutParams(params);
 	}
 
 	@ProtocoderScript
@@ -302,7 +285,9 @@ public class PUIGeneric extends PInterface {
 		b.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				callbackfn.event();
+				if (callbackfn != null) {
+					callbackfn.event();
+				}
 			}
 		});
 
@@ -363,17 +348,13 @@ public class PUIGeneric extends PInterface {
 					int key = t1.getKey();
 					TouchEvent value = t1.getValue();
 
-					JSONObject o = new JSONObject();
-					try {
-						o.put("id", value.id);
-						o.put("x", value.x);
-						o.put("y", value.y);
-						o.put("action", value.action);
-						o.put("type", value.type);
-
-					} catch (JSONException e) {
-						e.printStackTrace();
-					}
+					/*
+					 * JSONObject o = new JSONObject(); try { o.put("id",
+					 * value.id); o.put("x", value.x); o.put("y", value.y);
+					 * o.put("action", value.action); o.put("type", value.type);
+					 * 
+					 * } catch (JSONException e) { e.printStackTrace(); }
+					 */
 
 					PadXYReturn q = new PadXYReturn();
 					q.id = value.id;
@@ -453,6 +434,15 @@ public class PUIGeneric extends PInterface {
 
 		return sb;
 
+	}
+
+	public PProgressBar addGenericProgress(int max) {
+
+		initializeLayout();
+		// Create the position the view
+		PProgressBar pb = new PProgressBar(a.get(), android.R.attr.progressBarStyleHorizontal);
+
+		return pb;
 	}
 
 	/**
@@ -713,7 +703,6 @@ public class PUIGeneric extends PInterface {
 		initializeLayout();
 
 		PCanvasView sv = new PCanvasView(a.get(), w, h);
-		positionView(sv, x, y, w, h);
 		// Add the view
 		addViewAbsolute(sv, x, y, w, h);
 

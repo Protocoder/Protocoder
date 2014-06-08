@@ -105,4 +105,8 @@ public class PCamera extends PInterface implements PViewInterface {
 		// });
 	}
 
+	public void turnOnFlash(boolean b) {
+		cameraFragment.turnOnFlash(b);
+	}
+
 }

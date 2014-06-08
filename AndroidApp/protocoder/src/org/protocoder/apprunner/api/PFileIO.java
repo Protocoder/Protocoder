@@ -36,6 +36,7 @@ import org.protocoder.apidoc.annotation.APIParam;
 import org.protocoder.apprunner.AppRunnerSettings;
 import org.protocoder.apprunner.PInterface;
 import org.protocoder.apprunner.ProtocoderScript;
+import org.protocoder.apprunner.api.other.PSqlLite;
 import org.protocoder.events.ProjectManager;
 import org.protocoder.utils.FileIO;
 
@@ -122,4 +123,12 @@ public class PFileIO extends PInterface {
 	public String[] listFilesInDir() {
 		return null;
 	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "filename" })
+	public PSqlLite openSqlLite(String db) {
+		return new PSqlLite(a.get(), db);
+	}
+
 }

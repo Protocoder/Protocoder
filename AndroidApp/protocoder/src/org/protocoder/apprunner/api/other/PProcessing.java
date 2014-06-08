@@ -38,15 +38,13 @@ public class PProcessing extends PApplet {
 			Looper.prepare();
 			// tell activity Processing is ready
 		} else {
-			// jui.callback(drawfn);
-			// /line(12, 12, 125, 125);
 			if (pfnDraw != null) {
 				pfnDraw.draw(this);
 			}
 		}
+
 	}
 
-	// --------- addGenericButton ---------//
 	public interface PInterfaceSetup {
 		// void setup(PApplet p);
 
@@ -57,7 +55,6 @@ public class PProcessing extends PApplet {
 		pfnSetup = pIface;
 	}
 
-	// --------- addGenericButton ---------//
 	public interface PInterfaceDraw {
 		// void setup(PApplet p);
 		void draw(PApplet p);

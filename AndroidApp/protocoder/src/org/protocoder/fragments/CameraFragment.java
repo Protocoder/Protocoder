@@ -43,13 +43,16 @@ import org.protocoder.utils.TimeUtils;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
+import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PictureCallback;
+import android.hardware.Camera.PreviewCallback;
 import android.media.AudioManager;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
@@ -94,6 +97,7 @@ public class CameraFragment extends Fragment {
 	private View v;
 
 	private Vector<CameraListener> listeners;
+	private boolean flashAvailable;
 
 	public interface CameraListener {
 
@@ -120,6 +124,7 @@ public class CameraFragment extends Fragment {
 
 		this.modeColor = bundle.getInt("color");
 		this.modeCamera = bundle.getInt("camera");
+		flashAvailable = getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
 
 		/*
 		 * final Window win = getWindow();
@@ -201,6 +206,13 @@ public class CameraFragment extends Fragment {
 				}
 
 				mCamera.startPreview();
+				mCamera.setPreviewCallback(new PreviewCallback() {
+
+					@Override
+					public void onPreviewFrame(byte[] data, Camera camera) {
+
+					}
+				});
 
 				// mTextureView.animate()/*.rotation(200)*/.alpha((float)
 				// 0.5).scaleX(0.2f).scaleY(0.2f).setDuration(2000);
@@ -214,10 +226,10 @@ public class CameraFragment extends Fragment {
 			public boolean onTouch(View v, MotionEvent event) {
 				switch (event.getAction() & MotionEvent.ACTION_MASK) {
 				case MotionEvent.ACTION_MOVE:
-					v.setX(event.getX());
-					v.setY(event.getY());
+					// v.setX(event.getX());
+					// v.setY(event.getY());
 
-					MLog.d(TAG, "" + event.getX());
+					// MLog.d(TAG, "" + event.getX());
 					break;
 
 				}
@@ -446,12 +458,68 @@ public class CameraFragment extends Fragment {
 		return -1; // No front-facing camera found
 	}
 
+	public void turnOnFlash(boolean b) {
+		if (flashAvailable) {
+			Parameters p = mCamera.getParameters();
+			if (b) {
+				p.setFlashMode(Parameters.FLASH_MODE_TORCH);
+				mCamera.setParameters(p);
+				// mCamera.startPreview();
+			} else {
+				p.setFlashMode(Parameters.FLASH_MODE_OFF);
+				mCamera.setParameters(p);
+				// mCamera.startPreview();
+			}
+		}
+	}
+
 	public void addListener(CameraListener listener) {
 		listeners.add(listener);
 	}
 
 	public void removeListener(CameraListener listener) {
 		listeners.remove(listener);
+	}
+
+	static public void decodeYUV420SP(int[] rgb, byte[] yuv420sp, int width, int height) {
+		final int frameSize = width * height;
+
+		for (int j = 0, yp = 0; j < height; j++) {
+			int uvp = frameSize + (j >> 1) * width, u = 0, v = 0;
+			for (int i = 0; i < width; i++, yp++) {
+				int y = (0xff & (yuv420sp[yp])) - 16;
+				if (y < 0) {
+					y = 0;
+				}
+				if ((i & 1) == 0) {
+					v = (0xff & yuv420sp[uvp++]) - 128;
+					u = (0xff & yuv420sp[uvp++]) - 128;
+				}
+
+				int y1192 = 1192 * y;
+				int r = (y1192 + 1634 * v);
+				int g = (y1192 - 833 * v - 400 * u);
+				int b = (y1192 + 2066 * u);
+
+				if (r < 0) {
+					r = 0;
+				} else if (r > 262143) {
+					r = 262143;
+				}
+				if (g < 0) {
+					g = 0;
+				} else if (g > 262143) {
+					g = 262143;
+				}
+				if (b < 0) {
+					b = 0;
+				} else if (b > 262143) {
+					b = 262143;
+				}
+
+				rgb[yp] = 0xff000000 | ((r << 6) & 0xff0000) | ((g >> 2) & 0xff00) | ((b >> 10) & 0xff);
+			}
+		}
 	}
 
 }

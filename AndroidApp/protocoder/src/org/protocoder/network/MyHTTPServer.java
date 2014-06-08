@@ -42,6 +42,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.protocoder.apidoc.APIManager;
+import org.protocoder.apprunner.api.PApp;
 import org.protocoder.apprunner.api.PBoards;
 import org.protocoder.apprunner.api.PConsole;
 import org.protocoder.apprunner.api.PDashboard;
@@ -54,25 +55,33 @@ import org.protocoder.apprunner.api.PProtocoder;
 import org.protocoder.apprunner.api.PSensors;
 import org.protocoder.apprunner.api.PUI;
 import org.protocoder.apprunner.api.PUtil;
+import org.protocoder.apprunner.api.boards.PArduino;
 import org.protocoder.apprunner.api.boards.PIOIO;
 import org.protocoder.apprunner.api.boards.PMakr;
 import org.protocoder.apprunner.api.dashboard.PDashboardButton;
 import org.protocoder.apprunner.api.dashboard.PDashboardHTML;
 import org.protocoder.apprunner.api.dashboard.PDashboardImage;
+import org.protocoder.apprunner.api.dashboard.PDashboardInput;
 import org.protocoder.apprunner.api.dashboard.PDashboardLabel;
 import org.protocoder.apprunner.api.dashboard.PDashboardPlot;
+import org.protocoder.apprunner.api.dashboard.PDashboardSlider;
 import org.protocoder.apprunner.api.other.PCamera;
+import org.protocoder.apprunner.api.other.PProcessing;
+import org.protocoder.apprunner.api.other.PProtocoderFeedback;
 import org.protocoder.apprunner.api.other.PPureData;
+import org.protocoder.apprunner.api.other.PSqlLite;
 import org.protocoder.apprunner.api.other.PVideo;
 import org.protocoder.apprunner.api.widgets.PButton;
 import org.protocoder.apprunner.api.widgets.PCanvasView;
 import org.protocoder.apprunner.api.widgets.PCard;
 import org.protocoder.apprunner.api.widgets.PCheckBox;
 import org.protocoder.apprunner.api.widgets.PEditText;
+import org.protocoder.apprunner.api.widgets.PFakeAbsoluteLayoutLayout;
 import org.protocoder.apprunner.api.widgets.PImageButton;
 import org.protocoder.apprunner.api.widgets.PImageView;
 import org.protocoder.apprunner.api.widgets.PMap;
 import org.protocoder.apprunner.api.widgets.PPlotView;
+import org.protocoder.apprunner.api.widgets.PProgressBar;
 import org.protocoder.apprunner.api.widgets.PRadioButton;
 import org.protocoder.apprunner.api.widgets.PRow;
 import org.protocoder.apprunner.api.widgets.PSeekBar;
@@ -387,36 +396,44 @@ public class MyHTTPServer extends NanoHTTPD {
 
 					// TODO do it automatically
 					APIManager.getInstance().clear();
-					APIManager.getInstance().addClass(PDevice.class);
+					APIManager.getInstance().addClass(PApp.class);
 					APIManager.getInstance().addClass(PBoards.class);
 					APIManager.getInstance().addClass(PConsole.class);
 					APIManager.getInstance().addClass(PDashboard.class);
+					APIManager.getInstance().addClass(PDevice.class);
 					APIManager.getInstance().addClass(PEditor.class);
 					APIManager.getInstance().addClass(PFileIO.class);
 					APIManager.getInstance().addClass(PMedia.class);
 					APIManager.getInstance().addClass(PNetwork.class);
 					APIManager.getInstance().addClass(PProtocoder.class);
 					APIManager.getInstance().addClass(PSensors.class);
-					APIManager.getInstance().addClass(PUtil.class);
 					APIManager.getInstance().addClass(PUI.class);
+					APIManager.getInstance().addClass(PUtil.class);
 
+					APIManager.getInstance().addClass(PArduino.class);
 					APIManager.getInstance().addClass(PIOIO.class);
 					APIManager.getInstance().addClass(PMakr.class);
 
 					APIManager.getInstance().addClass(PCamera.class);
+					APIManager.getInstance().addClass(PProcessing.class);
+					APIManager.getInstance().addClass(PProtocoderFeedback.class);
 					APIManager.getInstance().addClass(PPureData.class);
+					APIManager.getInstance().addClass(PSqlLite.class);
 					APIManager.getInstance().addClass(PVideo.class);
 
 					APIManager.getInstance().addClass(PButton.class);
 					APIManager.getInstance().addClass(PCanvasView.class);
 					APIManager.getInstance().addClass(PCard.class);
-
 					APIManager.getInstance().addClass(PCheckBox.class);
 					APIManager.getInstance().addClass(PEditText.class);
+					APIManager.getInstance().addClass(PFakeAbsoluteLayoutLayout.class);
 					APIManager.getInstance().addClass(PImageButton.class);
 					APIManager.getInstance().addClass(PImageView.class);
+					// plist item
 					APIManager.getInstance().addClass(PMap.class);
 					APIManager.getInstance().addClass(PPlotView.class);
+					APIManager.getInstance().addClass(PProgressBar.class);
+
 					APIManager.getInstance().addClass(PRadioButton.class);
 					APIManager.getInstance().addClass(PRow.class);
 					APIManager.getInstance().addClass(PSeekBar.class);
@@ -428,8 +445,10 @@ public class MyHTTPServer extends NanoHTTPD {
 					APIManager.getInstance().addClass(PDashboardButton.class);
 					APIManager.getInstance().addClass(PDashboardHTML.class);
 					APIManager.getInstance().addClass(PDashboardImage.class);
+					APIManager.getInstance().addClass(PDashboardInput.class);
 					APIManager.getInstance().addClass(PDashboardLabel.class);
 					APIManager.getInstance().addClass(PDashboardPlot.class);
+					APIManager.getInstance().addClass(PDashboardSlider.class);
 
 					data.put("api", APIManager.getInstance().getDocumentation());
 				}

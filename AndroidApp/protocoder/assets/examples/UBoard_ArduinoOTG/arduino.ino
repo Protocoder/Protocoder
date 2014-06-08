@@ -26,7 +26,7 @@ void loop() {
    
     if(inputString2.startsWith("ledon")){
       digitalWrite(led, HIGH);
-    } else if(inputString2.startsWith("ledon")){
+    } else if(inputString2.startsWith("ledoff")){
       digitalWrite(led, LOW);
     } 
     

@@ -39,7 +39,6 @@ import ioio.lib.api.exception.ConnectionLostException;
 import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apprunner.PInterface;
 import org.protocoder.apprunner.ProtocoderScript;
-import org.protocoder.apprunner.api.PBoards;
 import org.protocoder.hardware.HardwareCallback;
 import org.protocoder.hardware.IOIOBoard;
 import org.protocoder.sensors.WhatIsRunning;
@@ -76,7 +75,7 @@ public class PIOIO extends PInterface implements HardwareCallback {
 		moiocallbackfn = callbackfn;
 		if (!isStarted) {
 			this.board = new IOIOBoard(a.get(), this);
-			board.powerOn();
+			// board.powerOn();
 			WhatIsRunning.getInstance().add(board);
 
 		}

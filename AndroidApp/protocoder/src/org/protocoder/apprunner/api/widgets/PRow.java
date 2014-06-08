@@ -24,7 +24,7 @@ public class PRow {
 		lParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, tt);
 	}
 
-	public void addWidget(View v) {
+	public void addView(View v) {
 		v.setLayoutParams(lParams);
 		ll.addView(v);
 	}

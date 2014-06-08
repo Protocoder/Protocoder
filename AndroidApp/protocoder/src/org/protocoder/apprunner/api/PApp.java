@@ -29,16 +29,31 @@
 
 package org.protocoder.apprunner.api;
 
+import org.protocoder.MainActivity;
 import org.protocoder.PrefsFragment;
+import org.protocoder.R;
 import org.protocoder.apidoc.annotation.APIMethod;
 import org.protocoder.apidoc.annotation.APIParam;
+import org.protocoder.apprunner.AppRunnerActivity;
+import org.protocoder.apprunner.AppRunnerSettings;
 import org.protocoder.apprunner.PInterface;
 import org.protocoder.apprunner.ProtocoderScript;
 import org.protocoder.events.Project;
 import org.protocoder.events.ProjectManager;
 import org.protocoder.events.SchedulerManager;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
+import android.content.ContentValues;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.MediaStore;
+import android.provider.MediaStore.MediaColumns;
+import android.support.v4.app.NotificationCompat;
 
 public class PApp extends PInterface {
 
@@ -101,12 +116,72 @@ public class PApp extends PInterface {
 		PrefsFragment.setId(a.get(), id);
 	}
 
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	public String getProjectURL() {
-		String url = ProjectManager.getInstance().getCurrentProject().getServingURL();
+	@APIParam(params = { "id" })
+	public void setNotification(int id, String title, String description) {
+		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(a.get())
+				.setSmallIcon(R.drawable.protocoder_icon).setContentTitle(title).setContentText(description);
+		// Creates an explicit intent for an Activity in your app
+		Intent resultIntent = new Intent(a.get(), AppRunnerActivity.class);
 
+		// The stack builder object will contain an artificial back stack for
+		// the started Activity.
+		// This ensures that navigating backward from the Activity leads out of
+		// your application to the Home screen.
+		TaskStackBuilder stackBuilder = TaskStackBuilder.create(a.get());
+		// Adds the back stack for the Intent (but not the Intent itself)
+		stackBuilder.addParentStack(MainActivity.class);
+		// Adds the Intent that starts the Activity to the top of the stack
+		stackBuilder.addNextIntent(resultIntent);
+		PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+		mBuilder.setContentIntent(resultPendingIntent);
+		NotificationManager mNotificationManager = (NotificationManager) a.get().getSystemService(
+				a.get().NOTIFICATION_SERVICE);
+		// mId allows you to update the notification later on.
+		mNotificationManager.notify(id, mBuilder.build());
+	}
+
+	// TOFIX not working yet
+	// @ProtocoderScript
+	// @APIMethod(description = "", example = "")
+	// @APIParam(params = { "id" })
+	public void shareImage(String imagePath) {
+
+		ContentValues values = new ContentValues();
+		values.put(MediaColumns.MIME_TYPE, "image/png");
+		values.put(MediaColumns.DATA, AppRunnerSettings.get().project.getStoragePath() + "/" + imagePath);
+		Uri uri = a.get().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+		Intent shareIntent = new Intent(Intent.ACTION_SEND);
+		shareIntent.setType("image/png");
+
+		shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+		a.get().startActivity(shareIntent);
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "id" })
+	public void shareText(String text) {
+		Intent shareIntent = new Intent(Intent.ACTION_SEND);
+		shareIntent.setType("text/*");
+		shareIntent.putExtra(Intent.EXTRA_TEXT, text);
+		a.get().startActivity(shareIntent);
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	public String getProjectUrl() {
+		String url = ProjectManager.getInstance().getCurrentProject().getServingURL();
 		return url;
 	}
 
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	public String getProjectPath() {
+		String url = ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/";
+		return url;
+	}
 }

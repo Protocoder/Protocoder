@@ -41,9 +41,9 @@ import android.widget.TextView;
 
 public class PCard extends LinearLayout implements PViewInterface {
 
-	private int currentColor;
-	private int viewCount = 0;
-	private Context c;
+	private final int currentColor;
+	private final int viewCount = 0;
+	private final Context c;
 	LinearLayout cardLl;
 	TextView title;
 
@@ -65,7 +65,7 @@ public class PCard extends LinearLayout implements PViewInterface {
 
 	public void addWidget(View v) {
 		v.setAlpha(0);
-		v.animate().alpha(1).setDuration(500).setStartDelay((long) (100 * (1 + viewCount)));
+		v.animate().alpha(1).setDuration(500).setStartDelay(100 * (1 + viewCount));
 
 		// v.setPadding(0, 0, 0, AndroidUtils.pixelsToDp(c, 3));
 		cardLl.addView(v);
@@ -78,8 +78,10 @@ public class PCard extends LinearLayout implements PViewInterface {
 	}
 
 	public void setTitle(String text) {
-		title.setVisibility(View.VISIBLE);
-		title.setText(text);
+		if (text.isEmpty() == false) {
+			title.setVisibility(View.VISIBLE);
+			title.setText(text);
+		}
 	}
 
 	public void setTitleColor(int color) {
@@ -96,11 +98,4 @@ public class PCard extends LinearLayout implements PViewInterface {
 		ll.setOrientation(LinearLayout.VERTICAL);
 	}
 
-	public void hide() {
-		this.setVisibility(View.GONE);
-	}
-
-	public void show() {
-		this.setVisibility(View.VISIBLE);
-	}
 }

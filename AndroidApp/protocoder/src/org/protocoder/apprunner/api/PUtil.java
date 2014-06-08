@@ -39,7 +39,10 @@ import org.protocoder.apprunner.ProtocoderScript;
 import org.protocoder.sensors.WhatIsRunning;
 
 import android.app.Activity;
+import android.content.res.Resources;
 import android.os.Handler;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 
 public class PUtil extends PInterface {
 
@@ -112,8 +115,8 @@ public class PUtil extends PInterface {
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	@APIParam(params = { "function()", "milliseconds" })
-	public Looper loop(final LooperCB callbackkfn, final int duration) {
+	@APIParam(params = { "milliseconds", "function()" })
+	public Looper loop(final int duration, final LooperCB callbackkfn) {
 
 		return new Looper(duration, callbackkfn);
 	}
@@ -125,8 +128,8 @@ public class PUtil extends PInterface {
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	@APIParam(params = { "function()", "milliseconds" })
-	public void delay(final delayCB fn, final int duration) {
+	@APIParam(params = { "milliseconds", "function()" })
+	public void delay(final int duration, final delayCB fn) {
 
 		Runnable task = new Runnable() {
 			@Override
@@ -152,6 +155,34 @@ public class PUtil extends PInterface {
 
 	public void stop() {
 		stopAllTimers();
+	}
+
+	// http://stackoverflow.com/questions/4605527/converting-pixels-to-dp
+	public float dpToPixels(float dp) {
+		Resources resources = a.get().getResources();
+		DisplayMetrics metrics = resources.getDisplayMetrics();
+		float px = dp * (metrics.densityDpi / 160f);
+		return px;
+	}
+
+	public float pixelsToDp(float px) {
+		Resources resources = a.get().getResources();
+		DisplayMetrics metrics = resources.getDisplayMetrics();
+		float dp = px / (metrics.densityDpi / 160f);
+		return dp;
+	}
+
+	public float mmToPixels(float mm) {
+		float px = TypedValue
+				.applyDimension(TypedValue.COMPLEX_UNIT_MM, mm, a.get().getResources().getDisplayMetrics());
+		return px;
+	}
+
+	public float pixelsToMm(int px) {
+		float onepx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_MM, 1, a.get().getResources()
+				.getDisplayMetrics());
+
+		return px * onepx;
 	}
 
 }
