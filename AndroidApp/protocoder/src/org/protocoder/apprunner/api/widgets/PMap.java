@@ -99,7 +99,7 @@ public class PMap extends MapView {
 		mapView.setTileSource(tileSource);
 	}
 
-	public OverlayItem addPoint(String title, String text, double lat, double lon) {
+	public OverlayItem addMarker(String title, String text, double lat, double lon) {
 
 		OverlayItem olItem = new OverlayItem(title, text, new GeoPoint(lat, lon));
 		Drawable newMarker = c.getResources().getDrawable(R.drawable.marker);

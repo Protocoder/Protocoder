@@ -345,6 +345,10 @@ public class PMedia extends PInterface {
 		Audio.speak(a.get(), text, Locale.getDefault());
 	}
 
+	public void startMidi() {
+		// SimpleMidi simpleMidi = new SimpleMidi();
+	}
+
 	// --------- startVoiceRecognition ---------//
 	interface startVoiceRecognitionCB {
 		void event(String responseString);

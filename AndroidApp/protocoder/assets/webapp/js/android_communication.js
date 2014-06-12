@@ -9,7 +9,9 @@ var Communication = function(useWebsockets) {
   this.remoteIP = window.location.hostname;  
   //this.remoteIP = 'localhost';
   this.remoteWSPORT = '8587';
-  this.self = this;
+  this.self = this; 
+  this.countLogs = 0; 
+
   if (useWebsockets) { 
     this.initWebsockets();
   }
@@ -136,6 +138,7 @@ Communication.prototype.runApp = function (project) {
 	} catch (e) {};
 
 	$("#console_wrapper #console").empty();
+	this.countLogs = 0;
 
 }
 
@@ -286,12 +289,24 @@ Communication.prototype.initWebsockets = function () {
 
     if (result.type == "console") { 
       if (result.action == "log") { 
-        var log = result.values.val; 
-        $("#console_wrapper #console").append('<p>' + log + '</p>');
-        var c = $("#console_wrapper #console")[0];
-        c.scrollTop = c.scrollHeight;
+	       var log = result.values.val;
+
+
+	       //limit to 1000 the num of log entries that can be displayed 
+	       if (self.countLogs > 1000) { 
+				$("#console_wrapper #console p").slice(0, 100).remove(); 
+				self.countLogs -= 100;
+			}
+
+
+	       $("#console_wrapper #console").append('<p>' + log + '</p>');        
+	       var c = $("#console_wrapper #console")[0];
+	       c.scrollTop = c.scrollHeight;
+
+	       self.countLogs++;
        } else if (result.action == "clear") { 
-        $("#console_wrapper #console").empty();
+       		$("#console_wrapper #console").empty();
+       		self.countLogs = 0;
        }
     }
 

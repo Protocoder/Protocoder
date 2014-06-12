@@ -103,7 +103,7 @@ public class PPureData {
 		PdBase.writeArray(destination, 0, source, 0, n);
 	}
 
-	private void stop() {
+	public void stop() {
 		// PdBase.release();
 	}
 }

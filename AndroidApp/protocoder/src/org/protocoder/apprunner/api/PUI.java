@@ -43,7 +43,7 @@ import org.protocoder.apprunner.ProtocoderScript;
 import org.protocoder.apprunner.api.other.PCamera;
 import org.protocoder.apprunner.api.other.PProcessing;
 import org.protocoder.apprunner.api.other.PVideo;
-import org.protocoder.apprunner.api.widgets.PFakeAbsoluteLayoutLayout;
+import org.protocoder.apprunner.api.widgets.PAbsoluteLayout;
 import org.protocoder.apprunner.api.widgets.PButton;
 import org.protocoder.apprunner.api.widgets.PCanvasView;
 import org.protocoder.apprunner.api.widgets.PCard;
@@ -560,8 +560,8 @@ public class PUI extends PUIGeneric {
 	@ProtocoderScript
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
 	@APIParam(params = { "label" })
-	public PFakeAbsoluteLayoutLayout addAbsoluteLayout() {
-		PFakeAbsoluteLayoutLayout al = new PFakeAbsoluteLayoutLayout(a.get());
+	public PAbsoluteLayout addAbsoluteLayout() {
+		PAbsoluteLayout al = new PAbsoluteLayout(a.get());
 		addViewLinear(al);
 
 		return al;
@@ -574,8 +574,8 @@ public class PUI extends PUIGeneric {
 	@ProtocoderScript
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
 	@APIParam(params = { "x", "y", "w", "h" })
-	public PFakeAbsoluteLayoutLayout addAbsoluteLayout(int x, int y, int w, int h) {
-		PFakeAbsoluteLayoutLayout al = new PFakeAbsoluteLayoutLayout(a.get());
+	public PAbsoluteLayout addAbsoluteLayout(int x, int y, int w, int h) {
+		PAbsoluteLayout al = new PAbsoluteLayout(a.get());
 		addViewAbsolute(al, x, y, w, h);
 
 		return al;

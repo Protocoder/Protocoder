@@ -41,6 +41,7 @@ import org.protocoder.apprunner.ProtocoderScript;
 import org.protocoder.events.Project;
 import org.protocoder.events.ProjectManager;
 import org.protocoder.events.SchedulerManager;
+import org.protocoder.utils.FileIO;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -106,6 +107,15 @@ public class PApp extends PInterface {
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "code" })
 	public void eval(String code) {
+		a.get().interp.eval(code);
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "code" })
+	public void load(String filename) {
+		String code = FileIO.loadFile(filename);
+
 		a.get().interp.eval(code);
 	}
 

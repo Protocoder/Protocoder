@@ -40,10 +40,20 @@ import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Properties;
 import java.util.Set;
 
+import javax.activation.DataHandler;
+import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.Session;
+import javax.mail.Transport;
 import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -232,7 +242,7 @@ public class PNetwork extends PInterface {
 
 	// --------- webSocket Server ---------//
 	interface startWebSocketServerCB {
-		void event(String string, String string2, String arg1);
+		void event(String string, WebSocket socket, String arg1);
 	}
 
 	WifiManager.MulticastLock wifiLock;
@@ -254,7 +264,7 @@ public class PNetwork extends PInterface {
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	@APIParam(params = { "port", "function(status, remoteAddress, jsonData)" })
+	@APIParam(params = { "port", "function(status, socket, data)" })
 	public WebSocketServer startWebsocketServer(int port, final startWebSocketServerCB callbackfn) {
 
 		InetSocketAddress inetSocket = new InetSocketAddress(port);
@@ -263,26 +273,27 @@ public class PNetwork extends PInterface {
 
 			@Override
 			public void onClose(WebSocket arg0, int arg1, String arg2, boolean arg3) {
-				callbackfn.event("close", arg0.getRemoteSocketAddress().toString(), "");
+				callbackfn.event("close", arg0, "");
 			}
 
 			@Override
 			public void onError(WebSocket arg0, Exception arg1) {
-				callbackfn.event("error", arg0.getRemoteSocketAddress().toString(), "");
+				callbackfn.event("error", arg0, "");
 			}
 
 			@Override
 			public void onMessage(WebSocket arg0, String arg1) {
-				callbackfn.event("message", arg0.getRemoteSocketAddress().toString(), arg1);
+				callbackfn.event("message", arg0, arg1);
 			}
 
 			@Override
 			public void onOpen(WebSocket arg0, ClientHandshake arg1) {
-				callbackfn.event("open", arg0.getRemoteSocketAddress().toString(), "");
+				callbackfn.event("open", arg0, "");
 			}
 		};
 		websocketServer.start();
 
+		WhatIsRunning.getInstance().add(websocketServer);
 		return websocketServer;
 
 	}
@@ -294,7 +305,7 @@ public class PNetwork extends PInterface {
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	@APIParam(params = { "uri", "function(type, data)" })
+	@APIParam(params = { "uri", "function(status, data)" })
 	public org.java_websocket.client.WebSocketClient connectWebsocket(String uri, final connectWebsocketCB callbackfn) {
 
 		org.java_websocket.client.WebSocketClient webSocketClient = null;
@@ -325,6 +336,7 @@ public class PNetwork extends PInterface {
 			callbackfn.event("error ", e.toString());
 			e.printStackTrace();
 		}
+
 		return webSocketClient;
 	}
 
@@ -336,7 +348,7 @@ public class PNetwork extends PInterface {
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	@APIParam(params = { "uri", "function(type, data)" })
+	@APIParam(params = { "uri", "function(status, message, data)" })
 	public SocketIOClient connectSocketIO(String uri, final connectSocketIOCB callbackfn) {
 		SocketIOClient socketIOClient = new SocketIOClient(URI.create(uri), new SocketIOClient.Handler() {
 
@@ -359,19 +371,19 @@ public class PNetwork extends PInterface {
 			@Override
 			public void onDisconnect(int code, String reason) {
 				callbackfn.event("disconnect", reason, null);
-				MLog.d("qq", "disconnected");
+				// MLog.d("qq", "disconnected");
 			}
 
 			@Override
 			public void onConnect() {
 				callbackfn.event("connected", null, null);
-				MLog.d("qq", "connected");
+				// MLog.d("qq", "connected");
 			}
 
 			@Override
 			public void on(String event, JSONArray arguments) {
-				callbackfn.event("onmessage", event, arguments);
-				MLog.d("qq", "onmessage");
+				callbackfn.event("on", event, arguments);
+				// MLog.d("qq", "onmessage");
 
 			}
 		});
@@ -380,16 +392,92 @@ public class PNetwork extends PInterface {
 		return socketIOClient;
 	}
 
+	private class EmailConf {
+		public String host;
+		public String user;
+		public String password;
+		public String port;
+		public String auth;
+		public String ttl;
+	}
+
+	// public EmailConf emailSettings;
+
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "url", "function(data)" })
-	public void sendEmail() {
+	public EmailConf createEmailSettings() {
+		/*
+		 * String host, String user, String pass, String iPort, String bAuth,
+		 * String bTtl) {
+		 * 
+		 * emailSettings = new EmailConf(); emailSettings.host = host;
+		 * emailSettings.user = user; emailSettings.password = pass;
+		 * emailSettings.port = iPort; emailSettings.auth = bAuth;
+		 * emailSettings.ttl = bTtl;
+		 */
+		return new EmailConf();
+	}
+
+	// http://mrbool.com/how-to-work-with-java-mail-api-in-android/27800#ixzz2tulYAG00
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "url", "function(data)" })
+	public void sendEmail(String from, String to, String subject, String text, final EmailConf emailSettings)
+			throws AddressException, MessagingException {
+
+		if (emailSettings == null) {
+			return;
+		}
+
+		// final String host = "smtp.gmail.com";
+		// final String address = "@gmail.com";
+		// final String pass = "";
+
+		Multipart multiPart;
+		String finalString = "";
+
+		Properties props = System.getProperties();
+		props.put("mail.smtp.starttls.enable", emailSettings.ttl);
+		props.put("mail.smtp.host", emailSettings.host);
+		props.put("mail.smtp.user", emailSettings.user);
+		props.put("mail.smtp.password", emailSettings.password);
+		props.put("mail.smtp.port", emailSettings.port);
+		props.put("mail.smtp.auth", emailSettings.auth);
+
+		Log.i("Check", "done pops");
+		final Session session = Session.getDefaultInstance(props, null);
+		DataHandler handler = new DataHandler(new ByteArrayDataSource(finalString.getBytes(), "text/plain"));
+		final MimeMessage message = new MimeMessage(session);
+		message.setFrom(new InternetAddress(from));
+		message.setDataHandler(handler);
+		Log.i("Check", "done sessions");
+
+		multiPart = new MimeMultipart();
+
+		InternetAddress toAddress;
+		toAddress = new InternetAddress(to);
+		message.addRecipient(Message.RecipientType.TO, toAddress);
+		Log.i("Check", "added recipient");
+		message.setSubject(subject);
+		message.setContent(multiPart);
+		message.setText(text);
+
 		Thread t = new Thread(new Runnable() {
 
 			@Override
 			public void run() {
 				try {
-					NetworkUtils.sendEmail();
+					MLog.i("check", "transport");
+					Transport transport = session.getTransport("smtp");
+					MLog.i("check", "connecting");
+					transport.connect(emailSettings.host, emailSettings.user, emailSettings.password);
+					MLog.i("check", "wana send");
+					transport.sendMessage(message, message.getAllRecipients());
+					transport.close();
+
+					MLog.i("check", "sent");
+
 				} catch (AddressException e) {
 					e.printStackTrace();
 				} catch (MessagingException e) {

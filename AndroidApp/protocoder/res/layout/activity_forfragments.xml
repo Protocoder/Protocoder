@@ -3,7 +3,8 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:gravity="bottom"
-    android:visibility="visible" >
+    android:visibility="visible"
+    android:background="@color/white" >
 
     <!--
     <ImageView
@@ -31,7 +32,8 @@
         android:layout_alignParentTop="true"
         android:focusableInTouchMode="true"
         android:gravity="bottom"
-        android:paddingTop="?android:attr/actionBarSize" >
+        >
+<!--         android:paddingTop="?android:attr/actionBarSize"  -->
 
         <android.support.v4.view.ViewPager
             xmlns:android="http://schemas.android.com/apk/res/android"
@@ -50,7 +52,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
-                android:background="#00ff8800"
+                android:background="#FFFF8800"
                 android:padding="8dp"
                 android:textAppearance="@style/PagerTitleStripText"
                 android:textColor="#fff"

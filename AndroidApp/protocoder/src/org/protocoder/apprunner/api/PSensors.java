@@ -84,7 +84,7 @@ public class PSensors extends PInterface {
 	public PSensors(AppRunnerActivity mwmActivity) {
 		super(mwmActivity);
 
-		sensorsSpeed = SensorManager.SENSOR_DELAY_NORMAL;
+		sensorsSpeed = SensorManager.SENSOR_DELAY_FASTEST;
 
 		a.get().addNFCReadListener(new onNFCListener() {
 			@Override
