@@ -408,6 +408,17 @@ public class FileIO {
 		return null;
 	}
 
+	public static String loadFile(String filename) {
+		String[] arr = loadStrings(filename);
+
+		StringBuilder builder = new StringBuilder();
+		for (String s : arr) {
+			builder.append(s);
+		}
+
+		return builder.toString();
+	}
+
 	/*
 	 * Method borrowed from Processing PApplet.java
 	 */

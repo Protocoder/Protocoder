@@ -76,7 +76,7 @@ import org.protocoder.apprunner.api.widgets.PCanvasView;
 import org.protocoder.apprunner.api.widgets.PCard;
 import org.protocoder.apprunner.api.widgets.PCheckBox;
 import org.protocoder.apprunner.api.widgets.PEditText;
-import org.protocoder.apprunner.api.widgets.PFakeAbsoluteLayoutLayout;
+import org.protocoder.apprunner.api.widgets.PAbsoluteLayout;
 import org.protocoder.apprunner.api.widgets.PImageButton;
 import org.protocoder.apprunner.api.widgets.PImageView;
 import org.protocoder.apprunner.api.widgets.PMap;
@@ -426,7 +426,7 @@ public class MyHTTPServer extends NanoHTTPD {
 					APIManager.getInstance().addClass(PCard.class);
 					APIManager.getInstance().addClass(PCheckBox.class);
 					APIManager.getInstance().addClass(PEditText.class);
-					APIManager.getInstance().addClass(PFakeAbsoluteLayoutLayout.class);
+					APIManager.getInstance().addClass(PAbsoluteLayout.class);
 					APIManager.getInstance().addClass(PImageButton.class);
 					APIManager.getInstance().addClass(PImageView.class);
 					// plist item

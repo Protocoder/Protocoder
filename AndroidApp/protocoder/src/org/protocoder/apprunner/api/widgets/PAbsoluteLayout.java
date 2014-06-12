@@ -5,9 +5,9 @@ import android.graphics.Color;
 import android.view.View;
 import android.widget.FrameLayout;
 
-public class PFakeAbsoluteLayoutLayout extends FrameLayout {
+public class PAbsoluteLayout extends FrameLayout {
 
-	public PFakeAbsoluteLayoutLayout(Context context) {
+	public PAbsoluteLayout(Context context) {
 		super(context);
 	}
 

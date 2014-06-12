@@ -10,7 +10,7 @@
     <style name="ProtocoderLaunchTheme" parent="@android:style/Theme.Holo.Light.NoActionBar"></style>
 
     <style name="ProtocoderTheme.ActionBarStyle" parent="@android:style/Widget.Holo.Light.ActionBar">
-        <item name="android:background">@color/transparent</item>
+        <item name="android:background">@color/white</item>
         <item name="android:titleTextStyle">@style/ProtocoderTheme.ActionBar.TitleTextStyle</item>
         <item name="android:selectableItemBackground">@drawable/actionbar_highlight</item>
         <item name="android:actionOverflowButtonStyle">@style/OverFlow</item>

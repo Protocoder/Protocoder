@@ -13,7 +13,6 @@ var c;
 var count = 0.0;
 
 processing.setup(function(p) {
-    p.size(192, 157); 
     p.background(0); 
     p.frameRate(25);
     c = 100;

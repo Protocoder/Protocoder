@@ -105,7 +105,7 @@ public class PUIGeneric extends PInterface {
 	View viewArray[] = new View[MAXVIEW];
 	int viewCount = 0;
 	boolean isMainLayoutSetup = false;
-	protected PFakeAbsoluteLayoutLayout uiAbsoluteLayout;
+	protected PAbsoluteLayout uiAbsoluteLayout;
 	protected LinearLayout uiLinearLayout;
 	protected RelativeLayout holderLayout;
 	protected ImageView bgImageView;
@@ -163,7 +163,7 @@ public class PUIGeneric extends PInterface {
 			if (absoluteLayout) {
 				// Create the main layout. This is where all the items actually
 				// go
-				uiAbsoluteLayout = new PFakeAbsoluteLayoutLayout(a.get());
+				uiAbsoluteLayout = new PAbsoluteLayout(a.get());
 				uiAbsoluteLayout.setLayoutParams(layoutParams);
 				uiAbsoluteLayout.setBackgroundColor(a.get().getResources().getColor(R.color.transparent));
 				sv.addView(uiAbsoluteLayout);

@@ -197,9 +197,6 @@ public class PProtocoderFeedback {
 		// liveRLayout.setLayoutAnimation(new
 		// LayoutAnimationController(spinin));
 
-		LayoutTransition l = new LayoutTransition();
-		l.enableTransitionType(LayoutTransition.CHANGING);
-
 		Animator appearingAnimation = ObjectAnimator.ofFloat(null, "translationY", 20, 0);
 		appearingAnimation.addListener(new AnimatorListenerAdapter() {
 			@Override
@@ -209,14 +206,18 @@ public class PProtocoderFeedback {
 			}
 		});
 
-		AnimatorSet as = (AnimatorSet) AnimatorInflater.loadAnimator(a, R.animator.live_code);
-		// as.se
-		l.setAnimator(LayoutTransition.APPEARING, as);
-		l.setDuration(LayoutTransition.APPEARING, 300);
-		l.setStartDelay(LayoutTransition.APPEARING, 0);
+		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+			LayoutTransition l = new LayoutTransition();
+			l.enableTransitionType(LayoutTransition.CHANGING);
 
-		liveRLayout.setLayoutTransition(l);
+			AnimatorSet as = (AnimatorSet) AnimatorInflater.loadAnimator(a, R.animator.live_code);
+			// as.se
+			l.setAnimator(LayoutTransition.APPEARING, as);
+			l.setDuration(LayoutTransition.APPEARING, 300);
+			l.setStartDelay(LayoutTransition.APPEARING, 0);
 
+			liveRLayout.setLayoutTransition(l);
+		}
 		return liveRLayout;
 
 	}

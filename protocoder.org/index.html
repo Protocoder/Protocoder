@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us" class="no-js"  itemscope itemtype="http://schema.org/Article">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Android rapid prototyping tool. IOIO, OSC, websockets.">
     <meta name="author" content="">
@@ -161,7 +162,7 @@
           </pre>
 
           <p>
-          Protocoder runs internally a webserver and a websockets server to serve you an IDE that you can use wirelessly or via USB cable using the companion app. It supports most android hardware functionality, the only requirement is running Android version > 4.0 in your device. 
+          Protocoder runs internally a webserver and a websockets server to serve you an IDE that you can use wirelessly or via USB cable using the companion app. It supports most android hardware functionality, the only requirement is running Android version > 4.0 in your device. That means that it runs on phones, tablets, glasses, tv dongles and smart watches :) 
           </p>
 
         </div><!-- /.col-lg-4 -->
@@ -213,37 +214,66 @@
           <div class="col-md-7">
             <h2 class="featurette-heading">A Dashboard. <span class="text-muted">Remote control! </span></h2>
             <p class="lead">Imagine that you want to use your phone as a brain for your robot. You have the phone between wires and cases, which might be a bit difficult to access for debugging it. 
-
             No problem. Use the dashboard to see wirelessly information from the sensors or control it. A pieze of cake!</p>
           </div>
           <div class="col-md-5">
-            <img class="featurette-image img-responsive" src="./docs-assets/images/protocoder_dashboard.jpg" alt="Generic placeholder image">
+            <img class="featurette-image img-responsive" src="./docs-assets/images/protocoder_dashboard.png" alt="Generic placeholder image">
           </div>
         </div>
 
-        <hr class="featurette-divider">
 
+
+    <hr class="featurette-divider">
+ 	<div class="row featurette">
+      <div class="col-md-5">
+            <img class="featurette-image img-responsive" src="./docs-assets/images/protocoder_libraries.png" alt="Generic placeholder image">
+      </div>
+        <div class="col-md-7">
+        	<h2 class="featurette-heading">More libraries. <span class="text-muted">Be expresive. </span></h2>
+        	<p class="lead">Protocoder wants to share the philosophy of amazing projects such as Processing.org, Pure Data, Open Street Maps and many more. That's why they are included so you can start using them straight away. </p>
+      	</div>
+     
+
+      </div>
+    
+
+    <hr class="featurette-divider">
+ 	<div class="row featurette">
+      <div class="col-md-7">
+        <h2 class="featurette-heading">Expand your device. <span class="text-muted"> </span></h2>
+        <p class="lead">Connect your Arduino, IOIO, makey makey or other boards to your device and create physical stuff with them. Note: Arduino will work only if your device supports USB OTG</p>
+      </div>
+      <div class="col-md-5">
+        <img class="featurette-image img-responsive" src="./docs-assets/images/boards.png" alt="Generic placeholder image">
+      </div>
+    </div>
+
+
+
+    <hr class="featurette-divider">
+  	<div class="row featurette">
+        <div class="col-md-5">
+          <img class="featurette-image img-responsive" src="./docs-assets/images/protocoder_livecoding.gif" alt="Generic placeholder image">
+        </div>
+        <div class="col-md-7">
+          <h2 class="featurette-heading">Live execution. <span class="text-muted"> be water </span></h2>
+          <p class="lead">Select the lines, press Cmd / Control + Shift + X and see how things change on your device. Once you master, you will wonder why mobile development tools don't have this as default.</p>
+        </div>
+      </div>
+
+
+	<!-- 
+    <hr class="featurette-divider">
   	<div class="row featurette">
         <div class="col-md-5">
           <img class="featurette-image img-responsive" src="./docs-assets/images/protocoder_run.png" alt="Generic placeholder image">
         </div>
         <div class="col-md-7">
           <h2 class="featurette-heading">More than phones. <span class="text-muted"> </span></h2>
-          <p class="lead">Protocoder works on any Android device which a version higher than 4.0. It means that works in other devices such as tablets, Ouya, Google Glass, Epson Smart Glasses, UDOO, smart watches and many more. </p>
+          <p class="lead">Protocoder works on any Android device with a version higher than 4.0. It means that works in other devices such as tablets, Android tv dongles, glasses, smart watches and many more. Why not creating your own device?</p>
         </div>
-      </div>
-
-    <hr class="featurette-divider">
-
- 	<div class="row featurette">
-      <div class="col-md-7">
-        <h2 class="featurette-heading">Friend libraries. <span class="text-muted">Be expresive. </span></h2>
-        <p class="lead">Protocoder wants to share the philosophy of amazing projects such as Processing.org, Pure Data, Open Street Maps ans many more. That's why they are included and you can start using them straight away. </p>
-      </div>
-      <div class="col-md-5">
-        <img class="featurette-image img-responsive" src="./docs-assets/images/protocoder_dashboard.jpg" alt="Generic placeholder image">
-      </div>
-    </div>
+      </div>  
+  	-->
 
     <hr class="featurette-divider">
 
@@ -257,7 +287,7 @@
             <a name = "download" id = "download"></a>
             <p>Download the apk in your phone. Dont forget to enable installing apps for unknown sources. 
             Once you install it, connect your Android device and your computer to the same Wifi network and and input the ip address in your browser.</p>
-            <a class="btn btn-lg btn-primary" href="./downloads/protocoder-release-0.9.apk" role="button">Download APK v0.9</a>
+            <a class="btn btn-lg btn-primary" href="./downloads/protocoder-release-0.95.apk" role="button">Download APK v0.95</a>
          
             <!--
             <a class="btn btn-lg btn-primary" href="./downloads/protocoder-release-0_8.apk" role="button">Get it from the Play Store</a>
@@ -272,12 +302,18 @@
             </p>
             -->  
             <p>
-            If you know a bit of adb trickery you can still use protocoder with USB cable. Just write this command line in your system console and then go to http://localhost:8585 in your browser. Please note that you need to install adb in your system. 
+            If you know a bit of adb trickery you can still use protocoder with <strong>USB cable</strong> . Just write this command line in your system console and then go to http://localhost:8585 in your browser. Please note that you need to install adb in your system. 
             </p>
+
           <pre class="prettyprint">
     > adb forward tcp:8585 tcp:8585
     > adb forward tcp:8587 tcp:8587</pre>
-             </p>
+	
+    		<p>
+            If you want you can download Adb for Mac, Linux and Windows using this zip file</p>
+            <a class="btn btn-lg btn-primary" href="./downloads/adb.zip" role="button">Download adb </a>
+            </p>
+
           </div>
         </div>
 

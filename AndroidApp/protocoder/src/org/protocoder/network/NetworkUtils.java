@@ -43,19 +43,6 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.ByteOrder;
 import java.util.Enumeration;
-import java.util.Properties;
-
-import javax.activation.DataHandler;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-import javax.mail.util.ByteArrayDataSource;
 
 import org.protocoder.apprunner.AppRunnerSettings;
 import org.protocoder.utils.MLog;
@@ -287,55 +274,6 @@ public class NetworkUtils {
 		// MLog.d(TAG, ex.toString());
 		// }
 		// return null;
-
-	}
-
-	// http://mrbool.com/how-to-work-with-java-mail-api-in-android/27800#ixzz2tulYAG00
-	public static void sendEmail() throws AddressException, MessagingException {
-		String host = "smtp.gmail.com";
-		String address = "@gmail.com";
-		String pass = "";
-
-		String from = "@gmail.com";
-		String to = "@gmail.com";
-
-		Multipart multiPart;
-		String finalString = "";
-
-		Properties props = System.getProperties();
-		props.put("mail.smtp.starttls.enable", "true");
-		props.put("mail.smtp.host", host);
-		props.put("mail.smtp.user", address);
-		props.put("mail.smtp.password", pass);
-		props.put("mail.smtp.port", "587");
-		props.put("mail.smtp.auth", "true");
-		Log.i("Check", "done pops");
-		Session session = Session.getDefaultInstance(props, null);
-		DataHandler handler = new DataHandler(new ByteArrayDataSource(finalString.getBytes(), "text/plain"));
-		MimeMessage message = new MimeMessage(session);
-		message.setFrom(new InternetAddress(from));
-		message.setDataHandler(handler);
-		Log.i("Check", "done sessions");
-
-		multiPart = new MimeMultipart();
-
-		InternetAddress toAddress;
-		toAddress = new InternetAddress(to);
-		message.addRecipient(Message.RecipientType.TO, toAddress);
-		Log.i("Check", "added recipient");
-		message.setSubject("Send Auto-Mail");
-		message.setContent(multiPart);
-		message.setText("Demo For Sending Mail in Android Automatically");
-
-		Log.i("check", "transport");
-		Transport transport = session.getTransport("smtp");
-		Log.i("check", "connecting");
-		transport.connect(host, address, pass);
-		Log.i("check", "wana send");
-		transport.sendMessage(message, message.getAllRecipients());
-		transport.close();
-
-		Log.i("check", "sent");
 
 	}
 
