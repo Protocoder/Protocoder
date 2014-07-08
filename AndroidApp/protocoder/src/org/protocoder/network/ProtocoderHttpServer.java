@@ -103,7 +103,7 @@ import de.greenrobot.event.EventBus;
 /**
  * An example of subclassing NanoHTTPD to make a custom HTTP server.
  */
-public class MyHTTPServer extends NanoHTTPD {
+public class ProtocoderHttpServer extends NanoHTTPD {
 	public static final String TAG = "myHTTPServer";
 	private final WeakReference<Context> ctx;
 	private final String WEBAPP_DIR = "webapp/";
@@ -138,14 +138,14 @@ public class MyHTTPServer extends NanoHTTPD {
 		}
 	};
 
-	private static MyHTTPServer instance;
+	private static ProtocoderHttpServer instance;
 
-	public static MyHTTPServer getInstance(Context aCtx, int port) {
+	public static ProtocoderHttpServer getInstance(Context aCtx, int port) {
 		MLog.d(TAG, "launching web server...");
 		if (instance == null) {
 			try {
 				MLog.d(TAG, "ok...");
-				instance = new MyHTTPServer(aCtx, port);
+				instance = new ProtocoderHttpServer(aCtx, port);
 			} catch (IOException e) {
 				MLog.d(TAG, "nop :(...");
 				e.printStackTrace();
@@ -155,7 +155,7 @@ public class MyHTTPServer extends NanoHTTPD {
 		return instance;
 	}
 
-	public MyHTTPServer(Context aCtx, int port) throws IOException {
+	public ProtocoderHttpServer(Context aCtx, int port) throws IOException {
 		super(port);
 		ctx = new WeakReference<Context>(aCtx);
 		String ip = NetworkUtils.getLocalIpAddress(aCtx);

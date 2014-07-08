@@ -86,7 +86,7 @@ public class PDashboardInput extends PInterface {
 				try {
 
 					final String val = jsonObject.getString("val");
-					a.get().runOnUiThread(new Runnable() {
+					mHandler.post(new Runnable() {
 
 						@Override
 						public void run() {

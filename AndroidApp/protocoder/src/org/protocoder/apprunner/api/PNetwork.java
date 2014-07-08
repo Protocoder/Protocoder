@@ -90,6 +90,7 @@ import org.protocoder.network.OSC;
 import org.protocoder.network.OSC.Client;
 import org.protocoder.network.OSC.OSCServerListener;
 import org.protocoder.network.OSC.Server;
+import org.protocoder.network.ProtocoderAPIHttpServer;
 import org.protocoder.network.bt.DeviceListActivity;
 import org.protocoder.network.bt.SimpleBT;
 import org.protocoder.network.bt.SimpleBT.SimpleBTListener;
@@ -211,7 +212,8 @@ public class PNetwork extends PInterface {
 				}
 				// callback(callbackfn, "\"" + msg.getName() + "\"", str);
 				// Log.d(TAG, msg.g)
-				a.get().runOnUiThread(new Runnable() {
+
+				mHandler.post(new Runnable() {
 
 					@Override
 					public void run() {
@@ -521,7 +523,7 @@ public class PNetwork extends PInterface {
 						throw new IOException(statusLine.getReasonPhrase());
 					}
 
-					a.get().runOnUiThread(new Runnable() {
+					mHandler.post(new Runnable() {
 
 						@Override
 						public void run() {
@@ -547,7 +549,7 @@ public class PNetwork extends PInterface {
 		MLog.d(TAG, "" + new RequestTask().execute(url));
 	}
 
-	// --------- getRequest ---------//
+	// --------- postRequest ---------//
 	interface HttpPostCB {
 		void event(String string);
 	}
@@ -618,6 +620,23 @@ public class PNetwork extends PInterface {
 				}
 			}
 		}).start();
+	}
+
+	// --------- getRequest ---------//
+	interface HttpServerCB {
+		void event(String string);
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "url", "params", "function(responseString)" })
+	public void startHttpServer(int port, final HttpServerCB callbackfn) {
+		try {
+			ProtocoderAPIHttpServer httpServer = new ProtocoderAPIHttpServer(a.get(), port);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	// --------- Bluetooth ---------//
@@ -736,7 +755,7 @@ public class PNetwork extends PInterface {
 			@Override
 			public void onMessageReceived(final String data) {
 				if (data != "") {
-					a.get().runOnUiThread(new Runnable() {
+					mHandler.post(new Runnable() {
 						@Override
 						public void run() {
 							MLog.d(TAG, "Got data: " + data);

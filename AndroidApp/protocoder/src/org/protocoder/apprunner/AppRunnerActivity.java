@@ -38,18 +38,11 @@ import org.protocoder.MainActivity;
 import org.protocoder.R;
 import org.protocoder.apprunner.AppRunnerInterpreter.InterpreterInfo;
 import org.protocoder.apprunner.api.PApp;
-import org.protocoder.apprunner.api.PBoards;
-import org.protocoder.apprunner.api.PConsole;
-import org.protocoder.apprunner.api.PDashboard;
 import org.protocoder.apprunner.api.PDevice;
-import org.protocoder.apprunner.api.PEditor;
-import org.protocoder.apprunner.api.PFileIO;
 import org.protocoder.apprunner.api.PMedia;
 import org.protocoder.apprunner.api.PNetwork;
-import org.protocoder.apprunner.api.PProtocoder;
 import org.protocoder.apprunner.api.PSensors;
 import org.protocoder.apprunner.api.PUI;
-import org.protocoder.apprunner.api.PUtil;
 import org.protocoder.apprunner.api.other.PProtocoderFeedback;
 import org.protocoder.base.BaseActivity;
 import org.protocoder.events.Events;
@@ -152,54 +145,20 @@ public class AppRunnerActivity extends BaseActivity {
 		// ColorDrawable(android.graphics.Color.TRANSPARENT));
 		super.onCreate(savedInstanceState);
 
-		interp = new AppRunnerInterpreter(this);
-
-		interp.addInterface(PApp.class);
-		interp.addInterface(PBoards.class);
-		interp.addInterface(PConsole.class);
-		interp.addInterface(PDashboard.class);
-		interp.addInterface(PDevice.class);
-		interp.addInterface(PEditor.class);
-		interp.addInterface(PFileIO.class);
-		interp.addInterface(PMedia.class);
-		interp.addInterface(PNetwork.class);
-		interp.addInterface(PProtocoder.class);
-		interp.addInterface(PSensors.class);
-		interp.addInterface(PUI.class);
-		interp.addInterface(PUtil.class);
-
-		try {
-			MLog.d(TAG, "starting websocket server");
-			ws = CustomWebsocketServer.getInstance(this);
-		} catch (UnknownHostException e) {
-			MLog.d(TAG, "cannot start websocket server");
-			e.printStackTrace();
-		}
-
-		interp.createInterpreter();
-		interp.addListener(new InterpreterInfo() {
-
-			@Override
-			public void onError(String message) {
-				MLog.d(TAG, "error " + message);
-				showConsole(message);
-
-				// send to web ide
-				JSONObject obj = new JSONObject();
-				try {
-					obj.put("type", "error");
-					obj.put("values", message);
-					ws.send(obj);
-				} catch (JSONException er1) {
-					er1.printStackTrace();
-				}
-
-			}
-		});
-
 		// Read in the script given in the intent.
 		Intent intent = getIntent();
 		if (null != intent) {
+			boolean isService = intent.getBooleanExtra("isService", false);
+
+			if (isService) {
+				Intent i = new Intent(this, AppRunnerActivity.class);
+				i.putExtras(i);
+				// potentially add data to the intent
+				// i.putExtra("KEY1", "Value to be used by the service");
+				this.startService(i);
+				finish();
+			}
+
 			// get projects intent
 			String projectName = intent.getStringExtra(Project.NAME);
 			int projectType = intent.getIntExtra(Project.TYPE, -1);
@@ -220,8 +179,38 @@ public class AppRunnerActivity extends BaseActivity {
 						| WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
 				win.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
 						| WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-
 			}
+
+			interp = new AppRunnerInterpreter(this);
+
+			try {
+				MLog.d(TAG, "starting websocket server");
+				ws = CustomWebsocketServer.getInstance(this);
+			} catch (UnknownHostException e) {
+				MLog.d(TAG, "cannot start websocket server");
+				e.printStackTrace();
+			}
+
+			interp.createInterpreter(true);
+			interp.addListener(new InterpreterInfo() {
+
+				@Override
+				public void onError(String message) {
+					MLog.d(TAG, "error " + message);
+					showConsole(message);
+
+					// send to web ide
+					JSONObject obj = new JSONObject();
+					try {
+						obj.put("type", "error");
+						obj.put("values", message);
+						ws.send(obj);
+					} catch (JSONException er1) {
+						er1.printStackTrace();
+					}
+
+				}
+			});
 
 			// loading the libraries
 			interp.eval(AppRunnerInterpreter.scriptPrefix);
@@ -243,21 +232,19 @@ public class AppRunnerActivity extends BaseActivity {
 				setActionBar(actionBarColor, getResources().getColor(R.color.white));
 			}
 
+			// Call the onCreate JavaScript function.
+			interp.callJsFunction("onCreate", savedInstanceState);
+
+			AudioManager audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+			int currentVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
+			this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
+
+			initializeNFC();
+			startFileObserver();
+
+			// send ready to the ide
+			IDEcommunication.getInstance(this).ready(true);
 		}
-
-		// Call the onCreate JavaScript function.
-		interp.callJsFunction("onCreate", savedInstanceState);
-
-		AudioManager audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-		int currentVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
-		this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
-
-		initializeNFC();
-		startFileObserver();
-
-		// send ready to the ide
-		IDEcommunication.getInstance(this).ready(true);
-
 	}
 
 	public void onEventMainThread(ProjectEvent evt) {

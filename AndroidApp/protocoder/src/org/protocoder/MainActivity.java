@@ -42,7 +42,7 @@ import org.protocoder.events.ProjectManager;
 import org.protocoder.fragments.NewProjectDialogFragment;
 import org.protocoder.network.CustomWebsocketServer;
 import org.protocoder.network.IDEcommunication;
-import org.protocoder.network.MyHTTPServer;
+import org.protocoder.network.ProtocoderHttpServer;
 import org.protocoder.network.NetworkUtils;
 import org.protocoder.projectlist.ListFragmentExamples;
 import org.protocoder.projectlist.ListFragmentUserProjects;
@@ -110,7 +110,7 @@ public class MainActivity extends BaseActivity implements NewProjectDialogFragme
 
 	// connection
 	BroadcastReceiver mStopServerReceiver;
-	MyHTTPServer httpServer;
+	ProtocoderHttpServer httpServer;
 	private CustomWebsocketServer ws;
 	private ConnectivityChangeReceiver connectivityChangeReceiver;
 	int usbEnabled = 0;
@@ -309,7 +309,7 @@ public class MainActivity extends BaseActivity implements NewProjectDialogFragme
 		updateStartStopActionbarItem();
 
 		// start webserver
-		httpServer = MyHTTPServer.getInstance(getApplicationContext(), AppSettings.httpPort);
+		httpServer = ProtocoderHttpServer.getInstance(getApplicationContext(), AppSettings.httpPort);
 
 		// websocket
 		try {

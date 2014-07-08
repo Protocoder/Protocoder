@@ -96,7 +96,7 @@ public class PArduino extends PInterface {
 
 						@Override
 						public void onNewData(final byte[] data) {
-							a.get().runOnUiThread(new Runnable() {
+							mHandler.post(new Runnable() {
 								@Override
 								public void run() {
 									String readMsg = new String(data, 0, data.length);

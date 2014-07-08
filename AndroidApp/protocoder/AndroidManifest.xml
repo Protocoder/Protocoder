@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.protocoder"
-    android:versionCode="11"
-    android:versionName="0.95" >
-
-    <uses-sdk android:minSdkVersion="14" />
+    android:versionCode="12"
+    android:versionName="0.96" >
+    <uses-sdk android:targetSdkVersion="L"  android:minSdkVersion="L" />
 
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -166,6 +165,11 @@
             </intent-filter>
         </activity>
 
+        <service
+            android:name="org.protocoder.apprunner.AppRunnerService"
+            android:icon="@drawable/icon"
+            android:label="AppRunnerService" >
+        </service>
         <service android:name="org.protocoder.hardware.IOIOBoardService" />
         <service android:name="org.puredata.android.service.PdService" />
 

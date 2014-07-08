@@ -13,6 +13,6 @@ camera = ui.addCameraView(0, 0, 0, 500, 500);
 //take a picture and save it 
 ui.addButton("Take pic", 0, 500, 500, 100, function() { 
     camera.takePicture("picture.png", function() {
-        console.log('<img src="' + app.getProjectURL() + 'picture.png"/>');
+        console.log('<img src="' + app.getProjectUrl() + 'picture.png"/>');
     });
 });
