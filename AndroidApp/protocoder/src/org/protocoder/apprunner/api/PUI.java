@@ -70,6 +70,8 @@ import org.protocoder.views.PadView;
 import org.protocoder.views.TouchAreaView;
 
 import processing.core.PApplet;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
@@ -93,6 +95,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.CycleInterpolator;
 import android.view.inputmethod.InputMethodManager;
@@ -320,6 +323,53 @@ public class PUI extends PUIGeneric {
 		v.animate().x(x).setDuration(AppSettings.animSpeed);
 		v.animate().y(y).setDuration(AppSettings.animSpeed);
 
+	}
+
+	@TargetApi(Build.VERSION_CODES.L)
+	@ProtocoderScript
+	@APIParam(params = { "View" })
+	public void reveal(View v) {
+		// previously invisible view
+
+		// get the center for the clipping circle
+		int cx = (v.getLeft() + v.getRight()) / 2;
+		int cy = (v.getTop() + v.getBottom()) / 2;
+
+		// get the final radius for the clipping circle
+		int finalRadius = v.getWidth();
+
+		// create and start the animator for this view
+		// (the start radius is zero)
+		ValueAnimator anim = ViewAnimationUtils.createCircularReveal(v, cx, cy, 0, finalRadius);
+		anim.start();
+	}
+
+	@TargetApi(Build.VERSION_CODES.L)
+	@ProtocoderScript
+	@APIParam(params = { "View" })
+	public void unreveal(final View v) {
+
+		// get the center for the clipping circle
+		int cx = (v.getLeft() + v.getRight()) / 2;
+		int cy = (v.getTop() + v.getBottom()) / 2;
+
+		// get the initial radius for the clipping circle
+		int initialRadius = v.getWidth();
+
+		// create the animation (the final radius is zero)
+		ValueAnimator anim = ViewAnimationUtils.createCircularReveal(v, cx, cy, initialRadius, 0);
+
+		// make the view invisible when the animation is done
+		anim.addListener(new AnimatorListenerAdapter() {
+			@Override
+			public void onAnimationEnd(Animator animation) {
+				super.onAnimationEnd(animation);
+				v.setVisibility(View.INVISIBLE);
+			}
+		});
+
+		// start the animation
+		anim.start();
 	}
 
 	// http://stackoverflow.com/questions/16557076/how-to-smoothly-move-a-image-view-with-users-finger-on-android-emulator

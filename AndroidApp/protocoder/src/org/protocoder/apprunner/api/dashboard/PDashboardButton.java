@@ -86,7 +86,7 @@ public class PDashboardButton extends PInterface {
 
 			@Override
 			public void onUpdated(JSONObject jsonObject) {
-				a.get().runOnUiThread(new Runnable() {
+				mHandler.post(new Runnable() {
 
 					@Override
 					public void run() {

@@ -29,7 +29,6 @@
 
 package org.protocoder.apprunner;
 
-import java.lang.ref.WeakReference;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.mozilla.javascript.Callable;
@@ -41,6 +40,19 @@ import org.mozilla.javascript.RhinoException;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.commonjs.module.Require;
+import org.protocoder.apprunner.api.PApp;
+import org.protocoder.apprunner.api.PBoards;
+import org.protocoder.apprunner.api.PConsole;
+import org.protocoder.apprunner.api.PDashboard;
+import org.protocoder.apprunner.api.PDevice;
+import org.protocoder.apprunner.api.PEditor;
+import org.protocoder.apprunner.api.PFileIO;
+import org.protocoder.apprunner.api.PMedia;
+import org.protocoder.apprunner.api.PNetwork;
+import org.protocoder.apprunner.api.PProtocoder;
+import org.protocoder.apprunner.api.PSensors;
+import org.protocoder.apprunner.api.PUI;
+import org.protocoder.apprunner.api.PUtil;
 import org.protocoder.utils.MLog;
 
 import android.app.Activity;
@@ -58,7 +70,7 @@ public class AppRunnerInterpreter {
 
 	static ScriptContextFactory contextFactory;
 	public Interpreter interpreter;
-	private final WeakReference<AppRunnerActivity> a;
+	private final android.content.Context a;
 	private InterpreterInfo listener;
 
 	static String scriptPrefix = "//Prepend text for all scripts \n" + "var window = this; \n";
@@ -66,18 +78,49 @@ public class AppRunnerInterpreter {
 	static final String SCRIPT_POSTFIX = "//Appends text for all scripts \n" + "function onAndroidPause(){ }  \n"
 			+ "// End of Append Section" + "\n";
 
-	public AppRunnerInterpreter(Activity a) {
-		this.a = new WeakReference<AppRunnerActivity>((AppRunnerActivity) a);
+	public AppRunnerInterpreter(android.content.Context context) {
+		// this.a = new WeakReference<AppRunnerActivity>((AppRunnerActivity)
+		// context);
+		this.a = context;
+
+		this.addInterface(PApp.class);
+		this.addInterface(PBoards.class);
+		this.addInterface(PConsole.class);
+		this.addInterface(PDashboard.class);
+		this.addInterface(PDevice.class);
+		this.addInterface(PEditor.class);
+		this.addInterface(PFileIO.class);
+		this.addInterface(PMedia.class);
+		this.addInterface(PNetwork.class);
+		this.addInterface(PProtocoder.class);
+		this.addInterface(PSensors.class);
+		this.addInterface(PUI.class);
+		this.addInterface(PUtil.class);
+
 	}
 
 	public Object eval(final String code) {
 		return eval(code, "");
 	}
 
+	// since service doesnt use UIs we dont have to use runOnUiThread
+	public Object evalFromService(final String code) {
+		final AtomicReference<Object> result = new AtomicReference<Object>(null);
+
+		try {
+			result.set(interpreter.eval(code, ""));
+		} catch (Throwable e) {
+			reportError(e);
+			result.set(e);
+		}
+		return result.get();
+
+	}
+
 	public Object eval(final String code, final String sourceName) {
 		final AtomicReference<Object> result = new AtomicReference<Object>(null);
 
-		a.get().runOnUiThread(new Runnable() {
+		((Activity) a).runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				try {
@@ -110,7 +153,7 @@ public class AppRunnerInterpreter {
 		}
 	}
 
-	protected void createInterpreter() {
+	protected void createInterpreter(boolean isActivity) {
 		// Initialize global context factory with our custom factory.
 		if (null == contextFactory) {
 			contextFactory = new ScriptContextFactory(this);
@@ -118,21 +161,27 @@ public class AppRunnerInterpreter {
 			Log.i(TAG, "Creating ContextFactory");
 		}
 
-		contextFactory.setActivity(a.get());
+		contextFactory.setActivity(a);
 
 		if (null == interpreter) {
-			// Get the interpreter, if previously created.
-			Object obj = a.get().getLastNonConfigurationInstance();
-			if (null == obj) {
-				// Create interpreter.
-				interpreter = new Interpreter();
+			// Get the interpreter, if previously created in activity
+			if (isActivity) {
+				Object obj = ((Activity) a).getLastNonConfigurationInstance();
+
+				if (null == obj) {
+					// Create interpreter.
+					interpreter = new Interpreter();
+				} else {
+					// Restore interpreter state.
+					interpreter = (Interpreter) obj;
+				}
 			} else {
-				// Restore interpreter state.
-				interpreter = (Interpreter) obj;
+				interpreter = new Interpreter();
+
 			}
 		}
 
-		interpreter.setActivity(a.get());
+		interpreter.setActivity(a);
 	}
 
 	public interface InterpreterInfo {
@@ -288,14 +337,14 @@ public class AppRunnerInterpreter {
 			scope = context.initStandardObjects();
 		}
 
-		public Interpreter setActivity(Activity activity) {
+		public Interpreter setActivity(android.content.Context a) {
 			// ScriptAssetProvider provider = new ScriptAssetProvider(activity);
 			// Require require = new Require(context, scope, provider, null,
 			// null, true);
 			// require.install(scope);
 
 			// Set the global JavaScript variable Activity.
-			ScriptableObject.putProperty(scope, "Activity", Context.javaToJS(activity, scope));
+			ScriptableObject.putProperty(scope, "Activity", Context.javaToJS(a, scope));
 			return this;
 		}
 
@@ -329,15 +378,15 @@ public class AppRunnerInterpreter {
 	}
 
 	public static class ScriptContextFactory extends ContextFactory {
-		AppRunnerActivity activity;
+		android.content.Context c;
 		private final AppRunnerInterpreter appRunnerInterpreter;
 
 		ScriptContextFactory(AppRunnerInterpreter appRunnerInterpreter) {
 			this.appRunnerInterpreter = appRunnerInterpreter;
 		}
 
-		public ScriptContextFactory setActivity(AppRunnerActivity activity) {
-			this.activity = activity;
+		public ScriptContextFactory setActivity(android.content.Context c) {
+			this.c = c;
 			return this;
 		}
 
@@ -347,7 +396,7 @@ public class AppRunnerInterpreter {
 				return super.doTopCall(callable, cx, scope, thisObj, args);
 			} catch (Throwable e) {
 				Log.i(TAG, "ContextFactory catched error: " + e);
-				if (null != activity) {
+				if (null != c) {
 					appRunnerInterpreter.reportError(e);
 				}
 				return e;
@@ -376,7 +425,7 @@ public class AppRunnerInterpreter {
 
 				f1 = f1 + ");";
 			}
-			a.get().interp.eval(f1);
+			this.eval(f1);
 
 		} catch (Throwable e) {
 

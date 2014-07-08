@@ -147,7 +147,7 @@ public class PIOIO extends PInterface implements HardwareCallback {
 		moiocallbackfn.event();
 
 		isStarted = true;
-		this.a.get().runOnUiThread(new Runnable() {
+		mHandler.post(new Runnable() {
 
 			@Override
 			public void run() {

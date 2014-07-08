@@ -101,7 +101,7 @@ public class PMakr extends PInterface {
 				MLog.d("MAKr", "" + receivedData);
 
 				if (receivedData != "") {
-					a.get().runOnUiThread(new Runnable() {
+					mHandler.post(new Runnable() {
 						@Override
 						public void run() {
 

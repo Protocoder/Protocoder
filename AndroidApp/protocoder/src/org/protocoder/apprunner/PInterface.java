@@ -32,8 +32,12 @@ package org.protocoder.apprunner;
 import java.lang.ref.WeakReference;
 
 import android.app.Activity;
+import android.os.Handler;
+import android.os.Looper;
 
 public class PInterface {
+
+	public Handler mHandler = new Handler(Looper.getMainLooper());
 
 	protected String TAG = getClass().getSimpleName();
 

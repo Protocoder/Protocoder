@@ -87,7 +87,7 @@ public class PDashboardSlider extends PInterface {
 			public void onUpdated(JSONObject jsonObject) {
 				try {
 					final double val = jsonObject.getDouble("val");
-					a.get().runOnUiThread(new Runnable() {
+					mHandler.post(new Runnable() {
 
 						@Override
 						public void run() {
