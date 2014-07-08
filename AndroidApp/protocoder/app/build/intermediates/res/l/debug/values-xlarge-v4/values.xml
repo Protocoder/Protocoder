@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values-xlarge/bools.xml -->
+    <eat-comment />
+
+    <bool name="isTablet">true</bool>
+    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values-xlarge/themes.xml -->
+    <eat-comment />
+
+    <style name="prototypr" parent="android:Theme.Holo"></style>
+
+</resources>
