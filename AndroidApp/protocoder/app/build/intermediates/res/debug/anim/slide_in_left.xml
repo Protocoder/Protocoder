@@ -9,4 +9,4 @@
     android:fromXDelta="100%p"
     android:toXDelta="0%p"
     android:zAdjustment="top" />
-<!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/anim/slide_in_left.xml -->
+<!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/anim/slide_in_left.xml -->

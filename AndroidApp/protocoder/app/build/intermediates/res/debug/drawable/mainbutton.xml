@@ -6,4 +6,4 @@
    android:drawable="@drawable/ic_action_logo" /> <!-- focused -->
   <item android:drawable="@drawable/ic_action_logo" /> <!-- default -->
 </selector>
-<!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/mainbutton.xml -->
+<!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/mainbutton.xml -->

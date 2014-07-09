@@ -375,4 +375,14 @@ public class PMedia extends PInterface {
 		stopRecording();
 	}
 
+
+
+    @ProtocoderScript
+    @APIMethod(description = "start voice recognition", example = "media.startVoiceRecognition(function(text) { console.log(text) } );")
+    @APIParam(params = { "function(recognizedText)" })
+    public void startMidiDevice(final PMidi.MidiDeviceEventCB callbackfn) {
+        PMidi pMidi = new PMidi(a.get(), callbackfn);
+
+        WhatIsRunning.getInstance().add(pMidi);
+    }
 }

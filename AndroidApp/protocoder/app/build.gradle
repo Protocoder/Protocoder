@@ -15,6 +15,7 @@ android {
 
     }
 
+
     buildTypes {
         release {
             runProguard false
@@ -53,6 +54,13 @@ android {
 }
 
 
+repositories {
+    maven {
+        url 'https://github.com/kshoji/USB-MIDI-Driver/raw/master/MIDIDriver/snapshots'
+    }
+    mavenCentral()
+}
+
 
 dependencies {
     compile 'com.android.support:support-v4:+'
@@ -82,6 +90,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:+'
     compile 'com.android.support:cardview-v7:+'
     compile 'com.android.support:palette-v7:+'
+    compile 'jp.kshoji:midi-driver:0.0.1-SNAPSHOT:@aar'
 
 
 }

@@ -30,4 +30,4 @@
         android:toXDelta="-100%"
         android:zAdjustment="top" />
 
-</set><!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/anim/splash_slide_out_anim_set.xml -->
+</set><!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/anim/splash_slide_out_anim_set.xml -->

@@ -37,4 +37,4 @@
             android:title="@string/setting_opensource_title" />
     </PreferenceCategory>
 
-</PreferenceScreen><!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/xml/preferences.xml -->
+</PreferenceScreen><!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/xml/preferences.xml -->

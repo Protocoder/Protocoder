@@ -25,4 +25,4 @@
         android:repeatMode="reverse"
         android:repeatCount="1"
         android:duration="350"/>
-</set><!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/animator/flip_down.xml -->
+</set><!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/animator/flip_down.xml -->

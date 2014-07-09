@@ -32,4 +32,4 @@
         android:repeatCount="infinite"
         android:toYDelta="2.5%p" />
 
-</set><!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/anim/rocking_float_cycle_anim_set.xml -->
+</set><!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/anim/rocking_float_cycle_anim_set.xml -->

@@ -364,7 +364,7 @@ public class PUI extends PUIGeneric {
         AndroidUtils.setViewGenericShadow(v, type, x, y, w, h, r);
     }
 
-	@TargetApi(L)
+	//@TargetApi(L)
 	@ProtocoderScript
 	@APIParam(params = { "View" })
 	public void reveal(final View v) {
@@ -392,7 +392,7 @@ public class PUI extends PUIGeneric {
 		anim.start();
 	}
 
-	@TargetApi(L)
+	//@TargetApi()
 	@ProtocoderScript
 	@APIParam(params = { "View" })
 	public void unreveal(final View v) {
