@@ -7,4 +7,4 @@
           android:icon="@drawable/ic_action_logo"
           android:title="@string/delete" />
     
-</menu><!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/menu/file_list.xml -->
+</menu><!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/menu/file_list.xml -->

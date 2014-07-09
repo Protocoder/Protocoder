@@ -6,4 +6,4 @@
     android:fillEnabled="true"
     android:fromXDelta="0%p"
     android:toXDelta="100%p" />
-<!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/anim/slide_out_left.xml -->
+<!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/anim/slide_out_left.xml -->

@@ -11,5 +11,9 @@
 	<usb-device vendor-id="5824" product-id="1155"/>
 	<!--  0x10C4 / 0xEA60: CP210x UART Bridge  -->
 	<usb-device vendor-id="4292" product-id="60000"/>
+
+    <!-- korg -->
+    <usb-device vendor-id="0944" />
+
 </resources>
-<!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/xml/device_filter.xml -->
+<!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/xml/device_filter.xml -->

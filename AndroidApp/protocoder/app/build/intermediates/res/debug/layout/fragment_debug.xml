@@ -55,4 +55,4 @@
         android:layout_alignParentTop="true"
         android:src="@drawable/makewithmotologo" />
 
-</RelativeLayout><!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/fragment_debug.xml -->
+</RelativeLayout><!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/fragment_debug.xml -->

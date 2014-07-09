@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/audio.xml -->
+    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/audio.xml -->
     <eat-comment />
 
     <string-array name="inchannels_labels">
@@ -48,35 +48,35 @@
         <item>44100</item>
         <item>48000</item>
     </string-array>
-    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/bools.xml -->
+    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/bools.xml -->
     <eat-comment />
 
     <bool name="isTablet">false</bool>
-    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/colors.xml -->
+    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/colors.xml -->
     <eat-comment />
 
     <color name="black">#000000</color>
     <color name="blacktransparent">#88000000</color>
     <color name="blue">#0000ff</color>
-    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/build/intermediates/exploded-aar/com.android.support/cardview-v7/21.0.0-rc1/res/values/values.xml -->
+    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/build/intermediates/exploded-aar/com.android.support/cardview-v7/21.0.0-rc1/res/values/values.xml -->
     <eat-comment />
 
     <color name="cardview_dark_background">#FF202020</color>
     <color name="cardview_light_background">#FFFAFAFA</color>
     <color name="cardview_shadow_end_color">#03000000</color>
     <color name="cardview_shadow_start_color">#37000000</color>
-    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/colors.xml -->
+    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/colors.xml -->
     <eat-comment />
 
     <color name="green">#00ff00</color>
-    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/license_colors.xml -->
+    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/license_colors.xml -->
     <eat-comment />
 
     <color name="license_background">#e5e5e5</color>
     <color name="license_blue">#33b5e5</color>
     <color name="license_grey">#777777</color>
     <color name="license_white">#FFFFFF</color>
-    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/colors.xml -->
+    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/colors.xml -->
     <eat-comment />
 
     <color name="light_grey">#ffeeeeee</color>
@@ -97,7 +97,7 @@
     <color name="transparent_focused">#22000000</color>
     <color name="transparent_pressed">#55000000</color>
     <color name="white">#ffffff</color>
-    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/build/intermediates/exploded-aar/com.android.support/cardview-v7/21.0.0-rc1/res/values/values.xml -->
+    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/build/intermediates/exploded-aar/com.android.support/cardview-v7/21.0.0-rc1/res/values/values.xml -->
     <eat-comment />
 
     <declare-styleable name="CardView">
@@ -107,7 +107,7 @@
         <!-- Corner radius for CardView. -->
         <attr name="cardCornerRadius" format="dimension" />
     </declare-styleable>
-    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/attrs.xml -->
+    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/attrs.xml -->
     <eat-comment />
 
     <declare-styleable name="HoloCircleSeekBar">
@@ -126,26 +126,26 @@
         <attr name="pointer_halo_color" format="string" />
         <attr name="text_color" format="string" />
     </declare-styleable>
-    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/dimens.xml -->
+    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/dimens.xml -->
     <eat-comment />
 
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="apprunner_console">150dp</dimen>
     <dimen name="apprunner_console_text_padding">15dp</dimen>
-    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/build/intermediates/exploded-aar/com.android.support/cardview-v7/21.0.0-rc1/res/values/values.xml -->
+    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/build/intermediates/exploded-aar/com.android.support/cardview-v7/21.0.0-rc1/res/values/values.xml -->
     <eat-comment />
 
     <dimen name="cardview_default_radius">2dp</dimen>
     <dimen name="cardview_elevation">2dp</dimen>
     <dimen name="cardview_shadow_size">2dp</dimen>
-    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/dimens.xml -->
+    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/dimens.xml -->
     <eat-comment />
 
     <dimen name="license_card_marginBottom">5dp</dimen>
     <dimen name="license_card_marginTop">10dp</dimen>
     <dimen name="license_card_title_padding">10dp</dimen>
-    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/colors.xml -->
+    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/colors.xml -->
     <eat-comment />
 
     <drawable name="actionbar_highlight">#00777777</drawable>
@@ -167,11 +167,11 @@
     <drawable name="drawable_transparent">#00000000</drawable>
     <drawable name="drawable_yellow">#ffFFbb33</drawable>
     <drawable name="drawable_yellow_selected">#FF8800</drawable>
-    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/integers.xml -->
+    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/integers.xml -->
     <eat-comment />
 
     <integer name="icons_per_row">3</integer>
-    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/strings.xml -->
+    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/strings.xml -->
     <eat-comment />
 
     <string name="BT_Home">Connect</string>
@@ -219,22 +219,22 @@
     <string name="new_project_name_hint">Project name</string>
     <string name="nfc_not_available">Sorry, your device doesn\'t seem to have an NFC adapter</string>
     <string name="nfc_turned_off">NFC is currently turned off in Settings, please enable it and try to share the file again</string>
-    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/preferences.xml -->
+    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/preferences.xml -->
     <eat-comment />
 
     <string name="pref_curtain_notifications">"curtainNotifications"</string>
     <string name="pref_is_first_launch">"firstLaunch"</string>
-    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/strings.xml -->
+    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/strings.xml -->
     <eat-comment />
 
     <string name="pref_key_inchannels">INPUT_CHANNELS</string>
     <string name="pref_key_outchannels">OUTPUT_CHANNELS</string>
     <string name="pref_key_srate">SAMPLE_RATE</string>
-    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/preferences.xml -->
+    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/preferences.xml -->
     <eat-comment />
 
     <string name="pref_start_server_manually">"startServerManually"</string>
-    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/strings.xml -->
+    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/strings.xml -->
     <eat-comment />
 
     <string name="pref_sum">Pure Data Preferences</string>
@@ -278,7 +278,7 @@
     <string name="welcome_activity_name">protocoder</string>
     <string name="welcome_body">protocoder makes is simple to create, edit and run projects from your Android device or computer at the same time. Just start the app and build from your mobile, or navigate to the displayed URL to edit via a web IDE.\n\nAre you in?</string>
     <string name="welcome_title">Good to see you.</string>
-    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/styles.xml -->
+    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/styles.xml -->
     <eat-comment />
 
     <style name="AppBaseTheme" parent="android:Theme.Light">
@@ -292,7 +292,7 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
-    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/build/intermediates/exploded-aar/com.android.support/cardview-v7/21.0.0-rc1/res/values/values.xml -->
+    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/build/intermediates/exploded-aar/com.android.support/cardview-v7/21.0.0-rc1/res/values/values.xml -->
     <eat-comment />
 
     <style name="CardView">
@@ -306,13 +306,13 @@
     <style name="CardView.Light">
         <item name="cardBackgroundColor">@color/cardview_light_background</item>
     </style>
-    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/styles.xml -->
+    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/styles.xml -->
     <eat-comment />
 
     <style name="DisableSoundEffects">
         <item name="android:soundEffectsEnabled">false</item>
     </style>
-    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/license_styles.xml -->
+    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/license_styles.xml -->
     <eat-comment />
 
     <style name="LicenseCardBody">
@@ -331,13 +331,13 @@
         <item name="android:padding">@dimen/license_card_title_padding</item>
         <item name="android:textSize">20sp</item>
     </style>
-    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/themes.xml -->
+    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/themes.xml -->
     <eat-comment />
 
     <style name="OverFlow" parent="@android:style/Widget.Holo.ActionButton.Overflow">
         <item name="android:src">@drawable/ic_action_overflow</item>
     </style>
-    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/styles.xml -->
+    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/styles.xml -->
     <eat-comment />
 
     <style name="PagerTitleStripText">
@@ -349,7 +349,7 @@
         <item name="android:shadowDy">1</item>
         <item name="android:shadowRadius">1</item>
     </style>
-    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/protocoder_dark.xml -->
+    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/protocoder_dark.xml -->
     <eat-comment />
 
     <style name="ProtocoderDark" parent="@android:Widget">
@@ -358,7 +358,7 @@
         <item name="android:textColor">#00FF00</item>
         <item name="android:fontFamily">sans-serif-condensed</item>
     </style>
-    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/protocoder_dark_button.xml -->
+    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/protocoder_dark_button.xml -->
     <eat-comment />
 
     <style name="ProtocoderDark.Button" parent="@android:style/Widget.Button">
@@ -371,7 +371,7 @@
         <item name="android:background">@drawable/protocoder_theme_dark_btn_selector</item>
         <item name="android:padding">10dip</item>
     </style>
-    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/protocoder_dark_seekbar.xml -->
+    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/protocoder_dark_seekbar.xml -->
     <eat-comment />
 
     <style name="ProtocoderDark.SeekBar" parent="@android:style/Widget.SeekBar">
@@ -382,13 +382,13 @@
         <item name="android:minHeight">2dip</item>
         <item name="android:maxHeight">2dip</item>
     </style>
-    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/protocoder_dark_textview.xml -->
+    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/protocoder_dark_textview.xml -->
     <eat-comment />
 
     <style name="ProtocoderDark.TextView" parent="@android:style/Widget.TextView">
         <item name="android:fontFamily">sans-serif-condensed</item>
     </style>
-    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/protocoder_dark_theme.xml -->
+    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/protocoder_dark_theme.xml -->
     <eat-comment />
 
     <style name="ProtocoderDark_Theme" parent="android:Theme.Holo.Light">
@@ -412,7 +412,7 @@
         -->
 
     </style>
-    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/themes.xml -->
+    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/themes.xml -->
     <eat-comment />
 
     <style name="ProtocoderLaunchTheme" parent="@android:style/Theme.Holo.Light.NoActionBar" />
@@ -435,7 +435,7 @@
         <item name="android:displayOptions">showHome|homeAsUp|showTitle</item>
         <item name="android:icon">@android:color/transparent</item>
     </style>
-    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/styles.xml -->
+    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/styles.xml -->
     <eat-comment />
 
     <style name="editor">

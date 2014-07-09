@@ -1,10 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merger version="2" >
 
-    <dataSet config="21.0.0-rc1" >
-        <source path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/build/intermediates/exploded-aar/com.android.support/cardview-v7/21.0.0-rc1/res" >
+    <dataSet config="0.0.1-SNAPSHOT" >
+        <source path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/build/intermediates/exploded-aar/jp.kshoji/midi-driver/0.0.1-SNAPSHOT/res" >
             <file
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/build/intermediates/exploded-aar/com.android.support/cardview-v7/21.0.0-rc1/res/values/values.xml"
+                name="device_filter"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/build/intermediates/exploded-aar/jp.kshoji/midi-driver/0.0.1-SNAPSHOT/res/xml/device_filter.xml"
+                qualifiers=""
+                type="xml" />
+        </source>
+    </dataSet>
+    <dataSet config="21.0.0-rc1" >
+        <source path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/build/intermediates/exploded-aar/com.android.support/palette-v7/21.0.0-rc1/res" />
+    </dataSet>
+    <dataSet config="21.0.0-rc1" >
+        <source path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/build/intermediates/exploded-aar/com.android.support/cardview-v7/21.0.0-rc1/res" >
+            <file
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/build/intermediates/exploded-aar/com.android.support/cardview-v7/21.0.0-rc1/res/values/values.xml"
                 qualifiers="" >
 
                 <style name="CardView.Dark" >
@@ -60,805 +72,805 @@
         </source>
     </dataSet>
     <dataSet config="21.0.0-rc1" >
-        <source path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0-rc1/res" />
+        <source path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0-rc1/res" />
     </dataSet>
     <dataSet config="21.0.0-rc1" >
-        <source path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/21.0.0-rc1/res" />
+        <source path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/21.0.0-rc1/res" />
     </dataSet>
     <dataSet config="main" >
-        <source path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res" >
+        <source path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res" >
             <file
                 name="fade"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/anim/fade.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/anim/fade.xml"
                 qualifiers=""
                 type="anim" />
             <file
                 name="fav_anim_set"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/anim/fav_anim_set.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/anim/fav_anim_set.xml"
                 qualifiers=""
                 type="anim" />
             <file
                 name="fav_grid_anim"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/anim/fav_grid_anim.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/anim/fav_grid_anim.xml"
                 qualifiers=""
                 type="anim" />
             <file
                 name="rocking_float_cycle_anim"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/anim/rocking_float_cycle_anim.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/anim/rocking_float_cycle_anim.xml"
                 qualifiers=""
                 type="anim" />
             <file
                 name="rocking_float_cycle_anim_set"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/anim/rocking_float_cycle_anim_set.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/anim/rocking_float_cycle_anim_set.xml"
                 qualifiers=""
                 type="anim" />
             <file
                 name="slide_in_left"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/anim/slide_in_left.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/anim/slide_in_left.xml"
                 qualifiers=""
                 type="anim" />
             <file
                 name="slide_out_left"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/anim/slide_out_left.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/anim/slide_out_left.xml"
                 qualifiers=""
                 type="anim" />
             <file
                 name="splash_slide_in_anim_reverse_set"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/anim/splash_slide_in_anim_reverse_set.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/anim/splash_slide_in_anim_reverse_set.xml"
                 qualifiers=""
                 type="anim" />
             <file
                 name="splash_slide_in_anim_set"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/anim/splash_slide_in_anim_set.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/anim/splash_slide_in_anim_set.xml"
                 qualifiers=""
                 type="anim" />
             <file
                 name="splash_slide_out_anim_reverse_set"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/anim/splash_slide_out_anim_reverse_set.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/anim/splash_slide_out_anim_reverse_set.xml"
                 qualifiers=""
                 type="anim" />
             <file
                 name="splash_slide_out_anim_set"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/anim/splash_slide_out_anim_set.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/anim/splash_slide_out_anim_set.xml"
                 qualifiers=""
                 type="anim" />
             <file
                 name="flip_down"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/animator/flip_down.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/animator/flip_down.xml"
                 qualifiers=""
                 type="animator" />
             <file
                 name="flip_up"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/animator/flip_up.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/animator/flip_up.xml"
                 qualifiers=""
                 type="animator" />
             <file
                 name="live_code"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/animator/live_code.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/animator/live_code.xml"
                 qualifiers=""
                 type="animator" />
             <file
                 name="axiom_bg"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/axiom_bg.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/axiom_bg.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="axiom_tile"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/axiom_tile.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/axiom_tile.png"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="bg"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/bg.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/bg.png"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="blue_rounded_rect"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/blue_rounded_rect.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/blue_rounded_rect.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="card_bg"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/card_bg.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/card_bg.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="card_item_bg"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/card_item_bg.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/card_item_bg.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="file_item_bg"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/file_item_bg.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/file_item_bg.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="gradient"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/gradient.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/gradient.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="grey_rounded_rect"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/grey_rounded_rect.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/grey_rounded_rect.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="grey_rounded_rect_highlighted"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/grey_rounded_rect_highlighted.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/grey_rounded_rect_highlighted.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="icon"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/icon.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/icon.png"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="ip_bg_gradient"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/ip_bg_gradient.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/ip_bg_gradient.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="item_menu_list"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/item_menu_list.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/item_menu_list.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="item_menu_list_focused"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/item_menu_list_focused.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/item_menu_list_focused.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="item_menu_list_normal"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/item_menu_list_normal.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/item_menu_list_normal.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="item_menu_list_pressed"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/item_menu_list_pressed.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/item_menu_list_pressed.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="low_contrast_linen"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/low_contrast_linen.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/low_contrast_linen.png"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="low_contrast_linen_bg"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/low_contrast_linen_bg.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/low_contrast_linen_bg.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="magenta_rounded_rect"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/magenta_rounded_rect.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/magenta_rounded_rect.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="mainbutton"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/mainbutton.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/mainbutton.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="marker"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/marker.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/marker.png"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="paper_bg"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/paper_bg.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/paper_bg.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="paper_tile"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/paper_tile.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/paper_tile.png"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="protocoder_icon"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/protocoder_icon.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/protocoder_icon.png"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="protocoder_theme_dark_btn_selector"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/protocoder_theme_dark_btn_selector.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/protocoder_theme_dark_btn_selector.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="protocoder_theme_dark_seekbar_bg"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/protocoder_theme_dark_seekbar_bg.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/protocoder_theme_dark_seekbar_bg.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="protocoder_theme_dark_seekbar_progress"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/protocoder_theme_dark_seekbar_progress.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/protocoder_theme_dark_seekbar_progress.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="protocoder_theme_dark_seekbar_progress_fill"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/protocoder_theme_dark_seekbar_progress_fill.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/protocoder_theme_dark_seekbar_progress_fill.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="protocoder_theme_dark_seekbar_thumb"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/protocoder_theme_dark_seekbar_thumb.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/protocoder_theme_dark_seekbar_thumb.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="rounded"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/rounded.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/rounded.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="script_selector"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/script_selector.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/script_selector.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="solid_blue_button"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/solid_blue_button.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/solid_blue_button.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="theme_rounded_rect_blue"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/theme_rounded_rect_blue.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/theme_rounded_rect_blue.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="theme_rounded_rect_dark"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/theme_rounded_rect_dark.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/theme_rounded_rect_dark.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="toolbar_btn_connect"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/toolbar_btn_connect.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/toolbar_btn_connect.png"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="toolbar_btn_disconnect"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/toolbar_btn_disconnect.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/toolbar_btn_disconnect.png"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="toolbar_btn_pause"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/toolbar_btn_pause.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/toolbar_btn_pause.png"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="toolbar_btn_play"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/toolbar_btn_play.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/toolbar_btn_play.png"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="toolbarbg"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/toolbarbg.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/toolbarbg.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="transparent_blue_button"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/transparent_blue_button.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/transparent_blue_button.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="banner_help"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable-hdpi/banner_help.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable-hdpi/banner_help.png"
                 qualifiers="hdpi-v4"
                 type="drawable" />
             <file
                 name="hello_banner"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable-hdpi/hello_banner.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable-hdpi/hello_banner.png"
                 qualifiers="hdpi-v4"
                 type="drawable" />
             <file
                 name="hello_bubble"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable-hdpi/hello_bubble.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable-hdpi/hello_bubble.png"
                 qualifiers="hdpi-v4"
                 type="drawable" />
             <file
                 name="ic_action_about"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable-hdpi/ic_action_about.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable-hdpi/ic_action_about.png"
                 qualifiers="hdpi-v4"
                 type="drawable" />
             <file
                 name="ic_action_help"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable-hdpi/ic_action_help.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable-hdpi/ic_action_help.png"
                 qualifiers="hdpi-v4"
                 type="drawable" />
             <file
                 name="ic_action_overflow"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable-hdpi/ic_action_overflow.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable-hdpi/ic_action_overflow.png"
                 qualifiers="hdpi-v4"
                 type="drawable" />
             <file
                 name="ic_action_overflow_light"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable-hdpi/ic_action_overflow_light.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable-hdpi/ic_action_overflow_light.png"
                 qualifiers="hdpi-v4"
                 type="drawable" />
             <file
                 name="ic_content_new"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable-hdpi/ic_content_new.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable-hdpi/ic_content_new.png"
                 qualifiers="hdpi-v4"
                 type="drawable" />
             <file
                 name="ic_launcher"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable-hdpi/ic_launcher.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable-hdpi/ic_launcher.png"
                 qualifiers="hdpi-v4"
                 type="drawable" />
             <file
                 name="ic_navigation_cancel"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable-hdpi/ic_navigation_cancel.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable-hdpi/ic_navigation_cancel.png"
                 qualifiers="hdpi-v4"
                 type="drawable" />
             <file
                 name="ic_script"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable-hdpi/ic_script.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable-hdpi/ic_script.png"
                 qualifiers="hdpi-v4"
                 type="drawable" />
             <file
                 name="ic_script_example"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable-hdpi/ic_script_example.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable-hdpi/ic_script_example.png"
                 qualifiers="hdpi-v4"
                 type="drawable" />
             <file
                 name="nfc_banner"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable-hdpi/nfc_banner.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable-hdpi/nfc_banner.png"
                 qualifiers="hdpi-v4"
                 type="drawable" />
             <file
                 name="protocoder_icon"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable-hdpi/protocoder_icon.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable-hdpi/protocoder_icon.png"
                 qualifiers="hdpi-v4"
                 type="drawable" />
             <file
                 name="sadface"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable-hdpi/sadface.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable-hdpi/sadface.png"
                 qualifiers="hdpi-v4"
                 type="drawable" />
             <file
                 name="ic_script"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable-mdpi/ic_script.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable-mdpi/ic_script.png"
                 qualifiers="mdpi-v4"
                 type="drawable" />
             <file
                 name="ic_script_example"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable-mdpi/ic_script_example.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable-mdpi/ic_script_example.png"
                 qualifiers="mdpi-v4"
                 type="drawable" />
             <file
                 name="banner_help"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable-xhdpi/banner_help.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable-xhdpi/banner_help.png"
                 qualifiers="xhdpi-v4"
                 type="drawable" />
             <file
                 name="hello_banner"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable-xhdpi/hello_banner.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable-xhdpi/hello_banner.png"
                 qualifiers="xhdpi-v4"
                 type="drawable" />
             <file
                 name="hello_bubble"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable-xhdpi/hello_bubble.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable-xhdpi/hello_bubble.png"
                 qualifiers="xhdpi-v4"
                 type="drawable" />
             <file
                 name="ic_action_about"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable-xhdpi/ic_action_about.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable-xhdpi/ic_action_about.png"
                 qualifiers="xhdpi-v4"
                 type="drawable" />
             <file
                 name="ic_action_help"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable-xhdpi/ic_action_help.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable-xhdpi/ic_action_help.png"
                 qualifiers="xhdpi-v4"
                 type="drawable" />
             <file
                 name="ic_action_logo"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable-xhdpi/ic_action_logo.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable-xhdpi/ic_action_logo.png"
                 qualifiers="xhdpi-v4"
                 type="drawable" />
             <file
                 name="ic_action_overflow"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable-xhdpi/ic_action_overflow.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable-xhdpi/ic_action_overflow.png"
                 qualifiers="xhdpi-v4"
                 type="drawable" />
             <file
                 name="ic_action_overflow_light"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable-xhdpi/ic_action_overflow_light.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable-xhdpi/ic_action_overflow_light.png"
                 qualifiers="xhdpi-v4"
                 type="drawable" />
             <file
                 name="ic_content_new"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable-xhdpi/ic_content_new.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable-xhdpi/ic_content_new.png"
                 qualifiers="xhdpi-v4"
                 type="drawable" />
             <file
                 name="ic_navigation_cancel"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable-xhdpi/ic_navigation_cancel.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable-xhdpi/ic_navigation_cancel.png"
                 qualifiers="xhdpi-v4"
                 type="drawable" />
             <file
                 name="ic_script"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable-xhdpi/ic_script.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable-xhdpi/ic_script.png"
                 qualifiers="xhdpi-v4"
                 type="drawable" />
             <file
                 name="ic_script_example"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable-xhdpi/ic_script_example.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable-xhdpi/ic_script_example.png"
                 qualifiers="xhdpi-v4"
                 type="drawable" />
             <file
                 name="makewithmotologo"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable-xhdpi/makewithmotologo.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable-xhdpi/makewithmotologo.png"
                 qualifiers="xhdpi-v4"
                 type="drawable" />
             <file
                 name="nfc_banner"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable-xhdpi/nfc_banner.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable-xhdpi/nfc_banner.png"
                 qualifiers="xhdpi-v4"
                 type="drawable" />
             <file
                 name="protocoder_icon"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable-xhdpi/protocoder_icon.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable-xhdpi/protocoder_icon.png"
                 qualifiers="xhdpi-v4"
                 type="drawable" />
             <file
                 name="sadface"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable-xhdpi/sadface.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable-xhdpi/sadface.png"
                 qualifiers="xhdpi-v4"
                 type="drawable" />
             <file
                 name="song_nn"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable-xhdpi/song_nn.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable-xhdpi/song_nn.xml"
                 qualifiers="xhdpi-v4"
                 type="drawable" />
             <file
                 name="ic_script"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable-xxhdpi/ic_script.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable-xxhdpi/ic_script.png"
                 qualifiers="xxhdpi-v4"
                 type="drawable" />
             <file
                 name="ic_script_example"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable-xxhdpi/ic_script_example.png"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable-xxhdpi/ic_script_example.png"
                 qualifiers="xxhdpi-v4"
                 type="drawable" />
             <file
                 name="activity_about"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/activity_about.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/activity_about.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="activity_apprunner"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/activity_apprunner.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/activity_apprunner.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="activity_beam"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/activity_beam.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/activity_beam.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="activity_bootscreen"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/activity_bootscreen.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/activity_bootscreen.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="activity_bt"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/activity_bt.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/activity_bt.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="activity_debug_sound_2"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/activity_debug_sound_2.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/activity_debug_sound_2.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="activity_forfragments"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/activity_forfragments.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/activity_forfragments.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="activity_launcher"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/activity_launcher.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/activity_launcher.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="activity_license"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/activity_license.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/activity_license.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="activity_welcome"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/activity_welcome.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/activity_welcome.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="bt_custom_title"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/bt_custom_title.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/bt_custom_title.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="bt_device_list"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/bt_device_list.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/bt_device_list.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="bt_device_name"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/bt_device_name.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/bt_device_name.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="bt_message"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/bt_message.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/bt_message.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="check_plot"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/check_plot.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/check_plot.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="check_ui"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/check_ui.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/check_ui.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="fragment_camera"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/fragment_camera.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/fragment_camera.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="fragment_debug"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/fragment_debug.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/fragment_debug.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="fragment_dialog_new_project"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/fragment_dialog_new_project.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/fragment_dialog_new_project.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="fragment_dialog_new_task_scheduler"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/fragment_dialog_new_task_scheduler.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/fragment_dialog_new_task_scheduler.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="fragment_editor"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/fragment_editor.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/fragment_editor.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="fragment_empty"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/fragment_empty.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/fragment_empty.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="fragment_file_manager"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/fragment_file_manager.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/fragment_file_manager.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="fragment_help"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/fragment_help.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/fragment_help.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="fragment_logger_overlay"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/fragment_logger_overlay.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/fragment_logger_overlay.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="fragment_project"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/fragment_project.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/fragment_project.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="fragment_project_dialog"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/fragment_project_dialog.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/fragment_project_dialog.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="fragment_task_scheduler"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/fragment_task_scheduler.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/fragment_task_scheduler.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="fragment_texturevideo"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/fragment_texturevideo.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/fragment_texturevideo.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="fragment_videoplayer"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/fragment_videoplayer.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/fragment_videoplayer.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="hocus_pocus_main"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/hocus_pocus_main.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/hocus_pocus_main.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="main"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/main.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/main.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="popupinfowindow"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/popupinfowindow.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/popupinfowindow.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="view_card_view_holder"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/view_card_view_holder.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/view_card_view_holder.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="view_file_item"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/view_file_item.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/view_file_item.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="view_project_item"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/view_project_item.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/view_project_item.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="view_project_item_"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/view_project_item_.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/view_project_item_.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="view_project_item_list"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/view_project_item_list.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/view_project_item_list.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="view_task_schedule_item"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/view_task_schedule_item.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/view_task_schedule_item.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="view_textview_receive"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/view_textview_receive.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/view_textview_receive.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="view_textview_send"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/view_textview_send.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/view_textview_send.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="webview"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/webview.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/webview.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="webviewmanual"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout/webviewmanual.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/webviewmanual.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="activity_beam"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/layout-land/activity_beam.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout-land/activity_beam.xml"
                 qualifiers="land"
                 type="layout" />
             <file
                 name="activity_main"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/menu/activity_main.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/menu/activity_main.xml"
                 qualifiers=""
                 type="menu" />
             <file
                 name="creditmenu"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/menu/creditmenu.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/menu/creditmenu.xml"
                 qualifiers=""
                 type="menu" />
             <file
                 name="file_list"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/menu/file_list.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/menu/file_list.xml"
                 qualifiers=""
                 type="menu" />
             <file
                 name="launcher"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/menu/launcher.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/menu/launcher.xml"
                 qualifiers=""
                 type="menu" />
             <file
                 name="main_activity_menu"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/menu/main_activity_menu.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/menu/main_activity_menu.xml"
                 qualifiers=""
                 type="menu" />
             <file
                 name="moldable"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/menu/moldable.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/menu/moldable.xml"
                 qualifiers=""
                 type="menu" />
             <file
                 name="project_list"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/menu/project_list.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/menu/project_list.xml"
                 qualifiers=""
                 type="menu" />
             <file
                 name="copyright_notice"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/raw/copyright_notice.txt"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/raw/copyright_notice.txt"
                 qualifiers=""
                 type="raw" />
             <file
                 name="extra_abs"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/raw/extra_abs.zip"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/raw/extra_abs.zip"
                 qualifiers=""
                 type="raw" />
             <file
                 name="laser"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/raw/laser.mp3"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/raw/laser.mp3"
                 qualifiers=""
                 type="raw" />
             <file
                 name="license_android_websockets"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/raw/license_android_websockets.txt"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/raw/license_android_websockets.txt"
                 qualifiers=""
                 type="raw" />
             <file
                 name="license_commons_lang"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/raw/license_commons_lang.txt"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/raw/license_commons_lang.txt"
                 qualifiers=""
                 type="raw" />
             <file
                 name="license_commons_net"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/raw/license_commons_net.txt"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/raw/license_commons_net.txt"
                 qualifiers=""
                 type="raw" />
             <file
                 name="license_eventbus"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/raw/license_eventbus.txt"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/raw/license_eventbus.txt"
                 qualifiers=""
                 type="raw" />
             <file
                 name="license_gson"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/raw/license_gson.txt"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/raw/license_gson.txt"
                 qualifiers=""
                 type="raw" />
             <file
                 name="license_ioiolib"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/raw/license_ioiolib.txt"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/raw/license_ioiolib.txt"
                 qualifiers=""
                 type="raw" />
             <file
                 name="license_libpd"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/raw/license_libpd.txt"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/raw/license_libpd.txt"
                 qualifiers=""
                 type="raw" />
             <file
                 name="license_mozilla_rhino"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/raw/license_mozilla_rhino.txt"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/raw/license_mozilla_rhino.txt"
                 qualifiers=""
                 type="raw" />
             <file
                 name="license_nano"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/raw/license_nano.txt"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/raw/license_nano.txt"
                 qualifiers=""
                 type="raw" />
             <file
                 name="license_netutil"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/raw/license_netutil.txt"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/raw/license_netutil.txt"
                 qualifiers=""
                 type="raw" />
             <file
                 name="silence"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/raw/silence.wav"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/raw/silence.wav"
                 qualifiers=""
                 type="raw" />
             <file
                 name="sound1"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/raw/sound1"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/raw/sound1"
                 qualifiers=""
                 type="raw" />
             <file
                 name="sound2"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/raw/sound2.ogg"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/raw/sound2.ogg"
                 qualifiers=""
                 type="raw" />
             <file
                 name="tuner"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/raw/tuner.zip"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/raw/tuner.zip"
                 qualifiers=""
                 type="raw" />
             <file
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/attrs.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/attrs.xml"
                 qualifiers="" >
                 <declare-styleable name="HoloCircleSeekBar" >
                     <attr
@@ -906,19 +918,8 @@
                 </declare-styleable>
             </file>
             <file
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/audio.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/audio.xml"
                 qualifiers="" >
-                <string-array name="inchannels_values" >
-                    <item>
-0
-                    </item>
-                    <item>
-1
-                    </item>
-                    <item>
-2
-                    </item>
-                </string-array>
                 <string-array name="srate_labels" >
                     <item>
 8000Hz
@@ -940,6 +941,17 @@
                     </item>
                     <item>
 48000Hz
+                    </item>
+                </string-array>
+                <string-array name="inchannels_values" >
+                    <item>
+0
+                    </item>
+                    <item>
+1
+                    </item>
+                    <item>
+2
                     </item>
                 </string-array>
                 <string-array name="outchannels_values" >
@@ -1018,14 +1030,14 @@ Quadraphonic
                 </string-array>
             </file>
             <file
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/bools.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/bools.xml"
                 qualifiers="" >
                 <bool name="isTablet" >
 false
                 </bool>
             </file>
             <file
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/colors.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/colors.xml"
                 qualifiers="" >
                 <drawable name="drawable_blue_selected" >
 #0099cc
@@ -1036,25 +1048,25 @@ false
                 <color name="project_example_color" >#FFffbb33
                 </color>
 
-                <drawable name="drawable_purple_selected" >
-#9933CC
-                </drawable>
                 <drawable name="drawable_green_selected" >
 #ff669900
                 </drawable>
-                <drawable name="drawable_red_selected" >
-#ffcc0000
+                <drawable name="drawable_purple_selected" >
+#9933CC
                 </drawable>
                 <drawable name="drawable_grey_selected" >
 #aaaaaa
                 </drawable>
-                <drawable name="drawable_grey_dark" >
-#555555
+                <drawable name="drawable_red_selected" >
+#ffcc0000
                 </drawable>
 
                 <color name="theme_bg_magenta" >#BBCD005B
                 </color>
 
+                <drawable name="drawable_grey_dark" >
+#555555
+                </drawable>
                 <drawable name="drawable_blue_transparent" >
 #6633B5E5
                 </drawable>
@@ -1103,14 +1115,14 @@ false
 
                 <color name="blue" >#0000ff
                 </color>
-                <color name="title" >#777777
+                <color name="mwmblue" >#287ED1
                 </color>
 
                 <drawable name="actionbar_highlight" >
 #00777777
                 </drawable>
 
-                <color name="mwmblue" >#287ED1
+                <color name="title" >#777777
                 </color>
 
                 <drawable name="drawable_yellow" >
@@ -1119,9 +1131,9 @@ false
 
                 <color name="red" >#ff0000
                 </color>
-                <color name="light_grey" >#ffeeeeee
-                </color>
                 <color name="blacktransparent" >#88000000
+                </color>
+                <color name="light_grey" >#ffeeeeee
                 </color>
                 <color name="transparent_focused" >#22000000
                 </color>
@@ -1129,13 +1141,13 @@ false
                 </color>
                 <color name="mwmorange" >#FA871E
                 </color>
-                <color name="white" >#ffffff
-                </color>
                 <color name="mwmgray" >#606168
                 </color>
-                <color name="mwmmagenta" >#CD005B
+                <color name="white" >#ffffff
                 </color>
                 <color name="theme_bg_blue" >#BB33B5E5
+                </color>
+                <color name="mwmmagenta" >#CD005B
                 </color>
                 <color name="theme_text_white" >#FFFFFFFF
                 </color>
@@ -1148,7 +1160,7 @@ false
                 </drawable>
             </file>
             <file
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/dimens.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/dimens.xml"
                 qualifiers="" >
                 <dimen name="license_card_marginTop" >10dp
                 </dimen>
@@ -1158,26 +1170,26 @@ false
                 </dimen>
                 <dimen name="activity_vertical_margin" >16dp
                 </dimen>
-                <dimen name="apprunner_console" >150dp
-                </dimen>
                 <dimen name="license_card_title_padding" >10dp
+                </dimen>
+                <dimen name="apprunner_console" >150dp
                 </dimen>
                 <dimen name="apprunner_console_text_padding" >15dp
                 </dimen>
             </file>
             <file
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/integers.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/integers.xml"
                 qualifiers="" >
                 <integer name="icons_per_row" >
 3
                 </integer>
             </file>
             <file
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/license_colors.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/license_colors.xml"
                 qualifiers="" >
-                <color name="license_grey" >#777777
-                </color>
                 <color name="license_blue" >#33b5e5
+                </color>
+                <color name="license_grey" >#777777
                 </color>
                 <color name="license_white" >#FFFFFF
                 </color>
@@ -1185,7 +1197,7 @@ false
                 </color>
             </file>
             <file
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/license_styles.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/license_styles.xml"
                 qualifiers="" >
 
                 <style name="LicenseCardTitle" >
@@ -1228,7 +1240,7 @@ wrap_content
                 </style>
             </file>
             <file
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/preferences.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/preferences.xml"
                 qualifiers="" >
                 <string name="pref_start_server_manually" >"startServerManually"
                 </string>
@@ -1238,7 +1250,7 @@ wrap_content
                 </string>
             </file>
             <file
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/protocoder_dark.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/protocoder_dark.xml"
                 qualifiers="" >
 
                 <style
@@ -1259,7 +1271,7 @@ sans-serif-condensed
                 </style>
             </file>
             <file
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/protocoder_dark_button.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/protocoder_dark_button.xml"
                 qualifiers="" >
 
                 <style
@@ -1292,7 +1304,7 @@ center
                 </style>
             </file>
             <file
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/protocoder_dark_seekbar.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/protocoder_dark_seekbar.xml"
                 qualifiers="" >
 
                 <style
@@ -1317,7 +1329,7 @@ center
                 </style>
             </file>
             <file
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/protocoder_dark_textview.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/protocoder_dark_textview.xml"
                 qualifiers="" >
 
                 <style
@@ -1329,7 +1341,7 @@ sans-serif-condensed
                 </style>
             </file>
             <file
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/protocoder_dark_theme.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/protocoder_dark_theme.xml"
                 qualifiers="" >
 
                 <style
@@ -1363,7 +1375,7 @@ sans-serif-condensed
                 </style>
             </file>
             <file
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/strings.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/strings.xml"
                 qualifiers="" >
                 <string name="pref_title_outchannels" >Output channels
                 </string>
@@ -1386,27 +1398,27 @@ sans-serif-condensed
                 <string name="setting_show_webserver" ></string>
                 <string name="beaming_files" >Beaming files using Android Beam
                 </string>
-                <string name="setting_reinstall_description" >Ovewrite all the examples with the default ones
-                </string>
                 <string name="edit" >Edit
+                </string>
+                <string name="setting_reinstall_description" >Ovewrite all the examples with the default ones
                 </string>
                 <string name="setting_about" >About
                 </string>
-                <string name="pref_sum_outchannels" >Number of output channels
-                </string>
                 <string name="about_how_to_contents" >protocoder is easy to get started.\nAt the bottom of the screen, you\'ll see a little pop-up to show you where to navigate to get started. Make sure yout Android device is on the same network as your computer. Then, open a web browser to that address and you\'ll see a fully-featured editor interface.\n\nThis web IDE is connected directly to your application. With it, you can create new projects, edit existing ones, see live console output, view documentation, and more.
+                </string>
+                <string name="pref_sum_outchannels" >Number of output channels
                 </string>
                 <string name="pref_title_inchannels" >Input channels
                 </string>
-                <string name="pref_key_srate" >SAMPLE_RATE
+                <string name="about_how_to_title" >How-to
                 </string>
                 <string name="multiple_files" >Multiple files
                 </string>
-                <string name="about_how_to_title" >How-to
-                </string>
-                <string name="pref_title_srate" >Sample rate
+                <string name="pref_key_srate" >SAMPLE_RATE
                 </string>
                 <string name="menu_settings" >Settings
+                </string>
+                <string name="pref_title_srate" >Sample rate
                 </string>
                 <string name="pref_sum_srate" >Sample rate for Pure Data
                 </string>
@@ -1458,25 +1470,25 @@ sans-serif-condensed
                 </string>
                 <string name="beam" >NFC Share
                 </string>
-                <string name="setting_opensource_title" >Open Source Licenses
+                <string name="beaming_text" >Beaming text using Android Beam
                 </string>
                 <string name="runner_name" >protocoder AppRunner
                 </string>
-                <string name="beaming_text" >Beaming text using Android Beam
-                </string>
-                <string name="action_settings" >Settings
-                </string>
-                <string name="touch_devices" >Touch the two devices to continue…
-                </string>
-                <string name="nfc_turned_off" >NFC is currently turned off in Settings, please enable it and try to share the file again
+                <string name="setting_opensource_title" >Open Source Licenses
                 </string>
                 <string name="detail_unknown_size" >Unknown size
                 </string>
+                <string name="nfc_turned_off" >NFC is currently turned off in Settings, please enable it and try to share the file again
+                </string>
+                <string name="touch_devices" >Touch the two devices to continue…
+                </string>
+                <string name="action_settings" >Settings
+                </string>
                 <string name="license_title_nano" >Nano HTTPD
                 </string>
-                <string name="run" >Run
-                </string>
                 <string name="detail_unknown_type" >Unknown type
+                </string>
+                <string name="run" >Run
                 </string>
                 <string name="menu_label_about" >About
                 </string>
@@ -1486,9 +1498,9 @@ sans-serif-condensed
                 </string>
                 <string name="setting_id_description" >This ID is generated the first time you install the app. You can always change it!
                 </string>
-                <string name="pref_sum" >Pure Data Preferences
-                </string>
                 <string name="license_title_ioio" >ioio
+                </string>
+                <string name="pref_sum" >Pure Data Preferences
                 </string>
                 <string name="license_title_eventbus" >EventBus
                 </string>
@@ -1524,26 +1536,26 @@ sans-serif-condensed
                 </string>
                 <string name="setting_show_websocket_title" >Websocket port
                 </string>
-                <string name="app_name" >protocoder
-                </string>
                 <string name="detail_unknown_content" >Unknown content
+                </string>
+                <string name="app_name" >protocoder
                 </string>
                 <string name="setting_notifications_title" >Notifications
                 </string>
                 <string name="share" >Share code
                 </string>
-                <string name="license_title_websockets" >Android Websockets
-                </string>
                 <string name="delete" >Delete
                 </string>
-                <string name="pref_key_inchannels" >INPUT_CHANNELS
+                <string name="license_title_websockets" >Android Websockets
                 </string>
                 <string name="setting_show_websocket" ></string>
+                <string name="pref_key_inchannels" >INPUT_CHANNELS
+                </string>
                 <string name="menu_label_start_server" >Start server
                 </string>
             </file>
             <file
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/styles.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/styles.xml"
                 qualifiers="" >
 
                 <style name="PagerTitleStripText" >
@@ -1558,6 +1570,36 @@ bold
                     </item>
                     <item name="android:shadowColor">
 #44000000
+                    </item>
+                    <item name="android:shadowDx">
+1
+                    </item>
+                    <item name="android:shadowDy">
+1
+                    </item>
+                    <item name="android:shadowRadius">
+1
+                    </item>
+                </style>
+
+                <style name="qq" >
+                    <item name="android:paddingLeft">
+4px
+                    </item>
+                    <item name="android:paddingBottom">
+4px
+                    </item>
+                    <item name="android:textColor">
+#ffffffff
+                    </item>
+                    <item name="android:background">
+#00000088
+                    </item>
+                    <item name="android:textSize">
+12sp
+                    </item>
+                    <item name="android:shadowColor">
+#000000
                     </item>
                     <item name="android:shadowDx">
 1
@@ -1603,36 +1645,6 @@ bold
                     </item>
                 </style>
 
-                <style name="qq" >
-                    <item name="android:paddingLeft">
-4px
-                    </item>
-                    <item name="android:paddingBottom">
-4px
-                    </item>
-                    <item name="android:textColor">
-#ffffffff
-                    </item>
-                    <item name="android:background">
-#00000088
-                    </item>
-                    <item name="android:textSize">
-12sp
-                    </item>
-                    <item name="android:shadowColor">
-#000000
-                    </item>
-                    <item name="android:shadowDx">
-1
-                    </item>
-                    <item name="android:shadowDy">
-1
-                    </item>
-                    <item name="android:shadowRadius">
-1
-                    </item>
-                </style>
-
                 <style
                     name="AppBaseTheme"
                     parent="android:Theme.Light" >
@@ -1658,7 +1670,7 @@ false
                 </style>
             </file>
             <file
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values/themes.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values/themes.xml"
                 qualifiers="" >
 
                 <style
@@ -1719,20 +1731,20 @@ showHome|homeAsUp|showTitle
                     parent="@android:style/Theme.Holo.Light.NoActionBar" />
             </file>
             <file
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values-land/integers.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values-land/integers.xml"
                 qualifiers="land" >
                 <integer name="icons_per_row" >
 5
                 </integer>
             </file>
             <file
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values-sw720dp-land/dimens.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values-sw720dp-land/dimens.xml"
                 qualifiers="sw720dp-land-v13" >
                 <dimen name="activity_horizontal_margin" >128dp
                 </dimen>
             </file>
             <file
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values-v11/styles.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values-v11/styles.xml"
                 qualifiers="v11" >
 
                 <style
@@ -1743,7 +1755,7 @@ showHome|homeAsUp|showTitle
                 </style>
             </file>
             <file
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values-v14/styles.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values-v14/styles.xml"
                 qualifiers="v14" >
 
                 <style
@@ -1754,7 +1766,7 @@ showHome|homeAsUp|showTitle
                 </style>
             </file>
             <file
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values-v21/themes.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values-v21/themes.xml"
                 qualifiers="v21" >
 
                 <style
@@ -1763,14 +1775,14 @@ showHome|homeAsUp|showTitle
                 </style>
             </file>
             <file
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values-xlarge/bools.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values-xlarge/bools.xml"
                 qualifiers="xlarge-v4" >
                 <bool name="isTablet" >
 true
                 </bool>
             </file>
             <file
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values-xlarge/themes.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/values-xlarge/themes.xml"
                 qualifiers="xlarge-v4" >
 
                 <style
@@ -1780,25 +1792,25 @@ true
             </file>
             <file
                 name="accessory_filter"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/xml/accessory_filter.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/xml/accessory_filter.xml"
                 qualifiers=""
                 type="xml" />
             <file
                 name="device_filter"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/xml/device_filter.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/xml/device_filter.xml"
                 qualifiers=""
                 type="xml" />
             <file
                 name="preferences"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/xml/preferences.xml"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/xml/preferences.xml"
                 qualifiers=""
                 type="xml" />
         </source>
-        <source path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/build/generated/res/rs/debug" />
-        <source path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/build/generated/res/generated/debug" />
+        <source path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/build/generated/res/rs/debug" />
+        <source path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/build/generated/res/generated/debug" />
     </dataSet>
     <dataSet config="debug" >
-        <source path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/debug/res" />
+        <source path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/debug/res" />
     </dataSet>
 
 </merger>

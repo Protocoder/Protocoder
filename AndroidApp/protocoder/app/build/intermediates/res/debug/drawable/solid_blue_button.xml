@@ -10,4 +10,4 @@
            android:drawable="@drawable/drawable_blue" />           
      <item android:drawable="@drawable/drawable_blue" />
  </selector>
-<!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/drawable/solid_blue_button.xml -->
+<!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/solid_blue_button.xml -->

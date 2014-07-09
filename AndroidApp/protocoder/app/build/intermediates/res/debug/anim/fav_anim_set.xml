@@ -26,4 +26,4 @@
         android:toYDelta="0%"
         android:duration="420"
         android:zAdjustment="top" />
-</set><!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/anim/fav_anim_set.xml -->
+</set><!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/anim/fav_anim_set.xml -->
