@@ -2,6 +2,7 @@ package org.protocoder.apprunner.api.widgets;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -21,7 +22,8 @@ public class PAbsoluteLayout extends FixedLayout {
 		addView(v, new LayoutParams(w, h, x, y));
 	}
 
-	/**
+
+    /**
 	 * This is what we use to actually position and size the views
 	 */
     /*

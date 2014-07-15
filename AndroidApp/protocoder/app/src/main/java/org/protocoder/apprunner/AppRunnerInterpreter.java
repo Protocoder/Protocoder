@@ -40,12 +40,14 @@ import org.mozilla.javascript.RhinoException;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.commonjs.module.Require;
+import org.mozilla.javascript.debug.DebugFrame;
+import org.mozilla.javascript.debug.DebuggableScript;
+import org.mozilla.javascript.debug.Debugger;
 import org.protocoder.apprunner.api.PApp;
 import org.protocoder.apprunner.api.PBoards;
 import org.protocoder.apprunner.api.PConsole;
 import org.protocoder.apprunner.api.PDashboard;
 import org.protocoder.apprunner.api.PDevice;
-import org.protocoder.apprunner.api.PEditor;
 import org.protocoder.apprunner.api.PFileIO;
 import org.protocoder.apprunner.api.PMedia;
 import org.protocoder.apprunner.api.PNetwork;
@@ -88,7 +90,6 @@ public class AppRunnerInterpreter {
 		this.addInterface(PConsole.class);
 		this.addInterface(PDashboard.class);
 		this.addInterface(PDevice.class);
-		this.addInterface(PEditor.class);
 		this.addInterface(PFileIO.class);
 		this.addInterface(PMedia.class);
 		this.addInterface(PNetwork.class);
@@ -319,7 +320,7 @@ public class AppRunnerInterpreter {
 		return prefix;
 	}
 
-	public static class Interpreter {
+	public class Interpreter {
 		public Context context;
 		public Scriptable scope;
 		Require require;
@@ -331,6 +332,20 @@ public class AppRunnerInterpreter {
 			context.getWrapFactory().setJavaPrimitiveWrap(false);
 			context.setOptimizationLevel(-1);
 
+            Debugger debugger = new Debugger() {
+                @Override
+                public void handleCompilationDone(Context context, DebuggableScript debuggableScript, String s) {
+
+                }
+
+                @Override
+                public DebugFrame getFrame(Context context, DebuggableScript debuggableScript) {
+                   MLog.network(a, TAG, "" + debuggableScript.getFunctionCount() + " " + debuggableScript.getFunctionName());
+                    return null;
+                }
+            };
+
+            context.setDebugger(debugger, context);
 			// Initialize the standard objects (Object, Function, etc.)
 			// This must be done before scripts can be executed. Returns
 			// a scope object that we use in later calls.

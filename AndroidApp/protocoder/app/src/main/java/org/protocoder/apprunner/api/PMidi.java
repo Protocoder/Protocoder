@@ -45,7 +45,7 @@ public class PMidi extends PInterface implements OnMidiDeviceDetachedListener, O
     ArrayAdapter<String> midiInputEventAdapter;
     ArrayAdapter<String> midiOutputEventAdapter;
 
-    final Handler midiInputEventHandler = new Handler(new Handler.Callback() {
+    Handler midiInputEventHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
             if (midiInputEventAdapter != null) {
@@ -56,7 +56,7 @@ public class PMidi extends PInterface implements OnMidiDeviceDetachedListener, O
         }
     });
 
-    final Handler midiOutputEventHandler = new Handler(new Handler.Callback() {
+    Handler midiOutputEventHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
             if (midiOutputEventAdapter != null) {
@@ -258,7 +258,7 @@ public class PMidi extends PInterface implements OnMidiDeviceDetachedListener, O
                     }
                     device = null;
 
-                    MLog.d(Constants.TAG, "Device " + usbDevice.getDeviceName() + " has been detached.");
+                    MLog.network(a.get(), Constants.TAG, "Device " + usbDevice.getDeviceName() + " has been detached.");
 
                     Message message = Message.obtain(deviceDetachedHandler);
                     message.obj = usbDevice;
@@ -310,17 +310,27 @@ public class PMidi extends PInterface implements OnMidiDeviceDetachedListener, O
     public void stop() {
         if (deviceConnectionWatcher != null) {
             deviceConnectionWatcher.stop();
+
+            MLog.network(a.get(), TAG, "trying to stop deviceConnectionWatcher ");
         }
         deviceConnectionWatcher = null;
 
         if (midiInputDevice != null) {
             midiInputDevice.stop();
             midiInputDevice = null;
+
+            MLog.network(a.get(), TAG, "trying to stop midiInputDevice ");
+
         }
 
         midiOutputDevice = null;
-
         deviceConnection = null;
+
+        midiInputEventHandler = null;
+        midiOutputEventHandler = null;
+
+        MLog.network(a.get(), TAG, "trying to stop pMidi " + midiOutputDevice + " " + deviceConnection);
+
     }
 
 

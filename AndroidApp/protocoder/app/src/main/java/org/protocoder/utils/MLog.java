@@ -29,9 +29,16 @@
 
 package org.protocoder.utils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.protocoder.events.Events.LogEvent;
+import org.protocoder.network.CustomWebsocketServer;
 
+import android.content.Context;
 import android.util.Log;
+
+import java.net.UnknownHostException;
+
 import de.greenrobot.event.EventBus;
 
 public class MLog {
@@ -42,9 +49,9 @@ public class MLog {
 	private static final int LOG_I = 2;
 	private static final int LOG_W = 3;
 
-	static boolean network = false;
-	static boolean device = true;
-	static boolean verbose = false;
+	public static boolean network = true;
+	public static boolean device = true;
+	public static boolean verbose = false;
 
 	public static void d(final String tag, final String msg) {
 		generic(LOG_D, tag, msg);
@@ -105,11 +112,34 @@ public class MLog {
 		}
 
 		if (network) {
-			LogEvent evt = new LogEvent("debug", msg);
-			EventBus.getDefault().post(evt);
+			//LogEvent evt = new LogEvent("debug", msg);
+			//EventBus.getDefault().post(evt);
 
-			// WebSocketService.getWebSocketServer().sendToConnections(msg);
+
 		}
 	}
+
+    public static void network(Context c, String TAG, String msg) {
+
+        JSONObject jsonMsg = new JSONObject();
+        try {
+            jsonMsg.put("type", "console");
+            jsonMsg.put("action", "log");
+            JSONObject values = new JSONObject();
+            values.put("val", TAG + " " + msg);
+            jsonMsg.put("values", values);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        CustomWebsocketServer ws = null;
+        try {
+            ws = CustomWebsocketServer.getInstance(c);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        ws.send(jsonMsg);
+    }
 
 }
