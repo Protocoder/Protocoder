@@ -31,6 +31,8 @@ package org.protocoder;
 
 import android.os.Build;
 
+import org.protocoder.utils.MLog;
+
 public class AppSettings {
 
 	// == APP SETTINGS ==========
@@ -53,7 +55,7 @@ public class AppSettings {
 	public static int animSpeed = 500;
 	public static int httpPort = 8585;
 
-	public String id;
+    public String id;
 
 	private static AppSettings instance;
 

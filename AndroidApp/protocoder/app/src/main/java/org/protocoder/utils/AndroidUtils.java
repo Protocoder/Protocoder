@@ -40,6 +40,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Outline;
+import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
@@ -175,10 +176,19 @@ public class AndroidUtils {
             } else if (type == CLIP_ROUND) {
                 outline.setOval(x, y, w, h);
             } else {
-                return;
+                Path path = new Path();
+                path.moveTo(10, 10);
+                path.lineTo(100, 100);
+                path.lineTo(100, 200);
+                path.lineTo(10, 10);
+                path.close();
+                outline.setConvexPath(path);
+
+                // return;
             }
             v.setClipToOutline(true);
             v.setOutline(outline);
+            v.invalidate();
 
        //    RippleDrawable rippleDrawable = (RippleDrawable) v.getBackground();
        //     GradientDrawable rippleBackground = (GradientDrawable) rippleDrawable.getDrawable(0);

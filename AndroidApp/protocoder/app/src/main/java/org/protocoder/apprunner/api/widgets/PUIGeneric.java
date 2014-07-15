@@ -270,6 +270,17 @@ public class PUIGeneric extends PInterface {
 		return card;
 	}
 
+	/**
+	 * Adds a window
+	 *
+	 */
+	public PWindow addGenericWindow() {
+		initializeLayout();
+
+		PWindow w = new PWindow(a.get());
+		return w;
+	}
+
 	// --------- addGenericButton ---------//
 	public interface addGenericButtonCB {
 		void event();

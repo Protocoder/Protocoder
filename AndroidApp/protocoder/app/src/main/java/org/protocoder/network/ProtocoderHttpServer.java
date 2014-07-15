@@ -47,7 +47,7 @@ import org.protocoder.apprunner.api.PBoards;
 import org.protocoder.apprunner.api.PConsole;
 import org.protocoder.apprunner.api.PDashboard;
 import org.protocoder.apprunner.api.PDevice;
-import org.protocoder.apprunner.api.PEditor;
+import org.protocoder.apprunner.api.other.PWebEditor;
 import org.protocoder.apprunner.api.PFileIO;
 import org.protocoder.apprunner.api.PMedia;
 import org.protocoder.apprunner.api.PNetwork;
@@ -400,7 +400,7 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 					APIManager.getInstance().addClass(PConsole.class);
 					APIManager.getInstance().addClass(PDashboard.class);
 					APIManager.getInstance().addClass(PDevice.class);
-					APIManager.getInstance().addClass(PEditor.class);
+					APIManager.getInstance().addClass(PWebEditor.class);
 					APIManager.getInstance().addClass(PFileIO.class);
 					APIManager.getInstance().addClass(PMedia.class);
 					APIManager.getInstance().addClass(PNetwork.class);

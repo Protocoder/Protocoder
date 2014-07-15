@@ -56,7 +56,7 @@ public class PCard extends LinearLayout implements PViewInterface {
 		setGravity(Gravity.CENTER_VERTICAL);
 
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		inflater.inflate(R.layout.view_card_view_holder, this, true);
+		inflater.inflate(R.layout.pwidget_card, this, true);
 
 		title = (TextView) findViewById(R.id.cardTitle);
 		cardLl = (LinearLayout) findViewById(R.id.cardWidgets);

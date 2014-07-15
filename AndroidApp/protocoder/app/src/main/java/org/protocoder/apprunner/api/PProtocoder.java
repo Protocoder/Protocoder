@@ -43,6 +43,8 @@ import org.protocoder.apprunner.AppRunnerActivity;
 import org.protocoder.apprunner.PInterface;
 import org.protocoder.apprunner.ProtocoderScript;
 import org.protocoder.apprunner.api.other.ApplicationInfo;
+import org.protocoder.apprunner.api.other.PDeviceEditor;
+import org.protocoder.apprunner.api.other.PWebEditor;
 import org.protocoder.apprunner.api.other.PProtocoderFeedback;
 import org.protocoder.events.ProjectManager;
 
@@ -99,7 +101,33 @@ public class PProtocoder extends PInterface {
 		return l;
 	}
 
-	@ProtocoderScript
+
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { })
+    public PWebEditor webEditor() {
+        a.get().initLayout();
+
+        PWebEditor pWebEditor = new PWebEditor(a.get());
+
+        return pWebEditor;
+    }
+
+
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { })
+    public PDeviceEditor deviceEditor() {
+        a.get().initLayout();
+
+        PDeviceEditor pEditor = new PDeviceEditor(a.get());
+
+        return pEditor;
+    }
+
+
+
+    @ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "name", "type" })
 	@APIVersion(minLevel = "2")
@@ -151,6 +179,8 @@ public class PProtocoder extends PInterface {
 
 	}
 
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
 	public String getVersionName() {
 		PackageInfo pInfo = null;
 		try {
@@ -161,6 +191,8 @@ public class PProtocoder extends PInterface {
 		return pInfo.versionName;
 	}
 
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
 	public int getVersionCode() {
 		PackageInfo pInfo = null;
 		try {
@@ -170,6 +202,8 @@ public class PProtocoder extends PInterface {
 		}
 		return pInfo.versionCode;
 	}
+
+
 
 	public static ArrayList<ApplicationInfo> mApplications;
 

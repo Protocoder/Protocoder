@@ -38,12 +38,15 @@ import org.protocoder.views.CustomWebView;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 public class PWebView extends CustomWebView implements PViewInterface {
 
 	public PWebView(WeakReference<AppRunnerActivity> a) {
 		super(a.get());
 
+        this.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 		WebSettings webSettings = this.getSettings();
 		webSettings.setJavaScriptEnabled(true);
 		webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
@@ -69,7 +72,22 @@ public class PWebView extends CustomWebView implements PViewInterface {
 			}
 		});
 
+        WebViewClient webViewClient = new CustomWebViewClient();
+        this.setWebViewClient(webViewClient);
 		this.addJavascriptInterface(new PApp(a.get()), "app");
 
 	}
+
+    private class CustomWebViewClient extends WebViewClient {
+        public boolean shouldOverrideUrlLoading(WebView view, String url)
+        {
+            //do whatever you want with the url that is clicked inside the webview.
+            //for example tell the webview to load that url.
+            view.loadUrl(url);
+            //return true if this method handled the link event
+            //or false otherwise
+            return true;
+        }
+    }
+
 }

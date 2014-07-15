@@ -586,7 +586,7 @@ public class AppRunnerActivity extends BaseActivity {
 			//this.addFragment(editorFragment, EDITOR_ID, "editorFragment", true);
 
 		} else {
-          
+
 
 			if (editorFragment != null && editorFragment.isVisible()) {
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();

@@ -695,11 +695,6 @@
                 qualifiers=""
                 type="layout" />
             <file
-                name="view_card_view_holder"
-                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/view_card_view_holder.xml"
-                qualifiers=""
-                type="layout" />
-            <file
                 name="view_file_item"
                 path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/view_file_item.xml"
                 qualifiers=""
@@ -1805,6 +1800,16 @@ true
                 path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/xml/preferences.xml"
                 qualifiers=""
                 type="xml" />
+            <file
+                name="pwidget_card"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/pwidget_card.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="pwidget_window"
+                path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/layout/pwidget_window.xml"
+                qualifiers=""
+                type="layout" />
         </source>
         <source path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/build/generated/res/rs/debug" />
         <source path="/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/build/generated/res/generated/debug" />

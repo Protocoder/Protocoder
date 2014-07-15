@@ -100,7 +100,9 @@ import org.protocoder.apprunner.api.widgets.PTextView;
 import org.protocoder.apprunner.api.widgets.PToggleButton;
 import org.protocoder.apprunner.api.widgets.PUIGeneric;
 import org.protocoder.apprunner.api.widgets.PWebView;
+import org.protocoder.apprunner.api.widgets.PWindow;
 import org.protocoder.apprunner.logger.L;
+import org.protocoder.fragments.EditorFragment;
 import org.protocoder.sensors.WhatIsRunning;
 import org.protocoder.utils.AndroidUtils;
 import org.protocoder.utils.MLog;
@@ -769,7 +771,25 @@ public class PUI extends PUIGeneric {
 		return c;
 	}
 
-	/**
+
+    /**
+     * Adds a window
+     *
+     */
+    @ProtocoderScript
+    @APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
+    @APIParam(params = { "label", "x", "y", "w", "h" })
+    public PWindow addWindow(String label, int x, int y, int w, int h) {
+        PWindow wn = addGenericWindow();
+        wn.setTitle(label);
+
+        addViewAbsolute(wn, x, y, w, h);
+        return wn;
+    }
+
+
+
+    /**
 	 * Adds a button to the view
 	 * 
 	 */
@@ -1156,6 +1176,7 @@ public class PUI extends PUIGeneric {
 
 	}
 
+
 	public PApplet addProcessing(int x, int y, int w, int h) {
 
 		initializeLayout();
@@ -1181,6 +1202,34 @@ public class PUI extends PUIGeneric {
 		ft.commit();
 
 		return p;
+
+	}
+
+	public EditorFragment addEditor(int x, int y, int w, int h) {
+
+		initializeLayout();
+
+		// Create the main layout. This is where all the items actually go
+		FrameLayout fl = new FrameLayout(a.get());
+		fl.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		fl.setId(125);
+		fl.setBackgroundResource(R.color.transparent);
+
+		// Add the view
+		addViewAbsolute(fl, x, y, w, h);
+
+		EditorFragment ef = new EditorFragment();
+
+		FragmentTransaction ft = a.get().getSupportFragmentManager().beginTransaction();
+		ft.add(fl.getId(), ef, String.valueOf(fl.getId()));
+
+		// ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+		// ft.setCustomAnimations(android.R.anim.fade_in,
+		// android.R.anim.fade_out);
+		ft.addToBackStack(null);
+		ft.commit();
+
+		return ef;
 
 	}
 
@@ -1225,6 +1274,13 @@ public class PUI extends PUIGeneric {
 	/**
 	 * Adds an image with the option to hide the default background
 	 */
+	@APIParam(params = { "type", "x", "y", "w", "h" })
+	public PCameraNew addCameraView(int type) {
+		PCameraNew jCamera = addGenericCamera(type);
+
+		return jCamera;
+	}
+
 	@APIParam(params = { "type", "x", "y", "w", "h" })
 	public PCameraNew addCameraView(int type, int x, int y, int w, int h) {
 
