@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <item android:drawable="@drawable/item_menu_list_pressed" android:state_pressed="true"></item>
-    <item android:drawable="@drawable/item_menu_list_focused" android:state_focused="true"></item>
-    <item android:drawable="@drawable/item_menu_list_normal"></item>
-
-</selector><!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/app/src/main/res/drawable/item_menu_list.xml -->
