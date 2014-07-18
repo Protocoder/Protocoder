@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?> 
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-  <item android:state_pressed="true"
-   android:drawable="@drawable/ic_action_logo" /> <!-- pressed -->
-  <item android:state_focused="true"
-   android:drawable="@drawable/ic_action_logo" /> <!-- focused -->
-  <item android:drawable="@drawable/ic_action_logo" /> <!-- default -->
-</selector>
-<!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/protocoder_app/src/main/res/drawable/mainbutton.xml -->
