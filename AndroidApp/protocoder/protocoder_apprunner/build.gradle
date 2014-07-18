@@ -1,0 +1,29 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 'android-L'
+    buildToolsVersion "20.0.0"
+
+    defaultConfig {
+        applicationId "org.protocoder.apprunner"
+        minSdkVersion 'L'
+        targetSdkVersion 'L'
+        versionCode 1
+        versionName "1.0"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+    buildTypes {
+        release {
+            runProguard false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+}

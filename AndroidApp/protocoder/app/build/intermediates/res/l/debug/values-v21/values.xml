@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder_gradle/app/src/main/res/values-v21/themes.xml -->
-    <eat-comment />
-
-    <style name="ProtocoderTheme" parent="@android:style/Theme.Material.Light"></style>
-
-</resources>

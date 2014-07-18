@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <!-- USB MIDI Standard -->
+    <usb-device class="1" subclass="3" />
+    <!-- YAMAHA -->
+    <usb-device vendor-id="1177" />
+    <!-- Roland -->
+    <usb-device vendor-id="1410" />
+    <!-- MOTU -->
+    <usb-device vendor-id="2045" />
+    <!-- vmeter -->
+    <usb-device vendor-id="5840" />
+    <!-- korg -->
+    <usb-device vendor-id="0944" />
+    <!-- CME -->
+    <usb-device vendor-id="9615" />
+</resources>

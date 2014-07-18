@@ -1,0 +1,13 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android"
+	android:exitFadeDuration="@android:integer/config_shortAnimTime">
+     <item android:state_pressed="true"
+           android:drawable="@drawable/drawable_blue_selected" />
+     <item android:state_focused="true"
+           android:drawable="@drawable/drawable_blue" />
+     <item android:state_selected="true"
+           android:drawable="@drawable/drawable_blue_selected" />
+     <item android:state_enabled="false"
+           android:drawable="@drawable/drawable_blue" />           
+     <item android:drawable="@drawable/drawable_blue" />
+ </selector>
+<!-- From: file:/Users/victormanueldiazbarrales/Desarrollo/protocoder/AndroidApp/protocoder/protocoder_app/src/main/res/drawable/solid_blue_button.xml -->

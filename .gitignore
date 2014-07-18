@@ -47,6 +47,7 @@ proguard/
 *.ipr
 *.iws
 .idea/
+.app/build/
 
 #damm .Ds_store
 .DS_Store
