@@ -111,7 +111,7 @@ public class PrefsFragment extends PreferenceFragment {
 							public void onClick(DialogInterface dialog, int which) {
 								progress.show();
 
-								ProjectManager.getInstance().install(getActivity(), BaseMainApp.typeExampleStr,
+								ProjectManager.getInstance().install(getActivity(), BaseMainApp.TYPE_EXAMPLE_STRING,
 										new InstallListener() {
 
 											@Override

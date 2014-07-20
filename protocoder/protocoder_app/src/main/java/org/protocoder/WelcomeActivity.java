@@ -126,7 +126,7 @@ public class WelcomeActivity extends BaseActivity {
 		progress.setCanceledOnTouchOutside(false);
 
 		// install examples
-		ProjectManager.getInstance().install(this, BaseMainApp.typeExampleStr, new InstallListener() {
+		ProjectManager.getInstance().install(this, BaseMainApp.TYPE_EXAMPLE_STRING, new InstallListener() {
 
 			@Override
 			public void onReady() {
