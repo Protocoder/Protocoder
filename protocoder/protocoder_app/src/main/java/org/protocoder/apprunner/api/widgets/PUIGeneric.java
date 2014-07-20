@@ -461,7 +461,7 @@ public class PUIGeneric extends PInterface {
 	 * Adds a TextView. Note that the user doesn't specify font size
 	 * 
 	 */
-	public PTextView addLabelGeneric(String label) {
+	public PTextView createGenericText(String label) {
 		// int defaultTextSize = 16;
 		// tv.setTextSize((float) textSize);
 		PTextView tv = new PTextView(a.get());

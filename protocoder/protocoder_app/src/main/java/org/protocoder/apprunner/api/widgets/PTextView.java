@@ -30,18 +30,71 @@
 package org.protocoder.apprunner.api.widgets;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.text.Html;
 import android.widget.TextView;
+
+import org.protocoder.apidoc.annotation.APIMethod;
+import org.protocoder.apidoc.annotation.APIParam;
+import org.protocoder.apprunner.ProtocoderScript;
 
 public class PTextView extends TextView implements PViewInterface {
 
 	public PTextView(Context context) {
 		super(context);
-		// TODO Auto-generated constructor stub
 	}
 
-	public void setHTMLText(String text) {
-		this.setText(Html.fromHtml(text));
-	}
+
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "color" })
+    public PTextView setColor(String c) {
+        this.setTextColor(Color.parseColor(c));
+        return this;
+    }
+
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "color" })
+    public PTextView setBackgroundColor(String c) {
+        this.setBackgroundColor(Color.parseColor(c));
+        return this;
+    }
+
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "size" })
+    public PTextView setSize(int size) {
+        this.setTextSize(size);
+        return this;
+    }
+
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "string" })
+	public PTextView setHtmlText(String text) {
+        this.setText(Html.fromHtml(text));
+        return this;
+    }
+
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "string" })
+	public PTextView setSize(int w, int h) {
+        this.setWidth(w);
+        this.setHeight(h);
+        return this;
+    }
+
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "string" })
+	public PTextView setPos(int x, int y) {
+        this.setX(x);
+        this.setY(y);
+        return this;
+    }
+
+
 
 }

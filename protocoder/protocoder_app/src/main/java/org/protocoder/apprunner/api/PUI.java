@@ -36,7 +36,6 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
@@ -52,7 +51,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.graphics.Palette;
-import android.support.v7.widget.CardView;
 import android.text.InputType;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -76,11 +74,9 @@ import org.protocoder.apidoc.annotation.APIParam;
 import org.protocoder.apprunner.AppRunnerActivity;
 import org.protocoder.apprunner.AppRunnerSettings;
 import org.protocoder.apprunner.ProtocoderScript;
-import org.protocoder.apprunner.api.other.PCamera;
 import org.protocoder.apprunner.api.other.PCameraNew;
 import org.protocoder.apprunner.api.other.PProcessing;
 import org.protocoder.apprunner.api.other.PVideo;
-import org.protocoder.apprunner.api.widgets.FixedLayout;
 import org.protocoder.apprunner.api.widgets.PAbsoluteLayout;
 import org.protocoder.apprunner.api.widgets.PButton;
 import org.protocoder.apprunner.api.widgets.PCanvasView;
@@ -101,7 +97,6 @@ import org.protocoder.apprunner.api.widgets.PToggleButton;
 import org.protocoder.apprunner.api.widgets.PUIGeneric;
 import org.protocoder.apprunner.api.widgets.PWebView;
 import org.protocoder.apprunner.api.widgets.PWindow;
-import org.protocoder.apprunner.logger.L;
 import org.protocoder.fragments.EditorFragment;
 import org.protocoder.sensors.WhatIsRunning;
 import org.protocoder.utils.AndroidUtils;
@@ -111,7 +106,6 @@ import org.protocoder.views.PadView;
 import org.protocoder.views.TouchAreaView;
 
 import java.io.File;
-import java.util.List;
 
 import processing.core.PApplet;
 
@@ -933,16 +927,16 @@ public class PUI extends PUIGeneric {
 	 */
 	@ProtocoderScript
 	@APIParam(params = { "label" })
-	public PTextView addLabel(String label) {
-		PTextView tv = addLabelGeneric(label);
+	public PTextView newText(String label) {
+		PTextView tv = createGenericText(label);
 
 		return tv;
 	}
 
 	@ProtocoderScript
 	@APIParam(params = { "label", "x", "y", "w", "h" })
-	public PTextView addLabel(String label, int x, int y, int w, int h) {
-		PTextView tv = addLabelGeneric(label);
+	public PTextView addText(String label, int x, int y, int w, int h) {
+		PTextView tv = createGenericText(label);
 		addViewAbsolute(tv, x, y, w, h);
 
 		return tv;
@@ -1505,6 +1499,13 @@ public class PUI extends PUIGeneric {
 		} else if (v instanceof PTextView) {
 			((PTextView) v).setTypeface(f);
 		}
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "colorString" })
+	public int parseColor(String c) {
+        return Color.parseColor(c);
 	}
 
 	// it only works with absolute layout and only when
