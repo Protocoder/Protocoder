@@ -32,7 +32,7 @@ package org.protocoder.utils;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class Hardware {
+public class HardwareUtils {
 
 	public static void setSpeakerOn(boolean b) {
 
