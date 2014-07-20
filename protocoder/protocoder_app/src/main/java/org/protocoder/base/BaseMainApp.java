@@ -44,9 +44,12 @@ public class BaseMainApp extends Application {
 	public static String baseDir;
 	public static String projectsDir;
 	public static String examplesDir;
-	public static Application instance;
-	public static String typeExampleStr = "examples";
-	public static String typeProjectStr = "projects";
+    public static String backupDir;
+
+    public static Application instance;
+	public static String TYPE_EXAMPLE_STRING = "examples";
+	public static String TYPE_PROJECT_STRING = "projects";
+	public static String TYPE_PROJECT_BACKUP = "backups";
 
 	public BaseMainApp() {
 		baseDir = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + AppSettings.appFolder
@@ -55,8 +58,9 @@ public class BaseMainApp extends Application {
 		// baseDir = getFilesDir()+ File.separator +
 		// AppSettings.appFolder + File.separator;
 
-		projectsDir = baseDir + typeProjectStr;
-		examplesDir = baseDir + typeExampleStr;
+		projectsDir = baseDir + TYPE_PROJECT_STRING;
+		examplesDir = baseDir + TYPE_EXAMPLE_STRING;
+		backupDir = baseDir + TYPE_PROJECT_BACKUP;
 
 	}
 

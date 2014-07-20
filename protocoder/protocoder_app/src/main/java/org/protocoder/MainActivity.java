@@ -47,7 +47,6 @@ import org.protocoder.network.NetworkUtils;
 import org.protocoder.projectlist.ListFragmentExamples;
 import org.protocoder.projectlist.ListFragmentUserProjects;
 import org.protocoder.utils.AndroidUtils;
-import org.protocoder.utils.ColorUtils;
 import org.protocoder.utils.MLog;
 import org.protocoder.views.ProjectSelectorStrip;
 
@@ -56,13 +55,11 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
-import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.FileObserver;
 import android.provider.Settings;
@@ -176,7 +173,7 @@ public class MainActivity extends BaseActivity implements NewProjectDialogFragme
 			@Override
 			public void onPageScrolled(int arg0, float arg1, int arg2) {
 
-				int c = ColorUtils.calculateColor(arg0 + arg1, c0, c1);
+				int c = AndroidUtils.calculateColor(arg0 + arg1, c0, c1);
 				strip.setBackgroundColor(c);
 
 			}

@@ -180,7 +180,7 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 				// TODO its pretty hack so this deserves coding it again
 				Project p = ProjectManager.getInstance().getCurrentProject();
 
-				String projectFolder = "/" + p.getTypeString() + "/" + p.getName();
+				String projectFolder = "/" + p.getTypeName() + "/" + p.getName();
 				// MLog.d("qq", "project folder is " + projectFolder);
 				if (uri.replace(projectURLPrefix, "").contains(projectFolder)) {
 					// MLog.d("qq", "inside project");
