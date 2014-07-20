@@ -48,13 +48,15 @@ import org.protocoder.utils.MLog;
 
 import android.content.Context;
 
-//TODO take out the file reading to FileIO 
 public class ProjectManager {
-	public static final int PROJECT_USER_MADE = 0;
+
+    private static final String TAG = "ProjectManager";
+
+    public static final int PROJECT_USER_MADE = 0;
 	public static final int PROJECT_EXAMPLE = 1;
-	private static final String TAG = "ProjectManager";
 	public static int type;
-	private Project currentProject;
+    private static String PROTOCODER_EXTENSION = ".proto";
+    private Project currentProject;
 	String mainFileStr = "main.js";
 	private String remoteIP;
 
@@ -68,7 +70,43 @@ public class ProjectManager {
 		return INSTANCE;
 	}
 
-	public interface InstallListener {
+    public String getBackupFolder() {
+        return BaseMainApp.backupDir;
+
+    }
+
+    public String createBackup(Project p) {
+        MLog.d(TAG, " " + p.getTypeName() + " " + p.getName());
+
+        String givenName = getBackupFolder() + File.separator + p.getTypeName() + "_" + p.getName();
+        MLog.d(TAG, "1 " + givenName);
+
+        //check if file exists and rename it if so
+        File f = new File(givenName + ProjectManager.PROTOCODER_EXTENSION);
+        int num = 1;
+        while(f.exists()) {
+            f = new File(givenName + "_" + num++ + ProjectManager.PROTOCODER_EXTENSION);
+        }
+
+        MLog.d(TAG, "2 " + givenName);
+        MLog.d(TAG, "3 " + p.getStoragePath());
+        MLog.d(TAG, "4 " + f.getAbsolutePath());
+        //compress
+        try {
+            FileIO.zipFolder(p.getStoragePath(), f.getAbsolutePath());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        //return the filepath of the backup
+        return f.getAbsolutePath();
+    }
+
+    public String installProject() {
+        return null;
+    }
+
+    public interface InstallListener {
 		void onReady();
 	}
 
