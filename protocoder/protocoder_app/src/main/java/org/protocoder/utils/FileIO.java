@@ -29,6 +29,8 @@
 
 package org.protocoder.utils;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
@@ -49,6 +51,7 @@ import java.nio.channels.FileChannel;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import org.protocoder.apprunner.AppRunnerSettings;
@@ -59,6 +62,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.util.Log;
+
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.model.ZipParameters;
+import net.lingala.zip4j.util.Zip4jConstants;
 
 public class FileIO {
 
@@ -543,40 +550,77 @@ public class FileIO {
 	}
 
 	static public void zipFolder(String srcFolder, String destZipFile) throws Exception {
-		ZipOutputStream zip = null;
-		FileOutputStream fileWriter = null;
-		fileWriter = new FileOutputStream(destZipFile);
-		zip = new ZipOutputStream(fileWriter);
-		addFolderToZip("", srcFolder, zip);
-		zip.flush();
-		zip.close();
-	}
+        File f = new File(destZipFile);
+        //make dirs if necessary
+        f.getParentFile().mkdirs();
 
-	static private void addFileToZip(String path, String srcFile, ZipOutputStream zip) throws Exception {
-		File folder = new File(srcFile);
-		if (folder.isDirectory()) {
-			addFolderToZip(path, srcFile, zip);
-		} else {
-			byte[] buf = new byte[1024];
-			int len;
-			FileInputStream in = new FileInputStream(srcFile);
-			zip.putNextEntry(new ZipEntry(path + "/" + folder.getName()));
-			while ((len = in.read(buf)) > 0) {
-				zip.write(buf, 0, len);
-			}
-		}
-	}
+        ZipFile zipfile = new ZipFile(f.getAbsolutePath());
+        ZipParameters parameters = new ZipParameters();
+        parameters.setCompressionMethod(Zip4jConstants.COMP_DEFLATE);
+        parameters.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_NORMAL);
+        zipfile.addFolder(srcFolder, parameters);
+    }
 
-	static private void addFolderToZip(String path, String srcFolder, ZipOutputStream zip) throws Exception {
-		File folder = new File(srcFolder);
-		for (String fileName : folder.list()) {
-			if (path.equals("")) {
-				addFileToZip(folder.getName(), srcFolder + "/" + fileName, zip);
-			} else {
-				addFileToZip(path + "/" + folder.getName(), srcFolder + "/" + fileName, zip);
-			}
-		}
-	}
+    static public void extractZip(String zipFile, String location) throws IOException {
+
+        int size;
+        int BUFFER_SIZE = 1024;
+
+        byte[] buffer = new byte[BUFFER_SIZE];
+
+        try {
+            if ( !location.endsWith("/") ) {
+                location += "/";
+            }
+            File f = new File(location);
+            if(!f.isDirectory()) {
+                f.mkdirs();
+            }
+            ZipInputStream zin = new ZipInputStream(new BufferedInputStream(new FileInputStream(zipFile), BUFFER_SIZE));
+            try {
+                ZipEntry ze = null;
+                while ((ze = zin.getNextEntry()) != null) {
+                    String path = location + ze.getName();
+                    File unzipFile = new File(path);
+
+                    if (ze.isDirectory()) {
+                        if(!unzipFile.isDirectory()) {
+                            unzipFile.mkdirs();
+                        }
+                    } else {
+                        // check for and create parent directories if they don't exist
+                        File parentDir = unzipFile.getParentFile();
+                        if ( null != parentDir ) {
+                            if ( !parentDir.isDirectory() ) {
+                                parentDir.mkdirs();
+                            }
+                        }
+
+                        // unzip the file
+                        FileOutputStream out = new FileOutputStream(unzipFile, false);
+                        BufferedOutputStream fout = new BufferedOutputStream(out, BUFFER_SIZE);
+                        try {
+                            while ( (size = zin.read(buffer, 0, BUFFER_SIZE)) != -1 ) {
+                                fout.write(buffer, 0, size);
+                            }
+
+                            zin.closeEntry();
+                        }
+                        finally {
+                            fout.flush();
+                            fout.close();
+                        }
+                    }
+                }
+            }
+            finally {
+                zin.close();
+            }
+        }
+        catch (Exception e) {
+            Log.e(TAG, "Unzip exception", e);
+        }
+    }
 
 	public static File[] listFiles(final String extension) {
 		File f = new File(AppRunnerSettings.get().project.getStoragePath() + File.separator);

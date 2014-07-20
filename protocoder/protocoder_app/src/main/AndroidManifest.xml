@@ -64,7 +64,6 @@
             android:theme="@style/ProtocoderLaunchTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
@@ -117,25 +116,18 @@
             android:label="@string/activity_name"
             android:logo="@drawable/protocoder_icon" >
         </activity>
-        <activity
-            android:name="org.protocoder.beam.BeamActivity"
-            android:label="@string/beam" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
 
-                <data android:mimeType="*/*" />
-
+        <activity android:name="org.protocoder.ProtoAppInstallerActivity"
+            android:label="@string/activity_name"
+            android:logo="@drawable/protocoder_icon"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.SEND_MULTIPLE" />
-
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="file" />
                 <data android:mimeType="*/*" />
-
-                <category android:name="android.intent.category.DEFAULT" />
+                <data android:pathPattern=".*\\.proto" />
             </intent-filter>
         </activity>
         <!-- android:screenOrientation="portrait" -->

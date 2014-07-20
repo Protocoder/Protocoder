@@ -80,7 +80,7 @@ public class Project {
 
 	public String getServingURL() {
 		String url = "http://" + ProjectManager.getInstance().getRemoteIP();
-		url += "apps/" + this.getTypeString() + "/" + this.getName() + "/";
+		url += "apps/" + this.getTypeName() + "/" + this.getName() + "/";
 		return url;
 	}
 
@@ -88,14 +88,14 @@ public class Project {
 		return this.type;
 	}
 
-	public String getTypeString() {
-		String rtn;
-		if (type == ProjectManager.PROJECT_USER_MADE) {
-			rtn = BaseMainApp.typeProjectStr;
-		} else {
-			rtn = BaseMainApp.typeExampleStr;
-		}
-		return rtn;
-	}
 
+    public String getTypeName() {
+        String pname = "";
+        if (this.type == ProjectManager.PROJECT_USER_MADE) {
+            pname = BaseMainApp.TYPE_PROJECT_STRING;
+        } else if (this.type == ProjectManager.PROJECT_EXAMPLE) {
+            pname = BaseMainApp.TYPE_EXAMPLE_STRING;
+        }
+        return pname;
+    }
 }
