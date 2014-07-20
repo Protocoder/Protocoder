@@ -1249,38 +1249,13 @@ public class PUI extends PUIGeneric {
 
 	}
 
-	/**
-	 * Adds an image with the option to hide the default background
-	 */
-	// @APIParam(params = { "type" })
-	// public JCamera addCameraView(int type) {
-	// // JCamera camera = addGenericCamera(type);
-	//
-	// return camera;
-	// }
 
 	/**
 	 * Adds an image with the option to hide the default background
 	 */
-	// @APIParam(params = { "type", "x", "y", "w", "h" })
-	// public JCamera addCameraView(int type, int x, int y, int w, int h) {
-	// // JCamera camera = addGenericCamera(type);
-	// FrameLayout fl = addGenericCamera(type);
-	//
-	// // Add the view
-	// addViewAbsolute(fl, x, y, w, h);
-	//
-	// JCamera jCamera = new JCamera(a.get(), cameraFragment);
-	//
-	// return camera;
-	// }
-	//
-	/**
-	 * Adds an image with the option to hide the default background
-	 */
 	@APIParam(params = { "type", "x", "y", "w", "h" })
-	public PCameraNew addCameraView(int type) {
-		PCameraNew jCamera = addGenericCamera(type);
+	public PCameraNew newCameraView(int type) {
+		PCameraNew jCamera = createGenericCamera(type);
 
 		return jCamera;
 	}
@@ -1288,7 +1263,7 @@ public class PUI extends PUIGeneric {
 	@APIParam(params = { "type", "x", "y", "w", "h" })
 	public PCameraNew addCameraView(int type, int x, int y, int w, int h) {
 
-		PCameraNew jCamera = addGenericCamera(type);
+		PCameraNew jCamera = createGenericCamera(type);
         addViewAbsolute(jCamera, x, y, w, h);
 
 		return jCamera;
@@ -1300,8 +1275,8 @@ public class PUI extends PUIGeneric {
 	 * @author victordiaz
 	 */
 	@APIParam(params = { "videoFileName" })
-	public PVideo addVideoView(final String videoFile) {
-		PVideo video = addGenericVideo(videoFile);
+	public PVideo newVideoView(final String videoFile) {
+		PVideo video = createGenericVideo(videoFile);
 
 		return video;
 	}
@@ -1313,7 +1288,7 @@ public class PUI extends PUIGeneric {
 	 */
 	@APIParam(params = { "videoFileName", "x", "y", "w", "h" })
 	public PVideo addVideoView(final String videoFile, int x, int y, int w, int h) {
-		PVideo video = addGenericVideo(videoFile);
+		PVideo video = createGenericVideo(videoFile);
 		addViewAbsolute(video, x, y, w, h);
 
 		return video;
