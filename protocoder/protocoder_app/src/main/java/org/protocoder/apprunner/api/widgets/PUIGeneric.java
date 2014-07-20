@@ -745,7 +745,7 @@ public class PUIGeneric extends PInterface {
 		return mapView;
 	}
 
-	public PVideo addGenericVideo(final String videoFile) {
+	public PVideo createGenericVideo(final String videoFile) {
 		initializeLayout();
 		final PVideo video = new PVideo(a.get());
 
@@ -771,7 +771,7 @@ public class PUIGeneric extends PInterface {
 	}
 
 	// transform fragment into view
-	public PCameraNew addGenericCamera(int type) {
+	public PCameraNew createGenericCamera(int type) {
         initializeLayout();
 
         if (type == 1) {
