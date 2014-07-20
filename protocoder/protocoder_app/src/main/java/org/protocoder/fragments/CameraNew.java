@@ -198,7 +198,7 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
         });
 
         //set shadow
-        AndroidUtils.setViewGenericShadow(this, width, height);
+        //AndroidUtils.setViewGenericShadow(this, width, height);
 
     }
 
