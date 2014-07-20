@@ -115,6 +115,9 @@ import com.codebutler.android_websockets.SocketIOClient;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.googlecode.jpingy.Ping;
+import com.googlecode.jpingy.PingArguments;
+import com.googlecode.jpingy.PingResult;
 
 import de.sciss.net.OSCMessage;
 
@@ -251,22 +254,46 @@ public class PNetwork extends PInterface {
 		void event(String string, WebSocket socket, String arg1);
 	}
 
-	WifiManager.MulticastLock wifiLock;
+    WifiManager.MulticastLock wifiLock;
 
-	@ProtocoderScript
+    @ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "boolean" })
 	public void setMulticast(boolean b) {
-		WifiManager wifi = (WifiManager) a.get().getSystemService(Context.WIFI_SERVICE);
-		if (wifi != null) {
-			if (b) {
-				wifiLock = wifi.createMulticastLock("mylock");
-				wifiLock.acquire();
-			} else {
-				wifiLock.release();
-			}
-		}
-	}
+        WifiManager wifi = (WifiManager) a.get().getSystemService(Context.WIFI_SERVICE);
+        if (wifi != null) {
+            if (b) {
+                wifiLock = wifi.createMulticastLock("mylock");
+                wifiLock.acquire();
+            } else {
+                wifiLock.release();
+            }
+        }
+    }
+
+    class MulticastEnabler {
+        WifiManager.MulticastLock wifiLock;
+
+        MulticastEnabler(boolean b) {
+            WifiManager wifi = (WifiManager) a.get().getSystemService(Context.WIFI_SERVICE);
+            if (wifi != null) {
+                if (b) {
+                    wifiLock = wifi.createMulticastLock("mylock");
+                    wifiLock.acquire();
+                    WhatIsRunning.getInstance().add(this);
+                } else {
+                    wifiLock.release();
+                }
+            }
+        }
+
+        public void stop() {
+            if (wifiLock != null) {
+                wifiLock.release();
+            }
+        }
+
+    }
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
@@ -935,12 +962,17 @@ public class PNetwork extends PInterface {
         void event();
     }
 
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "serviceName, serviceType, port, function(name, status)" })
     public void registerService(String serviceName, String serviceType, int port, ServiceDiscovery.CreateCB callbackfn) {
         ServiceDiscovery.Create rD = new ServiceDiscovery().create(a.get(), serviceName, serviceType, port, callbackfn);
         WhatIsRunning.getInstance().add(rD);
     }
 
-
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "serviceType, function(name, jsonData)" })
     public void discoverServices(final String serviceType, ServiceDiscovery.DiscoverCB callbackfn) {
         ServiceDiscovery.Discover sD = new ServiceDiscovery().discover(a.get(), serviceType, callbackfn);
         WhatIsRunning.getInstance().add(sD);
@@ -948,11 +980,23 @@ public class PNetwork extends PInterface {
     }
 
 
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "port, callback(data)" })
+    public void ping(String where) {
+        PingArguments arguments = new PingArguments.Builder().url(where)
+                .timeout(5000).count(2).bytes(32).build();
+
+        PingResult results = Ping.ping(arguments, Ping.Backend.UNIX);
+
+        System.out.println(results.ttl());
+        System.out.println(results.rtt_min());
+        System.out.println(results.received());
+    }
+
 
 	public void stop() {
-		if (wifiLock != null) {
-			wifiLock.release();
-		}
+
 	}
 
 
