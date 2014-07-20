@@ -85,7 +85,6 @@ dependencies {
     compile 'com.android.support:palette-v7:+'
     compile 'jp.kshoji:midi-driver:0.0.1-SNAPSHOT:@aar'
     compile 'de.sciss:netutil:1.0.0'
-
     compile files('libs/activation.jar')
     compile files('libs/additionnal.jar')
     compile files('libs/androidsvg-1.2.1.jar')
@@ -110,11 +109,8 @@ dependencies {
     compile files('libs/slf4j-android-1.7.6.jar')
     compile files('libs/slf4j-api-1.7.6.jar')
     compile files('libs/usb-serial-for-android.jar')
-
+    compile files('libs/jpingy0_1-alpha.jar')
     //compile project('libraries:processing')
     //compile project('libraries:pdlib')
-
-
-
-
+    compile files('libs/zip4j_1.3.2.jar')
 }
