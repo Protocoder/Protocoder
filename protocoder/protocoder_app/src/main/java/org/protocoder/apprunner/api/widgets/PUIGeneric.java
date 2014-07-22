@@ -808,6 +808,7 @@ public class PUIGeneric extends PInterface {
 			try {
 				InputStream in = new java.net.URL(urldisplay).openStream();
 				bmp = BitmapFactory.decodeStream(in);
+                
 			} catch (Exception e) {
 				Log.e("Error", e.getMessage());
 				e.printStackTrace();

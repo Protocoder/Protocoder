@@ -4,6 +4,7 @@ android {
     compileSdkVersion 'android-L'
     buildToolsVersion "20.0.0"
 
+
     defaultConfig {
         applicationId "org.protocoder"
         minSdkVersion 'L'
@@ -34,7 +35,7 @@ android {
 
         debug {
             debuggable true;
-            //§applicationIdSuffix ".debug";
+            //applicationIdSuffix ".debug";
         }
     }
 
@@ -70,6 +71,9 @@ android {
 
 
 repositories {
+    flatDir {
+        dirs 'libs'
+    }
     maven {
         url 'https://github.com/kshoji/USB-MIDI-Driver/raw/master/MIDIDriver/snapshots'
     }
@@ -114,4 +118,6 @@ dependencies {
     //compile project('libraries:processing')
     //compile project('libraries:pdlib')
     compile files('libs/zip4j_1.3.2.jar')
+    compile (name:'processing', ext:'aar')
+
 }
