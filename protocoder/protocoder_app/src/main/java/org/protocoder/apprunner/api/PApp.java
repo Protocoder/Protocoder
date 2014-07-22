@@ -41,6 +41,7 @@ import org.protocoder.apprunner.ProtocoderScript;
 import org.protocoder.events.Project;
 import org.protocoder.events.ProjectManager;
 import org.protocoder.events.SchedulerManager;
+import org.protocoder.utils.AndroidUtils;
 import org.protocoder.utils.FileIO;
 
 import android.annotation.TargetApi;
@@ -205,4 +206,20 @@ public class PApp extends PInterface {
 	public void doNothing(DoNothingCB callbackfn) {
 
 	}
+
+
+	@ProtocoderScript
+	@APIMethod(description = "this function doesnt do any thing", example = "")
+	public void executeCommand(final String cmd, final AndroidUtils.ExecuteCommandCB callbackfn) {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                AndroidUtils.executeCommand(cmd, callbackfn);
+
+            }
+        });
+
+	}
+
+
 }
