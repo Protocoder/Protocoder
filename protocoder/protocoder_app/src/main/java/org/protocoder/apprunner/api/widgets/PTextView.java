@@ -31,7 +31,9 @@ package org.protocoder.apprunner.api.widgets;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.text.Html;
+import android.view.View;
 import android.widget.TextView;
 
 import org.protocoder.apidoc.annotation.APIMethod;
@@ -48,7 +50,7 @@ public class PTextView extends TextView implements PViewInterface {
     @ProtocoderScript
     @APIMethod(description = "", example = "")
     @APIParam(params = { "color" })
-    public PTextView setColor(String c) {
+    public PTextView color(String c) {
         this.setTextColor(Color.parseColor(c));
         return this;
     }
@@ -56,7 +58,7 @@ public class PTextView extends TextView implements PViewInterface {
     @ProtocoderScript
     @APIMethod(description = "", example = "")
     @APIParam(params = { "color" })
-    public PTextView setBackgroundColor(String c) {
+    public PTextView background(String c) {
         this.setBackgroundColor(Color.parseColor(c));
         return this;
     }
@@ -64,7 +66,7 @@ public class PTextView extends TextView implements PViewInterface {
     @ProtocoderScript
     @APIMethod(description = "", example = "")
     @APIParam(params = { "size" })
-    public PTextView setSize(int size) {
+    public PTextView size(int size) {
         this.setTextSize(size);
         return this;
     }
@@ -72,7 +74,7 @@ public class PTextView extends TextView implements PViewInterface {
     @ProtocoderScript
     @APIMethod(description = "", example = "")
     @APIParam(params = { "string" })
-	public PTextView setHtmlText(String text) {
+	public PTextView html(String text) {
         this.setText(Html.fromHtml(text));
         return this;
     }
@@ -80,7 +82,7 @@ public class PTextView extends TextView implements PViewInterface {
     @ProtocoderScript
     @APIMethod(description = "", example = "")
     @APIParam(params = { "string" })
-	public PTextView setSize(int w, int h) {
+	public PTextView boxsize(int w, int h) {
         this.setWidth(w);
         this.setHeight(h);
         return this;
@@ -89,12 +91,28 @@ public class PTextView extends TextView implements PViewInterface {
     @ProtocoderScript
     @APIMethod(description = "", example = "")
     @APIParam(params = { "string" })
-	public PTextView setPos(int x, int y) {
+	public PTextView pos(int x, int y) {
         this.setX(x);
         this.setY(y);
         return this;
     }
 
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "Typeface" })
+    public PTextView shadow(int x, int y, int r, String c) {
+        this.setShadowLayer(r, x, y, Color.parseColor(c));
+        return this;
+    }
+
+
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "Typeface" })
+    public PTextView font(Typeface f) {
+        this.setTypeface(f);
+        return this;
+    }
 
 
 }
