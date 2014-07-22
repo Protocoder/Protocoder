@@ -97,6 +97,7 @@ import org.protocoder.network.bt.DeviceListActivity;
 import org.protocoder.network.bt.SimpleBT;
 import org.protocoder.network.bt.SimpleBT.SimpleBTListener;
 import org.protocoder.sensors.WhatIsRunning;
+import org.protocoder.utils.AndroidUtils;
 import org.protocoder.utils.MLog;
 
 import android.app.Activity;
@@ -983,19 +984,17 @@ public class PNetwork extends PInterface {
     @ProtocoderScript
     @APIMethod(description = "", example = "")
     @APIParam(params = { "port, callback(data)" })
-    public void ping(String where) {
-        PingArguments arguments = new PingArguments.Builder().url(where)
-                .timeout(5000).count(2).bytes(32).build();
-
-        PingResult results = Ping.ping(arguments, Ping.Backend.UNIX);
-
-        System.out.println(results.ttl());
-        System.out.println(results.rtt_min());
-        System.out.println(results.received());
+    public void ping(final String where, final AndroidUtils.ExecuteCommandCB callbackfn) {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                AndroidUtils.executeCommand("/system/bin/ping -c 8 " + where, callbackfn);
+            }
+        });
     }
 
 
-	public void stop() {
+    public void stop() {
 
 	}
 
