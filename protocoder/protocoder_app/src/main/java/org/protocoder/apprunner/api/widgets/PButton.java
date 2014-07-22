@@ -31,7 +31,12 @@ package org.protocoder.apprunner.api.widgets;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.widget.Button;
+
+import org.protocoder.apidoc.annotation.APIMethod;
+import org.protocoder.apidoc.annotation.APIParam;
+import org.protocoder.apprunner.ProtocoderScript;
 
 public class PButton extends Button implements PViewInterface {
 
@@ -42,5 +47,13 @@ public class PButton extends Button implements PViewInterface {
 		currentColor = Color.argb(255, 255, 255, 255);
 
 	}
+
+
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "Typeface" })
+    public void setFont(Typeface f) {
+        this.setTypeface(f);
+    }
 
 }
