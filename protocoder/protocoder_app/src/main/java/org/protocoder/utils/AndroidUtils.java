@@ -38,6 +38,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -48,6 +49,9 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.RippleDrawable;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -230,45 +234,4 @@ public class AndroidUtils {
                 | (startG + (int) (fraction * (endG - startG))) << 8 | ((startB + (int) (fraction * (endB - startB))));
     }
 
-
-    public interface ExecuteCommandCB {
-        void event(String buffer);
-    }
-
-    public static void executeCommand(final String cmd, final ExecuteCommandCB callbackfn) {
-
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                int count = 0;
-                String str = "";
-                try {
-                    Process process = Runtime.getRuntime().exec(cmd);
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(
-                            process.getInputStream()));
-                    
-                    int i;
-                    char[] buffer = new char[4096];
-                    StringBuffer output = new StringBuffer();
-                    Log.d(TAG, "qq ");
-                    while ((i = reader.read(buffer)) > 0) {
-                        output.append(buffer, 0, i);
-                        Log.d(TAG, "qq " + String.valueOf(buffer));
-                        callbackfn.event(i + " " + String.valueOf(buffer));
-                    }
-                    reader.close();
-
-                    str = output.toString();
-                    Log.d(TAG, str);
-                } catch (IOException e) {
-                    Log.d(TAG, "Error");
-                    e.printStackTrace();
-                }
-            }
-        });
-        t.start();
-
-        //return str;
-
-    }
 }
