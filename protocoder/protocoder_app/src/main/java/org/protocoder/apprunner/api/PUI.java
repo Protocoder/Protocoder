@@ -942,6 +942,15 @@ public class PUI extends PUIGeneric {
 		return tv;
 	}
 
+	@ProtocoderScript
+	@APIParam(params = { "label", "x", "y", "w", "h" })
+	public PTextView addText(String label, int x, int y) {
+		PTextView tv = createGenericText(label);
+		addViewAbsolute(tv, x, y, -1, -1);
+
+		return tv;
+	}
+
 	/**
 	 * Adds an Input dialog
 	 */
@@ -1462,18 +1471,6 @@ public class PUI extends PUIGeneric {
 	@APIParam(params = { "fontFile" })
 	public Typeface loadFont(String fontName) {
 		return Typeface.createFromFile(AppRunnerSettings.get().project.getStoragePath() + File.separator + fontName);
-	}
-
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "View", "Typeface" })
-	public void setFont(View v, Typeface f) {
-
-		if (v instanceof PButton) {
-			((PButton) v).setTypeface(f);
-		} else if (v instanceof PTextView) {
-			((PTextView) v).setTypeface(f);
-		}
 	}
 
 	@ProtocoderScript
