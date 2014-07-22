@@ -36,6 +36,9 @@ import org.protocoder.apprunner.api.widgets.PUIGeneric.DownloadImageTask;
 import org.protocoder.apprunner.api.widgets.PUIGeneric.SetImageTask;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.graphics.Shader;
+import android.graphics.drawable.BitmapDrawable;
 import android.widget.ImageView;
 
 public class PImageView extends ImageView implements PViewInterface {
@@ -57,5 +60,11 @@ public class PImageView extends ImageView implements PViewInterface {
 		}
 
 	}
+
+    public void setRepeat() {
+        BitmapDrawable bd = new BitmapDrawable();
+        Shader.TileMode mode = Shader.TileMode.REPEAT;
+        bd.setTileModeXY(mode, mode);
+    }
 
 }
