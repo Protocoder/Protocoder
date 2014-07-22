@@ -1,9 +1,15 @@
 package org.protocoder.apprunner.api.widgets;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import org.osmdroid.DefaultResourceProxyImpl;
+import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
+import org.osmdroid.events.DelayedMapListener;
+import org.osmdroid.events.MapListener;
+import org.osmdroid.events.ScrollEvent;
+import org.osmdroid.events.ZoomEvent;
 import org.osmdroid.tileprovider.MapTileProviderBasic;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -21,6 +27,8 @@ import org.protocoder.utils.MLog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
+import android.view.MotionEvent;
 
 public class PMap extends MapView {
 
@@ -66,6 +74,32 @@ public class PMap extends MapView {
 		mapView.getOverlays().add(myLocationOverlay);
 		mapView.getOverlays().add(iconOverlay);
 
+        mapView.setClickable(true);
+        mapView.setFocusable(true);
+        mapView.setDuplicateParentStateEnabled(false);
+
+        mapView.setMapListener(new DelayedMapListener(new MapListener() {
+            @Override
+            public boolean onScroll(ScrollEvent event) {
+                Log.d(TAG, "qqqqqq");
+
+                //mapView.getBoundingBox().getCenter();
+
+                return true;
+            }
+
+            @Override
+            public boolean onZoom(ZoomEvent event) {
+                Log.d(TAG, "qqqqqq");
+
+                //mapView.getBoundingBox().getCenter();
+
+
+                return true;
+            }
+        }, 500));
+
+
 		// myLocationOverlay.enableMyLocation();
 		// myLocationOverlay.setDrawAccuracyEnabled(true);
 
@@ -79,16 +113,20 @@ public class PMap extends MapView {
 		return line;
 	}
 
-	public void addPointToPath(PathOverlay p, double lat, double lon) {
+	public MapView addPointToPath(PathOverlay p, double lat, double lon) {
 		p.addPoint(new GeoPoint(lat, lon));
 		mapView.invalidate();
+
+        return this;
 	}
 
-	public void clearPath(PathOverlay p, double lat, double lon) {
+	public MapView clearPath(PathOverlay p, double lat, double lon) {
 		p.clearPath();
+
+        return this;
 	}
 
-	public void setTileSource(String url) {
+	public MapView setTileSource(String url) {
 
 		String[] qq = new String[1];
 		qq[0] = url;
@@ -97,6 +135,8 @@ public class PMap extends MapView {
 
 		tileProvider.setTileSource(tileSource);
 		mapView.setTileSource(tileSource);
+
+        return this;
 	}
 
 	public OverlayItem addMarker(String title, String text, double lat, double lon) {
@@ -113,39 +153,88 @@ public class PMap extends MapView {
 
 	}
 
-	public void clearCache() {
+	public MapView clearCache() {
 		mapView.getTileProvider().clearTileCache();
+
+        return this;
 	}
 
-	public void setZoom(int z) {
+	public MapView setZoom(int z) {
 		mapController.setZoom(z);
+
+        return this;
+    }
+
+	public MapView showControls(boolean b) {
+        mapView.setBuiltInZoomControls(b);
+
+        return this;
 	}
 
-	public void showControls(boolean b) {
-		mapView.setBuiltInZoomControls(b);
-	}
-
-	public void setMultitouch(boolean b) {
+	public MapView setMultitouch(boolean b) {
 		mapView.setMultiTouchControls(b);
+        return this;
 	}
 
-	public void follow(boolean b) {
+	public MapView follow(boolean b) {
 		if (b) {
 			myLocationOverlay.enableFollowLocation();
 		} else {
 			myLocationOverlay.disableFollowLocation();
 		}
+
+        return this;
 	}
 
-	public void moveTo(double lat, double lon) {
+	public MapView moveTo(double lat, double lon) {
 		GeoPoint point2 = new GeoPoint(lat, lon);
 		mapController.animateTo(point2);
 		// mapView.addMarker(lat, lon, "qq", "text");
+
+        return this;
 	}
 
-	public void setCenter(double lat, double lon) {
+	public MapView setCenter(double lat, double lon) {
 		GeoPoint point2 = new GeoPoint(lat, lon);
 		mapController.setCenter(point2);
+
+        return this;
 	}
 
+    public GeoPoint getCenter() {
+        return mapView.getBoundingBox().getCenter();
+    }
+
+    public float getZoom() {
+        return mapView.getZoomLevel();
+    }
+
+
+    public MapView setZoomLimits(int min, int max) {
+        mapView.setMinZoomLevel(min);
+        mapView.setMaxZoomLevel(max);
+
+        return this;
+    }
+
+
+//    @Override
+//    public boolean onTouchEvent(MotionEvent ev) {
+//        int action = ev.getAction();
+//        switch (action) {
+//            case MotionEvent.ACTION_DOWN:
+//                // Disallow ScrollView to intercept touch events.
+//                this.getParent().requestDisallowInterceptTouchEvent(true);
+//                break;
+//
+//            case MotionEvent.ACTION_UP:
+//                // Allow ScrollView to intercept touch events.
+//                this.getParent().requestDisallowInterceptTouchEvent(false);
+//                break;
+//        }
+//
+//        // Handle MapView's touch events.
+//        super.onTouchEvent(ev);
+//        return true;
+//    }
 }
