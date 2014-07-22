@@ -63,7 +63,6 @@ public class PBoards extends PInterface {
 	public PArduino startArduino(int baud, PArduino.startCB callbackfn) {
 		PArduino arduino = new PArduino(a.get());
 		arduino.start(baud, callbackfn);
-		WhatIsRunning.getInstance().add(arduino);
 
 		return arduino;
 	}
