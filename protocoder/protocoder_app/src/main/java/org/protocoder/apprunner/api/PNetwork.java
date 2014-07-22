@@ -98,6 +98,7 @@ import org.protocoder.network.bt.SimpleBT;
 import org.protocoder.network.bt.SimpleBT.SimpleBTListener;
 import org.protocoder.sensors.WhatIsRunning;
 import org.protocoder.utils.AndroidUtils;
+import org.protocoder.utils.ExecuteCmd;
 import org.protocoder.utils.MLog;
 
 import android.app.Activity;
@@ -984,13 +985,13 @@ public class PNetwork extends PInterface {
     @ProtocoderScript
     @APIMethod(description = "", example = "")
     @APIParam(params = { "port, callback(data)" })
-    public void ping(final String where, final AndroidUtils.ExecuteCommandCB callbackfn) {
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                AndroidUtils.executeCommand("/system/bin/ping -c 8 " + where, callbackfn);
-            }
-        });
+    public ExecuteCmd ping(final String where, final ExecuteCmd.ExecuteCommandCB callbackfn) {
+//        mHandler.post(new Runnable() {
+//            @Override
+//            public void run() {
+               return new ExecuteCmd("/system/bin/ping -c 8 " + where, callbackfn);
+     //       }
+     //   });
     }
 
 
