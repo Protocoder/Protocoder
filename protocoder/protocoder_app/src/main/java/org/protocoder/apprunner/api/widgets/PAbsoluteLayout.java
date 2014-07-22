@@ -19,6 +19,8 @@ public class PAbsoluteLayout extends FixedLayout {
 	public void addView(View v, int x, int y, int w, int h) {
 		//positionView(v, x, y, w, h);
 
+        if (w == -1) w = LayoutParams.WRAP_CONTENT;
+        if (h == -1) h = LayoutParams.WRAP_CONTENT;
 		addView(v, new LayoutParams(w, h, x, y));
 	}
 
