@@ -204,8 +204,10 @@ public class PUIGeneric extends PInterface {
 	public void allowScroll(boolean scroll) {
 		if (sv != null) {
 			if (scroll) {
-				sv.setOnTouchListener(null);
+                sv.requestDisallowInterceptTouchEvent(false);
+                sv.setOnTouchListener(null);
 			} else {
+                sv.requestDisallowInterceptTouchEvent(true);
 				sv.setOnTouchListener(new OnTouchListener() {
 
 					@Override
