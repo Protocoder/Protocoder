@@ -85,6 +85,7 @@ dependencies {
     compile 'com.android.support:palette-v7:+'
     compile 'jp.kshoji:midi-driver:0.0.1-SNAPSHOT:@aar'
     compile 'de.sciss:netutil:1.0.0'
+    compile 'org.osmdroid:osmdroid-android:4.2'
     compile files('libs/activation.jar')
     compile files('libs/additionnal.jar')
     compile files('libs/androidsvg-1.2.1.jar')
@@ -104,7 +105,7 @@ dependencies {
     compile files('libs/js.jar')
     compile files('libs/mail.jar')
     compile files('libs/osmbonuspack_v4.5.jar')
-    compile files('libs/osmdroid-android-4.1.jar')
+    //compile files('libs/osmdroid-android-4.1.jar')
     compile files('libs/pdcore.jar')
     compile files('libs/slf4j-android-1.7.6.jar')
     compile files('libs/slf4j-api-1.7.6.jar')
