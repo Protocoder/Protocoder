@@ -58,7 +58,7 @@ dependencies {
     compile 'com.android.support:palette-v7:+'
 
     compile 'com.google.code.gson:gson:2.2.4'
-    compile 'jp.kshoji:midi-driver:0.0.2-SNAPSHOT:@aar'
+    compile 'jp.kshoji:midi-driver:0.0.1-SNAPSHOT:@aar'
     compile 'de.sciss:netutil:1.0.0'
     compile 'org.osmdroid:osmdroid-android:4.2'
 
