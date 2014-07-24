@@ -30,8 +30,8 @@
 package org.protocoder.fragments;
 
 import org.protocoder.R;
-import org.protocoder.base.BaseFragment;
-import org.protocoder.utils.MLog;
+import org.protocoderrunner.base.BaseFragment;
+import org.protocoderrunner.utils.MLog;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;

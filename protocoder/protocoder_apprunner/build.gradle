@@ -1,3 +1,4 @@
+//apply plugin: 'android'
 apply plugin: 'com.android.library'
 
 android {
@@ -5,7 +6,7 @@ android {
     buildToolsVersion "20.0.0"
 
     defaultConfig {
-        applicationId "org.protocoder.apprunner"
+        applicationId "org.protocoderrunner"
         minSdkVersion 'L'
         targetSdkVersion 'L'
         versionCode 1
@@ -22,8 +23,73 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/dependencies.txt'
+        exclude 'META-INF/LGPL2.1'
+    }
 }
 
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+    maven {
+        url 'https://github.com/kshoji/USB-MIDI-Driver/raw/master/MIDIDriver/snapshots'
+    }
+    mavenCentral()
+}
+
+
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    //compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:support-v4:+'
+    compile 'com.android.support:recyclerview-v7:+'
+    compile 'com.android.support:cardview-v7:+'
+    compile 'com.android.support:palette-v7:+'
+
+    compile 'com.google.code.gson:gson:2.2.4'
+    compile 'jp.kshoji:midi-driver:0.0.2-SNAPSHOT:@aar'
+    compile 'de.sciss:netutil:1.0.0'
+    compile 'org.osmdroid:osmdroid-android:4.2'
+
+    compile files('libs/activation.jar')
+    compile files('libs/additionnal.jar')
+    compile files('libs/androidsvg-1.2.1.jar')
+    compile files('libs/commons-lang3-3.1.jar')
+    compile files('libs/commons-logging-1.1.3.jar')
+    compile files('libs/commons-net-3.0.1.jar')
+    compile files('libs/eventbus-2.1.0-beta-1.jar')
+    compile files('libs/httpclient-4.3.4.jar')
+    compile files('libs/httpclient-cache-4.3.4.jar')
+    compile files('libs/httpcore-4.3.2.jar')
+    compile files('libs/httpmime-4.3.4.jar')
+
+    compile files('libs/ioiolibaccessory.jar')
+    compile files('libs/ioiolibandroid.jar')
+    compile files('libs/ioiolibbt.jar')
+    compile files('libs/java_websocket.jar')
+    compile files('libs/android-websockets.jar')
+    compile files('libs/js.jar')
+    compile files('libs/mail.jar')
+    compile files('libs/osmbonuspack_v4.5.jar')
+
+    compile files('libs/pdcore.jar')
+    compile files('libs/slf4j-android-1.7.6.jar')
+    compile files('libs/slf4j-api-1.7.6.jar')
+    compile files('libs/usb-serial-for-android.jar')
+
+
+    compile files('libs/zip4j_1.3.2.jar')
+    compile (name:'processing', ext:'aar')
+
 }

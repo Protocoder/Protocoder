@@ -29,10 +29,10 @@
 
 package org.protocoder;
 
-import org.protocoder.base.BaseMainApp;
-import org.protocoder.base.BaseNotification;
-import org.protocoder.events.ProjectManager;
-import org.protocoder.events.ProjectManager.InstallListener;
+import org.protocoderrunner.base.BaseMainApp;
+import org.protocoderrunner.base.BaseNotification;
+import org.protocoderrunner.project.ProjectManager;
+import org.protocoderrunner.project.ProjectManager.InstallListener;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
@@ -185,7 +185,7 @@ public class PrefsFragment extends PreferenceFragment {
 	}
 
 	public static String getId(Context c) {
-		// get apprunner settings
+		// get org.apprunner settings
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(c);
 		String id = sharedPrefs.getString("pref_id", "-1");
 
@@ -193,7 +193,7 @@ public class PrefsFragment extends PreferenceFragment {
 	}
 
 	public static void setId(Context c, String id) {
-		// get apprunner settings
+		// get org.apprunner settings
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(c);
 		Editor editor = sharedPrefs.edit();
 		editor.putString("pref_id", id);
@@ -201,7 +201,7 @@ public class PrefsFragment extends PreferenceFragment {
 	}
 
 	public static void setListPreference(Context c, boolean id) {
-		// get apprunner settings
+		// get org.apprunner settings
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(c);
 		Editor editor = sharedPrefs.edit();
 		editor.putBoolean("pref_list_mode", id);
@@ -209,7 +209,7 @@ public class PrefsFragment extends PreferenceFragment {
 	}
 
 	public static boolean getListPreference(Context c) {
-		// get apprunner settings
+		// get org.apprunner settings
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(c);
 		boolean pref = sharedPrefs.getBoolean("pref_list_mode", false);
 

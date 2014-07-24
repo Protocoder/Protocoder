@@ -33,12 +33,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.protocoder.base.BaseActivity;
-import org.protocoder.base.BaseMainApp;
-import org.protocoder.events.ProjectManager;
-import org.protocoder.events.ProjectManager.InstallListener;
-import org.protocoder.utils.MLog;
-import org.protocoder.utils.StrUtils;
+import org.protocoderrunner.base.BaseActivity;
+import org.protocoderrunner.base.BaseMainApp;
+import org.protocoderrunner.project.ProjectManager;
+import org.protocoderrunner.project.ProjectManager.InstallListener;
+import org.protocoderrunner.utils.MLog;
+import org.protocoderrunner.utils.StrUtils;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
@@ -132,7 +132,7 @@ public class WelcomeActivity extends BaseActivity {
 			public void onReady() {
 				progress.dismiss();
 				// Write a shared pref to never come back here
-				SharedPreferences userDetails = getSharedPreferences("org.protocoder", MODE_PRIVATE);
+				SharedPreferences userDetails = getSharedPreferences("org.org.apprunner.protocoder", MODE_PRIVATE);
 				userDetails.edit().putBoolean(getResources().getString(R.string.pref_is_first_launch), false).commit();
 				// Start the activity
 				Intent i = new Intent(WelcomeActivity.this, MainActivity.class);

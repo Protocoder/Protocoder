@@ -1,1 +1,1 @@
-include ':protocoder_app', ':protocoder_apprunner', ':protocoder_custom', ':processing_fragment'
+include ':protocoder_app', ':protocoder_apprunner', ':protocoder_custom'
