@@ -1,256 +1,96 @@
 package org.protocoderrunner.apprunner.api.other;
 
-
-import android.content.Context;
+import android.app.Activity;
 import android.hardware.usb.UsbDevice;
-import android.hardware.usb.UsbDeviceConnection;
-import android.hardware.usb.UsbManager;
-import android.os.AsyncTask;
+import android.media.AudioFormat;
+import android.media.AudioTrack;
 import android.os.Handler;
+import android.os.Handler.Callback;
 import android.os.Message;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
-import org.protocoderrunner.apprunner.AppRunnerActivity;
+import org.protocoderrunner.R;
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.utils.MLog;
+import org.protocoderrunner.sensors.WhatIsRunning;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import jp.kshoji.driver.midi.device.MidiInputDevice;
 import jp.kshoji.driver.midi.device.MidiOutputDevice;
-import jp.kshoji.driver.midi.listener.OnMidiDeviceAttachedListener;
-import jp.kshoji.driver.midi.listener.OnMidiDeviceDetachedListener;
-import jp.kshoji.driver.midi.listener.OnMidiInputEventListener;
-import jp.kshoji.driver.midi.thread.MidiDeviceConnectionWatcher;
-import jp.kshoji.driver.midi.util.Constants;
-import jp.kshoji.driver.midi.util.UsbMidiDeviceUtils;
-import jp.kshoji.driver.usb.util.DeviceFilter;
 
-public class PMidi extends PInterface implements OnMidiDeviceDetachedListener, OnMidiDeviceAttachedListener, OnMidiInputEventListener {
+public class PMidi extends PInterface {
 
     private static final String TAG = "PMidi";
 
-    private static UsbDevice device = null;
-    private static UsbDeviceConnection deviceConnection = null;
-    private static MidiInputDevice midiInputDevice = null;
-    private static MidiOutputDevice midiOutputDevice = null;
-    private static OnMidiDeviceAttachedListener deviceAttachedListener = null;
-    private static OnMidiDeviceDetachedListener deviceDetachedListener = null;
-    private static Handler deviceDetachedHandler = null;
-    private Handler midiInputEventHandler = null;
-    private Handler midiOutputEventHandler = null;
-    private MidiDeviceConnectionWatcher deviceConnectionWatcher = null;
+    // User interface
+    final Handler midiInputEventHandler = new Handler(new Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            if (midiInputEventAdapter != null) {
+                midiInputEventAdapter.add((String)msg.obj);
+            }
+            // message handled successfully
+            return true;
+        }
+    });
 
-    //ArrayAdapter<String> midiInputEventAdapter;
-    //ArrayAdapter<String> midiOutputEventAdapter;
+    final Handler midiOutputEventHandler = new Handler(new Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            if (midiOutputEventAdapter != null) {
+                midiOutputEventAdapter.add((String)msg.obj);
+            }
+            // message handled successfully
+            return true;
+        }
+    });
 
-    @Override
-    public void onDeviceAttached(UsbDevice usbDevice) {
-        Toast.makeText(a.get(), "USB MIDI Device " + usbDevice.getDeviceName() + " has been attached.", Toast.LENGTH_LONG).show();
+    ArrayAdapter<String> midiInputEventAdapter;
+    ArrayAdapter<String> midiOutputEventAdapter;
+    private ToggleButton thruToggleButton;
+    Spinner cableIdSpinner;
+    Spinner deviceSpinner;
 
-    }
+    ArrayAdapter<UsbDevice> connectedDevicesAdapter;
 
-    @Override
-    public void onDeviceDetached(UsbDevice usbDevice) {
-        Toast.makeText(a.get(), "USB MIDI Device " + usbDevice.getDeviceName() + " has been detached.", Toast.LENGTH_LONG).show();
+    // Play sounds
+    AudioTrack audioTrack;
+    Timer timer;
+    TimerTask timerTask;
+    int currentProgram = 0;
 
-    }
+    private UsbMidiDriver usbMidiDriver;
 
-    @Override
-    public void onMidiMiscellaneousFunctionCodes(MidiInputDevice midiInputDevice, int i, int i2, int i3, int i4) {
-
-    }
-
-    @Override
-    public void onMidiCableEvents(MidiInputDevice sender, int cable, int byte1, int byte2, int byte3) {
-        midiInputEventHandler.sendMessage(Message.obtain(midiInputEventHandler, 0, "CableEvents cable: " + cable + ", byte1: " + byte1 + ", byte2: " + byte2 + ", byte3: " + byte3));
-    }
-
-    @Override
-    public void onMidiSystemCommonMessage(MidiInputDevice sender, int cable, byte[] bytes) {
-        midiInputEventHandler.sendMessage(Message.obtain(midiInputEventHandler, 0, "SystemCommonMessage cable: " + cable + ", bytes: " + Arrays.toString(bytes)));
-
-    }
-
-    @Override
-    public void onMidiSystemExclusive(MidiInputDevice sender, int cable, byte[] systemExclusive) {
-
-    }
-
-    @Override
-    public void onMidiNoteOff(MidiInputDevice sender, int cable, int channel, int note, int velocity) {
-        midiInputEventHandler.sendMessage(Message.obtain(midiInputEventHandler, 0, "NoteOff cable: " + cable + ", channel: " + channel + ", note: " + note + ", velocity: " + velocity));
-
-       // MLog.d(TAG, cable + " " + channel + " " + note + " " + velocity);
-    }
-
-    @Override
-    public void onMidiNoteOn(MidiInputDevice sender, int cable, int channel, int note, int velocity) {
-        midiOutputEventHandler.sendMessage(Message.obtain(midiOutputEventHandler, 0, "NoteOn cable: " + cable + ",  channel: " + channel + ", note: " + note + ", velocity: " + velocity));
-
-       // MLog.d(TAG, cable + " " + channel + " " + note + " " + velocity);
-    }
-
-    @Override
-    public void onMidiPolyphonicAftertouch(MidiInputDevice sender, int cable, int channel, int note, int pressure) {
-        midiInputEventHandler.sendMessage(Message.obtain(midiInputEventHandler, 0, "PolyphonicAftertouch cable: " + cable + ", channel: " + channel + ", note: " + note + ", pressure: " + pressure));
-
-    }
-
-    @Override
-    public void onMidiControlChange(MidiInputDevice sender, int cable, int channel, int function, int value) {
-        midiInputEventHandler.sendMessage(Message.obtain(midiInputEventHandler, 0, "ControlChange cable: " + cable + ", channel: " + channel + ", function: " + function + ", value: " + value));
-
-        midiEvent.event(cable, channel, function, value);
-
-      //  MLog.d(TAG, "onMidiControlChange " + cable + " " + channel + " " + function + " " + value);
-
-    }
-
-    @Override
-    public void onMidiProgramChange(MidiInputDevice sender, int cable, int channel, int program) {
-        midiInputEventHandler.sendMessage(Message.obtain(midiInputEventHandler, 0, "ProgramChange cable: " + cable + ", channel: " + channel + ", program: " + program));
-
-      //  MLog.d(TAG, "onMidiProgramChange " + cable + " " + channel + " " + program);
-    }
-
-    @Override
-    public void onMidiChannelAftertouch(MidiInputDevice sender, int cable, int channel, int pressure) {
-        midiInputEventHandler.sendMessage(Message.obtain(midiInputEventHandler, 0, "ChannelAftertouch cable: " + cable + ", channel: " + channel + ", pressure: " + pressure));
-
-      //  MLog.d(TAG, "onMidiChannelAfterTouch " + cable + " " + channel + " " + pressure);
-
-    }
-
-    @Override
-    public void onMidiPitchWheel(MidiInputDevice sender, int cable, int channel, int amount) {
-        midiInputEventHandler.sendMessage(Message.obtain(midiInputEventHandler, 0, "PitchWheel cable: " + cable + ", channel: " + channel + ", amount: " + amount));
-
-      //  MLog.d(TAG, "onMidiPitchWheel " + cable + " " + channel + " " + amount);
-    }
-
-    @Override
-    public void onMidiSingleByte(MidiInputDevice sender, int cable, int byte1) {
-
-    }
-
-    @Override
-    public void onMidiRPNReceived(MidiInputDevice sender, int cable, int channel, int function, int valueMSB, int valueLSB) {
-
-    }
-
-    @Override
-    public void onMidiNRPNReceived(MidiInputDevice sender, int cable, int channel, int function, int valueMSB, int valueLSB) {
-
-    }
 
     /**
-     * Implementation for single device connections.
+     * Choose device from spinner
      *
-     * @author K.Shoji
+     * @return
      */
-    final class OnMidiDeviceAttachedListenerImpl implements OnMidiDeviceAttachedListener {
-        private final UsbManager usbManager;
-
-        /**
-         * constructor
-         *
-         * @param usbManager
-         */
-        public OnMidiDeviceAttachedListenerImpl(UsbManager usbManager) {
-            this.usbManager = usbManager;
-        }
-
-        /*
-         * (non-Javadoc)
-         * @see jp.kshoji.driver.midi.listener.OnMidiDeviceAttachedListener#onDeviceAttached(android.hardware.usb.UsbDevice, android.hardware.usb.UsbInterface)
-         */
-        @Override
-        public synchronized void onDeviceAttached(final UsbDevice attachedDevice) {
+    MidiOutputDevice getMidiOutputDeviceFromSpinner() {
+        if (deviceSpinner != null && deviceSpinner.getSelectedItemPosition() >= 0 && connectedDevicesAdapter != null && !connectedDevicesAdapter.isEmpty()) {
+            UsbDevice device = connectedDevicesAdapter.getItem(deviceSpinner.getSelectedItemPosition());
             if (device != null) {
-                // already one device has been connected
-                Toast.makeText(a.get(), "Device already connected.", Toast.LENGTH_LONG).show();
-                return;
-            }
+                Set<MidiOutputDevice> midiOutputDevices = usbMidiDriver.getMidiOutputDevices(device);
 
-            deviceConnection = usbManager.openDevice(attachedDevice);
-            if (deviceConnection == null) {
-                Toast.makeText(a.get(), "Cannot connect", Toast.LENGTH_LONG).show();
-
-                return;
-            }
-
-            List<DeviceFilter> deviceFilters = DeviceFilter.getDeviceFilters(a.get().getApplicationContext());
-
-            Set<MidiInputDevice> foundInputDevices = UsbMidiDeviceUtils.findMidiInputDevices(attachedDevice, deviceConnection, deviceFilters, PMidi.this);
-            if (foundInputDevices.size() > 0) {
-                midiInputDevice = (MidiInputDevice) foundInputDevices.toArray()[0];
-            }
-
-            Set<MidiOutputDevice> foundOutputDevices = UsbMidiDeviceUtils.findMidiOutputDevices(attachedDevice, deviceConnection, deviceFilters);
-            if (foundOutputDevices.size() > 0) {
-                midiOutputDevice = (MidiOutputDevice) foundOutputDevices.toArray()[0];
-            }
-
-            Toast.makeText(a.get(), "Connected", Toast.LENGTH_LONG).show();
-
-            MLog.d(Constants.TAG, "Device " + attachedDevice.getDeviceName() + " has been attached.");
-
-            PMidi.this.onDeviceAttached(attachedDevice);
-        }
-    }
-
-    /**
-     * Implementation for single device connections.
-     *
-     * @author K.Shoji
-     */
-    final class OnMidiDeviceDetachedListenerImpl implements OnMidiDeviceDetachedListener {
-        /*
-         * (non-Javadoc)
-         * @see jp.kshoji.driver.midi.listener.OnMidiDeviceDetachedListener#onDeviceDetached(android.hardware.usb.UsbDevice)
-         */
-        @Override
-        public synchronized void onDeviceDetached(final UsbDevice detachedDevice) {
-
-            AsyncTask<UsbDevice, Void, Void> task = new AsyncTask<UsbDevice, Void, Void>() {
-
-                @Override
-                protected Void doInBackground(UsbDevice... params) {
-                    if (params == null || params.length < 1) {
-                        return null;
-                    }
-
-                    UsbDevice usbDevice = params[0];
-
-                    if (midiInputDevice != null) {
-                        midiInputDevice.stop();
-                        midiInputDevice = null;
-                    }
-
-                    if (midiOutputDevice != null) {
-                        midiOutputDevice.stop();
-                        midiOutputDevice = null;
-                    }
-
-                    if (deviceConnection != null) {
-                        deviceConnection.close();
-                        deviceConnection = null;
-                    }
-                    device = null;
-
-                    MLog.network(a.get(), Constants.TAG, "Device " + usbDevice.getDeviceName() + " has been detached.");
-
-                    Message message = Message.obtain(deviceDetachedHandler);
-                    message.obj = usbDevice;
-                    deviceDetachedHandler.sendMessage(message);
-                    return null;
+                if (midiOutputDevices.size() > 0) {
+                    // returns the first one.
+                    return (MidiOutputDevice) midiOutputDevices.toArray()[0];
                 }
-            };
-            task.execute(detachedDevice);
+            }
         }
+        return null;
     }
 
 
@@ -261,98 +101,187 @@ public class PMidi extends PInterface implements OnMidiDeviceDetachedListener, O
 
     MidiDeviceEventCB midiEvent;
 
-    public PMidi(AppRunnerActivity a) {
-        super(a);
+    public PMidi(Activity appActivity, MidiDeviceEventCB callbackfn) {
+        super(appActivity);
+
+        this.midiEvent = callbackfn;
+        WhatIsRunning.getInstance().add(this);
+
+
+        usbMidiDriver = new UsbMidiDriver(appActivity) {
+            @Override
+            public void onDeviceAttached(UsbDevice usbDevice) {
+                if (connectedDevicesAdapter != null) {
+                    connectedDevicesAdapter.remove(usbDevice);
+                    connectedDevicesAdapter.add(usbDevice);
+                    connectedDevicesAdapter.notifyDataSetChanged();
+                }
+               // Toast.makeText(UsbMidiDriverSampleActivity.this, "USB MIDI Device " + usbDevice.getDeviceName() + " has been attached.", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onDeviceDetached(UsbDevice usbDevice) {
+                if (connectedDevicesAdapter != null) {
+                    connectedDevicesAdapter.remove(usbDevice);
+                    connectedDevicesAdapter.notifyDataSetChanged();
+                }
+              //  Toast.makeText(UsbMidiDriverSampleActivity.this, "USB MIDI Device " + usbDevice.getDeviceName() + " has been detached.", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onMidiNoteOff(final MidiInputDevice sender, int cable, int channel, int note, int velocity) {
+                midiInputEventHandler.sendMessage(Message.obtain(midiInputEventHandler, 0, "NoteOff from: " + sender.getUsbDevice().getDeviceName() + ", cable: " + cable + ", channel: " + channel + ", note: " + note + ", velocity: " + velocity));
+
+
+
+            }
+
+            @Override
+            public void onMidiNoteOn(final MidiInputDevice sender, int cable, int channel, int note, int velocity) {
+                midiInputEventHandler.sendMessage(Message.obtain(midiInputEventHandler, 0, "NoteOn from: " + sender.getUsbDevice().getDeviceName() + ", cable: " + cable + ",  channel: " + channel + ", note: " + note + ", velocity: " + velocity));
+
+
+
+            }
+
+            @Override
+            public void onMidiPolyphonicAftertouch(final MidiInputDevice sender, int cable, int channel, int note, int pressure) {
+                midiInputEventHandler.sendMessage(Message.obtain(midiInputEventHandler, 0, "PolyphonicAftertouch from: " + sender.getUsbDevice().getDeviceName() + ", cable: " + cable + ", channel: " + channel + ", note: " + note + ", pressure: " + pressure));
+
+
+            }
+
+            @Override
+            public void onMidiControlChange(final MidiInputDevice sender, final int cable, final int channel, final int function, final int value) {
+                midiInputEventHandler.sendMessage(Message.obtain(midiInputEventHandler, 0, "ControlChange from: " + sender.getUsbDevice().getDeviceName() + ", cable: " + cable + ", channel: " + channel + ", function: " + function + ", value: " + value));
+
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        midiEvent.event(cable, channel, function, value);
+                    }
+                });
+
+            }
+
+            @Override
+            public void onMidiProgramChange(final MidiInputDevice sender, int cable, int channel, int program) {
+                midiInputEventHandler.sendMessage(Message.obtain(midiInputEventHandler, 0, "ProgramChange from: " + sender.getUsbDevice().getDeviceName() + ", cable: " + cable + ", channel: " + channel + ", program: " + program));
+
+            }
+
+            @Override
+            public void onMidiChannelAftertouch(final MidiInputDevice sender, int cable, int channel, int pressure) {
+                midiInputEventHandler.sendMessage(Message.obtain(midiInputEventHandler, 0, "ChannelAftertouch from: " + sender.getUsbDevice().getDeviceName() + ", cable: " + cable + ", channel: " + channel + ", pressure: " + pressure));
+
+
+            }
+
+            @Override
+            public void onMidiPitchWheel(final MidiInputDevice sender, int cable, int channel, int amount) {
+                midiInputEventHandler.sendMessage(Message.obtain(midiInputEventHandler, 0, "PitchWheel from: " + sender.getUsbDevice().getDeviceName() + ", cable: " + cable + ", channel: " + channel + ", amount: " + amount));
+
+
+            }
+
+            @Override
+            public void onMidiSystemExclusive(final MidiInputDevice sender, int cable, final byte[] systemExclusive) {
+                midiInputEventHandler.sendMessage(Message.obtain(midiInputEventHandler, 0, "SystemExclusive from: " + sender.getUsbDevice().getDeviceName() + ", cable: " + cable + ", data:" + Arrays.toString(systemExclusive)));
+
+
+            }
+
+            @Override
+            public void onMidiSystemCommonMessage(final MidiInputDevice sender, int cable, final byte[] bytes) {
+                midiInputEventHandler.sendMessage(Message.obtain(midiInputEventHandler, 0, "SystemCommonMessage from: " + sender.getUsbDevice().getDeviceName() + ", cable: " + cable + ", bytes: " + Arrays.toString(bytes)));
+
+            }
+
+            @Override
+            public void onMidiSingleByte(final MidiInputDevice sender, int cable, int byte1) {
+                midiInputEventHandler.sendMessage(Message.obtain(midiInputEventHandler, 0, "SingleByte from: " + sender.getUsbDevice().getDeviceName() + ", cable: " + cable + ", data: " + byte1));
+
+
+            }
+
+            @Override
+            public void onMidiMiscellaneousFunctionCodes(final MidiInputDevice sender, int cable, int byte1, int byte2, int byte3) {
+                midiInputEventHandler.sendMessage(Message.obtain(midiInputEventHandler, 0, "MiscellaneousFunctionCodes from: " + sender.getUsbDevice().getDeviceName() + ", cable: " + cable + ", byte1: " + byte1 + ", byte2: " + byte2 + ", byte3: " + byte3));
+
+
+            }
+
+            @Override
+            public void onMidiCableEvents(final MidiInputDevice sender, int cable, int byte1, int byte2, int byte3) {
+                midiInputEventHandler.sendMessage(Message.obtain(midiInputEventHandler, 0, "CableEvents from: " + sender.getUsbDevice().getDeviceName() + ", cable: " + cable + ", byte1: " + byte1 + ", byte2: " + byte2 + ", byte3: " + byte3));
+
+
+            }
+        };
+
+        usbMidiDriver.open();
+
+//        OnTouchListener onToneButtonTouchListener = new OnTouchListener() {
+//
+//            /*
+//             * (non-Javadoc)
+//             * @see android.view.View.OnTouchListener#onTouch(android.view.View, android.view.MotionEvent)
+//             */
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                MidiOutputDevice midiOutputDevice = getMidiOutputDeviceFromSpinner();
+//                if (midiOutputDevice == null) {
+//                    return false;
+//                }
+//
+//                int note = 60 + Integer.parseInt((String) v.getTag());
+//                switch (event.getAction()) {
+//                    case MotionEvent.ACTION_DOWN:
+//                        midiOutputDevice.sendMidiNoteOn(cableIdSpinner.getSelectedItemPosition(), 0, note, 127);
+//                        midiOutputEventHandler.sendMessage(Message.obtain(midiOutputEventHandler, 0, "NoteOn to: " + midiOutputDevice.getUsbDevice().getDeviceName() + ", cableId: " + cableIdSpinner.getSelectedItemPosition() + ", note: " + note + ", velocity: 127"));
+//                        break;
+//                    case MotionEvent.ACTION_UP:
+//                        midiOutputDevice.sendMidiNoteOff(cableIdSpinner.getSelectedItemPosition(), 0, note, 127);
+//                        midiOutputEventHandler.sendMessage(Message.obtain(midiOutputEventHandler, 0, "NoteOff to: " + midiOutputDevice.getUsbDevice().getDeviceName() + ", cableId: " + cableIdSpinner.getSelectedItemPosition() + ", note: " + note + ", velocity: 127"));
+//                        break;
+//                    default:
+//                        // do nothing.
+//                        break;
+//                }
+//                return false;
+//            }
+//        };
+
     }
-
-    public PMidi(AppRunnerActivity a, MidiDeviceEventCB midiEvent) {
-		super(a);
-        this.midiEvent = midiEvent;
-
-        //midiInputEventAdapter = new ArrayAdapter<String>();
-
-         midiInputEventHandler = new Handler(new Handler.Callback() {
-            @Override
-            public boolean handleMessage(Message msg) {
-               // if (midiInputEventAdapter != null) {
-               //     midiInputEventAdapter.add((String)msg.obj);
-               // }
-                // message handled successfully
-                return true;
-            }
-        });
-
-        midiOutputEventHandler = new Handler(new Handler.Callback() {
-            @Override
-            public boolean handleMessage(Message msg) {
-               // if (midiOutputEventAdapter != null) {
-               //     midiOutputEventAdapter.add((String)msg.obj);
-               // }
-                // message handled successfully
-                return true;
-            }
-        });
-
-
-
-        UsbManager usbManager = (UsbManager) a.getApplicationContext().getSystemService(Context.USB_SERVICE);
-        deviceAttachedListener = new OnMidiDeviceAttachedListenerImpl(usbManager);
-        deviceDetachedListener = new OnMidiDeviceDetachedListenerImpl();
-
-        deviceDetachedHandler = new Handler(new Handler.Callback() {
-            /*
-             * (non-Javadoc)
-             * @see android.os.Handler.Callback#handleMessage(android.os.Message)
-             */
-            @Override
-            public boolean handleMessage(Message msg) {
-                UsbDevice usbDevice = (UsbDevice) msg.obj;
-                PMidi.this.onDeviceDetached(usbDevice);
-                return true;
-            }
-        });
-
-        deviceConnectionWatcher = new MidiDeviceConnectionWatcher(a.getApplicationContext(), usbManager, deviceAttachedListener, deviceDetachedListener);
-	}
-
 
     public void stop() {
 
-        if (midiInputDevice != null) {
-            midiInputDevice.stop();
-            midiInputDevice = null;
+        usbMidiDriver.close();
+
+        if (timer != null) {
+            try {
+                timer.cancel();
+                timer.purge();
+            } catch (Throwable t) {
+                // do nothing
+            } finally {
+                timer = null;
+            }
         }
-
-        if (midiOutputDevice != null) {
-            midiOutputDevice.stop();
-            midiOutputDevice = null;
+        if (audioTrack != null) {
+            try {
+                audioTrack.stop();
+                audioTrack.flush();
+                audioTrack.release();
+            } catch (Throwable t) {
+                // do nothing
+            } finally {
+                audioTrack = null;
+            }
         }
-
-        if (deviceConnection != null) {
-            deviceConnection.close();
-            deviceConnection = null;
-        }
-        device = null;
-        deviceAttachedListener = null;
-        deviceDetachedListener = null;
-        deviceDetachedHandler = null;
-
-        if (deviceConnectionWatcher != null) {
-            deviceConnectionWatcher.stop();
-
-            MLog.network(a.get(), TAG, "trying to stop deviceConnectionWatcher ");
-            deviceConnectionWatcher = null;
-
-        }
-
-
-
-
-
-
-        MLog.network(a.get(), TAG, "trying to stop pMidi " + midiOutputDevice + " " + deviceConnection);
 
     }
+
 
 
 }

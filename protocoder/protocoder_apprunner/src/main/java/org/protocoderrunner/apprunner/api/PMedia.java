@@ -40,6 +40,7 @@ import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.apprunner.api.other.PMidi;
 import org.protocoderrunner.apprunner.api.other.PPureData;
 import org.protocoderrunner.media.Audio;
 import org.protocoderrunner.media.AudioService;
@@ -373,12 +374,11 @@ public class PMedia extends PInterface {
 	}
 
 
-//    @ProtocoderScript
-//    @APIMethod(description = "start voice recognition", example = "media.startVoiceRecognition(function(text) { console.log(text) } );")
-//    @APIParam(params = { "function(recognizedText)" })
-//    public void startMidiDevice(final PMidi.MidiDeviceEventCB callbackfn) {
-//        PMidi pMidi = new PMidi(a.get(), callbackfn);
-//
-//        WhatIsRunning.getInstance().add(pMidi);
-//    }
+    @ProtocoderScript
+    @APIMethod(description = "start voice recognition", example = "media.startVoiceRecognition(function(text) { console.log(text) } );")
+    @APIParam(params = { "function(recognizedText)" })
+    public void startMidiDevice(final PMidi.MidiDeviceEventCB callbackfn) {
+        PMidi pMidi = new PMidi(a.get(), callbackfn);
+
+    }
 }
