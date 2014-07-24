@@ -32,7 +32,7 @@ package org.protocoderrunner.apprunner.api.widgets;
 import android.content.Context;
 import android.widget.ImageView;
 
-public class PImageButton extends ImageView implements PViewInterface {
+public class PImageButton extends PImageView implements PViewInterface {
 
     private final PImageButton img;
     Context c;
