@@ -351,8 +351,8 @@ public class PUI extends PUIGeneric {
 	@ProtocoderScript
 	@APIParam(params = { "View", "x", "y" })
 	public void move(View v, float x, float y) {
-		v.animate().x(x).setDuration(AppSettings.animSpeed);
-		v.animate().y(y).setDuration(AppSettings.animSpeed);
+		v.animate().x(x).setDuration(AppSettings.ANIM_GENERAL_SPEED);
+		v.animate().y(y).setDuration(AppSettings.ANIM_GENERAL_SPEED);
 
 	}
 
@@ -488,7 +488,7 @@ public class PUI extends PUIGeneric {
     @ProtocoderScript
     @APIParam(params = { "View" })
     public void animSpeed(int speed) {
-        AppSettings.animSpeed = speed;
+        AppSettings.ANIM_GENERAL_SPEED = speed;
     }
 
 	@ProtocoderScript
@@ -519,36 +519,36 @@ public class PUI extends PUIGeneric {
 	@ProtocoderScript
 	@APIParam(params = { "View", "degrees" })
 	public void rotate(View v, float x) {
-		v.animate().rotation(x).setDuration(AppSettings.animSpeed);
+		v.animate().rotation(x).setDuration(AppSettings.ANIM_GENERAL_SPEED);
 	}
 
 	@ProtocoderScript
 	@APIParam(params = { "View", "degrees", "degrees", "degrees" })
 	public void rotate(View v, float x, float y, float z) {
-		v.animate().rotation(x).setDuration(AppSettings.animSpeed);
+		v.animate().rotation(x).setDuration(AppSettings.ANIM_GENERAL_SPEED);
 		// looks weird but it works more consistent
-		v.animate().rotationX(y).setDuration(AppSettings.animSpeed);
-		v.animate().rotationY(z).setDuration(AppSettings.animSpeed);
+		v.animate().rotationX(y).setDuration(AppSettings.ANIM_GENERAL_SPEED);
+		v.animate().rotationY(z).setDuration(AppSettings.ANIM_GENERAL_SPEED);
 	}
 
 	@ProtocoderScript
 	@APIParam(params = { "View", "float" })
 	public void alpha(View v, float deg) {
-		v.animate().alpha(deg).setDuration(AppSettings.animSpeed);
+		v.animate().alpha(deg).setDuration(AppSettings.ANIM_GENERAL_SPEED);
 	}
 
 	@ProtocoderScript
 	@APIParam(params = { "View", "float" })
 	public void scale(View v, float x, float y) {
-		v.animate().scaleX(x).setDuration(AppSettings.animSpeed);
-		v.animate().scaleY(y).setDuration(AppSettings.animSpeed);
+		v.animate().scaleX(x).setDuration(AppSettings.ANIM_GENERAL_SPEED);
+		v.animate().scaleY(y).setDuration(AppSettings.ANIM_GENERAL_SPEED);
 	}
 
 	@ProtocoderScript
 	@APIParam(params = { "View", "float" })
 	public void scaleBy(View v, float x, float y) {
-		v.animate().scaleXBy(x).setDuration(AppSettings.animSpeed);
-		v.animate().scaleYBy(y).setDuration(AppSettings.animSpeed);
+		v.animate().scaleXBy(x).setDuration(AppSettings.ANIM_GENERAL_SPEED);
+		v.animate().scaleYBy(y).setDuration(AppSettings.ANIM_GENERAL_SPEED);
 	}
 
 
@@ -697,7 +697,19 @@ public class PUI extends PUIGeneric {
 	public void backgroundImage(String imagePath) {
 		initializeLayout();
 		// Add the bg image asynchronously
-		new SetBgImageTask(bgImageView).execute(AppRunnerSettings.get().project.getStoragePath() + File.separator
+		new SetBgImageTask(bgImageView, false).execute(AppRunnerSettings.get().project.getStoragePath() + File.separator
+				+ imagePath);
+
+	}
+
+    /**
+	 * Set a background image
+	 */
+	@APIParam(params = { "imageName" })
+	public void backgroundImageTile(String imagePath) {
+		initializeLayout();
+		// Add the bg image asynchronously
+		new SetBgImageTask(bgImageView, true).execute(AppRunnerSettings.get().project.getStoragePath() + File.separator
 				+ imagePath);
 
 	}
@@ -1134,7 +1146,7 @@ public class PUI extends PUIGeneric {
 		}
 
 		// Add image asynchronously
-		new SetImageTask(ib).execute(AppRunnerSettings.get().project.getStoragePath() + File.separator + imgNotPressed);
+		new SetImageTask(ib, false).execute(AppRunnerSettings.get().project.getStoragePath() + File.separator + imgNotPressed);
 
 		// Set on click behavior
 		ib.setOnTouchListener(new OnTouchListener() {

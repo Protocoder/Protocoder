@@ -153,7 +153,7 @@ public class CustomCameraView extends TextureView {
 					MLog.d("qq", "qq3 " + mCamera);
 
 					if (c.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
-						// parameters.set("orientation", "portrait"); // For
+						// parameters.set("orientation", "PORTRAIT"); // For
 						// Android Version 2.2 and above
 						MLog.d("qq", "qq4 " + mCamera);
 						mCamera.setDisplayOrientation(90);
