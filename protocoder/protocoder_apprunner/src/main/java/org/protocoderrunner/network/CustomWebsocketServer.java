@@ -155,7 +155,7 @@ public class CustomWebsocketServer extends WebSocketServer {
 		 * 
 		 * JSONObject values = new JSONObject();; values.put("address_ip",
 		 * NetworkUtils.getLocalIpAddress().toString());
-		 * values.put("address_port", AppSettings.httpPort);
+		 * values.put("address_port", AppSettings.HTTP_PORT);
 		 * values.put("device_name", android.os.Build.MANUFACTURER +
 		 * android.os.Build.PRODUCT + " " + Build.MODEL); msg.put("values",
 		 * values);

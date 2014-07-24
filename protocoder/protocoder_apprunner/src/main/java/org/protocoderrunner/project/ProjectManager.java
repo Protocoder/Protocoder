@@ -309,7 +309,7 @@ public class ProjectManager {
 	}
 
 	public void setRemoteIP(String remoteIP) {
-		this.remoteIP = remoteIP + ":" + AppSettings.httpPort;
+		this.remoteIP = remoteIP + ":" + AppSettings.HTTP_PORT;
 	}
 
 	public String getRemoteIP() {

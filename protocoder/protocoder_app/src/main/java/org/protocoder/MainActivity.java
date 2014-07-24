@@ -309,11 +309,11 @@ public class MainActivity extends BaseActivity implements NewProjectDialogFragme
 		updateStartStopActionbarItem();
 
 		// start webserver
-		httpServer = ProtocoderHttpServer.getInstance(getApplicationContext(), AppSettings.httpPort);
+		httpServer = ProtocoderHttpServer.getInstance(getApplicationContext(), AppSettings.HTTP_PORT);
 
 		// websocket
 		try {
-			ws = CustomWebsocketServer.getInstance(this, AppSettings.websocketPort, new Draft_17());
+			ws = CustomWebsocketServer.getInstance(this, AppSettings.WEBSOCKET_PORT, new Draft_17());
 			IDEcommunication.getInstance(this).ready(false);
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
@@ -325,7 +325,7 @@ public class MainActivity extends BaseActivity implements NewProjectDialogFragme
 			textIP.setText("No WIFI, still you can hack via USB using the companion app");
 		} else {
 			textIP.setText("Hack via your browser @ http://" + NetworkUtils.getLocalIpAddress(this) + ":"
-					+ AppSettings.httpPort);
+					+ AppSettings.HTTP_PORT);
 		}
 
 		if (httpServer != null) {// If no instance of HTTPServer, we set the IP

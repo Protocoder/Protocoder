@@ -71,15 +71,15 @@ public class BaseActivity extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		// if (AppSettings.fullscreen) {
+		// if (AppSettings.FULLSCREEN) {
 		// setFullScreen();
 		// }
 		//
-		// if (AppSettings.hideHomeBar) {
+		// if (AppSettings.HIDE_HOME_BAR) {
 		// setHideHomeBar();
 		// }
 		//
-		// if (AppSettings.screenAlwaysOn) {
+		// if (AppSettings.SCREEN_ALWAYS_ON) {
 		// setScreenAlwaysOn();
 		// }
 		//
@@ -296,7 +296,7 @@ public class BaseActivity extends FragmentActivity {
 	// override home buttons
 	@Override
 	public void onAttachedToWindow() {
-		if (AppSettings.overrideHomeButtons) {
+		if (AppSettings.OVERRIDE_HOME_BUTTONS) {
 			this.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD);
 			super.onAttachedToWindow();
 		}
@@ -327,13 +327,13 @@ public class BaseActivity extends FragmentActivity {
 
 		MLog.d(TAG, "" + keyCode);
 
-		if (AppSettings.overrideVolumeButtons
+		if (AppSettings.OVERRIDE_VOLUME_BUTTONS
 				&& (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP)) {
 
 			return true;
 		}
 
-		if (keyCode == KeyEvent.KEYCODE_BACK && AppSettings.closeWithBack) {
+		if (keyCode == KeyEvent.KEYCODE_BACK && AppSettings.CLOSE_WITH_BACK) {
 			finish();
 			return true;
 		}

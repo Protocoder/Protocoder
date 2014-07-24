@@ -856,7 +856,7 @@ public class AppRunnerActivity extends BaseActivity {
 		if (actionBar != null) {
 
 			// home clickable if is running inside org.apprunner.protocoder
-			if (AppSettings.standAlone == false) {
+			if (AppSettings.STANDALONE == false) {
 				actionBar.setDisplayHomeAsUpEnabled(true);
 			}
 			// actionBar.setDisplayUseLogoEnabled(false);

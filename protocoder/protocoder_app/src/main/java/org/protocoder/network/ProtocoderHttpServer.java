@@ -47,6 +47,8 @@ import org.protocoderrunner.apprunner.api.PBoards;
 import org.protocoderrunner.apprunner.api.PConsole;
 import org.protocoderrunner.apprunner.api.PDashboard;
 import org.protocoderrunner.apprunner.api.PDevice;
+import org.protocoderrunner.apprunner.api.boards.PSerial;
+import org.protocoderrunner.apprunner.api.other.PProcessing;
 import org.protocoderrunner.apprunner.api.other.PWebEditor;
 import org.protocoderrunner.apprunner.api.PFileIO;
 import org.protocoderrunner.apprunner.api.PMedia;
@@ -55,7 +57,6 @@ import org.protocoderrunner.apprunner.api.PProtocoder;
 import org.protocoderrunner.apprunner.api.PSensors;
 import org.protocoderrunner.apprunner.api.PUI;
 import org.protocoderrunner.apprunner.api.PUtil;
-import org.protocoderrunner.apprunner.api.boards.PArduino;
 import org.protocoderrunner.apprunner.api.boards.PIOIO;
 import org.protocoderrunner.apprunner.api.dashboard.PDashboardButton;
 import org.protocoderrunner.apprunner.api.dashboard.PDashboardHTML;
@@ -410,11 +411,11 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 					APIManager.getInstance().addClass(PUI.class);
 					APIManager.getInstance().addClass(PUtil.class);
 
-					APIManager.getInstance().addClass(PArduino.class);
+					APIManager.getInstance().addClass(PSerial.class);
 					APIManager.getInstance().addClass(PIOIO.class);
 
 					APIManager.getInstance().addClass(PCamera.class);
-					//APIManager.getInstance().addClass(PProcessing.class);
+					APIManager.getInstance().addClass(PProcessing.class);
 					APIManager.getInstance().addClass(PProtocoderFeedback.class);
 					APIManager.getInstance().addClass(PPureData.class);
 					APIManager.getInstance().addClass(PSqlLite.class);
