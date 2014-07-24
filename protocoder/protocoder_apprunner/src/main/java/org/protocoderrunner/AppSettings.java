@@ -34,24 +34,24 @@ import android.os.Build;
 public class AppSettings {
 
 	// == APP SETTINGS ==========
-	public static boolean debug = true;
-	public static boolean fullscreen = false;
-	public static boolean portrait = false;
-	public static boolean stayAwake = false;
-	public static boolean overrideHomeButtons = false;
-	public static boolean overrideVolumeButtons = false;
-	public static boolean hideHomeBar = false;
-	public static boolean screenAlwaysOn = false;
-	public static boolean closeWithBack = true;
-	public static boolean standAlone = false;
+	public static boolean DEBUG = true;
+	public static boolean FULLSCREEN = false;
+	public static boolean PORTRAIT = false;
+	public static boolean STAY_AWAKE = false;
+	public static boolean OVERRIDE_HOME_BUTTONS = false;
+	public static boolean OVERRIDE_VOLUME_BUTTONS = false;
+	public static boolean HIDE_HOME_BAR = false;
+	public static boolean SCREEN_ALWAYS_ON = false;
+	public static boolean CLOSE_WITH_BACK = true;
+	public static boolean STANDALONE = false;
 
 	public static int MIN_SUPPORTED_VERSION = Build.VERSION_CODES.ICE_CREAM_SANDWICH;
 
-	public static String appFolder = "protocoder";
+	public static String APP_FOLDER = "protocoder";
 	public static String SERVER_ADDRESS = "";
-	public static int websocketPort = 8587;
-	public static int animSpeed = 500;
-	public static int httpPort = 8585;
+	public static int WEBSOCKET_PORT = 8587;
+	public static int ANIM_GENERAL_SPEED = 500;
+	public static int HTTP_PORT = 8585;
 
     public String id;
 

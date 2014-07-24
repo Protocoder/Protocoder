@@ -52,11 +52,11 @@ public class BaseMainApp extends Application {
 	public static String TYPE_PROJECT_BACKUP = "backups";
 
 	public BaseMainApp() {
-		baseDir = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + AppSettings.appFolder
+		baseDir = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + AppSettings.APP_FOLDER
 				+ File.separator;
 
 		// baseDir = getFilesDir()+ File.separator +
-		// AppSettings.appFolder + File.separator;
+		// AppSettings.APP_FOLDER + File.separator;
 
 		projectsDir = baseDir + TYPE_PROJECT_STRING;
 		examplesDir = baseDir + TYPE_EXAMPLE_STRING;
