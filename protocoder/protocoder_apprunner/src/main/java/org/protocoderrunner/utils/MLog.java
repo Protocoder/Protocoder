@@ -109,7 +109,7 @@ public class MLog {
 		}
 
 		if (network) {
-			//LogEvent evt = new LogEvent("debug", msg);
+			//LogEvent evt = new LogEvent("DEBUG", msg);
 			//EventBus.getDefault().post(evt);
 
 
