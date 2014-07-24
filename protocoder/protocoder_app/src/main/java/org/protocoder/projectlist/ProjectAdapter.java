@@ -33,8 +33,8 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import org.protocoder.R;
-import org.protocoder.events.Project;
-import org.protocoder.events.ProjectManager;
+import org.protocoderrunner.project.Project;
+import org.protocoderrunner.project.ProjectManager;
 
 import android.content.Context;
 import android.view.View;

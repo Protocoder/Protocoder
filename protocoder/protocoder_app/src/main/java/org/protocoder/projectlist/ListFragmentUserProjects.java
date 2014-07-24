@@ -30,7 +30,7 @@
 package org.protocoder.projectlist;
 
 import org.protocoder.R;
-import org.protocoder.events.ProjectManager;
+import org.protocoderrunner.project.ProjectManager;
 
 import android.content.Intent;
 import android.os.Bundle;

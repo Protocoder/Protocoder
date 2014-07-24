@@ -29,8 +29,8 @@
 
 package org.protocoder;
 
-import org.protocoder.base.BaseActivity;
-import org.protocoder.utils.StrUtils;
+import org.protocoderrunner.base.BaseActivity;
+import org.protocoderrunner.utils.StrUtils;
 
 import android.content.Intent;
 import android.content.SharedPreferences;

@@ -1,0 +1,188 @@
+/*
+ * Protocoder 
+ * A prototyping platform for Android devices 
+ * 
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
+ * Copyright (C) 2014 Victor Diaz
+ * Copyright (C) 2013 Motorola Mobility LLC
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the Software
+ * is furnished to do so, subject to the following conditions: 
+ * 
+ * The above copyright notice and this permission notice shall be included in all 
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+ * THE SOFTWARE.
+ * 
+ */
+
+package org.protocoderrunner.apprunner.api;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import org.protocoderrunner.apidoc.annotation.APIMethod;
+import org.protocoderrunner.apidoc.annotation.APIParam;
+import org.protocoderrunner.apprunner.PInterface;
+import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.sensors.WhatIsRunning;
+
+import android.app.Activity;
+import android.content.res.Resources;
+import android.os.Handler;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
+
+public class PUtil extends PInterface {
+
+	private final Handler handler;
+	ArrayList<Runnable> rl = new ArrayList<Runnable>();
+
+	public PUtil(Activity a) {
+		super(a);
+		WhatIsRunning.getInstance().add(this);
+		handler = new Handler();
+
+	}
+
+	// --------- getRequest ---------//
+	interface getRequestCB {
+		void event(int eventType, String responseString);
+	}
+
+	public class Looper {
+		Runnable task;
+		public int delay;
+		boolean paused = false;
+
+		Looper(final int duration, final LooperCB callbackkfn) {
+			delay = duration;
+
+			task = new Runnable() {
+
+				@Override
+				public void run() {
+					callbackkfn.event();
+					if (!paused) {
+						handler.postDelayed(this, delay);
+					}
+				}
+			};
+			handler.post(task);
+
+			rl.add(task);
+		}
+
+		@ProtocoderScript
+		@APIMethod(description = "", example = "")
+		@APIParam(params = { "duration" })
+		public void setDelay(int duration) {
+			this.delay = duration;
+		}
+
+		@ProtocoderScript
+		@APIMethod(description = "", example = "")
+		@APIParam(params = { "boolean" })
+		public void pause(boolean b) {
+			this.paused = b;
+			if (b == false) {
+				handler.postDelayed(task, delay);
+			}
+		}
+
+		@ProtocoderScript
+		@APIMethod(description = "", example = "")
+		public void stop() {
+			handler.removeCallbacks(task);
+		}
+	}
+
+	// --------- Looper ---------//
+	interface LooperCB {
+		void event();
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "milliseconds", "function()" })
+	public Looper loop(final int duration, final LooperCB callbackkfn) {
+
+		return new Looper(duration, callbackkfn);
+	}
+
+	// --------- delay ---------//
+	interface delayCB {
+		void event();
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	@APIParam(params = { "milliseconds", "function()" })
+	public void delay(final int duration, final delayCB fn) {
+
+		Runnable task = new Runnable() {
+			@Override
+			public void run() {
+				// handler.postDelayed(this, duration);
+				fn.event();
+				handler.removeCallbacks(this);
+				rl.remove(this);
+			}
+		};
+		handler.postDelayed(task, duration);
+
+		rl.add(task);
+	}
+
+	public void stopAllTimers() {
+		Iterator<Runnable> ir = rl.iterator();
+		while (ir.hasNext()) {
+			handler.removeCallbacks(ir.next());
+			// handler.post(ir.next());
+		}
+	}
+
+	public void stop() {
+		stopAllTimers();
+	}
+
+	// http://stackoverflow.com/questions/4605527/converting-pixels-to-dp
+	public float dpToPixels(float dp) {
+		Resources resources = a.get().getResources();
+		DisplayMetrics metrics = resources.getDisplayMetrics();
+		float px = dp * (metrics.densityDpi / 160f);
+		return px;
+	}
+
+	public float pixelsToDp(float px) {
+		Resources resources = a.get().getResources();
+		DisplayMetrics metrics = resources.getDisplayMetrics();
+		float dp = px / (metrics.densityDpi / 160f);
+		return dp;
+	}
+
+	public float mmToPixels(float mm) {
+		float px = TypedValue
+				.applyDimension(TypedValue.COMPLEX_UNIT_MM, mm, a.get().getResources().getDisplayMetrics());
+		return px;
+	}
+
+	public float pixelsToMm(int px) {
+		float onepx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_MM, 1, a.get().getResources()
+				.getDisplayMetrics());
+
+		return px * onepx;
+	}
+
+}

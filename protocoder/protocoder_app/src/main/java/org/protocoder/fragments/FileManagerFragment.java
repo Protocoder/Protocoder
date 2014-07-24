@@ -34,9 +34,9 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import org.protocoder.R;
-import org.protocoder.base.BaseFragment;
-import org.protocoder.events.Project;
-import org.protocoder.events.ProjectManager;
+import org.protocoderrunner.base.BaseFragment;
+import org.protocoderrunner.project.Project;
+import org.protocoderrunner.project.ProjectManager;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;

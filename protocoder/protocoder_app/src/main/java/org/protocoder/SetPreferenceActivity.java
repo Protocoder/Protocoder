@@ -29,7 +29,7 @@
 
 package org.protocoder;
 
-import org.protocoder.base.BaseActivity;
+import org.protocoderrunner.base.BaseActivity;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;

@@ -16,7 +16,7 @@ package org.protocoder.views;
  * limitations under the License.
  */
 
-import org.protocoder.utils.MLog;
+import org.protocoderrunner.utils.MLog;
 
 import android.content.Context;
 import android.support.v4.view.PagerTitleStrip;

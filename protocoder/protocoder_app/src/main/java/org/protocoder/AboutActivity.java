@@ -29,8 +29,8 @@
 
 package org.protocoder;
 
-import org.protocoder.base.BaseActivity;
-import org.protocoder.utils.MLog;
+import org.protocoderrunner.base.BaseActivity;
+import org.protocoderrunner.utils.MLog;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;

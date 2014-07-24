@@ -33,8 +33,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import org.protocoder.base.BaseActivity;
-import org.protocoder.utils.StrUtils;
+import org.protocoderrunner.base.BaseActivity;
+import org.protocoderrunner.utils.StrUtils;
 
 public class ProtoAppInstallerActivity extends BaseActivity {
 
@@ -46,7 +46,7 @@ public class ProtoAppInstallerActivity extends BaseActivity {
 
 		// Prepare intent to exit the activity and move to the main one
 		boolean firstLaunch; // If this is the first time the
-		SharedPreferences userDetails = getSharedPreferences("org.protocoder", MODE_PRIVATE);
+		SharedPreferences userDetails = getSharedPreferences("org.org.apprunner.protocoder", MODE_PRIVATE);
 		firstLaunch = userDetails.getBoolean(getResources().getString(R.string.pref_is_first_launch), true);
 
 		if (firstLaunch) {
