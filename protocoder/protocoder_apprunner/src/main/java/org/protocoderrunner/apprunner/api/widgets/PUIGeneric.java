@@ -102,7 +102,7 @@ public class PUIGeneric extends PInterface {
 	protected PAbsoluteLayout uiAbsoluteLayout;
 	protected LinearLayout uiLinearLayout;
 	protected RelativeLayout holderLayout;
-	protected ImageView bgImageView;
+	protected PImageView bgImageView;
 
 	// properties
 	public int canvasWidth;
@@ -172,7 +172,7 @@ public class PUIGeneric extends PInterface {
 			}
 
 			// background image
-			bgImageView = new ImageView(a.get());
+			bgImageView = new PImageView(a.get());
 			holderLayout.addView(bgImageView, layoutParams);
 
 			// set the layout
@@ -656,7 +656,7 @@ public class PUIGeneric extends PInterface {
 		}
 
 		// Add image asynchronously
-		new SetImageTask(ib).execute(AppRunnerSettings.get().project.getStoragePath() + File.separator + imgNotPressed);
+		new SetImageTask(ib, false).execute(AppRunnerSettings.get().project.getStoragePath() + File.separator + imgNotPressed);
 
 		// Set on click behavior
 		ib.setOnTouchListener(new OnTouchListener() {
@@ -774,10 +774,12 @@ public class PUIGeneric extends PInterface {
 	 * 
 	 */
 	public static class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-		ImageView bmImage;
+		PImageView bmImage;
+        boolean isTiled = false;
 
-		public DownloadImageTask(ImageView bmImage) {
+		public DownloadImageTask(PImageView bmImage, boolean isTiled) {
 			this.bmImage = bmImage;
+            this.isTiled = isTiled;
 		}
 
 		@Override
@@ -798,6 +800,10 @@ public class PUIGeneric extends PInterface {
 		@Override
 		protected void onPostExecute(Bitmap result) {
 			bmImage.setImageBitmap(result);
+
+            if (isTiled == true) {
+                bmImage.setRepeat();
+            }
 		}
 	}
 
@@ -808,33 +814,32 @@ public class PUIGeneric extends PInterface {
 	 * 
 	 */
 	public static class SetImageTask extends AsyncTask<String, Void, Object> {
-		ImageView bgImage;
+		PImageView bgImage;
 		String imagePath;
 		private String fileExtension;
+        boolean isTiled = false;
 
-		public SetImageTask(ImageView bmImage) {
+		public SetImageTask(PImageView bmImage, boolean isTiled) {
 			this.bgImage = bmImage;
+            this.isTiled = isTiled;
 		}
 
 		@Override
 		protected Object doInBackground(String... paths) {
 			imagePath = paths[0];
 			File imgFile = new File(imagePath);
-			MLog.d("svg", "imagePath " + imagePath);
+			//MLog.d("svg", "imagePath " + imagePath);
 			if (imgFile.exists()) {
 				fileExtension = FileIO.getFileExtension(imagePath);
-				MLog.d("svg", "fileExtension " + fileExtension);
+				//MLog.d("svg", "fileExtension " + fileExtension);
 				if (fileExtension.equals("svg")) {
 					try {
-						MLog.d("svg", "is SVG 1");
+						//MLog.d("svg", "is SVG 1");
 						File file = new File(imagePath);
 						FileInputStream fileInputStream = new FileInputStream(file);
-						MLog.d("svg", "input " + fileInputStream);
 
 						SVG svg = SVG.getFromInputStream(fileInputStream);
-						MLog.d("svg", "svg " + svg);
 						Drawable drawable = new PictureDrawable(svg.renderToPicture());
-						MLog.d("svg", "drawable " + drawable);
 
 						return drawable;
 					} catch (SVGParseException e) {
@@ -861,6 +866,10 @@ public class PUIGeneric extends PInterface {
 				bgImage.setImageDrawable((Drawable) result);
 			} else {
 				bgImage.setImageBitmap((Bitmap) result);
+
+                if (isTiled == true) {
+                    bgImage.setRepeat();
+                }
 			}
 		}
 	}
@@ -873,10 +882,12 @@ public class PUIGeneric extends PInterface {
 	 */
 	// We need to set the bitmap image asynchronously
 	protected class SetBgImageTask extends AsyncTask<String, Void, Bitmap> {
-		ImageView fl;
+		PImageView fl;
+        boolean isTiled;
 
-		public SetBgImageTask(ImageView bgImageView) {
+		public SetBgImageTask(PImageView bgImageView, boolean isTiled) {
 			this.fl = bgImageView;
+            this.isTiled = isTiled;
 		}
 
 		@Override
@@ -898,6 +909,10 @@ public class PUIGeneric extends PInterface {
 			fl.setImageBitmap(result);
 			fl.setScaleType(ScaleType.CENTER_INSIDE);
 			// fl.setBackgroundDrawable(d);
+
+            if (isTiled == true) {
+                fl.setRepeat();
+            }
 		}
 	}
 

@@ -44,21 +44,37 @@ public class PImageView extends ImageView implements PViewInterface {
 		super(context);
 	}
 
-	public void setImage(String imagePath) {
+	public PImageView setImage(String imagePath) {
 
 		if (imagePath.startsWith("http")) {
 			// Add image asynchronously
-			new PUIGeneric.DownloadImageTask(this).execute(imagePath);
+			new PUIGeneric.DownloadImageTask(this, false).execute(imagePath);
 		} else {
 			// Add the image from file
-			new PUIGeneric.SetImageTask(this).execute(AppRunnerSettings.get().project.getStoragePath() + File.separator
+			new PUIGeneric.SetImageTask(this, false).execute(AppRunnerSettings.get().project.getStoragePath() + File.separator
 					+ imagePath);
 
 		}
 
+        return this;
 	}
 
-    public void setRepeat() {
+	public PImageView setTiledImage(String imagePath) {
+
+		if (imagePath.startsWith("http")) {
+			// Add image asynchronously
+			new PUIGeneric.DownloadImageTask(this, true).execute(imagePath);
+		} else {
+			// Add the image from file
+			new PUIGeneric.SetImageTask(this, true).execute(AppRunnerSettings.get().project.getStoragePath() + File.separator
+					+ imagePath);
+
+		}
+
+        return this;
+	}
+
+    public PImageView setRepeat() {
 
         BitmapDrawable bitmapDrawable = ((BitmapDrawable) this.getDrawable());
        // Bitmap bmp = bitmapDrawable .getBitmap();
@@ -66,8 +82,12 @@ public class PImageView extends ImageView implements PViewInterface {
        // BitmapDrawable bd = new BitmapDrawable(bmp);
         Shader.TileMode mode = Shader.TileMode.REPEAT;
         bitmapDrawable.setTileModeXY(mode, mode);
+
         setBackground(bitmapDrawable);
+        setImageBitmap(null);
         //setScaleX(2);
+
+        return this;
     }
 
 }
