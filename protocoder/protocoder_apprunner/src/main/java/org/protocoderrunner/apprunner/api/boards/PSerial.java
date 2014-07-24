@@ -48,10 +48,10 @@ import com.hoho.android.usbserial.driver.UsbSerialDriver;
 import com.hoho.android.usbserial.driver.UsbSerialPort;
 import com.hoho.android.usbserial.util.SerialInputOutputManager;
 
-public class PArduino extends PInterface {
+public class PSerial extends PInterface {
 
 	private String receivedData;
-	private final String TAG = "PArduino";
+	private final String TAG = "PSerial";
 
     private static UsbSerialPort sPort = null;
 
@@ -62,7 +62,7 @@ public class PArduino extends PInterface {
     private final ExecutorService mExecutor = Executors.newSingleThreadExecutor();
 	String msg = "";
 
-	public PArduino(Activity a) {
+	public PSerial(Activity a) {
 		super(a);
 
 	}
