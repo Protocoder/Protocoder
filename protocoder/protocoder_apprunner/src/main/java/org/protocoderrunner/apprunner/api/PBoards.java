@@ -33,7 +33,7 @@ import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
-import org.protocoderrunner.apprunner.api.boards.PArduino;
+import org.protocoderrunner.apprunner.api.boards.PSerial;
 import org.protocoderrunner.apprunner.api.boards.PIOIO;
 
 import android.app.Activity;
@@ -59,8 +59,8 @@ public class PBoards extends PInterface {
 	@ProtocoderScript
 	@APIMethod(description = "initializes makr board", example = "")
 	@APIParam(params = { "function()" })
-	public PArduino startArduino(int baud, PArduino.startCB callbackfn) {
-		PArduino arduino = new PArduino(a.get());
+	public PSerial startArduino(int baud, PSerial.startCB callbackfn) {
+		PSerial arduino = new PSerial(a.get());
 		arduino.start(baud, callbackfn);
 
 		return arduino;
