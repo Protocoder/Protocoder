@@ -27,7 +27,7 @@
  * 
  */
 
-package org.protocoderrunner.views;
+package org.protocoderrunner.apprunner.api.widgets;
 
 /*
  * use vectors 
@@ -40,6 +40,7 @@ import java.util.Map;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.PorterDuff.Mode;
@@ -48,9 +49,10 @@ import android.graphics.RectF;
 import android.view.MotionEvent;
 import android.view.View;
 
+import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.utils.AndroidUtils;
 
-public class PadView extends View {
+public class PPadView extends View {
 	private static final String TAG = "TouchAreaView";
 	// paint
 	private final Paint mPaint = new Paint();
@@ -62,9 +64,13 @@ public class PadView extends View {
 	private float mHeight;
 	private boolean lastTouch = false;
 	private OnTouchAreaListener mOnTouchAreaListener;
-	HashMap<Integer, TouchEvent> t = new HashMap<Integer, PadView.TouchEvent>();
+	HashMap<Integer, TouchEvent> t = new HashMap<Integer, PPadView.TouchEvent>();
+    private int mStrokeColor;
+    private int mBackgroundColor = 0x00FFFFFF;
+    private int mPadsColorStroke = 0x0000FF;
+    private int mPadsColorBg = 0x880000FF;
 
-	public PadView(Context context) {
+    public PPadView(Context context) {
 		super(context);
 		init();
 	}
@@ -77,7 +83,6 @@ public class PadView extends View {
 		if (isInEditMode()) {
 			loadDemoValues();
 		}
-
 
 	}
 
@@ -115,29 +120,31 @@ public class PadView extends View {
 			canvas.drawBitmap(bitmap, new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight()),
 					new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight()), null);
 
-			// paint
-			// mPaint.setStyle(Style.STROKE);
+            //clear
+            mCanvas.drawColor(0, Mode.CLEAR);
 
-			mPaint.setColor(0x88FFFFFF);
-			mPaint.setStyle(Style.STROKE);
-
+            // background
+			mPaint.setStyle(Style.FILL);
+			mPaint.setColor(mBackgroundColor);
 			mCanvas.drawRoundRect(new RectF(0, 0, mWidth, mHeight), 5, 5, mPaint);
+
 
 			mPaint.setStyle(Paint.Style.STROKE);
-			mCanvas.drawColor(0, Mode.CLEAR);
-			mPaint.setColor(0x88000000);
-			mCanvas.drawRoundRect(new RectF(0, 0, mWidth, mHeight), 5, 5, mPaint);
+			mCanvas.drawColor(mStrokeColor);
+			mPaint.setColor(mStrokeColor);
 
-			for (Map.Entry<Integer, PadView.TouchEvent> t1 : t.entrySet()) {
+            mCanvas.drawRoundRect(new RectF(0, 0, mWidth, mHeight), 5, 5, mPaint);
+
+			for (Map.Entry<Integer, PPadView.TouchEvent> t1 : t.entrySet()) {
 				int key = t1.getKey();
 				TouchEvent value = t1.getValue();
-
-				mPaint.setColor(0x550000FF);
+                
+				mPaint.setColor(mPadsColorBg);
 				mPaint.setStyle(Paint.Style.FILL);
 
 				mCanvas.drawCircle(value.x, value.y, 50, mPaint);
 
-				mPaint.setColor(0xFF0000FF);
+				mPaint.setColor(mPadsColorStroke);
 				mPaint.setStyle(Paint.Style.STROKE);
 				mPaint.setStrokeWidth(3);
 
@@ -250,5 +257,28 @@ public class PadView extends View {
 			System.out.printf("  pointer %d: (%f,%f)", ev.getPointerId(p), ev.getX(p), ev.getY(p));
 		}
 	}
+
+    @ProtocoderScript
+    public PPadView padsColor(String c) {
+        mPadsColorStroke = Color.parseColor(c);
+        int r = Color.red(mPadsColorStroke);
+        int g = Color.green(mPadsColorStroke);
+        int b = Color.blue(mPadsColorStroke);
+        
+        mPadsColorBg = Color.argb(125, r, g, b);
+        return this;
+    }
+    
+    @ProtocoderScript
+    public PPadView strokeColor(String c) {
+        mBackgroundColor = Color.parseColor(c);
+        return this;
+    }
+
+    @ProtocoderScript
+    public PPadView backgroundColor(String c) {
+        mBackgroundColor = Color.parseColor(c);
+        return this;
+    }
 
 }
