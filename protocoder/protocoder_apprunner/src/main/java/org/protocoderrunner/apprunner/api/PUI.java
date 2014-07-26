@@ -59,6 +59,7 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup.LayoutParams;
+import android.view.animation.BounceInterpolator;
 import android.view.animation.CycleInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -101,7 +102,7 @@ import org.protocoderrunner.apprunner.api.widgets.PWindow;
 import org.protocoderrunner.sensors.WhatIsRunning;
 import org.protocoderrunner.utils.AndroidUtils;
 import org.protocoderrunner.utils.MLog;
-import org.protocoderrunner.views.PadView;
+import org.protocoderrunner.apprunner.api.widgets.PPadView;
 import org.protocoderrunner.views.TouchAreaView;
 
 import java.io.File;
@@ -353,7 +354,13 @@ public class PUI extends PUIGeneric {
 	public void move(View v, float x, float y) {
 		v.animate().x(x).setDuration(AppSettings.ANIM_GENERAL_SPEED);
 		v.animate().y(y).setDuration(AppSettings.ANIM_GENERAL_SPEED);
+	}
 
+	@ProtocoderScript
+	@APIParam(params = { "View", "x", "y" })
+	public void moveBy(View v, float x, float y) {
+		v.animate().xBy(x).setDuration(AppSettings.ANIM_GENERAL_SPEED).setInterpolator(new BounceInterpolator());
+		v.animate().yBy(y).setDuration(AppSettings.ANIM_GENERAL_SPEED).setInterpolator(new BounceInterpolator());
 	}
 
     //@TargetApi(L)
@@ -854,8 +861,8 @@ public class PUI extends PUIGeneric {
 
 	@ProtocoderScript
 	@APIParam(params = { "x", "y", "w", "h", "function(touching, x, y)" })
-	public PadView addXYPad(int x, int y, int w, int h, final addPadCB callbackfn) {
-		PadView taV = addPad(callbackfn);
+	public PPadView addXYPad(int x, int y, int w, int h, final addPadCB callbackfn) {
+		PPadView taV = addPad(callbackfn);
 		addViewAbsolute(taV, x, y, w, h);
 
 		return taV;
@@ -863,8 +870,8 @@ public class PUI extends PUIGeneric {
 
 	@ProtocoderScript
 	@APIParam(params = { "function(touching, x, y)" })
-	public PadView addXYPad(final addPadCB callbackfn) {
-		PadView taV = addPad(callbackfn);
+	public PPadView addXYPad(final addPadCB callbackfn) {
+		PPadView taV = addPad(callbackfn);
 
 		return taV;
 	}
