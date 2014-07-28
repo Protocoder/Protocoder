@@ -29,14 +29,15 @@
 
 package org.protocoderrunner.apprunner.api;
 
+import android.app.Activity;
+
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
-import org.protocoderrunner.apprunner.api.boards.PSerial;
 import org.protocoderrunner.apprunner.api.boards.PIOIO;
-
-import android.app.Activity;
+import org.protocoderrunner.apprunner.api.boards.PArduino;
+import org.protocoderrunner.apprunner.api.boards.PSerial;
 
 public class PBoards extends PInterface {
 
@@ -65,5 +66,15 @@ public class PBoards extends PInterface {
 
 		return arduino;
 	}
+
+    @ProtocoderScript
+    @APIMethod(description = "initializes arduino board", example = "")
+    @APIParam(params = { "function()" })
+    public PArduino startPhysicaloid() {
+        PArduino arduino = new PArduino(a.get());
+        arduino.start();
+
+        return arduino;
+    }
 
 }
