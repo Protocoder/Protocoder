@@ -29,14 +29,15 @@
 
 package org.protocoderrunner.apprunner.api;
 
+import android.app.Activity;
+
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
-import org.protocoderrunner.apprunner.api.boards.PSerial;
 import org.protocoderrunner.apprunner.api.boards.PIOIO;
-
-import android.app.Activity;
+import org.protocoderrunner.apprunner.api.boards.PArduino;
+import org.protocoderrunner.apprunner.api.boards.PSerial;
 
 public class PBoards extends PInterface {
 
@@ -59,11 +60,20 @@ public class PBoards extends PInterface {
 	@ProtocoderScript
 	@APIMethod(description = "initializes makr board", example = "")
 	@APIParam(params = { "function()" })
-	public PSerial startArduino(int baud, PSerial.startCB callbackfn) {
+	public PSerial startSerial(int baud, PSerial.startCB callbackfn) {
 		PSerial arduino = new PSerial(a.get());
 		arduino.start(baud, callbackfn);
 
 		return arduino;
 	}
+
+    @ProtocoderScript
+    @APIMethod(description = "initializes arduino board", example = "")
+    public PArduino startArduino() {
+        PArduino arduino = new PArduino(a.get());
+        arduino.start();
+
+        return arduino;
+    }
 
 }
