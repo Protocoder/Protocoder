@@ -60,7 +60,7 @@ public class PBoards extends PInterface {
 	@ProtocoderScript
 	@APIMethod(description = "initializes makr board", example = "")
 	@APIParam(params = { "function()" })
-	public PSerial startArduino(int baud, PSerial.startCB callbackfn) {
+	public PSerial startSerial(int baud, PSerial.startCB callbackfn) {
 		PSerial arduino = new PSerial(a.get());
 		arduino.start(baud, callbackfn);
 
@@ -69,8 +69,7 @@ public class PBoards extends PInterface {
 
     @ProtocoderScript
     @APIMethod(description = "initializes arduino board", example = "")
-    @APIParam(params = { "function()" })
-    public PArduino startPhysicaloid() {
+    public PArduino startArduino() {
         PArduino arduino = new PArduino(a.get());
         arduino.start();
 
