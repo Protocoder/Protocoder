@@ -33,8 +33,12 @@ import android.app.Activity;
 
 import com.physicaloid.lib.Boards;
 import com.physicaloid.lib.Physicaloid;
+import com.physicaloid.lib.Physicaloid.UploadCallBack;
+import com.physicaloid.lib.programmer.avr.UploadErrors;
+import com.physicaloid.lib.usb.driver.uart.ReadLisener;
 
 import org.protocoderrunner.apidoc.annotation.APIMethod;
+import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
@@ -42,6 +46,7 @@ import org.protocoderrunner.sensors.WhatIsRunning;
 import org.protocoderrunner.utils.MLog;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 public class PArduino extends PInterface {
@@ -57,14 +62,10 @@ public class PArduino extends PInterface {
 	@ProtocoderScript
 	@APIMethod(description = "initializes arduino board", example = "arduino.start();")
 	public void start() {
-        try {
-            mPhysicaloid = new Physicaloid(a.get());
-            open();
-            WhatIsRunning.getInstance().add(this);
-            MLog.network(a.get(), TAG, "The device is ready");
-        } catch (Exception e) {
-            MLog.network(a.get(), TAG, "Error starting Arduino: " + e.getMessage() + e);
-        }
+        mPhysicaloid = new Physicaloid(a.get());
+        open();
+
+        WhatIsRunning.getInstance().add(this);
 	}
 
     // Opens a device and communicate USB UART by default settings
@@ -84,6 +85,8 @@ public class PArduino extends PInterface {
     // Closes a device
     public void close() {
         if (mPhysicaloid.close()) {
+            //  clear read callback
+            mPhysicaloid.clearReadListener();
             MLog.network(a.get(), TAG, "Device closed");
         } else {
             MLog.network(a.get(), TAG, "Cannot close the device");
@@ -115,7 +118,7 @@ public class PArduino extends PInterface {
                 try {
                     str = new String(buf, "UTF-8");
                 } catch (UnsupportedEncodingException e) {
-                    MLog.e(TAG,e.toString());
+                    MLog.network(a.get(), TAG, e.toString());
                 }
             }
         } else {
@@ -124,6 +127,71 @@ public class PArduino extends PInterface {
         return str;
     }
 
+    // --------- onReadCB ---------//
+    public interface onReadCB {
+        void event(String responseString);
+    }
+
+    // Read callback
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    public void onRead(final onReadCB callbackfn) {
+        if (mPhysicaloid.isOpened()) {
+            mPhysicaloid.addReadListener(new ReadLisener() {
+                String readStr;
+
+                // callback when reading one or more size buffer
+                @Override
+                public void onRead(int size) {
+                    byte[] buf = new byte[size];
+
+                    mPhysicaloid.read(buf, size);
+                    try {
+                        readStr = new String(buf, "UTF-8");
+                    } catch (UnsupportedEncodingException e) {
+                        MLog.network(a.get(), TAG, e.toString());
+                        return;
+                    }
+
+                    callbackfn.event(readStr);
+                }
+            });
+        }
+    }
+
+    // Upload callback
+    private UploadCallBack mUploadCallback = new UploadCallBack() {
+        @Override
+        public void onPreUpload() {
+            MLog.network(a.get(), TAG, "Upload : Start");
+        }
+
+        @Override
+        public void onUploading(int value) {
+            MLog.network(a.get(), TAG, "Upload : " + value + " %");
+        }
+
+        @Override
+        public void onPostUpload(boolean success) {
+            if(success) {
+                MLog.network(a.get(), TAG, "Upload : Successful");
+
+            } else {
+                MLog.network(a.get(), TAG, "Upload fail");
+            }
+        }
+
+        @Override
+        public void onCancel() {
+            MLog.network(a.get(), TAG, "Cancel uploading");
+        }
+
+        @Override
+        public void onError(UploadErrors err) {
+            MLog.network(a.get(), TAG, "Error  : " + err.toString());
+        }
+    };
+
     // Uploads a binary file to a device on background process. No need to open().
     // * @param board board profile e.g. Packages.com.physicaloid.lib.Boards.ARDUINO_UNO
     // * @param fileName a binary file name e.g. Blink.hex
@@ -131,26 +199,36 @@ public class PArduino extends PInterface {
     @ProtocoderScript
     @APIMethod(description = "Uploads a binary file to a device on background process. No need to open().", example = "")
     public void upload(Boards board, String fileName) {
-
         if (mPhysicaloid.isOpened()) {
-            // TODO
-            // Check if the fileName includes the .hex extension
+            // Build the absolute path
             String filePath = AppRunnerSettings.get().project.getStoragePath() + File.separator + fileName;
 
-            // TODO
-            // Check if the file exists
+            // Check if the fileName includes the .hex extension
+            if (!filePath.toLowerCase().endsWith(".hex")) {
+                MLog.network(a.get(), TAG, "Cannot upload the sketch. The file must have a .hex extension");
+                return;
+            }
 
             try {
-                //****************************************************************
-                // TODO : set board type and assets file.
-                // TODO : copy .hex file to porject_dir/assets directory.
-                mPhysicaloid.upload(board, filePath);
-                //****************************************************************
+                mPhysicaloid.upload(board, filePath, mUploadCallback);
             } catch (RuntimeException e) {
-                MLog.e(TAG, e.toString());
+                MLog.network(a.get(), TAG, e.toString());
             }
+
         } else {
             MLog.network(a.get(), TAG, "Cannot upload the sketch. The device is not opened");
+        }
+    }
+
+    @ProtocoderScript
+    @APIMethod(description = "Sets Baud Rate", example = "")
+    @APIParam(params = { "baudrate" })
+    public boolean setBaudrate(int baudrate) {
+        try {
+            return mPhysicaloid.setBaudrate(baudrate);
+        } catch (RuntimeException e) {
+            MLog.network(a.get(), TAG, e.toString());
+            return false;
         }
     }
 
