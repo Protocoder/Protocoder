@@ -46,7 +46,6 @@ import org.protocoderrunner.sensors.WhatIsRunning;
 import org.protocoderrunner.utils.MLog;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 public class PArduino extends PInterface {
@@ -59,8 +58,7 @@ public class PArduino extends PInterface {
 
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "initializes arduino board", example = "arduino.start();")
+    // Initializes arduino board
 	public void start() {
         mPhysicaloid = new Physicaloid(a.get());
         open();
@@ -94,12 +92,11 @@ public class PArduino extends PInterface {
     }
 
     @ProtocoderScript
-    @APIMethod(description = "sends commands to arduino board", example = "arduino.writeSerial(\"LEDON\");")
-    public void writeSerial(String cmd) {
+    @APIMethod(description = "sends commands to arduino board", example = "arduino.write(\"LEDON\");")
+    public void write(String cmd) {
         if (mPhysicaloid.isOpened()) {
             byte[] buf = cmd.getBytes();
             mPhysicaloid.write(buf, buf.length);
-            mPhysicaloid.close();
             MLog.network(a.get(), TAG, "Command sent to the device");
         } else {
             MLog.network(a.get(), TAG, "Cannot write to the device. The device is not opened");
@@ -107,8 +104,8 @@ public class PArduino extends PInterface {
     }
 
     @ProtocoderScript
-    @APIMethod(description = "read from the arduino board", example = "")
-    public String readSerial() {
+    @APIMethod(description = "reads from the arduino board", example = "arduino.read()")
+    public String read() {
         String str = "";
         if (mPhysicaloid.isOpened()) {
             byte[] buf = new byte[256];
@@ -132,9 +129,9 @@ public class PArduino extends PInterface {
         void event(String responseString);
     }
 
-    // Read callback
     @ProtocoderScript
-    @APIMethod(description = "", example = "")
+    @APIMethod(description = "adds a read callback that is called when one or more bytes are read", example = "")
+    @APIParam(params = { "function(data)" })
     public void onRead(final onReadCB callbackfn) {
         if (mPhysicaloid.isOpened()) {
             mPhysicaloid.addReadListener(new ReadLisener() {
@@ -197,7 +194,8 @@ public class PArduino extends PInterface {
     // * @param fileName a binary file name e.g. Blink.hex
     //
     @ProtocoderScript
-    @APIMethod(description = "Uploads a binary file to a device on background process. No need to open().", example = "")
+    @APIMethod(description = "uploads a binary file to a device on background process", example = "")
+    @APIParam(params = { "board", "fileName" })
     public void upload(Boards board, String fileName) {
         if (mPhysicaloid.isOpened()) {
             // Build the absolute path
@@ -221,7 +219,7 @@ public class PArduino extends PInterface {
     }
 
     @ProtocoderScript
-    @APIMethod(description = "Sets Baud Rate", example = "")
+    @APIMethod(description = "Sets Baud Rate", example = "arduino.setBaudrate(9600)")
     @APIParam(params = { "baudrate" })
     public boolean setBaudrate(int baudrate) {
         try {
