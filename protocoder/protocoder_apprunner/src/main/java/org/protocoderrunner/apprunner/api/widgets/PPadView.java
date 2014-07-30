@@ -54,7 +54,9 @@ import org.protocoderrunner.utils.AndroidUtils;
 
 public class PPadView extends View {
 	private static final String TAG = "TouchAreaView";
-	// paint
+    private static final String TYPE_PROG = "prog";
+    private static final String TYPE_FINGER = "finger";
+    // paint
 	private final Paint mPaint = new Paint();
 	private Canvas mCanvas = new Canvas();
 	private Bitmap bitmap; // Cache
@@ -186,6 +188,12 @@ public class PPadView extends View {
 
 	}
 
+    public TouchEvent newTouch(int id, int x, int y) {
+        TouchEvent t = new TouchEvent(TYPE_PROG, id, "move", x, y);
+
+        return t;
+    }
+
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		// AndroidUtils.dumpMotionEvent(event);
@@ -197,7 +205,7 @@ public class PPadView extends View {
 		int numPoints = event.getPointerCount();
 		for (int i = 0; i < numPoints; i++) {
 			int id = event.getPointerId(i);
-			TouchEvent o = new TouchEvent("finger", id, "move", (int) event.getX(i), (int) event.getY(i));
+			TouchEvent o = new TouchEvent(TYPE_FINGER, id, "move", (int) event.getX(i), (int) event.getY(i));
 			t.put(id, o);
 		}
 
