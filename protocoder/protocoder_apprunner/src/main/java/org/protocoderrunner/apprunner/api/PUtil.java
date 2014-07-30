@@ -109,7 +109,7 @@ public class PUtil extends PInterface {
 	}
 
 	// --------- Looper ---------//
-	interface LooperCB {
+    public interface LooperCB {
 		void event();
 	}
 
