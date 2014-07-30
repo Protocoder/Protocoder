@@ -197,6 +197,17 @@ pre.prettyprint {
   height: 100%;
 }
 
+.video {
+	background: black;
+	border-radius: 3px;
+	border: 2px solid black;
+	box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.43);
+}
+
+element.style {
+	text-align: center;
+	font-size: 1.2em;
+}
 
 @media only screen and (max-device-width: 800px), only screen and (device-width: 1024px) and (device-height: 600px), only screen and (width: 1280px) and (orientation: landscape), only screen and (device-width: 800px), only screen and (max-width: 767px) {
   .flex-video { padding-top: 0; }

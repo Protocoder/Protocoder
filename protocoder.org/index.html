@@ -61,6 +61,7 @@
                 <li id = "contribute"><a href="https://github.com/victordiaz/protocoder/wiki">Contribute</a></li>
                 <li id = "download_protocoder"><a href="#download">Download</a></li>
                 <li id = "forum"><a href="https://groups.google.com/forum/?hl=es#!forum/protocoder">Forum</a></li>
+                <li id = "showcase"><a href="./showcase.html">Showcase</a></li>
 
                 <!--
                 <li><a href="#about">About</a></li>
@@ -357,35 +358,11 @@
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="./dist/js/bootstrap.min.js"></script>
     <script src="./docs-assets/js/holder.js"></script>
+    <script src="./docs-assets/js/custom.js"></script>
 
-     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
   
-  <script type="text/javascript">
 
-  function addAnimMenu(item) { 
-
-    //drawOverlay();
-    $("#" + item).hover(function() {
-      console.log("hola");
-      $("#bg-header").addClass(item);
-    }, function() { 
-      $("#bg-header").removeClass(item);
-    });
-
-
-
-  }
-
-
-  $(document).ready(function() {
-    addAnimMenu("home");
-    addAnimMenu("contribute");
-    addAnimMenu("download_protocoder");
-    addAnimMenu("forum");
-  });
-  
-  
-  </script> 
      <script type="text/javascript">
         var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
         document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
