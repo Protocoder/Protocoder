@@ -65,10 +65,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView.ScaleType;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.mozilla.javascript.NativeArray;
+import org.mozilla.javascript.NativeJSON;
 import org.protocoderrunner.AppSettings;
 import org.protocoderrunner.R;
 import org.protocoderrunner.apidoc.annotation.APIMethod;
@@ -85,6 +88,7 @@ import org.protocoderrunner.apprunner.api.widgets.PCanvasView;
 import org.protocoderrunner.apprunner.api.widgets.PCard;
 import org.protocoderrunner.apprunner.api.widgets.PCheckBox;
 import org.protocoderrunner.apprunner.api.widgets.PEditText;
+import org.protocoderrunner.apprunner.api.widgets.PGrid;
 import org.protocoderrunner.apprunner.api.widgets.PImageButton;
 import org.protocoderrunner.apprunner.api.widgets.PImageView;
 import org.protocoderrunner.apprunner.api.widgets.PList;
@@ -849,7 +853,8 @@ public class PUI extends PUIGeneric {
 		return taV;
 	}
 
-	@ProtocoderScript
+
+    @ProtocoderScript
 	@APIParam(params = { "x", "y", "w", "h", "bShowArea", "function(touching, x, y)" })
 	public TouchAreaView addTouchArea(int x, int y, int w, int h, boolean showArea,
 			final addGenericTouchAreaCB callbackfn) {
@@ -1189,7 +1194,21 @@ public class PUI extends PUIGeneric {
 
 	}
 
-	@Override
+    /**
+     * Adds a touch area
+     *
+     */
+    @ProtocoderScript
+    @APIParam(params = { "bShowArea", "function(touching, x, y)" })
+    public PGrid addGridOf(String type, NativeArray array, int cols, int x, int y, int w, int h, final addGridOfCB callbackfn) {
+        PGrid grid = addGenericGridOf(type, array, cols, callbackfn);
+        addViewAbsolute(grid, x, y, w, h);
+
+        return grid;
+    }
+
+
+    @Override
 	@ProtocoderScript
 	@APIParam(params = { "x", "y", "w", "h" })
 	public PCanvasView addCanvas(int x, int y, int w, int h) {
