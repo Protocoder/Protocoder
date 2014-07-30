@@ -32,19 +32,22 @@ package org.protocoderrunner.apprunner.api.widgets;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.text.Html;
+import android.view.View;
 import android.widget.Button;
 
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 
-public class PButton extends Button implements PViewInterface {
+public class PButton extends Button implements PViewInterface, PViewMethodsInterface {
 
 	private int currentColor;
 
 	public PButton(Context context) {
 		super(context);
 		currentColor = Color.argb(255, 255, 255, 255);
+
 
 	}
 
@@ -56,4 +59,55 @@ public class PButton extends Button implements PViewInterface {
         this.setTypeface(f);
     }
 
+    @ProtocoderScript
+    @Override
+    public PButton font(Typeface font) {
+        this.setFont(font);
+        return this;
+    }
+
+    @ProtocoderScript
+    @Override
+    public PButton color(String c) {
+        this.setTextColor(Color.parseColor(c));
+        return this;
+    }
+
+    @ProtocoderScript
+    @Override
+    public PButton background(String c) {
+        this.setBackgroundColor(Color.parseColor(c));
+        return this;
+    }
+
+    @ProtocoderScript
+    @Override
+    public PButton html(String htmlText) {
+        this.setText(Html.fromHtml(htmlText));
+
+        return this;
+    }
+
+    @ProtocoderScript
+    @Override
+    public PButton boxsize(int w, int h) {
+        this.setWidth(w);
+        this.setHeight(h);
+
+        return this;
+    }
+
+    @Override
+    public View textSize(int size) {
+        this.setTextSize(size);
+        return this;
+    }
+
+    @ProtocoderScript
+    @Override
+    public PButton pos(int x, int y) {
+        this.setX(x);
+        this.setY(y);
+        return this;
+    }
 }

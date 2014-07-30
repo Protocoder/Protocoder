@@ -33,18 +33,20 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.Html;
+import android.view.View;
 import android.widget.TextView;
 
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 
-public class PTextView extends TextView implements PViewInterface {
+public class PTextView extends TextView implements PViewInterface, PViewMethodsInterface {
 
+    PViewMethods vM;
 	public PTextView(Context context) {
 		super(context);
+        vM = new PViewMethods();
 	}
-
 
     @ProtocoderScript
     @APIMethod(description = "", example = "")
@@ -65,7 +67,7 @@ public class PTextView extends TextView implements PViewInterface {
     @ProtocoderScript
     @APIMethod(description = "", example = "")
     @APIParam(params = { "size" })
-    public PTextView size(int size) {
+    public PTextView textSize(int size) {
         this.setTextSize(size);
         return this;
     }
