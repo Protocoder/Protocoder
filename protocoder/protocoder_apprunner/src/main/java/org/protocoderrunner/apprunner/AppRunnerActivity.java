@@ -53,7 +53,7 @@ import org.protocoderrunner.sensors.NFCUtil;
 import org.protocoderrunner.sensors.WhatIsRunning;
 import org.protocoderrunner.utils.MLog;
 import org.protocoderrunner.utils.StrUtils;
-import org.protocoderrunner.views.PadView;
+import org.protocoderrunner.apprunner.api.widgets.PPadView;
 
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
@@ -895,7 +895,7 @@ public class AppRunnerActivity extends BaseActivity {
 		int action = event.getAction();
 		int actionCode = event.getActionMasked();
 
-		ArrayList<PadView.TouchEvent> t = new ArrayList<PadView.TouchEvent>();
+		ArrayList<PPadView.TouchEvent> t = new ArrayList<PPadView.TouchEvent>();
 
 		// check finger if down or up
 		if (actionCode == MotionEvent.ACTION_POINTER_DOWN || actionCode == MotionEvent.ACTION_POINTER_UP) {
