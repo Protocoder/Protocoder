@@ -37,10 +37,7 @@ public class PMidi extends PInterface {
     final Handler midiInputEventHandler = new Handler(new Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-            if (midiInputEventAdapter != null) {
-                midiInputEventAdapter.add((String)msg.obj);
-            }
-            // message handled successfully
+
             return true;
         }
     });
@@ -48,50 +45,12 @@ public class PMidi extends PInterface {
     final Handler midiOutputEventHandler = new Handler(new Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-            if (midiOutputEventAdapter != null) {
-                midiOutputEventAdapter.add((String)msg.obj);
-            }
-            // message handled successfully
+
             return true;
         }
     });
 
-    ArrayAdapter<String> midiInputEventAdapter;
-    ArrayAdapter<String> midiOutputEventAdapter;
-    private ToggleButton thruToggleButton;
-    Spinner cableIdSpinner;
-    Spinner deviceSpinner;
-
-    ArrayAdapter<UsbDevice> connectedDevicesAdapter;
-
-    // Play sounds
-    AudioTrack audioTrack;
-    Timer timer;
-    TimerTask timerTask;
-    int currentProgram = 0;
-
     private UsbMidiDriver usbMidiDriver;
-
-
-    /**
-     * Choose device from spinner
-     *
-     * @return
-     */
-    MidiOutputDevice getMidiOutputDeviceFromSpinner() {
-        if (deviceSpinner != null && deviceSpinner.getSelectedItemPosition() >= 0 && connectedDevicesAdapter != null && !connectedDevicesAdapter.isEmpty()) {
-            UsbDevice device = connectedDevicesAdapter.getItem(deviceSpinner.getSelectedItemPosition());
-            if (device != null) {
-                Set<MidiOutputDevice> midiOutputDevices = usbMidiDriver.getMidiOutputDevices(device);
-
-                if (midiOutputDevices.size() > 0) {
-                    // returns the first one.
-                    return (MidiOutputDevice) midiOutputDevices.toArray()[0];
-                }
-            }
-        }
-        return null;
-    }
 
 
     // --------- startVoiceRecognition ---------//
@@ -111,20 +70,12 @@ public class PMidi extends PInterface {
         usbMidiDriver = new UsbMidiDriver(appActivity) {
             @Override
             public void onDeviceAttached(UsbDevice usbDevice) {
-                if (connectedDevicesAdapter != null) {
-                    connectedDevicesAdapter.remove(usbDevice);
-                    connectedDevicesAdapter.add(usbDevice);
-                    connectedDevicesAdapter.notifyDataSetChanged();
-                }
+
                // Toast.makeText(UsbMidiDriverSampleActivity.this, "USB MIDI Device " + usbDevice.getDeviceName() + " has been attached.", Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onDeviceDetached(UsbDevice usbDevice) {
-                if (connectedDevicesAdapter != null) {
-                    connectedDevicesAdapter.remove(usbDevice);
-                    connectedDevicesAdapter.notifyDataSetChanged();
-                }
               //  Toast.makeText(UsbMidiDriverSampleActivity.this, "USB MIDI Device " + usbDevice.getDeviceName() + " has been detached.", Toast.LENGTH_LONG).show();
             }
 
@@ -255,31 +206,7 @@ public class PMidi extends PInterface {
     }
 
     public void stop() {
-
         usbMidiDriver.close();
-
-        if (timer != null) {
-            try {
-                timer.cancel();
-                timer.purge();
-            } catch (Throwable t) {
-                // do nothing
-            } finally {
-                timer = null;
-            }
-        }
-        if (audioTrack != null) {
-            try {
-                audioTrack.stop();
-                audioTrack.flush();
-                audioTrack.release();
-            } catch (Throwable t) {
-                // do nothing
-            } finally {
-                audioTrack = null;
-            }
-        }
-
     }
 
 
