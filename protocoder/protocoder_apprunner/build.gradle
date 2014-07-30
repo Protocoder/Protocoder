@@ -54,6 +54,7 @@ repositories {
 
 
 dependencies {
+
     //compile fileTree(dir: 'libs', include: ['*.jar'])
 
     //android support
@@ -63,15 +64,13 @@ dependencies {
     compile 'com.android.support:palette-v7:+'
 
     //some of the apache libs collide with the ones in Android, better to include them as jars
+    compile files('libs/commons-lang3-3.1.jar')
+    compile files('libs/commons-logging-1.1.3.jar')
+    compile files('libs/commons-net-3.0.1.jar')
     compile files('libs/httpclient-4.3.4.jar')
     compile files('libs/httpclient-cache-4.3.4.jar')
     compile files('libs/httpcore-4.3.2.jar')
     compile files('libs/httpmime-4.3.4.jar')
-
-    compile files('libs/commons-lang3-3.1.jar')
-    compile files('libs/commons-logging-1.1.3.jar')
-    compile files('libs/commons-net-3.0.1.jar')
-
     compile 'de.greenrobot:eventbus:2.2.1'
 
     //compile files('libs/js.jar') //mozilla rhino
@@ -86,6 +85,7 @@ dependencies {
     compile 'de.sciss:netutil:1.0.0'
 
     //media
+    compile files('libs/osmbonuspack_v4.5.jar')
     compile files('libs/pdcore.jar')
     compile (name:'processing', ext:'aar')
     compile 'com.github.japgolly.android:svg-android:2.0.6' //'files('libs/androidsvg-1.2.1.jar')
@@ -100,13 +100,11 @@ dependencies {
     compile files('libs/ioiolibbt.jar')
     compile files('libs/usb-serial-for-android.jar')
     compile 'jp.kshoji:midi-driver:0.0.2-SNAPSHOT:@aar'
+    compile files('libs/physicaloidlibrary.jar')
 
     //other libs
     compile 'net.lingala.zip4j:zip4j:1.3.2'
     compile 'com.google.code.gson:gson:2.2.4'
     compile files('libs/slf4j-android-1.7.6.jar')
     compile files('libs/slf4j-api-1.7.6.jar')
-
-
-
 }
