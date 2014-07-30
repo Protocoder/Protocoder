@@ -29,37 +29,135 @@
 
 package org.protocoderrunner.views;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.View;
 
-public class CanvasView extends View {
-	private SurfaceHolder sh;
-	private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-	private Canvas canvas;
-	private Bitmap bmp;
+import org.protocoderrunner.apprunner.api.PUtil;
+import org.protocoderrunner.sensors.WhatIsRunning;
 
-	public CanvasView(Context context, int w, int h) {
+import processing.core.PApplet;
+
+public class CanvasView extends View {
+    private final Context context;
+    private PUtil.Looper loop;
+    private int mWidth;
+    private int mHeight;
+    //private SurfaceHolder sh;
+
+
+    public interface PCanvasInterfaceDraw {
+        void onDraw(Canvas c);
+    }
+
+    public interface PCanvasInterfaceTouch {
+        void onTouch(float x, float y);
+    }
+
+    private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+	private Canvas mCanvas;
+	private Bitmap bmp;
+    private PCanvasInterfaceDraw pCanvasInterfaceDraw;
+    private PCanvasInterfaceTouch pCanvasInterfaceTouch;
+
+
+
+    //on create
+	public CanvasView(Context context, int w, int h, PCanvasInterfaceDraw pCanvasInterfaceDraw, PCanvasInterfaceTouch pCanvasInterfaceTouch) {
 		super(context);
+        this.context = context;
+        WhatIsRunning.getInstance().add(this);
+        this.pCanvasInterfaceDraw = pCanvasInterfaceDraw;
+        this.pCanvasInterfaceTouch = pCanvasInterfaceTouch;
 
 		Bitmap.Config conf = Bitmap.Config.ARGB_8888;
 		bmp = Bitmap.createBitmap(w, h, conf);
-		canvas = new Canvas(bmp);
-		draw(canvas);
+		mCanvas = new Canvas(bmp);
+		draw(mCanvas);
+
 	}
 
+    public CanvasView(Context context, int w, int h) {
+        this(context, w, h, null, null);
+    }
+    //on draw
 	@Override
 	protected void onDraw(Canvas c) {
 		super.onDraw(c);
 		c.drawBitmap(bmp, 0, 0, null);
 	}
 
-	public Canvas getCanvas() {
+    //on touch
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (pCanvasInterfaceTouch != null) {
+            pCanvasInterfaceTouch.onTouch(event.getX(), event.getY());
+        }
+        return super.onTouchEvent(event);
+    }
 
-		return canvas;
+    public void clear() {
+        mCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
+    }
+
+    public void draw(PCanvasInterfaceDraw pCanvasInterface) {
+        pCanvasInterface.onDraw(mCanvas);
+    }
+
+    public void onTouch(PCanvasInterfaceTouch pCanvasInterfaceTouch) {
+        this.pCanvasInterfaceTouch = pCanvasInterfaceTouch;
+    }
+
+    public void autoDraw(int ms, final PCanvasInterfaceDraw pCanvasInterfaceDraw) {
+        if (loop != null) {
+            loop.stop();
+            loop = null;
+        }
+
+
+        PUtil util = new PUtil((Activity) context);
+        loop = util.loop(ms, new PUtil.LooperCB() {
+            @Override
+            public void event() {
+                pCanvasInterfaceDraw.onDraw(mCanvas);
+                invalidate();
+            }
+        });
+
+    }
+
+    public Canvas getCanvas() {
+
+		return mCanvas;
 	}
 
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        mWidth = w;
+        mHeight = h;
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        stop();
+        super.onDetachedFromWindow();
+    }
+
+    public void stop() {
+        if (loop != null) {
+            loop.stop();
+        }
+    }
 }
