@@ -38,6 +38,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.mozilla.javascript.NativeArray;
+import org.mozilla.javascript.NativeJSON;
 import org.osmdroid.events.DelayedMapListener;
 import org.osmdroid.events.MapListener;
 import org.osmdroid.events.ScrollEvent;
@@ -56,8 +60,7 @@ import org.protocoderrunner.fragments.CustomVideoTextureView;
 import org.protocoderrunner.utils.AndroidUtils;
 import org.protocoderrunner.utils.FileIO;
 import org.protocoderrunner.utils.MLog;
-import org.protocoderrunner.views.PadView;
-import org.protocoderrunner.views.PadView.TouchEvent;
+import org.protocoderrunner.apprunner.api.widgets.PPadView.TouchEvent;
 import org.protocoderrunner.views.TouchAreaView;
 
 import android.animation.LayoutTransition;
@@ -77,18 +80,22 @@ import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.ImageView;
+import android.widget.GridView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.Space;
 
-import com.caverock.androidsvg.SVG;
-import com.caverock.androidsvg.SVGParseException;
+//import com.caverock.androidsvg.SVG;
+//import com.caverock.androidsvg.SVGParseException;
+import com.larvalabs.svgandroid.SVG;
+import com.larvalabs.svgandroid.SVGBuilder;
+import com.larvalabs.svgandroid.SVGParser;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class PUIGeneric extends PInterface {
@@ -109,7 +116,7 @@ public class PUIGeneric extends PInterface {
 	public int canvasHeight;
 	public int cw;
 	public int ch;
-	private ScrollView sv;
+	private PScrollView sv;
 	public int screenWidth;
 	public int screenHeight;
 	public int sw;
@@ -147,7 +154,7 @@ public class PUIGeneric extends PInterface {
 
 			// We need to let the view scroll, so we're creating a scroll
 			// view
-			sv = new ScrollView(a.get());
+			sv = new PScrollView(a.get(), true);
 			sv.setLayoutParams(layoutParams);
 			sv.setBackgroundColor(a.get().getResources().getColor(R.color.transparent));
 			sv.setFillViewport(true);
@@ -197,18 +204,20 @@ public class PUIGeneric extends PInterface {
 	public void allowScroll(boolean scroll) {
 		if (sv != null) {
 			if (scroll) {
-                sv.requestDisallowInterceptTouchEvent(false);
-                sv.setOnTouchListener(null);
+                sv.setScrollingEnabled(true);
+               // sv.requestDisallowInterceptTouchEvent(false);
+               // sv.setOnTouchListener(null);
 			} else {
-                sv.requestDisallowInterceptTouchEvent(true);
-				sv.setOnTouchListener(new OnTouchListener() {
-
-					@Override
-					public boolean onTouch(View v, MotionEvent event) {
-
-						return true;
-					}
-				});
+                sv.setScrollingEnabled(false);
+//                sv.requestDisallowInterceptTouchEvent(true);
+//				sv.setOnTouchListener(new OnTouchListener() {
+//
+//					@Override
+//					public boolean onTouch(View v, MotionEvent event) {
+//
+//						return true;
+//					}
+//				});
 			}
 		}
 		isScrollLayout = scroll;
@@ -336,13 +345,13 @@ public class PUIGeneric extends PInterface {
 
 	PadXYReturn[] q2;
 
-	public PadView addPad(final addPadCB callbackfn) {
+	public PPadView addPad(final addPadCB callbackfn) {
 		initializeLayout();
 
 		final ArrayList<PadXYReturn> m = new ArrayList<PUIGeneric.PadXYReturn>();
 
-		PadView taV = new PadView(a.get());
-		taV.setTouchAreaListener(new PadView.OnTouchAreaListener() {
+		PPadView taV = new PPadView(a.get());
+		taV.setTouchAreaListener(new PPadView.OnTouchAreaListener() {
 
 			@Override
 			public void onGenericTouch(HashMap<Integer, TouchEvent> t) {
@@ -351,7 +360,7 @@ public class PUIGeneric extends PInterface {
 				q2 = new PadXYReturn[t.size()];
 
 				int num = 0;
-				for (Map.Entry<Integer, PadView.TouchEvent> t1 : t.entrySet()) {
+				for (Map.Entry<Integer, PPadView.TouchEvent> t1 : t.entrySet()) {
 					int key = t1.getKey();
 					TouchEvent value = t1.getValue();
 
@@ -692,6 +701,123 @@ public class PUIGeneric extends PInterface {
 
 	}
 
+    public// --------- getRequest ---------//
+    interface addGridOfCB {
+        void event(JSONObject json);
+    }
+
+    public PGrid addGenericGridOf(String type, NativeArray array, int cols, final addGridOfCB callbackfn) {
+
+        PGrid gridLayout = new PGrid(a.get());
+        int counter = 0;
+        int num = (int) array.getLength();
+        int rows = (int) Math.ceil(num / 2);
+
+       // try {
+
+            //cols = obj.get("cols");
+            //rows = obj.get("rows");
+            //num = rows * cols;
+            //name = obj.getString("name");
+            //prefix = obj.getString("prefix");
+            //postfix = obj.getString("postfix");
+
+        //} catch (JSONException e) {
+        //    e.printStackTrace();
+        //}
+
+        PGridRow ll2 = null;
+        int i = 0;
+        for (int j = 0; j < cols * rows; j++) {
+            if (j % cols == 0) {
+                ll2 = gridLayout.addRow(cols);
+                i++;
+                Log.d(TAG, "added new row");
+            }
+
+            Log.d(TAG, "counter/num " + counter + " " + num + " " + i + " " + cols + " " + rows);
+
+            if (counter >= num) {
+                Log.d(TAG, "this space");
+                ll2.addViewInRow(new Space(a.get()));
+               break;
+            }
+                String name = (String) array.get(counter++);
+                final JSONObject cbData = new JSONObject();
+                try {
+                    cbData.put("name", name);
+                    cbData.put("i", i);
+                    cbData.put("j", j);
+                    cbData.put("count", counter);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                //button
+                if (type.equals("button")) {
+                    PButton btn = addGenericButton(name, new addGenericButtonCB() {
+                        @Override
+                        public void event() {
+                            try {
+                                cbData.put("data", "");
+                                callbackfn.event(cbData);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                    ll2.addViewInRow(btn);
+
+                //imagebutton
+                } else if (type.equals("imagebutton")) {
+                    PImageButton btn = new PImageButton(a.get());
+
+
+                //toggle
+                } else if (type.equals("toggle")) {
+                    PToggleButton toggle = addGenericToggle(name, false, new addGenericToggleCB() {
+                        @Override
+                        public void event(boolean isChecked) {
+                            try {
+                                cbData.put("data", isChecked);
+                                callbackfn.event(cbData);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                    ll2.addViewInRow(toggle);
+
+                //hslider
+                } else if (type.equals("hslider")) {
+                    PSeekBar slider = addGenericSlider(1024, 0, new addGenericSliderCB() {
+                        @Override
+                        public void eval(int progress) {
+                            try {
+                                cbData.put("data", progress / 1024);
+                                callbackfn.event(cbData);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                    ll2.addViewInRow(slider);
+
+                //vslider
+                } else if (type.equals("vslider")) {
+
+                //knob
+                } else if (type.equals("knob")) {
+
+                }
+
+            }
+
+        //MLog.network(a.get(), "qq", "" + gridLayout);
+        return gridLayout;
+    }
+
 	public PCanvasView addCanvas(int x, int y, int w, int h) {
 		initializeLayout();
 
@@ -833,20 +959,39 @@ public class PUIGeneric extends PInterface {
 				fileExtension = FileIO.getFileExtension(imagePath);
 				//MLog.d("svg", "fileExtension " + fileExtension);
 				if (fileExtension.equals("svg")) {
-					try {
-						//MLog.d("svg", "is SVG 1");
-						File file = new File(imagePath);
-						FileInputStream fileInputStream = new FileInputStream(file);
 
-						SVG svg = SVG.getFromInputStream(fileInputStream);
-						Drawable drawable = new PictureDrawable(svg.renderToPicture());
+                    File file = new File(imagePath);
+                    FileInputStream fileInputStream = null;
+                    try {
+                        fileInputStream = new FileInputStream(file);
+                        SVG svg = new SVGBuilder().readFromInputStream(fileInputStream).build();
+                        SVGParser svgParser = new SVGParser();
+                        //new SVGBuilder().
+                        //       SVGParser.
 
-						return drawable;
-					} catch (SVGParseException e) {
-						e.printStackTrace();
-					} catch (FileNotFoundException e) {
-						e.printStackTrace();
-					}
+
+                        //svg.
+                        return svg.getDrawable();
+
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+
+
+//                    try {
+//						//MLog.d("svg", "is SVG 1");
+//						File file = new File(imagePath);
+//						FileInputStream fileInputStream = new FileInputStream(file);
+//
+//						SVG svg = SVG.getFromInputStream(fileInputStream);
+//						Drawable drawable = new PictureDrawable(svg.renderToPicture());
+//
+//						return drawable;
+//					} catch (SVGParseException e) {
+//						e.printStackTrace();
+//					} catch (FileNotFoundException e) {
+//						e.printStackTrace();
+//					}
 				} else {
 					// Get the bitmap with appropriate options
 					final BitmapFactory.Options options = new BitmapFactory.Options();
