@@ -36,6 +36,7 @@ import com.physicaloid.lib.Physicaloid;
 import com.physicaloid.lib.Physicaloid.UploadCallBack;
 import com.physicaloid.lib.programmer.avr.UploadErrors;
 import com.physicaloid.lib.usb.driver.uart.ReadLisener;
+import com.physicaloid.lib.usb.driver.uart.UartConfig;
 
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
@@ -243,7 +244,7 @@ public class PArduino extends PInterface {
         upload(board, fileName, callbackfn);
     }
 
-        @ProtocoderScript
+    @ProtocoderScript
     @APIMethod(description = "sets baud rate", example = "arduino.setBaudrate(9600)")
     @APIParam(params = { "baudrate" })
     public boolean setBaudrate(int baudrate) {
@@ -286,6 +287,65 @@ public class PArduino extends PInterface {
                 Boards.NONE};
 
         return boards;
+    }
+
+    @ProtocoderScript
+    @APIMethod(description = "sets serial configuration", example = "")
+    @APIParam(params = { "settings" })
+    public void setConfig(UartConfig settings) {
+        try {
+            mPhysicaloid.setConfig(settings);
+        } catch (RuntimeException e) {
+            MLog.network(a.get(), TAG, e.toString());
+        }
+    }
+
+    @ProtocoderScript
+    @APIMethod(description = "sets data bits", example = "")
+    @APIParam(params = { "dataBits" })
+    public boolean setDataBits(int dataBits) {
+        try {
+            return mPhysicaloid.setDataBits(dataBits);
+        } catch (RuntimeException e) {
+            MLog.network(a.get(), TAG, e.toString());
+            return false;
+        }
+    }
+
+    @ProtocoderScript
+    @APIMethod(description = "sets parity bits", example = "")
+    @APIParam(params = { "parity" })
+    public boolean setParity(int parity) {
+        try {
+            return mPhysicaloid.setParity(parity);
+        } catch (RuntimeException e) {
+            MLog.network(a.get(), TAG, e.toString());
+            return false;
+        }
+    }
+
+    @ProtocoderScript
+    @APIMethod(description = "sets stop bits", example = "")
+    @APIParam(params = { "stopBits" })
+    public boolean setStopBits(int stopBits) {
+        try {
+            return mPhysicaloid.setStopBits(stopBits);
+        } catch (RuntimeException e) {
+            MLog.network(a.get(), TAG, e.toString());
+            return false;
+        }
+    }
+
+    @ProtocoderScript
+    @APIMethod(description = "sets flow control DTR/RTS", example = "")
+    @APIParam(params = { "stopBits" })
+    public boolean setDtrRts(boolean dtrOn, boolean rtsOn) {
+        try {
+            return mPhysicaloid.setDtrRts(dtrOn, rtsOn);
+        } catch (RuntimeException e) {
+            MLog.network(a.get(), TAG, e.toString());
+            return false;
+        }
     }
 
     public void stop() {
