@@ -156,47 +156,20 @@ public class PArduino extends PInterface {
         }
     }
 
-    // Upload callback
-    private UploadCallBack mUploadCallback = new UploadCallBack() {
-        @Override
-        public void onPreUpload() {
-            MLog.network(a.get(), TAG, "Upload : Start");
-        }
-
-        @Override
-        public void onUploading(int value) {
-            MLog.network(a.get(), TAG, "Upload : " + value + " %");
-        }
-
-        @Override
-        public void onPostUpload(boolean success) {
-            if(success) {
-                MLog.network(a.get(), TAG, "Upload : Successful");
-
-            } else {
-                MLog.network(a.get(), TAG, "Upload fail");
-            }
-        }
-
-        @Override
-        public void onCancel() {
-            MLog.network(a.get(), TAG, "Cancel uploading");
-        }
-
-        @Override
-        public void onError(UploadErrors err) {
-            MLog.network(a.get(), TAG, "Error  : " + err.toString());
-        }
-    };
+    // --------- uploadCallback ---------//
+    public interface uploadCallback {
+        void event(Boolean error);
+    }
 
     // Uploads a binary file to a device on background process. No need to open().
     // * @param board board profile e.g. Packages.com.physicaloid.lib.Boards.ARDUINO_UNO
     // * @param fileName a binary file name e.g. Blink.hex
+    // * @param callbackfn callback when the upload has been completed (success, fail or error)
     //
     @ProtocoderScript
     @APIMethod(description = "uploads a binary file to a device on background process", example = "")
-    @APIParam(params = { "board", "fileName" })
-    public void upload(Boards board, String fileName) {
+    @APIParam(params = { "board", "fileName", "function(error)" })
+    public void upload(Boards board, String fileName, final uploadCallback callbackfn) {
         if (mPhysicaloid.isOpened()) {
             // Build the absolute path
             String filePath = AppRunnerSettings.get().project.getStoragePath() + File.separator + fileName;
@@ -208,7 +181,44 @@ public class PArduino extends PInterface {
             }
 
             try {
-                mPhysicaloid.upload(board, filePath, mUploadCallback);
+                mPhysicaloid.upload(board, filePath, new UploadCallBack() {
+                    String responseStr;
+
+                    @Override
+                    public void onPreUpload() {
+                        MLog.network(a.get(), TAG, "Upload : Start");
+                    }
+
+                    @Override
+                    public void onUploading(int value) {
+                        MLog.network(a.get(), TAG, "Upload : " + value + " %");
+                    }
+
+                    @Override
+                    public void onPostUpload(boolean success) {
+                        if(success) {
+                            MLog.network(a.get(), TAG, "Upload : Successful");
+
+                            callbackfn.event(null);
+                        } else {
+                            MLog.network(a.get(), TAG, "Upload fail");
+
+                            callbackfn.event(new Boolean(true));
+                        }
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        MLog.network(a.get(), TAG, "Cancel uploading");
+                    }
+
+                    @Override
+                    public void onError(UploadErrors err) {
+                        MLog.network(a.get(), TAG, "Error  : " + err.toString());
+
+                        callbackfn.event(new Boolean(true));
+                    }
+                });
             } catch (RuntimeException e) {
                 MLog.network(a.get(), TAG, e.toString());
             }
@@ -219,7 +229,22 @@ public class PArduino extends PInterface {
     }
 
     @ProtocoderScript
-    @APIMethod(description = "Sets Baud Rate", example = "arduino.setBaudrate(9600)")
+    @APIMethod(description = "uploads a binary file to a device on background process", example = "")
+    @APIParam(params = { "board", "fileName" })
+    public void upload(Boards board, String fileName) {
+
+        final uploadCallback callbackfn = new uploadCallback() {
+            @Override
+            public void event(Boolean error) {
+
+            }
+        };
+
+        upload(board, fileName, callbackfn);
+    }
+
+        @ProtocoderScript
+    @APIMethod(description = "sets baud rate", example = "arduino.setBaudrate(9600)")
     @APIParam(params = { "baudrate" })
     public boolean setBaudrate(int baudrate) {
         try {
@@ -228,6 +253,39 @@ public class PArduino extends PInterface {
             MLog.network(a.get(), TAG, e.toString());
             return false;
         }
+    }
+
+    @ProtocoderScript
+    @APIMethod(description = "returns a list of the supported devices that you can use with the \"upload\" function", example = "arduino.getSupportedDevices()")
+    public Boards[] getSupportedDevices() {
+        Boards[] boards = new Boards[]{
+                Boards.ARDUINO_UNO,
+                Boards.ARDUINO_DUEMILANOVE_328,
+                Boards.ARDUINO_DUEMILANOVE_168,
+                Boards.ARDUINO_NANO_328,
+                Boards.ARDUINO_NANO_168,
+                Boards.ARDUINO_MEGA_2560_ADK,
+                Boards.ARDUINO_MEGA_1280,
+                Boards.ARDUINO_MINI_328,
+                Boards.ARDUINO_MINI_168,
+                Boards.ARDUINO_ETHERNET,
+                Boards.ARDUINO_FIO,
+                Boards.ARDUINO_BT_328,
+                Boards.ARDUINO_BT_168,
+                Boards.ARDUINO_LILYPAD_328,
+                Boards.ARDUINO_LILYPAD_168,
+                Boards.ARDUINO_PRO_5V_328,
+                Boards.ARDUINO_PRO_5V_168,
+                Boards.ARDUINO_PRO_33V_328,
+                Boards.ARDUINO_PRO_33V_168,
+                Boards.ARDUINO_NG_168,
+                Boards.ARDUINO_NG_8,
+                Boards.BALANDUINO,
+                Boards.POCKETDUINO,
+                Boards.PERIDOT,
+                Boards.NONE};
+
+        return boards;
     }
 
     public void stop() {
