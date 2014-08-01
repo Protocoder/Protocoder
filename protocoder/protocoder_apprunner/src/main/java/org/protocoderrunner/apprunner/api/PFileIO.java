@@ -30,7 +30,10 @@
 package org.protocoderrunner.apprunner.api;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.mozilla.javascript.NativeArray;
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
@@ -41,6 +44,8 @@ import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.FileIO;
 
 import android.app.Activity;
+
+import net.lingala.zip4j.exception.ZipException;
 
 public class PFileIO extends PInterface {
 
@@ -106,15 +111,22 @@ public class PFileIO extends PInterface {
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "fileName" })
-	public File[] listFiles() {
-		return null; // FileIO.listFiles();
+	public NativeArray listFiles() {
+		return listFiles("");
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "fileName" })
-	public File[] listFiles(String filter) {
-		return FileIO.listFiles(filter);
+	public NativeArray listFiles(String filter) {
+
+        File files[] = FileIO.listFiles(filter);
+        NativeArray filesNativeArray = new NativeArray(files.length);
+        for (int i = 0; i < files.length; i++) {
+            filesNativeArray.put(i, filesNativeArray, files[i].getName());
+        }
+
+		return filesNativeArray;
 	}
 
 	@ProtocoderScript
@@ -131,4 +143,31 @@ public class PFileIO extends PInterface {
 		return new PSqlLite(a.get(), db);
 	}
 
+    public interface addZipUnzipCB {
+        void event(String data);
+    }
+
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "filename" })
+    public void zip(String path, String fDestiny, final addZipUnzipCB callbackfn) {
+        String fOrigin = ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/" + path;
+        try {
+            FileIO.zipFolder(fOrigin, fDestiny);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "filename" })
+    public void unzip(String src, String dst, final addZipUnzipCB callbackfn) {
+        String projectPath = ProjectManager.getInstance().getCurrentProject().getStoragePath();
+        try {
+            FileIO.unZipFile(projectPath + "/" + src, projectPath + "/" + dst);
+        } catch (ZipException e) {
+            e.printStackTrace();
+        }
+    }
 }
