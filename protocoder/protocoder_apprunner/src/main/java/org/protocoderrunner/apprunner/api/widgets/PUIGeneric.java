@@ -42,6 +42,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.NativeJSON;
+import org.mozilla.javascript.NativeObject;
+import org.mozilla.javascript.ScriptableObject;
 import org.osmdroid.events.DelayedMapListener;
 import org.osmdroid.events.MapListener;
 import org.osmdroid.events.ScrollEvent;
@@ -701,9 +703,9 @@ public class PUIGeneric extends PInterface {
 
 	}
 
-    public// --------- getRequest ---------//
-    interface addGridOfCB {
-        void event(JSONObject json);
+    // --------- getRequest ---------//
+    public interface addGridOfCB {
+        void event(NativeObject json);
     }
 
     public PGrid addGenericGridOf(String type, NativeArray array, int cols, final addGridOfCB callbackfn) {
@@ -736,83 +738,71 @@ public class PUIGeneric extends PInterface {
             }
 
             Log.d(TAG, "counter/num " + counter + " " + num + " " + i + " " + cols + " " + rows);
+            final NativeObject cbData = new NativeObject();
 
             if (counter >= num) {
                 Log.d(TAG, "this space");
                 ll2.addViewInRow(new Space(a.get()));
-               break;
-            }
-                String name = (String) array.get(counter++);
-                final JSONObject cbData = new JSONObject();
-                try {
-                    cbData.put("name", name);
-                    cbData.put("i", i);
-                    cbData.put("j", j);
-                    cbData.put("count", counter);
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+            //   break;
+            } else {
+                String name = (String) array.get(counter);
+                cbData.put("name", cbData, name);
+                cbData.put("i", cbData, i);
+                cbData.put("j", cbData, j);
+                cbData.put("count", cbData, counter);
 
                 //button
                 if (type.equals("button")) {
                     PButton btn = addGenericButton(name, new addGenericButtonCB() {
                         @Override
                         public void event() {
-                            try {
-                                cbData.put("data", "");
-                                callbackfn.event(cbData);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                            cbData.put("data", cbData, "");
+                            callbackfn.event(cbData);
+
                         }
                     });
                     ll2.addViewInRow(btn);
 
-                //imagebutton
+                    //imagebutton
                 } else if (type.equals("imagebutton")) {
                     PImageButton btn = new PImageButton(a.get());
 
 
-                //toggle
+                    //toggle
                 } else if (type.equals("toggle")) {
                     PToggleButton toggle = addGenericToggle(name, false, new addGenericToggleCB() {
                         @Override
                         public void event(boolean isChecked) {
-                            try {
-                                cbData.put("data", isChecked);
-                                callbackfn.event(cbData);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+
+                            cbData.put("data", cbData, isChecked);
+                            callbackfn.event(cbData);
+
                         }
                     });
                     ll2.addViewInRow(toggle);
 
-                //hslider
+                    //hslider
                 } else if (type.equals("hslider")) {
                     PSeekBar slider = addGenericSlider(1024, 0, new addGenericSliderCB() {
                         @Override
                         public void eval(int progress) {
-                            try {
-                                cbData.put("data", progress / 1024);
-                                callbackfn.event(cbData);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                            cbData.put("data", cbData, progress / 1024);
+                            callbackfn.event(cbData);
+
                         }
                     });
                     ll2.addViewInRow(slider);
 
-                //vslider
+                    //vslider
                 } else if (type.equals("vslider")) {
 
-                //knob
+                    //knob
                 } else if (type.equals("knob")) {
 
                 }
-
+                counter++;
             }
+        }
 
         //MLog.network(a.get(), "qq", "" + gridLayout);
         return gridLayout;
