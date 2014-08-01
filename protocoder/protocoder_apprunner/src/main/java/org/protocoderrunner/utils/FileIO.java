@@ -55,6 +55,7 @@ import java.util.zip.ZipInputStream;
 
 import org.protocoderrunner.apprunner.AppRunnerSettings;
 import org.protocoderrunner.base.BaseMainApp;
+import org.protocoderrunner.project.Project;
 import org.protocoderrunner.project.ProjectManager;
 
 import android.app.Activity;
@@ -63,6 +64,7 @@ import android.content.res.AssetManager;
 import android.util.Log;
 
 import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.ZipParameters;
 import net.lingala.zip4j.util.Zip4jConstants;
 
@@ -125,7 +127,7 @@ public class FileIO {
 
 	/**
 	 * Read the contents of the file indicated by fileName
-	 * 
+	 *
 	 * @param fileName
 	 * @return the contents
 	 * @throws IOException
@@ -548,8 +550,8 @@ public class FileIO {
 		}
 	}
 
-	static public void zipFolder(String srcFolder, String destZipFile) throws Exception {
-        File f = new File(destZipFile);
+	static public void zipFolder(String src, String dst) throws Exception {
+        File f = new File(dst);
         //make dirs if necessary
         f.getParentFile().mkdirs();
 
@@ -557,7 +559,13 @@ public class FileIO {
         ZipParameters parameters = new ZipParameters();
         parameters.setCompressionMethod(Zip4jConstants.COMP_DEFLATE);
         parameters.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_NORMAL);
-        zipfile.addFolder(srcFolder, parameters);
+        zipfile.addFolder(src, parameters);
+    }
+
+    static public void unZipFile(String src, String dst) throws ZipException {
+        ZipFile zipFile = new ZipFile(src);
+        zipFile.extractAll(dst);
+
     }
 
     static public void extractZip(String zipFile, String location) throws IOException {
@@ -623,6 +631,7 @@ public class FileIO {
 
 	public static File[] listFiles(final String extension) {
 		File f = new File(AppRunnerSettings.get().project.getStoragePath() + File.separator);
+
 		return f.listFiles(new FilenameFilter() {
 
 			@Override
@@ -630,7 +639,8 @@ public class FileIO {
 				return fileName.endsWith(extension);
 			}
 		});
-	}
+
+    }
 
 	public static String getFileExtension(String fileName) {
 		String extension = "";
