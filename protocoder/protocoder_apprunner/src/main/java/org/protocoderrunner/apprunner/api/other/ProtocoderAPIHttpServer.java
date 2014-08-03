@@ -27,7 +27,7 @@
  * 
  */
 
-package org.protocoderrunner.network;
+package org.protocoderrunner.apprunner.api.other;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,6 +37,9 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.json.JSONObject;
+import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.network.NanoHTTPD;
+import org.protocoderrunner.network.NetworkUtils;
 import org.protocoderrunner.project.Project;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.FileIO;
@@ -48,10 +51,8 @@ import android.content.Context;
  * An example of subclassing NanoHTTPD to make a custom HTTP server.
  */
 public class ProtocoderAPIHttpServer extends NanoHTTPD {
-	public static final String TAG = "PHttpServer";
+	public static final String TAG = "ProtocoderHttpServer";
 	private final WeakReference<Context> ctx;
-	private final String WEBAPP_DIR = "webapp/";
-	String projectURLPrefix = "/apps";
 
 	private static final Map<String, String> MIME_TYPES = new HashMap<String, String>() {
 		{
@@ -81,10 +82,19 @@ public class ProtocoderAPIHttpServer extends NanoHTTPD {
 			put("class", "application/octet-stream");
 		}
 	};
+    private final HttpCB callbackfn;
+    private final Project p;
 
 
-	public ProtocoderAPIHttpServer(Context aCtx, int port) throws IOException {
-		super(port);
+    public interface HttpCB {
+        Response event(String uri, String method);
+    }
+
+    public ProtocoderAPIHttpServer(Context aCtx, int port, HttpCB callbackfn) throws IOException {
+        super(port);
+        p = ProjectManager.getInstance().getCurrentProject();
+
+        this.callbackfn = callbackfn;
 		ctx = new WeakReference<Context>(aCtx);
 		String ip = NetworkUtils.getLocalIpAddress(aCtx);
 		if (ip == null) {
@@ -94,59 +104,63 @@ public class ProtocoderAPIHttpServer extends NanoHTTPD {
 		}
 	}
 
-	@Override
+    @ProtocoderScript
+    public Response respond(String data) {
+        return new Response("200", MIME_TYPES.get("txt"), data);
+    }
+
 	public Response serve(String uri, String method, Properties header, Properties parms, Properties files) {
 
 		Response res = null;
 
-		try {
+        try {
+            res = callbackfn.event(uri, method);
+        } catch (Exception e) {
+
+        }
+       // MLog.network(ctx.get(), TAG, "lalalalal " + res.toString());
+
+        if (res == null) {
+
+            try {
+
+                // file upload
+                if (!files.isEmpty()) {
+
+                    File src = new File(files.getProperty("pic").toString());
+                    File dst = new File(p.getStoragePath() + "/" + parms.getProperty("pic").toString());
+
+                    FileIO.copyFile(src, dst);
+
+                    JSONObject data = new JSONObject();
+                    data.put("result", "OK");
+
+                    return new Response("200", MIME_TYPES.get("txt"), data.toString());
+
+                    // normal file serving
+                } else {
+                    MLog.d(TAG, "received String" + uri + " " + method + " " + header + " " + " " + parms + " " + files);
+
+                    String projectFolder = p.getStoragePath();
 
 
-            // file upload
-            if (!files.isEmpty()) {
+                    res = serveFile(uri.substring(uri.lastIndexOf('/') + 1, uri.length()), header,
+                            new File(p.getStoragePath()), false);
 
-                String name = parms.getProperty("name").toString();
-                String fileType = parms.getProperty("fileType").toString();
-
-                int projectType = -1;
-
-                if (fileType.equals("projects")) {
-                    projectType = ProjectManager.PROJECT_USER_MADE;
-                } else if (fileType.equals("examples")) {
-                    projectType = ProjectManager.PROJECT_EXAMPLE;
+                    // new Response(HTTP_NOTFOUND, MIME_HTML, "resource not found");
                 }
 
-                Project p = ProjectManager.getInstance().get(name, projectType);
+                //  res =  new Response(HTTP_OK, MIME_PLAINTEXT,
+                //          "INTERNAL ERRROR: serveFile(): given homeDir is not a directory.");
 
-                File src = new File(files.getProperty("pic").toString());
-                File dst = new File(p.getStoragePath() + "/" + parms.getProperty("pic").toString());
-
-                FileIO.copyFile(src, dst);
-
-                JSONObject data = new JSONObject();
-                data.put("result", "OK");
-
-                return new Response("200", MIME_TYPES.get("txt"), data.toString());
-
-            // normal file serving
-            } else {
-                MLog.d(TAG, "received String" + uri + " " + method + " " + header + " " + " " + parms + " " + files);
-                Project p = ProjectManager.getInstance().getCurrentProject();
-
-                String projectFolder = p.getStoragePath();
-
-                res = serveFile(uri.substring(uri.lastIndexOf('/') + 1, uri.length()), header,
-                        new File(p.getStoragePath()), false);
-
-                // new Response(HTTP_NOTFOUND, MIME_HTML, "resource not found");
+            } catch (Exception e) {
+                MLog.d(TAG, "response error " + e.toString());
             }
 
-		} catch (Exception e) {
-			MLog.d(TAG, "response error " + e.toString());
-		}
+        }
 
-		return res;
-	}
+        return res;
+    }
 
 	public void stop() {
 		super.stop();
