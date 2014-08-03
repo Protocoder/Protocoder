@@ -61,3 +61,7 @@ DesktopApp/
 AndroidApp/protocoder/tool_release.sh
 AndroidApp/protocoder/tool_verify_signature.sh
 AndroidApp/protocoder/key_release.keystore
+
+
+# JS shit
+node_modules
