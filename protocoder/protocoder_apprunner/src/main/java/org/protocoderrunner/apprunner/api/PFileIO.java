@@ -30,16 +30,14 @@
 package org.protocoderrunner.apprunner.api;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
-import org.mozilla.javascript.NativeArray;
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.apprunner.api.other.PSqlLite;
+import org.protocoderrunner.apprunner.api.other.ProtocoderNativeArray;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.FileIO;
 
@@ -111,19 +109,19 @@ public class PFileIO extends PInterface {
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "fileName" })
-	public NativeArray listFiles() {
+	public ProtocoderNativeArray listFiles() {
 		return listFiles("");
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "fileName" })
-	public NativeArray listFiles(String filter) {
+	public ProtocoderNativeArray listFiles(String filter) {
 
         File files[] = FileIO.listFiles(filter);
-        NativeArray filesNativeArray = new NativeArray(files.length);
+        ProtocoderNativeArray filesNativeArray = new ProtocoderNativeArray(files.length);
         for (int i = 0; i < files.length; i++) {
-            filesNativeArray.put(i, filesNativeArray, files[i].getName());
+            filesNativeArray.addPE(i, files[i].getName());
         }
 
 		return filesNativeArray;
@@ -144,30 +142,46 @@ public class PFileIO extends PInterface {
 	}
 
     public interface addZipUnzipCB {
-        void event(String data);
+        void event();
     }
 
     @ProtocoderScript
     @APIMethod(description = "", example = "")
     @APIParam(params = { "filename" })
-    public void zip(String path, String fDestiny, final addZipUnzipCB callbackfn) {
-        String fOrigin = ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/" + path;
-        try {
-            FileIO.zipFolder(fOrigin, fDestiny);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void zip(String path, final String fDestiny, final addZipUnzipCB callbackfn) {
+        final String fOrigin = ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/" + path;
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    FileIO.zipFolder(fOrigin, fDestiny);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                callbackfn.event();
+            }
+        });
+        t.start();
+
     }
 
     @ProtocoderScript
     @APIMethod(description = "", example = "")
     @APIParam(params = { "filename" })
-    public void unzip(String src, String dst, final addZipUnzipCB callbackfn) {
-        String projectPath = ProjectManager.getInstance().getCurrentProject().getStoragePath();
-        try {
-            FileIO.unZipFile(projectPath + "/" + src, projectPath + "/" + dst);
-        } catch (ZipException e) {
-            e.printStackTrace();
-        }
+    public void unzip(final String src, final String dst, final addZipUnzipCB callbackfn) {
+        final String projectPath = ProjectManager.getInstance().getCurrentProject().getStoragePath();
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    FileIO.unZipFile(projectPath + "/" + src, projectPath + "/" + dst);
+                } catch (ZipException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        t.start();
+
+
     }
 }
