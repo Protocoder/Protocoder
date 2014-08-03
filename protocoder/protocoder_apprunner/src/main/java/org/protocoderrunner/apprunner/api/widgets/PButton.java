@@ -30,7 +30,9 @@
 package org.protocoderrunner.apprunner.api.widgets;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.text.Html;
 import android.view.View;
@@ -43,12 +45,13 @@ import org.protocoderrunner.apprunner.ProtocoderScript;
 public class PButton extends Button implements PViewInterface, PViewMethodsInterface {
 
 	private int currentColor;
+    private Paint paint;
 
-	public PButton(Context context) {
+    public PButton(Context context) {
 		super(context);
 		currentColor = Color.argb(255, 255, 255, 255);
 
-
+        init();
 	}
 
 
@@ -109,5 +112,23 @@ public class PButton extends Button implements PViewInterface, PViewMethodsInter
         this.setX(x);
         this.setY(y);
         return this;
+    }
+
+    private void init() {
+        paint = new Paint();
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setColor(Color.BLACK);
+        paint.setStrokeWidth(4);
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(Color.parseColor("#550000FF"));
+        canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), paint);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setColor(Color.parseColor("#FF0000FF"));
+        super.onDraw(canvas);
+        canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), paint);
     }
 }
