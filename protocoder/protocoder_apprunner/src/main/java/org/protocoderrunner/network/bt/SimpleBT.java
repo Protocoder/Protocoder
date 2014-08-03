@@ -46,9 +46,7 @@ public class SimpleBT implements WhatIsRunningInterface {
 	public interface SimpleBTListener {
 
 		public void onConnected();
-
 		public void onMessageReceived(String data);
-
 		public void onRawDataReceived(final byte[] buffer, final int size);
 
 	}
@@ -111,7 +109,11 @@ public class SimpleBT implements WhatIsRunningInterface {
 			case MESSAGE_DEVICE_NAME:
 				// save the connected device's name
 				mConnectedDeviceName = msg.getData().getString(BluetoothViewer.DEVICE_NAME);
-				Toast.makeText(ac.getApplicationContext(), "Connected", Toast.LENGTH_SHORT).show();
+                for (int i = 0; i < listeners.size(); i++) {
+                    SimpleBTListener l = listeners.get(0);
+                    l.onConnected();
+                }
+				//Toast.makeText(ac.getApplicationContext(), "Connected", Toast.LENGTH_SHORT).show();
 				break;
 			}
 		}
@@ -139,13 +141,10 @@ public class SimpleBT implements WhatIsRunningInterface {
 
 	private PNetwork.onBluetoothListener onBluetoothListener;
 
-	public void addBluetoothScanListener(PNetwork.onBluetoothListener onBluetoothListener2) {
-		onBluetoothListener = onBluetoothListener2;
+	public void scanBluetooth(PNetwork.onBluetoothListener onBluetoothListener2) {
+        onBluetoothListener = onBluetoothListener2;
 
-	}
-
-	public void scanBluetooth() {
-		BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
 		mBluetoothAdapter.startDiscovery();
 		BroadcastReceiver mReceiver = new BroadcastReceiver() {

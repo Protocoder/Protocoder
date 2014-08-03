@@ -87,7 +87,7 @@ import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.network.NetworkUtils;
 import org.protocoderrunner.network.NetworkUtils.DownloadTask.DownloadListener;
 import org.protocoderrunner.network.OSC;
-import org.protocoderrunner.network.ProtocoderAPIHttpServer;
+import org.protocoderrunner.apprunner.api.other.ProtocoderAPIHttpServer;
 import org.protocoderrunner.network.ServiceDiscovery;
 import org.protocoderrunner.network.bt.DeviceListActivity;
 import org.protocoderrunner.network.bt.SimpleBT;
@@ -114,143 +114,143 @@ import de.sciss.net.OSCMessage;
 
 public class PNetwork extends PInterface {
 
-	private final String TAG = "JNetwork";
+    private final String TAG = "JNetwork";
 
-	public PNetwork(Activity a) {
-		super(a);
+    public PNetwork(Activity a) {
+        super(a);
 
-		WhatIsRunning.getInstance().add(this);
-	}
+        WhatIsRunning.getInstance().add(this);
+    }
 
-	// --------- download file ---------//
-	interface downloadFileCB {
-		void event(int eventType);
-	}
+    // --------- download file ---------//
+    interface downloadFileCB {
+        void event(int eventType);
+    }
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "url", "fileName", "function(progress)" })
-	public void downloadFile(String url, String fileName, final downloadFileCB callbackfn) {
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = {"url", "fileName", "function(progress)"})
+    public void downloadFile(String url, String fileName, final downloadFileCB callbackfn) {
 
-		NetworkUtils.DownloadTask downloadTask = new NetworkUtils.DownloadTask(a.get(), fileName);
-		downloadTask.execute(url);
-		downloadTask.addListener(new DownloadListener() {
+        NetworkUtils.DownloadTask downloadTask = new NetworkUtils.DownloadTask(a.get(), fileName);
+        downloadTask.execute(url);
+        downloadTask.addListener(new DownloadListener() {
 
-			@Override
-			public void onUpdate(int progress) {
-				callbackfn.event(progress);
-			}
-		});
+            @Override
+            public void onUpdate(int progress) {
+                callbackfn.event(progress);
+            }
+        });
 
-	}
+    }
 
-	// @JavascriptInterface
-	// @APIMethod(description = "", example = "")
-	// @APIParam( params = {"file", "function()"} )
-	public void isReachable(final String host, final String callbackfn) {
+    // @JavascriptInterface
+    // @APIMethod(description = "", example = "")
+    // @APIParam( params = {"file", "function()"} )
+    public void isReachable(final String host, final String callbackfn) {
 
-		Thread t = new Thread(new Runnable() {
+        Thread t = new Thread(new Runnable() {
 
-			@Override
-			public void run() {
+            @Override
+            public void run() {
 
-				// doesnt work! isReachable
-				//
-				// try {
-				// InetAddress in = InetAddress.getByName(host);
-				// boolean isReacheable = in.isReachable(5000);
-				// callback(callbackfn, isReacheable);
-				// } catch (UnknownHostException e) {
-				// e.printStackTrace();
-				// } catch (IOException e) {
-				// e.printStackTrace();
-				// }
+                // doesnt work! isReachable
+                //
+                // try {
+                // InetAddress in = InetAddress.getByName(host);
+                // boolean isReacheable = in.isReachable(5000);
+                // callback(callbackfn, isReacheable);
+                // } catch (UnknownHostException e) {
+                // e.printStackTrace();
+                // } catch (IOException e) {
+                // e.printStackTrace();
+                // }
 
-			}
-		});
-		t.start();
+            }
+        });
+        t.start();
 
-	}
+    }
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "" })
-	public String getIP() {
-		return NetworkUtils.getLocalIpAddress(a.get());
-	}
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = {""})
+    public String getIP() {
+        return NetworkUtils.getLocalIpAddress(a.get());
+    }
 
-	// --------- OSC Server ---------//
-	interface startOSCServerCB {
-		void event(String string, JSONArray jsonArray);
-	}
+    // --------- OSC Server ---------//
+    interface startOSCServerCB {
+        void event(String string, JSONArray jsonArray);
+    }
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "port", "function(jsonData)" })
-	public OSC.Server startOSCServer(String port, final startOSCServerCB callbackfn) {
-		OSC osc = new OSC();
-		OSC.Server server = osc.new Server();
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = {"port", "function(jsonData)"})
+    public OSC.Server startOSCServer(String port, final startOSCServerCB callbackfn) {
+        OSC osc = new OSC();
+        OSC.Server server = osc.new Server();
 
-		server.addListener(new OSC.OSCServerListener() {
+        server.addListener(new OSC.OSCServerListener() {
 
-			@Override
-			public void onMessage(final OSCMessage msg) {
-				MLog.d(TAG, "message received " + msg);
+            @Override
+            public void onMessage(final OSCMessage msg) {
+                MLog.d(TAG, "message received " + msg);
 
-				final JSONArray jsonArray = new JSONArray();
-				for (int i = 0; i < msg.getArgCount(); i++) {
-					jsonArray.put(msg.getArg(i));
-				}
+                final JSONArray jsonArray = new JSONArray();
+                for (int i = 0; i < msg.getArgCount(); i++) {
+                    jsonArray.put(msg.getArg(i));
+                }
 
-				try {
-					MLog.d(TAG, msg.getName() + " " + jsonArray.toString(2));
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				// callback(callbackfn, "\"" + msg.getName() + "\"", str);
-				// Log.d(TAG, msg.g)
+                try {
+                    MLog.d(TAG, msg.getName() + " " + jsonArray.toString(2));
+                } catch (JSONException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                // callback(callbackfn, "\"" + msg.getName() + "\"", str);
+                // Log.d(TAG, msg.g)
 
-				mHandler.post(new Runnable() {
+                mHandler.post(new Runnable() {
 
-					@Override
-					public void run() {
-						// MLog.d(TAG, "receiver");
-						callbackfn.event(msg.getName(), jsonArray);
-					}
-				});
-			}
+                    @Override
+                    public void run() {
+                        // MLog.d(TAG, "receiver");
+                        callbackfn.event(msg.getName(), jsonArray);
+                    }
+                });
+            }
 
-		});
+        });
 
-		server.start(port);
-		WhatIsRunning.getInstance().add(server);
+        server.start(port);
+        WhatIsRunning.getInstance().add(server);
 
-		return server;
-	}
+        return server;
+    }
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "address", "port" })
-	public OSC.Client connectOSC(String address, int port) {
-		OSC osc = new OSC();
-		OSC.Client client = osc.new Client(address, port);
-		WhatIsRunning.getInstance().add(client);
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = {"address", "port"})
+    public OSC.Client connectOSC(String address, int port) {
+        OSC osc = new OSC();
+        OSC.Client client = osc.new Client(address, port);
+        WhatIsRunning.getInstance().add(client);
 
-		return client;
-	}
+        return client;
+    }
 
-	// --------- webSocket Server ---------//
-	interface startWebSocketServerCB {
-		void event(String string, WebSocket socket, String arg1);
-	}
+    // --------- webSocket Server ---------//
+    interface startWebSocketServerCB {
+        void event(String string, WebSocket socket, String arg1);
+    }
 
     WifiManager.MulticastLock wifiLock;
 
     @ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "boolean" })
-	public void setMulticast(boolean b) {
+    @APIMethod(description = "", example = "")
+    @APIParam(params = {"boolean"})
+    public void setMulticast(boolean b) {
         WifiManager wifi = (WifiManager) a.get().getSystemService(Context.WIFI_SERVICE);
         if (wifi != null) {
             if (b) {
@@ -286,124 +286,124 @@ public class PNetwork extends PInterface {
 
     }
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "port", "function(status, socket, data)" })
-	public WebSocketServer startWebsocketServer(int port, final startWebSocketServerCB callbackfn) {
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = {"port", "function(status, socket, data)"})
+    public WebSocketServer startWebsocketServer(int port, final startWebSocketServerCB callbackfn) {
 
-		InetSocketAddress inetSocket = new InetSocketAddress(port);
-		Draft d = new Draft_17();
-		WebSocketServer websocketServer = new WebSocketServer(inetSocket, Collections.singletonList(d)) {
+        InetSocketAddress inetSocket = new InetSocketAddress(port);
+        Draft d = new Draft_17();
+        WebSocketServer websocketServer = new WebSocketServer(inetSocket, Collections.singletonList(d)) {
 
-			@Override
-			public void onClose(WebSocket arg0, int arg1, String arg2, boolean arg3) {
-				callbackfn.event("close", arg0, "");
-			}
+            @Override
+            public void onClose(WebSocket arg0, int arg1, String arg2, boolean arg3) {
+                callbackfn.event("close", arg0, "");
+            }
 
-			@Override
-			public void onError(WebSocket arg0, Exception arg1) {
-				callbackfn.event("error", arg0, "");
-			}
+            @Override
+            public void onError(WebSocket arg0, Exception arg1) {
+                callbackfn.event("error", arg0, "");
+            }
 
-			@Override
-			public void onMessage(WebSocket arg0, String arg1) {
-				callbackfn.event("message", arg0, arg1);
-			}
+            @Override
+            public void onMessage(WebSocket arg0, String arg1) {
+                callbackfn.event("message", arg0, arg1);
+            }
 
-			@Override
-			public void onOpen(WebSocket arg0, ClientHandshake arg1) {
-				callbackfn.event("open", arg0, "");
-			}
-		};
-		websocketServer.start();
+            @Override
+            public void onOpen(WebSocket arg0, ClientHandshake arg1) {
+                callbackfn.event("open", arg0, "");
+            }
+        };
+        websocketServer.start();
 
-		WhatIsRunning.getInstance().add(websocketServer);
-		return websocketServer;
+        WhatIsRunning.getInstance().add(websocketServer);
+        return websocketServer;
 
-	}
+    }
 
-	// --------- connect websocket ---------//
-	interface connectWebsocketCB {
-		void event(String string, String string2);
-	}
+    // --------- connect websocket ---------//
+    interface connectWebsocketCB {
+        void event(String string, String string2);
+    }
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "uri", "function(status, data)" })
-	public org.java_websocket.client.WebSocketClient connectWebsocket(String uri, final connectWebsocketCB callbackfn) {
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = {"uri", "function(status, data)"})
+    public org.java_websocket.client.WebSocketClient connectWebsocket(String uri, final connectWebsocketCB callbackfn) {
 
-		org.java_websocket.client.WebSocketClient webSocketClient = null;
-		try {
-			webSocketClient = new org.java_websocket.client.WebSocketClient(new URI(uri)) {
+        org.java_websocket.client.WebSocketClient webSocketClient = null;
+        try {
+            webSocketClient = new org.java_websocket.client.WebSocketClient(new URI(uri)) {
 
-				@Override
-				public void onOpen(ServerHandshake arg0) {
-					callbackfn.event("open", "");
-				}
+                @Override
+                public void onOpen(ServerHandshake arg0) {
+                    callbackfn.event("open", "");
+                }
 
-				@Override
-				public void onMessage(String arg0) {
-					callbackfn.event("message", arg0);
-				}
+                @Override
+                public void onMessage(String arg0) {
+                    callbackfn.event("message", arg0);
+                }
 
-				@Override
-				public void onError(Exception arg0) {
-					callbackfn.event("error", "");
-				}
+                @Override
+                public void onError(Exception arg0) {
+                    callbackfn.event("error", "");
+                }
 
-				@Override
-				public void onClose(int arg0, String arg1, boolean arg2) {
-					callbackfn.event("close", "");
-				}
-			};
-		} catch (URISyntaxException e) {
-			callbackfn.event("error ", e.toString());
-			e.printStackTrace();
-		}
+                @Override
+                public void onClose(int arg0, String arg1, boolean arg2) {
+                    callbackfn.event("close", "");
+                }
+            };
+        } catch (URISyntaxException e) {
+            callbackfn.event("error ", e.toString());
+            e.printStackTrace();
+        }
 
-		return webSocketClient;
-	}
+        return webSocketClient;
+    }
 
-	// --------- connectSocketIO ---------//
-	interface connectSocketIOCB {
-		// void event(String string, String reason, String string2);
-		void event(String string, String event, JSONArray arguments);
-	}
+    // --------- connectSocketIO ---------//
+    interface connectSocketIOCB {
+        // void event(String string, String reason, String string2);
+        void event(String string, String event, JSONArray arguments);
+    }
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "uri", "function(status, message, data)" })
-	public SocketIOClient connectSocketIO(String uri, final connectSocketIOCB callbackfn) {
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = {"uri", "function(status, message, data)"})
+    public SocketIOClient connectSocketIO(String uri, final connectSocketIOCB callbackfn) {
 
         SocketIOClient socketIOClient = new SocketIOClient(URI.create(uri), new SocketIOClient.Handler() {
 
-			@Override
-			public void onMessage(String message) {
-				callbackfn.event("onMessage", null, null);
-				MLog.d("qq", "onMessage");
-			}
+            @Override
+            public void onMessage(String message) {
+                callbackfn.event("onMessage", null, null);
+                MLog.d("qq", "onMessage");
+            }
 
-			@Override
-			public void onJSON(JSONObject json) {
+            @Override
+            public void onJSON(JSONObject json) {
 
-			}
+            }
 
-			@Override
-			public void onError(Exception error) {
-				callbackfn.event("error", null, null);
-			}
+            @Override
+            public void onError(Exception error) {
+                callbackfn.event("error", null, null);
+            }
 
-			@Override
-			public void onDisconnect(int code, String reason) {
-				callbackfn.event("disconnect", reason, null);
-				// MLog.d("qq", "disconnected");
-			}
+            @Override
+            public void onDisconnect(int code, String reason) {
+                callbackfn.event("disconnect", reason, null);
+                // MLog.d("qq", "disconnected");
+            }
 
-			@Override
-			public void onConnect() {
-				callbackfn.event("connected", null, null);
-				// MLog.d("qq", "connected");
-			}
+            @Override
+            public void onConnect() {
+                callbackfn.event("connected", null, null);
+                // MLog.d("qq", "connected");
+            }
 
             @Override
             public void onConnectToEndpoint(String s) {
@@ -411,32 +411,32 @@ public class PNetwork extends PInterface {
             }
 
             @Override
-			public void on(String event, JSONArray arguments) {
-				callbackfn.event("on", event, arguments);
-				// MLog.d("qq", "onmessage");
+            public void on(String event, JSONArray arguments) {
+                callbackfn.event("on", event, arguments);
+                // MLog.d("qq", "onmessage");
 
-			}
-		});
-		socketIOClient.connect();
+            }
+        });
+        socketIOClient.connect();
 
-		return socketIOClient;
-	}
+        return socketIOClient;
+    }
 
-	private class EmailConf {
-		public String host;
-		public String user;
-		public String password;
-		public String port;
-		public String auth;
-		public String ttl;
-	}
+    private class EmailConf {
+        public String host;
+        public String user;
+        public String password;
+        public String port;
+        public String auth;
+        public String ttl;
+    }
 
-	// public EmailConf emailSettings;
+    // public EmailConf emailSettings;
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "url", "function(data)" })
-	public EmailConf createEmailSettings() {
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = {"url", "function(data)"})
+    public EmailConf createEmailSettings() {
 		/*
 		 * String host, String user, String pass, String iPort, String bAuth,
 		 * String bTtl) {
@@ -446,222 +446,220 @@ public class PNetwork extends PInterface {
 		 * emailSettings.port = iPort; emailSettings.auth = bAuth;
 		 * emailSettings.ttl = bTtl;
 		 */
-		return new EmailConf();
-	}
+        return new EmailConf();
+    }
 
-	// http://mrbool.com/how-to-work-with-java-mail-api-in-android/27800#ixzz2tulYAG00
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "url", "function(data)" })
-	public void sendEmail(String from, String to, String subject, String text, final EmailConf emailSettings)
-			throws AddressException, MessagingException {
+    // http://mrbool.com/how-to-work-with-java-mail-api-in-android/27800#ixzz2tulYAG00
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = {"url", "function(data)"})
+    public void sendEmail(String from, String to, String subject, String text, final EmailConf emailSettings)
+            throws AddressException, MessagingException {
 
-		if (emailSettings == null) {
-			return;
-		}
+        if (emailSettings == null) {
+            return;
+        }
 
-		// final String host = "smtp.gmail.com";
-		// final String address = "@gmail.com";
-		// final String pass = "";
+        // final String host = "smtp.gmail.com";
+        // final String address = "@gmail.com";
+        // final String pass = "";
 
-		Multipart multiPart;
-		String finalString = "";
+        Multipart multiPart;
+        String finalString = "";
 
-		Properties props = System.getProperties();
-		props.put("mail.smtp.starttls.enable", emailSettings.ttl);
-		props.put("mail.smtp.host", emailSettings.host);
-		props.put("mail.smtp.user", emailSettings.user);
-		props.put("mail.smtp.password", emailSettings.password);
-		props.put("mail.smtp.port", emailSettings.port);
-		props.put("mail.smtp.auth", emailSettings.auth);
+        Properties props = System.getProperties();
+        props.put("mail.smtp.starttls.enable", emailSettings.ttl);
+        props.put("mail.smtp.host", emailSettings.host);
+        props.put("mail.smtp.user", emailSettings.user);
+        props.put("mail.smtp.password", emailSettings.password);
+        props.put("mail.smtp.port", emailSettings.port);
+        props.put("mail.smtp.auth", emailSettings.auth);
 
-		Log.i("Check", "done pops");
-		final Session session = Session.getDefaultInstance(props, null);
-		DataHandler handler = new DataHandler(new ByteArrayDataSource(finalString.getBytes(), "text/plain"));
-		final MimeMessage message = new MimeMessage(session);
-		message.setFrom(new InternetAddress(from));
-		message.setDataHandler(handler);
-		Log.i("Check", "done sessions");
+        Log.i("Check", "done pops");
+        final Session session = Session.getDefaultInstance(props, null);
+        DataHandler handler = new DataHandler(new ByteArrayDataSource(finalString.getBytes(), "text/plain"));
+        final MimeMessage message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(from));
+        message.setDataHandler(handler);
+        Log.i("Check", "done sessions");
 
-		multiPart = new MimeMultipart();
+        multiPart = new MimeMultipart();
 
-		InternetAddress toAddress;
-		toAddress = new InternetAddress(to);
-		message.addRecipient(Message.RecipientType.TO, toAddress);
-		Log.i("Check", "added recipient");
-		message.setSubject(subject);
-		message.setContent(multiPart);
-		message.setText(text);
+        InternetAddress toAddress;
+        toAddress = new InternetAddress(to);
+        message.addRecipient(Message.RecipientType.TO, toAddress);
+        Log.i("Check", "added recipient");
+        message.setSubject(subject);
+        message.setContent(multiPart);
+        message.setText(text);
 
-		Thread t = new Thread(new Runnable() {
+        Thread t = new Thread(new Runnable() {
 
-			@Override
-			public void run() {
-				try {
-					MLog.i("check", "transport");
-					Transport transport = session.getTransport("smtp");
-					MLog.i("check", "connecting");
-					transport.connect(emailSettings.host, emailSettings.user, emailSettings.password);
-					MLog.i("check", "wana send");
-					transport.sendMessage(message, message.getAllRecipients());
-					transport.close();
+            @Override
+            public void run() {
+                try {
+                    MLog.i("check", "transport");
+                    Transport transport = session.getTransport("smtp");
+                    MLog.i("check", "connecting");
+                    transport.connect(emailSettings.host, emailSettings.user, emailSettings.password);
+                    MLog.i("check", "wana send");
+                    transport.sendMessage(message, message.getAllRecipients());
+                    transport.close();
 
-					MLog.i("check", "sent");
+                    MLog.i("check", "sent");
 
-				} catch (AddressException e) {
-					e.printStackTrace();
-				} catch (MessagingException e) {
-					e.printStackTrace();
-				}
+                } catch (AddressException e) {
+                    e.printStackTrace();
+                } catch (MessagingException e) {
+                    e.printStackTrace();
+                }
 
-			}
-		});
-		t.start();
+            }
+        });
+        t.start();
 
-	}
+    }
 
-	// --------- getRequest ---------//
-	interface HttpGetCB {
-		void event(int eventType, String responseString);
-	}
+    // --------- getRequest ---------//
+    interface HttpGetCB {
+        void event(int eventType, String responseString);
+    }
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "url", "function(eventType, responseString)" })
-	public void httpGet(String url, final HttpGetCB callbackfn) {
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = {"url", "function(eventType, responseString)"})
+    public void httpGet(String url, final HttpGetCB callbackfn) {
 
-		class RequestTask extends AsyncTask<String, String, String> {
-			String responseString = null;
+        class RequestTask extends AsyncTask<String, String, String> {
+            String responseString = null;
 
-			@Override
-			protected String doInBackground(String... uri) {
-				HttpClient httpclient = new DefaultHttpClient();
-				HttpResponse response;
-				try {
-					response = httpclient.execute(new HttpGet(uri[0]));
-					final StatusLine statusLine = response.getStatusLine();
-					if (statusLine.getStatusCode() == HttpStatus.SC_OK) {
-						ByteArrayOutputStream out = new ByteArrayOutputStream();
-						response.getEntity().writeTo(out);
-						out.close();
-						responseString = out.toString();
-					} else {
-						// Closes the connection.
-						response.getEntity().getContent().close();
-						throw new IOException(statusLine.getReasonPhrase());
-					}
+            @Override
+            protected String doInBackground(String... uri) {
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpResponse response;
+                try {
+                    response = httpclient.execute(new HttpGet(uri[0]));
+                    final StatusLine statusLine = response.getStatusLine();
+                    if (statusLine.getStatusCode() == HttpStatus.SC_OK) {
+                        ByteArrayOutputStream out = new ByteArrayOutputStream();
+                        response.getEntity().writeTo(out);
+                        out.close();
+                        responseString = out.toString();
+                    } else {
+                        // Closes the connection.
+                        response.getEntity().getContent().close();
+                        throw new IOException(statusLine.getReasonPhrase());
+                    }
 
-					mHandler.post(new Runnable() {
+                    mHandler.post(new Runnable() {
 
-						@Override
-						public void run() {
-							callbackfn.event(statusLine.getStatusCode(), responseString);
-						}
-					});
+                        @Override
+                        public void run() {
+                            callbackfn.event(statusLine.getStatusCode(), responseString);
+                        }
+                    });
 
-				} catch (ClientProtocolException e) {
+                } catch (ClientProtocolException e) {
 
-				} catch (IOException e) {
+                } catch (IOException e) {
 
-				}
-				return responseString;
-			}
+                }
+                return responseString;
+            }
 
-			@Override
-			protected void onPostExecute(String result) {
-				super.onPostExecute(result);
-				// Do anything with response..
-			}
-		}
+            @Override
+            protected void onPostExecute(String result) {
+                super.onPostExecute(result);
+                // Do anything with response..
+            }
+        }
 
-		MLog.d(TAG, "" + new RequestTask().execute(url));
-	}
+        MLog.d(TAG, "" + new RequestTask().execute(url));
+    }
 
-	// --------- postRequest ---------//
-	interface HttpPostCB {
-		void event(String string);
-	}
+    // --------- postRequest ---------//
+    interface HttpPostCB {
+        void event(String string);
+    }
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "url", "params", "function(responseString)" })
-	public void httpPost(String url, Object object, final HttpPostCB callbackfn) {
-		final HttpClient httpClient = new DefaultHttpClient();
-		final HttpContext localContext = new BasicHttpContext();
-		final HttpPost httpPost = new HttpPost(url);
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = {"url", "params", "function(responseString)"})
+    public void httpPost(String url, Object object, final HttpPostCB callbackfn) {
+        final HttpClient httpClient = new DefaultHttpClient();
+        final HttpContext localContext = new BasicHttpContext();
+        final HttpPost httpPost = new HttpPost(url);
 
-		Gson g = new Gson();
-		JsonArray q = g.toJsonTree(object).getAsJsonArray();
+        Gson g = new Gson();
+        JsonArray q = g.toJsonTree(object).getAsJsonArray();
 
-		MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+        MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
 
-		for (int i = 0; i < q.size(); i++) {
-			Set<Entry<String, JsonElement>> set = q.get(i).getAsJsonObject().entrySet();
+        for (int i = 0; i < q.size(); i++) {
+            Set<Entry<String, JsonElement>> set = q.get(i).getAsJsonObject().entrySet();
 
-			// go through elements
-			String name = "";
-			String content = "";
-			String type = "";
-			for (Object element : set) {
-				Entry<String, JsonElement> entry = (Entry<String, JsonElement>) element;
-				if (entry.getKey().equals("name")) {
-					name = entry.getValue().getAsString();
-				} else if (entry.getKey().equals("content")) {
-					content = entry.getValue().getAsString();
-				} else if (entry.getKey().equals("type")) {
-					type = entry.getValue().getAsString();
-				}
-			}
+            // go through elements
+            String name = "";
+            String content = "";
+            String type = "";
+            for (Object element : set) {
+                Entry<String, JsonElement> entry = (Entry<String, JsonElement>) element;
+                if (entry.getKey().equals("name")) {
+                    name = entry.getValue().getAsString();
+                } else if (entry.getKey().equals("content")) {
+                    content = entry.getValue().getAsString();
+                } else if (entry.getKey().equals("type")) {
+                    type = entry.getValue().getAsString();
+                }
+            }
 
-			MLog.d("qq", i + " " + name + " " + content);
+            // create the multipart
+            if (type.contains("file")) {
+                File f = new File(ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/" + content);
+                ContentBody cbFile = new FileBody(f);
+                entity.addPart(name, cbFile);
+            } else if (type.contains("text")) { // Normal string data
+                try {
+                    entity.addPart(name, new StringBody(content));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 
-			// create the multipart
-			if (type.contains("file")) {
-				MLog.d("qq", "mm");
-				File f = new File(ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/" + content);
-				MLog.d("qq", f.getAbsolutePath());
-				ContentBody cbFile = new FileBody(f);
-				entity.addPart(name, cbFile);
-			} else if (type.contains("text")) { // Normal string data
-				try {
-					entity.addPart(name, new StringBody(content));
-				} catch (UnsupportedEncodingException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+        // send
+        httpPost.setEntity(entity);
+        new Thread(new Runnable() {
 
-		// send
-		httpPost.setEntity(entity);
-		new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    HttpResponse response = httpClient.execute(httpPost, localContext);
+                    callbackfn.event(response.getStatusLine().toString());
+                } catch (ClientProtocolException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
 
-			@Override
-			public void run() {
-				try {
-					HttpResponse response = httpClient.execute(httpPost, localContext);
-					MLog.d("qq", "" + response.getStatusLine());
-					callbackfn.event(response.getStatusLine().toString());
-				} catch (ClientProtocolException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}).start();
-	}
+    //gives the url trying to access
+    //if (url == "") {
+    //} else {
+    //server.serveFiles()
+    //
+    //}
 
-	// --------- getRequest ---------//
-	interface HttpServerCB {
-		void event(String string);
-	}
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	@APIParam(params = { "url", "params", "function(responseString)" })
-	public ProtocoderAPIHttpServer startHttpServer(int port, final HttpServerCB callbackfn) {
+	@APIParam(params = { "port", "function(responseString)" })
+	public ProtocoderAPIHttpServer startSimpleHttpServer(int port, final ProtocoderAPIHttpServer.HttpCB callbackfn) {
         ProtocoderAPIHttpServer httpServer = null;
         try {
-			httpServer = new ProtocoderAPIHttpServer(a.get(), port);
+			httpServer = new ProtocoderAPIHttpServer(a.get(), port, callbackfn);
             WhatIsRunning.getInstance().add(httpServer);
 
 		} catch (IOException e) {
@@ -671,13 +669,14 @@ public class PNetwork extends PInterface {
         return httpServer;
 	}
 
+
+
 	// --------- Bluetooth ---------//
 	private scanBTNetworksCB onBluetoothfn;
 	private SimpleBT simpleBT;
 
 	public interface onBluetoothListener {
 		public void onDeviceFound(String name, String macAddress, float strength);
-
 		public void onActivityResult(int requestCode, int resultCode, Intent data);
 	}
 
@@ -688,12 +687,9 @@ public class PNetwork extends PInterface {
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "function(name, macAddress, strength)" })
-	public void scanBTNetworks(final scanBTNetworksCB callbackfn) {
+	public void scanBluetoothNetworks(final scanBTNetworksCB callbackfn) {
 		onBluetoothfn = callbackfn;
-
-		simpleBT.scanBluetooth();
-
-		simpleBT.addBluetoothScanListener(new onBluetoothListener() {
+		simpleBT.scanBluetooth(new onBluetoothListener() {
 
 			@Override
 			public void onDeviceFound(String name, String macAddress, float strength) {
@@ -764,51 +760,61 @@ public class PNetwork extends PInterface {
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "function(name, macAddress, strength)" })
-	public void connectBluetoothByUI(final String callbackfn) {
+	public void connectBluetoothSerialByUI(final String callbackfn) {
 		simpleBT.startDeviceListActivity();
 	}
 
 	// --------- connectBluetooth ---------//
 	interface connectBluetoothCB {
-		void event(String data);
+		void event(String what, String data);
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "function(name, macAddress, strength)" })
-	public void connectBluetoothByMac(String mac, final connectBluetoothCB callbackfn) {
+	public void connectBluetoothSerialByMac(String mac, final connectBluetoothCB callbackfn) {
 		simpleBT.connectByMac(mac);
-		simpleBT.addListener(new SimpleBT.SimpleBTListener() {
+        addBTConnectionListener(callbackfn);
 
-			@Override
-			public void onRawDataReceived(byte[] buffer, int size) {
-			}
-
-			@Override
-			public void onMessageReceived(final String data) {
-				if (data != "") {
-					mHandler.post(new Runnable() {
-						@Override
-						public void run() {
-							MLog.d(TAG, "Got data: " + data);
-							callbackfn.event(data);
-						}
-					});
-				}
-			}
-
-			@Override
-			public void onConnected() {
-			}
-		});
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "name, function()" })
-	public void connectBluetoothByName(String name, final String callbackfn) {
+	public void connectBluetoothByName(String name, final connectBluetoothCB callbackfn) {
 		simpleBT.connectByName(name);
-	}
+        addBTConnectionListener(callbackfn);
+    }
+
+    private void addBTConnectionListener(final connectBluetoothCB callbackfn) {
+        simpleBT.addListener(new SimpleBT.SimpleBTListener() {
+
+            @Override
+            public void onRawDataReceived(byte[] buffer, int size) {
+                MLog.network(a.get(), "Bluetooth", "1. got " + buffer.toString());
+            }
+
+            @Override
+            public void onMessageReceived(final String data) {
+                MLog.network(a.get(), "Bluetooth", "2. got " + data);
+
+                if (data != "") {
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            MLog.d(TAG, "Got data: " + data);
+                            callbackfn.event("data", data);
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onConnected() {
+                callbackfn.event("connected", null);
+            }
+        });
+    }
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
@@ -929,22 +935,6 @@ public class PNetwork extends PInterface {
                 }
             }
         }
-    }
-
-
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "port, callback(data)" })
-    public void startHttpServer(int port, String fn) {
-        ProtocoderAPIHttpServer server = null;
-        try {
-            server = new ProtocoderAPIHttpServer(a.get(), port);
-            WhatIsRunning.getInstance().add(server);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
     }
 
 
