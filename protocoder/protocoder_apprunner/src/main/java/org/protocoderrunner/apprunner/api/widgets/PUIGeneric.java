@@ -38,12 +38,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.mozilla.javascript.NativeArray;
-import org.mozilla.javascript.NativeJSON;
-import org.mozilla.javascript.NativeObject;
-import org.mozilla.javascript.ScriptableObject;
 import org.osmdroid.events.DelayedMapListener;
 import org.osmdroid.events.MapListener;
 import org.osmdroid.events.ScrollEvent;
@@ -56,6 +51,7 @@ import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.apprunner.api.other.PCameraNew;
 import org.protocoderrunner.apprunner.api.other.PVideo;
+import org.protocoderrunner.apprunner.api.other.ProtocoderNativeObject;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.fragments.CameraFragment;
 import org.protocoderrunner.fragments.CustomVideoTextureView;
@@ -72,7 +68,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.PictureDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
@@ -82,10 +77,8 @@ import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.GridView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -381,7 +374,7 @@ public class PUIGeneric extends PInterface {
 					q.action = value.action;
 					q.type = value.type;
 
-					// m.add(q);
+					// m.addPE(q);
 					q2[num++] = q;
 
 					// array.put(o);
@@ -409,7 +402,7 @@ public class PUIGeneric extends PInterface {
 		void eval(int progress);
 	}
 
-	// We'll add in the circular view as a nice to have later once all the other
+	// We'll addPE in the circular view as a nice to have later once all the other
 	// widgets are handled.
 	public PSeekBar addGenericSlider(int max, int progress, final addGenericSliderCB callbackfn) {
 
@@ -705,7 +698,7 @@ public class PUIGeneric extends PInterface {
 
     // --------- getRequest ---------//
     public interface addGridOfCB {
-        void event(NativeObject json);
+        void event(ProtocoderNativeObject json);
     }
 
     public PGrid addGenericGridOf(String type, NativeArray array, int cols, final addGridOfCB callbackfn) {
@@ -738,7 +731,7 @@ public class PUIGeneric extends PInterface {
             }
 
             Log.d(TAG, "counter/num " + counter + " " + num + " " + i + " " + cols + " " + rows);
-            final NativeObject cbData = new NativeObject();
+            final ProtocoderNativeObject cbData = new ProtocoderNativeObject();
 
             if (counter >= num) {
                 Log.d(TAG, "this space");
@@ -746,21 +739,25 @@ public class PUIGeneric extends PInterface {
             //   break;
             } else {
                 String name = (String) array.get(counter);
-                cbData.put("name", cbData, name);
-                cbData.put("i", cbData, i);
-                cbData.put("j", cbData, j);
-                cbData.put("count", cbData, counter);
+                cbData.addPE("name", name);
+                cbData.addPE("name", name);
+                cbData.addPE("i", i);
+                cbData.addPE("j", j);
+                cbData.addPE("count", counter);
 
                 //button
                 if (type.equals("button")) {
-                    PButton btn = addGenericButton(name, new addGenericButtonCB() {
+                    PButton btn = null;
+                    btn = addGenericButton(name, new addGenericButtonCB() {
                         @Override
                         public void event() {
-                            cbData.put("data", cbData, "");
+                            cbData.addPE("data", "");
                             callbackfn.event(cbData);
-
                         }
                     });
+
+                    cbData.addPE("view", btn);
+
                     ll2.addViewInRow(btn);
 
                     //imagebutton
@@ -774,7 +771,7 @@ public class PUIGeneric extends PInterface {
                         @Override
                         public void event(boolean isChecked) {
 
-                            cbData.put("data", cbData, isChecked);
+                            cbData.addPE("data", isChecked);
                             callbackfn.event(cbData);
 
                         }
@@ -786,7 +783,7 @@ public class PUIGeneric extends PInterface {
                     PSeekBar slider = addGenericSlider(1024, 0, new addGenericSliderCB() {
                         @Override
                         public void eval(int progress) {
-                            cbData.put("data", cbData, progress / 1024);
+                            cbData.addPE("data", progress / 1024);
                             callbackfn.event(cbData);
 
                         }
