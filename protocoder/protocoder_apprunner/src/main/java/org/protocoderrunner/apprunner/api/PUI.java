@@ -55,6 +55,7 @@ import android.support.v7.graphics.Palette;
 import android.text.InputType;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewAnimationUtils;
@@ -112,6 +113,8 @@ import org.protocoderrunner.views.TouchAreaView;
 import java.io.File;
 
 import processing.core.PApplet;
+
+import static android.view.ScaleGestureDetector.OnScaleGestureListener;
 
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -606,7 +609,9 @@ public class PUI extends PUIGeneric {
 		void event(GestureDetectorReturn g);
 	}
 
-	public void gestureDetector(View v, final addGestureDetectorCB cb) {
+
+    //http://stackoverflow.com/questions/6599329/can-one-ongesturelistener-object-deal-with-two-gesturedetector-objects
+    public void gestureDetector(View v, final addGestureDetectorCB cb) {
 		final GestureDetectorReturn g = new GestureDetectorReturn();
 
 		final GestureDetector gestureDetector = new GestureDetector(a.get(), new GestureDetector.OnGestureListener() {
@@ -667,11 +672,41 @@ public class PUI extends PUIGeneric {
 			}
 		});
 
-		v.setOnTouchListener(new OnTouchListener() {
+
+
+        final ScaleGestureDetector scaleGestureDetector = new ScaleGestureDetector(a.get(), new OnScaleGestureListener() {
+            @Override
+            public boolean onScale(ScaleGestureDetector scaleGestureDetector) {
+                g.type = "scale";
+                cb.event(g);
+                return false;
+            }
+
+            @Override
+            public boolean onScaleBegin(ScaleGestureDetector scaleGestureDetector) {
+                g.type = "scaleBegin";
+                cb.event(g);
+                return false;
+            }
+
+            @Override
+            public void onScaleEnd(ScaleGestureDetector scaleGestureDetector) {
+                g.type = "scaleEnd";
+                cb.event(g);
+            }
+        });
+
+
+
+        v.setOnTouchListener(new OnTouchListener() {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				return gestureDetector.onTouchEvent(event);
+                scaleGestureDetector.onTouchEvent(event);
+                if(scaleGestureDetector.isInProgress()) return true;
+                gestureDetector.onTouchEvent(event);
+
+                return true;
 			}
 		});
 	}
