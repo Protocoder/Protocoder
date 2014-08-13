@@ -29,14 +29,8 @@
 
 package org.protocoder.network;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import android.content.Context;
+import android.content.res.AssetManager;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONArray;
@@ -47,9 +41,6 @@ import org.protocoderrunner.apprunner.api.PBoards;
 import org.protocoderrunner.apprunner.api.PConsole;
 import org.protocoderrunner.apprunner.api.PDashboard;
 import org.protocoderrunner.apprunner.api.PDevice;
-import org.protocoderrunner.apprunner.api.boards.PSerial;
-import org.protocoderrunner.apprunner.api.other.PProcessing;
-import org.protocoderrunner.apprunner.api.other.PWebEditor;
 import org.protocoderrunner.apprunner.api.PFileIO;
 import org.protocoderrunner.apprunner.api.PMedia;
 import org.protocoderrunner.apprunner.api.PNetwork;
@@ -57,7 +48,9 @@ import org.protocoderrunner.apprunner.api.PProtocoder;
 import org.protocoderrunner.apprunner.api.PSensors;
 import org.protocoderrunner.apprunner.api.PUI;
 import org.protocoderrunner.apprunner.api.PUtil;
+import org.protocoderrunner.apprunner.api.boards.PArduino;
 import org.protocoderrunner.apprunner.api.boards.PIOIO;
+import org.protocoderrunner.apprunner.api.boards.PSerial;
 import org.protocoderrunner.apprunner.api.dashboard.PDashboardButton;
 import org.protocoderrunner.apprunner.api.dashboard.PDashboardHTML;
 import org.protocoderrunner.apprunner.api.dashboard.PDashboardImage;
@@ -66,16 +59,18 @@ import org.protocoderrunner.apprunner.api.dashboard.PDashboardLabel;
 import org.protocoderrunner.apprunner.api.dashboard.PDashboardPlot;
 import org.protocoderrunner.apprunner.api.dashboard.PDashboardSlider;
 import org.protocoderrunner.apprunner.api.other.PCamera;
+import org.protocoderrunner.apprunner.api.other.PProcessing;
 import org.protocoderrunner.apprunner.api.other.PProtocoderFeedback;
 import org.protocoderrunner.apprunner.api.other.PPureData;
 import org.protocoderrunner.apprunner.api.other.PSqlLite;
 import org.protocoderrunner.apprunner.api.other.PVideo;
+import org.protocoderrunner.apprunner.api.other.PWebEditor;
+import org.protocoderrunner.apprunner.api.widgets.PAbsoluteLayout;
 import org.protocoderrunner.apprunner.api.widgets.PButton;
 import org.protocoderrunner.apprunner.api.widgets.PCanvasView;
 import org.protocoderrunner.apprunner.api.widgets.PCard;
 import org.protocoderrunner.apprunner.api.widgets.PCheckBox;
 import org.protocoderrunner.apprunner.api.widgets.PEditText;
-import org.protocoderrunner.apprunner.api.widgets.PAbsoluteLayout;
 import org.protocoderrunner.apprunner.api.widgets.PImageButton;
 import org.protocoderrunner.apprunner.api.widgets.PImageView;
 import org.protocoderrunner.apprunner.api.widgets.PMap;
@@ -97,8 +92,15 @@ import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.FileIO;
 import org.protocoderrunner.utils.MLog;
 
-import android.content.Context;
-import android.content.res.AssetManager;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+
 import de.greenrobot.event.EventBus;
 
 /**
@@ -411,7 +413,8 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 					APIManager.getInstance().addClass(PUI.class);
 					APIManager.getInstance().addClass(PUtil.class);
 
-					APIManager.getInstance().addClass(PSerial.class);
+                    APIManager.getInstance().addClass(PArduino.class);
+                    APIManager.getInstance().addClass(PSerial.class);
 					APIManager.getInstance().addClass(PIOIO.class);
 
 					APIManager.getInstance().addClass(PCamera.class);
