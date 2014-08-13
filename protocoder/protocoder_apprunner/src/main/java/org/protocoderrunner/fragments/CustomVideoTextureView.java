@@ -162,7 +162,7 @@ public class CustomVideoTextureView extends TextureView implements TextureView.S
         w = width;
         h = height;
 
-        AndroidUtils.setViewGenericShadow(this, width, height);
+        //AndroidUtils.setViewGenericShadow(this, width, height);
 
     }
 
@@ -177,7 +177,7 @@ public class CustomVideoTextureView extends TextureView implements TextureView.S
 	public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
         w = width;
         h = height;
-        AndroidUtils.setViewGenericShadow(this, width, height);
+        //AndroidUtils.setViewGenericShadow(this, width, height);
 
 	}
 

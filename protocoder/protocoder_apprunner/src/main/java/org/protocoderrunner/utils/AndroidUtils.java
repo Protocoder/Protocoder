@@ -37,7 +37,6 @@ import java.io.OutputStream;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Outline;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.os.Build;
@@ -45,6 +44,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import org.protocoderrunner.AppSettings;
+import org.protocoderrunner.apprunner.logger.L;
 
 public class AndroidUtils {
 
@@ -153,6 +153,8 @@ public class AndroidUtils {
 		MLog.d(TAG, sb.toString());
 	}
 
+    // TODO enable Protocoder-L
+    /*
     public static void setViewGenericShadow(View v, int w, int h) {
         setViewGenericShadow(v, CLIP_RECT, 0, 0, w, h, 10);
     }
@@ -161,7 +163,7 @@ public class AndroidUtils {
     public static int CLIP_ROUND = 1;
 
     public static void setViewGenericShadow(View v, int type, int x, int y, int w, int h, int r) {
-        MLog.d("qq", "no android L " + Build.VERSION.SDK + " " + Build.VERSION_CODES.L);
+        MLog.d("qq", "no android L " + Build.VERSION.SDK + " " + L);
 
        // if (AndroidUtils.isVersionL()) {
             Outline outline = new Outline();
@@ -193,11 +195,14 @@ public class AndroidUtils {
 
         // }
     }
+  */
 
+    //TODO enable Android-L
     public static boolean isVersionL() {
 
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.L;
+        return false; //Build.VERSION.SDK_INT >= L;
     }
+
 
     public static boolean isVersionMinSupported() {
        return AppSettings.MIN_SUPPORTED_VERSION > Build.VERSION.SDK_INT;

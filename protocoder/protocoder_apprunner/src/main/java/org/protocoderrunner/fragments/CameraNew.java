@@ -137,7 +137,7 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
     @Override
     public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
         //set shadow
-        AndroidUtils.setViewGenericShadow(this, width, height);
+        //AndroidUtils.setViewGenericShadow(this, width, height);
 
     }
 
