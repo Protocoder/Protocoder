@@ -29,9 +29,17 @@
 
 package org.protocoderrunner.apprunner.api;
 
-import java.io.File;
-import java.util.Arrays;
-import java.util.Locale;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.MediaRecorder;
+import android.speech.RecognizerIntent;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.protocoderrunner.apidoc.annotation.APIMethod;
@@ -52,21 +60,13 @@ import org.puredata.core.PdBase;
 import org.puredata.core.PdReceiver;
 import org.puredata.core.utils.PdDispatcher;
 
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.media.MediaRecorder;
-import android.speech.RecognizerIntent;
-import android.telephony.PhoneStateListener;
-import android.telephony.TelephonyManager;
-import android.util.Log;
+import java.io.File;
+import java.util.Arrays;
+import java.util.Locale;
 
 public class PMedia extends PInterface {
 
-	String TAG = "JMedia";
+	String TAG = "PMedia";
 	startVoiceRecognitionCB onVoiceRecognitionfn;
 
 	public PMedia(AppRunnerActivity a) {

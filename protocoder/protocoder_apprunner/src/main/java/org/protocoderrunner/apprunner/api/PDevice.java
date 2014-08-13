@@ -29,15 +29,6 @@
 
 package org.protocoderrunner.apprunner.api;
 
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
-import org.protocoderrunner.apprunner.AppRunnerActivity;
-import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.apprunner.ProtocoderScript;
-import org.protocoderrunner.sensors.WhatIsRunning;
-import org.protocoderrunner.utils.Intents;
-import org.protocoderrunner.utils.MLog;
-
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
@@ -55,6 +46,15 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.google.gson.Gson;
+
+import org.protocoderrunner.apidoc.annotation.APIMethod;
+import org.protocoderrunner.apidoc.annotation.APIParam;
+import org.protocoderrunner.apprunner.AppRunnerActivity;
+import org.protocoderrunner.apprunner.PInterface;
+import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.sensors.WhatIsRunning;
+import org.protocoderrunner.utils.Intents;
+import org.protocoderrunner.utils.MLog;
 
 public class PDevice extends PInterface {
 
@@ -176,7 +176,7 @@ public class PDevice extends PInterface {
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	@APIParam(params = { "recepient", "subject", "message" })
+	@APIParam(params = { "recipient", "subject", "message" })
 	public void launchIntent(String intent) {
 		Intent market_intent = new Intent(intent);
 		a.get().startActivity(market_intent);
@@ -184,14 +184,14 @@ public class PDevice extends PInterface {
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	@APIParam(params = { "recepient", "subject", "message" })
-	public void openEmailApp(String recepient, String subject, String msg) {
-		Intents.sendEmail(a.get(), recepient, subject, msg);
+	@APIParam(params = { "recipient", "subject", "message" })
+	public void openEmailApp(String recipient, String subject, String msg) {
+		Intents.sendEmail(a.get(), recipient, subject, msg);
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	@APIParam(params = { "longitue", "latitude" })
+	@APIParam(params = { "longitude", "latitude" })
 	public void openMapApp(double longitude, double latitude) {
 		Intents.openMap(a.get(), longitude, latitude);
 	}

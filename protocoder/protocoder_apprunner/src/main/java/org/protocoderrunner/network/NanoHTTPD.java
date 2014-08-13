@@ -29,6 +29,10 @@
 
 package org.protocoderrunner.network;
 
+import android.annotation.SuppressLint;
+
+import org.protocoderrunner.utils.MLog;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -40,6 +44,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URLEncoder;
@@ -51,10 +56,6 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
 import java.util.Vector;
-
-import org.protocoderrunner.utils.MLog;
-
-import android.annotation.SuppressLint;
 
 /**
  * A simple, tiny, nicely embeddable HTTP 1.0 server in Java
@@ -673,27 +674,11 @@ public class NanoHTTPD {
 		 */
 		private String decodePercent(String str) throws InterruptedException {
 			try {
-				StringBuffer sb = new StringBuffer();
-				for (int i = 0; i < str.length(); i++) {
-					char c = str.charAt(i);
-					switch (c) {
-					case '+':
-						sb.append(' ');
-						break;
-					case '%':
-						sb.append((char) Integer.parseInt(str.substring(i + 1, i + 3), 16));
-						i += 2;
-						break;
-					default:
-						sb.append(c);
-						break;
-					}
-				}
-				return sb.toString();
-			} catch (Exception e) {
-				sendError(HTTP_BADREQUEST, "BAD REQUEST: Bad percent-encoding.");
-				return null;
-			}
+                return java.net.URLDecoder.decode(str, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                sendError(HTTP_BADREQUEST, "BAD REQUEST: Bad percent-encoding.");
+                return null;
+            }
 		}
 
 		/**
