@@ -49,7 +49,7 @@ import android.app.Activity;
 
 public class PIOIO extends PInterface implements HardwareCallback {
 
-	private final String TAG = "JIOIO";
+	private final String TAG = "PIOIO";
 
 	private IOIOBoard board;
 
@@ -76,7 +76,7 @@ public class PIOIO extends PInterface implements HardwareCallback {
 		moiocallbackfn = callbackfn;
 		if (!isStarted) {
 			this.board = new IOIOBoard(a.get(), this);
-			// board.powerOn();
+			board.powerOn();
 			WhatIsRunning.getInstance().add(board);
 
 		}

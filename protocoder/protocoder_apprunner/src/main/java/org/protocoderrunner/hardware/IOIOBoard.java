@@ -83,9 +83,9 @@ public class IOIOBoard extends HardwareBase {
 	 */
 	@Override
 	public void powerOn() {
-		SysFs.write("/sys/class/gpio/export", "43");
-		SysFs.write("/sys/class/gpio/gpio43/direction", "out");
-		SysFs.write("/sys/class/gpio/gpio43/value", "1");
+		//SysFs.write("/sys/class/gpio/export", "43");
+		//SysFs.write("/sys/class/gpio/gpio43/direction", "out");
+		//SysFs.write("/sys/class/gpio/gpio43/value", "1");
 
 		MLog.d(TAG, "Setting up intent");
 		serviceIntent_ = new Intent(activity_, IOIOBoardService.class);
