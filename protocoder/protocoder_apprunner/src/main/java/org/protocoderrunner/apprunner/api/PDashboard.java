@@ -29,7 +29,7 @@
 
 package org.protocoderrunner.apprunner.api;
 
-import java.net.UnknownHostException;
+import android.app.Activity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,11 +46,11 @@ import org.protocoderrunner.apprunner.api.dashboard.PDashboardPlot;
 import org.protocoderrunner.apprunner.api.dashboard.PDashboardSlider;
 import org.protocoderrunner.network.CustomWebsocketServer;
 
-import android.app.Activity;
+import java.net.UnknownHostException;
 
 public class PDashboard extends PInterface {
 
-	String TAG = "JDashboard";
+	String TAG = "PDashboard";
 
 	public PDashboard(Activity a) {
 		super(a);
@@ -94,7 +94,7 @@ public class PDashboard extends PInterface {
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	@APIParam(params = { "name", "x", "y", "w", "h", "min", "max", "callback(num)" })
+	@APIParam(params = { "name", "x", "y", "w", "h", "min", "max", "function(num)" })
 	public PDashboardSlider addSlider(String name, int x, int y, int w, int h, int min, int max,
 			final PDashboardSlider.jDashboardSliderAddCB callbackfn) throws UnknownHostException, JSONException {
 		// MLog.d(TAG, "callback " + callbackfn);
@@ -107,7 +107,7 @@ public class PDashboard extends PInterface {
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	@APIParam(params = { "name", "x", "y", "w", "h", "callback(text)" })
+	@APIParam(params = { "name", "x", "y", "w", "h", "function(text)" })
 	public PDashboardInput addInput(String name, int x, int y, int w, int h, final PDashboardInput.jDashboardInputCB callbackfn)
 			throws UnknownHostException, JSONException {
 		// MLog.d(TAG, "callback " + callbackfn);

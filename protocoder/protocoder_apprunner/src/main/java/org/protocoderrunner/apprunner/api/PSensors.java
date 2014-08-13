@@ -29,6 +29,9 @@
 
 package org.protocoderrunner.apprunner.api;
 
+import android.hardware.SensorManager;
+import android.location.Location;
+
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.AppRunnerActivity;
@@ -46,9 +49,6 @@ import org.protocoderrunner.sensors.ProximityManager;
 import org.protocoderrunner.sensors.StepManager;
 import org.protocoderrunner.sensors.WhatIsRunning;
 import org.protocoderrunner.utils.MLog;
-
-import android.hardware.SensorManager;
-import android.location.Location;
 
 public class PSensors extends PInterface {
 
@@ -155,7 +155,7 @@ public class PSensors extends PInterface {
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	@APIParam(params = { "", "function(x, y, z)" })
+	@APIParam(params = { "function(x, y, z)" })
 	public void startGyroscope(final startGyroscopeCB callbackfn) {
 		if (!gyroscopeStarted) {
 			gyroscopeManager = new GyroscopeManager(a.get());
