@@ -75,16 +75,7 @@ Reference.prototype.parseHelp = function (docString) {
 	        	}
 
 	        	// add curly braces when insert a callback
-	        	var p = parameters.split(",");
-	        	for (var q in p) { 
-	        		console.log(p[q].indexOf("function")); 
-
-	        		if (p[q].indexOf("function") == 1) { 
-	        			console.log("hola");
-	        			p[q] = p[q] + " { " + '\n' + '\n' + "}"
-	        		}
-	        	} 
-	        	p.join(",");
+                var p = parameters.replace(")", "){ " + '\n' + '\n' + "}");
 
 	        	protocoder.editor.editor.insert(returnType + "" + className + "." + method.name + "(" + p + ");"+'\n\n')
 	        });
