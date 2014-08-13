@@ -29,31 +29,20 @@
 
 package org.protocoderrunner.apprunner.api;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Method;
-import java.net.InetSocketAddress;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Properties;
-import java.util.Set;
+import android.app.Activity;
+import android.bluetooth.BluetoothDevice;
+import android.content.Context;
+import android.content.Intent;
+import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
+import android.util.Log;
+import android.widget.Toast;
 
-import javax.activation.DataHandler;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-import javax.mail.util.ByteArrayDataSource;
+import com.codebutler.android_websockets.SocketIOClient;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -83,7 +72,6 @@ import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
-import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.network.NetworkUtils;
 import org.protocoderrunner.network.NetworkUtils.DownloadTask.DownloadListener;
 import org.protocoderrunner.network.OSC;
@@ -91,30 +79,42 @@ import org.protocoderrunner.network.ProtocoderAPIHttpServer;
 import org.protocoderrunner.network.ServiceDiscovery;
 import org.protocoderrunner.network.bt.DeviceListActivity;
 import org.protocoderrunner.network.bt.SimpleBT;
+import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.sensors.WhatIsRunning;
 import org.protocoderrunner.utils.ExecuteCmd;
 import org.protocoderrunner.utils.MLog;
 
-import android.app.Activity;
-import android.bluetooth.BluetoothDevice;
-import android.content.Context;
-import android.content.Intent;
-import android.net.wifi.WifiConfiguration;
-import android.net.wifi.WifiManager;
-import android.os.AsyncTask;
-import android.util.Log;
-import android.widget.Toast;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Method;
+import java.net.InetSocketAddress;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Properties;
+import java.util.Set;
 
-import com.codebutler.android_websockets.SocketIOClient;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
+import javax.activation.DataHandler;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
 
 import de.sciss.net.OSCMessage;
 
 public class PNetwork extends PInterface {
 
-	private final String TAG = "JNetwork";
+	private final String TAG = "PNetwork";
 
 	public PNetwork(Activity a) {
 		super(a);
@@ -973,7 +973,7 @@ public class PNetwork extends PInterface {
 
     @ProtocoderScript
     @APIMethod(description = "", example = "")
-    @APIParam(params = { "port, callback(data)" })
+    @APIParam(params = { "port, function(data)" })
     public ExecuteCmd ping(final String where, final ExecuteCmd.ExecuteCommandCB callbackfn) {
 //        mHandler.post(new Runnable() {
 //            @Override

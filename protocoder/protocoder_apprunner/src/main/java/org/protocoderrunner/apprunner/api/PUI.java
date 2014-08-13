@@ -112,7 +112,7 @@ import processing.core.PApplet;
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class PUI extends PUIGeneric {
 
-	String TAG = "JUI";
+	String TAG = "PUI";
 	private String onNFCfn;
 
 	private onKeyDownCB onKeyDownfn;

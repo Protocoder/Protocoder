@@ -29,7 +29,7 @@
 
 package org.protocoderrunner.apprunner.api;
 
-import java.net.UnknownHostException;
+import android.support.v4.app.FragmentActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,11 +39,11 @@ import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.network.CustomWebsocketServer;
 
-import android.support.v4.app.FragmentActivity;
+import java.net.UnknownHostException;
 
 public class PConsole extends PInterface {
 
-	String TAG = "JConsole";
+	String TAG = "PConsole";
 
 	public PConsole(FragmentActivity mwmActivity) {
 		super(mwmActivity);

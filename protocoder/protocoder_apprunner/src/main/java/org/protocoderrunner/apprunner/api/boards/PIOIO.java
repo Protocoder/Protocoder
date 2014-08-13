@@ -29,7 +29,16 @@
 
 package org.protocoderrunner.apprunner.api.boards;
 
+import android.app.Activity;
+
+import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apprunner.PInterface;
+import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.hardware.HardwareCallback;
+import org.protocoderrunner.hardware.IOIOBoard;
+import org.protocoderrunner.sensors.WhatIsRunning;
+import org.protocoderrunner.utils.MLog;
+
 import ioio.lib.api.AnalogInput;
 import ioio.lib.api.DigitalInput;
 import ioio.lib.api.DigitalOutput;
@@ -37,19 +46,9 @@ import ioio.lib.api.IOIO;
 import ioio.lib.api.PwmOutput;
 import ioio.lib.api.exception.ConnectionLostException;
 
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-
-import org.protocoderrunner.apprunner.ProtocoderScript;
-import org.protocoderrunner.hardware.HardwareCallback;
-import org.protocoderrunner.hardware.IOIOBoard;
-import org.protocoderrunner.sensors.WhatIsRunning;
-import org.protocoderrunner.utils.MLog;
-
-import android.app.Activity;
-
 public class PIOIO extends PInterface implements HardwareCallback {
 
-	private final String TAG = "JIOIO";
+	private final String TAG = "PIOIO";
 
 	private IOIOBoard board;
 

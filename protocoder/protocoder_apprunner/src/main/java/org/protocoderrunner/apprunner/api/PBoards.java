@@ -41,7 +41,7 @@ import org.protocoderrunner.apprunner.api.boards.PSerial;
 
 public class PBoards extends PInterface {
 
-	private final String TAG = "JBoards";
+	private final String TAG = "PBoards";
 
 	public PBoards(Activity a) {
 		super(a);

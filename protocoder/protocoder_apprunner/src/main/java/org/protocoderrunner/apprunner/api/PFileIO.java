@@ -29,7 +29,7 @@
 
 package org.protocoderrunner.apprunner.api;
 
-import java.io.File;
+import android.app.Activity;
 
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
@@ -40,11 +40,11 @@ import org.protocoderrunner.apprunner.api.other.PSqlLite;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.FileIO;
 
-import android.app.Activity;
+import java.io.File;
 
 public class PFileIO extends PInterface {
 
-	String TAG = "JFileIO";
+	String TAG = "PFileIO";
 
 	public PFileIO(Activity a) {
 		super(a);
