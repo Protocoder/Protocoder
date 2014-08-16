@@ -8,6 +8,8 @@ define([
 
   var UiView = Backbone.View.extend({
 
+    el: "#example_for_victor",
+
     events: {
       "click .ui": "clicked"
     },
@@ -34,7 +36,9 @@ define([
       var tplHtml = tpl({a: 1000});
 
       // Inject html (at once for performance)
-      $('#example_for_victor').html(tplHtml);
+      this.$el.html(tplHtml);
+      // or
+      // this.$el.append(tplHtml);
 
       return this;
     },
@@ -42,7 +46,9 @@ define([
     /**
      * Example callback function for view events.
      */
-    clicked: function() {
+    clicked: function(e) {
+      var color = '#' + Math.floor(Math.random()*16777215).toString(16);
+      $(e.target).css('border', '10px solid ' + color);
       console.log("You clicked on the Ui element.");
     }
   });
