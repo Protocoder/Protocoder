@@ -77,10 +77,10 @@ public class ProjectManager {
     }
 
     public String createBackup(Project p) {
-        MLog.d(TAG, " " + p.getTypeName() + " " + p.getName());
+
+        // TODO: Use a thread
 
         String givenName = getBackupFolder() + File.separator + p.getTypeName() + "_" + p.getName();
-        MLog.d(TAG, "1 " + givenName);
 
         //check if file exists and rename it if so
         File f = new File(givenName + ProjectManager.PROTOCODER_EXTENSION);
@@ -89,9 +89,6 @@ public class ProjectManager {
             f = new File(givenName + "_" + num++ + ProjectManager.PROTOCODER_EXTENSION);
         }
 
-        MLog.d(TAG, "2 " + givenName);
-        MLog.d(TAG, "3 " + p.getStoragePath());
-        MLog.d(TAG, "4 " + f.getAbsolutePath());
         //compress
         try {
             FileIO.zipFolder(p.getStoragePath(), f.getAbsolutePath());
@@ -103,8 +100,18 @@ public class ProjectManager {
         return f.getAbsolutePath();
     }
 
-    public String installProject() {
-        return null;
+    public boolean installProject(String zipFilePath) {
+
+        // TODO: Use a thread
+
+        //decompress
+        try {
+            FileIO.extractZip(zipFilePath, BaseMainApp.projectsDir);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     public interface InstallListener {

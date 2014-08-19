@@ -132,7 +132,7 @@ public class WelcomeActivity extends BaseActivity {
 			public void onReady() {
 				progress.dismiss();
 				// Write a shared pref to never come back here
-				SharedPreferences userDetails = getSharedPreferences("org.org.apprunner.protocoder", MODE_PRIVATE);
+				SharedPreferences userDetails = getSharedPreferences("org.protocoder", MODE_PRIVATE);
 				userDetails.edit().putBoolean(getResources().getString(R.string.pref_is_first_launch), false).commit();
 				// Start the activity
 				Intent i = new Intent(WelcomeActivity.this, MainActivity.class);
