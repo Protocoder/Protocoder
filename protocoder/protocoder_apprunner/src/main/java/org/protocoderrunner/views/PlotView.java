@@ -157,7 +157,7 @@ public class PlotView extends View {
 		mCanvas.drawRect(new RectF(0, 0, mWidth, mHeight), mPaint);
 
         //set shadow
-        AndroidUtils.setViewGenericShadow(this, w, h);
+        //AndroidUtils.setViewGenericShadow(this, w, h);
 
 
         // draw grid

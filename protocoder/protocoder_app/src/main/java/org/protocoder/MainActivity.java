@@ -438,7 +438,8 @@ public class MainActivity extends BaseActivity implements NewProjectDialogFragme
 
 				Project p = evt.getProject();
                 if (AndroidUtils.isVersionL()) {
-                    currentProjectApplicationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+                    //TODO enable version Android-L  
+                    //currentProjectApplicationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
                 } else {
                     currentProjectApplicationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 }

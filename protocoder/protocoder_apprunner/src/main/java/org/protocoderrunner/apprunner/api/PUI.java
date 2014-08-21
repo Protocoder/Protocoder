@@ -42,7 +42,6 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Outline;
 import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
@@ -51,14 +50,13 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.graphics.Palette;
+//import android.support.v7.graphics.Palette;
 import android.text.InputType;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.View.OnTouchListener;
-import android.view.ViewAnimationUtils;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.BounceInterpolator;
 import android.view.animation.CycleInterpolator;
@@ -370,6 +368,9 @@ public class PUI extends PUIGeneric {
 		v.animate().yBy(y).setDuration(AppSettings.ANIM_GENERAL_SPEED).setInterpolator(new BounceInterpolator());
 	}
 
+    
+    //TODO enable Protocoder L
+    /*
     //@TargetApi(L)
     @ProtocoderScript
     @APIParam(params = { "View" })
@@ -384,7 +385,7 @@ public class PUI extends PUIGeneric {
         AndroidUtils.setViewGenericShadow(v, type, x, y, w, h, r);
     }
 
-	//@TargetApi(L)
+    //@TargetApi(L)
 	@ProtocoderScript
 	@APIParam(params = { "View" })
 	public void reveal(final View v) {
@@ -399,7 +400,8 @@ public class PUI extends PUIGeneric {
 
 		// create and start the animator for this view
 		// (the start radius is zero)
-		ValueAnimator anim = ViewAnimationUtils.createCircularReveal(v, cx, cy, 0, finalRadius);
+        /
+        ValueAnimator anim = ViewAnimationUtils.createCircularReveal(v, cx, cy, 0, finalRadius);
 
         anim.setDuration(1000);
         anim.addListener(new AnimatorListenerAdapter() {
@@ -411,6 +413,7 @@ public class PUI extends PUIGeneric {
         });
 		anim.start();
 	}
+
 
 	//@TargetApi()
 	@ProtocoderScript
@@ -450,7 +453,7 @@ public class PUI extends PUIGeneric {
         v.setClipToOutline(true);
         v.setOutline(outline);
     }
-
+    */
 
 	// http://stackoverflow.com/questions/16557076/how-to-smoothly-move-a-image-view-with-users-finger-on-android-emulator
 	@ProtocoderScript
@@ -591,12 +594,13 @@ public class PUI extends PUIGeneric {
         v.setLayoutParams(lp);
     }
 
-    public Palette getPalette(Bitmap bmp) {
-        Palette palette = Palette.generate(bmp);
-        //palette.getVibrantColor();
-
-        return palette;
-    }
+    //TODO enable Android-L
+//    public Palette getPalette(Bitmap bmp) {
+//        Palette palette = Palette.generate(bmp);
+//        //palette.getVibrantColor();
+//
+//        return palette;
+//    }
 
     class GestureDetectorReturn {
 		public String type;
