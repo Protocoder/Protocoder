@@ -29,6 +29,7 @@
 
 package org.protocoder.projectlist;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import org.protocoder.MainActivity;
@@ -51,6 +52,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Intent.ShortcutIconResource;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -281,15 +283,12 @@ public class ListFragmentBase extends BaseFragment {
 			startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
 			return true;
         } else if (itemId == R.id.menu_project_list_share_zip) {
-
-            MLog.d("qq", "" + project.getName() + " " + project.getType());
-        //    Project p = ProjectManager.getInstance().get(project.getName(), project.getType());
-            ProjectManager.getInstance().createBackup(project);
-			//Intent sendIntent = new Intent();
-			//sendIntent.setAction(Intent.ACTION_SEND);
-			//sendIntent.putExtra(Intent.EXTRA_TEXT, ProjectManager.getInstance().getCode(project));
-			//sendIntent.setType("text/plain");
-			//startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
+            String zipFilePath = ProjectManager.getInstance().createBackup(project);
+            Intent shareIntent = new Intent();
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(zipFilePath)));
+            shareIntent.setType("application/zip");
+            startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.share_zip)));
 			return true;
 		} else {
 			return super.onContextItemSelected(item);

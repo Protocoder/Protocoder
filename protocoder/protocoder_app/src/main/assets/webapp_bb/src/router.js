@@ -2,9 +2,12 @@ define([
   'underscore',
   'backbone',
 
+  // CONTROLLERS
+  'CommunicationController',
+
   // VIEWS
-  'src/views/uiView'
-], function(_, Backbone, UiView) {
+  'UiView'
+], function(_, Backbone, CommunicationController, UiView) {
 
   "use strict";
 
@@ -33,9 +36,15 @@ define([
     initialize: function() {
       console.log("Welcome to Protocoder router.");
 
+      // Get data
+      Protocoder.comm = new CommunicationController();
+      Protocoder.comm.listApps("projects");
+      Protocoder.comm.listApps("examples");
+      console.log(Protocoder.comm);
+
       // Start main views
       Protocoder.uiView = new UiView();
-      Protocoder.uiView.init().render();
+      Protocoder.uiView.render();
 
     },
 
@@ -48,7 +57,6 @@ define([
       var page = title ? title : defaultPage;
 
       console.log("Page: " + page);
-
 
     }
 

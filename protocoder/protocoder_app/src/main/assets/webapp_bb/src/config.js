@@ -17,7 +17,13 @@ var require = {
     "w2ui": "src/vendors/w2ui-1.2/w2ui-1.2.min",
 
     // D3
-    "d3": "src/vendors/d3.v3/d3.v3.min"
+    "d3": "src/vendors/d3.v3/d3.v3.min",
+
+    // CONTROLLERS
+    "CommunicationController": "src/controllers/communicationController",
+
+    // VIEWS
+    "UiView": "src/views/uiView"
 
   },
   shim: {
