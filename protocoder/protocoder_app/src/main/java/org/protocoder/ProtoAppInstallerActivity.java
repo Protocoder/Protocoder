@@ -30,11 +30,11 @@
 package org.protocoder;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 
 import org.protocoderrunner.base.BaseActivity;
-import org.protocoderrunner.utils.StrUtils;
+import org.protocoderrunner.project.ProjectManager;
 
 public class ProtoAppInstallerActivity extends BaseActivity {
 
@@ -44,22 +44,19 @@ public class ProtoAppInstallerActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		// Prepare intent to exit the activity and move to the main one
-		boolean firstLaunch; // If this is the first time the
-		SharedPreferences userDetails = getSharedPreferences("org.org.apprunner.protocoder", MODE_PRIVATE);
-		firstLaunch = userDetails.getBoolean(getResources().getString(R.string.pref_is_first_launch), true);
-
-		if (firstLaunch) {
-			intent = new Intent(this, WelcomeActivity.class);
-			userDetails.edit().putString("device_id", StrUtils.generateRandomString());
-		} else {
-			intent = new Intent(this, MainActivity.class);
-		}
-
-		intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-		startActivity(intent);
-		finish();
-
+        Uri data = getIntent().getData();
+        if(data != null) {
+            // install project
+            if (!ProjectManager.getInstance().installProject(data.getPath())) {
+                intent = new Intent(this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(intent);
+                finish();
+            } else {
+                // TODO: Show a warning
+                finish();
+            }
+        }
 	}
 
 	@Override
