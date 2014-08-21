@@ -106,9 +106,7 @@ public class PPadView extends View {
 		bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
 		mCanvas.setBitmap(bitmap);
 
-        AndroidUtils.setViewGenericShadow(this, w, h);
-
-        AndroidUtils.setViewGenericShadow(this, w, h);
+       // AndroidUtils.setViewGenericShadow(this, w, h);
 
 		super.onSizeChanged(w, h, oldw, oldh);
 	}

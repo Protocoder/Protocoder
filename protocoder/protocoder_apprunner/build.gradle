@@ -2,13 +2,13 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 'android-L'
+    compileSdkVersion 19
     buildToolsVersion "20.0.0"
 
     defaultConfig {
         applicationId "org.protocoderrunner"
-        minSdkVersion 'L'
-        targetSdkVersion 'L'
+        minSdkVersion 15
+        targetSdkVersion 19
         versionCode 1
         versionName "1.0"
     }
@@ -36,6 +36,8 @@ android {
         exclude 'META-INF/dependencies.txt'
         exclude 'META-INF/LGPL2.1'
     }
+
+
 }
 
 
@@ -58,10 +60,10 @@ dependencies {
     //compile fileTree(dir: 'libs', include: ['*.jar'])
 
     //android support
-    compile 'com.android.support:support-v4:+'
-    compile 'com.android.support:recyclerview-v7:+'
-    compile 'com.android.support:cardview-v7:+'
-    compile 'com.android.support:palette-v7:+'
+    compile 'com.android.support:support-v4:20.0.0'
+    //compile 'com.android.support:recyclerview-v7:21.0.0-rc1'
+    //compile 'com.android.support:cardview-v7:21.0.0-rc1'
+    //compile 'com.android.support:palette-v7:21.0.0-rc1'
 
     //some of the apache libs collide with the ones in Android, better to include them as jars
     compile files('libs/commons-lang3-3.1.jar')
@@ -87,7 +89,7 @@ dependencies {
     //media
     compile files('libs/osmbonuspack_v4.5.jar')
     compile files('libs/pdcore.jar')
-    compile (name:'processing', ext:'aar')
+    compile (name:'processing_fragmented', ext:'aar')
     compile 'com.github.japgolly.android:svg-android:2.0.6' //'files('libs/androidsvg-1.2.1.jar')
 
     //osmdroid
@@ -108,3 +110,4 @@ dependencies {
     compile files('libs/slf4j-android-1.7.6.jar')
     compile files('libs/slf4j-api-1.7.6.jar')
 }
+

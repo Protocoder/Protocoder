@@ -1,14 +1,14 @@
 apply plugin: 'android'
 
 android {
-    compileSdkVersion 'android-L'
-    buildToolsVersion "20.0.0"
+    compileSdkVersion 19
+    buildToolsVersion '20.0.0'
 
 
     defaultConfig {
         applicationId "org.protocoder"
-        minSdkVersion 'L'
-        targetSdkVersion 'L'
+        minSdkVersion 15
+        targetSdkVersion 19
         versionCode 1
         versionName "1.0"
 
@@ -35,7 +35,7 @@ android {
 
         debug {
             debuggable true;
-            //applicationIdSuffix ".debug";
+          //  applicationIdSuffix ".nineteen";
         }
     }
 
@@ -74,13 +74,9 @@ repositories {
     flatDir {
         dirs 'libs'
     }
-
     mavenCentral()
     //mavenLocal()
-
-    maven {
-        url 'https://github.com/kshoji/USB-MIDI-Driver/raw/master/MIDIDriver/snapshots'
-    }
+    maven { url 'https://github.com/kshoji/USB-MIDI-Driver/raw/master/MIDIDriver/snapshots' }
 }
 
 configurations {
@@ -90,6 +86,6 @@ configurations {
 
 dependencies {
     compile project(':protocoder_apprunner')
-    compile (name:'processing', ext:'aar')
+    compile(name: 'processing_fragmented', ext: 'aar')
     compile 'jp.kshoji:midi-driver:0.0.2-SNAPSHOT:@aar'
 }
