@@ -1,5 +1,5 @@
 /*
-*	draw on a canvas!
+*   draw on a canvas!
 *   This example imports native Android classes (Paint and Color) 
 *   and uses them 
 */
@@ -17,14 +17,11 @@ sensors.startAccelerometer(function(x, y, z) {
    y1 = y;
 });
 
-util.loop(35, function() { 
+canvas.autoDraw(35, function() { 
     paint.setColor(new Color().argb(15, 255, 0, 0));
     canvas.getCanvas().drawRect(0, 0, 500, 500, paint); 
     paint.setColor(Color.BLUE);
-    //canvas.getCanvas().drawRect(x1 * 100, 500 * Math.random(), 500 * Math.random(), 500 * Math.random(), paint); 
     var mx = Math.round(250 + 50 * -x1);
     var my = Math.round(250 + 50 * y1);
-
     canvas.getCanvas().drawCircle(mx, my, 50, paint); 
-    canvas.invalidate();
 });

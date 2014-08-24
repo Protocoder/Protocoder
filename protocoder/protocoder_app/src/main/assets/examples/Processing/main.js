@@ -1,11 +1,12 @@
 /*
-*	Processing example 
+*   Processing example 
 *   The usage its pretty similar to the original processing, just prepend 
 *   the processing (p.) object to the methods to access them ie. p.rect  
 *
 */
 
-var processing = ui.addProcessing(0, 0, 500, 500);
+ui.allowScroll(false);
+var processing = ui.addProcessing(0, 0, 500, 500, "P3D");
 
 var x = 100; 
 var size;

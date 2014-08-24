@@ -862,7 +862,7 @@ public class PUI extends PUIGeneric {
 	@ProtocoderScript
 	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
 	@APIParam(params = { "label", "x", "y", "w", "h", "function()" })
-	public PButton addButton(String label, final addGenericButtonCB callbackfn) {
+	public PButton newButton(String label, final addGenericButtonCB callbackfn) {
 		PButton b = addGenericButton(label, callbackfn);
 		return b;
 	}
@@ -914,7 +914,7 @@ public class PUI extends PUIGeneric {
 
 	@ProtocoderScript
 	@APIParam(params = { "function(touching, x, y)" })
-	public PPadView addXYPad(final addPadCB callbackfn) {
+	public PPadView newXYPad(final addPadCB callbackfn) {
 		PPadView taV = addPad(callbackfn);
 
 		return taV;

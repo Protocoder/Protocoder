@@ -2,13 +2,13 @@
 *	Shows which id and message are written in the NFC tag 
 */
 
-var nfcinfo = ui.addLabel("tap to get NFC id and content", 20, 20, 500, 100);
+var nfcinfo = ui.addText("tap to get NFC id and content", 20, 20, 500, 100);
 
 //when tapping on a nfc the id and content will be displayed 
 //on the label 
 sensors.onNFC(function (id, data) { 
     console.log("the nfc id is: " + id, data); 
-    nfcinfo.setHTMLText("<strong>id: </strong>" + id + "<br /> <strong>data: </strong>" + data);
+    nfcinfo.html("<strong>id: </strong>" + id + "<br /> <strong>data: </strong>" + data);
 });
 
 
