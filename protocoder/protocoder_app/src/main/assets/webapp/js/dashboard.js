@@ -145,7 +145,8 @@ Dashboard.prototype.addInput = function(element, name, posx, posy, w, h) {
   function sendAndClear() {
     var value = $("#container #text_input_"+element + " input").val();
     console.log(value);
-    ws.send('{type:text_input, id:'+ element +', val:'+ value +'}');
+    var obj = {type:"text_input", id:element, val:value}
+    ws.send(JSON.stringify(obj));
     $("#container #text_input_"+element + " input").val("");
   }
 } 

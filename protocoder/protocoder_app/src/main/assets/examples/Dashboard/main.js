@@ -1,5 +1,5 @@
 /* 
-*	Communication with the dashboard  
+*   Communication with the dashboard  
 *
 *   Dashboard is an element in the Web Editor where you 
 *   can add widgets that interact with your device 

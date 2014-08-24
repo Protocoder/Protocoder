@@ -5,31 +5,11 @@
 */
 
 
-var dataLabel = ui.addLabel("data : ",10, 20, 500, 100);
+var arduino = boards.startArduino();
 
-var arduino; 
+arduino.upload(Packages.com.physicaloid.lib.Boards.ARDUINO_UNO, "serialwrite.uno.hex");
 
-//start connexion with arduino
-ui.addButton("START", 50, 150, 500,100, function() { 
-	//show arduino incoming data
-    arduino = boards.startArduino(9600, function(data) {
-		dataLabel.setText("Data : "+ data);
-		console.log(data);
-		media.textToSpeech("tick"); 
-	});
-});
-
-
-//write to the serial led on
-ui.addButton("LEDON", 50, 250, 500,100, function(){ 
-	arduino.writeSerial("ledon"); 
-});
-
-ui.addButton("LEDOFF", 50, 350, 500,100, function(){
-	arduino.writeSerial("ledoff");
-});
-
-
-ui.addButton("STOP", 50, 450, 500,100, function(){
-	arduino.stop(); 
+arduino.onRead(function(data){
+    console.log(data);
+    media.textToSpeech(data);
 });

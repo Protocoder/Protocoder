@@ -123,12 +123,13 @@ public class PButton extends Button implements PViewInterface, PViewMethodsInter
 
     @Override
     protected void onDraw(Canvas canvas) {
-        paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.parseColor("#550000FF"));
-        canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), paint);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setColor(Color.parseColor("#FF0000FF"));
         super.onDraw(canvas);
-        canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), paint);
+//        paint.setStyle(Paint.Style.FILL);
+//        paint.setColor(Color.parseColor("#550000FF"));
+//        canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), paint);
+//        paint.setStyle(Paint.Style.STROKE);
+//        paint.setColor(Color.parseColor("#FF0000FF"));
+//        super.onDraw(canvas);
+//        canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), paint);
     }
 }

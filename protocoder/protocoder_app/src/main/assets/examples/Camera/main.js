@@ -16,3 +16,8 @@ ui.addButton("Take pic", 0, 500, 500, 100, function() {
         console.log('<img src="' + app.getProjectUrl() + 'picture.png"/>');
     });
 });
+
+//toggle flash on and off
+ui.addToggle("Flash", 0, 700, 500, 100, false, function(state) { 
+    camera.turnOnFlash(state);
+});
