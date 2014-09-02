@@ -33,6 +33,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.Html;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.TextView;
 
@@ -71,6 +72,29 @@ public class PTextView extends TextView implements PViewInterface, PViewMethodsI
         this.setTextSize(size);
         return this;
     }
+
+
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "size" })
+    public PTextView scrollable(boolean b) {
+        if (b) {
+            this.setMovementMethod(new ScrollingMovementMethod());
+        } else {
+            this.setMovementMethod(null);
+        }
+        return this;
+    }
+
+
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "string" })
+	public PTextView text(String text) {
+        this.setText(text);
+        return this;
+    }
+
 
     @ProtocoderScript
     @APIMethod(description = "", example = "")
