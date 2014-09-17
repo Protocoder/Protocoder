@@ -116,6 +116,8 @@ public class PUIGeneric extends PInterface {
 	public int screenHeight;
 	public int sw;
 	public int sh;
+    public boolean isFullscreenMode = false;
+    public boolean isImmersiveMode = false;
 	protected int theme;
 	protected boolean absoluteLayout = true;
 	protected boolean noActionBarAllowed = false;
@@ -124,12 +126,22 @@ public class PUIGeneric extends PInterface {
 	public PUIGeneric(Activity a) {
 		super(a);
 
-		screenWidth = ((BaseActivity) a).screenWidth;
-		screenHeight = ((BaseActivity) a).screenHeight;
-
-		sw = ((BaseActivity) a).screenWidth;
-		sh = ((BaseActivity) a).screenHeight;
+        updateScreenSizes();
 	}
+
+    public void updateScreenSizes() {
+
+        screenWidth = ((BaseActivity) a.get()).getScrenSize().x;
+        screenHeight = ((BaseActivity) a.get()).getScrenSize().y;
+
+        //if in immersive mode then add the navigation bar height
+        if (isImmersiveMode) {
+            screenHeight += a.get().getNavigationBarHeight();
+        }
+
+        sw = screenWidth;
+        sh = screenHeight;
+    }
 
 	protected void initializeLayout() {
 		if (!isMainLayoutSetup) {
@@ -220,6 +232,12 @@ public class PUIGeneric extends PInterface {
 
 	protected void addViewAbsolute(View v, int x, int y, int w, int h) {
 		addViewGeneric(v);
+      //  if (true) {
+           // x = AndroidUtils.dpToPixels(a.get(), x);
+           // y = AndroidUtils.dpToPixels(a.get(), y);
+           // w = AndroidUtils.dpToPixels(a.get(), w);
+           // h = AndroidUtils.dpToPixels(a.get(), h);
+      //  }
 		uiAbsoluteLayout.addView(v, x, y, w, h);
 	}
 

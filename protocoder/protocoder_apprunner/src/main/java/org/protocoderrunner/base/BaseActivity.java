@@ -41,6 +41,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Point;
 import android.media.AudioManager;
 import android.os.Build;
@@ -62,8 +63,6 @@ import android.view.WindowManager;
 public class BaseActivity extends FragmentActivity {
 
 	private static final String TAG = "BaseActivity";
-	public int screenWidth;
-	public int screenHeight;
 	public boolean actionBarAllowed = true;
 	private boolean lightsOutMode;
 
@@ -86,13 +85,25 @@ public class BaseActivity extends FragmentActivity {
 		// setVolume(100);
 		// setBrightness(1f);
 
-		Display display = getWindowManager().getDefaultDisplay();
-		Point size = new Point();
-		display.getSize(size);
-
-		screenWidth = size.x;
-		screenHeight = size.y;
 	}
+
+    public Point getScrenSize() {
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+
+        return size;
+    }
+
+    public int getNavigationBarHeight() {
+        Resources resources = getResources();
+        int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            return resources.getDimensionPixelSize(resourceId);
+        }
+        return 0;
+    }
 
 	public void setFullScreen() {
 		actionBarAllowed = false;

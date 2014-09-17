@@ -36,10 +36,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.os.Build;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -119,13 +121,22 @@ public class AndroidUtils {
 
 	}
 
-	public static int pixelsToDp(Context c, int i) {
+	public static int pixelsToDp(Context c, int px) {
 
-		int padding_in_dp = 6; // 6 dps
-		final float scale = c.getResources().getDisplayMetrics().density;
-		int padding_in_px = (int) (padding_in_dp * scale + 0.5f);
+        Resources resources = c.getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        float dp = px / (metrics.densityDpi / 160f);
 
-		return padding_in_px;
+		return (int)dp;
+	}
+
+	public static int dpToPixels(Context c, int dp) {
+
+        Resources resources = c.getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        float px = dp * (metrics.densityDpi / 160f);
+
+		return (int)px;
 	}
 
 	/** Show an event in the LogCat view, for debugging */
