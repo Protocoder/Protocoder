@@ -38,6 +38,7 @@ import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.apprunner.api.boards.PIOIO;
 import org.protocoderrunner.apprunner.api.boards.PArduino;
 import org.protocoderrunner.apprunner.api.boards.PSerial;
+import org.protocoderrunner.utils.MLog;
 
 public class PBoards extends PInterface {
 
@@ -61,17 +62,21 @@ public class PBoards extends PInterface {
 	@APIMethod(description = "initializes makr board", example = "")
 	@APIParam(params = { "function()" })
 	public PSerial startSerial(int baud, PSerial.startCB callbackfn) {
-		PSerial arduino = new PSerial(a.get());
-		arduino.start(baud, callbackfn);
+		PSerial serial = new PSerial(a.get());
+		serial.start(baud, callbackfn);
 
-		return arduino;
+		return serial;
 	}
 
     @ProtocoderScript
     @APIMethod(description = "initializes arduino board", example = "")
-    public PArduino startArduino() {
+    public PArduino startArduino(int bauds, PArduino.onReadCB callbackfn) {
         PArduino arduino = new PArduino(a.get());
-        arduino.start();
+        MLog.network(a.get(), "PBoard", "instance arduino " + arduino);
+        arduino.start(bauds, callbackfn);
+        MLog.network(a.get(), "PBoard", "instance arduino " + arduino);
+
+        MLog.network(a.get(), "PBoard", "iniciando ");
 
         return arduino;
     }

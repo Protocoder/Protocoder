@@ -157,7 +157,7 @@ public class SimpleBT implements WhatIsRunningInterface {
 					int rssi = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI, Short.MIN_VALUE);
 
 					onBluetoothListener.onDeviceFound(device.getName(), device.getAddress(), rssi);
-					Log.d(TAG, device.getName() + "\n" + device.getAddress() + " " + rssi);
+					//Log.d(TAG, device.getName() + "\n" + device.getAddress() + " " + rssi);
 				}
 			}
 		};
@@ -193,8 +193,8 @@ public class SimpleBT implements WhatIsRunningInterface {
 				startBTService();
 			} else {
 				// User did not enable Bluetooth or an error occurred
-				Log.d(TAG, "BT not enabled");
-				Toast.makeText(ac.getApplicationContext(), "BT not enabled, leaving", Toast.LENGTH_SHORT).show();
+				//Log.d(TAG, "BT not enabled");
+				Toast.makeText(ac.getApplicationContext(), "BT not enabled :(", Toast.LENGTH_SHORT).show();
 
 				// TODO show error
 				// finish();
