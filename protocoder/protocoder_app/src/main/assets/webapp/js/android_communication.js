@@ -278,8 +278,8 @@ Communication.prototype.initWebsockets = function () {
       currentError = result.values; 
       //console.log("error "  + currentError);
 
-      $("#console_wrapper #console").empty();
-      $("#console_wrapper #console").append("<p> " + currentError + " </p>");
+      //$("#console_wrapper #console").empty();
+      $("#console_wrapper #console").append("<p class ='error'> " + currentError + " </p>");
    
       var c = $("#console_wrapper #console")[0];
       c.scrollTop = c.scrollHeight;
