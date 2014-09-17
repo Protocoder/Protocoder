@@ -60,15 +60,23 @@ public class PArduino extends PInterface {
 	}
 
     // Initializes arduino board
-	public void start() {
+	public void start(int bauds, onReadCB callbackfn) {
+        MLog.network(a.get(), "PArduino", "start ");
+
         mPhysicaloid = new Physicaloid(a.get());
-        open();
+        MLog.network(a.get(), "PArduino", "physicaloid q" + mPhysicaloid);
+
+        open(bauds);
+        MLog.network(a.get(), "PArduino", "post open " + mPhysicaloid);
+
+        onRead(callbackfn);
+        MLog.network(a.get(), "PArduino", "post onRead " + mPhysicaloid);
 
         WhatIsRunning.getInstance().add(this);
 	}
 
     // Opens a device and communicate USB UART by default settings
-    public void open() {
+    public void open(int bauds) {
         if (mPhysicaloid.isOpened()) {
             MLog.network(a.get(), TAG, "The device is opened");
             return;
@@ -79,6 +87,8 @@ public class PArduino extends PInterface {
         } else {
             MLog.network(a.get(), TAG, "Cannot open the device");
         }
+        mPhysicaloid.setBaudrate(bauds);
+
     }
 
     // Closes a device
