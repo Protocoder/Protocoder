@@ -44,6 +44,7 @@ import org.protocoderrunner.apprunner.api.dashboard.PDashboardInput;
 import org.protocoderrunner.apprunner.api.dashboard.PDashboardLabel;
 import org.protocoderrunner.apprunner.api.dashboard.PDashboardPlot;
 import org.protocoderrunner.apprunner.api.dashboard.PDashboardSlider;
+import org.protocoderrunner.apprunner.api.dashboard.PDashboardVideoCamera;
 import org.protocoderrunner.network.CustomWebsocketServer;
 
 import java.net.UnknownHostException;
@@ -143,6 +144,17 @@ public class PDashboard extends PInterface {
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
+	@APIParam(params = { "url", "x", "y", "w", "h" })
+	public PDashboardVideoCamera addCameraPreview(int x, int y, int w, int h) throws UnknownHostException, JSONException {
+
+		PDashboardVideoCamera jWebAppVideoCamera = new PDashboardVideoCamera(a.get());
+		jWebAppVideoCamera.add(x, y, w, h);
+
+		return jWebAppVideoCamera;
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
 	@APIParam(params = { "r", "g", "b", "alpha" })
 	public void setBackgroundColor(int r, int g, int b, float alpha) {
 		JSONObject msg = new JSONObject();
@@ -195,4 +207,8 @@ public class PDashboard extends PInterface {
 		}
 
 	}
+
+    public static void get() {
+
+    }
 }

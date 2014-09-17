@@ -29,6 +29,7 @@
 
 package org.protocoderrunner.fragments;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -37,6 +38,7 @@ import java.io.OutputStream;
 import java.util.Vector;
 
 import org.protocoderrunner.R;
+import org.protocoderrunner.apprunner.api.PDashboard;
 import org.protocoderrunner.utils.MLog;
 import org.protocoderrunner.utils.TimeUtils;
 
@@ -47,7 +49,9 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
+import android.graphics.YuvImage;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.hardware.Camera.Parameters;
@@ -210,7 +214,18 @@ public class CameraFragment extends Fragment {
 
 					@Override
 					public void onPreviewFrame(byte[] data, Camera camera) {
+                        Camera.Parameters parameters = camera.getParameters();
+                        Camera.Size size = parameters.getPreviewSize();
 
+                        final YuvImage image = new YuvImage(data, parameters.getPreviewFormat(),
+                                size.width, size.height, null);
+
+                        Rect rect = new Rect(0, 0, size.width, size.height);
+                        ByteArrayOutputStream out = new ByteArrayOutputStream();
+                        image.compressToJpeg(rect, 50, out);
+
+                        //PDashboard.get().sendCameraData(out);
+                       // MLog.network(getActivity(), "", out);
 					}
 				});
 
