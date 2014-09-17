@@ -27,7 +27,7 @@
  * 
  */
 
-package org.protocoder;
+package org.protocoder.fragments;
 
 import org.protocoder.fragments.BaseWebviewFragment;
 import org.protocoder.R;

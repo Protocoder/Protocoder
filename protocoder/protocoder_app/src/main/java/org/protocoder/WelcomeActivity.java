@@ -33,6 +33,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.protocoder.fragments.PrefsFragment;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.base.BaseMainApp;
 import org.protocoderrunner.project.ProjectManager;

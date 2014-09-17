@@ -48,7 +48,11 @@ repositories {
     maven {
         url 'https://github.com/kshoji/USB-MIDI-Driver/raw/master/MIDIDriver/snapshots'
     }
-   // maven {
+    maven {
+        url 'https://oss.sonatype.org/content/repositories/snapshots/'
+    }
+
+    // maven {
     //    url 'http://repo.maven.apache.org/maven2'
    // }
     mavenCentral()
@@ -100,7 +104,9 @@ dependencies {
     compile files('libs/ioiolibaccessory.jar')
     compile files('libs/ioiolibandroid.jar')
     compile files('libs/ioiolibbt.jar')
+  //  compile 'com.hoho.android:usb-serial-for-android:0.2.0-SNAPSHOT'
     compile files('libs/usb-serial-for-android.jar')
+
     compile 'jp.kshoji:midi-driver:0.0.2-SNAPSHOT:@aar'
     compile files('libs/physicaloidlibrary.jar')
 

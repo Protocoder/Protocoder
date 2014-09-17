@@ -33,7 +33,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.protocoder.MainActivity;
-import org.protocoder.PrefsFragment;
+import org.protocoder.fragments.PrefsFragment;
 import org.protocoder.R;
 import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.base.BaseFragment;

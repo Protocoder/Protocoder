@@ -1,6 +1,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <PreferenceCategory android:title="@string/setting_notifications_title" >
+    <PreferenceCategory android:title="@string/setting_options_title" >
         <!-- 
         <EditTextPreference
             android:key="@string/pref_webserver_port"
@@ -22,9 +22,29 @@
             android:title="@string/setting_id_title" />
         <CheckBoxPreference
             android:checked="false"
+            android:key="pref_screen_on"
+            android:summary="@string/setting_screen_on_description"
+            android:title="@string/setting_screen_on_title" />
+        <CheckBoxPreference
+            android:checked="false"
             android:key="pref_list_mode"
             android:summary="@string/setting_list_mode_description"
-            android:title="@string/setting_list_mode_title" />  
+            android:title="@string/setting_list_mode_title" />
+        <CheckBoxPreference
+            android:checked="false"
+            android:key="pref_background_mode"
+            android:summary="@string/setting_background_mode_description"
+            android:title="@string/setting_background_mode_title" />
+        <CheckBoxPreference
+            android:checked="false"
+            android:key="pref_connection_alert"
+            android:summary="@string/setting_connection_alert_description"
+            android:title="@string/setting_connection_alert_title" />
+        <CheckBoxPreference
+            android:checked="false"
+            android:key="pref_notify_new_version"
+            android:summary="@string/setting_new_version_description"
+            android:title="@string/setting_new_version_title" />
         <Preference
             android:key="reinstall_examples"
             android:summary="@string/setting_reinstall_description"

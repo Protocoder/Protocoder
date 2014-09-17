@@ -63,12 +63,22 @@
     <string name="setting_about">About</string>
     <string name="setting_opensource_title">Open Source Licenses</string>
     <string name="setting_opensource_description">License Details for open source software</string>
+
+    <string name="setting_screen_on_title">Keep screen on</string>
+    <string name="setting_screen_on_description">Force the device to be awake all the time</string>
     <string name="setting_list_mode_title">Use List Mode</string>
     <string name="setting_list_mode_description">Switch between grid or list mode in the main screen, list mode is nice for wearable devices</string>
+    <string name="setting_background_mode_title">Background mode</string>
+    <string name="setting_background_mode_description">Servers will work in the background so you can keep working even if you are in a different app</string>
+    <string name="setting_connection_alert_title">Connection Alert</string>
+    <string name="setting_connection_alert_description">Protocoder will show when a new user is connecting</string>
+    <string name="setting_new_version_title">Notify New version</string>
+    <string name="setting_new_version_description">Protocoder will download (only Wifi) and notify when there is a new version</string>
+
     <string name="setting_reinstall_title">Reinstall examples</string>
     <string name="setting_reinstall_description">Ovewrite all the examples with the default ones</string>
     <string name="settings_activity_name">Settings</string>
-    <string name="setting_notifications_title">Notifications</string>
+    <string name="setting_options_title">Notifications</string>
     <string name="setting_show_notifications_title">Show notifications</string>
     <string name="setting_show_notifications_body">Display a persistent notification when the server is running</string>
     <string name="setting_show_webserver_title">Webserver port</string>
@@ -77,6 +87,7 @@
     <string name="setting_show_websocket"></string>
     <string name="setting_id_title"> Device ID </string>
     <string name="setting_id_description">This ID is generated the first time you install the app. You can always change it!</string>
+
     <string name="licenses">Licenses</string>
     <string name="license_title_websockets">Android Websockets</string>
     <string name="license_title_netutil">NetUtil</string>
@@ -88,6 +99,7 @@
     <string name="license_title_ioio">ioio</string>
     <string name="license_title_rhino">Mozilla Rhino</string>
     <string name="license_title_nano">Nano HTTPD</string>
+
     <string name="title_item_list">Items</string>
     <string name="title_item_detail">Item Detail</string>
 
