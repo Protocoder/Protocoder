@@ -258,13 +258,16 @@ public class PlotView extends View {
 
 	}
 
-	public void setLimits(float min, float max) {
+	public PlotView setLimits(float min, float max) {
 		mMinBoundary = min;
 		mMaxBoundary = max;
+
+        return this;
 	}
 
-	public void setDefinition(int definition) {
+	public PlotView setDefinition(int definition) {
 		mDefinition = definition;
+        return this;
 	}
 
 	public void destroy() {
@@ -295,12 +298,13 @@ public class PlotView extends View {
 
 	}
 
-	public void setThickness(float r) {
+	public PlotView setThickness(float r) {
 		thickness = r; // when dot
 		mPaint.setStrokeWidth(thickness); // when line
+        return this;
 	}
 
-	public void setColor(String plotName, String rgb) {
+	public PlotView setColor(String plotName, String rgb) {
 		new Color();
 		int c = Color.parseColor(rgb);
 
@@ -308,6 +312,8 @@ public class PlotView extends View {
 		if (p != null) {
 			p.color = c;
 		}
+
+        return this;
 	}
 
     //public void setBackgroundColor() {
