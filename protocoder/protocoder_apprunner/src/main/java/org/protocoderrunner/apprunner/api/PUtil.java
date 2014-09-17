@@ -38,11 +38,20 @@ import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.sensors.WhatIsRunning;
 
+import android.animation.TimeInterpolator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.res.Resources;
+import android.graphics.Interpolator;
 import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AnticipateInterpolator;
+import android.view.animation.AnticipateOvershootInterpolator;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 
 public class PUtil extends PInterface {
 
@@ -184,5 +193,39 @@ public class PUtil extends PInterface {
 
 		return px * onepx;
 	}
+
+    public interface  AnimCB {
+        void event(float data);
+    }
+
+    public ValueAnimator anim(float min, float max, int time, String type, final AnimCB callback) {
+        TimeInterpolator interpolator = null;
+        if (type.equals("bounce")) {
+            interpolator = new BounceInterpolator();
+        } else if (type.equals("linear")) {
+            interpolator = new LinearInterpolator();
+        } else if (type.equals("decelerate")) {
+            interpolator = new DecelerateInterpolator();
+        } else if (type.equals("anticipate")) {
+            interpolator = new AnticipateInterpolator();
+        } else if (type.equals("aovershoot")) {
+            interpolator = new AnticipateOvershootInterpolator();
+        } else {
+            interpolator = new AccelerateDecelerateInterpolator();
+        }
+
+        ValueAnimator va = ValueAnimator.ofFloat(min, max);
+        va.setDuration(time);
+        va.setInterpolator(interpolator);
+
+        va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            public void onAnimationUpdate(ValueAnimator animation) {
+                Float value = (Float) animation.getAnimatedValue();
+                callback.event(value);
+            }
+        });
+
+        return va;
+    }
 
 }
