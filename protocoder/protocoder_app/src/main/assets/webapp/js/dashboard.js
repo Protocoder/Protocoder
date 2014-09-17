@@ -163,6 +163,29 @@ Dashboard.prototype.addButton = function(element, name, posx, posy, w, h) {
 } 
 
 
+Dashboard.prototype.addCameraPreview = function(element, posx, posy, w, h) {
+  $('<canvas class ="widget" id = "camera_' + element +'"> </canvas>')
+          .appendTo("#overlay #container")
+          .css({"width": w+"px", "height":h+"px","top":posy+"px","left":posx+"px"});
+
+} 
+
+Dashboard.prototype.updateCamera = function() {
+
+  var drawingCanvas = document.getElementById('camera_canvas');
+
+    if(drawingCanvas.getContext) {
+      var context = drawingCanvas.getContext('2d');
+      var cam = new Image();
+      cam.onload = function() {
+         context.drawImage(cam, 0, 0, cam.width, cam.height);
+      }
+      cam.src = 'cam.jpg?pwd=' + pwd;
+      setTimeout("update()", 500);
+    }
+
+  
+}
 
 
 Dashboard.prototype.setBackgroundColor = function(r, g, b, a) { 
