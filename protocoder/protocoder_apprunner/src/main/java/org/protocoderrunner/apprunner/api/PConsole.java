@@ -29,6 +29,7 @@
 
 package org.protocoderrunner.apprunner.api;
 
+import android.app.Activity;
 import android.support.v4.app.FragmentActivity;
 
 import org.json.JSONException;
@@ -45,8 +46,8 @@ public class PConsole extends PInterface {
 
 	String TAG = "PConsole";
 
-	public PConsole(FragmentActivity mwmActivity) {
-		super(mwmActivity);
+	public PConsole(Activity a) {
+		super(a);
 	}
 
 	@ProtocoderScript

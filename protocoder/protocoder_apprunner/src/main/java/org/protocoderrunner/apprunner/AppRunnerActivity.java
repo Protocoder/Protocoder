@@ -30,6 +30,9 @@ package org.protocoderrunner.apprunner;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -209,6 +212,7 @@ public class AppRunnerActivity extends BaseActivity {
             //create a new interpreter and add the objects to it
             interp = new AppRunnerInterpreter(this);
             interp.createInterpreter(true);
+            interp.addObjects();
 
 			interp.addListener(new AppRunnerInterpreter.InterpreterInfo() {
 
