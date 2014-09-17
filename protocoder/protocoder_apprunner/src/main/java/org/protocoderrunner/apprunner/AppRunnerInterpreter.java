@@ -29,6 +29,7 @@
 
 package org.protocoderrunner.apprunner;
 
+import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.mozilla.javascript.Callable;
@@ -83,18 +84,20 @@ public class  AppRunnerInterpreter {
 		// mainScriptContext);
 		this.a = context;
 
-		this.addInterface(PApp.class);
-		this.addInterface(PBoards.class);
-		this.addInterface(PConsole.class);
-		this.addInterface(PDashboard.class);
-		this.addInterface(PDevice.class);
-		this.addInterface(PFileIO.class);
-		this.addInterface(PMedia.class);
-		this.addInterface(PNetwork.class);
-		this.addInterface(PProtocoder.class);
-		this.addInterface(PSensors.class);
-		this.addInterface(PUI.class);
-		this.addInterface(PUtil.class);
+
+        //old way of adding objects to javascript
+//        this.addInterface(PApp.class);
+//		this.addInterface(PBoards.class);
+//		this.addInterface(PConsole.class);
+//		this.addInterface(PDashboard.class);
+//		this.addInterface(PDevice.class);
+//		this.addInterface(PFileIO.class);
+//		this.addInterface(PMedia.class);
+//		this.addInterface(PNetwork.class);
+//		this.addInterface(PProtocoder.class);
+//		this.addInterface(PSensors.class);
+//		this.addInterface(PUI.class);
+//		this.addInterface(PUtil.class);
 
 	}
 
@@ -186,6 +189,37 @@ public class  AppRunnerInterpreter {
     public void addDebugger(Debugger debugger) {
         MLog.network(a.getApplicationContext(), TAG, "qq" + interpreter + " " + interpreter.mainScriptContext);
         interpreter.mainScriptContext.setDebugger(debugger, interpreter.mainScriptContext);
+    }
+
+    public void addObjects() {
+        PApp app = new PApp((AppRunnerActivity) a);
+        PBoards boards = new PBoards((AppRunnerActivity) a);
+        PConsole console = new PConsole((AppRunnerActivity) a);
+        PDashboard dashboard = new PDashboard((AppRunnerActivity) a);
+        PDevice device = new PDevice((AppRunnerActivity) a);
+        PFileIO fileIO = new PFileIO((AppRunnerActivity) a);
+        PMedia media = new PMedia((AppRunnerActivity) a);
+        PNetwork network = new PNetwork((AppRunnerActivity) a);
+        PProtocoder protocoder = new PProtocoder((AppRunnerActivity) a);
+        PSensors sensors = new PSensors((AppRunnerActivity) a);
+        PUI ui = new PUI((AppRunnerActivity) a);
+        PUtil util  = new PUtil((AppRunnerActivity) a);
+
+
+        //transition to a new way of adding objects to javascript
+        interpreter.addObjectToInterface("app", app);
+        interpreter.addObjectToInterface("boards", boards);
+        interpreter.addObjectToInterface("console", console);
+        interpreter.addObjectToInterface("dashboard", dashboard);
+        interpreter.addObjectToInterface("device", device);
+        interpreter.addObjectToInterface("fileIO", fileIO);
+        interpreter.addObjectToInterface("media", media);
+        interpreter.addObjectToInterface("network", network);
+        interpreter.addObjectToInterface("protocoder", protocoder);
+        interpreter.addObjectToInterface("sensors", sensors);
+        interpreter.addObjectToInterface("ui", ui);
+        interpreter.addObjectToInterface("util", util);
+
     }
 
     public interface InterpreterInfo {
@@ -309,6 +343,8 @@ public class  AppRunnerInterpreter {
 		return result.toString();
 	}
 
+
+
 	public String addInterface(Class c) {
 		String pkg = "Packages." + c.getName().toString();
 		String clsName = c.getSimpleName();
@@ -342,11 +378,6 @@ public class  AppRunnerInterpreter {
 		}
 
 		public Interpreter setActivity(android.content.Context a) {
-			// ScriptAssetProvider provider = new ScriptAssetProvider(activity);
-			// Require require = new Require(mainScriptContext, scope, provider, null,
-			// null, true);
-			// require.install(scope);
-
 			// Set the global JavaScript variable Activity.
 			ScriptableObject.putProperty(scope, "Activity", Context.javaToJS(a, scope));
 			return this;
@@ -380,6 +411,10 @@ public class  AppRunnerInterpreter {
 				return null;
 			}
 		}
+
+        public void addObjectToInterface(String name, Object obj) {
+            ScriptableObject.putProperty(scope, name, Context.javaToJS(obj, scope));
+        }
 	}
 
 	public static class ScriptContextFactory extends ContextFactory {
