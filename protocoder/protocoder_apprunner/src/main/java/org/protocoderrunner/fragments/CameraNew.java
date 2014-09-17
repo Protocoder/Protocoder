@@ -92,7 +92,6 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
 
 	private Vector<CameraListener> listeners = new Vector<CameraListener>();
 
-	private boolean flashAvailable;
 
 	public interface CameraListener {
 
@@ -107,11 +106,8 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
         super(context);
         this.c = context;
         this.modeColor = colorMode;
-        this.modeCamera = modeCamera;
+        this.modeCamera = camera;
         this.setSurfaceTextureListener(this);
-
-        flashAvailable = c.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
-
     }
 
     @Override
@@ -409,17 +405,26 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
 		return -1; // No front-facing camera found
 	}
 
+    public boolean isFlashAvailable() {
+        MLog.d(TAG, "qq 1");
+       boolean b = c.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
+        MLog.d(TAG, "qq 2");
+        MLog.d(TAG, " " + b);
+        return b;
+    }
+
 	public void turnOnFlash(boolean b) {
-		if (flashAvailable) {
+        MLog.d(TAG, "qq " + b + " " + isFlashAvailable());
+		if (isFlashAvailable()) {
 			Parameters p = mCamera.getParameters();
 			if (b) {
 				p.setFlashMode(Parameters.FLASH_MODE_TORCH);
 				mCamera.setParameters(p);
-				// mCamera.startPreview();
+				//mCamera.startPreview();
 			} else {
 				p.setFlashMode(Parameters.FLASH_MODE_OFF);
 				mCamera.setParameters(p);
-				// mCamera.startPreview();
+				//mCamera.startPreview();
 			}
 		}
 	}

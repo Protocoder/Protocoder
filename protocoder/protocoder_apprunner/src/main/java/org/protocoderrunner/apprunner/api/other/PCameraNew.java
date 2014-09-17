@@ -63,8 +63,8 @@ public class PCameraNew extends CameraNew implements PViewInterface {
 	// @APIRequires()
 	public void takePicture(String file, final TakePictureCB callbackfn) {
 
-		cam.takePic(AppRunnerSettings.get().project.getStoragePath() + File.separator + file);
-		cam.addListener(new CameraListener() {
+		takePic(AppRunnerSettings.get().project.getStoragePath() + File.separator + file);
+		addListener(new CameraListener() {
 
             @Override
             public void onVideoRecorded() {
@@ -82,13 +82,13 @@ public class PCameraNew extends CameraNew implements PViewInterface {
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void recordVideo(String file) {
-		cam.recordVideo(AppRunnerSettings.get().project.getStoragePath() + File.separator + file);
+		recordVideo(AppRunnerSettings.get().project.getStoragePath() + File.separator + file);
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void stopRecordingVideo() {
-		cam.stopRecordingVideo();
+		stopRecordingVideo();
 
 		// cameraFragment.recordVideo(((AppRunnerActivity)
 		// a.get()).getCurrentDir() + File.separator + file);
@@ -107,8 +107,14 @@ public class PCameraNew extends CameraNew implements PViewInterface {
 		// });
 	}
 
-	public void turnOnFlash(boolean b) {
-		cam.turnOnFlash(b);
+    @Override
+    public boolean isFlashAvailable() {
+        return super.isFlashAvailable();
+    }
+
+    @Override
+    public void turnOnFlash(boolean b) {
+		super.turnOnFlash(b);
 	}
 
 }
