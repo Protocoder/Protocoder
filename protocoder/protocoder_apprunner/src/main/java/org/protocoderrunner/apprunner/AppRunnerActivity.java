@@ -60,6 +60,7 @@ import android.animation.Animator.AnimatorListener;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -161,15 +162,16 @@ public class AppRunnerActivity extends BaseActivity {
 			}
 
 
-    /*
-        ActivityManager activityManager = (ActivityManager) a.get().getSystemService(a.get().ACTIVITY_SERVICE);
-        List<ActivityManager.AppTask> tasks = activityManager.getAppTasks();
-        tasks.get(0).getTaskInfo().
-        for (ActivityManager.AppTask task in tasks) {
 
-        }
+//    TODO Protocoder L
+//        ActivityManager activityManager = (ActivityManager) a.get().getSystemService(a.get().ACTIVITY_SERVICE);
+//        List<ActivityManager.AppTask> tasks = activityManager.getAppTasks();
+//        tasks.get(0).getTaskInfo().
+//        for (ActivityManager.AppTask task in tasks) {
+//
+//        }
 
-    */
+
 
 			// get projects intent
 			String projectName = intent.getStringExtra(Project.NAME);
@@ -193,7 +195,6 @@ public class AppRunnerActivity extends BaseActivity {
 						| WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 			}
 
-			interp = new AppRunnerInterpreter(this);
 
 			try {
 				MLog.d(TAG, "starting websocket server");
@@ -203,7 +204,10 @@ public class AppRunnerActivity extends BaseActivity {
 				e.printStackTrace();
 			}
 
-			interp.createInterpreter(true);
+            //create a new interpreter and add the objects to it
+            interp = new AppRunnerInterpreter(this);
+            interp.createInterpreter(true);
+
 			interp.addListener(new AppRunnerInterpreter.InterpreterInfo() {
 
 				@Override
@@ -231,7 +235,8 @@ public class AppRunnerActivity extends BaseActivity {
 			if (null != script) {
 				interp.eval(script, projectName);
 			}
-			interp.eval(AppRunnerInterpreter.SCRIPT_POSTFIX);
+            interp.callJsFunction("setup");
+            interp.eval(AppRunnerInterpreter.SCRIPT_POSTFIX);
 
 			// actionbar color
 			Integer actionBarColor = null;

@@ -64,7 +64,7 @@ import android.util.Log;
  * Source code license: MIT
  */
 
-public class AppRunnerInterpreter {
+public class  AppRunnerInterpreter {
 
 	private static final String TAG = "AppRunnerInterpreter";
 
@@ -369,6 +369,7 @@ public class AppRunnerInterpreter {
 		public Object callJsFunction(String funName, Object... args) throws Throwable {
 			MLog.d(TAG, "calling " + funName);
 			Object fun = scope.get(funName, scope);
+
 			if (fun instanceof Function) {
 				Log.i(TAG, "Calling JsFun " + funName);
 				Function f = (Function) fun;
