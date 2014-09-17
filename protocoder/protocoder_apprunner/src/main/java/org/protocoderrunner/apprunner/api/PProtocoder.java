@@ -100,18 +100,6 @@ public class PProtocoder extends PInterface {
 //		PrefsFragment.setId(a.get(), id);
 //	}
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { })
-	public PProtocoderFeedback liveCoding() {
-		a.get().initLayout();
-
-		PProtocoderFeedback l = a.get().liveCoding;
-		l.enable = true;
-
-		return l;
-	}
-
 
     @ProtocoderScript
     @APIMethod(description = "", example = "")
@@ -157,13 +145,6 @@ public class PProtocoder extends PInterface {
 		// a.get().startActivity(intent);
 		// String code = StrUtils.generateRandomString();
 		a.get().startActivityForResult(intent, 22);
-	}
-
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "code" })
-	public void eval(String code) {
-		a.get().interp.eval(code);
 	}
 
 	@ProtocoderScript

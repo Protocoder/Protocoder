@@ -35,6 +35,7 @@ import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.apprunner.api.other.PProtocoderFeedback;
 import org.protocoderrunner.project.Project;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.project.SchedulerManager;
@@ -210,5 +211,17 @@ public class PApp extends PInterface {
      //   });
 	}
 
+
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { })
+    public PProtocoderFeedback liveCoding() {
+        a.get().initLayout();
+
+        PProtocoderFeedback l = a.get().liveCoding;
+        l.enable = true;
+
+        return l;
+    }
 
 }
