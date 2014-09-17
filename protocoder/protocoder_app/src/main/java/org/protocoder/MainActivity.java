@@ -33,6 +33,7 @@ import java.lang.reflect.Field;
 import java.net.UnknownHostException;
 
 import org.java_websocket.drafts.Draft_17;
+import org.protocoder.fragments.PrefsFragment;
 import org.protocoder.network.ProtocoderHttpServer;
 import org.protocoder.projectlist.ProjectsPagerAdapter;
 import org.protocoderrunner.AppSettings;
@@ -217,7 +218,12 @@ public class MainActivity extends BaseActivity implements NewProjectDialogFragme
 	@Override
 	protected void onResume() {
 		super.onResume();
-		MLog.d(TAG, "Registering as an EventBus listener in MainActivity");
+
+        //set settings
+        setScreenAlwaysOn(PrefsFragment.getScreenOn(this));
+
+
+        MLog.d(TAG, "Registering as an EventBus listener in MainActivity");
 		EventBus.getDefault().register(this);
 
 		mStopServerReceiver = new BroadcastReceiver() {
@@ -282,22 +288,6 @@ public class MainActivity extends BaseActivity implements NewProjectDialogFragme
 	 * Starts the remote service connection
 	 */
 	private int startServers() {
-
-		/*
-		 * IntentFilter intentFilter = new IntentFilter();
-		 * intentFilter.addAction
-		 * (WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION);
-		 * registerReceiver(new BroadcastReceiver() {
-		 * 
-		 * @Override public void onReceive(Context mainScriptContext, Intent intent) {
-		 * final String action = intent.getAction(); if
-		 * (action.equals(WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION)) { if
-		 * (intent.getBooleanExtra( WifiManager.EXTRA_SUPPLICANT_CONNECTED,
-		 * false)) { MLog.d(TAG, "wifi connection on"); } else { MLog.d(TAG,
-		 * "wifi connection lost"); } }
-		 * 
-		 * } }, intentFilter);
-		 */
 
 		// check if usb is enabled
 		usbEnabled = Settings.Secure.getInt(getContentResolver(), Settings.Secure.ADB_ENABLED, 0);
@@ -508,14 +498,14 @@ public class MainActivity extends BaseActivity implements NewProjectDialogFragme
 			startActivity(aboutActivityIntent);
 			overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
 			return true;
-		} else if (itemId == R.id.menu_start_stop) {
-			if (httpServer != null) {
-				hardKillConnections();
-			} else {
-				startServers();
-			}
-			updateStartStopActionbarItem();
-			return true;
+//		} else if (itemId == R.id.menu_start_stop) {
+//			if (httpServer != null) {
+//				hardKillConnections();
+//			} else {
+//				startServers();
+//			}
+//			updateStartStopActionbarItem();
+//			return true;
 		} else if (itemId == R.id.menu_settings) {
 			Intent preferencesIntent = new Intent(this, SetPreferenceActivity.class);
 			startActivity(preferencesIntent);

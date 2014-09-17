@@ -215,8 +215,7 @@ public class PrefsFragment extends PreferenceFragment {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object o) {
                     boolean isChecked = (Boolean) o;
-                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                    prefs.edit().putBoolean("pref_connection_alert", isChecked).commit();
+                    setConnectionAlert(getActivity(), isChecked);
                     return true;
                 }
             });
@@ -237,11 +236,16 @@ public class PrefsFragment extends PreferenceFragment {
         }
 
 
-
-
-
         return view;
 	}
+
+
+    public static void setId(Context c, String id) {
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(c);
+        Editor editor = sharedPrefs.edit();
+        editor.putString("pref_id", id);
+        editor.commit();
+    }
 
 	public static String getId(Context c) {
 		// get org.apprunner settings
@@ -251,16 +255,7 @@ public class PrefsFragment extends PreferenceFragment {
 		return id;
 	}
 
-	public static void setId(Context c, String id) {
-		// get org.apprunner settings
-		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(c);
-		Editor editor = sharedPrefs.edit();
-		editor.putString("pref_id", id);
-		editor.commit();
-	}
-
 	public static void setListPreference(Context c, boolean id) {
-		// get org.apprunner settings
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(c);
 		Editor editor = sharedPrefs.edit();
 		editor.putBoolean("pref_list_mode", id);
@@ -268,11 +263,47 @@ public class PrefsFragment extends PreferenceFragment {
 	}
 
 	public static boolean getListPreference(Context c) {
-		// get org.apprunner settings
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(c);
 		boolean pref = sharedPrefs.getBoolean("pref_list_mode", false);
 
 		return pref;
 	}
+
+
+    public static boolean getScreenOn(Context c) {
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(c);
+		boolean pref = sharedPrefs.getBoolean("pref_screen_on", false);
+
+		return pref;
+	}
+
+    public static boolean getBackgroundMode(Context c) {
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(c);
+		boolean pref = sharedPrefs.getBoolean("pref_background_mode", false);
+
+		return pref;
+	}
+
+    public static boolean getNotifyNewVersion(Context c) {
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(c);
+		boolean pref = sharedPrefs.getBoolean("pref_notify_new_version", false);
+
+		return pref;
+	}
+
+    public static void setConnectionAlert(Context c, boolean b) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c);
+        prefs.edit().putBoolean("pref_connection_alert", b).commit();
+	}
+
+    public static boolean getConnectionAlert(Context c) {
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(c);
+		boolean pref = sharedPrefs.getBoolean("pref_connection_alert", false);
+
+		return pref;
+	}
+
+
+
 
 }

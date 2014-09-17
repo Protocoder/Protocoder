@@ -63,4 +63,6 @@ public class AppSettings {
 		return instance;
 	}
 
+
+
 }

@@ -29,6 +29,7 @@
 
 package org.protocoder;
 
+import org.protocoder.fragments.PrefsFragment;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.utils.StrUtils;
 
@@ -54,7 +55,8 @@ public class LauncherActivity extends BaseActivity {
 
 		if (firstLaunch) {
 			intent = new Intent(this, WelcomeActivity.class);
-			userDetails.edit().putString("device_id", StrUtils.generateRandomString());
+            PrefsFragment.setId(this, StrUtils.generateRandomString());
+            PrefsFragment.setConnectionAlert(this, true);
 		} else {
 			intent = new Intent(this, MainActivity.class);
 		}

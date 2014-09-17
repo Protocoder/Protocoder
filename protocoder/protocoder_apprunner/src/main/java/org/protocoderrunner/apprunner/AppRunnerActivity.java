@@ -195,6 +195,8 @@ public class AppRunnerActivity extends BaseActivity {
 						| WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 			}
 
+            //protocoder app settings
+
 
 			try {
 				MLog.d(TAG, "starting websocket server");
