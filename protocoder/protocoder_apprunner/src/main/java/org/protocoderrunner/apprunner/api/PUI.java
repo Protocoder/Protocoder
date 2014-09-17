@@ -262,14 +262,17 @@ public class PUI extends PUIGeneric {
 	public void setFullscreen() {
 		noActionBarAllowed = true;
 		a.get().setFullScreen();
+        isFullscreenMode = true;
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void setImmersive() {
 		noActionBarAllowed = true;
-		a.get().setImmersive();
-	}
+        isImmersiveMode = true;
+        a.get().setImmersive();
+        updateScreenSizes();
+    }
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")

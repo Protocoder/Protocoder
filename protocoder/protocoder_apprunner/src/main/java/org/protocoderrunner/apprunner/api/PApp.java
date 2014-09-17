@@ -73,6 +73,13 @@ public class PApp extends PInterface {
 
 	}
 
+
+	@ProtocoderScript
+	@APIMethod(description = "", example = "")
+	public AppRunnerActivity getContext() {
+		return a.get();
+	}
+
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void setDelayedAlarm(int delay, boolean alarmRepeat, boolean wakeUpScreen) {
