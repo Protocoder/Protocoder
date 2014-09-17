@@ -46,36 +46,38 @@ public class PPlotView extends PlotView implements PViewInterface {
 
     @ProtocoderScript
     @APIMethod(description = "", example = "")
-    public void setBackground(String c) {
+    public PlotView setBackground(String c) {
         super.setBackgroundColor(Color.parseColor(c));
+
+        return this;
     }
 
     @Override
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	public void setThickness(float r) {
-		super.setThickness(r);
+	public PlotView setThickness(float r) {
+		return super.setThickness(r);
 	}
 
 	@Override
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	public void setDefinition(int definition) {
-		super.setDefinition(definition);
+	public PlotView setDefinition(int definition) {
+		return super.setDefinition(definition);
 	}
 
 	@Override
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	public void setColor(String plotName, String rgb) {
-		super.setColor(plotName, rgb);
+	public PlotView setColor(String plotName, String rgb) {
+		return super.setColor(plotName, rgb);
 	}
 
 	@Override
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	public void setLimits(float min, float max) {
-		super.setLimits(min, max);
+	public PlotView setLimits(float min, float max) {
+        return super.setLimits(min, max);
 	}
 
 	@ProtocoderScript
