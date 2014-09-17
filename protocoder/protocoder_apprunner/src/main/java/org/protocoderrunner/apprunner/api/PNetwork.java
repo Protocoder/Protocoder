@@ -60,6 +60,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.java_websocket.WebSocket;
+import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
 import org.java_websocket.drafts.Draft_17;
 import org.java_websocket.handshake.ClientHandshake;
@@ -72,6 +73,7 @@ import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.apprunner.api.other.PSocketIOClient;
 import org.protocoderrunner.network.NetworkUtils;
 import org.protocoderrunner.network.NetworkUtils.DownloadTask.DownloadListener;
 import org.protocoderrunner.network.OSC;
@@ -297,26 +299,30 @@ public class PNetwork extends PInterface {
 
             @Override
             public void onClose(WebSocket arg0, int arg1, String arg2, boolean arg3) {
-                callbackfn.event("close", arg0, "");
+                callbackfn.event("onClose", arg0, "");
+                //MLog.d(TAG, "onClose");
             }
 
             @Override
             public void onError(WebSocket arg0, Exception arg1) {
-                callbackfn.event("error", arg0, "");
+                callbackfn.event("onError", arg0, "");
+                //MLog.d(TAG, "onError");
             }
 
             @Override
             public void onMessage(WebSocket arg0, String arg1) {
-                callbackfn.event("message", arg0, arg1);
+                callbackfn.event("onMessage", arg0, arg1);
+                //MLog.d(TAG, "onMessage server");
+
             }
 
             @Override
             public void onOpen(WebSocket arg0, ClientHandshake arg1) {
-                callbackfn.event("open", arg0, "");
+                callbackfn.event("onOpen", arg0, "");
+                //MLog.d(TAG, "onOpen");
             }
         };
         websocketServer.start();
-
         WhatIsRunning.getInstance().add(websocketServer);
         return websocketServer;
 
@@ -330,33 +336,46 @@ public class PNetwork extends PInterface {
     @ProtocoderScript
     @APIMethod(description = "", example = "")
     @APIParam(params = {"uri", "function(status, data)"})
-    public org.java_websocket.client.WebSocketClient connectWebsocket(String uri, final connectWebsocketCB callbackfn) {
+    public WebSocketClient connectWebsocket(String uri, final connectWebsocketCB callbackfn) {
 
-        org.java_websocket.client.WebSocketClient webSocketClient = null;
+        Draft d = new Draft_17();
+
+        WebSocketClient webSocketClient = null;
         try {
-            webSocketClient = new org.java_websocket.client.WebSocketClient(new URI(uri)) {
+            webSocketClient = new WebSocketClient(new URI(uri), d) {
 
                 @Override
                 public void onOpen(ServerHandshake arg0) {
-                    callbackfn.event("open", "");
+                    callbackfn.event("onOpen", "");
+                    //Log.d(TAG, "onOpen");
                 }
 
                 @Override
                 public void onMessage(String arg0) {
-                    callbackfn.event("message", arg0);
+                    callbackfn.event("onMessage", arg0);
+                    //Log.d(TAG, "onMessage client");
+
                 }
 
                 @Override
                 public void onError(Exception arg0) {
-                    callbackfn.event("error", "");
+                    callbackfn.event("onError", "");
+                    //Log.d(TAG, "onError");
+
                 }
 
                 @Override
                 public void onClose(int arg0, String arg1, boolean arg2) {
-                    callbackfn.event("close", "");
+                    callbackfn.event("onClose", "");
+                    //Log.d(TAG, "onClose");
+
                 }
             };
+            webSocketClient.connect();
+
         } catch (URISyntaxException e) {
+            Log.d(TAG, "error");
+
             callbackfn.event("error ", e.toString());
             e.printStackTrace();
         }
@@ -373,14 +392,14 @@ public class PNetwork extends PInterface {
     @ProtocoderScript
     @APIMethod(description = "", example = "")
     @APIParam(params = {"uri", "function(status, message, data)"})
-    public SocketIOClient connectSocketIO(String uri, final connectSocketIOCB callbackfn) {
+    public PSocketIOClient connectSocketIO(String uri, final connectSocketIOCB callbackfn) {
 
-        SocketIOClient socketIOClient = new SocketIOClient(URI.create(uri), new SocketIOClient.Handler() {
+        PSocketIOClient socketIOClient = new PSocketIOClient(URI.create(uri), new SocketIOClient.Handler() {
 
             @Override
             public void onMessage(String message) {
                 callbackfn.event("onMessage", null, null);
-                MLog.d("qq", "onMessage");
+                //MLog.d("qq", "onMessage");
             }
 
             @Override
@@ -730,20 +749,20 @@ public class PNetwork extends PInterface {
 						BluetoothDevice device = simpleBT.getAdapter().getRemoteDevice(address);
 						// Attempt to connect to the device
 						simpleBT.getSerialService().connect(device);
-						MLog.d(TAG, "connected");
+						//MLog.d(TAG, "connected");
 					}
 					break;
 				case SimpleBT.REQUEST_ENABLE_BT:
 					// When the request to enable Bluetooth returns
 					if (resultCode == Activity.RESULT_OK) {
-						MLog.d(TAG, "enabling BT");
+						//MLog.d(TAG, "enabling BT");
 						// Bluetooth is now enabled, so set up a Bluetooth
 						// session
 						simpleBT.startBTService();
 					} else {
 						// User did not enable Bluetooth or an error occurred
-						MLog.d(TAG, "BT not enabled");
-						Toast.makeText(a.get().getApplicationContext(), "BT not enabled, leaving", Toast.LENGTH_SHORT)
+					//	MLog.d(TAG, "BT not enabled");
+						Toast.makeText(a.get().getApplicationContext(), "BT not enabled :(", Toast.LENGTH_SHORT)
 								.show();
 
 						// TODO show error
@@ -773,7 +792,8 @@ public class PNetwork extends PInterface {
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "function(name, macAddress, strength)" })
 	public void connectBluetoothSerialByMac(String mac, final connectBluetoothCB callbackfn) {
-		simpleBT.connectByMac(mac);
+        startBluetooth();
+        simpleBT.connectByMac(mac);
         addBTConnectionListener(callbackfn);
 
 	}
@@ -791,18 +811,18 @@ public class PNetwork extends PInterface {
 
             @Override
             public void onRawDataReceived(byte[] buffer, int size) {
-                MLog.network(a.get(), "Bluetooth", "1. got " + buffer.toString());
+                //MLog.network(a.get(), "Bluetooth", "1. got " + buffer.toString());
             }
 
             @Override
             public void onMessageReceived(final String data) {
-                MLog.network(a.get(), "Bluetooth", "2. got " + data);
+                //MLog.network(a.get(), "Bluetooth", "2. got " + data);
 
                 if (data != "") {
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            MLog.d(TAG, "Got data: " + data);
+                            //MLog.d(TAG, "Got data: " + data);
                             callbackfn.event("data", data);
                         }
                     });
@@ -923,15 +943,15 @@ public class PNetwork extends PInterface {
 
                 //
                 try {
-                    Log.d(TAG, "enableMobileAP try: ");
+                    //MLog.d(TAG, "enableMobileAP try: ");
                     method.invoke(wifi, netConfig, enabled);
                     if (netConfig.wepKeys != null && netConfig.wepKeys.length >= 1) {
                         Log.d(TAG, "enableMobileAP key : " + netConfig.wepKeys[0]);
                     }
-                    Log.d(TAG, "enableMobileAP enabled: ");
+                    //MLog.d(TAG, "enableMobileAP enabled: ");
                     mIsWifiAPEnabled = enabled;
                 } catch (Exception e) {
-                    Log.e(TAG, "enableMobileAP failed: ", e);
+                    //MLog.e(TAG, "enableMobileAP failed: ", e);
                 }
             }
         }
