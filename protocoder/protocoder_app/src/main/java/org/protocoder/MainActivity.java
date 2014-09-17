@@ -34,6 +34,7 @@ import java.net.UnknownHostException;
 
 import org.java_websocket.drafts.Draft_17;
 import org.protocoder.network.ProtocoderHttpServer;
+import org.protocoder.projectlist.ProjectsPagerAdapter;
 import org.protocoderrunner.AppSettings;
 import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.base.BaseActivity;
@@ -231,7 +232,7 @@ public class MainActivity extends BaseActivity implements NewProjectDialogFragme
 
 		startServers();
 		IntentFilter filterSend = new IntentFilter();
-		filterSend.addAction("com.makewithmoto.intent.action.STOP_SERVER");
+		filterSend.addAction("org.protocoder.intent.action.STOP_SERVER");
 		registerReceiver(mStopServerReceiver, filterSend);
 		observer.startWatching();
 

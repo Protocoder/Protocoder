@@ -27,7 +27,7 @@
  * 
  */
 
-package org.protocoder;
+package org.protocoder.projectlist;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

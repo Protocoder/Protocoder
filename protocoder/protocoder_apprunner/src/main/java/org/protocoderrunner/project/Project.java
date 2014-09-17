@@ -38,8 +38,10 @@ public class Project {
 	public final static String TYPE = "projectType";
 	public final static String NAME = "projectName";
 	public final static String URL = "projectUrl";
+	public final static String LOAD_FROM = "projectLoadFrom";
+    public static final String FORMAT = "projectFormat";
 
-	public String name;
+    public String name;
 	public String storagePath;
 	public int type;
 	public boolean containsReadme;
@@ -98,4 +100,5 @@ public class Project {
         }
         return pname;
     }
+
 }
