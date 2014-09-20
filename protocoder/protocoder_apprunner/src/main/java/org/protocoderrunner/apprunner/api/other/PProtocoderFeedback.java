@@ -51,7 +51,7 @@ public class PProtocoderFeedback {
 	public boolean enable = false;
     private int paddingLeft = 5;
     private int paddingBottom = 5;
-    private int alignment = TextView.TEXT_ALIGNMENT_VIEW_START;
+    private int alignment = TextView.TEXT_ALIGNMENT_VIEW_END;
     private long timeToHide = 4000;
 
     public PProtocoderFeedback(Activity a) {
@@ -161,11 +161,11 @@ public class PProtocoderFeedback {
     @ProtocoderScript
     @APIMethod(description = "", example = "")
     public PProtocoderFeedback align(String alignment) {
-        if (alignment.equals("left")) {
+        if (alignment.equals("right")) {
             this.alignment = TextView.TEXT_ALIGNMENT_VIEW_START;
         } else if (alignment.equals("center")) {
             this.alignment = Gravity.CENTER;
-        } else if (alignment.equals("right")) {
+        } else if (alignment.equals("left")) {
             this.alignment = TextView.TEXT_ALIGNMENT_VIEW_END;
         }
 
