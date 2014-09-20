@@ -96,6 +96,7 @@ import org.protocoderrunner.apprunner.api.widgets.PPlotView;
 import org.protocoderrunner.apprunner.api.widgets.PProgressBar;
 import org.protocoderrunner.apprunner.api.widgets.PRadioButton;
 import org.protocoderrunner.apprunner.api.widgets.PSeekBar;
+import org.protocoderrunner.apprunner.api.widgets.PSpinner;
 import org.protocoderrunner.apprunner.api.widgets.PSwitch;
 import org.protocoderrunner.apprunner.api.widgets.PTextView;
 import org.protocoderrunner.apprunner.api.widgets.PToggleButton;
@@ -936,14 +937,14 @@ public class PUI extends PUIGeneric {
 		return null;
 	}
 
-	@ProtocoderScript
-	@APIParam(params = { "x", "y", "w", "h, function(progress)" })
-	public View addKnob(int x, int y, int w, int h, final addGenericKnobCB callbackfn) {
-
-		addViewAbsolute(null, x, y, w, h);
-
-		return null;
-	}
+//	@ProtocoderScript
+//	@APIParam(params = { "x", "y", "w", "h, function(progress)" })
+//	public View addKnob(int x, int y, int w, int h, final addGenericKnobCB callbackfn) {
+//
+//		addViewAbsolute(null, x, y, w, h);
+//
+//		return null;
+//	}
 
 	/**
 	 * Adds a seekbar with a callback function
@@ -964,6 +965,15 @@ public class PUI extends PUIGeneric {
 		addViewAbsolute(sb, x, y, w, -1);
 		return sb;
 
+	}
+
+	@ProtocoderScript
+	@APIParam(params = { "x", "y", "w", "h", "max", "progress", "function(progress)" })
+	public PSpinner addSpinner(int x, int y, int w, int h, final String[] array, final addGenericSpinnerCB callbackfn) {
+		PSpinner spinner = createGenericSpinner(array, callbackfn);
+        addViewAbsolute(spinner, x, y, w, h);
+
+        return spinner;
 	}
 
 	/**
@@ -1409,13 +1419,8 @@ public class PUI extends PUIGeneric {
 		return mapView;
 	}
 
-	/**
-	 * yesnoDialog
-	 * 
-	 * @author victordiaz
-	 * 
-	 * @param msg
-	 */
+
+
 
 	// --------- yesno dialog ---------//
 	interface popupCB {
@@ -1454,13 +1459,6 @@ public class PUI extends PUIGeneric {
 		builder.show();
 	}
 
-	/**
-	 * inputDialog
-	 * 
-	 * @author victordiaz
-	 * 
-	 * @param title
-	 */
 
 	// --------- inputDialog ---------//
 	interface inputDialogCB {
@@ -1495,14 +1493,6 @@ public class PUI extends PUIGeneric {
 		builder.show();
 	}
 
-	/**
-	 * choiceDialog
-	 * 
-	 * @author victordiaz
-	 * 
-	 * @param title
-	 * @param choices
-	 */
 
 	// --------- choiceDialog ---------//
 	interface choiceDialogCB {

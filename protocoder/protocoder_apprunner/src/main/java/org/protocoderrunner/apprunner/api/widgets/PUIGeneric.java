@@ -77,6 +77,8 @@ import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView.ScaleType;
@@ -417,7 +419,7 @@ public class PUIGeneric extends PInterface {
 
 	// --------- seekbar ---------//
 	public interface addGenericSliderCB {
-		void eval(int progress);
+		void event(int progress);
 	}
 
 	// We'll addPE in the circular view as a nice to have later once all the other
@@ -443,13 +445,42 @@ public class PUIGeneric extends PInterface {
 
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-				callbackfn.eval(progress);
+				callbackfn.event(progress);
 			}
 		});
 
 		return sb;
 
 	}
+
+    // --------- seekbar ---------//
+    public interface addGenericSpinnerCB {
+        void event(String result);
+    }
+
+    public PSpinner createGenericSpinner(final String[] array, final addGenericSpinnerCB callbackfn) {
+        initializeLayout();
+
+        PSpinner spinner = new PSpinner(a.get());
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(a.get(), android.R.layout.simple_spinner_item, array);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                callbackfn.event(array[position]);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        return spinner;
+    }
 
 	public PProgressBar addGenericProgress(int max) {
 
@@ -800,7 +831,7 @@ public class PUIGeneric extends PInterface {
                 } else if (type.equals("hslider")) {
                     PSeekBar slider = addGenericSlider(1024, 0, new addGenericSliderCB() {
                         @Override
-                        public void eval(int progress) {
+                        public void event(int progress) {
                             cbData.addPE("data", progress / 1024);
                             callbackfn.event(cbData);
 
