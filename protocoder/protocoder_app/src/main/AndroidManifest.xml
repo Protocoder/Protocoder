@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.protocoder"
     android:versionCode="12"
-    android:versionName="0.96" >
-    <uses-sdk android:targetSdkVersion="L"  android:minSdkVersion="L" />
+    android:versionName="0.96.1" >
+    <uses-sdk android:targetSdkVersion="L"  android:minSdkVersion="14" />
 
     <application
         android:name="org.protocoder.MainApp"
@@ -15,17 +15,18 @@
             android:icon="@drawable/protocoder_icon"
             android:label="@string/activity_name"
             android:logo="@drawable/protocoder_icon"
-            android:theme="@style/ProtocoderLaunchTheme" >
+            android:theme="@style/ProtocoderLaunchTheme"
+            android:launchMode="singleInstance"
+            android:stateNotNeeded="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.HOME"/>
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="application/com.protocoder.beam" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.ASSIST" />
@@ -65,11 +66,6 @@
             android:label="@string/settings_activity_name"
             android:noHistory="true" >
         </activity>
-        <activity
-            android:name="org.protocoderrunner.network.bt.DeviceListActivity"
-            android:label="@string/activity_name"
-            android:logo="@drawable/protocoder_icon" >
-        </activity>
 
         <activity android:name="org.protocoder.ProtoAppInstallerActivity"
             android:label="@string/activity_name"
@@ -77,11 +73,11 @@
             >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+                <action android:name="org.protocoder.ProtoAppInstallerActivity" />
                 <data android:scheme="file" />
                 <data android:mimeType="*/*" />
                 <data android:pathPattern=".*\\.proto" />
+                <data android:host="*" />
             </intent-filter>
         </activity>
         <!-- android:screenOrientation="portrait" -->
