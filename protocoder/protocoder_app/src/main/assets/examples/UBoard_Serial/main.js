@@ -5,14 +5,14 @@
 */
 
 
-var dataLabel = ui.addLabel("data : ",10, 20, 500, 100);
+var dataLabel = ui.addText("data : ",10, 20, 500, 100);
 
 var arduino; 
 
 //start connexion with arduino
 ui.addButton("START", 50, 150, 500,100, function() { 
 	//show arduino incoming data
-    arduino = boards.startArduino(9600, function(data) {
+    arduino = boards.startSerial(9600, function(data) {
 		dataLabel.setText("Data : "+ data);
 		console.log(data);
 		media.textToSpeech("tick"); 
