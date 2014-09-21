@@ -37,6 +37,7 @@ import org.protocoder.fragments.PrefsFragment;
 import org.protocoder.R;
 import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.base.BaseFragment;
+import org.protocoderrunner.base.BaseMainApp;
 import org.protocoderrunner.events.Events.ProjectEvent;
 import org.protocoderrunner.project.Project;
 import org.protocoderrunner.project.ProjectManager;
@@ -49,6 +50,7 @@ import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Intent.ShortcutIconResource;
@@ -282,13 +284,24 @@ public class ListFragmentBase extends BaseFragment {
 			sendIntent.setType("text/plain");
 			startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
 			return true;
-        } else if (itemId == R.id.menu_project_list_share_zip) {
+        } else if (itemId == R.id.menu_project_list_share_proto_file) {
+
+            final ProgressDialog progress = new ProgressDialog(getActivity());
+            progress.setTitle("Exporting .proto");
+            progress.setMessage("Your project will be ready soon!");
+            progress.setCancelable(true);
+            progress.setCanceledOnTouchOutside(false);
+            progress.show();
+
             String zipFilePath = ProjectManager.getInstance().createBackup(project);
             Intent shareIntent = new Intent();
             shareIntent.setAction(Intent.ACTION_SEND);
             shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(zipFilePath)));
             shareIntent.setType("application/zip");
-            startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.share_zip)));
+
+            progress.dismiss();
+
+            startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.share_proto_file)));
 			return true;
 		} else {
 			return super.onContextItemSelected(item);

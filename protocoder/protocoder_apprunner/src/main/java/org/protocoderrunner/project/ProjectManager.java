@@ -54,22 +54,22 @@ public class ProjectManager {
     private static final String TAG = "ProjectManager";
 
     public static final int PROJECT_USER_MADE = 0;
-	public static final int PROJECT_EXAMPLE = 1;
-	public static int type;
+    public static final int PROJECT_EXAMPLE = 1;
+    public static int type;
     private static String PROTOCODER_EXTENSION = ".proto";
     private Project currentProject;
-	String mainFileStr = "main.js";
-	private String remoteIP;
+    String mainFileStr = "main.js";
+    private String remoteIP;
 
-	private static ProjectManager INSTANCE;
+    private static ProjectManager INSTANCE;
 
-	public static ProjectManager getInstance() {
-		if (INSTANCE == null) {
-			INSTANCE = new ProjectManager();
-		}
+    public static ProjectManager getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new ProjectManager();
+        }
 
-		return INSTANCE;
-	}
+        return INSTANCE;
+    }
 
     public String getBackupFolder() {
         return BaseMainApp.backupDir;
@@ -100,6 +100,19 @@ public class ProjectManager {
         return f.getAbsolutePath();
     }
 
+    public boolean isProjectExisting(String name) {
+        ArrayList<Project> projects = list(PROJECT_USER_MADE);
+
+        for (int i = 0; i < projects.size(); i++) {
+            if (projects.get(i).getName().equals(name)) {
+                return true;
+            }
+        }
+
+
+        return false;
+    }
+
     public boolean installProject(String zipFilePath) {
 
         // TODO: Use a thread
@@ -115,230 +128,229 @@ public class ProjectManager {
     }
 
     public interface InstallListener {
-		void onReady();
-	}
+        void onReady();
+    }
 
-	public void install(final Context c, final String assetsName, final InstallListener l) {
+    public void install(final Context c, final String assetsName, final InstallListener l) {
 
-		new Thread(new Runnable() {
+        new Thread(new Runnable() {
 
-			@Override
-			public void run() {
-				File dir = new File(BaseMainApp.baseDir + "/" + assetsName);
-				FileIO.deleteDir(dir);
-				FileIO.copyFileOrDir(c.getApplicationContext(), assetsName);
-				l.onReady();
-			}
-		}).start();
-	}
+            @Override
+            public void run() {
+                File dir = new File(BaseMainApp.baseDir + "/" + assetsName);
+                FileIO.deleteDir(dir);
+                FileIO.copyFileOrDir(c.getApplicationContext(), assetsName);
+                l.onReady();
+            }
+        }).start();
+    }
 
-	public String getCode(Project p) {
-		String out = null;
-		File f = new File(p.getStoragePath() + File.separator + mainFileStr);
-		try {
-			InputStream in = new FileInputStream(f);
-			ByteArrayOutputStream buf = new ByteArrayOutputStream();
-			int i;
-			try {
-				i = in.read();
-				while (i != -1) {
-					buf.write(i);
-					i = in.read();
-				}
-				in.close();
-			} catch (IOException ex) {
-			}
-			out = buf.toString();
-		} catch (IOException e) {
-			e.printStackTrace();
-			// Log.e("Project", e.toString());
-		}
-		return out;
-	}
+    public String getCode(Project p) {
+        String out = null;
+        File f = new File(p.getStoragePath() + File.separator + mainFileStr);
+        try {
+            InputStream in = new FileInputStream(f);
+            ByteArrayOutputStream buf = new ByteArrayOutputStream();
+            int i;
+            try {
+                i = in.read();
+                while (i != -1) {
+                    buf.write(i);
+                    i = in.read();
+                }
+                in.close();
+            } catch (IOException ex) {
+            }
+            out = buf.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Log.e("Project", e.toString());
+        }
+        return out;
+    }
 
-	public void writeNewCode(Project p, String code, String fileName) {
-		MLog.d(TAG, "--> " + fileName);
-		writeNewFile(p.getStoragePath() + File.separator + fileName, code);
-	}
+    public void writeNewCode(Project p, String code, String fileName) {
+        MLog.d(TAG, "--> " + fileName);
+        writeNewFile(p.getStoragePath() + File.separator + fileName, code);
+    }
 
-	public void writeNewFile(String file, String code) {
-		File f = new File(file);
+    public void writeNewFile(String file, String code) {
+        File f = new File(file);
 
-		try {
-			if (!f.exists()) {
-				f.createNewFile();
-			}
-			FileOutputStream fo = new FileOutputStream(f);
-			byte[] data = code.getBytes();
-			fo.write(data);
-			fo.flush();
-			fo.close();
-		} catch (FileNotFoundException ex) {
-			// Log.e("Project", ex.toString());
-		} catch (IOException e) {
-			e.printStackTrace();
-			// Log.e("Project", e.toString());
-		}
-	}
+        try {
+            if (!f.exists()) {
+                f.createNewFile();
+            }
+            FileOutputStream fo = new FileOutputStream(f);
+            byte[] data = code.getBytes();
+            fo.write(data);
+            fo.flush();
+            fo.close();
+        } catch (FileNotFoundException ex) {
+            // Log.e("Project", ex.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Log.e("Project", e.toString());
+        }
+    }
 
-	public JSONObject toJson(Project p) {
-		JSONObject json = new JSONObject();
-		try {
-			json.put("name", p.getName());
-			json.put("type", p.getType());
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return json;
-	}
+    public JSONObject toJson(Project p) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("name", p.getName());
+            json.put("type", p.getType());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json;
+    }
 
-	public ArrayList<Project> list(int type) {
-		ArrayList<Project> projects = new ArrayList<Project>();
-		File dir = null;
+    public ArrayList<Project> list(int type) {
+        ArrayList<Project> projects = new ArrayList<Project>();
+        File dir = null;
 
-		// MLog.d(TAG, "project type" + type + " " + PROJECT_USER_MADE + " " +
-		// PROJECT_EXAMPLE);
+        // MLog.d(TAG, "project type" + type + " " + PROJECT_USER_MADE + " " +
+        // PROJECT_EXAMPLE);
 
-		switch (type) {
-		case PROJECT_USER_MADE:
-			dir = new File(BaseMainApp.projectsDir);
-            Log.d("qq", dir.getAbsolutePath());
-			if (!dir.exists()) {
-				dir.mkdir();
-			}
+        switch (type) {
+            case PROJECT_USER_MADE:
+                dir = new File(BaseMainApp.projectsDir);
+                if (!dir.exists()) {
+                    dir.mkdir();
+                }
 
-			break;
+                break;
 
-		case PROJECT_EXAMPLE:
-			dir = new File(BaseMainApp.examplesDir);
-			if (!dir.exists()) {
-				dir.mkdir();
-			}
+            case PROJECT_EXAMPLE:
+                dir = new File(BaseMainApp.examplesDir);
+                if (!dir.exists()) {
+                    dir.mkdir();
+                }
 
-			break;
-		default:
-			break;
-		}
+                break;
+            default:
+                break;
+        }
 
-		File[] all_projects = dir.listFiles();
+        File[] all_projects = dir.listFiles();
 
-		for (File file : all_projects) {
-			String projectURL = file.getAbsolutePath();
-			String projectName = file.getName();
-			// MLog.d("PROJECT", "Adding project named " + projectName);
-			boolean containsReadme = false;
-			boolean containsTutorial = false;
-			projects.add(new Project(projectName, projectURL, type, containsReadme, containsTutorial));
-		}
+        for (File file : all_projects) {
+            String projectURL = file.getAbsolutePath();
+            String projectName = file.getName();
+            // MLog.d("PROJECT", "Adding project named " + projectName);
+            boolean containsReadme = false;
+            boolean containsTutorial = false;
+            projects.add(new Project(projectName, projectURL, type, containsReadme, containsTutorial));
+        }
 
-		return projects;
-	}
+        return projects;
+    }
 
-	public Project get(String name, int type) {
-		MLog.d(TAG, "looking for project " + name + " " + type);
-		ArrayList<Project> projects = list(type);
-		for (Project project : projects) {
-			if (name.equals(project.getName())) {
-				setCurrentProject(project);
-				return project;
-			}
-		}
-		return null;
-	}
+    public Project get(String name, int type) {
+        MLog.d(TAG, "looking for project " + name + " " + type);
+        ArrayList<Project> projects = list(type);
+        for (Project project : projects) {
+            if (name.equals(project.getName())) {
+                setCurrentProject(project);
+                return project;
+            }
+        }
+        return null;
+    }
 
-	public Project addNewProject(Context c, String newProjectName, String fileName, int type) {
-		String newTemplateCode = FileIO.readAssetFile(c, "templates/new.js");
+    public Project addNewProject(Context c, String newProjectName, String fileName, int type) {
+        String newTemplateCode = FileIO.readAssetFile(c, "templates/new.js");
 
-		if (newTemplateCode == null) {
-			newTemplateCode = "";
-		}
-		String file = FileIO.writeStringToFile(BaseMainApp.projectsDir, newProjectName, newTemplateCode);
+        if (newTemplateCode == null) {
+            newTemplateCode = "";
+        }
+        String file = FileIO.writeStringToFile(BaseMainApp.projectsDir, newProjectName, newTemplateCode);
 
-		Project newProject = new Project(newProjectName, file, type);
+        Project newProject = new Project(newProjectName, file, type);
 
-		return newProject;
+        return newProject;
 
-	}
+    }
 
-	public ArrayList<File> listFilesInProject(Project p) {
-		ArrayList<File> files = new ArrayList<File>();
+    public ArrayList<File> listFilesInProject(Project p) {
+        ArrayList<File> files = new ArrayList<File>();
 
-		File f = new File(p.getStoragePath());
-		File file[] = f.listFiles();
+        File f = new File(p.getStoragePath());
+        File file[] = f.listFiles();
 
-		for (File element : file) {
-			files.add(element);
-		}
+        for (File element : file) {
+            files.add(element);
+        }
 
-		return files;
-	}
+        return files;
+    }
 
-	public JSONArray listFilesInProjectJSON(Project p) {
+    public JSONArray listFilesInProjectJSON(Project p) {
 
-		File f = new File(p.getStoragePath());
-		File file[] = f.listFiles();
-		MLog.d("Files", "Size: " + file.length);
+        File f = new File(p.getStoragePath());
+        File file[] = f.listFiles();
+        MLog.d("Files", "Size: " + file.length);
 
-		JSONArray array = new JSONArray();
-		for (File element : file) {
+        JSONArray array = new JSONArray();
+        for (File element : file) {
 
-			JSONObject jsonObject = new JSONObject();
-			try {
-				jsonObject.put("file_name", element.getName());
-				jsonObject.put("file_size", element.length() / 1024);
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("file_name", element.getName());
+                jsonObject.put("file_size", element.length() / 1024);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
-			array.put(jsonObject);
-			MLog.d("Files", "FileName:" + element.getName());
-		}
+            array.put(jsonObject);
+            MLog.d("Files", "FileName:" + element.getName());
+        }
 
-		return array;
-	}
+        return array;
+    }
 
-	// TODO fix this hack
-	public String getProjectURL(Project p) {
-		String projectURL = p.getStoragePath();
+    // TODO fix this hack
+    public String getProjectURL(Project p) {
+        String projectURL = p.getStoragePath();
 
-		return projectURL;
+        return projectURL;
 
-	}
+    }
 
-	public void setCurrentProject(Project project) {
-		currentProject = project;
+    public void setCurrentProject(Project project) {
+        currentProject = project;
 
-	}
+    }
 
-	public Project getCurrentProject() {
+    public Project getCurrentProject() {
 
-		return currentProject;
-	}
+        return currentProject;
+    }
 
-	public void setRemoteIP(String remoteIP) {
-		this.remoteIP = remoteIP + ":" + AppSettings.HTTP_PORT;
-	}
+    public void setRemoteIP(String remoteIP) {
+        this.remoteIP = remoteIP + ":" + AppSettings.HTTP_PORT;
+    }
 
-	public String getRemoteIP() {
-		String url = remoteIP;
-		// add / if doesnt contain it
-		if (url.charAt(url.length() - 1) != '/') {
-			url += "/";
-		}
+    public String getRemoteIP() {
+        String url = remoteIP;
+        // add / if doesnt contain it
+        if (url.charAt(url.length() - 1) != '/') {
+            url += "/";
+        }
 
-		return url;
-	}
+        return url;
+    }
 
-	public void deleteProject(Project p) {
-		File dir = new File(p.getStoragePath());
+    public void deleteProject(Project p) {
+        File dir = new File(p.getStoragePath());
 
-		if (dir.isDirectory()) {
-			String[] children = dir.list();
-			for (String element : children) {
-				new File(dir, element).delete();
-			}
-		}
-		dir.delete();
-	}
+        if (dir.isDirectory()) {
+            String[] children = dir.list();
+            for (String element : children) {
+                new File(dir, element).delete();
+            }
+        }
+        dir.delete();
+    }
 
 }

@@ -34,6 +34,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
@@ -136,6 +137,14 @@ public class PTextView extends TextView implements PViewInterface, PViewMethodsI
     @APIParam(params = { "Typeface" })
     public PTextView font(Typeface f) {
         this.setTypeface(f);
+        return this;
+    }
+
+  @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "Typeface" })
+    public PTextView center(String centering) {
+        this.setGravity(Gravity.CENTER_VERTICAL);
         return this;
     }
 
