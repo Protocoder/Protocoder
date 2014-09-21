@@ -94,6 +94,8 @@ import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
@@ -557,7 +559,8 @@ public class PNetwork extends PInterface {
                 HttpClient httpclient = new DefaultHttpClient();
                 HttpResponse response;
                 try {
-                    response = httpclient.execute(new HttpGet(uri[0]));
+                    URL url = new URL(uri[0]);
+                    response = httpclient.execute(new HttpGet(url.toString()));
                     final StatusLine statusLine = response.getStatusLine();
                     if (statusLine.getStatusCode() == HttpStatus.SC_OK) {
                         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -579,9 +582,11 @@ public class PNetwork extends PInterface {
                     });
 
                 } catch (ClientProtocolException e) {
-
+                    MLog.e(TAG, e.toString());
                 } catch (IOException e) {
-
+                    MLog.e(TAG, e.toString());
+                } finally {
+                    MLog.e(TAG, "error");
                 }
                 return responseString;
             }
