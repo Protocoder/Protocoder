@@ -30,6 +30,8 @@
 package org.protocoderrunner.apprunner.api.boards;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -46,6 +48,7 @@ import android.hardware.usb.UsbManager;
 
 import com.hoho.android.usbserial.driver.UsbSerialDriver;
 import com.hoho.android.usbserial.driver.UsbSerialPort;
+import com.hoho.android.usbserial.driver.UsbSerialProber;
 import com.hoho.android.usbserial.util.SerialInputOutputManager;
 
 public class PSerial extends PInterface {
@@ -53,7 +56,7 @@ public class PSerial extends PInterface {
 	private String receivedData;
 	private final String TAG = "PSerial";
 
-    private static UsbSerialPort sPort = null;
+    private UsbSerialPort sPort = null;
 
     boolean isStarted = false;
 	private UsbSerialDriver driver;
@@ -77,19 +80,34 @@ public class PSerial extends PInterface {
 	public void start(int bauds, final startCB callbackfn) {
 		WhatIsRunning.getInstance().add(this);
 		if (!isStarted) {
-            // Get UsbManager from Android.
+            // Find all available drivers from attached devices.
             UsbManager manager = (UsbManager) a.get().getSystemService(Context.USB_SERVICE);
-            UsbDeviceConnection connection = manager.openDevice(sPort.getDriver().getDevice());
-
-            if (connection == null) {
-                //fail
+            List<UsbSerialDriver> availableDrivers = UsbSerialProber.getDefaultProber().findAllDrivers(manager);
+            if (availableDrivers.isEmpty()) {
+                MLog.d(TAG, "no drivers found");
                 return;
             }
 
+            // Open a connection to the first available driver.
+            UsbSerialDriver driver = availableDrivers.get(0);
+
+            UsbDeviceConnection connection = manager.openDevice(driver.getDevice());
+            if (connection == null) {
+                // You probably need to call UsbManager.requestPermission(driver.getDevice(), ..)
+                MLog.d(TAG, "no connection");
+
+                return;
+            }
+
+            // Read some data! Most have just one port (port 0).
+            List<UsbSerialPort> portList = driver.getPorts();
+
+            sPort = portList.get(0);
+
             try {
+
                 sPort.open(connection);
                 sPort.setParameters(bauds, 8, UsbSerialPort.STOPBITS_1, UsbSerialPort.PARITY_NONE);
-
 
                 mListener = new SerialInputOutputManager.Listener() {
 
@@ -127,6 +145,7 @@ public class PSerial extends PInterface {
                 };
 
                 startIoManager();
+
                 isStarted = true;
 
             } catch (IOException e) {
@@ -155,6 +174,7 @@ public class PSerial extends PInterface {
 	}
 
 	private void startIoManager() {
+
         if (sPort != null) {
             MLog.i(TAG, "Starting io manager ..");
             mSerialIoManager = new SerialInputOutputManager(sPort, mListener);
