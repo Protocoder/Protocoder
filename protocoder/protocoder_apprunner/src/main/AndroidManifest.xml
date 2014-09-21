@@ -62,7 +62,7 @@
             android:windowSoftInputMode="stateHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
-                <action android:name="com.protocoder.apprunner.AppRunnerActivity" />
+                <action android:name="org.protocoderrunner.apprunner.AppRunnerActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <!--

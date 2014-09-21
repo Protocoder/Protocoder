@@ -51,9 +51,12 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.MediaStore.MediaColumns;
 import android.support.v4.app.NotificationCompat;
+
+import java.io.File;
 
 public class PApp extends PInterface {
 
@@ -229,6 +232,32 @@ public class PApp extends PInterface {
         l.enable = true;
 
         return l;
+    }
+
+//
+//    @ProtocoderScript
+//    @APIMethod(description = "", example = "")
+//    @APIParam(params = { "fileName" })
+//    public void openWithApp(final String src) {
+//        final String projectPath = ProjectManager.getInstance().getCurrentProject().getStoragePath();
+//
+//        Intent intent = new Intent(Intent.ACTION_VIEW);
+//        intent.setData(Uri.parse(projectPath + "/" + src));
+//
+//        a.get().startActivity(intent);
+//    }
+
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "fileName", "packageName" })
+    public void openWithApp(final String src, String packageName) {
+        final String projectPath = ProjectManager.getInstance().getCurrentProject().getStoragePath();
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(Uri.parse("file://" + projectPath + "/" + src), packageName);
+        //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        a.get().startActivity(intent);
     }
 
 }
