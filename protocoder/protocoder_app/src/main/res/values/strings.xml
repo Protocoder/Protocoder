@@ -14,10 +14,9 @@
     <string name="run">Run</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
-    <string name="title_activity_moldable">MoldableActivity</string>
     <string name="add_shortcut">Add shortcut</string>
     <string name="share">Share code</string>
-    <string name="share_zip">Share zip</string>
+    <string name="share_proto_file">Share .proto</string>
     <string name="send_to">Send to...</string>
     <string name="beam">NFC Share</string>
     <string name="projects_zero">\nPress + to get started or slide to the right to check the examples</string>

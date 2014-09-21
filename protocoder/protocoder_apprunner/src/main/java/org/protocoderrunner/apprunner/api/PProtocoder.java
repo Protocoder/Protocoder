@@ -63,6 +63,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -266,6 +267,20 @@ public class PProtocoder extends PInterface {
 		return pInfo.versionCode;
 	}
 
+
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    public void installProtoApp(String src, boolean b) {
+        final String projectPath = ProjectManager.getInstance().getCurrentProject().getStoragePath();
+
+        Intent intent = new Intent();
+        intent.setComponent(new ComponentName("org.protocoder", "org.protocoder.ProtoAppInstallerActivity"));
+        intent.setData(Uri.parse(projectPath + "/" + src));
+        intent.putExtra("autoInstall", b);
+       // intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        a.get().startActivity(intent);
+    }
 
 
 	public static ArrayList<ApplicationInfo> mApplications;
