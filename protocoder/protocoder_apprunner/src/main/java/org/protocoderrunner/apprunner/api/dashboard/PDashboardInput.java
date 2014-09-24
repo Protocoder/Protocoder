@@ -44,7 +44,7 @@ import android.app.Activity;
 
 public class PDashboardInput extends PInterface {
 
-	private static final String TAG = "JWebAppInput";
+	private static final String TAG = "PDashboardInput";
 	String id;
 
 	public PDashboardInput(Activity a) {
@@ -56,29 +56,25 @@ public class PDashboardInput extends PInterface {
 		void event(String responseString);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
 	public void add(String name, int x, int y, int width, int height, final jDashboardInputCB callbackfn)
 			throws UnknownHostException, JSONException {
 		this.id = StrUtils.generateRandomString();
-		JSONObject msg = new JSONObject();
 
-		msg.put("type", "widget");
-		msg.put("action", "add");
+		JSONObject values = new JSONObject()
+                .put("id", id)
+                .put("name", name)
+                .put("type", "input")
+                .put("x", x)
+                .put("y", y)
+                .put("width", width)
+                .put("height", height);
 
-		JSONObject values = new JSONObject();
-		values.put("id", id);
-		values.put("name", name);
-		values.put("type", "input");
-		values.put("x", x);
-		values.put("y", y);
-		values.put("width", width);
-		values.put("height", height);
+        JSONObject msg = new JSONObject()
+                .put("type", "widget")
+                .put("action", "add")
+                .put("values", values);
 
-		msg.put("values", values);
-
-		CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
-		ws.send(msg);
+		CustomWebsocketServer.getInstance(a.get()).send(msg);
 
 		CustomWebsocketServer.getInstance(a.get()).addListener(id, new WebSocketListener() {
 			@Override
@@ -90,8 +86,6 @@ public class PDashboardInput extends PInterface {
 
 						@Override
 						public void run() {
-							// MLog.d(TAG, "" + jsonObject.toString(2));
-							// MLog.d(TAG, "" + val);
 							callbackfn.event(val);
 						}
 					});

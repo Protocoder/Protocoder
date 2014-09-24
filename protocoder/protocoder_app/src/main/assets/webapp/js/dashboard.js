@@ -52,6 +52,8 @@ Dashboard.prototype.addWidget = function(widget) {
     return this.addImage(widget.id, widget.url, widget.x, widget.y, widget.w, widget.h);
   } else if (widget.type == "html") { 
     return this.addHTML(widget.id, widget.html, widget.x, widget.y); 
+  } else if (widget.type == "background") { 
+    return this.setBackgroundColor(widget.r, widget.g, widget.b, widget.a); 
   } 
 
 }
@@ -159,7 +161,6 @@ Dashboard.prototype.addButton = function(element, name, posx, posy, w, h) {
           .click(function() {
             ws.send('{type:button, id:'+ element +'}');
           });
-
 } 
 
 
@@ -167,11 +168,9 @@ Dashboard.prototype.addCameraPreview = function(element, posx, posy, w, h) {
   $('<canvas class ="widget" id = "camera_' + element +'"> </canvas>')
           .appendTo("#overlay #container")
           .css({"width": w+"px", "height":h+"px","top":posy+"px","left":posx+"px"});
-
 } 
 
 Dashboard.prototype.updateCamera = function() {
-
   var drawingCanvas = document.getElementById('camera_canvas');
 
     if(drawingCanvas.getContext) {
@@ -182,11 +181,8 @@ Dashboard.prototype.updateCamera = function() {
       }
       cam.src = 'cam.jpg?pwd=' + pwd;
       setTimeout("update()", 500);
-    }
-
-  
+    } 
 }
-
 
 Dashboard.prototype.setBackgroundColor = function(r, g, b, a) { 
   $("#overlay #container").css("background", "rgba("+r+","+g+","+b+","+a+")");

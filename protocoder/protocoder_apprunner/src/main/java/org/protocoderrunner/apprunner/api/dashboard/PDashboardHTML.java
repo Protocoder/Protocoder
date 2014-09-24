@@ -43,52 +43,29 @@ import android.app.Activity;
 
 public class PDashboardHTML extends PInterface {
 
-	private static final String TAG = "JWebAppImage";
+	private static final String TAG = "PDashboardHTML";
 	String id;
 
 	public PDashboardHTML(Activity a) {
 		super(a);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
 	public void add(String html, int posx, int posy) throws UnknownHostException, JSONException {
 		this.id = StrUtils.generateRandomString();
-		JSONObject msg = new JSONObject();
 
-		msg.put("type", "widget");
-		msg.put("action", "add");
+		JSONObject values = new JSONObject()
+                .put("id", id)
+                .put("type", "html")
+                .put("x", posx)
+                .put("y", posy)
+                .put("html", html);
 
-		JSONObject values = new JSONObject();
-		values.put("id", id);
-		values.put("type", "html");
-		values.put("x", posx);
-		values.put("y", posy);
-		values.put("html", html);
+        JSONObject msg = new JSONObject()
+                .put("type", "widget")
+                .put("action", "add")
+                .put("values", values);
 
-		msg.put("values", values);
-
-		CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
-		ws.send(msg);
-
+		CustomWebsocketServer.getInstance(a.get()).send(msg);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	public void changeImage(String url) throws JSONException, UnknownHostException {
-		JSONObject msg = new JSONObject();
-
-		msg.put("type", "widget");
-		msg.put("action", "changeImage");
-
-		JSONObject values = new JSONObject();
-		values.put("id", id);
-		values.put("type", "label");
-		values.put("url", url);
-		msg.put("values", values);
-
-		CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
-		ws.send(msg);
-
-	}
 }

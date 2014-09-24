@@ -34,6 +34,7 @@ import java.net.UnknownHostException;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.protocoderrunner.apidoc.annotation.APIMethod;
+import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.network.CustomWebsocketServer;
@@ -44,7 +45,7 @@ import android.app.Activity;
 
 public class PDashboardImage extends PInterface {
 
-	private static final String TAG = "JWebAppImage";
+	private static final String TAG = "PDashboardImage";
 	String id;
 
 	public PDashboardImage(Activity a) {
@@ -55,45 +56,39 @@ public class PDashboardImage extends PInterface {
 	@APIMethod(description = "", example = "")
 	public void add(String url, int x, int y, int w, int h) throws UnknownHostException, JSONException {
 		this.id = StrUtils.generateRandomString();
-		JSONObject msg = new JSONObject();
 
-		msg.put("type", "widget");
-		msg.put("action", "add");
+		JSONObject values = new JSONObject()
+                .put("id", id)
+                .put("url", url)
+                .put("type", "image")
+                .put("x", x)
+                .put("y", y)
+                .put("w", w)
+                .put("h", h);
 
-		JSONObject values = new JSONObject();
-		values.put("id", id);
-		values.put("url", url);
-		values.put("type", "image");
-		values.put("x", x);
-		values.put("y", y);
-		values.put("w", w);
-		values.put("h", h);
+        JSONObject msg = new JSONObject()
+                .put("type", "widget")
+                .put("action", "add")
+                .put("values", values);
 
-		msg.put("values", values);
-
-		MLog.d(TAG, "added widget ");
-
-		CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
-		ws.send(msg);
-
+		CustomWebsocketServer.getInstance(a.get()).send(msg);
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	public void changeImage(String url) throws JSONException, UnknownHostException {
-		JSONObject msg = new JSONObject();
+	@APIMethod(description = "change image with a provided url", example = "")
+    @APIParam(params = { "url"})
+    public void changeImage(String url) throws JSONException, UnknownHostException {
 
-		msg.put("type", "widget");
-		msg.put("action", "changeImage");
+		JSONObject values = new JSONObject()
+                .put("id", id)
+                .put("type", "label")
+                .put("url", url);
 
-		JSONObject values = new JSONObject();
-		values.put("id", id);
-		values.put("type", "label");
-		values.put("url", url);
-		msg.put("values", values);
+        JSONObject msg = new JSONObject()
+                .put("type", "widget")
+                .put("action", "changeImage")
+                .put("values", values);
 
-		CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
-		ws.send(msg);
-
+		CustomWebsocketServer.getInstance(a.get()).send(msg);
 	}
 }

@@ -44,9 +44,11 @@ import java.net.UnknownHostException;
 
 public class PDashboardVideoCamera extends PInterface {
 
-	private static final String TAG = "JWebAppImage";
+	private static final String TAG = "PDashboardVideoCamera";
 	String id;
 
+
+    //TODO this is just a scaffold needs to be implemented
 	public PDashboardVideoCamera(Activity a) {
 		super(a);
 	}
@@ -55,44 +57,38 @@ public class PDashboardVideoCamera extends PInterface {
 	@APIMethod(description = "", example = "")
 	public void add(int x, int y, int w, int h) throws UnknownHostException, JSONException {
 		this.id = StrUtils.generateRandomString();
-		JSONObject msg = new JSONObject();
 
-		msg.put("type", "widget");
-		msg.put("action", "add");
+		JSONObject values = new JSONObject()
+                .put("id", id)
+                .put("type", "video")
+                .put("x", x)
+                .put("y", y)
+                .put("w", w)
+                .put("h", h);
 
-		JSONObject values = new JSONObject();
-		values.put("id", id);
-		values.put("type", "video");
-		values.put("x", x);
-		values.put("y", y);
-		values.put("w", w);
-		values.put("h", h);
+        JSONObject msg = new JSONObject()
+                .put("type", "widget")
+                .put("action", "add")
+                .put("values", values);
 
-		msg.put("values", values);
-
-		MLog.d(TAG, "added widget ");
-
-		CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
-		ws.send(msg);
+		CustomWebsocketServer.getInstance(a.get()).send(msg);
 
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void changeImage(String url) throws JSONException, UnknownHostException {
-		JSONObject msg = new JSONObject();
 
-		msg.put("type", "widget");
-		msg.put("action", "changeImage");
+		JSONObject values = new JSONObject()
+                .put("id", id)
+                .put("type", "label")
+                .put("url", url);
 
-		JSONObject values = new JSONObject();
-		values.put("id", id);
-		values.put("type", "label");
-		values.put("url", url);
-		msg.put("values", values);
+        JSONObject msg = new JSONObject()
+                .put("type", "widget")
+                .put("action", "changeImage")
+                .put("values", values);
 
-		CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
-		ws.send(msg);
-
+		CustomWebsocketServer.getInstance(a.get()).send(msg);
 	}
 }

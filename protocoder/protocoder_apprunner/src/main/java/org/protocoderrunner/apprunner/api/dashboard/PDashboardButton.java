@@ -44,7 +44,7 @@ import android.app.Activity;
 
 public class PDashboardButton extends PInterface {
 
-	private static final String TAG = "JWebAppButton";
+	private static final String TAG = "PDashboardButton";
 	String id;
 	String name;
 
@@ -57,31 +57,26 @@ public class PDashboardButton extends PInterface {
 		void event();
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
 	public void add(String name, int x, int y, int w, int h, final jDashboardAddCB callbackfn) throws JSONException,
 			UnknownHostException {
 		this.id = StrUtils.generateRandomString();
 		this.name = name;
-		JSONObject msg = new JSONObject();
 
-		msg.put("type", "widget");
-		msg.put("action", "add");
+		JSONObject values = new JSONObject()
+                .put("id", id)
+                .put("name", name)
+                .put("type", "button")
+                .put("x", x)
+                .put("y", y)
+                .put("w", w)
+                .put("h", h);
 
-		JSONObject values = new JSONObject();
-		values.put("id", id);
-		values.put("name", name);
-		values.put("type", "button");
-		values.put("x", x);
-		values.put("y", y);
-		values.put("w", w);
-		values.put("h", h);
+        JSONObject msg = new JSONObject()
+                .put("type", "widget")
+                .put("action", "add")
+                .put("values", values);
 
-		msg.put("values", values);
-
-		CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
-		ws.send(msg);
-
+		CustomWebsocketServer.getInstance(a.get()).send(msg);
 		CustomWebsocketServer.getInstance(a.get()).addListener(id, new WebSocketListener() {
 
 			@Override
@@ -98,22 +93,18 @@ public class PDashboardButton extends PInterface {
 
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
 	public void update(boolean pressed) throws JSONException, UnknownHostException {
-		JSONObject msg = new JSONObject();
 
-		msg.put("type", "widget");
-		msg.put("action", "update");
+		JSONObject values = new JSONObject()
+                .put("name", name)
+                .put("type", "button")
+                .put("val", pressed);
 
-		JSONObject values = new JSONObject();
-		values.put("name", name);
-		values.put("type", "button");
-		values.put("val", pressed);
-		msg.put("values", values);
+        JSONObject msg = new JSONObject()
+                .put("type", "widget")
+                .put("action", "update")
+                .put("values", values);
 
-		CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
-		ws.send(msg);
-
+		CustomWebsocketServer.getInstance(a.get()).send(msg);
 	}
 }

@@ -29,66 +29,55 @@
 
 package org.protocoderrunner.apprunner.api.dashboard;
 
-import java.net.UnknownHostException;
+import android.app.Activity;
+import android.graphics.Color;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.network.CustomWebsocketServer;
+import org.protocoderrunner.network.CustomWebsocketServer.WebSocketListener;
 import org.protocoderrunner.utils.StrUtils;
 
-import android.app.Activity;
+import java.net.UnknownHostException;
 
-public class PDashboardPlot extends PInterface {
+public class PDashboardBackground extends PInterface {
 
-	private static final String TAG = "PDashboardPlot";
-	String id;
+	private static final String TAG = "PDashboardBackground";
 
-	public PDashboardPlot(Activity a) {
+	public PDashboardBackground(Activity a) {
 		super(a);
 	}
 
-	public void add(String name, int x, int y, int w, int h, float minLimit, float maxLimit)
-			throws UnknownHostException, JSONException {
-		this.id = StrUtils.generateRandomString();
+	// --------- JDashboard add ---------//
+	public interface jDashboardAddCB {
+		void event();
+	}
 
-		JSONObject values = new JSONObject()
-                .put("id", id)
-                .put("name", name)
-                .put("type", "plot")
-                .put("x", x)
-                .put("y", y)
-                .put("w", w)
-                .put("h", h)
-                .put("minLimit", minLimit)
-                .put("maxLimit", maxLimit);
+
+    public void updateColor(String hex) throws JSONException, UnknownHostException {
+        int c = Color.parseColor(hex);
+        float alpha = (float) (Color.alpha(c) / 255.0); //html uses normalized values
+        int r = Color.red(c);
+        int g = Color.green(c);
+        int b = Color.blue(c);
+        
+        JSONObject values = new JSONObject()
+                .put("type", "background")
+                .put("a", alpha)
+                .put("r", r)
+                .put("g", g)
+                .put("b", b);
 
         JSONObject msg = new JSONObject()
                 .put("type", "widget")
                 .put("action", "add")
                 .put("values", values);
 
-		CustomWebsocketServer.getInstance(a.get()).send(msg);
+        CustomWebsocketServer.getInstance(a.get()).send(msg);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "update the plot with a given value", example = "")
-    @APIParam(params = { "value" })
-    public void update(float val) throws UnknownHostException, JSONException {
 
-		JSONObject values = new JSONObject()
-                .put("id", id)
-                .put("type", "plot")
-                .put("val", val);
-
-        JSONObject msg = new JSONObject()
-                .put("type", "widget")
-                .put("action", "update")
-                .put("values", values);
-
-		CustomWebsocketServer.getInstance(a.get()).send(msg);
-	}
 }
