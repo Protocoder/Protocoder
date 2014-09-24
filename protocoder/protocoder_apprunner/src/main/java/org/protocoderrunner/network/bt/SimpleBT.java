@@ -107,8 +107,6 @@ public class SimpleBT implements WhatIsRunningInterface {
 
 				break;
 			case MESSAGE_DEVICE_NAME:
-				// save the connected device's name
-				mConnectedDeviceName = msg.getData().getString(BluetoothViewer.DEVICE_NAME);
                 for (int i = 0; i < listeners.size(); i++) {
                     SimpleBTListener l = listeners.get(0);
                     l.onConnected();
@@ -229,7 +227,6 @@ public class SimpleBT implements WhatIsRunningInterface {
 	}
 
 	public void connectByName(String name) {
-
 		Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
 		if (pairedDevices.size() > 0) {
 			for (BluetoothDevice device : pairedDevices) {
@@ -254,7 +251,6 @@ public class SimpleBT implements WhatIsRunningInterface {
 	@Override
 	public void stop() {
 		disconnect();
-		// close();
 	}
 
 }
