@@ -86,7 +86,7 @@ public class PMedia extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "plays a sound", example = "media.playSound(fileName);")
+	@APIMethod(description = "Play a sound file", example = "media.playSound(fileName);")
 	@APIParam(params = { "fileName" })
 	public MediaPlayer playSound(String url) {
 
@@ -98,21 +98,22 @@ public class PMedia extends PInterface {
 		return player;
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "routes the audio through the speakers", example = "media.playSound(fileName);")
-	@APIParam(params = { "" })
-	public void setAudioOnSpeakers() {
-		AudioManager audioManager = (AudioManager) a.get().getSystemService(Context.AUDIO_SERVICE);
-		// audioManager.setMode(AudioManager.MODE_IN_CALL);
-		audioManager.setSpeakerphoneOn(true);
-	}
 
 	@ProtocoderScript
-	@APIMethod(description = "routes the audio through the speakers", example = "media.playSound(fileName);")
+	@APIMethod(description = "Set the main volume", example = "media.playSound(fileName);")
 	@APIParam(params = { "volume" })
 	public void setVolume(int volume) {
 		a.get().setVolume(volume);
 	}
+
+    @ProtocoderScript
+    @APIMethod(description = "Routes the audio through the speakers", example = "media.playSound(fileName);")
+    @APIParam(params = { "" })
+    public void setAudioOnSpeakers() {
+        AudioManager audioManager = (AudioManager) a.get().getSystemService(Context.AUDIO_SERVICE);
+        // audioManager.setMode(AudioManager.MODE_IN_CALL);
+        audioManager.setSpeakerphoneOn(true);
+    }
 
 	// --------- initPDPatch ---------//
 	interface initPDPatchCB {
@@ -127,7 +128,7 @@ public class PMedia extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Loads and initializes a PureData patch http://www.puredata.info", example = "")
 	@APIParam(params = { "fileName", "function(objectType, value)" })
 	public PPureData initPDPatch(String fileName, final initPDPatchCB callbackfn) {
 		String filePath = AppRunnerSettings.get().project.getStoragePath() + File.separator + fileName;
@@ -267,7 +268,7 @@ public class PMedia extends PInterface {
 	boolean showProgress = false;
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Record a sound with the microphone", example = "")
 	@APIParam(params = { "fileName", "showProgressBoolean" })
 	public void recordAudio(String fileName, boolean showProgress) {
 		this.showProgress = showProgress;
@@ -314,6 +315,10 @@ public class PMedia extends PInterface {
 		}
 	}
 
+
+    @ProtocoderScript
+    @APIMethod(description = "Stops recording", example = "")
+    @APIParam(params = { "" })
 	public void stopRecording() {
 		try {
 			if (recorder != null) {
@@ -332,18 +337,19 @@ public class PMedia extends PInterface {
 		}
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "" })
-	public void stopAudio() {
 
+	@ProtocoderScript
+	@APIMethod(description = "Says a text with voice", example = "media.textToSpeech('hello world');")
+	@APIParam(params = { "text" })
+	public void textToSpeech(String text) {
+        Audio.speak(a.get(), text, Locale.getDefault());
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "text to speech", example = "media.textToSpeech('hello world');")
-	@APIParam(params = { "text" })
-	public void textToSpeech(String text) {
-		Audio.speak(a.get(), text, Locale.getDefault());
+	@APIMethod(description = "Says a text with voice using a defined locale", example = "media.textToSpeech('hello world');")
+	@APIParam(params = { "text", "Locale" })
+	public void textToSpeech(String text, Locale locale) {
+        Audio.speak(a.get(), text, locale);
 	}
 
 
@@ -353,7 +359,7 @@ public class PMedia extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "start voice recognition", example = "media.startVoiceRecognition(function(text) { console.log(text) } );")
+	@APIMethod(description = "Fires the voice recognition and returns the best match", example = "media.startVoiceRecognition(function(text) { console.log(text) } );")
 	@APIParam(params = { "function(recognizedText)" })
 	public void startVoiceRecognition(final startVoiceRecognitionCB callbackfn) {
 		onVoiceRecognitionfn = callbackfn;
@@ -375,10 +381,9 @@ public class PMedia extends PInterface {
 
 
     @ProtocoderScript
-    @APIMethod(description = "start voice recognition", example = "media.startVoiceRecognition(function(text) { console.log(text) } );")
+    @APIMethod(description = "Start a connected midi device", example = "media.startVoiceRecognition(function(text) { console.log(text) } );")
     @APIParam(params = { "function(recognizedText)" })
     public void startMidiDevice(final PMidi.MidiDeviceEventCB callbackfn) {
         PMidi pMidi = new PMidi(a.get(), callbackfn);
-
     }
 }

@@ -94,14 +94,14 @@ public class PUtil extends PInterface {
 		}
 
 		@ProtocoderScript
-		@APIMethod(description = "", example = "")
+		@APIMethod(description = "Change the current delay to a new one", example = "")
 		@APIParam(params = { "duration" })
 		public void setDelay(int duration) {
 			this.delay = duration;
 		}
 
 		@ProtocoderScript
-		@APIMethod(description = "", example = "")
+		@APIMethod(description = "Pause the looper", example = "")
 		@APIParam(params = { "boolean" })
 		public void pause(boolean b) {
 			this.paused = b;
@@ -111,7 +111,7 @@ public class PUtil extends PInterface {
 		}
 
 		@ProtocoderScript
-		@APIMethod(description = "", example = "")
+		@APIMethod(description = "Stop the looper", example = "")
 		public void stop() {
 			handler.removeCallbacks(task);
 		}
@@ -123,7 +123,7 @@ public class PUtil extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Creates a looper that loops a given function every 'n' milliseconds", example = "")
 	@APIParam(params = { "milliseconds", "function()" })
 	public Looper loop(final int duration, final LooperCB callbackkfn) {
 
@@ -136,7 +136,7 @@ public class PUtil extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Delay a given function 'n' milliseconds", example = "")
 	@APIParam(params = { "milliseconds", "function()" })
 	public void delay(final int duration, final delayCB fn) {
 
@@ -154,6 +154,10 @@ public class PUtil extends PInterface {
 		rl.add(task);
 	}
 
+
+    @ProtocoderScript
+    @APIMethod(description = "Stop all timers", example = "")
+    @APIParam(params = { "" })
 	public void stopAllTimers() {
 		Iterator<Runnable> ir = rl.iterator();
 		while (ir.hasNext()) {
@@ -167,6 +171,9 @@ public class PUtil extends PInterface {
 	}
 
 	// http://stackoverflow.com/questions/4605527/converting-pixels-to-dp
+    @ProtocoderScript
+    @APIMethod(description = "Convert given dp to pixels", example = "")
+    @APIParam(params = { "" })
 	public float dpToPixels(float dp) {
 		Resources resources = a.get().getResources();
 		DisplayMetrics metrics = resources.getDisplayMetrics();
@@ -174,6 +181,9 @@ public class PUtil extends PInterface {
 		return px;
 	}
 
+    @ProtocoderScript
+    @APIMethod(description = "Convert given px to dp", example = "")
+    @APIParam(params = { "" })
 	public float pixelsToDp(float px) {
 		Resources resources = a.get().getResources();
 		DisplayMetrics metrics = resources.getDisplayMetrics();
@@ -181,12 +191,18 @@ public class PUtil extends PInterface {
 		return dp;
 	}
 
+    @ProtocoderScript
+    @APIMethod(description = "Convert given mm to pixels", example = "")
+    @APIParam(params = { "" })
 	public float mmToPixels(float mm) {
 		float px = TypedValue
 				.applyDimension(TypedValue.COMPLEX_UNIT_MM, mm, a.get().getResources().getDisplayMetrics());
 		return px;
 	}
 
+    @ProtocoderScript
+    @APIMethod(description = "Convert given pixels to mm", example = "")
+    @APIParam(params = { "" })
 	public float pixelsToMm(int px) {
 		float onepx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_MM, 1, a.get().getResources()
 				.getDisplayMetrics());
@@ -198,6 +214,9 @@ public class PUtil extends PInterface {
         void event(float data);
     }
 
+    @ProtocoderScript
+    @APIMethod(description = "Animate a variable from min to max in a specified time using 'bounce', 'linear', 'decelerate', 'anticipate', 'aovershoot', 'accelerate' type  ", example = "")
+    @APIParam(params = { "" })
     public ValueAnimator anim(float min, float max, int time, String type, final AnimCB callback) {
         TimeInterpolator interpolator = null;
         if (type.equals("bounce")) {

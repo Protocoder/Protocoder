@@ -51,53 +51,39 @@ public class PConsole extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "text" })
+	@APIMethod(description = "shows any HTML text in the webIde console", example = "")
+	@APIParam(params = { "text","text","..." })
 	public void log(String... outputs) throws JSONException, UnknownHostException {
 
 		StringBuilder builder = new StringBuilder();
 
 		for (String output : outputs) {
-			builder.append(" ");
-			builder.append(output);
+			builder.append(" ").append(output);
 		}
 
-		JSONObject msg = new JSONObject();
-		msg.put("type", "console");
-		msg.put("action", "log");
-		JSONObject values = new JSONObject();
-		values.put("val", builder.toString());
-		msg.put("values", values);
+		JSONObject values = new JSONObject().put("val", builder.toString());
+        JSONObject msg = new JSONObject().put("type", "console").put("action", "log").put("values", values);
 
-		CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
-		ws.send(msg);
+		CustomWebsocketServer.getInstance(a.get()).send(msg);
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "text" })
-	public void log(String output) throws JSONException, UnknownHostException {
-		JSONObject msg = new JSONObject();
-		msg.put("type", "console");
-		msg.put("action", "log");
-		JSONObject values = new JSONObject();
-		values.put("val", output);
-		msg.put("values", values);
-
-		CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
-		ws.send(msg);
-	}
-
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "clear the webIde console", example = "")
 	@APIParam(params = { "" })
 	public void clear() throws JSONException, UnknownHostException {
-		JSONObject msg = new JSONObject();
-		msg.put("type", "console");
-		msg.put("action", "clear");
+		JSONObject msg = new JSONObject().put("type", "console").put("action", "clear");
 
-		CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
-		ws.send(msg);
+		CustomWebsocketServer.getInstance(a.get()).send(msg);
 	}
 
+    //TODO
+    public void show(boolean b) {
+
+    }
+
+    //TODO
+    public void size(int textSize) {
+
+    }
 }
+

@@ -49,7 +49,7 @@ public class PBoards extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "initializes ioio board", example = "")
+	@APIMethod(description = "initializes the ioio board", example = "")
 	@APIParam(params = { "function()" })
 	public PIOIO startIOIO(PIOIO.startCB callbackfn) {
 		PIOIO ioio = new PIOIO(a.get());
@@ -59,8 +59,8 @@ public class PBoards extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "initializes makr board", example = "")
-	@APIParam(params = { "function()" })
+	@APIMethod(description = "initializes serial communication", example = "")
+	@APIParam(params = { "bauds", "function()" })
 	public PSerial startSerial(int baud, PSerial.startCB callbackfn) {
 		PSerial serial = new PSerial(a.get());
 		serial.start(baud, callbackfn);
@@ -68,15 +68,23 @@ public class PBoards extends PInterface {
 		return serial;
 	}
 
+
     @ProtocoderScript
-    @APIMethod(description = "initializes arduino board", example = "")
+    @APIMethod(description = "initializes arduino board without callback", example = "")
+    @APIParam(params = { "" })
+    public PArduino startArduino() {
+        PArduino arduino = new PArduino(a.get());
+        arduino.start();
+
+        return arduino;
+    }
+
+    @ProtocoderScript
+    @APIMethod(description = "initializes arduino board with callback", example = "")
+    @APIParam(params = { "bauds", "function()" })
     public PArduino startArduino(int bauds, PArduino.onReadCB callbackfn) {
         PArduino arduino = new PArduino(a.get());
-        MLog.network(a.get(), "PBoard", "instance arduino " + arduino);
         arduino.start(bauds, callbackfn);
-        MLog.network(a.get(), "PBoard", "instance arduino " + arduino);
-
-        MLog.network(a.get(), "PBoard", "iniciando ");
 
         return arduino;
     }

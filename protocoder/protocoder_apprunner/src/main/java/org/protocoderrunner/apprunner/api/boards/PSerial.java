@@ -76,7 +76,7 @@ public class PSerial extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "initializes makr board", example = "makr.start();")
+	@APIMethod(description = "starts serial", example = "")
 	public void start(int bauds, final startCB callbackfn) {
 		WhatIsRunning.getInstance().add(this);
 		if (!isStarted) {
@@ -118,29 +118,30 @@ public class PSerial extends PInterface {
 
                     @Override
                     public void onNewData(final byte[] data) {
-                        mHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                String readMsg = new String(data, 0, data.length);
-                                msg = msg + readMsg;
-                                MLog.d(TAG, "preMsg " + msg);
+                        String readMsg = new String(data, 0, data.length);
+                        msg = msg + readMsg;
 
-                                int newLineIndex = msg.indexOf('\n');
-                                MLog.d(TAG, "index " + newLineIndex);
-                                String msgReturn = "";
-                                if (newLineIndex != -1) {
-                                    msgReturn = msg.substring(0, newLineIndex);
-                                    msg = msg.substring(newLineIndex + 1, msg.length());
-                                    MLog.d(TAG, "msgReturn " + msgReturn);
-                                    MLog.d(TAG, "postMsg " + msg);
-                                }
+                        int newLineIndex = msg.indexOf('\n');
+                        MLog.d(TAG, "index " + newLineIndex);
+                        String msgReturn = "";
+                        if (newLineIndex != -1) {
+                            msgReturn = msg.substring(0, newLineIndex);
+                            msg = msg.substring(newLineIndex + 1, msg.length());
 
-                                MLog.d(TAG, msg);
-                                if (msgReturn.trim().equals("") == false) {
-                                    callbackfn.event(msgReturn);
+                        }
+
+                        MLog.d(TAG, msg);
+                        if (msgReturn.trim().equals("") == false) {
+
+                            final String finalMsgReturn = msgReturn;
+                            mHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                        callbackfn.event(finalMsgReturn);
                                 }
-                            }
-                        });
+                            });
+                        }
+
                     }
                 };
 
@@ -188,7 +189,7 @@ public class PSerial extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "clean up and poweroff makr board", example = "makr.stop();")
+	@APIMethod(description = "stop serial", example = "")
 	public void stop() {
 		if (isStarted) {
 			isStarted = false;
@@ -208,7 +209,7 @@ public class PSerial extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "sends commands to makr board", example = "makr.writeSerial(\"LEDON\");")
+	@APIMethod(description = "sends commands to the serial")
 	public void writeSerial(String cmd) {
 		if (isStarted) {
 			try {
@@ -220,13 +221,13 @@ public class PSerial extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "resumes makr activity", example = "makr.resume();")
+	@APIMethod(description = "resumes serial")
 	public void resume() {
 
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "pause makr activity", example = "makr.pause();")
+	@APIMethod(description = "pause serial")
 	public void pause() {
 
 	}

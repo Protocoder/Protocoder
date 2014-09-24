@@ -132,7 +132,7 @@ public class PNetwork extends PInterface {
     }
 
     @ProtocoderScript
-    @APIMethod(description = "", example = "")
+    @APIMethod(description = "Downloads a file from a given Uri. Returns the progress", example = "")
     @APIParam(params = {"url", "fileName", "function(progress)"})
     public void downloadFile(String url, String fileName, final downloadFileCB callbackfn) {
 
@@ -176,10 +176,11 @@ public class PNetwork extends PInterface {
 
     }
 
+    //TODO this doesnt work
     @ProtocoderScript
-    @APIMethod(description = "", example = "")
+    @APIMethod(description = "Returns the current device Ip address", example = "")
     @APIParam(params = {""})
-    public String getIP() {
+    public String getIp() {
         return NetworkUtils.getLocalIpAddress(a.get());
     }
 
@@ -189,7 +190,7 @@ public class PNetwork extends PInterface {
     }
 
     @ProtocoderScript
-    @APIMethod(description = "", example = "")
+    @APIMethod(description = "Starts an OSC server", example = "")
     @APIParam(params = {"port", "function(jsonData)"})
     public OSC.Server startOSCServer(String port, final startOSCServerCB callbackfn) {
         OSC osc = new OSC();
@@ -234,7 +235,7 @@ public class PNetwork extends PInterface {
     }
 
     @ProtocoderScript
-    @APIMethod(description = "", example = "")
+    @APIMethod(description = "Connects to a OSC server. Returns an object that allow sending messages", example = "")
     @APIParam(params = {"address", "port"})
     public OSC.Client connectOSC(String address, int port) {
         OSC osc = new OSC();
@@ -252,7 +253,7 @@ public class PNetwork extends PInterface {
     WifiManager.MulticastLock wifiLock;
 
     @ProtocoderScript
-    @APIMethod(description = "", example = "")
+    @APIMethod(description = "Enable multicast networking", example = "")
     @APIParam(params = {"boolean"})
     public void setMulticast(boolean b) {
         WifiManager wifi = (WifiManager) a.get().getSystemService(Context.WIFI_SERVICE);
@@ -291,7 +292,7 @@ public class PNetwork extends PInterface {
     }
 
     @ProtocoderScript
-    @APIMethod(description = "", example = "")
+    @APIMethod(description = "Start a websocket server", example = "")
     @APIParam(params = {"port", "function(status, socket, data)"})
     public WebSocketServer startWebsocketServer(int port, final startWebSocketServerCB callbackfn) {
 
@@ -336,7 +337,7 @@ public class PNetwork extends PInterface {
     }
 
     @ProtocoderScript
-    @APIMethod(description = "", example = "")
+    @APIMethod(description = "Connect to a websocket server", example = "")
     @APIParam(params = {"uri", "function(status, data)"})
     public WebSocketClient connectWebsocket(String uri, final connectWebsocketCB callbackfn) {
 
@@ -392,7 +393,7 @@ public class PNetwork extends PInterface {
     }
 
     @ProtocoderScript
-    @APIMethod(description = "", example = "")
+    @APIMethod(description = "Connect to a SocketIO server", example = "")
     @APIParam(params = {"uri", "function(status, message, data)"})
     public PSocketIOClient connectSocketIO(String uri, final connectSocketIOCB callbackfn) {
 
@@ -455,7 +456,7 @@ public class PNetwork extends PInterface {
     // public EmailConf emailSettings;
 
     @ProtocoderScript
-    @APIMethod(description = "", example = "")
+    @APIMethod(description = "Creates an object where to set the e-mail sending settings", example = "")
     @APIParam(params = {"url", "function(data)"})
     public EmailConf createEmailSettings() {
 		/*
@@ -472,7 +473,7 @@ public class PNetwork extends PInterface {
 
     // http://mrbool.com/how-to-work-with-java-mail-api-in-android/27800#ixzz2tulYAG00
     @ProtocoderScript
-    @APIMethod(description = "", example = "")
+    @APIMethod(description = "Send an E-mail. It requires passing a EmailConf object", example = "")
     @APIParam(params = {"url", "function(data)"})
     public void sendEmail(String from, String to, String subject, String text, final EmailConf emailSettings)
             throws AddressException, MessagingException {
@@ -547,7 +548,7 @@ public class PNetwork extends PInterface {
     }
 
     @ProtocoderScript
-    @APIMethod(description = "", example = "")
+    @APIMethod(description = "Simple http get. It returns the data using the callback", example = "")
     @APIParam(params = {"url", "function(eventType, responseString)"})
     public void httpGet(String url, final HttpGetCB callbackfn) {
 
@@ -607,7 +608,7 @@ public class PNetwork extends PInterface {
     }
 
     @ProtocoderScript
-    @APIMethod(description = "", example = "")
+    @APIMethod(description = "Simple http post request. It needs an object to be sent. If an element of the object contains the key file then it will try to upload the resource indicated in the value as Uri ", example = "")
     @APIParam(params = {"url", "params", "function(responseString)"})
     public void httpPost(String url, Object object, final HttpPostCB callbackfn) {
         final HttpClient httpClient = new DefaultHttpClient();
@@ -678,7 +679,7 @@ public class PNetwork extends PInterface {
 
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Simple http server, serving the content of the project folder", example = "")
 	@APIParam(params = { "port", "function(responseString)" })
 	public ProtocoderAPIHttpServer startSimpleHttpServer(int port, final ProtocoderAPIHttpServer.HttpCB callbackfn) {
         ProtocoderAPIHttpServer httpServer = null;
@@ -709,7 +710,7 @@ public class PNetwork extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Scan bluetooth networks. Gives back the name, mac and signal strength", example = "")
 	@APIParam(params = { "function(name, macAddress, strength)" })
 	public void scanBluetoothNetworks(final scanBTNetworksCB callbackfn) {
 		onBluetoothfn = callbackfn;
@@ -729,8 +730,8 @@ public class PNetwork extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "function(name, macAddress, strength)" })
+	@APIMethod(description = "Start the bluetooth adapter", example = "")
+	@APIParam(params = { "" })
 	public SimpleBT startBluetooth() {
 		simpleBT = new SimpleBT(a.get());
 		simpleBT.start();
@@ -782,7 +783,7 @@ public class PNetwork extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Connects to a bluetooth device using a popup", example = "")
 	@APIParam(params = { "function(name, macAddress, strength)" })
 	public void connectBluetoothSerialByUI(final String callbackfn) {
 		simpleBT.startDeviceListActivity();
@@ -794,8 +795,8 @@ public class PNetwork extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "function(name, macAddress, strength)" })
+	@APIMethod(description = "Connect to a bluetooth device using the mac address", example = "")
+	@APIParam(params = { "mac", "function(data)" })
 	public void connectBluetoothSerialByMac(String mac, final connectBluetoothCB callbackfn) {
         startBluetooth();
         simpleBT.connectByMac(mac);
@@ -804,8 +805,8 @@ public class PNetwork extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "name, function()" })
+	@APIMethod(description = "Connect to a bluetooth device using a name", example = "")
+	@APIParam(params = { "name, function(data)" })
 	public void connectBluetoothByName(String name, final connectBluetoothCB callbackfn) {
 		simpleBT.connectByName(name);
         addBTConnectionListener(callbackfn);
@@ -842,44 +843,42 @@ public class PNetwork extends PInterface {
     }
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Send a bluetooth serial message", example = "")
 	@APIParam(params = { "string" })
 	public void sendBluetoothSerial(String string) {
 		simpleBT.send(string);
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Disconnect the bluetooth", example = "")
 	@APIParam(params = { "" })
 	public void disconnectBluetooth() {
-		simpleBT.disconnect();
+        simpleBT.disconnect();
+	}
+
+
+	@ProtocoderScript
+	@APIMethod(description = "Enable/Disable the bluetooth adapter", example = "")
+	@APIParam(params = { "boolean" })
+	public void enableBluetooth(boolean b) {
+
+        if (b) {
+            simpleBT.start();
+        } else {
+            simpleBT.disable();
+        }
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "" })
-	public void disableBluetooth() {
-		simpleBT.disable();
-	}
-
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "" })
-	public void enableBluetooth() {
-		simpleBT.start();
-	}
-
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Enable/Disable the Wifi adapter", example = "")
 	@APIParam(params = { "boolean" })
 	public void enableWifi(boolean enabled) {
 		WifiManager wifiManager = (WifiManager) a.get().getSystemService(Context.WIFI_SERVICE);
 		wifiManager.setWifiEnabled(enabled);
-
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Check if the Wifi adapter is enabled", example = "")
 	@APIParam(params = {})
 	public boolean isWifiEnabled() {
 		WifiManager wifiManager = (WifiManager) a.get().getSystemService(Context.WIFI_SERVICE);
@@ -888,7 +887,7 @@ public class PNetwork extends PInterface {
 
 	// http://stackoverflow.com/questions/8818290/how-to-connect-to-a-specific-wifi-network-in-android-programmatically
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Connect to a given Wifi network with a given 'wpa', 'wep', 'open' type and a password", example = "")
 	@APIParam(params = { "ssidName", "type", "password" })
 	public void connectWifi(String networkSSID, String type, String networkPass) {
 
@@ -929,7 +928,7 @@ public class PNetwork extends PInterface {
 	private Object mIsWifiAPEnabled = true;
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Enable/Disable a Wifi access point", example = "")
 	@APIParam(params = { "boolean, apName" })
 	public void wifiAP(boolean enabled, String wifiName) {
 
@@ -969,7 +968,7 @@ public class PNetwork extends PInterface {
     }
 
     @ProtocoderScript
-    @APIMethod(description = "", example = "")
+    @APIMethod(description = "Register a discovery service", example = "")
     @APIParam(params = { "serviceName, serviceType, port, function(name, status)" })
     public void registerService(String serviceName, String serviceType, int port, ServiceDiscovery.CreateCB callbackfn) {
         ServiceDiscovery.Create rD = new ServiceDiscovery().create(a.get(), serviceName, serviceType, port, callbackfn);
@@ -977,7 +976,7 @@ public class PNetwork extends PInterface {
     }
 
     @ProtocoderScript
-    @APIMethod(description = "", example = "")
+    @APIMethod(description = "Discover services in the current network", example = "")
     @APIParam(params = { "serviceType, function(name, jsonData)" })
     public void discoverServices(final String serviceType, ServiceDiscovery.DiscoverCB callbackfn) {
         ServiceDiscovery.Discover sD = new ServiceDiscovery().discover(a.get(), serviceType, callbackfn);
@@ -987,8 +986,8 @@ public class PNetwork extends PInterface {
 
 
     @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "port, function(data)" })
+    @APIMethod(description = "Ping a Ip address", example = "")
+    @APIParam(params = { "ip", "function(result)" })
     public ExecuteCmd ping(final String where, final ExecuteCmd.ExecuteCommandCB callbackfn) {
 //        mHandler.post(new Runnable() {
 //            @Override

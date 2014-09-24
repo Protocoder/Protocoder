@@ -58,40 +58,28 @@ import org.protocoderrunner.utils.MLog;
 
 public class PDevice extends PInterface {
 
-	private onSmsReceivedCB onSmsReceivedfn;
 	private BroadcastReceiver batteryReceiver;
 
 	public PDevice(Activity a) {
 		super(a);
 		WhatIsRunning.getInstance().add(this);
 
-		((AppRunnerActivity) a).addOnSmsReceivedListener(new onSmsReceivedListener() {
-
-			@Override
-			public void onSmsReceived(String number, String msg) {
-				onSmsReceivedfn.event(number, msg);
-			}
-		});
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "makes the phone vibrate", example = "android.vibrate(500);")
 	@APIParam(params = { "duration" })
 	public void vibrate(String duration) {
-		MLog.d("TAG", "vibrate...");
 		Vibrator v = (Vibrator) a.get().getSystemService(Context.VIBRATOR_SERVICE);
 		v.vibrate(Integer.parseInt(duration));
-
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "Change brightness", example = "")
+	@APIMethod(description = "send an sms to the given number", example = "")
 	@APIParam(params = { "number", "message" })
 	public void smsSend(String number, String msg) {
-
 		SmsManager sm = SmsManager.getDefault();
 		sm.sendTextMessage(number, null, msg, null, null);
-
 	}
 
 	// --------- onSmsReceived ---------//
@@ -100,10 +88,17 @@ public class PDevice extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Gives back the number and sms of the sender", example = "")
 	@APIParam(params = { "function(number, message)" })
 	public void onSmsReceived(final onSmsReceivedCB fn) {
-		onSmsReceivedfn = fn;
+
+        a.get().addOnSmsReceivedListener(new onSmsReceivedListener() {
+
+            @Override
+            public void onSmsReceived(String number, String msg) {
+                fn.event(number, msg);
+            }
+        });
 	}
 
 	@ProtocoderScript
@@ -114,25 +109,27 @@ public class PDevice extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "Change brightness", example = "")
-	public void setGlobalBrightness(int b) {
+	@APIMethod(description = "Set the global brightness from 0 to 255", example = "")
+    @APIParam(params = { "brightness" })
+    public void setGlobalBrightness(int b) {
 		a.get().setGlobalBrightness(b);
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "Change brightness", example = "")
+	@APIMethod(description = "Get the current brightness", example = "")
 	public float getBrightness() {
 		return a.get().getCurrentBrightness();
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	public void screenAlwaysOn(boolean b) {
+	@APIMethod(description = "Set the screen always on", example = "")
+    @APIParam(params = { "boolean" })
+    public void screenAlwaysOn(boolean b) {
 		a.get().setScreenAlwaysOn(b);
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Check if the scrren is on", example = "")
 	public boolean isScreenOn() {
 		return a.get().isScreenOn();
 	}
@@ -144,80 +141,87 @@ public class PDevice extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	public void setScreenTimeout(int time) {
+	@APIMethod(description = "Set the screen timeout", example = "")
+    @APIParam(params = { "time" })
+    public void setScreenTimeout(int time) {
 		a.get().setScreenTimeout(time);
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Check if is in airplane mode", example = "")
 	public boolean isAirplaneMode() {
 		return a.get().isAirplaneMode();
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	public boolean isTablet() {
-		return a.get().isTablet();
+	@APIMethod(description = "Check what type of device is", example = "")
+    @APIParam(params = { "" })
+    public String getDeviceType() {
+        if (a.get().isTablet()) {
+            return "tablet";
+        } else {
+            return "phone";
+        }
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	public void enableSoundEffects(boolean b) {
-		a.get().setEnableSoundEffects(b);
+	@APIMethod(description = "Enable sounds effects (default false)", example = "")
+    @APIParam(params = { "boolean" })
+    public void enableSoundEffects(boolean b) {
+        a.get().setEnableSoundEffects(b);
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	public void setWakeLock(boolean b) {
+	@APIMethod(description = "Prevent the device suspend at any time. Good for long living operations.", example = "")
+    @APIParam(params = { "boolean" })
+    public void setWakeLock(boolean b) {
 		a.get().setWakeLock(b);
-
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "recipient", "subject", "message" })
+	@APIMethod(description = "Launch an intent", example = "")
+	@APIParam(params = { "intent" })
 	public void launchIntent(String intent) {
 		Intent market_intent = new Intent(intent);
 		a.get().startActivity(market_intent);
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Open the default e-mail app", example = "")
 	@APIParam(params = { "recipient", "subject", "message" })
 	public void openEmailApp(String recipient, String subject, String msg) {
 		Intents.sendEmail(a.get(), recipient, subject, msg);
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Open the default Map app", example = "")
 	@APIParam(params = { "longitude", "latitude" })
 	public void openMapApp(double longitude, double latitude) {
 		Intents.openMap(a.get(), longitude, latitude);
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Open the phone dial", example = "")
 	public void openDial() {
 		Intents.openDial(a.get());
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Call a given phone number", example = "")
 	@APIParam(params = { "number" })
 	public void call(String number) {
 		Intents.call(a.get(), number);
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Open the default web browser with a given Url", example = "")
 	@APIParam(params = { "url" })
 	public void openWebApp(String url) {
 		Intents.openWeb(a.get(), url);
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Open the search app with the given text", example = "")
 	@APIParam(params = { "text" })
 	public void openWebSearch(String text) {
 		Intents.webSearch(a.get(), text);
@@ -234,11 +238,17 @@ public class PDevice extends PInterface {
 		public boolean connected;
 	}
 
+    @ProtocoderScript
+    @APIMethod(description = "Copy the content into the clipboard", example = "")
+    @APIParam(params = { "label", "text" })
 	public void setClipboard(String label, String text) {
 		ClipboardManager clipboard = (ClipboardManager) a.get().getSystemService(Context.CLIPBOARD_SERVICE);
 		clipboard.setPrimaryClip(ClipData.newPlainText(label, text));
 	}
 
+    @ProtocoderScript
+    @APIMethod(description = "Get the content from the clipboard", example = "")
+    @APIParam(params = { "label", "text" })
 	public String getClipboard(String label, String text) {
 		ClipboardManager clipboard = (ClipboardManager) a.get().getSystemService(Context.CLIPBOARD_SERVICE);
 		return clipboard.getPrimaryClip().getItemAt(clipboard.getPrimaryClip().getItemCount()).getText().toString();
@@ -294,7 +304,7 @@ public class PDevice extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Get the device battery level", example = "")
 	@APIParam(params = { "" })
 	public float getBatteryLevel() {
 		Intent batteryIntent = a.get().registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
@@ -331,7 +341,7 @@ public class PDevice extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Get some device information", example = "")
 	@APIParam(params = { "" })
 	public DeviceInfo getInfo() {
 		DeviceInfo deviceInfo = new DeviceInfo();
@@ -369,7 +379,7 @@ public class PDevice extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Get memory usage", example = "")
 	@APIParam(params = { "" })
 	public Memory getMemory() {
 		Memory mem = new Memory();
