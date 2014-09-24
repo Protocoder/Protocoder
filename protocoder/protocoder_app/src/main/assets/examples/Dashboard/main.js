@@ -41,8 +41,8 @@ ui.addButton("adios", 0, 400, 500, 100, function(){
 //---------- DASHBOARD UI ---------------------
 
 //labels need an unique id in order to be identified in the dashboard
-var label = dashboard.addLabel("Use the Dashboard to see information and interact remotely with your device", 50, 50, 200, 100, 28, "#FFFFFF");
-var labelChange = dashboard.addLabel("This label can change", 50, 250, 200, 100, 28, "#FF00FF");
+var text = dashboard.addText("Use the Dashboard to see information and interact remotely with your device", 50, 50, 200, 100, 28, "#FFFFFF");
+var textChange = dashboard.addText("This label can change", 50, 250, 200, 100, 28, "#FF00FF");
 
 slider = dashboard.addSlider("name", 50, 400, 200, 100, 0, 100, function(val) {
     console.log(val);
