@@ -55,12 +55,12 @@ import org.protocoderrunner.apprunner.api.dashboard.PDashboardButton;
 import org.protocoderrunner.apprunner.api.dashboard.PDashboardHTML;
 import org.protocoderrunner.apprunner.api.dashboard.PDashboardImage;
 import org.protocoderrunner.apprunner.api.dashboard.PDashboardInput;
-import org.protocoderrunner.apprunner.api.dashboard.PDashboardLabel;
+import org.protocoderrunner.apprunner.api.dashboard.PDashboardText;
 import org.protocoderrunner.apprunner.api.dashboard.PDashboardPlot;
 import org.protocoderrunner.apprunner.api.dashboard.PDashboardSlider;
 import org.protocoderrunner.apprunner.api.other.PCamera;
 import org.protocoderrunner.apprunner.api.other.PProcessing;
-import org.protocoderrunner.apprunner.api.other.PProtocoderFeedback;
+import org.protocoderrunner.apprunner.api.other.PProtocoderLiveCodingFeedback;
 import org.protocoderrunner.apprunner.api.other.PPureData;
 import org.protocoderrunner.apprunner.api.other.PSqlLite;
 import org.protocoderrunner.apprunner.api.other.PVideo;
@@ -419,7 +419,7 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 
 					APIManager.getInstance().addClass(PCamera.class);
 					APIManager.getInstance().addClass(PProcessing.class);
-					APIManager.getInstance().addClass(PProtocoderFeedback.class);
+					APIManager.getInstance().addClass(PProtocoderLiveCodingFeedback.class);
 					APIManager.getInstance().addClass(PPureData.class);
 					APIManager.getInstance().addClass(PSqlLite.class);
 					APIManager.getInstance().addClass(PVideo.class);
@@ -449,7 +449,7 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 					APIManager.getInstance().addClass(PDashboardHTML.class);
 					APIManager.getInstance().addClass(PDashboardImage.class);
 					APIManager.getInstance().addClass(PDashboardInput.class);
-					APIManager.getInstance().addClass(PDashboardLabel.class);
+					APIManager.getInstance().addClass(PDashboardText.class);
 					APIManager.getInstance().addClass(PDashboardPlot.class);
 					APIManager.getInstance().addClass(PDashboardSlider.class);
 
