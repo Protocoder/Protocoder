@@ -212,7 +212,7 @@ public class  AppRunnerInterpreter {
         interpreter.addObjectToInterface("console", console);
         interpreter.addObjectToInterface("dashboard", dashboard);
         interpreter.addObjectToInterface("device", device);
-        interpreter.addObjectToInterface("fileIO", fileIO);
+        interpreter.addObjectToInterface("fileio", fileIO);
         interpreter.addObjectToInterface("media", media);
         interpreter.addObjectToInterface("network", network);
         interpreter.addObjectToInterface("protocoder", protocoder);
