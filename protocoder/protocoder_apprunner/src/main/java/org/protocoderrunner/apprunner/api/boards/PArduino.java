@@ -51,43 +51,80 @@ import java.io.UnsupportedEncodingException;
 
 public class PArduino extends PInterface {
 
-	private final String TAG = "PArduino";
+    private final String TAG = "PArduino";
     private Physicaloid mPhysicaloid;
+    private boolean started = false;
+    private String msg = "";
 
-	public PArduino(Activity a) {
+    public static final Boards ARDUINO_UNO = Boards.ARDUINO_UNO;
+    public static final Boards ARDUINO_DUEMILANOVE_328 = Boards.ARDUINO_DUEMILANOVE_328;
+    public static final Boards ARDUINO_DUEMILANOVE_168 = Boards.ARDUINO_DUEMILANOVE_168;
+    public static final Boards ARDUINO_NANO_328 = Boards.ARDUINO_NANO_328;
+    public static final Boards ARDUINO_NANO_168 = Boards.ARDUINO_NANO_168;
+    public static final Boards ARDUINO_MEGA_2560_ADK = Boards.ARDUINO_MEGA_2560_ADK;
+    public static final Boards ARDUINO_MEGA_1280 = Boards.ARDUINO_MEGA_1280;
+    public static final Boards ARDUINO_MINI_328 = Boards.ARDUINO_MINI_328;
+    public static final Boards ARDUINO_MINI_168 = Boards.ARDUINO_MINI_168;
+    public static final Boards ARDUINO_ETHERNET = Boards.ARDUINO_ETHERNET;
+    public static final Boards ARDUINO_FIO = Boards.ARDUINO_FIO;
+    public static final Boards ARDUINO_BT_328 = Boards.ARDUINO_BT_328;
+    public static final Boards ARDUINO_BT_168 = Boards.ARDUINO_BT_168;
+    public static final Boards ARDUINO_LILYPAD_328 = Boards.ARDUINO_LILYPAD_328;
+    public static final Boards ARDUINO_LILYPAD_168 = Boards.ARDUINO_LILYPAD_168;
+
+    public static final Boards ARDUINO_PRO_5V_328 = Boards.ARDUINO_PRO_5V_328;
+    public static final Boards ARDUINO_PRO_5V_168 = Boards.ARDUINO_PRO_5V_168;
+    public static final Boards ARDUINO_PRO_33V_328 = Boards.ARDUINO_PRO_33V_328;
+    public static final Boards ARDUINO_PRO_33V_168 = Boards.ARDUINO_PRO_33V_168;
+    public static final Boards ARDUINO_NG_168 = Boards.ARDUINO_NG_168;
+    public static final Boards ARDUINO_NG_8 = Boards.ARDUINO_NG_8;
+    public static final Boards BALANDUINO = Boards.BALANDUINO;
+    public static final Boards POCKETDUINO = Boards.POCKETDUINO;
+    public static final Boards PERIDOT = Boards.PERIDOT;
+
+    public static final Boards FREADUINO = Boards.ARDUINO_UNO;
+    public static final Boards BQ_ZUM = Boards.ARDUINO_BT_328;
+
+    public static final Boards NONE = Boards.NONE;
+
+
+    public PArduino(Activity a) {
 		super(a);
+    }
 
-	}
-
-    // Initializes arduino board
-	public void start(int bauds, onReadCB callbackfn) {
-        MLog.network(a.get(), "PArduino", "start ");
-
-        mPhysicaloid = new Physicaloid(a.get());
-        MLog.network(a.get(), "PArduino", "physicaloid q" + mPhysicaloid);
-
-        open(bauds);
-        MLog.network(a.get(), "PArduino", "post open " + mPhysicaloid);
-
-        onRead(callbackfn);
-        MLog.network(a.get(), "PArduino", "post onRead " + mPhysicaloid);
-
+    public void start() {
         WhatIsRunning.getInstance().add(this);
+        mPhysicaloid = new Physicaloid(a.get());
+        open();
+    }
+
+        // Initializes arduino board
+	public void start(int bauds, onReadCB callbackfn) {
+        WhatIsRunning.getInstance().add(this);
+        if (!started) {
+            started = true;
+            MLog.d("PArduino", "start ");
+
+            mPhysicaloid = new Physicaloid(a.get());
+            open();
+            mPhysicaloid.setBaudrate(bauds);
+
+            onRead(callbackfn);
+        }
 	}
 
     // Opens a device and communicate USB UART by default settings
-    public void open(int bauds) {
+    public void open() {
         if (mPhysicaloid.isOpened()) {
-            MLog.network(a.get(), TAG, "The device is opened");
+            MLog.d(TAG, "The device is opened");
             return;
         }
 
         if (mPhysicaloid.open()) {
-            MLog.network(a.get(), TAG, "Device opened");
+            MLog.d(TAG, "Device opened");
         } else {
-            MLog.network(a.get(), TAG, "Cannot open the device");
+            MLog.d(TAG, "Cannot open the device");
         }
-        mPhysicaloid.setBaudrate(bauds);
 
     }
 
@@ -96,9 +133,9 @@ public class PArduino extends PInterface {
         if (mPhysicaloid.close()) {
             //  clear read callback
             mPhysicaloid.clearReadListener();
-            MLog.network(a.get(), TAG, "Device closed");
+            MLog.d(TAG, "Device closed");
         } else {
-            MLog.network(a.get(), TAG, "Cannot close the device");
+            MLog.d(TAG, "Cannot close the device");
         }
     }
 
@@ -108,10 +145,15 @@ public class PArduino extends PInterface {
         if (mPhysicaloid.isOpened()) {
             byte[] buf = cmd.getBytes();
             mPhysicaloid.write(buf, buf.length);
-            MLog.network(a.get(), TAG, "Command sent to the device");
+            MLog.d(TAG, "Command sent to the device");
         } else {
-            MLog.network(a.get(), TAG, "Cannot write to the device. The device is not opened");
+            MLog.d(TAG, "Cannot write to the device. The device is not opened");
         }
+    }
+
+    // --------- onReadCB ---------//
+    public interface onReadCB {
+        void event(String responseString);
     }
 
     @ProtocoderScript
@@ -126,19 +168,16 @@ public class PArduino extends PInterface {
                 try {
                     str = new String(buf, "UTF-8");
                 } catch (UnsupportedEncodingException e) {
-                    MLog.network(a.get(), TAG, e.toString());
+                    MLog.d(TAG, e.toString());
                 }
             }
         } else {
-            MLog.network(a.get(), TAG, "Cannot read from the device. The device is not opened");
+            MLog.d(TAG, "Cannot read from the device. The device is not opened");
         }
         return str;
     }
 
-    // --------- onReadCB ---------//
-    public interface onReadCB {
-        void event(String responseString);
-    }
+
 
     @ProtocoderScript
     @APIMethod(description = "adds a read callback that is called when one or more bytes are read", example = "")
@@ -152,24 +191,45 @@ public class PArduino extends PInterface {
                 @Override
                 public void onRead(int size) {
                     byte[] buf = new byte[size];
-
                     mPhysicaloid.read(buf, size);
                     try {
                         readStr = new String(buf, "UTF-8");
                     } catch (UnsupportedEncodingException e) {
-                        MLog.network(a.get(), TAG, e.toString());
+                        MLog.d(TAG, e.toString());
                         return;
                     }
 
-                    callbackfn.event(readStr);
+                    msg = msg + readStr;
+                    //MLog.network(a.get(), TAG, "msg " + msg);
+                    //MLog.network(a.get(), TAG, "readStr " + readStr);
+
+                    int newLineIndex = msg.indexOf('\n');
+                    //MLog.network(a.get(), TAG, "index " + newLineIndex);
+                    String msgReturn = "";
+
+                    if (newLineIndex != -1) {
+                        msgReturn = msg.substring(0, newLineIndex);
+                        msg = msg.substring(newLineIndex + 1, msg.length());
+                        //MLog.network(a.get(), TAG, "msgReturn " + msgReturn);
+
+                    }
+                    if (msgReturn.trim().equals("") == false) {
+                        final String finalMsgReturn = msgReturn;
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                callbackfn.event(finalMsgReturn);
+                            }
+                        });
+                    }
                 }
             });
         }
     }
 
     // --------- uploadCallback ---------//
-    public interface uploadCallback {
-        void event(Boolean error);
+    public interface uploadCB {
+        void event(int progress);
     }
 
     // Uploads a binary file to a device on background process. No need to open().
@@ -180,63 +240,75 @@ public class PArduino extends PInterface {
     @ProtocoderScript
     @APIMethod(description = "uploads a binary file to a device on background process", example = "")
     @APIParam(params = { "board", "fileName", "function(error)" })
-    public void upload(Boards board, String fileName, final uploadCallback callbackfn) {
+    public void upload(Boards board, String fileName, final uploadCB callbackfn) {
         if (mPhysicaloid.isOpened()) {
             // Build the absolute path
             String filePath = AppRunnerSettings.get().project.getStoragePath() + File.separator + fileName;
 
+            callbackfn.event(0);
             // Check if the fileName includes the .hex extension
             if (!filePath.toLowerCase().endsWith(".hex")) {
-                MLog.network(a.get(), TAG, "Cannot upload the sketch. The file must have a .hex extension");
+                MLog.d(TAG, "Cannot upload the sketch. The file must have a .hex extension");
+
                 return;
             }
 
             try {
+                //MLog.network(a.get(), TAG, "3");
+
                 mPhysicaloid.upload(board, filePath, new UploadCallBack() {
                     String responseStr;
 
                     @Override
                     public void onPreUpload() {
-                        MLog.network(a.get(), TAG, "Upload : Start");
+                        MLog.d(TAG, "Upload : Start");
                     }
 
                     @Override
                     public void onUploading(int value) {
-                        MLog.network(a.get(), TAG, "Upload : " + value + " %");
+                        uploadCallbackEvent(value, callbackfn);
                     }
 
                     @Override
                     public void onPostUpload(boolean success) {
+                        //MLog.network(a.get(), TAG, "5");
+
                         if(success) {
-                            MLog.network(a.get(), TAG, "Upload : Successful");
-
-                            callbackfn.event(null);
+                       //     uploadCallbackEvent(100, callbackfn);
                         } else {
-                            MLog.network(a.get(), TAG, "Upload fail");
 
-                            callbackfn.event(new Boolean(true));
+                            uploadCallbackEvent(-1, callbackfn);
                         }
                     }
 
                     @Override
                     public void onCancel() {
-                        MLog.network(a.get(), TAG, "Cancel uploading");
+                        uploadCallbackEvent(-1, callbackfn);
                     }
 
                     @Override
                     public void onError(UploadErrors err) {
-                        MLog.network(a.get(), TAG, "Error  : " + err.toString());
+                        MLog.d(TAG, "Error  : " + err.toString());
 
-                        callbackfn.event(new Boolean(true));
+                        uploadCallbackEvent(-1, callbackfn);
                     }
                 });
             } catch (RuntimeException e) {
-                MLog.network(a.get(), TAG, e.toString());
+                MLog.d(TAG, e.toString());
             }
 
         } else {
-            MLog.network(a.get(), TAG, "Cannot upload the sketch. The device is not opened");
+            MLog.d(TAG, "Cannot upload the sketch. The device is not opened");
         }
+    }
+
+    private void uploadCallbackEvent(final int value, final uploadCB callbackfn) {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                callbackfn.event(value);
+            }
+        });
     }
 
     @ProtocoderScript
@@ -244,14 +316,12 @@ public class PArduino extends PInterface {
     @APIParam(params = { "board", "fileName" })
     public void upload(Boards board, String fileName) {
 
-        final uploadCallback callbackfn = new uploadCallback() {
+        upload(board, fileName, new uploadCB() {
             @Override
-            public void event(Boolean error) {
+            public void event(int progress) {
 
             }
-        };
-
-        upload(board, fileName, callbackfn);
+        });
     }
 
     @ProtocoderScript
@@ -261,7 +331,6 @@ public class PArduino extends PInterface {
         try {
             return mPhysicaloid.setBaudrate(baudrate);
         } catch (RuntimeException e) {
-            MLog.network(a.get(), TAG, e.toString());
             return false;
         }
     }
@@ -269,6 +338,10 @@ public class PArduino extends PInterface {
     @ProtocoderScript
     @APIMethod(description = "returns a list of the supported devices that you can use with the \"upload\" function", example = "arduino.getSupportedDevices()")
     public Boards[] getSupportedDevices() {
+        MLog.d(TAG, Boards.ARDUINO_BT_328.toString());
+
+        return com.physicaloid.lib.Boards.values();
+        /*
         Boards[] boards = new Boards[]{
                 Boards.ARDUINO_UNO,
                 Boards.ARDUINO_DUEMILANOVE_328,
@@ -297,6 +370,7 @@ public class PArduino extends PInterface {
                 Boards.NONE};
 
         return boards;
+        */
     }
 
     @ProtocoderScript
@@ -306,7 +380,7 @@ public class PArduino extends PInterface {
         try {
             mPhysicaloid.setConfig(settings);
         } catch (RuntimeException e) {
-            MLog.network(a.get(), TAG, e.toString());
+            MLog.d(TAG, e.toString());
         }
     }
 
@@ -317,7 +391,7 @@ public class PArduino extends PInterface {
         try {
             return mPhysicaloid.setDataBits(dataBits);
         } catch (RuntimeException e) {
-            MLog.network(a.get(), TAG, e.toString());
+            MLog.d(TAG, e.toString());
             return false;
         }
     }
@@ -329,7 +403,7 @@ public class PArduino extends PInterface {
         try {
             return mPhysicaloid.setParity(parity);
         } catch (RuntimeException e) {
-            MLog.network(a.get(), TAG, e.toString());
+            MLog.d(TAG, e.toString());
             return false;
         }
     }
@@ -341,7 +415,7 @@ public class PArduino extends PInterface {
         try {
             return mPhysicaloid.setStopBits(stopBits);
         } catch (RuntimeException e) {
-            MLog.network(a.get(), TAG, e.toString());
+            MLog.d(TAG, e.toString());
             return false;
         }
     }
@@ -353,7 +427,7 @@ public class PArduino extends PInterface {
         try {
             return mPhysicaloid.setDtrRts(dtrOn, rtsOn);
         } catch (RuntimeException e) {
-            MLog.network(a.get(), TAG, e.toString());
+            MLog.d(TAG, e.toString());
             return false;
         }
     }
