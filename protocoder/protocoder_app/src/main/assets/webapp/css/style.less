@@ -394,6 +394,7 @@ body {
 	top: 48px;
 	left: 0px;
 	width: 100%;
+	min-width: 710px;
 	height: 100%;
 	background-color: #FAFAFA;
 	background: linear-gradient(rgba(237, 237, 237, 1), rgba(240, 240, 240, 1));
@@ -1371,6 +1372,29 @@ body {
 	color: rgb(163, 163, 163);
 	font-weight: 100;
 	font-size: 0.8em;
+}
+
+#ace_settingsmenu, #kbshortcutmenu {
+	background-color: #FAFAFA;
+	color: black;
+	box-shadow: -2px 0px 2px rgba(126, 126, 126, 0.55);
+	font-family: Roboto-Condensed-Regular, verdana, sans-serif;
+	padding: 0em 0.5em 2em 1em;
+
+	h1 {
+		text-transform: uppercase;
+		font-size: 1.5em;
+	}
+	.ace_optionsMenuEntry {
+		padding: 0.2em;
+		.ace_optionsMenuCommand {
+			color: rgb(51, 51, 51);
+		} 
+		.ace_optionsMenuKey {
+			color: #B40056;
+		} 
+
+	}
 }
 
 .app_running { 
