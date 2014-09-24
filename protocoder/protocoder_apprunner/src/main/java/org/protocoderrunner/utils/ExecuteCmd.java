@@ -34,6 +34,9 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 
+import org.protocoderrunner.apidoc.annotation.APIMethod;
+import org.protocoderrunner.apidoc.annotation.APIParam;
+import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.sensors.WhatIsRunning;
 
 import java.io.BufferedReader;
@@ -124,6 +127,8 @@ public class ExecuteCmd {
         WhatIsRunning.getInstance().add(this);
     }
 
+    @ProtocoderScript
+    @APIMethod(description = "stop the running command", example = "")
     public void stop() {
         Message msg = mHandler.obtainMessage();
         msg.arg1 = 0;
