@@ -34,6 +34,7 @@ import java.net.UnknownHostException;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.protocoderrunner.apidoc.annotation.APIMethod;
+import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.network.CustomWebsocketServer;
@@ -44,7 +45,7 @@ import android.app.Activity;
 
 public class PDashboardSlider extends PInterface {
 
-	private static final String TAG = "JDashboardSlider";
+	private static final String TAG = "PDashboardSlider";
 	String id;
 
 	public PDashboardSlider(Activity a) {
@@ -56,31 +57,27 @@ public class PDashboardSlider extends PInterface {
 		void event(double val);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
 	public void add(String name, int x, int y, int w, int h, int min, int max, final jDashboardSliderAddCB callbackfn)
 			throws UnknownHostException, JSONException {
 		this.id = StrUtils.generateRandomString();
-		JSONObject msg = new JSONObject();
 
-		msg.put("type", "widget");
-		msg.put("action", "add");
+		JSONObject values = new JSONObject()
+                .put("id", id)
+                .put("name", name)
+                .put("type", "slider")
+                .put("x", x)
+                .put("y", y)
+                .put("w", w)
+                .put("h", h)
+                .put("min", min)
+                .put("max", max);
 
-		JSONObject values = new JSONObject();
-		values.put("id", id);
-		values.put("name", name);
-		values.put("type", "slider");
-		values.put("x", x);
-		values.put("y", y);
-		values.put("w", w);
-		values.put("h", h);
-		values.put("min", min);
-		values.put("max", max);
+        JSONObject msg = new JSONObject()
+                .put("type", "widget")
+                .put("action", "add")
+                .put("values", values);
 
-		msg.put("values", values);
-
-		CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
-		ws.send(msg);
+		CustomWebsocketServer.getInstance(a.get()).send(msg);
 
 		CustomWebsocketServer.getInstance(a.get()).addListener(id, new WebSocketListener() {
 			@Override
@@ -102,13 +99,15 @@ public class PDashboardSlider extends PInterface {
 
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	public void setPosition(float position) throws UnknownHostException, JSONException {
+    //TODO this method doesnt work yet
+	//@ProtocoderScript
+	//@APIMethod(description = "change the slider value", example = "")
+    //@APIParam(params = { "value" })
+    public void setPosition(float position) throws UnknownHostException, JSONException {
 		JSONObject msg = new JSONObject();
 
 		msg.put("type", "widget");
-		msg.put("action", "setPosition");
+		msg.put("action", "setValue");
 
 		JSONObject values = new JSONObject();
 		values.put("id", id);
