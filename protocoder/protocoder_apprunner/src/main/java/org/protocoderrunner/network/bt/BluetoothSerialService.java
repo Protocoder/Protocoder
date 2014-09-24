@@ -44,7 +44,6 @@ import android.util.Log;
 public class BluetoothSerialService {
 	// Debugging
 	private static final String TAG = "BluetoothSerialService";
-	private static final boolean D = true;
 
 	// Unique UUID for this application
 	private static final UUID MY_UUID = UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66");
@@ -58,56 +57,32 @@ public class BluetoothSerialService {
 
 	// Constants that indicate the current connection state
 	public static final int STATE_NONE = 0; // we're doing nothing
-	public static final int STATE_CONNECTING = 2; // now initiating an outgoing
-													// connection
-	public static final int STATE_CONNECTED = 3; // now connected to a remote
-													// device
+	public static final int STATE_CONNECTING = 2; // now initiating an outgoing connection
+	public static final int STATE_CONNECTED = 3; // now connected to a remote device
 
-	/**
-	 * Constructor. Prepares a new BluetoothChat session.
-	 * 
-	 * @param handler
-	 *            A Handler to send messages back to the UI Activity
-	 */
+	//it needs a handler to pass messages back and forth
 	public BluetoothSerialService(Handler handler) {
 		mAdapter = BluetoothAdapter.getDefaultAdapter();
 		mState = STATE_NONE;
 		mHandler = handler;
 	}
 
-	/**
-	 * Set the current state of the chat connection
-	 * 
-	 * @param state
-	 *            An integer defining the current connection state
-	 */
-	private synchronized void setState(int state) {
-		if (D) {
-			MLog.d(TAG, "setState() " + mState + " -> " + state);
-		}
-		mState = state;
 
-		// Give the new state to the Handler so the UI Activity can update
-		mHandler.obtainMessage(BluetoothViewer.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
+    //change state
+	private synchronized void setState(int state) {
+		MLog.d(TAG, "setState() " + mState + " -> " + state);
+		mState = state;
+		mHandler.obtainMessage(SimpleBT.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
 	}
 
-	/**
-	 * Return the current connection state.
-	 */
+	//get state
 	public synchronized int getState() {
 		return mState;
 	}
 
-	/**
-	 * Start the ConnectThread to initiate a connection to a remote device.
-	 * 
-	 * @param device
-	 *            The BluetoothDevice to connect
-	 */
+	//connection thread
 	public synchronized void connect(BluetoothDevice device) {
-		if (D) {
-			MLog.d(TAG, "connect to: " + device);
-		}
+		MLog.d(TAG, "connect to: " + device);
 
 		// Cancel any thread attempting to make a connection
 		if (mState == STATE_CONNECTING) {
@@ -141,18 +116,9 @@ public class BluetoothSerialService {
 		}
 	}
 
-	/**
-	 * Start the ConnectedThread to begin managing a Bluetooth connection
-	 * 
-	 * @param socket
-	 *            The BluetoothSocket on which the connection was made
-	 * @param device
-	 *            The BluetoothDevice that has been connected
-	 */
+	// start connection thread
 	public synchronized void connected(BluetoothSocket socket, BluetoothDevice device) {
-		if (D) {
-			MLog.d(TAG, "connected");
-		}
+	    MLog.d(TAG, "connected");
 
 		// Cancel the thread that completed the connection
 		if (mConnectThread != null) {
@@ -170,23 +136,13 @@ public class BluetoothSerialService {
 		mConnectedThread = new ConnectedThread(socket);
 		mConnectedThread.start();
 
-		// Send the name of the connected device back to the UI Activity
-		Message msg = mHandler.obtainMessage(BluetoothViewer.MESSAGE_DEVICE_NAME);
-		Bundle bundle = new Bundle();
-		bundle.putString(BluetoothViewer.DEVICE_NAME, device.getName());
-		msg.setData(bundle);
-		mHandler.sendMessage(msg);
-
 		setState(STATE_CONNECTED);
 	}
 
-	/**
-	 * Stop all threads
-	 */
+	// stop all threads
 	public synchronized void stop() {
-		if (D) {
-			MLog.d(TAG, "stop");
-		}
+		MLog.d(TAG, "stop");
+
 		if (mConnectedThread != null) {
 			mConnectedThread.shutdown();
 		}
@@ -201,15 +157,8 @@ public class BluetoothSerialService {
 		setState(STATE_NONE);
 	}
 
-	/**
-	 * Write to the ConnectedThread in an unsynchronized manner
-	 * 
-	 * @param out
-	 *            The bytes to write
-	 * @see ConnectedThread#write(byte[])
-	 */
+	//write data
 	public void write(byte[] out) {
-		// Create temporary object
 		ConnectedThread r;
 		// Synchronize a copy of the ConnectedThread
 		synchronized (this) {
@@ -222,32 +171,14 @@ public class BluetoothSerialService {
 		r.write(out);
 	}
 
-	/**
-	 * Indicate that the connection attempt failed and notify the UI Activity.
-	 */
+	//notify not connected
 	private void connectionFailed() {
 		setState(STATE_NONE);
-
-		// Send a failure message back to the Activity
-		Message msg = mHandler.obtainMessage(BluetoothViewer.MESSAGE_TOAST);
-		Bundle bundle = new Bundle();
-		bundle.putString(BluetoothViewer.TOAST, "Unable to connect device");
-		msg.setData(bundle);
-		mHandler.sendMessage(msg);
 	}
 
-	/**
-	 * Indicate that the connection was lost and notify the UI Activity.
-	 */
+	//connection lost
 	private void connectionLost() {
 		setState(STATE_NONE);
-
-		// Send a failure message back to the Activity
-		Message msg = mHandler.obtainMessage(BluetoothViewer.MESSAGE_TOAST);
-		Bundle bundle = new Bundle();
-		bundle.putString(BluetoothViewer.TOAST, "Device connection was lost");
-		msg.setData(bundle);
-		mHandler.sendMessage(msg);
 	}
 
 	/**
@@ -373,7 +304,7 @@ public class BluetoothSerialService {
 				try {
 					String line = reader.readLine();
 					if (line != null) {
-						mHandler.obtainMessage(BluetoothViewer.MESSAGE_READ, line.length(), -1, line.getBytes())
+						mHandler.obtainMessage(SimpleBT.MESSAGE_READ, line.length(), -1, line.getBytes())
 								.sendToTarget();
 					}
 				} catch (IOException e) {
@@ -393,9 +324,6 @@ public class BluetoothSerialService {
 		public void write(byte[] buffer) {
 			try {
 				mmOutStream.write(buffer);
-
-				// Share the sent message back to the UI Activity
-				mHandler.obtainMessage(BluetoothViewer.MESSAGE_WRITE, -1, -1, buffer).sendToTarget();
 			} catch (IOException e) {
 				Log.e(TAG, "Exception during write", e);
 			}
