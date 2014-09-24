@@ -629,8 +629,8 @@ public class FileIO {
         }
     }
 
-	public static File[] listFiles(final String extension) {
-		File f = new File(AppRunnerSettings.get().project.getStoragePath() + File.separator);
+	public static File[] listFiles(String url, final String extension) {
+		File f = new File(AppRunnerSettings.get().project.getStoragePath() + File.separator + url + File.separator);
 
 		return f.listFiles(new FilenameFilter() {
 
