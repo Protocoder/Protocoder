@@ -5,6 +5,7 @@
     android:versionName="0.96.1" >
     <uses-sdk android:targetSdkVersion="L"  android:minSdkVersion="14" />
 
+
     <application
         android:name="org.protocoder.MainApp"
         android:icon="@drawable/protocoder_icon"
@@ -30,13 +31,13 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.ASSIST" />
-
                 <category android:name="android.intent.category.DEFAULT" >
                 </category>
             </intent-filter>
-            <intent-filter>
-                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
-            </intent-filter>
+
+            <!--<intent-filter>-->
+            <!--<action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />-->
+            <!--</intent-filter>-->
 
             <meta-data
                 android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
