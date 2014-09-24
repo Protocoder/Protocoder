@@ -49,7 +49,6 @@ import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.apprunner.api.other.ApplicationInfo;
 import org.protocoderrunner.apprunner.api.other.PDeviceEditor;
 import org.protocoderrunner.apprunner.api.other.PWebEditor;
-import org.protocoderrunner.apprunner.api.other.PProtocoderFeedback;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.MLog;
 
@@ -101,9 +100,9 @@ public class PProtocoder extends PInterface {
 //		PrefsFragment.setId(a.get(), id);
 //	}
 
-
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
+    //TODO this is a place holder
+   // @ProtocoderScript
+    @APIMethod(description = "Returns an object to manipulate the device app webIDE", example = "")
     @APIParam(params = { })
     public PWebEditor webEditor() {
         a.get().initLayout();
@@ -114,8 +113,8 @@ public class PProtocoder extends PInterface {
     }
 
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
+  //  @ProtocoderScript
+    @APIMethod(description = "Returns an object to manipulate the device app", example = "")
     @APIParam(params = { })
     public PDeviceEditor deviceEditor() {
         a.get().initLayout();
@@ -128,7 +127,7 @@ public class PProtocoder extends PInterface {
 
 
     @ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Launch another script given its name and type", example = "")
 	@APIParam(params = { "name", "type" })
 	@APIVersion(minLevel = "2")
 	@APIRequires("android.permission.INTERNET")
@@ -148,7 +147,8 @@ public class PProtocoder extends PInterface {
 		a.get().startActivityForResult(intent, 22);
 	}
 
-	@ProtocoderScript
+    //TODO this is a place holder
+	//@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIVersion(minLevel = "2")
 	@APIRequires("android.permission.INTERNET")
@@ -160,13 +160,26 @@ public class PProtocoder extends PInterface {
 	}
 
 
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    public void returnResult(String data) {
+
+        Bundle conData = new Bundle();
+        conData.putString("param_result", data);
+        Intent intent = new Intent();
+        intent.putExtras(conData);
+        a.get().setResult(a.get().RESULT_OK, intent);
+        a.get().finish();
+
+    }
+
     // --------- addDebugger ---------//
     public interface AddDebuggerCB {
         void data(String debuggableScript);
     }
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Add a debugger to the execution", example = "")
 	@APIVersion(minLevel = "2")
 	@APIRequires("android.permission.INTERNET")
 	public void addDebugger(final AddDebuggerCB cb) {
@@ -230,21 +243,10 @@ public class PProtocoder extends PInterface {
         }
     }
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	public void returnResult(String data) {
 
-		Bundle conData = new Bundle();
-		conData.putString("param_result", data);
-		Intent intent = new Intent();
-		intent.putExtras(conData);
-		a.get().setResult(a.get().RESULT_OK, intent);
-		a.get().finish();
-
-	}
 
     @ProtocoderScript
-    @APIMethod(description = "", example = "")
+    @APIMethod(description = "Get the current Protocoder version name", example = "")
 	public String getVersionName() {
 		PackageInfo pInfo = null;
 		try {
@@ -256,7 +258,7 @@ public class PProtocoder extends PInterface {
 	}
 
     @ProtocoderScript
-    @APIMethod(description = "", example = "")
+    @APIMethod(description = "Get the current Protocoder version code", example = "")
 	public int getVersionCode() {
 		PackageInfo pInfo = null;
 		try {
@@ -269,7 +271,7 @@ public class PProtocoder extends PInterface {
 
 
     @ProtocoderScript
-    @APIMethod(description = "", example = "")
+    @APIMethod(description = "Install a Proto app programatically", example = "")
     public void installProtoApp(String src, boolean b) {
         final String projectPath = ProjectManager.getInstance().getCurrentProject().getStoragePath();
 
@@ -283,6 +285,9 @@ public class PProtocoder extends PInterface {
     }
 
 
+
+
+    //TODO this is not finished either
 	public static ArrayList<ApplicationInfo> mApplications;
 
 	/**

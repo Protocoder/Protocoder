@@ -35,7 +35,7 @@ import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
-import org.protocoderrunner.apprunner.api.other.PProtocoderFeedback;
+import org.protocoderrunner.apprunner.api.other.PProtocoderLiveCodingFeedback;
 import org.protocoderrunner.project.Project;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.project.SchedulerManager;
@@ -51,12 +51,9 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.MediaStore.MediaColumns;
 import android.support.v4.app.NotificationCompat;
-
-import java.io.File;
 
 public class PApp extends PInterface {
 
@@ -78,11 +75,12 @@ public class PApp extends PInterface {
 
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "get the script runner context", example = "")
 	public AppRunnerActivity getContext() {
 		return a.get();
 	}
 
+    //TODO
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void setDelayedAlarm(int delay, boolean alarmRepeat, boolean wakeUpScreen) {
@@ -90,14 +88,16 @@ public class PApp extends PInterface {
 		SchedulerManager.getInstance(a.get()).setAlarmDelayed(p, delay, alarmRepeat, wakeUpScreen);
 	}
 
-	@ProtocoderScript
+    //TODO
+    @ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void setDelayedAlarm(int hour, int minute, int second, boolean wakeUpScreen) {
 		Project p = ProjectManager.getInstance().getCurrentProject();
 		SchedulerManager.getInstance(a.get()).setAlarm(p, hour, minute, second, wakeUpScreen);
 	}
 
-	@ProtocoderScript
+    //TODO
+    @ProtocoderScript
 	@APIMethod(description = "", example = "")
 	public void setExactAlarm(int hour, int minute, int second, boolean wakeUpScreen) {
 		Project p = ProjectManager.getInstance().getCurrentProject();
@@ -105,33 +105,42 @@ public class PApp extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "close the running script", example = "")
 	public void close() {
 		a.get().finish();
-
 	}
 
 	@android.webkit.JavascriptInterface
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "evaluate a script", example = "")
 	@APIParam(params = { "code" })
 	public void eval(String code) {
 		a.get().interp.eval(code);
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "code" })
+	@APIMethod(description = "loads and external file containing code", example = "")
+	@APIParam(params = { "fileName" })
 	public void load(String filename) {
 		String code = FileIO.loadFile(filename);
 
 		a.get().interp.eval(code);
 	}
 
+    @ProtocoderScript
+	@APIMethod(description = "loads a library stored in the <i>libraries</i>' folder", example = "")
+	@APIParam(params = { "libraryName" })
+	public void loadLibrary(String name) {
+		String code = FileIO.loadFile("../../libraries/" + name + "/main.js");
+
+		a.get().interp.eval(code);
+	}
+
+    //TODO way to cancel notification and come back to the script
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	@APIParam(params = { "id" })
+	@APIParam(params = { "id", "title", "description" })
 	public void setNotification(int id, String title, String description) {
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(a.get())
 				.setSmallIcon(R.drawable.app_icon).setContentTitle(title).setContentText(description);
@@ -153,6 +162,7 @@ public class PApp extends PInterface {
 				a.get().NOTIFICATION_SERVICE);
 		// mId allows you to update the notification later on.
 		mNotificationManager.notify(id, mBuilder.build());
+
 	}
 
 	// TOFIX not working yet
@@ -174,8 +184,8 @@ public class PApp extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "id" })
+	@APIMethod(description = "launch the share intent with the included text", example = "")
+	@APIParam(params = { "text" })
 	public void shareText(String text) {
 		Intent shareIntent = new Intent(Intent.ACTION_SEND);
 		shareIntent.setType("text/*");
@@ -184,14 +194,14 @@ public class PApp extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "get the current project HTTP URL", example = "")
 	public String getProjectUrl() {
 		String url = ProjectManager.getInstance().getCurrentProject().getServingURL();
 		return url;
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "get the current project path", example = "")
 	public String getProjectPath() {
 		String url = ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/";
 		return url;
@@ -203,32 +213,29 @@ public class PApp extends PInterface {
     }
 
 	@ProtocoderScript
-	@APIMethod(description = "this function doesnt do any thing", example = "")
-	public void doNotExecute(DoNothingCB callbackfn) {
+	@APIMethod(description = "this function doesn't do anything", example = "")
+    @APIParam(params = { "function()" })
+    public void doNotExecute(DoNothingCB callbackfn) {
 
 	}
 
 
 	@ProtocoderScript
-	@APIMethod(description = "this function doesnt do any thing", example = "")
-	public ExecuteCmd executeCommand(final String cmd, final ExecuteCmd.ExecuteCommandCB callbackfn) {
-//        mHandler.post(new Runnable() {
-//
-//            @Override
-//            public void run() {
-                return new ExecuteCmd(cmd, callbackfn);
-    //        }
-     //   });
+	@APIMethod(description = "execute a shell command", example = "")
+    @APIParam(params = { "cmd", "function(data)" })
+    public ExecuteCmd executeCommand(final String cmd, final ExecuteCmd.ExecuteCommandCB callbackfn) {
+
+        return new ExecuteCmd(cmd, callbackfn);
 	}
 
 
     @ProtocoderScript
-    @APIMethod(description = "", example = "")
+    @APIMethod(description = "shows a feedback overlay with the live-executed code", example = "")
     @APIParam(params = { })
-    public PProtocoderFeedback liveCoding() {
+    public PProtocoderLiveCodingFeedback liveCodingFeedback() {
         a.get().initLayout();
 
-        PProtocoderFeedback l = a.get().liveCoding;
+        PProtocoderLiveCodingFeedback l = a.get().liveCoding;
         l.enable = true;
 
         return l;
@@ -248,7 +255,7 @@ public class PApp extends PInterface {
 //    }
 
     @ProtocoderScript
-    @APIMethod(description = "", example = "")
+    @APIMethod(description = "opens a file with a given app provided as package name ", example = "")
     @APIParam(params = { "fileName", "packageName" })
     public void openWithApp(final String src, String packageName) {
         final String projectPath = ProjectManager.getInstance().getCurrentProject().getStoragePath();

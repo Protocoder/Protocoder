@@ -96,7 +96,7 @@ public class PSensors extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Set the speed of all sensors 'slow', 'fast', 'normal'", example = "")
 	@APIParam(params = { "function(x, y, z)" })
 	public void setAllSensorsSpeed(String speed) {
 		if (speed.equals("slow")) {
@@ -110,7 +110,7 @@ public class PSensors extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Start the accelerometer. Returns x, y, z", example = "")
 	@APIParam(params = { "function(x, y, z)" })
 	public void startAccelerometer(final startAccelerometerCB callbackfn) {
 		if (!accelerometerStarted) {
@@ -137,7 +137,7 @@ public class PSensors extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Stop the accelerometer", example = "")
 	@APIParam(params = { "" })
 	public void stopAccelerometer() {
 		MLog.d(TAG, "Called stopAccelerometer");
@@ -154,7 +154,7 @@ public class PSensors extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Start the gyroscope. Returns x, y, z", example = "")
 	@APIParam(params = { "function(x, y, z)" })
 	public void startGyroscope(final startGyroscopeCB callbackfn) {
 		if (!gyroscopeStarted) {
@@ -175,7 +175,7 @@ public class PSensors extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Stops the gyroscope", example = "")
 	@APIParam(params = { "" })
 	public void stopGyroscope() {
 		if (gyroscopeStarted) {
@@ -191,7 +191,7 @@ public class PSensors extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Start the accelerometer. Returns lat, lon, alt, speed, bearing", example = "")
 	@APIParam(params = { "function(lat, lon, alt, speed, bearing)" })
 	public void startGPS(final startGPSCB callbackfn) {
 
@@ -203,14 +203,11 @@ public class PSensors extends PInterface {
 				@Override
 				public void onSpeedChanged(float speed) {
 					// TODO Auto-generated method stub
-
 				}
 
 				@Override
 				public void onLocationChanged(double lat, double lon, double alt, float speed, float bearing) {
-
 					callbackfn.event(lat, lon, alt, speed, bearing);
-
 				}
 
 				@Override
@@ -235,7 +232,7 @@ public class PSensors extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Stop the GPS", example = "")
 	@APIParam(params = { "" })
 	public void stopGPS() {
 		MLog.d(TAG, "Called stopGPS");
@@ -247,22 +244,22 @@ public class PSensors extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Get the last known location", example = "")
 	@APIParam(params = { "" })
 	public Location getLastKnownLocation() {
 		return gpsManager.getLastKnownLocation();
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Get the location name of a given latitude and longitude", example = "")
 	@APIParam(params = { "latitude", "longitude" })
 	public String getLocationName(double lat, double lon) {
 		return gpsManager.getLocationName(lat, lon);
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "endLatitude", "endLongitude", "endLatitude", "endLongitude" })
+	@APIMethod(description = "Get the distance from two points", example = "")
+	@APIParam(params = { "startLatitude", "starLongitude", "endLatitude", "endLongitude" })
 	public double getDistance(double startLatitude, double startLongitude, double endLatitude, double endLongitude) {
 		return gpsManager.getDistance(startLatitude, startLongitude, endLatitude, endLongitude);
 	}
@@ -273,7 +270,7 @@ public class PSensors extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Gives back data when a NFC tag is approached", example = "")
 	@APIParam(params = { "function(id, data)" })
 	public void onNFC(final onNFCCB fn) {
 		a.get().initializeNFC();
@@ -287,7 +284,7 @@ public class PSensors extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Write into a NFC tag the given text", example = "")
 	@APIParam(params = { "function()" })
 	public void writeNFC(String data, final writeNFCCB fn) {
 		NFCUtil.nfcMsg = data;
@@ -329,14 +326,14 @@ public class PSensors extends PInterface {
 		public void onNewTag(String id, String nfcMessage);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "function(msg)" })
-	public void nfcWrite(final onNFCCB fn) {
-		a.get().initializeNFC();
-
-		onNFCfn = fn;
-	}
+//	@ProtocoderScript
+//	@APIMethod(description = "", example = "")
+//	@APIParam(params = { "function(msg)" })
+//	public void nfcWrite(final onNFCCB fn) {
+//		a.get().initializeNFC();
+//
+//		onNFCfn = fn;
+//	}
 
 	// --------- orientation ---------//
 	interface startOrientationCB {
@@ -344,7 +341,7 @@ public class PSensors extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Start the orientation sensor. Returns pitch, roll, yaw", example = "")
 	@APIParam(params = { "function(pitch, roll, yaw)" })
 	public void startOrientation(final startOrientationCB callbackfn) {
 		orientationManager = new OrientationManager(a.get());
@@ -363,7 +360,7 @@ public class PSensors extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Stops the orientation sensor", example = "")
 	@APIParam(params = { "" })
 	public void stopOrientation() {
 		orientationManager.removeListener(orientationListener);
@@ -376,7 +373,7 @@ public class PSensors extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Start the light sensor. Returns the intensity. The value per device might vary", example = "")
 	@APIParam(params = { "function(intensity)" })
 	public void startLightIntensity(final startLightIntensityCB callbackfn) {
 		lightManager = new LightManager(a.get());
@@ -392,12 +389,11 @@ public class PSensors extends PInterface {
 		lightManager.addListener(lightListener);
 		lightManager.start(sensorsSpeed);
 		WhatIsRunning.getInstance().add(lightManager);
-
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	@APIParam(params = { "" })
+	@APIParam(params = { "Stop light sensor" })
 	public void stopLightIntensity() {
 		lightManager.removeListener(lightListener);
 		lightManager.stop();
@@ -409,7 +405,7 @@ public class PSensors extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Start the proximity sensor. Returns a proximty value. It might differ per device", example = "")
 	@APIParam(params = { "function(proximity)" })
 	public void startProximity(final startProximityCB callbackfn) {
 		proximityManager = new ProximityManager(a.get());
@@ -429,7 +425,7 @@ public class PSensors extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Stop proximity sensor", example = "")
 	public void stopProximity() {
 		proximityManager.removeListener(lightListener);
 		proximityManager.stop();
@@ -441,7 +437,7 @@ public class PSensors extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Start the magnetic sensor", example = "")
 	@APIParam(params = { "function(value)" })
 	public void startMagnetic(final startMagneticCB callbackfn) {
 		magneticManager = new MagneticManager(a.get());
@@ -461,7 +457,7 @@ public class PSensors extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Stop the magnetic sensor", example = "")
 	public void stopMagnetic() {
 		magneticManager.removeListener(magneticListener);
 		magneticManager.stop();
@@ -473,7 +469,7 @@ public class PSensors extends PInterface {
     }
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Start the barometer", example = "")
 	@APIParam(params = { "function(value)" })
 	public void startBarometer(final startBarometerCB callbackfn) {
 		pressureManager = new PressureManager(a.get());
@@ -493,8 +489,8 @@ public class PSensors extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	public void stopPressure() {
+	@APIMethod(description = "Stop the barometer", example = "")
+	public void stopBarometer() {
 		pressureManager.removeListener(pressureListener);
 		pressureManager.stop();
 	}
@@ -505,7 +501,7 @@ public class PSensors extends PInterface {
     }
 
     @ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Start the step counter. Not superacurate and only few devices", example = "")
 	@APIParam(params = { "function(value)" })
 	public void startStepCounter(final startStepCounterCB callbackfn) {
 		stepManager = new StepManager(a.get());
@@ -525,7 +521,7 @@ public class PSensors extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Stop the step counter", example = "")
 	public void stopStepCount() {
 		stepManager.removeListener(stepListener);
 		stepManager.stop();

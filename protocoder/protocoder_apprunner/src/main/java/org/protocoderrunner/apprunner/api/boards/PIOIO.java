@@ -32,6 +32,7 @@ package org.protocoderrunner.apprunner.api.boards;
 import android.app.Activity;
 
 import org.protocoderrunner.apidoc.annotation.APIMethod;
+import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.hardware.HardwareCallback;
@@ -51,14 +52,9 @@ public class PIOIO extends PInterface implements HardwareCallback {
 	private final String TAG = "PIOIO";
 
 	private IOIOBoard board;
-
-	boolean isStarted = false;
-
-	private IOIO ioio;
-
-	private DigitalOutput led;
-
-	private startCB moiocallbackfn;
+	boolean mIoioStarted = false;
+	private IOIO mIoio;
+	private startCB mIoioCallbackfn;
 
 	public PIOIO(Activity a) {
 		super(a);
@@ -69,11 +65,24 @@ public class PIOIO extends PInterface implements HardwareCallback {
 		void event();
 	}
 
+
+    @ProtocoderScript
+    @APIMethod(description = "initializes ioio board", example = "ioio.start();")
+    @APIParam(params = { "" })
+    public void start() {
+        if (!mIoioStarted) {
+            this.board = new IOIOBoard(a.get(), this);
+            board.powerOn();
+            WhatIsRunning.getInstance().add(board);
+        }
+    }
+
 	@ProtocoderScript
 	@APIMethod(description = "initializes ioio board", example = "ioio.start();")
-	public void start(startCB callbackfn) {
-		moiocallbackfn = callbackfn;
-		if (!isStarted) {
+    @APIParam(params = { "function()" })
+    public void start(startCB callbackfn) {
+		mIoioCallbackfn = callbackfn;
+		if (!mIoioStarted) {
 			this.board = new IOIOBoard(a.get(), this);
 			board.powerOn();
 			WhatIsRunning.getInstance().add(board);
@@ -82,71 +91,73 @@ public class PIOIO extends PInterface implements HardwareCallback {
 	}
 
 	public IOIO get() {
-		return ioio;
+		return mIoio;
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "clean up and poweroff makr board", example = "ioio.stop();")
+	@APIMethod(description = "stops the ioio board", example = "ioio.stop();")
 	public void stop() {
-		isStarted = false;
+		mIoioStarted = false;
 		board.powerOff();
 		board = null;
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	public DigitalOutput openDigitalOutput(int pinNum) throws ConnectionLostException {
-		return ioio.openDigitalOutput(pinNum, false); // start with the on board
-		// LED off
+    @APIParam(params = { "pinNumber" })
+    public DigitalOutput openDigitalOutput(int pinNum) throws ConnectionLostException {
+		return mIoio.openDigitalOutput(pinNum, false); // start with the on board
 
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	public DigitalInput openDigitalInput(int pinNum) throws ConnectionLostException {
-		return ioio.openDigitalInput(pinNum, DigitalInput.Spec.Mode.PULL_UP);
+    @APIParam(params = { "pinNumber" })
+    public DigitalInput openDigitalInput(int pinNum) throws ConnectionLostException {
+		return mIoio.openDigitalInput(pinNum, DigitalInput.Spec.Mode.PULL_UP);
 
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	public AnalogInput openAnalogInput(int pinNum) throws ConnectionLostException {
-		return ioio.openAnalogInput(pinNum);
+    @APIParam(params = { "pinNumber" })
+    public AnalogInput openAnalogInput(int pinNum) throws ConnectionLostException {
+		return mIoio.openAnalogInput(pinNum);
 
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	public PwmOutput openPWMOutput(int pinNum, int freq) throws ConnectionLostException {
-		return ioio.openPwmOutput(pinNum, freq);
+    @APIParam(params = { "pinNumber", "frequency" })
+    public PwmOutput openPWMOutput(int pinNum, int freq) throws ConnectionLostException {
+        return mIoio.openPwmOutput(pinNum, freq);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	public void setDigitalPin(int num, boolean status) throws ConnectionLostException {
-		led.write(status);
 
-	}
-
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
 	public void resume() {
-		// makr.resume();
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
 	public void pause() {
-		// makr.pause();
 	}
 
-	@Override
-	public void onConnect(Object obj) {
-		this.ioio = (IOIO) obj;
-		MLog.d(TAG, "MOIO Connected");
-		moiocallbackfn.event();
 
-		isStarted = true;
+    @ProtocoderScript
+    @APIMethod(description = "returns true is the ioio board is connected", example = "")
+    public boolean isStarted() {
+        return mIoioStarted;
+    }
+
+
+    @Override
+	public void onConnect(Object obj) {
+		this.mIoio = (IOIO) obj;
+		MLog.d(TAG, "MOIO Connected");
+
+        if (mIoioCallbackfn != null) {
+            mIoioCallbackfn.event();
+        }
+
+		mIoioStarted = true;
 		mHandler.post(new Runnable() {
 
 			@Override

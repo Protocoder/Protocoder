@@ -57,7 +57,7 @@ public class PFileIO extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Create a directory", example = "")
 	@APIParam(params = { "dirName" })
 	public void createDir(String name) {
 
@@ -66,62 +66,63 @@ public class PFileIO extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Delete a filename", example = "")
 	@APIParam(params = { "fileName" })
-	public void remove(String name) {
+	public void delete(String name) {
 		FileIO.deleteFileDir(ProjectManager.getInstance().getCurrentProject().getStoragePath(), name);
 	}
 
+    @ProtocoderScript
+    @APIMethod(description = "Save an array with text into a file", example = "")
+    @APIParam(params = { "fileName", "lines[]" })
+    public void saveStrings(String fileName, String[] lines) {
+        FileIO.saveStrings(fileName, lines);
+    }
+
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Save a String into a file", example = "")
 	@APIParam(params = { "fileName", "lines[]" })
 	public void saveString(String fileName, String line) {
 		String[] lines = { line };
 		FileIO.saveStrings(fileName, lines);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+    @ProtocoderScript
+	@APIMethod(description = "Append an array of text into a file", example = "")
 	@APIParam(params = { "fileName", "lines[]" })
 	public void appendString(String fileName, String[] lines) {
 		FileIO.appendStrings(fileName, lines);
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Append a String into a file", example = "")
 	@APIParam(params = { "fileName", "line" })
 	public void appendString(String fileName, String line) {
 		String[] lines = { line };
 		FileIO.appendStrings(fileName, lines);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "fileName", "lines[]" })
-	public void saveStrings(String fileName, String[] lines) {
-		FileIO.saveStrings(fileName, lines);
-	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Load the Strings of a text file into an array", example = "")
 	@APIParam(params = { "fileName" })
 	public String[] loadStrings(String fileName) {
-		return FileIO.loadStrings(fileName);
+        return FileIO.loadStrings(fileName);
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "fileName" })
-	public ProtocoderNativeArray listFiles() {
-		return listFiles("");
+	@APIMethod(description = "List all the files in the directory", example = "")
+	@APIParam(params = { "url" })
+	public ProtocoderNativeArray listFiles(String url) {
+		return listFiles(url, "");
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "List all the files with a given extension", example = "")
 	@APIParam(params = { "fileName" })
-	public ProtocoderNativeArray listFiles(String filter) {
+	public ProtocoderNativeArray listFiles(String url, String filter) {
 
-        File files[] = FileIO.listFiles(filter);
+        File files[] = FileIO.listFiles(url, filter);
         ProtocoderNativeArray filesNativeArray = new ProtocoderNativeArray(files.length);
         for (int i = 0; i < files.length; i++) {
             filesNativeArray.addPE(i, files[i].getName());
@@ -131,14 +132,7 @@ public class PFileIO extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "fileName" })
-	public String[] listFilesInDir() {
-		return null;
-	}
-
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Open a sqlite database", example = "")
 	@APIParam(params = { "filename" })
 	public PSqlLite openSqlLite(String db) {
 		return new PSqlLite(a.get(), db);
@@ -149,8 +143,8 @@ public class PFileIO extends PInterface {
     }
 
     @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "filename" })
+    @APIMethod(description = "Zip a file/folder into a zip", example = "")
+    @APIParam(params = { "folder", "filename" })
     public void zip(String path, final String fDestiny, final addZipUnzipCB callbackfn) {
         final String fOrigin = ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/" + path;
         Thread t = new Thread(new Runnable() {
@@ -169,8 +163,8 @@ public class PFileIO extends PInterface {
     }
 
     @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "filename" })
+    @APIMethod(description = "Unzip a file into a folder", example = "")
+    @APIParam(params = { "zipFile", "folder" })
     public void unzip(final String src, final String dst, final addZipUnzipCB callbackfn) {
         final String projectPath = ProjectManager.getInstance().getCurrentProject().getStoragePath();
         Thread t = new Thread(new Runnable() {
@@ -184,8 +178,5 @@ public class PFileIO extends PInterface {
             }
         });
         t.start();
-
-
     }
-
 }
