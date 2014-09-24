@@ -126,20 +126,14 @@ public class BaseActivity extends FragmentActivity {
 
 	public void showHomeBar(boolean b) {
 
-		if (b == true) {
-			if (Build.VERSION.SDK_INT > AppSettings.MIN_SUPPORTED_VERSION) {
-				getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
-			} else {
+        if (Build.VERSION.SDK_INT > AppSettings.MIN_SUPPORTED_VERSION) {
 
-			}
-
-		} else {
-			if (Build.VERSION.SDK_INT > AppSettings.MIN_SUPPORTED_VERSION) {
-				getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
-			} else {
-
-			}
-		}
+            if (b == true) {
+                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+            } else {
+                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+            }
+        }
 	}
 
 	public void lightsOutMode() {
