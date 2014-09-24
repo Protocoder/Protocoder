@@ -43,6 +43,10 @@ Editor.prototype.init = function() {
 	var renderer = editor.renderer;
 
 	session.setWrapLimitRange(null, null);
+
+	//session.setUseWrapMode(true);
+	//session.setWrapLimitRange();
+
     renderer.setShowPrintMargin = null; 
 
 	editor.setPrintMarginColumn(false);
