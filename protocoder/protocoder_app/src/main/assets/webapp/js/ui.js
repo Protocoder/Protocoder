@@ -589,7 +589,7 @@ Ui.prototype.setTabFeedback = function(f) {
 } 
 
 Ui.prototype.openNewWindow = function(f) {
-	window.open("http://192.168.1.47:8585", "_blank", "toolbar=no, location=no, status=no, resizable=yes, width=500, height=500, left=10, top=10");
+	window.open("http://192.168.1.100:8585", "_blank", "toolbar=no, location=no, status=no, resizable=yes, width=500, height=500, left=10, top=10");
 }
 
 Ui.prototype.initUpload = function() {
