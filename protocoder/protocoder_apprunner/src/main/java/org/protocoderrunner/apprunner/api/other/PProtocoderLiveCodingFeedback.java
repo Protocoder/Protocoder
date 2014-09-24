@@ -25,7 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class PProtocoderFeedback {
+public class PProtocoderLiveCodingFeedback {
 
 	private static final String TAG = "PProtocoderFeedback";
 
@@ -54,7 +54,7 @@ public class PProtocoderFeedback {
     private int alignment = TextView.TEXT_ALIGNMENT_VIEW_END;
     private long timeToHide = 4000;
 
-    public PProtocoderFeedback(Activity a) {
+    public PProtocoderLiveCodingFeedback(Activity a) {
 		this.a = a;
 		fontCode = Typeface.createFromAsset(a.getAssets(), "Inconsolata.otf");
 
@@ -90,7 +90,7 @@ public class PProtocoderFeedback {
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	public PProtocoderFeedback show(boolean b) {
+	public PProtocoderLiveCodingFeedback show(boolean b) {
 		this.show = b;
 
 		if (b) {
@@ -104,21 +104,21 @@ public class PProtocoderFeedback {
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	public PProtocoderFeedback autoHide(boolean b) {
+	public PProtocoderLiveCodingFeedback autoHide(boolean b) {
 		this.autoHide = b;
 		return this;
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	public PProtocoderFeedback timeToHide(int t) {
+	public PProtocoderLiveCodingFeedback timeToHide(int t) {
 		this.timeToHide = t;
 		return this;
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	public PProtocoderFeedback backgroundColor(String c) {
+	public PProtocoderLiveCodingFeedback backgroundColor(String c) {
 		new Color();
 		this.bgColor = Color.parseColor(c);
 		liveRLayout.setBackgroundColor(this.bgColor);
@@ -128,7 +128,7 @@ public class PProtocoderFeedback {
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	public PProtocoderFeedback textColor(String color) {
+	public PProtocoderLiveCodingFeedback textColor(String color) {
 		new Color();
 		this.textColor = color;
 		liveText.setTextColor(Color.parseColor(this.textColor));
@@ -138,7 +138,7 @@ public class PProtocoderFeedback {
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	public PProtocoderFeedback textSize(int textSize) {
+	public PProtocoderLiveCodingFeedback textSize(int textSize) {
 		this.textSize = textSize;
 		MLog.d(TAG, "textsize " + textSize);
 		// liveText.setTextSize(this.textSize);
@@ -147,7 +147,7 @@ public class PProtocoderFeedback {
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	public PProtocoderFeedback padding(int left, int bottom) {
+	public PProtocoderLiveCodingFeedback padding(int left, int bottom) {
 		this.textSize = textSize;
 		// MLog.d(TAG, "textsize " + textSize);
 		// liveText.setTextSize(this.textSize);
@@ -160,7 +160,7 @@ public class PProtocoderFeedback {
 
     @ProtocoderScript
     @APIMethod(description = "", example = "")
-    public PProtocoderFeedback align(String alignment) {
+    public PProtocoderLiveCodingFeedback align(String alignment) {
         if (alignment.equals("right")) {
             this.alignment = TextView.TEXT_ALIGNMENT_VIEW_START;
         } else if (alignment.equals("center")) {
@@ -175,7 +175,7 @@ public class PProtocoderFeedback {
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	public PProtocoderFeedback write(String text) {
+	public PProtocoderLiveCodingFeedback write(String text) {
         write(text, this.textColor, this.textSize);
 
         return this;
@@ -183,7 +183,7 @@ public class PProtocoderFeedback {
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	public PProtocoderFeedback write(String text, String color, int size) {
+	public PProtocoderLiveCodingFeedback write(String text, String color, int size) {
 		// this.text = text;
 
 		if (enable) {
