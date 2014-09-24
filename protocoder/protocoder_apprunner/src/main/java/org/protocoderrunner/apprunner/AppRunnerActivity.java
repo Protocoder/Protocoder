@@ -30,9 +30,6 @@ package org.protocoderrunner.apprunner;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,7 +42,7 @@ import org.protocoderrunner.apprunner.api.PMedia;
 import org.protocoderrunner.apprunner.api.PNetwork;
 import org.protocoderrunner.apprunner.api.PSensors;
 import org.protocoderrunner.apprunner.api.PUI;
-import org.protocoderrunner.apprunner.api.other.PProtocoderFeedback;
+import org.protocoderrunner.apprunner.api.other.PProtocoderLiveCodingFeedback;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.events.Events;
 import org.protocoderrunner.project.Project;
@@ -63,7 +60,6 @@ import android.animation.Animator.AnimatorListener;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -140,7 +136,7 @@ public class AppRunnerActivity extends BaseActivity {
 	public boolean keyVolumeEnabled = true;
 	public boolean keyBackEnabled = true;
 
-	public PProtocoderFeedback liveCoding;
+	public PProtocoderLiveCodingFeedback liveCoding;
     //private EditorFragment editorFragment;
 
     @Override
@@ -415,8 +411,8 @@ public class AppRunnerActivity extends BaseActivity {
 //			Intent intentHome = new Intent(this, MainActivity.class);
 //			intentHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 //			startActivity(intentHome);
-//			overridePendingTransition(R.anim.splash_slide_in_anim_reverse_set, R.anim.splash_slide_out_anim_reverse_set);
-//			finish();
+			overridePendingTransition(R.anim.splash_slide_in_anim_reverse_set, R.anim.splash_slide_out_anim_reverse_set);
+			finish();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -550,7 +546,7 @@ public class AppRunnerActivity extends BaseActivity {
 			consoleText.setPadding(textPadding, textPadding, textPadding, textPadding);
 			consoleRLayout.addView(consoleText);
 
-			liveCoding = new PProtocoderFeedback(this);
+			liveCoding = new PProtocoderLiveCodingFeedback(this);
 			mainLayout.addView(liveCoding.add());
 
 			setContentView(mainLayout);
@@ -858,7 +854,7 @@ public class AppRunnerActivity extends BaseActivity {
 	}
 
 	public void setActionBar(Integer colorBg, Integer colorText) {
-		MLog.d(TAG, "" + actionBarSet + " " + actionBar);
+		//MLog.d(TAG, "" + actionBarSet + " " + actionBar);
 
 		actionBarSet = true;
 		// Set up the actionbar
