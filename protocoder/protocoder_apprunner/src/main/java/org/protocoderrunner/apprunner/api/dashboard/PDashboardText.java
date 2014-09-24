@@ -34,6 +34,7 @@ import java.net.UnknownHostException;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.protocoderrunner.apidoc.annotation.APIMethod;
+import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.network.CustomWebsocketServer;
@@ -41,59 +42,53 @@ import org.protocoderrunner.utils.StrUtils;
 
 import android.app.Activity;
 
-public class PDashboardLabel extends PInterface {
+public class PDashboardText extends PInterface {
 
-	private static final String TAG = "JWebAppLabel";
+	private static final String TAG = "PDashboardText";
 	String id;
 
-	public PDashboardLabel(Activity a) {
+	public PDashboardText(Activity a) {
 		super(a);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
 	public void add(String name, int x, int y, int width, int height, int size, String color)
 			throws UnknownHostException, JSONException {
 		this.id = StrUtils.generateRandomString();
-		JSONObject msg = new JSONObject();
 
-		msg.put("type", "widget");
-		msg.put("action", "add");
+		JSONObject values = new JSONObject()
+                .put("id", id)
+                .put("name", name)
+                .put("type", "label")
+                .put("x", x)
+                .put("y", y)
+                .put("w", width)
+                .put("h", height)
+                .put("size", size)
+                .put("color", color);
 
-		JSONObject values = new JSONObject();
-		values.put("id", id);
-		values.put("name", name);
-		values.put("type", "label");
-		values.put("x", x);
-		values.put("y", y);
-		values.put("w", width);
-		values.put("h", height);
-		values.put("size", size);
-		values.put("color", color);
+        JSONObject msg = new JSONObject()
+                .put("type", "widget")
+                .put("action", "add")
+                .put("values", values);
 
-		msg.put("values", values);
-
-		CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
-		ws.send(msg);
-
+		CustomWebsocketServer.getInstance(a.get()).send(msg);
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	public void setText(String text) throws UnknownHostException, JSONException {
-		JSONObject msg = new JSONObject();
+	@APIMethod(description = "change the text", example = "")
+    @APIParam(params = { "text" })
+    public void setText(String text) throws UnknownHostException, JSONException {
 
-		msg.put("type", "widget");
-		msg.put("action", "setLabelText");
+		JSONObject values = new JSONObject()
+                .put("id", id)
+                .put("type", "label")
+                .put("val", text);
 
-		JSONObject values = new JSONObject();
-		values.put("id", id);
-		values.put("type", "label");
-		values.put("val", text);
-		msg.put("values", values);
+        JSONObject msg = new JSONObject()
+                .put("type", "widget")
+                .put("action", "setLabelText")
+                .put("values", values);
 
-		CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
-		ws.send(msg);
-
+		CustomWebsocketServer.getInstance(a.get()).send(msg);
 	}
 }
