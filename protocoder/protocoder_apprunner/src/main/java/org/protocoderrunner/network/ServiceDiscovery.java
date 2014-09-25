@@ -27,7 +27,7 @@ public class ServiceDiscovery {
     }
 
 
-    // --------- addGenericButton ---------//
+    // --------- CreateCB ---------//
     public interface CreateCB {
         void event(String mServiceName, String registered);
     }
@@ -97,7 +97,7 @@ public class ServiceDiscovery {
         }
     }
 
-    // --------- addGenericButton ---------//
+    // --------- DiscoverCB ---------//
     public interface DiscoverCB {
         void event(String mServiceName, NsdServiceInfo serviceInfo);
     }
