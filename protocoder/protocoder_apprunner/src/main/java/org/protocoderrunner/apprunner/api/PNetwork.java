@@ -962,7 +962,7 @@ public class PNetwork extends PInterface {
     }
 
 
-    // --------- addGenericButton ---------//
+    // --------- RegisterServiceCB ---------//
     public interface RegisterServiceCB {
         void event();
     }
