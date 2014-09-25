@@ -115,7 +115,14 @@ public class PMedia extends PInterface {
         audioManager.setSpeakerphoneOn(true);
     }
 
-	// --------- initPDPatch ---------//
+    @ProtocoderScript
+    @APIMethod(description = "Enable sounds effects (default false)", example = "")
+    @APIParam(params = { "boolean" })
+    public void enableSoundEffects(boolean b) {
+        a.get().setEnableSoundEffects(b);
+    }
+
+    // --------- initPDPatch ---------//
 	interface initPDPatchCB {
 		void event(PDReturn o);
 	}
