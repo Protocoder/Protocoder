@@ -111,7 +111,7 @@ public class AppRunnerActivity extends BaseActivity {
 	// listeners in the main activity that will pass the info to the API classes
 	public static final int VOICE_RECOGNITION_REQUEST_CODE = 55;
 	private PApp.onAppStatus onAppStatusListener;
-	private PUI.onKeyListener onKeyListener;
+	private PDevice.onKeyListener onKeyListener;
 	private PDevice.onSmsReceivedListener onSmsReceivedListener;
 	private PSensors.onNFCListener onNFCListener;
 	private PSensors.onNFCWrittenListener onNFCWrittenListener;
@@ -483,7 +483,7 @@ public class AppRunnerActivity extends BaseActivity {
 
 	}
 
-	public void addOnKeyListener(PUI.onKeyListener onKeyListener2) {
+	public void addOnKeyListener(PDevice.onKeyListener onKeyListener2) {
 		onKeyListener = onKeyListener2;
 
 	}
