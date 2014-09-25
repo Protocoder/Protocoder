@@ -962,7 +962,6 @@ public class PUI extends PUIGeneric {
 		return newImageButton(x, y, w, h, imagePath, "", false, callbackfn);
 	}
 
-	@Override
 	@APIParam(params = { "x", "y", "w", "h", "imageNameNotPressed", "imageNamePressed", "function()" })
 	public PImageButton addImageButton(int x, int y, int w, int h, String imgNotPressed, String imgPressed,
 			final addImageButtonCB callbackfn) {
