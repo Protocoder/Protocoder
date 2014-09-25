@@ -58,11 +58,34 @@ import org.protocoderrunner.utils.MLog;
 
 public class PDevice extends PInterface {
 
+    //key pressed callback
+    private OnKeyDownCB mOnKeyDownfn;
+    private OnKeyUpCB mOnKeyUpfn;
+
+
 	private BroadcastReceiver batteryReceiver;
 
 	public PDevice(Activity a) {
 		super(a);
 		WhatIsRunning.getInstance().add(this);
+
+
+        ((AppRunnerActivity) a).addOnKeyListener(new onKeyListener() {
+
+            @Override
+            public void onKeyUp(int keyCode) {
+                if (mOnKeyDownfn != null) {
+                    mOnKeyDownfn.event(keyCode);
+                }
+            }
+
+            @Override
+            public void onKeyDown(int keyCode) {
+                if (mOnKeyUpfn != null) {
+                    mOnKeyUpfn.event(keyCode);
+                }
+            }
+        });
 
 	}
 
@@ -162,13 +185,6 @@ public class PDevice extends PInterface {
         } else {
             return "phone";
         }
-	}
-
-	@ProtocoderScript
-	@APIMethod(description = "Enable sounds effects (default false)", example = "")
-    @APIParam(params = { "boolean" })
-    public void enableSoundEffects(boolean b) {
-        a.get().setEnableSoundEffects(b);
 	}
 
 	@ProtocoderScript
@@ -319,6 +335,51 @@ public class PDevice extends PInterface {
 		return ((float) level / (float) scale) * 100.0f;
 	}
 
+
+    // --------- onKeyDown ---------//
+    interface OnKeyDownCB {
+        void event(int eventType);
+    }
+
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "function(keyNumber)" })
+    public void onKeyDown(final OnKeyDownCB fn) {
+        mOnKeyDownfn = fn;
+    }
+
+    // --------- onKeyUp ---------//
+    interface OnKeyUpCB {
+        void event(int eventType);
+    }
+
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "function(keyNumber)" })
+    public void onKeyUp(final OnKeyUpCB fn) {
+        mOnKeyUpfn = fn;
+    }
+
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "boolean" })
+    public void enableVolumeKeys(boolean b) {
+        a.get().keyVolumeEnabled = b;
+    }
+
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "boolean" })
+    public void enableBackKey(boolean b) {
+        a.get().keyBackEnabled = b;
+    }
+
+    public interface onKeyListener {
+        public void onKeyDown(int keyCode);
+
+        public void onKeyUp(int keyCode);
+    }
+
 	class DeviceInfo {
 		public int screenDpi;
 		public String androidId;
@@ -390,6 +451,7 @@ public class PDevice extends PInterface {
 
 		return mem;
 	}
+
 
 	public void stop() {
 		a.get().unregisterReceiver(batteryReceiver);
