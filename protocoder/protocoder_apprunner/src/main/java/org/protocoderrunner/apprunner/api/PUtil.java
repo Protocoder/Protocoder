@@ -29,11 +29,13 @@
 
 package org.protocoderrunner.apprunner.api;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
+import org.protocoderrunner.apprunner.AppRunnerSettings;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.sensors.WhatIsRunning;
@@ -42,7 +44,9 @@ import android.animation.TimeInterpolator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.Interpolator;
+import android.graphics.Typeface;
 import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -245,6 +249,20 @@ public class PUtil extends PInterface {
         });
 
         return va;
+    }
+
+    @ProtocoderScript
+    @APIMethod(description = "Parse a color and return and int representing it", example = "")
+    @APIParam(params = { "colorString" })
+    public int parseColor(String c) {
+        return Color.parseColor(c);
+    }
+
+    @ProtocoderScript
+    @APIMethod(description = "Loads a font", example = "")
+    @APIParam(params = { "fontFile" })
+    public Typeface loadFont(String fontName) {
+        return Typeface.createFromFile(AppRunnerSettings.get().project.getStoragePath() + File.separator + fontName);
     }
 
 }
