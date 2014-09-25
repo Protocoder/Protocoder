@@ -732,7 +732,7 @@ public class PUI extends PUIGeneric {
     @ProtocoderScript
     @APIMethod(description = "Sets an image as tiled background", example = "")
 	@APIParam(params = { "imageName" })
-	public void backgroundImageTile(String imagePath) {
+	public void setBackgroundImageTile(String imagePath) {
 		initializeLayout();
 		// Add the bg image asynchronously
 		new SetBgImageTask(bgImageView, true).execute(AppRunnerSettings.get().project.getStoragePath() + File.separator
