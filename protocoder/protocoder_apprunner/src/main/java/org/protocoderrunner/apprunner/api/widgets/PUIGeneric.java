@@ -278,11 +278,17 @@ public class PUIGeneric extends PInterface {
 		v.setBackgroundResource(theme);
 	}
 
-	/**
-	 * Adds a card holder
-	 * 
-	 */
-	public PCard addGenericCard() {
+
+    @ProtocoderScript
+    @APIMethod(description = "Adds an absolute layout", example = "ui.button(\"button\"); ")
+    @APIParam(params = { "" })
+    public PAbsoluteLayout newAbsoluteLayout() {
+        PAbsoluteLayout al = new PAbsoluteLayout(a.get());
+
+        return al;
+    }
+
+    public PCard newCard() {
 		initializeLayout();
 
 		PCard card = new PCard(a.get());
@@ -293,19 +299,19 @@ public class PUIGeneric extends PInterface {
 	 * Adds a window
 	 *
 	 */
-	public PWindow addGenericWindow() {
+	public PWindow newWindow() {
 		initializeLayout();
 
 		PWindow w = new PWindow(a.get());
 		return w;
 	}
 
-	// --------- addGenericButton ---------//
+	// --------- newButton ---------//
 	public interface addGenericButtonCB {
 		void event();
 	}
 
-	public PButton addGenericButton(String label, final addGenericButtonCB callbackfn) {
+	public PButton newButton(String label, final addGenericButtonCB callbackfn) {
 		initializeLayout();
 
 		// Create the button
@@ -330,7 +336,7 @@ public class PUIGeneric extends PInterface {
 		void event(boolean touching, float x, float y);
 	}
 
-	public TouchAreaView addGenericTouchArea(boolean showArea, final addGenericTouchAreaCB callbackfn) {
+	public TouchAreaView newTouchArea(boolean showArea, final addGenericTouchAreaCB callbackfn) {
 		initializeLayout();
 
 		TouchAreaView taV = new TouchAreaView(a.get(), showArea);
@@ -345,7 +351,7 @@ public class PUIGeneric extends PInterface {
 		return taV;
 	}
 
-	// --------- addPad (Touch Area) ---------//
+	// --------- newTouchPad (Touch Area) ---------//
 	public interface addPadCB {
 		void event(PadXYReturn[] q2);
 	}
@@ -360,7 +366,7 @@ public class PUIGeneric extends PInterface {
 
 	PadXYReturn[] q2;
 
-	public PPadView addPad(final addPadCB callbackfn) {
+	public PPadView newTouchPad(final addPadCB callbackfn) {
 		initializeLayout();
 
 		final ArrayList<PadXYReturn> m = new ArrayList<PUIGeneric.PadXYReturn>();
@@ -424,7 +430,7 @@ public class PUIGeneric extends PInterface {
 
 	// We'll addPE in the circular view as a nice to have later once all the other
 	// widgets are handled.
-	public PSeekBar addGenericSlider(int max, int progress, final addGenericSliderCB callbackfn) {
+	public PSeekBar newSlider(int max, int progress, final addGenericSliderCB callbackfn) {
 
 		initializeLayout();
 		// Create the position the view
@@ -458,7 +464,7 @@ public class PUIGeneric extends PInterface {
         void event(String result);
     }
 
-    public PSpinner createGenericSpinner(final String[] array, final addGenericSpinnerCB callbackfn) {
+    public PSpinner newSpinner(final String[] array, final addGenericSpinnerCB callbackfn) {
         initializeLayout();
 
         PSpinner spinner = new PSpinner(a.get());
@@ -482,7 +488,7 @@ public class PUIGeneric extends PInterface {
         return spinner;
     }
 
-	public PProgressBar addGenericProgress(int max) {
+	public PProgressBar newProgress(int max) {
 
 		initializeLayout();
 		// Create the position the view
@@ -495,7 +501,7 @@ public class PUIGeneric extends PInterface {
 	 * Adds a TextView. Note that the user doesn't specify font size
 	 * 
 	 */
-	public PTextView createGenericText(String label) {
+	public PTextView newText(String label) {
 		// int defaultTextSize = 16;
 		// tv.setTextSize((float) textSize);
 		PTextView tv = new PTextView(a.get());
@@ -512,7 +518,7 @@ public class PUIGeneric extends PInterface {
 		void event();
 	}
 
-	public PEditText addGenericInput(String label, final addGenericInputCB callbackfn) {
+	public PEditText newInput(String label, final addGenericInputCB callbackfn) {
 
 		initializeLayout();
 		// Create view
@@ -541,7 +547,7 @@ public class PUIGeneric extends PInterface {
 		void event(boolean isChecked);
 	}
 
-	public PToggleButton addGenericToggle(final String label, boolean initstate, final addGenericToggleCB callbackfn) {
+	public PToggleButton newToggle(final String label, boolean initstate, final addGenericToggleCB callbackfn) {
 		initializeLayout();
 		// Create the view
 		PToggleButton tb = new PToggleButton(a.get());
@@ -564,7 +570,7 @@ public class PUIGeneric extends PInterface {
 		void event(boolean isChecked);
 	}
 
-	public PCheckBox addGenericCheckbox(String label, boolean initstate, final addGenericCheckboxCB callbackfn) {
+	public PCheckBox newCheckbox(String label, boolean initstate, final addGenericCheckboxCB callbackfn) {
 
 		initializeLayout();
 		// Adds a checkbox and set the initial state as initstate. if the button
@@ -596,7 +602,7 @@ public class PUIGeneric extends PInterface {
 		void event(boolean isChecked);
 	}
 
-	public PSwitch addGenericSwitch(boolean initstate, final addGenericSwitchCB callbackfn) {
+	public PSwitch newSwitch(boolean initstate, final addGenericSwitchCB callbackfn) {
 
 		initializeLayout();
 		// Adds a switch. If the state changes, we'll call the callback function
@@ -623,7 +629,7 @@ public class PUIGeneric extends PInterface {
 		void event(boolean isChecked);
 	}
 
-	public PRadioButton addGenericRadioButton(String label, boolean initstate, final addGenericRadioButtonCB callbackfn) {
+	public PRadioButton newRadioButton(String label, boolean initstate, final addGenericRadioButtonCB callbackfn) {
 
 		initializeLayout();
 		// Create and position the radio button
@@ -649,7 +655,7 @@ public class PUIGeneric extends PInterface {
 	 * Adds an imageview
 	 * 
 	 */
-	public PImageView addGenericImage(String imagePath) {
+	public PImageView newImage(String imagePath) {
 
 		initializeLayout();
 		// Create and position the image view
@@ -660,29 +666,14 @@ public class PUIGeneric extends PInterface {
 
 	}
 
-	public PPlotView addGenericPlot(int min, int max) {
+
+
+	public PPlotView newPlot(int min, int max) {
 		initializeLayout();
 		PPlotView jPlotView = new PPlotView(a.get());
 		jPlotView.setLimits(min, max);
 
 		return jPlotView;
-	}
-
-	/*
-	 * ---------- aqui
-	 */
-
-	/**
-	 * Adds an image button with the default background
-	 * 
-	 */
-	public PImageButton addImageButton(int x, int y, int w, int h, String imagePath, final addImageButtonCB callbackfn) {
-		return addImageButton(x, y, w, h, imagePath, "", false, callbackfn);
-	}
-
-	public PImageButton addImageButton(int x, int y, int w, int h, String imgNotPressed, String imgPressed,
-			final addImageButtonCB callbackfn) {
-		return addImageButton(x, y, w, h, imgNotPressed, imgPressed, false, callbackfn);
 	}
 
 	/**
@@ -695,7 +686,8 @@ public class PUIGeneric extends PInterface {
 		void event();
 	}
 
-	public PImageButton addImageButton(int x, int y, int w, int h, String imgNotPressed, String imgPressed,
+
+	public PImageButton newImageButton(int x, int y, int w, int h, String imgNotPressed, String imgPressed,
 			final boolean hideBackground, final addImageButtonCB callbackfn) {
 
 		initializeLayout();
@@ -750,7 +742,7 @@ public class PUIGeneric extends PInterface {
         void event(ProtocoderNativeObject json);
     }
 
-    public PGrid addGenericGridOf(String type, NativeArray array, int cols, final addGridOfCB callbackfn) {
+    public PGrid newGridOf(String type, NativeArray array, int cols, final addGridOfCB callbackfn) {
 
         PGrid gridLayout = new PGrid(a.get());
         int counter = 0;
@@ -797,7 +789,7 @@ public class PUIGeneric extends PInterface {
                 //button
                 if (type.equals("button")) {
                     PButton btn = null;
-                    btn = addGenericButton(name, new addGenericButtonCB() {
+                    btn = newButton(name, new addGenericButtonCB() {
                         @Override
                         public void event() {
                             cbData.addPE("data", "");
@@ -816,7 +808,7 @@ public class PUIGeneric extends PInterface {
 
                     //toggle
                 } else if (type.equals("toggle")) {
-                    PToggleButton toggle = addGenericToggle(name, false, new addGenericToggleCB() {
+                    PToggleButton toggle = newToggle(name, false, new addGenericToggleCB() {
                         @Override
                         public void event(boolean isChecked) {
 
@@ -829,7 +821,7 @@ public class PUIGeneric extends PInterface {
 
                     //hslider
                 } else if (type.equals("hslider")) {
-                    PSeekBar slider = addGenericSlider(1024, 0, new addGenericSliderCB() {
+                    PSeekBar slider = newSlider(1024, 0, new addGenericSliderCB() {
                         @Override
                         public void event(int progress) {
                             cbData.addPE("data", progress / 1024);
@@ -866,7 +858,7 @@ public class PUIGeneric extends PInterface {
 
 	/* ------------------------------ */
 
-	public PMap addGenericMap() {
+	public PMap newMap() {
 		initializeLayout();
 		PMap mapView = new PMap(a.get(), 256);
 
@@ -888,7 +880,7 @@ public class PUIGeneric extends PInterface {
 		return mapView;
 	}
 
-	public PVideo createGenericVideo(final String videoFile) {
+	public PVideo newVideo(final String videoFile) {
 		initializeLayout();
 		final PVideo video = new PVideo(a.get());
 
@@ -913,8 +905,22 @@ public class PUIGeneric extends PInterface {
 		return video;
 	}
 
+    public PCanvasView newCanvas(int w, int h) {
+        initializeLayout();
+        PCanvasView canvasView = new PCanvasView(a.get(), w, h);
+
+        return canvasView;
+    }
+
+    public PWebView newWebview() {
+        initializeLayout();
+        PWebView webView = new PWebView(a);
+
+        return webView;
+    }
+
 	// transform fragment into view
-	public PCameraNew createGenericCamera(int type) {
+	public PCameraNew newCamera(int type) {
         initializeLayout();
 
         if (type == 1) {
