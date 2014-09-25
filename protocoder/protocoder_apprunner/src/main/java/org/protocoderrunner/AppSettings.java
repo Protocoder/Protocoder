@@ -47,12 +47,12 @@ public class AppSettings {
 
 	public static int MIN_SUPPORTED_VERSION = Build.VERSION_CODES.ICE_CREAM_SANDWICH;
 
-	public static String APP_FOLDER = "protocoder";
-	public static String SERVER_ADDRESS = "";
-	public static int WEBSOCKET_PORT = 8587;
-	public static int ANIM_GENERAL_SPEED = 500;
-	public static int HTTP_PORT = 8585;
+	public final static String APP_FOLDER = "protocoder";
+	public final static int WEBSOCKET_PORT = 8587;
+	public final static int HTTP_PORT = 8585;
 
+    public static String serverAddress = "";
+    public static int animGeneralSpeed = 500;
     public String id;
 
 	private static AppSettings instance;
