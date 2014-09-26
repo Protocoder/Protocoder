@@ -37,11 +37,17 @@ import org.protocoderrunner.AppSettings;
 import org.protocoderrunner.R;
 
 import org.protocoderrunner.apprunner.api.PApp;
+import org.protocoderrunner.apprunner.api.PBoards;
+import org.protocoderrunner.apprunner.api.PConsole;
+import org.protocoderrunner.apprunner.api.PDashboard;
 import org.protocoderrunner.apprunner.api.PDevice;
+import org.protocoderrunner.apprunner.api.PFileIO;
 import org.protocoderrunner.apprunner.api.PMedia;
 import org.protocoderrunner.apprunner.api.PNetwork;
+import org.protocoderrunner.apprunner.api.PProtocoder;
 import org.protocoderrunner.apprunner.api.PSensors;
 import org.protocoderrunner.apprunner.api.PUI;
+import org.protocoderrunner.apprunner.api.PUtil;
 import org.protocoderrunner.apprunner.api.other.PProtocoderLiveCodingFeedback;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.events.Events;
@@ -137,6 +143,20 @@ public class AppRunnerActivity extends BaseActivity {
 	public boolean keyBackEnabled = true;
 
 	public PProtocoderLiveCodingFeedback liveCoding;
+
+    //API Objects for the interpreter
+    public PApp pApp;
+    public PBoards pBoards;
+    public PConsole pConsole;
+    public PDashboard pDashboard;
+    public PDevice pDevice;
+    public PFileIO pFileIO;
+    public PMedia pMedia;
+    public PNetwork pNetwork;
+    public PProtocoder pProtocoder;
+    public PSensors pSensors;
+    public PUI pUi;
+    public PUtil pUtil;
     //private EditorFragment editorFragment;
 
     @Override
@@ -146,7 +166,21 @@ public class AppRunnerActivity extends BaseActivity {
 		// ColorDrawable(android.graphics.Color.TRANSPARENT));
 		super.onCreate(savedInstanceState);
 
-		// Read in the script given in the intent.
+        //instantiate the objects that can be accessed from the interpreter
+        pApp = new PApp(this);
+        pBoards = new PBoards(this);
+        pConsole = new PConsole(this);
+        pDashboard = new PDashboard(this);
+        pDevice = new PDevice(this);
+        pFileIO = new PFileIO(this);
+        pMedia = new PMedia(this);
+        pNetwork = new PNetwork(this);
+        pProtocoder = new PProtocoder(this);
+        pSensors = new PSensors(this);
+        pUi = new PUI(this);
+        pUtil  = new PUtil(this);
+
+        // Read in the script given in the intent.
 		Intent intent = getIntent();
 		if (null != intent) {
 			boolean isService = intent.getBooleanExtra("isService", false);
@@ -208,9 +242,22 @@ public class AppRunnerActivity extends BaseActivity {
             //create a new interpreter and add the objects to it
             interp = new AppRunnerInterpreter(this);
             interp.createInterpreter(true);
-            interp.addObjects();
+            interp.interpreter.addObjectToInterface("app", pApp);
+            interp.interpreter.addObjectToInterface("boards", pBoards);
+            interp.interpreter.addObjectToInterface("console", pConsole);
+            interp.interpreter.addObjectToInterface("dashboard", pDashboard);
+            interp.interpreter.addObjectToInterface("device", pDevice);
+            interp.interpreter.addObjectToInterface("fileio", pFileIO);
+            interp.interpreter.addObjectToInterface("media", pMedia);
+            interp.interpreter.addObjectToInterface("network", pNetwork);
+            interp.interpreter.addObjectToInterface("protocoder", pProtocoder);
+            interp.interpreter.addObjectToInterface("sensors", pSensors);
+            interp.interpreter.addObjectToInterface("ui", pUi);
+            interp.interpreter.addObjectToInterface("util", pUtil);
 
-			interp.addListener(new AppRunnerInterpreter.InterpreterInfo() {
+
+
+            interp.addListener(new AppRunnerInterpreter.InterpreterInfo() {
 
 				@Override
 				public void onError(String message) {

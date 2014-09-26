@@ -191,37 +191,6 @@ public class  AppRunnerInterpreter {
         interpreter.mainScriptContext.setDebugger(debugger, interpreter.mainScriptContext);
     }
 
-    public void addObjects() {
-        PApp app = new PApp((AppRunnerActivity) a);
-        PBoards boards = new PBoards((AppRunnerActivity) a);
-        PConsole console = new PConsole((AppRunnerActivity) a);
-        PDashboard dashboard = new PDashboard((AppRunnerActivity) a);
-        PDevice device = new PDevice((AppRunnerActivity) a);
-        PFileIO fileIO = new PFileIO((AppRunnerActivity) a);
-        PMedia media = new PMedia((AppRunnerActivity) a);
-        PNetwork network = new PNetwork((AppRunnerActivity) a);
-        PProtocoder protocoder = new PProtocoder((AppRunnerActivity) a);
-        PSensors sensors = new PSensors((AppRunnerActivity) a);
-        PUI ui = new PUI((AppRunnerActivity) a);
-        PUtil util  = new PUtil((AppRunnerActivity) a);
-
-
-        //transition to a new way of adding objects to javascript
-        interpreter.addObjectToInterface("app", app);
-        interpreter.addObjectToInterface("boards", boards);
-        interpreter.addObjectToInterface("console", console);
-        interpreter.addObjectToInterface("dashboard", dashboard);
-        interpreter.addObjectToInterface("device", device);
-        interpreter.addObjectToInterface("fileio", fileIO);
-        interpreter.addObjectToInterface("media", media);
-        interpreter.addObjectToInterface("network", network);
-        interpreter.addObjectToInterface("protocoder", protocoder);
-        interpreter.addObjectToInterface("sensors", sensors);
-        interpreter.addObjectToInterface("ui", ui);
-        interpreter.addObjectToInterface("util", util);
-
-    }
-
     public interface InterpreterInfo {
 		public void onError(String message);
 	}
