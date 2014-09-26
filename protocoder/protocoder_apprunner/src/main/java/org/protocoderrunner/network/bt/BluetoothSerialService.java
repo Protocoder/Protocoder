@@ -30,9 +30,7 @@ import org.protocoderrunner.utils.MLog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 
 /**
@@ -46,7 +44,8 @@ public class BluetoothSerialService {
 	private static final String TAG = "BluetoothSerialService";
 
 	// Unique UUID for this application
-	private static final UUID MY_UUID = UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66");
+	//private static final UUID MY_UUID = UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66");
+	private static final UUID UUID_SPP = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
 	// Member fields
 	private final BluetoothAdapter mAdapter;
@@ -55,10 +54,10 @@ public class BluetoothSerialService {
 	private ConnectedThread mConnectedThread;
 	private int mState;
 
-	// Constants that indicate the current connection state
-	public static final int STATE_NONE = 0; // we're doing nothing
-	public static final int STATE_CONNECTING = 2; // now initiating an outgoing connection
-	public static final int STATE_CONNECTED = 3; // now connected to a remote device
+	// Connection state
+	public static final int STATE_NONE = 0;
+	public static final int STATE_CONNECTING = 2;
+	public static final int STATE_CONNECTED = 3;
 
 	//it needs a handler to pass messages back and forth
 	public BluetoothSerialService(Handler handler) {
@@ -66,7 +65,6 @@ public class BluetoothSerialService {
 		mState = STATE_NONE;
 		mHandler = handler;
 	}
-
 
     //change state
 	private synchronized void setState(int state) {
@@ -193,18 +191,22 @@ public class BluetoothSerialService {
 		public ConnectThread(BluetoothDevice device) throws SecurityException, NoSuchMethodException,
 				IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 			mmDevice = device;
-			BluetoothSocket tmp = null;
+			BluetoothSocket tmpSocket = null;
 
-			// Get a BluetoothSocket for a connection with the
-			// given BluetoothDevice
+			// Get a BluetoothSocket for a connection with the given BluetoothDevice
 			try {
-				tmp = device.createRfcommSocketToServiceRecord(MY_UUID);
-				Method m = device.getClass().getMethod("createRfcommSocket", new Class[] { int.class });
-				tmp = (BluetoothSocket) m.invoke(device, 1);
-			} catch (IOException e) {
-				Log.e(TAG, "create() failed", e);
+				tmpSocket = device.createRfcommSocketToServiceRecord(UUID_SPP);
+                MLog.d(TAG, "socketTmp " + tmpSocket);
+            } catch (IOException e) {
+				Log.e(TAG, "create socket failed, trying with new fallback", e);
+
+                Method m = device.getClass().getMethod("createRfcommSocket", new Class[]{int.class});
+                tmpSocket = (BluetoothSocket) m.invoke(device, 1);
+                MLog.d(TAG, "socketTmp 2" + tmpSocket);
 			}
-			mmSocket = tmp;
+
+
+            mmSocket = tmpSocket;
 		}
 
 		@Override
@@ -217,8 +219,7 @@ public class BluetoothSerialService {
 
 			// Make a connection to the BluetoothSocket
 			try {
-				// This is a blocking call and will only return on a
-				// successful connection or an exception
+				// This is a blocking call and will only return on a successful connection or an exception
 				mmSocket.connect();
 			} catch (IOException e) {
 				e.printStackTrace();

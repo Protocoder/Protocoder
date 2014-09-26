@@ -235,22 +235,28 @@ public class NetworkUtils {
 	public static String getLocalIpAddress(Context c) {
 
 		WifiManager wifiManager = (WifiManager) c.getSystemService(Context.WIFI_SERVICE);
+        MLog.d(TAG, "wifiManager " + wifiManager);
 		int ipAddress = wifiManager.getConnectionInfo().getIpAddress();
+        String ipAddressString = -1;
+        if (ipAddress != 0) {
 
-		// Convert little-endian to big-endianif needed
-		if (ByteOrder.nativeOrder().equals(ByteOrder.LITTLE_ENDIAN)) {
-			ipAddress = Integer.reverseBytes(ipAddress);
-		}
+            MLog.d(TAG, "ipAddress " + ipAddress);
 
-		byte[] ipByteArray = BigInteger.valueOf(ipAddress).toByteArray();
+            // Convert little-endian to big-endianif needed
+            if (ByteOrder.nativeOrder().equals(ByteOrder.LITTLE_ENDIAN)) {
+                ipAddress = Integer.reverseBytes(ipAddress);
+            }
 
-		String ipAddressString;
-		try {
-			ipAddressString = InetAddress.getByAddress(ipByteArray).getHostAddress();
-		} catch (UnknownHostException ex) {
-			Log.e("WIFIIP", "Unable to get host address.");
-			ipAddressString = null;
-		}
+            byte[] ipByteArray = BigInteger.valueOf(ipAddress).toByteArray();
+
+
+            try {
+                ipAddressString = InetAddress.getByAddress(ipByteArray).getHostAddress();
+            } catch (UnknownHostException ex) {
+                Log.e("WIFIIP", "Unable to get host address.");
+                ipAddressString = null;
+            }
+        }
 
 		return ipAddressString;
 
