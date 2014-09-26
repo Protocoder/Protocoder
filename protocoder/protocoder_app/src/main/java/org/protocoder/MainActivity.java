@@ -312,7 +312,7 @@ public class MainActivity extends BaseActivity implements NewProjectDialogFragme
 		}
 
 		// check if there is a WIFI connection or we can connect via USB
-		if (NetworkUtils.getLocalIpAddress(this) == null) {
+		if (NetworkUtils.getLocalIpAddress(this).equals("-1")) {
 			textIP.setText("No WIFI, still you can hack via USB using the companion app");
 		} else {
 			textIP.setText("Hack via your browser @ http://" + NetworkUtils.getLocalIpAddress(this) + ":"
