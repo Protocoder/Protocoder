@@ -254,8 +254,6 @@ public class PArduino extends PInterface {
             }
 
             try {
-                //MLog.network(a.get(), TAG, "3");
-
                 mPhysicaloid.upload(board, filePath, new UploadCallBack() {
                     String responseStr;
 
