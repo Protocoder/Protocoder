@@ -49,6 +49,8 @@ import android.graphics.RectF;
 import android.view.MotionEvent;
 import android.view.View;
 
+import org.protocoderrunner.apidoc.annotation.APIMethod;
+import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.utils.AndroidUtils;
 
@@ -265,6 +267,8 @@ public class PPadView extends View {
 	}
 
     @ProtocoderScript
+    @APIMethod(description = "Change the pad color", example = "")
+    @APIParam(params = { "colorHex" })
     public PPadView padsColor(String c) {
         mPadsColorStroke = Color.parseColor(c);
         int r = Color.red(mPadsColorStroke);
@@ -274,14 +278,18 @@ public class PPadView extends View {
         mPadsColorBg = Color.argb(125, r, g, b);
         return this;
     }
-    
+
     @ProtocoderScript
+    @APIMethod(description = "Change the strokeColor", example = "")
+    @APIParam(params = { "colorHex" })
     public PPadView strokeColor(String c) {
         mBackgroundColor = Color.parseColor(c);
         return this;
     }
 
     @ProtocoderScript
+    @APIMethod(description = "Change the background color", example = "")
+    @APIParam(params = { "colorHex" })
     public PPadView backgroundColor(String c) {
         mBackgroundColor = Color.parseColor(c);
         return this;

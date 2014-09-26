@@ -31,7 +31,10 @@ package org.protocoderrunner.apprunner.api.widgets;
 
 import java.io.File;
 
+import org.protocoderrunner.apidoc.annotation.APIMethod;
+import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
+import org.protocoderrunner.apprunner.ProtocoderScript;
 
 import android.content.Context;
 import android.graphics.Shader;
@@ -44,6 +47,10 @@ public class PImageView extends ImageView implements PViewInterface {
 		super(context);
 	}
 
+
+    @ProtocoderScript
+    @APIMethod(description = "Sets an image", example = "")
+    @APIParam(params = { "imageName" })
 	public PImageView setImage(String imagePath) {
 
 		if (imagePath.startsWith("http")) {
@@ -59,6 +66,9 @@ public class PImageView extends ImageView implements PViewInterface {
         return this;
 	}
 
+    @ProtocoderScript
+    @APIMethod(description = "Sets a tiled image", example = "")
+    @APIParam(params = { "imageName" })
 	public PImageView setTiledImage(String imagePath) {
 
 		if (imagePath.startsWith("http")) {

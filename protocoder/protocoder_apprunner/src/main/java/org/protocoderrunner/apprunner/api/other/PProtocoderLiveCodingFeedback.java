@@ -2,6 +2,7 @@ package org.protocoderrunner.apprunner.api.other;
 
 import org.protocoderrunner.R;
 import org.protocoderrunner.apidoc.annotation.APIMethod;
+import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.utils.MLog;
 
@@ -88,8 +89,9 @@ public class PProtocoderLiveCodingFeedback {
 
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+    @ProtocoderScript
+    @APIMethod(description = "Show/hide the live coding feedback", example = "")
+    @APIParam(params = { "boolean" })
 	public PProtocoderLiveCodingFeedback show(boolean b) {
 		this.show = b;
 
@@ -102,22 +104,25 @@ public class PProtocoderLiveCodingFeedback {
 		return this;
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+    @ProtocoderScript
+    @APIMethod(description = "Auto hide the text after shown", example = "")
+    @APIParam(params = { "boolean" })
 	public PProtocoderLiveCodingFeedback autoHide(boolean b) {
 		this.autoHide = b;
 		return this;
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+    @ProtocoderScript
+    @APIMethod(description = "Elapsed time until text is hidden", example = "")
+    @APIParam(params = { "milliseconds" })
 	public PProtocoderLiveCodingFeedback timeToHide(int t) {
 		this.timeToHide = t;
 		return this;
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+    @ProtocoderScript
+    @APIMethod(description = "Background color", example = "")
+    @APIParam(params = { "colorHex" })
 	public PProtocoderLiveCodingFeedback backgroundColor(String c) {
 		new Color();
 		this.bgColor = Color.parseColor(c);
@@ -126,8 +131,9 @@ public class PProtocoderLiveCodingFeedback {
 		return this;
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+    @ProtocoderScript
+    @APIMethod(description = "Text color", example = "")
+    @APIParam(params = { "colorHex" })
 	public PProtocoderLiveCodingFeedback textColor(String color) {
 		new Color();
 		this.textColor = color;
@@ -136,8 +142,9 @@ public class PProtocoderLiveCodingFeedback {
 		return this;
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+    @ProtocoderScript
+    @APIMethod(description = "Sets up the text size", example = "")
+    @APIParam(params = { "size" })
 	public PProtocoderLiveCodingFeedback textSize(int textSize) {
 		this.textSize = textSize;
 		MLog.d(TAG, "textsize " + textSize);
@@ -145,12 +152,10 @@ public class PProtocoderLiveCodingFeedback {
 		return this;
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+    @ProtocoderScript
+    @APIMethod(description = "Adds a text padding", example = "")
+    @APIParam(params = { "left", "bottom" })
 	public PProtocoderLiveCodingFeedback padding(int left, int bottom) {
-		this.textSize = textSize;
-		// MLog.d(TAG, "textsize " + textSize);
-		// liveText.setTextSize(this.textSize);
 		paddingLeft = left;
         paddingBottom = bottom;
 
@@ -159,7 +164,8 @@ public class PProtocoderLiveCodingFeedback {
 
 
     @ProtocoderScript
-    @APIMethod(description = "", example = "")
+    @APIMethod(description = "Aligns the text", example = "")
+    @APIParam(params = { "align={left,center,right}" })
     public PProtocoderLiveCodingFeedback align(String alignment) {
         if (alignment.equals("right")) {
             this.alignment = TextView.TEXT_ALIGNMENT_VIEW_START;
@@ -173,16 +179,18 @@ public class PProtocoderLiveCodingFeedback {
     }
 
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+    @ProtocoderScript
+    @APIMethod(description = "Writes simple text in the feedback", example = "")
+    @APIParam(params = { "text" })
 	public PProtocoderLiveCodingFeedback write(String text) {
         write(text, this.textColor, this.textSize);
 
         return this;
     }
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+    @ProtocoderScript
+    @APIMethod(description = "Writes text specifing the color and the size", example = "")
+    @APIParam(params = { "text", "colorHex", "size" })
 	public PProtocoderLiveCodingFeedback write(String text, String color, int size) {
 		// this.text = text;
 

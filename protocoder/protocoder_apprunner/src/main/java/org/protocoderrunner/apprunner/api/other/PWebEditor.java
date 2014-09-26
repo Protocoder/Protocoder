@@ -43,15 +43,17 @@ public class PWebEditor extends PInterface {
 
 	}
 
+    //TODO this is a place holder
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Loads a Html file in the webIde sidebar", example = "")
 	@APIParam(params = { "boolean" })
 	public void loadHTMLonSideBar(boolean visible) {
 
 	}
 
+    //TODO this is a place holder
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Shows/Hides the webIde sidebar", example = "")
 	@APIParam(params = { "boolean" })
 	public void showSideBar(boolean visible) {
 

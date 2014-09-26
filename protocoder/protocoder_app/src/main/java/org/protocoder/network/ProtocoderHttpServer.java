@@ -62,7 +62,7 @@ import org.protocoderrunner.apprunner.api.other.PCamera;
 import org.protocoderrunner.apprunner.api.other.PProcessing;
 import org.protocoderrunner.apprunner.api.other.PProtocoderLiveCodingFeedback;
 import org.protocoderrunner.apprunner.api.other.PPureData;
-import org.protocoderrunner.apprunner.api.other.PSqlLite;
+import org.protocoderrunner.apprunner.api.other.PSqLite;
 import org.protocoderrunner.apprunner.api.other.PVideo;
 import org.protocoderrunner.apprunner.api.other.PWebEditor;
 import org.protocoderrunner.apprunner.api.widgets.PAbsoluteLayout;
@@ -421,7 +421,7 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 					APIManager.getInstance().addClass(PProcessing.class);
 					APIManager.getInstance().addClass(PProtocoderLiveCodingFeedback.class);
 					APIManager.getInstance().addClass(PPureData.class);
-					APIManager.getInstance().addClass(PSqlLite.class);
+					APIManager.getInstance().addClass(PSqLite.class);
 					APIManager.getInstance().addClass(PVideo.class);
 
 					APIManager.getInstance().addClass(PButton.class);

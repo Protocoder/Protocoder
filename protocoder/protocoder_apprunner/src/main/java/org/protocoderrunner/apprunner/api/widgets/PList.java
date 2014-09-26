@@ -36,6 +36,10 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import org.protocoderrunner.apidoc.annotation.APIMethod;
+import org.protocoderrunner.apidoc.annotation.APIParam;
+import org.protocoderrunner.apprunner.ProtocoderScript;
+
 public class PList extends LinearLayout implements PViewInterface {
 
 	private final ListView lv;
@@ -50,21 +54,37 @@ public class PList extends LinearLayout implements PViewInterface {
 
 	}
 
+    //TODO place holder
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "" })
 	public void setItems(ArrayList<PListItem> items) {
 		plistAdapter = new PListAdapter(c, items);
 		lv.setAdapter(plistAdapter);
 	}
 
 	@Override
+    //TODO place holder
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "" })
 	public void addView(View v) {
 		lv.addView(v);
 	}
 
+    //TODO place holder
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "" })
 	public void clear() {
 		lv.removeAllViews();
 		plistAdapter.notifyDataSetChanged();
 	}
 
+    //TODO place holder
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "" })
 	public void notifyAddedProject() {
 		plistAdapter.notifyDataSetChanged();
 		lv.invalidateViews();

@@ -201,14 +201,14 @@ public class PUIGeneric extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
+	@APIMethod(description = "Enables/Disables the absolute layout", example = "")
 	@APIParam(params = { "boolean" })
 	public void setAbsoluteLayout(boolean absoluteLayout) {
 		this.absoluteLayout = absoluteLayout;
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "Creates a button ", example = "ui.button(\"button\"); ")
+	@APIMethod(description = "Allows the main interface to scroll", example = "")
 	@APIParam(params = { "boolean" })
 	public void allowScroll(boolean scroll) {
 		if (sv != null) {
@@ -232,6 +232,9 @@ public class PUIGeneric extends PInterface {
 		isScrollLayout = scroll;
 	}
 
+    @ProtocoderScript
+    @APIMethod(description = "Adds the given view to the layout", example = "")
+    @APIParam(params = { "x", "y", "w", "h" })
 	protected void addViewAbsolute(View v, int x, int y, int w, int h) {
 		addViewGeneric(v);
       //  if (true) {
@@ -280,7 +283,7 @@ public class PUIGeneric extends PInterface {
 
 
     @ProtocoderScript
-    @APIMethod(description = "Adds an absolute layout", example = "ui.button(\"button\"); ")
+    @APIMethod(description = "Creates an absolute layout", example = "")
     @APIParam(params = { "" })
     public PAbsoluteLayout newAbsoluteLayout() {
         PAbsoluteLayout al = new PAbsoluteLayout(a.get());
@@ -288,6 +291,9 @@ public class PUIGeneric extends PInterface {
         return al;
     }
 
+    @ProtocoderScript
+    @APIMethod(description = "Creates a card view holder", example = "")
+    @APIParam(params = { "" })
     public PCard newCard() {
 		initializeLayout();
 
@@ -295,10 +301,9 @@ public class PUIGeneric extends PInterface {
 		return card;
 	}
 
-	/**
-	 * Adds a window
-	 *
-	 */
+    @ProtocoderScript
+    @APIMethod(description = "Creates a new window", example = "")
+    @APIParam(params = { "" })
 	public PWindow newWindow() {
 		initializeLayout();
 
@@ -311,6 +316,9 @@ public class PUIGeneric extends PInterface {
 		void event();
 	}
 
+    @ProtocoderScript
+    @APIMethod(description = "Creates a new button", example = "")
+    @APIParam(params = { "label", "function()" })
 	public PButton newButton(String label, final addGenericButtonCB callbackfn) {
 		initializeLayout();
 
@@ -336,6 +344,9 @@ public class PUIGeneric extends PInterface {
 		void event(boolean touching, float x, float y);
 	}
 
+    @ProtocoderScript
+    @APIMethod(description = "Creates a new touch area", example = "")
+    @APIParam(params = { "boolean", "function(touching, x, y)" })
 	public TouchAreaView newTouchArea(boolean showArea, final addGenericTouchAreaCB callbackfn) {
 		initializeLayout();
 
@@ -366,6 +377,9 @@ public class PUIGeneric extends PInterface {
 
 	PadXYReturn[] q2;
 
+    @ProtocoderScript
+    @APIMethod(description = "Creates a new touch pad", example = "")
+    @APIParam(params = { "function(data)" })
 	public PPadView newTouchPad(final addPadCB callbackfn) {
 		initializeLayout();
 
@@ -428,8 +442,9 @@ public class PUIGeneric extends PInterface {
 		void event(int progress);
 	}
 
-	// We'll addPE in the circular view as a nice to have later once all the other
-	// widgets are handled.
+    @ProtocoderScript
+    @APIMethod(description = "Creates a new slider", example = "")
+    @APIParam(params = { "max", "progress", "function(progress)" })
 	public PSeekBar newSlider(int max, int progress, final addGenericSliderCB callbackfn) {
 
 		initializeLayout();
@@ -464,7 +479,10 @@ public class PUIGeneric extends PInterface {
         void event(String result);
     }
 
-    public PSpinner newSpinner(final String[] array, final addGenericSpinnerCB callbackfn) {
+    @ProtocoderScript
+    @APIMethod(description = "Creates a new choice box", example = "")
+    @APIParam(params = { "array", "function(selected)" })
+    public PSpinner newChoiceBox(final String[] array, final addGenericSpinnerCB callbackfn) {
         initializeLayout();
 
         PSpinner spinner = new PSpinner(a.get());
@@ -488,6 +506,9 @@ public class PUIGeneric extends PInterface {
         return spinner;
     }
 
+    @ProtocoderScript
+    @APIMethod(description = "Creates a progress bar of n units", example = "")
+    @APIParam(params = { "units" })
 	public PProgressBar newProgress(int max) {
 
 		initializeLayout();
@@ -497,10 +518,9 @@ public class PUIGeneric extends PInterface {
 		return pb;
 	}
 
-	/**
-	 * Adds a TextView. Note that the user doesn't specify font size
-	 * 
-	 */
+    @ProtocoderScript
+    @APIMethod(description = "Creates a new text", example = "")
+    @APIParam(params = { "text" })
 	public PTextView newText(String label) {
 		// int defaultTextSize = 16;
 		// tv.setTextSize((float) textSize);
@@ -518,6 +538,9 @@ public class PUIGeneric extends PInterface {
 		void event();
 	}
 
+    @ProtocoderScript
+    @APIMethod(description = "Creates a new input", example = "")
+    @APIParam(params = { "label, function(data)" })
 	public PEditText newInput(String label, final addGenericInputCB callbackfn) {
 
 		initializeLayout();
@@ -525,15 +548,17 @@ public class PUIGeneric extends PInterface {
 		PEditText et = new PEditText(a.get());
 		et.setHint(label);
 
-		// On focus lost, we need to call the callback function
-		et.setOnFocusChangeListener(new OnFocusChangeListener() {
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				if (!hasFocus) {
-					callbackfn.event();
-				}
-			}
-		});
+        if (callbackfn != null) {
+            // On focus lost, we need to call the callback function
+            et.setOnFocusChangeListener(new OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (!hasFocus) {
+                        callbackfn.event();
+                    }
+                }
+            });
+        }
 
 		// Add the view
 		themeWidget(et);
@@ -547,6 +572,9 @@ public class PUIGeneric extends PInterface {
 		void event(boolean isChecked);
 	}
 
+    @ProtocoderScript
+    @APIMethod(description = "Creates a new toggle", example = "")
+    @APIParam(params = { "name", "boolean", "function(b)" })
 	public PToggleButton newToggle(final String label, boolean initstate, final addGenericToggleCB callbackfn) {
 		initializeLayout();
 		// Create the view
@@ -570,6 +598,9 @@ public class PUIGeneric extends PInterface {
 		void event(boolean isChecked);
 	}
 
+    @ProtocoderScript
+    @APIMethod(description = "Creates a new checkbox", example = "")
+    @APIParam(params = { "name", "boolean", "function(boolean)" })
 	public PCheckBox newCheckbox(String label, boolean initstate, final addGenericCheckboxCB callbackfn) {
 
 		initializeLayout();
@@ -602,6 +633,9 @@ public class PUIGeneric extends PInterface {
 		void event(boolean isChecked);
 	}
 
+    @ProtocoderScript
+    @APIMethod(description = "Creates a new switch", example = "")
+    @APIParam(params = { "boolean", "function(b)" })
 	public PSwitch newSwitch(boolean initstate, final addGenericSwitchCB callbackfn) {
 
 		initializeLayout();
@@ -629,6 +663,10 @@ public class PUIGeneric extends PInterface {
 		void event(boolean isChecked);
 	}
 
+    //TODO change this, it doesnt make sense to have just one
+    @ProtocoderScript
+    @APIMethod(description = "Creates a new radio button", example = "")
+    @APIParam(params = { "thickness" })
 	public PRadioButton newRadioButton(String label, boolean initstate, final addGenericRadioButtonCB callbackfn) {
 
 		initializeLayout();
@@ -651,10 +689,9 @@ public class PUIGeneric extends PInterface {
 		return rb;
 	}
 
-	/**
-	 * Adds an imageview
-	 * 
-	 */
+    @ProtocoderScript
+    @APIMethod(description = "Creates a new image view", example = "")
+    @APIParam(params = { "imageName" })
 	public PImageView newImage(String imagePath) {
 
 		initializeLayout();
@@ -667,7 +704,9 @@ public class PUIGeneric extends PInterface {
 	}
 
 
-
+    @ProtocoderScript
+    @APIMethod(description = "Creates a new plot", example = "")
+    @APIParam(params = { "min", "max" })
 	public PPlotView newPlot(int min, int max) {
 		initializeLayout();
 		PPlotView jPlotView = new PPlotView(a.get());
@@ -687,6 +726,9 @@ public class PUIGeneric extends PInterface {
 	}
 
 
+    @ProtocoderScript
+    @APIMethod(description = "Creates a new image button", example = "")
+    @APIParam(params = { "x", "y", "w", "h", "imgNameNotPressed", "imgNamePressed", "hideBackground", "function()" })
 	public PImageButton newImageButton(int x, int y, int w, int h, String imgNotPressed, String imgPressed,
 			final boolean hideBackground, final addImageButtonCB callbackfn) {
 
@@ -846,18 +888,11 @@ public class PUIGeneric extends PInterface {
         return gridLayout;
     }
 
-	public PCanvasView addCanvas(int x, int y, int w, int h) {
-		initializeLayout();
-
-		PCanvasView sv = new PCanvasView(a.get(), w, h);
-		// Add the view
-		addViewAbsolute(sv, x, y, w, h);
-
-		return sv;
-	}
-
 	/* ------------------------------ */
 
+    @ProtocoderScript
+    @APIMethod(description = "Creates a new map", example = "")
+    @APIParam(params = { "" })
 	public PMap newMap() {
 		initializeLayout();
 		PMap mapView = new PMap(a.get(), 256);
@@ -905,6 +940,9 @@ public class PUIGeneric extends PInterface {
 		return video;
 	}
 
+    @ProtocoderScript
+    @APIMethod(description = "Creates a new drawing canvas", example = "")
+    @APIParam(params = { "width", "height" })
     public PCanvasView newCanvas(int w, int h) {
         initializeLayout();
         PCanvasView canvasView = new PCanvasView(a.get(), w, h);
@@ -912,6 +950,9 @@ public class PUIGeneric extends PInterface {
         return canvasView;
     }
 
+    @ProtocoderScript
+    @APIMethod(description = "Creates a new web view", example = "")
+    @APIParam(params = { "" })
     public PWebView newWebview() {
         initializeLayout();
         PWebView webView = new PWebView(a);
@@ -919,7 +960,9 @@ public class PUIGeneric extends PInterface {
         return webView;
     }
 
-	// transform fragment into view
+    @ProtocoderScript
+    @APIMethod(description = "Creates a new camera view", example = "")
+    @APIParam(params = { "type={0,1}" })
 	public PCameraNew newCamera(int type) {
         initializeLayout();
 

@@ -172,37 +172,6 @@ public class PMidi extends PInterface {
 
         usbMidiDriver.open();
 
-//        OnTouchListener onToneButtonTouchListener = new OnTouchListener() {
-//
-//            /*
-//             * (non-Javadoc)
-//             * @see android.view.View.OnTouchListener#onTouch(android.view.View, android.view.MotionEvent)
-//             */
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                MidiOutputDevice midiOutputDevice = getMidiOutputDeviceFromSpinner();
-//                if (midiOutputDevice == null) {
-//                    return false;
-//                }
-//
-//                int note = 60 + Integer.parseInt((String) v.getTag());
-//                switch (event.getAction()) {
-//                    case MotionEvent.ACTION_DOWN:
-//                        midiOutputDevice.sendMidiNoteOn(cableIdSpinner.getSelectedItemPosition(), 0, note, 127);
-//                        midiOutputEventHandler.sendMessage(Message.obtain(midiOutputEventHandler, 0, "NoteOn to: " + midiOutputDevice.getUsbDevice().getDeviceName() + ", cableId: " + cableIdSpinner.getSelectedItemPosition() + ", note: " + note + ", velocity: 127"));
-//                        break;
-//                    case MotionEvent.ACTION_UP:
-//                        midiOutputDevice.sendMidiNoteOff(cableIdSpinner.getSelectedItemPosition(), 0, note, 127);
-//                        midiOutputEventHandler.sendMessage(Message.obtain(midiOutputEventHandler, 0, "NoteOff to: " + midiOutputDevice.getUsbDevice().getDeviceName() + ", cableId: " + cableIdSpinner.getSelectedItemPosition() + ", note: " + note + ", velocity: 127"));
-//                        break;
-//                    default:
-//                        // do nothing.
-//                        break;
-//                }
-//                return false;
-//            }
-//        };
-
     }
 
     public void stop() {

@@ -352,7 +352,6 @@ public class CameraFragment extends Fragment {
 
 	public void recordVideo(String file) {
 
-		MLog.d(TAG, "mCamera " + mCamera);
 		// Camera.Parameters parameters = mCamera.getParameters();
 		// MLog.d(TAG, "parameters " + parameters);
 		// parameters.setColorEffect(Camera.Parameters.EFFECT_MONO);

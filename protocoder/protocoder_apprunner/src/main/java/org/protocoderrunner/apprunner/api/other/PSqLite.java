@@ -44,12 +44,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-public class PSqlLite extends PInterface {
+public class PSqLite extends PInterface {
 
-	String TAG = "JFileIO";
+	String TAG = "PSqlite";
 	private SQLiteDatabase db;
 
-	public PSqlLite(Activity a, String dbName) {
+	public PSqLite(Activity a, String dbName) {
 		super(a);
 
 		open(dbName);
@@ -57,7 +57,7 @@ public class PSqlLite extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Open a SQLite ", example = "")
 	@APIParam(params = { "dirName" })
 	public void open(String dbName) {
 		db = a.get().openOrCreateDatabase(
@@ -67,43 +67,45 @@ public class PSqlLite extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "fileName" })
+	@APIMethod(description = "Executes a SQL sentence", example = "")
+	@APIParam(params = { "sql" })
 	public void execSql(String sql) {
 		db.execSQL(sql);
 	}
 
 	// http://stackoverflow.com/questions/8830753/android-sqlite-which-query-query-or-rawquery-is-faster
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "fileName", "lines[]" })
+	@APIMethod(description = "Querys the database in the given array of columns and returns a cursor", example = "")
+	@APIParam(params = { "table", "colums[]" })
 	public Cursor query(String table, String[] columns) {
 		for (String column : columns) {
-			MLog.d("qq", column);
+			//MLog.d("qq", column);
 
 		}
 		Cursor c = db.query(table, columns, null, null, null, null, null);
-		MLog.d("qq", "count " + c.getCount());
 
 		return c;
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Close the database connection", example = "")
 	@APIParam(params = {})
 	public void close() {
 		db.close();
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = {})
-	public void delete(String dbName) {
-		this.db.delete(dbName, null, null);
+	@APIMethod(description = "Deletes a table in the database", example = "")
+	@APIParam(params = {"tableName"})
+	public void delete(String table) {
+		this.db.delete(table, null, null);
 
 	}
 
-	public void insertSql(String table, ArrayList<DBDataType> fields) {
+    @ProtocoderScript
+    @APIMethod(description = "Exectutes SQL sentence in the database", example = "")
+    @APIParam(params = { "table", "fields" })
+	public void execSql(String table, ArrayList<DBDataType> fields) {
 
 		String names = "";
 		String values = "";

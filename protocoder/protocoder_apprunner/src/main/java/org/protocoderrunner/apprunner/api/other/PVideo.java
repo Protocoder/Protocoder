@@ -50,36 +50,38 @@ public class PVideo extends CustomVideoTextureView implements PViewInterface {
 	}
 
 	@Override
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+    @ProtocoderScript
+    @APIMethod(description = "Plays a video", example = "")
+    @APIParam(params = { "" })
 	public void play() {
 		super.play();
 	}
 
 	@Override
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Seeks to a certain position in the video", example = "")
 	@APIParam(params = { "milliseconds" })
 	public void seekTo(int ms) {
 		super.seekTo(ms);
 	}
 
 	@Override
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+    @ProtocoderScript
+    @APIMethod(description = "Pauses the video", example = "")
+    @APIParam(params = { "" })
 	public void pause() {
 		super.pause();
 	}
 
 	@Override
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Stops the video", example = "")
 	public void stop() {
 		super.stop();
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Loads a videoFile", example = "")
 	@APIParam(params = { "fileName" })
 	public void load(String videoFile) {
 		super.loadExternalVideo(AppRunnerSettings.get().project.getStoragePath() + File.separator + videoFile);
@@ -92,7 +94,7 @@ public class PVideo extends CustomVideoTextureView implements PViewInterface {
     }
 
     @ProtocoderScript
-	@APIMethod(description = "", example = "camera.takePicture();")
+	@APIMethod(description = "Callback that gives information of the current video position", example = "")
 	@APIParam(params = { "function(milliseconds, totalDuration)" })
 	public void onUpdate(final OnUpdateCB callbackfn) {
 		super.addListener(new CustomVideoTextureView.VideoListener() {
@@ -116,15 +118,15 @@ public class PVideo extends CustomVideoTextureView implements PViewInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "camera.takePicture();")
-	@APIParam(params = { "int" })
+	@APIMethod(description = "Sets the video volume", example = "")
+	@APIParam(params = { "volume" })
 	public void setVolume(int vol) {
 		super.setVolume(vol);
 	}
 
 	@Override
 	@ProtocoderScript
-	@APIMethod(description = "", example = "camera.takePicture();")
+	@APIMethod(description = "Gets the video width", example = "")
 	@APIParam(params = { "" })
 	public void getVideoWidth() {
 		super.getVideoWidth();
@@ -132,7 +134,7 @@ public class PVideo extends CustomVideoTextureView implements PViewInterface {
 
 	@Override
 	@ProtocoderScript
-	@APIMethod(description = "", example = "camera.takePicture();")
+	@APIMethod(description = "Gets the video height", example = "")
 	@APIParam(params = { "" })
 	public void getVideoHeight() {
 		super.getVideoHeight();
@@ -140,7 +142,7 @@ public class PVideo extends CustomVideoTextureView implements PViewInterface {
 
 	@Override
 	@ProtocoderScript
-	@APIMethod(description = "", example = "camera.takePicture();")
+	@APIMethod(description = "Enables/Disables looping the video", example = "")
 	@APIParam(params = { "boolean" })
 	public void setLoop(boolean b) {
 		super.setLoop(b);
@@ -148,7 +150,7 @@ public class PVideo extends CustomVideoTextureView implements PViewInterface {
 
 	@Override
 	@ProtocoderScript
-	@APIMethod(description = "", example = "camera.takePicture();")
+	@APIMethod(description = "Get the total duration of the video", example = "")
 	@APIParam(params = { "" })
 	public int getDuration() {
 		return super.getDuration();
@@ -156,21 +158,21 @@ public class PVideo extends CustomVideoTextureView implements PViewInterface {
 
 	@Override
 	@ProtocoderScript
-	@APIMethod(description = "", example = "camera.takePicture();")
+	@APIMethod(description = "Gets the current position of the video", example = "")
 	@APIParam(params = { "" })
 	public int getCurrentPosition() {
 		return super.getCurrentPosition();
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "camera.takePicture();")
+	@APIMethod(description = "Fades in the audio in the given milliseconds", example = "")
 	@APIParam(params = { "milliseconds" })
 	public void fadeAudioIn(int time) {
 		super.fadeAudio(time, 1.0f);
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "camera.takePicture();")
+	@APIMethod(description = "Fades out the audio in the given milliseconds", example = "")
 	@APIParam(params = { "milliseconds" })
 	public void fadeAudioOut(int time) {
 		super.fadeAudio(time, 0.0f);
