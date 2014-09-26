@@ -235,12 +235,9 @@ public class NetworkUtils {
 	public static String getLocalIpAddress(Context c) {
 
 		WifiManager wifiManager = (WifiManager) c.getSystemService(Context.WIFI_SERVICE);
-        MLog.d(TAG, "wifiManager " + wifiManager);
 		int ipAddress = wifiManager.getConnectionInfo().getIpAddress();
-        String ipAddressString = -1;
+        String ipAddressString = "-1";
         if (ipAddress != 0) {
-
-            MLog.d(TAG, "ipAddress " + ipAddress);
 
             // Convert little-endian to big-endianif needed
             if (ByteOrder.nativeOrder().equals(ByteOrder.LITTLE_ENDIAN)) {
