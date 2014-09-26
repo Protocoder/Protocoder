@@ -30,6 +30,7 @@
 package org.protocoderrunner.apprunner.api;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiConfiguration;
@@ -68,11 +69,13 @@ import org.java_websocket.server.WebSocketServer;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.mozilla.javascript.NativeArray;
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.apprunner.api.other.PSocketIOClient;
+import org.protocoderrunner.apprunner.api.other.ProtocoderNativeArray;
 import org.protocoderrunner.network.NetworkUtils;
 import org.protocoderrunner.network.NetworkUtils.DownloadTask.DownloadListener;
 import org.protocoderrunner.network.OSC;
@@ -721,6 +724,7 @@ public class PNetwork extends PInterface {
 	@APIMethod(description = "Scan bluetooth networks. Gives back the name, mac and signal strength", example = "")
 	@APIParam(params = { "function(name, macAddress, strength)" })
 	public void scanBluetoothNetworks(final scanBTNetworksCB callbackfn) {
+        startBluetooth();
 		onBluetoothfn = callbackfn;
 		simpleBT.scanBluetooth(new onBluetoothListener() {
 
@@ -741,7 +745,7 @@ public class PNetwork extends PInterface {
 	//@APIMethod(description = "Start the bluetooth adapter", example = "")
 	//@APIParam(params = { "" })
 	public SimpleBT startBluetooth() {
-        if (!mBtStarted) {
+        if (mBtStarted) {
             return simpleBT;
         }
 		simpleBT = new SimpleBT(a.get());
@@ -790,6 +794,19 @@ public class PNetwork extends PInterface {
 	@APIMethod(description = "Connects to a bluetooth device using a popup", example = "")
 	@APIParam(params = { "function(name, macAddress, strength)" })
 	public void connectBluetoothSerialByUi(final connectBluetoothCB callbackfn) {
+        startBluetooth();
+        NativeArray nativeArray = getBluetoothBondedDevices();
+        String[] arrayStrings = new String[(int) nativeArray.size()];
+        for (int i = 0; i < nativeArray.size(); i++) {
+            arrayStrings[i] = (String) nativeArray.get(i, null);
+        }
+
+        a.get().pUi.choiceDialog("Connect to device", arrayStrings, new PUI.choiceDialogCB() {
+            @Override
+            public void event(String string) {
+                connectBluetoothSerialByMac(string.split(" ")[1], callbackfn);
+            }
+        });
 		//simpleBT.startDeviceListActivity();
 	}
 
@@ -846,8 +863,25 @@ public class PNetwork extends PInterface {
     @ProtocoderScript
     @APIMethod(description = "Send a bluetooth serial message", example = "")
     @APIParam(params = { "string" })
-    public Set<android.bluetooth.BluetoothDevice> getBluetoothBondedDevices() {
-        return simpleBT.listBondedDevices();
+    public NativeArray getBluetoothBondedDevices() {
+        startBluetooth();
+
+        Set<BluetoothDevice> listDevices = simpleBT.listBondedDevices();
+        MLog.d(TAG, "listDevices " + listDevices);
+        int listSize = listDevices.size();
+        ProtocoderNativeArray array = new ProtocoderNativeArray(listSize);
+        MLog.d(TAG, "array " + array);
+
+
+        int counter = 0;
+        for (BluetoothDevice b : listDevices) {
+            MLog.d(TAG, "b " + b);
+
+            String s = b.getName() + " " + b.getAddress();
+            array.addPE(counter++, s);
+        }
+
+        return array;
     }
 
 	@ProtocoderScript
