@@ -1,34 +1,47 @@
 /*
 * Bluetooth serial example 
-* This example is beta but included to experiment with it
-* The methods are commented out, feel free to experiment and 
-* dont forget to give feedback in github! :D
 *
-* If you want to connect a bluetooth module to Arduino this is a 
+* If you want to connect a bluetooth serial module to Arduino this is a 
 * good start 
 * https://learn.sparkfun.com/tutorials/using-the-bluesmirf/all
 */
 
-network.startBluetooth();
+var txt = ui.addText("", 10, 450, ui.screenWidth, -1);
 
-//network.connectBluetoothByUI("");
+ui.addButton("Scan bluetooth", 10, 0, function() {
+    network.scanBluetoothNetworks(function(n, m, s) { 
+        console.log("hola", n, m, s);
+        txt.append(n + " " + m + " " + s + "\n");
+    });
+})
 
-//OK
-// network.scanBTNetworks(function(n, m, s) { 
-//     console.log("hola", n, m, s);
+ui.addButton("Connect to bluetooth", 10, 150, function() {
+    network.connectBluetoothSerialByUi(function(m, data) {
+        txt.text(data + "\n");
+    });
+})
+
+ui.addButton("Disconnect", 380, 150, function() {
+    network.disconnectBluetooth();
+})
+
+var input = ui.addInput("message", 10, 300, 200, 100);
+var send = ui.addButton("Send", 210, 300, 150, 100, function() {
+    network.sendBluetoothSerial(input.getText() + "\n");
+})
+
+
+
+
+// ---------- other methods 
+// network.connectBluetoothSerialByMac("98:D3:31:30:1A:4E", function(m, data) {
+//     console.log(data);
 // });
 
-//OK 
-network.connectBluetoothByMac("00:06:66:64:45:B1", function(data) {
-    console.log(data);
-});
-
-//network.connectBluetoothByName("azulico", "");
-//network.sendBluetoothSerial("a");
-
-//OK
-//network.disconnectBluetooth();
-//OK
-//network.disableBluetooth();
-//OK
-//network.enableBluetooth();
+// network.connectBluetoothSerialByName("bqZUM_BT328", function(m, data) {
+//     console.log(m, data);
+// });
+// network.enableBluetooth(true);
+// network.enableBluetooth(false);
+// network.isBluetoothConnected(); 
+// network.getBluetoothBondedDevices();
