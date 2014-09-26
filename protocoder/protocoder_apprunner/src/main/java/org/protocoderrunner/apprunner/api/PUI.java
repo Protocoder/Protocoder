@@ -41,8 +41,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PointF;
-import android.graphics.PorterDuff;
-import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -60,7 +58,6 @@ import android.view.animation.CycleInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView.ScaleType;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -100,7 +97,6 @@ import org.protocoderrunner.apprunner.api.widgets.PWebView;
 import org.protocoderrunner.apprunner.api.widgets.PWindow;
 import org.protocoderrunner.sensors.WhatIsRunning;
 import org.protocoderrunner.utils.AndroidUtils;
-import org.protocoderrunner.utils.MLog;
 import org.protocoderrunner.apprunner.api.widgets.PPadView;
 import org.protocoderrunner.views.TouchAreaView;
 
@@ -792,6 +788,15 @@ public class PUI extends PUIGeneric {
 
 
     @ProtocoderScript
+    @APIMethod(description = "Adds a button", example = "")
+    @APIParam(params = { "label", "x", "y", "function()" })
+    public PButton addButton(String label, int x, int y, final addGenericButtonCB callbackfn) {
+        PButton b = newButton(label, callbackfn);
+        addViewAbsolute(b, x, y, -1, -1);
+        return b;
+    }
+
+    @ProtocoderScript
     @APIMethod(description = "Adds an invisible touch area", example = "")
     @APIParam(params = { "x", "y", "w", "h", "bShowArea", "function(touching, x, y)" })
 	public TouchAreaView addTouchArea(int x, int y, int w, int h, boolean showArea,
@@ -837,8 +842,8 @@ public class PUI extends PUIGeneric {
 	@ProtocoderScript
     @APIMethod(description = "Adds a list of items passed as array", example = "")
     @APIParam(params = { "x", "y", "w", "h", "arrayStrings", "function(data)" })
-	public PSpinner addList(int x, int y, int w, int h, final String[] array, final addGenericSpinnerCB callbackfn) {
-		PSpinner spinner = newSpinner(array, callbackfn);
+	public PSpinner addChoiceBox(int x, int y, int w, int h, final String[] array, final addGenericSpinnerCB callbackfn) {
+		PSpinner spinner = newChoiceBox(array, callbackfn);
         addViewAbsolute(spinner, x, y, w, h);
 
         return spinner;
@@ -864,8 +869,8 @@ public class PUI extends PUIGeneric {
 	}
 
 	@ProtocoderScript
-    @APIMethod(description = "Adds a changing text box only define by its position", example = "")
-    @APIParam(params = { "label", "x", "y", "w", "h" })
+    @APIMethod(description = "Adds a text box defined only by its position", example = "")
+    @APIParam(params = { "label", "x", "y" })
 	public PTextView addText(String label, int x, int y) {
 		PTextView tv = newText(label);
 		addViewAbsolute(tv, x, y, -1, -1);
@@ -879,6 +884,16 @@ public class PUI extends PUIGeneric {
 	@APIParam(params = { "label", "x", "y", "w", "h", "function()" })
 	public PEditText addInput(String label, int x, int y, int w, int h, final addGenericInputCB callbackfn) {
 		PEditText et = newInput(label, callbackfn);
+		addViewAbsolute(et, x, y, w, h);
+
+		return et;
+	}
+
+    @ProtocoderScript
+    @APIMethod(description = "Adds an input box", example = "")
+	@APIParam(params = { "label", "x", "y", "w", "h" })
+	public PEditText addInput(String label, int x, int y, int w, int h) {
+		PEditText et = newInput(label, null);
 		addViewAbsolute(et, x, y, w, h);
 
 		return et;
@@ -1081,7 +1096,10 @@ public class PUI extends PUIGeneric {
 		return jCamera;
 	}
 
-	@APIParam(params = { "videoFileName" })
+
+    @ProtocoderScript
+    @APIMethod(description = "Adds a video view and starts playing the fileName", example = "")
+	@APIParam(params = { "fileName" })
 	public PVideo newVideoView(final String videoFile) {
 		PVideo video = newVideo(videoFile);
 
@@ -1089,8 +1107,8 @@ public class PUI extends PUIGeneric {
 	}
 
     @ProtocoderScript
-    @APIMethod(description = "Adds a video file and start playing it", example = "")
-	@APIParam(params = { "videoFileName", "x", "y", "w", "h" })
+    @APIMethod(description = "Adds a video view and starts playing the fileName", example = "")
+	@APIParam(params = { "fileName", "x", "y", "w", "h" })
 	public PVideo addVideoView(final String videoFile, int x, int y, int w, int h) {
 		PVideo video = newVideo(videoFile);
 		addViewAbsolute(video, x, y, w, h);

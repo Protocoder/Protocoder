@@ -30,6 +30,9 @@
 package org.protocoderrunner.apprunner.api.widgets;
 
 import org.protocoderrunner.R;
+import org.protocoderrunner.apidoc.annotation.APIMethod;
+import org.protocoderrunner.apidoc.annotation.APIParam;
+import org.protocoderrunner.apprunner.ProtocoderScript;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -63,7 +66,11 @@ public class PCard extends LinearLayout implements PViewInterface {
 
 	}
 
-	public void addWidget(View v) {
+    @Override
+    @ProtocoderScript
+    @APIMethod(description = "Adds a new view", example = "")
+    @APIParam(params = { "view" })
+	public void addView(View v) {
 		v.setAlpha(0);
 		v.animate().alpha(1).setDuration(500).setStartDelay(100 * (1 + viewCount));
 
@@ -71,12 +78,18 @@ public class PCard extends LinearLayout implements PViewInterface {
 		cardLl.addView(v);
 	}
 
+    @ProtocoderScript
+    @APIMethod(description = "Add a row of n columns", example = "")
+    @APIParam(params = { "columnNumber" })
 	public PRow addRow(int n) {
 		PRow row = new PRow(c, cardLl, n);
 
 		return row;
 	}
 
+    @ProtocoderScript
+    @APIMethod(description = "Set the title of the card", example = "")
+    @APIParam(params = { "text" })
 	public void setTitle(String text) {
 		if (text.isEmpty() == false) {
 			title.setVisibility(View.VISIBLE);
@@ -84,15 +97,24 @@ public class PCard extends LinearLayout implements PViewInterface {
 		}
 	}
 
-	public void setTitleColor(int color) {
-		title.setBackgroundColor(color);
+    @ProtocoderScript
+    @APIMethod(description = "Changes the title color", example = "")
+    @APIParam(params = { "colorHex" })
+	public void setTitleColor(String color) {
+		title.setBackgroundColor(Color.parseColor(color));
 	}
 
+    @ProtocoderScript
+    @APIMethod(description = "Card with horizontal views", example = "")
+    @APIParam(params = { "" })
 	public void setHorizontal() {
 		LinearLayout ll = (LinearLayout) findViewById(R.id.cardWidgets);
 		ll.setOrientation(LinearLayout.HORIZONTAL);
 	}
 
+    @ProtocoderScript
+    @APIMethod(description = "Card with vertical views", example = "")
+    @APIParam(params = { "" })
 	public void setVertical() {
 		LinearLayout ll = (LinearLayout) findViewById(R.id.cardWidgets);
 		ll.setOrientation(LinearLayout.VERTICAL);

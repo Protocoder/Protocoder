@@ -42,7 +42,7 @@ public class PPureData {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Sends a message to PdLib", example = "")
 	@APIParam(params = { "message", "value" })
 	public void sendMessage(String message, String value) {
 		if (value.isEmpty()) {
@@ -55,36 +55,36 @@ public class PPureData {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Sends a bang to PdLib", example = "")
 	@APIParam(params = { "name" })
 	public void sendBang(String name) {
 		PdBase.sendBang(name);
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Sends a float number to PdLib", example = "")
 	@APIParam(params = { "name", "value" })
 	public void sendFloat(String name, int value) {
 		PdBase.sendFloat(name, value);
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "name", "pitch, velocity" })
+	@APIMethod(description = "Sends a note to PdLib", example = "")
+	@APIParam(params = { "channel", "pitch, velocity" })
 	public void sendNoteOn(int channel, int pitch, int velocity) {
 		PdBase.sendNoteOn(channel, pitch, velocity);
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Sends a midibyte to PdLib", example = "")
 	@APIParam(params = { "port", "value" })
-	public void sendFloat(int port, int value) {
+	public void sendMidiByte(int port, int value) {
 		PdBase.sendMidiByte(port, value);
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "port", "value" })
+	@APIMethod(description = "Gets an array from PdLib", example = "")
+	@APIParam(params = { "name", "size" })
 	public float[] getArray(String source, int n) {
 		// public void getArray(float[] destination, int destOffset, String
 		// source, int srcOffset, int n) {
@@ -97,8 +97,8 @@ public class PPureData {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "port", "value" })
+	@APIMethod(description = "Sends and array of floats to PdLib", example = "")
+	@APIParam(params = { "name", "array", "size" })
 	public void sendArray(String destination, float[] source, int n) {
 		PdBase.writeArray(destination, 0, source, 0, n);
 	}

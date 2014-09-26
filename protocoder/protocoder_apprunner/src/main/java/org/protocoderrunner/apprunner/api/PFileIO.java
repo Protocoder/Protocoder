@@ -30,16 +30,13 @@
 package org.protocoderrunner.apprunner.api;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Environment;
 
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
-import org.protocoderrunner.apprunner.api.other.PSqlLite;
+import org.protocoderrunner.apprunner.api.other.PSqLite;
 import org.protocoderrunner.apprunner.api.other.ProtocoderNativeArray;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.FileIO;
@@ -134,8 +131,8 @@ public class PFileIO extends PInterface {
 	@ProtocoderScript
 	@APIMethod(description = "Open a sqlite database", example = "")
 	@APIParam(params = { "filename" })
-	public PSqlLite openSqlLite(String db) {
-		return new PSqlLite(a.get(), db);
+	public PSqLite openSqlLite(String db) {
+		return new PSqLite(a.get(), db);
 	}
 
     public interface addZipUnzipCB {

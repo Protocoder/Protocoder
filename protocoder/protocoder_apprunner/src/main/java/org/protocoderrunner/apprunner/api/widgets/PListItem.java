@@ -38,6 +38,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.protocoderrunner.apidoc.annotation.APIMethod;
+import org.protocoderrunner.apidoc.annotation.APIParam;
+import org.protocoderrunner.apprunner.ProtocoderScript;
+
 public class PListItem extends LinearLayout {
 
 	private final WeakReference<View> v;
@@ -54,6 +58,10 @@ public class PListItem extends LinearLayout {
 		this.v = null; //new WeakReference<View>(inflater.inflate(R.layout.view_project_item_, this, true));
 	}
 
+    //TODO place holder
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "" })
 	public void setImage(int resId) {
         //TODO activate this
 		ImageView imageView = null; //(ImageView) v.get().findViewById(R.id.customViewImage);
@@ -62,6 +70,10 @@ public class PListItem extends LinearLayout {
 		// drawText(imageView, t);
 	}
 
+    //TODO place holder
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "" })
 	public void setText(String text) {
 		this.t = text;
         //TODO activate this
@@ -70,6 +82,10 @@ public class PListItem extends LinearLayout {
 		textView.setText(text);
 	}
 
+    //TODO place holder
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "" })
 	public String getName() {
 		return t;
 	}

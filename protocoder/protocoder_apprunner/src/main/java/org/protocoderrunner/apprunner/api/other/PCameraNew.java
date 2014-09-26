@@ -57,9 +57,10 @@ public class PCameraNew extends CameraNew implements PViewInterface {
         void event();
     }
 
-	@ProtocoderScript
-	@APIParam(params = { "file", "function()" })
-	@APIMethod(description = "", example = "camera.takePicture();")
+
+    @ProtocoderScript
+    @APIParam(params = { "fileName", "function()" })
+    @APIMethod(description = "Takes a picture and saves it to fileName", example = "camera.takePicture();")
 	// @APIRequires()
 	public void takePicture(String file, final TakePictureCB callbackfn) {
 
@@ -79,40 +80,30 @@ public class PCameraNew extends CameraNew implements PViewInterface {
         });
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+    @ProtocoderScript
+    @APIMethod(description = "Records a video in fileName", example = "")
+    @APIParam(params = { "fileName" })
 	public void recordVideo(String file) {
 		recordVideo(AppRunnerSettings.get().project.getStoragePath() + File.separator + file);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+    @ProtocoderScript
+    @APIMethod(description = "Stops recording the video", example = "")
+    @APIParam(params = { "" })
 	public void stopRecordingVideo() {
 		stopRecordingVideo();
-
-		// cameraFragment.recordVideo(((AppRunnerActivity)
-		// a.get()).getCurrentDir() + File.separator + file);
-		// cameraFragment.addListener(new CameraListener() {
-		//
-		// @Override
-		// public void onVideoRecorded() {
-		// callback(callbackfn);
-		// cameraFragment.removeListener(this);
-		//
-		// }
-		//
-		// @Override
-		// public void onPicTaken() {
-		// }
-		// });
 	}
 
-    @Override
+    @ProtocoderScript
+    @APIMethod(description = "Checks if flash is available", example = "")
+    @APIParam(params = { "" })
     public boolean isFlashAvailable() {
         return super.isFlashAvailable();
     }
 
-    @Override
+    @ProtocoderScript
+    @APIMethod(description = "Turns on/off the flash", example = "")
+    @APIParam(params = { "" })
     public void turnOnFlash(boolean b) {
 		super.turnOnFlash(b);
 	}

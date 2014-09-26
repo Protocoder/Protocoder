@@ -45,7 +45,7 @@ public class PDeviceEditor extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Shows the console in the device app", example = "")
 	@APIParam(params = { "boolean" })
 	public void showConsole(boolean visible) {
 		((AppRunnerActivity) a.get()).showConsole(visible);
@@ -53,7 +53,7 @@ public class PDeviceEditor extends PInterface {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	@APIMethod(description = "Shows the editor in the device app", example = "")
 	@APIParam(params = { "boolean" })
 	public void show(boolean visible) {
        //((AppRunnerActivity) a.get()).showEditor(visible);

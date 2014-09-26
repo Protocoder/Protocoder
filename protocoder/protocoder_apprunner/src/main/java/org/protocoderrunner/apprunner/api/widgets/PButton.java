@@ -56,43 +56,53 @@ public class PButton extends Button implements PViewInterface, PViewMethodsInter
 
 
     @ProtocoderScript
-    @APIMethod(description = "", example = "")
+    @APIMethod(description = "Changes the font type to the button", example = "")
     @APIParam(params = { "Typeface" })
     public void setFont(Typeface f) {
         this.setTypeface(f);
     }
 
-    @ProtocoderScript
     @Override
+    @ProtocoderScript
+    @APIMethod(description = "Changes the font type to the button", example = "")
+    @APIParam(params = { "" })
     public PButton font(Typeface font) {
         this.setFont(font);
         return this;
     }
 
-    @ProtocoderScript
     @Override
+    @ProtocoderScript
+    @APIMethod(description = "Changes the font text color", example = "")
+    @APIParam(params = { "colorHex" })
     public PButton color(String c) {
         this.setTextColor(Color.parseColor(c));
         return this;
     }
 
-    @ProtocoderScript
     @Override
+    @ProtocoderScript
+    @APIMethod(description = "Changes the background color", example = "")
+    @APIParam(params = { "" })
     public PButton background(String c) {
         this.setBackgroundColor(Color.parseColor(c));
         return this;
     }
 
-    @ProtocoderScript
     @Override
+    @ProtocoderScript
+    @APIMethod(description = "Sets html text", example = "")
+    @APIParam(params = { "htmlText" })
     public PButton html(String htmlText) {
         this.setText(Html.fromHtml(htmlText));
 
         return this;
     }
 
-    @ProtocoderScript
     @Override
+    @ProtocoderScript
+    @APIMethod(description = "Changes the button size", example = "")
+    @APIParam(params = { "w", "h" })
     public PButton boxsize(int w, int h) {
         this.setWidth(w);
         this.setHeight(h);
@@ -101,13 +111,18 @@ public class PButton extends Button implements PViewInterface, PViewMethodsInter
     }
 
     @Override
+    @ProtocoderScript
+    @APIMethod(description = "Changes the text size", example = "")
+    @APIParam(params = { "size" })
     public View textSize(int size) {
         this.setTextSize(size);
         return this;
     }
 
-    @ProtocoderScript
     @Override
+    @ProtocoderScript
+    @APIMethod(description = "Button position", example = "")
+    @APIParam(params = { "x", "y" })
     public PButton pos(int x, int y) {
         this.setX(x);
         this.setY(y);

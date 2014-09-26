@@ -37,6 +37,8 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.json.JSONObject;
+import org.protocoderrunner.apidoc.annotation.APIMethod;
+import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.network.NanoHTTPD;
 import org.protocoderrunner.network.NetworkUtils;
@@ -105,10 +107,14 @@ public class ProtocoderAPIHttpServer extends NanoHTTPD {
 	}
 
     @ProtocoderScript
-    public Response respond(String data) {
+    @APIMethod(description = "Responds to the request with a given text", example = "")
+    @APIParam(params = { "boolean" })    public Response respond(String data) {
         return new Response("200", MIME_TYPES.get("txt"), data);
     }
 
+    @ProtocoderScript
+    @APIMethod(description = "Creates a http server in the current project directory", example = "")
+    @APIParam(params = { "boolean" })
 	public Response serve(String uri, String method, Properties header, Properties parms, Properties files) {
 
 		Response res = null;

@@ -51,23 +51,23 @@ public class PTextView extends TextView implements PViewInterface, PViewMethodsI
 	}
 
     @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "color" })
+    @APIMethod(description = "Sets the text color", example = "")
+    @APIParam(params = { "colorHex" })
     public PTextView color(String c) {
         this.setTextColor(Color.parseColor(c));
         return this;
     }
 
     @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "color" })
+    @APIMethod(description = "Sets the background color", example = "")
+    @APIParam(params = { "colorHex" })
     public PTextView background(String c) {
         this.setBackgroundColor(Color.parseColor(c));
         return this;
     }
 
     @ProtocoderScript
-    @APIMethod(description = "", example = "")
+    @APIMethod(description = "Sets the text size", example = "")
     @APIParam(params = { "size" })
     public PTextView textSize(int size) {
         this.setTextSize(size);
@@ -76,7 +76,7 @@ public class PTextView extends TextView implements PViewInterface, PViewMethodsI
 
 
     @ProtocoderScript
-    @APIMethod(description = "", example = "")
+    @APIMethod(description = "Enables/disables the scroll in the text view", example = "")
     @APIParam(params = { "size" })
     public PTextView scrollable(boolean b) {
         if (b) {
@@ -89,8 +89,8 @@ public class PTextView extends TextView implements PViewInterface, PViewMethodsI
 
 
     @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "string" })
+    @APIMethod(description = "Changes the text to the given text", example = "")
+    @APIParam(params = { "text" })
 	public PTextView text(String text) {
         this.setText(text);
         return this;
@@ -98,16 +98,32 @@ public class PTextView extends TextView implements PViewInterface, PViewMethodsI
 
 
     @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "string" })
+    @APIMethod(description = "Changes the text to the given html text", example = "")
+    @APIParam(params = { "htmlText" })
 	public PTextView html(String text) {
         this.setText(Html.fromHtml(text));
         return this;
     }
 
     @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "string" })
+    @APIMethod(description = "Appends text to the text view", example = "")
+    @APIParam(params = { "text" })
+	public PTextView append(String text) {
+        this.setText(getText() + text);
+        return this;
+    }
+
+    @ProtocoderScript
+    @APIMethod(description = "Clears the text", example = "")
+    @APIParam(params = { "text" })
+	public PTextView clear(String text) {
+        this.clear("");
+        return this;
+    }
+
+    @ProtocoderScript
+    @APIMethod(description = "Changes the box size of the text", example = "")
+    @APIParam(params = { "w", "h" })
 	public PTextView boxsize(int w, int h) {
         this.setWidth(w);
         this.setHeight(h);
@@ -115,8 +131,8 @@ public class PTextView extends TextView implements PViewInterface, PViewMethodsI
     }
 
     @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "string" })
+    @APIMethod(description = "Sets a new position for the text", example = "")
+    @APIParam(params = { "x", "y" })
 	public PTextView pos(int x, int y) {
         this.setX(x);
         this.setY(y);
@@ -124,16 +140,15 @@ public class PTextView extends TextView implements PViewInterface, PViewMethodsI
     }
 
     @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "Typeface" })
+    @APIMethod(description = "Specifies a shadow for the text", example = "")
+    @APIParam(params = { "x", "y", "radius", "colorHex" })
     public PTextView shadow(int x, int y, int r, String c) {
         this.setShadowLayer(r, x, y, Color.parseColor(c));
         return this;
     }
 
-
     @ProtocoderScript
-    @APIMethod(description = "", example = "")
+    @APIMethod(description = "Changes the font", example = "")
     @APIParam(params = { "Typeface" })
     public PTextView font(Typeface f) {
         this.setTypeface(f);
@@ -141,7 +156,7 @@ public class PTextView extends TextView implements PViewInterface, PViewMethodsI
     }
 
   @ProtocoderScript
-    @APIMethod(description = "", example = "")
+    @APIMethod(description = "Centers the text inside the textview", example = "")
     @APIParam(params = { "Typeface" })
     public PTextView center(String centering) {
         this.setGravity(Gravity.CENTER_VERTICAL);

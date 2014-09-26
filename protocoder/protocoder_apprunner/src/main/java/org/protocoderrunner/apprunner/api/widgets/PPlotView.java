@@ -30,6 +30,7 @@
 package org.protocoderrunner.apprunner.api.widgets;
 
 import org.protocoderrunner.apidoc.annotation.APIMethod;
+import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.views.PlotView;
 
@@ -38,14 +39,16 @@ import android.graphics.Color;
 
 public class PPlotView extends PlotView implements PViewInterface {
 
-	private static final String TAG = "JPlotView";
+	private static final String TAG = "PPlotView";
 
 	public PPlotView(Context context) {
 		super(context);
 	}
 
+
     @ProtocoderScript
-    @APIMethod(description = "", example = "")
+    @APIMethod(description = "Sets the background color", example = "")
+    @APIParam(params = { "colorHex" })
     public PlotView setBackground(String c) {
         super.setBackgroundColor(Color.parseColor(c));
 
@@ -54,41 +57,47 @@ public class PPlotView extends PlotView implements PViewInterface {
 
     @Override
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	public PlotView setThickness(float r) {
+	@APIMethod(description = "Sets the line thickness", example = "")
+    @APIParam(params = { "thickness" })
+    public PlotView setThickness(float r) {
 		return super.setThickness(r);
 	}
 
 	@Override
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	public PlotView setDefinition(int definition) {
+	@APIMethod(description = "Changes the plot definition", example = "")
+    @APIParam(params = { "definition" })
+    public PlotView setDefinition(int definition) {
 		return super.setDefinition(definition);
 	}
 
 	@Override
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	public PlotView setColor(String plotName, String rgb) {
+	@APIMethod(description = "Changes the plot color", example = "")
+    @APIParam(params = { "plotName", "colorHex" })
+    public PlotView setColor(String plotName, String rgb) {
 		return super.setColor(plotName, rgb);
 	}
 
 	@Override
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	public PlotView setLimits(float min, float max) {
+	@APIMethod(description = "Changes the plot limits", example = "")
+    @APIParam(params = { "min", "max" })
+    public PlotView setLimits(float min, float max) {
         return super.setLimits(min, max);
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	public void update(float value) {
+	@APIMethod(description = "Updates the value of the default plot", example = "")
+    @APIParam(params = { "value" })
+    public void update(float value) {
 		super.setValue("default", value);
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	public void update(String plotName, float value) {
+	@APIMethod(description = "Updates the value of the plotName plot", example = "")
+    @APIParam(params = { "plotName", "value" })
+    public void update(String plotName, float value) {
 		super.setValue(plotName, value);
 	}
 
