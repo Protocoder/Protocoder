@@ -30,7 +30,6 @@
 package org.protocoderrunner.apprunner.api;
 
 import android.app.Activity;
-import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiConfiguration;
@@ -79,7 +78,6 @@ import org.protocoderrunner.network.NetworkUtils.DownloadTask.DownloadListener;
 import org.protocoderrunner.network.OSC;
 import org.protocoderrunner.apprunner.api.other.ProtocoderAPIHttpServer;
 import org.protocoderrunner.network.ServiceDiscovery;
-import org.protocoderrunner.network.bt.DeviceListActivity;
 import org.protocoderrunner.network.bt.SimpleBT;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.sensors.WhatIsRunning;
@@ -95,7 +93,6 @@ import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
@@ -119,6 +116,7 @@ import de.sciss.net.OSCMessage;
 public class PNetwork extends PInterface {
 
 	private final String TAG = "PNetwork";
+    private boolean mBtStarted = false;
 
     public PNetwork(Activity a) {
         super(a);
@@ -696,7 +694,17 @@ public class PNetwork extends PInterface {
 
 
 
-	// --------- Bluetooth ---------//
+	//--------- Bluetooth ---------//
+    //methods
+    //scanBluetoothNetworks
+    //connectBluetoothSerialByUi
+    //connectBluetoothSerialByMac
+    //connectBluetoothSerialByName
+    //sendBluetoothSerial
+    //disconnectBluetooth
+    //enableBluetooth
+    //isBluetoothConnected
+
 	private scanBTNetworksCB onBluetoothfn;
 	private SimpleBT simpleBT;
 
@@ -729,10 +737,13 @@ public class PNetwork extends PInterface {
 
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Start the bluetooth adapter", example = "")
-	@APIParam(params = { "" })
+	//@ProtocoderScript
+	//@APIMethod(description = "Start the bluetooth adapter", example = "")
+	//@APIParam(params = { "" })
 	public SimpleBT startBluetooth() {
+        if (!mBtStarted) {
+            return simpleBT;
+        }
 		simpleBT = new SimpleBT(a.get());
 		simpleBT.start();
 		(a.get()).addBluetoothListener(new onBluetoothListener() {
@@ -746,33 +757,20 @@ public class PNetwork extends PInterface {
 				simpleBT.onActivityResult(requestCode, resultCode, data);
 
 				switch (requestCode) {
-				case SimpleBT.REQUEST_CONNECT_DEVICE:
-					// When DeviceListActivity returns with a device to connect
-					if (resultCode == Activity.RESULT_OK) {
-						// Get the device MAC address
-						String address = data.getExtras().getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-						// Get the BLuetoothDevice object
-						BluetoothDevice device = simpleBT.getAdapter().getRemoteDevice(address);
-						// Attempt to connect to the device
-						simpleBT.getSerialService().connect(device);
-						//MLog.d(TAG, "connected");
-					}
-					break;
 				case SimpleBT.REQUEST_ENABLE_BT:
 					// When the request to enable Bluetooth returns
 					if (resultCode == Activity.RESULT_OK) {
 						//MLog.d(TAG, "enabling BT");
-						// Bluetooth is now enabled, so set up a Bluetooth
-						// session
-						simpleBT.startBTService();
-					} else {
-						// User did not enable Bluetooth or an error occurred
-					//	MLog.d(TAG, "BT not enabled");
+						// Bluetooth is now enabled, so set up a Bluetooth session
+                        mBtStarted = true;
+						simpleBT.startBtService();
+
+                    // User did not enable Bluetooth or an error occurred
+                    } else {
+					    //	MLog.d(TAG, "BT not enabled");
 						Toast.makeText(a.get().getApplicationContext(), "BT not enabled :(", Toast.LENGTH_SHORT)
 								.show();
 
-						// TODO show error
-						// finish();
 					}
 				}
 			}
@@ -782,16 +780,17 @@ public class PNetwork extends PInterface {
 		return simpleBT;
 	}
 
+    // --------- connectBluetooth ---------//
+    interface connectBluetoothCB {
+        void event(String what, String data);
+    }
+
+    //TODO removed new impl needed
 	@ProtocoderScript
 	@APIMethod(description = "Connects to a bluetooth device using a popup", example = "")
 	@APIParam(params = { "function(name, macAddress, strength)" })
-	public void connectBluetoothSerialByUI(final String callbackfn) {
-		simpleBT.startDeviceListActivity();
-	}
-
-	// --------- connectBluetooth ---------//
-	interface connectBluetoothCB {
-		void event(String what, String data);
+	public void connectBluetoothSerialByUi(final connectBluetoothCB callbackfn) {
+		//simpleBT.startDeviceListActivity();
 	}
 
 	@ProtocoderScript
@@ -807,7 +806,8 @@ public class PNetwork extends PInterface {
 	@ProtocoderScript
 	@APIMethod(description = "Connect to a bluetooth device using a name", example = "")
 	@APIParam(params = { "name, function(data)" })
-	public void connectBluetoothByName(String name, final connectBluetoothCB callbackfn) {
+	public void connectBluetoothSerialByName(String name, final connectBluetoothCB callbackfn) {
+        startBluetooth();
 		simpleBT.connectByName(name);
         addBTConnectionListener(callbackfn);
     }
@@ -842,26 +842,36 @@ public class PNetwork extends PInterface {
         });
     }
 
+
+    @ProtocoderScript
+    @APIMethod(description = "Send a bluetooth serial message", example = "")
+    @APIParam(params = { "string" })
+    public Set<android.bluetooth.BluetoothDevice> getBluetoothBondedDevices() {
+        return simpleBT.listBondedDevices();
+    }
+
 	@ProtocoderScript
 	@APIMethod(description = "Send a bluetooth serial message", example = "")
 	@APIParam(params = { "string" })
 	public void sendBluetoothSerial(String string) {
-		simpleBT.send(string);
+		if (simpleBT.isConnected()) {
+            simpleBT.send(string);
+        }
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Disconnect the bluetooth", example = "")
 	@APIParam(params = { "" })
 	public void disconnectBluetooth() {
-        simpleBT.disconnect();
+        if (simpleBT.isConnected()) {
+            simpleBT.disconnect();
+        }
 	}
-
 
 	@ProtocoderScript
 	@APIMethod(description = "Enable/Disable the bluetooth adapter", example = "")
 	@APIParam(params = { "boolean" })
 	public void enableBluetooth(boolean b) {
-
         if (b) {
             simpleBT.start();
         } else {
@@ -869,7 +879,15 @@ public class PNetwork extends PInterface {
         }
 	}
 
-	@ProtocoderScript
+    @ProtocoderScript
+    @APIMethod(description = "Enable/Disable the bluetooth adapter", example = "")
+    @APIParam(params = { "boolean" })
+    public boolean isBluetoothConnected() {
+        return simpleBT.isConnected();
+    }
+
+
+    @ProtocoderScript
 	@APIMethod(description = "Enable/Disable the Wifi adapter", example = "")
 	@APIParam(params = { "boolean" })
 	public void enableWifi(boolean enabled) {

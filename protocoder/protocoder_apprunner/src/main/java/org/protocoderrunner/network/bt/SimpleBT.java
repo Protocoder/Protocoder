@@ -43,7 +43,7 @@ public class SimpleBT implements WhatIsRunningInterface {
 
 	private final Activity ac;
 
-	public interface SimpleBTListener {
+    public interface SimpleBTListener {
 
 		public void onConnected();
 		public void onMessageReceived(String data);
@@ -58,9 +58,7 @@ public class SimpleBT implements WhatIsRunningInterface {
 
 	}
 
-	public void startBTService() {
-		Log.d(TAG, "setupUserInterface()");
-
+	public void startBtService() {
 		// Initialize the BluetoothService to perform Bluetooth connections
 		mBluetoothService = new BluetoothSerialService(mHandler);
 	}
@@ -117,11 +115,6 @@ public class SimpleBT implements WhatIsRunningInterface {
 		}
 	};
 
-	public void startDeviceListActivity() {
-		Intent serverIntent = new Intent(ac.getApplicationContext(), DeviceListActivity.class);
-		ac.startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
-	}
-
 	public void start() {
 
 		// If BT is not on, request that it be enabled.
@@ -132,7 +125,7 @@ public class SimpleBT implements WhatIsRunningInterface {
 			// Otherwise, setup the Bluetooth session
 		} else {
 			if (mBluetoothService == null) {
-				startBTService();
+				startBtService();
 			}
 		}
 	}
@@ -177,18 +170,18 @@ public class SimpleBT implements WhatIsRunningInterface {
 			// When DeviceListActivity returns with a device to connect
 			if (resultCode == Activity.RESULT_OK) {
 				// Get the device MAC address
-				String address = data.getExtras().getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
+				//String address = data.getExtras().getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
 				// Get the BLuetoothDevice object
-				BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
+				//BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
 				// Attempt to connect to the device
-				mBluetoothService.connect(device);
+				//mBluetoothService.connect(device);
 			}
 			break;
 		case REQUEST_ENABLE_BT:
 			// When the request to enable Bluetooth returns
 			if (resultCode == Activity.RESULT_OK) {
 				// Bluetooth is now enabled, so set up a Bluetooth session
-				startBTService();
+				startBtService();
 			} else {
 				// User did not enable Bluetooth or an error occurred
 				//Log.d(TAG, "BT not enabled");
@@ -239,6 +232,14 @@ public class SimpleBT implements WhatIsRunningInterface {
 			}
 		}
 	}
+
+    public boolean isConnected() {
+        return connected;
+    }
+
+    public Set<BluetoothDevice> listBondedDevices() {
+        return mBluetoothAdapter.getBondedDevices();
+    }
 
 	public BluetoothAdapter getAdapter() {
 		return mBluetoothAdapter;

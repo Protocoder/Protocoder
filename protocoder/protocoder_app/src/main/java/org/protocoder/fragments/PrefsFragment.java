@@ -70,10 +70,18 @@ public class PrefsFragment extends PreferenceFragment {
 		addPreferencesFromResource(R.xml.preferences);
 	}
 
-	@Override
+    //twostatepreference(boolean)->action/action edittextpreference(text)->action preference->action
+    @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = super.onCreateView(inflater, container, savedInstanceState);
-		view.setBackgroundResource(R.drawable.gradient);
+		//view.setBackgroundResource(R.drawable.gradient);
+
+        TwoStatePreference qq = new TwoStatePreference(getActivity()) {
+            @Override
+            protected void onClick() {
+                super.onClick();
+            }
+        };
 
 		final EditTextPreference prefId = (EditTextPreference) findPreference("pref_id");
 		prefId.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
@@ -237,11 +245,13 @@ public class PrefsFragment extends PreferenceFragment {
 
 
 
-
-
         return view;
 	}
 
+
+
+
+    //---------------- save / load methods
 
     public static void setId(Context c, String id) {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(c);
