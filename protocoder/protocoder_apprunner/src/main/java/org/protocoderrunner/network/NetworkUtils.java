@@ -51,6 +51,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.DhcpInfo;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.PowerManager;
@@ -279,5 +280,12 @@ public class NetworkUtils {
 		// return null;
 
 	}
+
+    public static WifiInfo getWifiInfo(Context c) {
+        WifiManager wifiManager = (WifiManager) c.getSystemService(c.WIFI_SERVICE);
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+
+        return wifiInfo;
+    }
 
 }
