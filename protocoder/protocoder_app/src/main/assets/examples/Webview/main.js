@@ -51,8 +51,8 @@ var content =
 </html>""";
 
 //load the content 
-var webview = ui.addWebView(0, 0, ui.screenWidth, 500);
+var webview = ui.addWebView(0, 0, ui.screenWidth, 200);
 webview.loadData(content);
 
-var webview = ui.addWebView(0, 500, ui.screenWidth, 500);
+var webview = ui.addWebView(0, 200, ui.screenWidth, 500);
 webview.loadHTMLFile("hello.html");

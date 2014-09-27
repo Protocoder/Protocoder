@@ -19,7 +19,9 @@ fileio.saveStrings("file.txt", data);
 //read data and store it in readData
 var readData = fileio.loadStrings("file.txt");
 
+var txt = ui.addText("stored and loaded data: \n", 10, 10);
 //show in the console the data
 for(var i = 0; i < readData.length; i++) { 
   console.log(readData[i]);  
+  txt.append(readData[i] + "\n");
 } 

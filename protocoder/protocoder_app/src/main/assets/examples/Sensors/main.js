@@ -41,3 +41,7 @@ sensors.startBarometer(function(x) {
 sensors.startProximity(function(intensity) {
   proximity.setText("proximity: " + intensity);
 });
+
+sensors.startStepCounter(function() {
+    console.log("step detected");
+});

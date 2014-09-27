@@ -1,15 +1,20 @@
 /* Arduino example 
+*
 * Works with Android devices with OTG support and Arduinos 
 * such as Uno, load the Arduino.ino in your Arduino to the 
 * the example working 
 */
 
+var text = ui.addText("", 0, 0);
 
-var arduino = boards.startArduino();
+var arduino = boards.startArduino(9600, function(data) {
+    text.setText(data);
+});
 
-arduino.upload(Packages.com.physicaloid.lib.Boards.ARDUINO_UNO, "serialwrite.uno.hex");
+ui.addButton("ledon", 0, 100, 200, 100, function() {
+    arduino.write("ledon\n");
+});
 
-arduino.onRead(function(data){
-    console.log(data);
-    media.textToSpeech(data);
+ui.addButton("ledoff", 250, 100, 200, 100, function() {
+    arduino.write("ledoff\n");
 });

@@ -1,7 +1,6 @@
 /*
-*	
-*	Description ........ 
-*	by ........ 
+* Register/discover network services  using mDns
+* android > 4.1 
 *
 */
 
