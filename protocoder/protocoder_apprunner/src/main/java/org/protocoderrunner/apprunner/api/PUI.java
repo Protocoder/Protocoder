@@ -70,7 +70,7 @@ import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
 import org.protocoderrunner.apprunner.ProtocoderScript;
-import org.protocoderrunner.apprunner.api.other.PCameraNew;
+import org.protocoderrunner.apprunner.api.other.PCamera;
 import org.protocoderrunner.apprunner.api.other.PProcessing;
 import org.protocoderrunner.apprunner.api.other.PVideo;
 import org.protocoderrunner.apprunner.api.widgets.PAbsoluteLayout;
@@ -1088,12 +1088,12 @@ public class PUI extends PUIGeneric {
     @ProtocoderScript
     @APIMethod(description = "Add camera view", example = "")
 	@APIParam(params = { "type", "x", "y", "w", "h" })
-	public PCameraNew addCameraView(int type, int x, int y, int w, int h) {
+	public PCamera addCameraView(int type, int x, int y, int w, int h) {
 
-		PCameraNew jCamera = newCamera(type);
-        addViewAbsolute(jCamera, x, y, w, h);
+		PCamera pCamera = newCamera(type);
+        addViewAbsolute(pCamera, x, y, w, h);
 
-		return jCamera;
+		return pCamera;
 	}
 
 
