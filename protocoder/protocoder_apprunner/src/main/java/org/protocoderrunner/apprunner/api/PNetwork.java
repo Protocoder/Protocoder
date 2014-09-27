@@ -34,6 +34,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -177,12 +178,18 @@ public class PNetwork extends PInterface {
 
     }
 
-    //TODO this doesnt work
     @ProtocoderScript
     @APIMethod(description = "Returns the current device Ip address", example = "")
     @APIParam(params = {""})
     public String getIp() {
         return NetworkUtils.getLocalIpAddress(a.get());
+    }
+
+    @ProtocoderScript
+    @APIMethod(description = "Get the wifi ap information", example = "")
+    @APIParam(params = {""})
+    public WifiInfo getWifiInfo() {
+        return NetworkUtils.getWifiInfo(a.get());
     }
 
     // --------- OSC Server ---------//
