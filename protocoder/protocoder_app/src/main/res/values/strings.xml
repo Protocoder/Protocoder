@@ -50,7 +50,9 @@
     <!-- Help/About -->
     <string name="about_activity_name">About</string>
     <string name="about_how_to_title">How-to</string>
-    <string name="about_how_to_contents">protocoder is easy to get started.\nAt the bottom of the screen, you\'ll see a little pop-up to show you where to navigate to get started. Make sure yout Android device is on the same network as your computer. Then, open a web browser to that address and you\'ll see a fully-featured editor interface.\n\nThis web IDE is connected directly to your application. With it, you can create new projects, edit existing ones, see live console output, view documentation, and more.</string>
+    <string name="about_credits">Credits</string>
+    <string name="about_how_to_contents">Protocoder is easy to get started.\nAt the bottom of the screen, you\'ll see a little pop-up to show you where to navigate to get started. Make sure yout Android device is on the same network as your computer. Then, open a web browser to that address and you\'ll see a fully-featured editor interface.\n\nThis web IDE is connected directly to your application. With it, you can create new projects, edit existing ones, see live console output, view documentation, and more.</string>
+    <string name="about_special_thanks">Special thanks to José Juan Sánchez Hernández, Ali Javidan, Gopi Palaniappan, Alan Sien and the MWM Crew :)</string>
 
     <!-- Welcome -->
     <string name="welcome_activity_name">protocoder</string>
@@ -89,15 +91,23 @@
 
     <string name="licenses">Licenses</string>
     <string name="license_title_websockets">Android Websockets</string>
+    <string name="license_title_svgandroid">Svg-Android</string>
     <string name="license_title_netutil">NetUtil</string>
     <string name="license_title_libpd">libpd</string>
     <string name="license_title_commons_lang">Commons Lang</string>
     <string name="license_title_commons_net">Commons Net</string>
     <string name="license_title_eventbus">EventBus</string>
+    <string name="license_title_httpclient">EventBus</string>
     <string name="license_title_gson">Google GSON</string>
     <string name="license_title_ioio">ioio</string>
+    <string name="license_title_mail">mail.jar</string>
+    <string name="license_title_osmdroid">osmdroid</string>
+    <string name="license_title_usb_serial">Usb-Serial</string>
+    <string name="license_title_processing">Processing</string>
+    <string name="license_title_physicaloid">Physicaloid</string>
     <string name="license_title_rhino">Mozilla Rhino</string>
     <string name="license_title_nano">Nano HTTPD</string>
+    <string name="license_title_zip4j">Zip4j</string>
 
     <string name="title_item_list">Items</string>
     <string name="title_item_detail">Item Detail</string>
