@@ -37,7 +37,7 @@ ui.addButton("adios", 0, 400, 500, 100, function(){
 
 
 //---------- DASHBOARD UI ---------------------
-dashboard.setBackgroundColor("#55000000");
+dashboard.setBackgroundColor("#EE000000");
 var text = dashboard.addText("Use the Dashboard to see information and interact remotely with your device", 50, 50, 200, 100, 28, "#FFFFFF");
 var textChange = dashboard.addText("This text can change", 50, 250, 200, 100, 28, "#FF00FF");
 
