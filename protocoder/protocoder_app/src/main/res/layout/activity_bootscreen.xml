@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:scaleType="centerInside"
-        android:src="@drawable/makewithmotologo" >
+        android:src="@drawable/app_icon" >
     </ImageView>
 
 </FrameLayout>

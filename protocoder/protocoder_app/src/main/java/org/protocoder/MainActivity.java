@@ -33,7 +33,7 @@ import java.lang.reflect.Field;
 import java.net.UnknownHostException;
 
 import org.java_websocket.drafts.Draft_17;
-import org.protocoder.fragments.PrefsFragment;
+import org.protocoder.fragments.PreferencesFragment;
 import org.protocoder.network.ProtocoderHttpServer;
 import org.protocoder.projectlist.ProjectsPagerAdapter;
 import org.protocoderrunner.AppSettings;
@@ -220,7 +220,7 @@ public class MainActivity extends BaseActivity implements NewProjectDialogFragme
 		super.onResume();
 
         //set settings
-        setScreenAlwaysOn(PrefsFragment.getScreenOn(this));
+        setScreenAlwaysOn(PreferencesFragment.getScreenOn(this));
 
 
         MLog.d(TAG, "Registering as an EventBus listener in MainActivity");

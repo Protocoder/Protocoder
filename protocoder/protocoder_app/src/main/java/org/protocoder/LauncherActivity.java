@@ -29,7 +29,7 @@
 
 package org.protocoder;
 
-import org.protocoder.fragments.PrefsFragment;
+import org.protocoder.fragments.PreferencesFragment;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.utils.StrUtils;
 
@@ -55,8 +55,8 @@ public class LauncherActivity extends BaseActivity {
 
 		if (firstLaunch) {
 			intent = new Intent(this, WelcomeActivity.class);
-            PrefsFragment.setId(this, StrUtils.generateRandomString());
-            PrefsFragment.setConnectionAlert(this, true);
+            PreferencesFragment.setId(this, StrUtils.generateRandomString());
+            PreferencesFragment.setConnectionAlert(this, true);
 		} else {
 			intent = new Intent(this, MainActivity.class);
 		}
