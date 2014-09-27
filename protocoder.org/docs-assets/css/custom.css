@@ -3,12 +3,12 @@ body {
 }
 
 #bg-header {
-	background: url(../images/phone_moio_banner.jpg) no-repeat center center fixed; 
+	background: url(../images/protocoder_0_96_bg.jpg) no-repeat center center fixed; 
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	-o-background-size: cover;
 	background-size: cover;
-
+	background-position-y: -100px !important;
 }
 
 
