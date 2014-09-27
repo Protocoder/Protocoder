@@ -179,7 +179,7 @@ public class PDevice extends PInterface {
 	@ProtocoderScript
 	@APIMethod(description = "Check what type of device is", example = "")
     @APIParam(params = { "" })
-    public String getDeviceType() {
+    public String getType() {
         if (a.get().isTablet()) {
             return "tablet";
         } else {
