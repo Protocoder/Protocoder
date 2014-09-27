@@ -49,7 +49,7 @@ import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
-import org.protocoderrunner.apprunner.api.other.PCameraNew;
+import org.protocoderrunner.apprunner.api.other.PCamera;
 import org.protocoderrunner.apprunner.api.other.PVideo;
 import org.protocoderrunner.apprunner.api.other.ProtocoderNativeObject;
 import org.protocoderrunner.base.BaseActivity;
@@ -963,7 +963,7 @@ public class PUIGeneric extends PInterface {
     @ProtocoderScript
     @APIMethod(description = "Creates a new camera view", example = "")
     @APIParam(params = { "type={0,1}" })
-	public PCameraNew newCamera(int type) {
+	public PCamera newCamera(int type) {
         initializeLayout();
 
         if (type == 1) {
@@ -972,7 +972,7 @@ public class PUIGeneric extends PInterface {
             type = CameraFragment.MODE_CAMERA_BACK;
         }
 
-		PCameraNew jCamera = new PCameraNew(a.get(), type, PCameraNew.MODE_COLOR_COLOR);
+		PCamera jCamera = new PCamera(a.get(), type, PCamera.MODE_COLOR_COLOR);
 
 		return jCamera;
 	}
