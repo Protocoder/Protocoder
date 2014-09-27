@@ -29,7 +29,7 @@
 
 package org.protocoder;
 
-import org.protocoder.fragments.PrefsFragment;
+import org.protocoder.fragments.PreferencesFragment;
 import org.protocoderrunner.base.BaseActivity;
 
 import android.annotation.SuppressLint;
@@ -47,7 +47,7 @@ public class SetPreferenceActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getFragmentManager().beginTransaction().replace(android.R.id.content, new PrefsFragment()).commit();
+        getFragmentManager().beginTransaction().replace(android.R.id.content, new PreferencesFragment()).commit();
 
         // If a preference needs to be default true, we need this hack to make
         // sure it is hard set

@@ -33,11 +33,10 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.protocoder.MainActivity;
-import org.protocoder.fragments.PrefsFragment;
+import org.protocoder.fragments.PreferencesFragment;
 import org.protocoder.R;
 import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.base.BaseFragment;
-import org.protocoderrunner.base.BaseMainApp;
 import org.protocoderrunner.events.Events.ProjectEvent;
 import org.protocoderrunner.project.Project;
 import org.protocoderrunner.project.ProjectManager;
@@ -98,7 +97,7 @@ public class ListFragmentBase extends BaseFragment {
 
 		// Get GridView and set adapter
 		gridView = (GridView) v.findViewById(R.id.gridview);
-		listMode = PrefsFragment.getListPreference(getActivity());
+		listMode = PreferencesFragment.getListPreference(getActivity());
 
 		MLog.d("mode", "" + listMode);
 		if (listMode) {

@@ -58,7 +58,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-public class PrefsFragment extends PreferenceFragment {
+public class PreferencesFragment extends PreferenceFragment {
 
 	protected static final String TAG = "PrefsFragment";
 
@@ -74,7 +74,6 @@ public class PrefsFragment extends PreferenceFragment {
     @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = super.onCreateView(inflater, container, savedInstanceState);
-		//view.setBackgroundResource(R.drawable.gradient);
 
         TwoStatePreference qq = new TwoStatePreference(getActivity()) {
             @Override

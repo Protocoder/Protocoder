@@ -33,7 +33,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.protocoder.fragments.PrefsFragment;
+import org.protocoder.fragments.PreferencesFragment;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.base.BaseMainApp;
 import org.protocoderrunner.project.ProjectManager;
@@ -72,7 +72,7 @@ public class WelcomeActivity extends BaseActivity {
 		copyright.setText(readFile(R.raw.copyright_notice));
 
 		// first time id
-		PrefsFragment.setId(this, StrUtils.generateRandomString());
+		PreferencesFragment.setId(this, StrUtils.generateRandomString());
 	}
 
 	/**
