@@ -22,27 +22,24 @@ ui.addButton("Update plot randomly", 0, 100, 500, 100, function(){
 
 //show and hide the dashboard 
 ui.addToggle("Show Hide dashboard", 0, 200, 500, 100, false, function(b){
-    
-    //console.log(b == true);
     dashboard.show(b);
 });
 
-//change the label text 
+//change the text  
 ui.addButton("hola", 0, 300, 500, 100, function(){
-    labelChange.setText("hola");
+    textChange.setText("hola");
 });
 
 ui.addButton("adios", 0, 400, 500, 100, function(){
-    labelChange.setText("adios");
+    textChange.setText("adios");
 });
 
 
 
 //---------- DASHBOARD UI ---------------------
-
-//labels need an unique id in order to be identified in the dashboard
+dashboard.setBackgroundColor("#55000000");
 var text = dashboard.addText("Use the Dashboard to see information and interact remotely with your device", 50, 50, 200, 100, 28, "#FFFFFF");
-var textChange = dashboard.addText("This label can change", 50, 250, 200, 100, 28, "#FF00FF");
+var textChange = dashboard.addText("This text can change", 50, 250, 200, 100, 28, "#FF00FF");
 
 slider = dashboard.addSlider("name", 50, 400, 200, 100, 0, 100, function(val) {
     console.log(val);
@@ -62,4 +59,4 @@ var webbutton = dashboard.addButton("hola", 310, 100, 150, 50, function() {
 });
 
 //add custom html
-dashboard.addHTML("<a href = 'http://www.protocoder.org' style='font-size:20px'> This is a link to Protocoder! </a>", 280, 280);
+dashboard.addHtml("<a href = 'http://www.protocoder.org' style='font-size:20px'> This is a link to Protocoder! </a>", 280, 280);

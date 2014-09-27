@@ -4,17 +4,16 @@
 */ 
 
 //ui.setTitle("UI examples");
-ui.setTitleBgColor(0, 255, 0);
+ui.setTitleBgColor(0, 255, 0, 255);
 //ui.showTitleBar(true);
-ui.backgroundColor(0, 255, 0);
+ui.backgroundColor(255, 255, 255);
 ui.allowScroll(true);
 
 //ui.showVirtualKeys(true);
 
 //Set up the canvas with padding all around and a white background
 //ui.setPadding(16, 16, 16, 16);
-ui.backgroundColor(255, 255, 255);
-ui.backgroundImageTile("patata2.png");
+ui.setBackgroundImageTile("patata2.png");
 
 //Add a generic button
 var btn = ui.addButton("Button", 0, 0, 500, 100, function(){
@@ -74,7 +73,7 @@ ui.addSwitch(0, 2000, 500, 100, true, function(val){
 var htmlText = ui.addText("lala", 0, 2100, 500, 100);
 htmlText.html("This is a <strong> HTML </strong> text");
 
-var font = ui.loadFont("visitor2.ttf");
+var font = util.loadFont("visitor2.ttf");
 var label = ui.addText("hola fonts", 0, 2200, 300, 200); 
 label.setTextSize(50);
 label.font(font);
