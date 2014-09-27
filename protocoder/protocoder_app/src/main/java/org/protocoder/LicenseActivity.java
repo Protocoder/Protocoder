@@ -49,42 +49,75 @@ public class LicenseActivity extends Activity {
 		TextView websocketsLicense = (TextView) findViewById(R.id.websockets);
 		websocketsLicense.setText(readFile(R.raw.license_android_websockets));
 
-		// NetUtil
+        // Svg-android
+        TextView svgAndroidLicense = (TextView) findViewById(R.id.svg_android);
+        svgAndroidLicense.setText(readFile(R.raw.license_svg_android));
+
+        // commons-lang
+        TextView commonslangLicense = (TextView) findViewById(R.id.commonslang);
+        commonslangLicense.setText(readFile(R.raw.license_commons_lang));
+
+        // commons-net
+        TextView commonsnetLicense = (TextView) findViewById(R.id.commonsnet);
+        commonsnetLicense.setText(readFile(R.raw.license_commons_net));
+
+        // NetUtil
 		TextView netutilLicense = (TextView) findViewById(R.id.netutil);
 		netutilLicense.setText(readFile(R.raw.license_netutil));
 
-		// libpd
+        // eventbus
+        TextView eventbusLicense = (TextView) findViewById(R.id.eventbus);
+        eventbusLicense.setText(readFile(R.raw.license_eventbus));
+
+        // httpclient
+        TextView httpClientLicense = (TextView) findViewById(R.id.httpclient);
+        httpClientLicense.setText(readFile(R.raw.license_httpclient));
+
+        // ioio
+        TextView ioioLicense = (TextView) findViewById(R.id.ioio);
+        ioioLicense.setText(readFile(R.raw.license_ioiolib));
+
+        // mail
+        TextView mailLicense = (TextView) findViewById(R.id.mail);
+        mailLicense.setText(readFile(R.raw.license_mail));
+
+        // osm
+        TextView osmdroidLicense = (TextView) findViewById(R.id.osmdroid);
+        osmdroidLicense.setText(readFile(R.raw.license_osmdroid));
+
+        // libpd
 		TextView libpdLicense = (TextView) findViewById(R.id.libpd);
 		libpdLicense.setText(readFile(R.raw.license_libpd));
 
-		// commons-lang
-		TextView commonslangLicense = (TextView) findViewById(R.id.commonslang);
-		commonslangLicense.setText(readFile(R.raw.license_commons_lang));
+        // physicaloid
+        TextView physicaloidLicense = (TextView) findViewById(R.id.physicaloid);
+        physicaloidLicense.setText(readFile(R.raw.license_physicaloid));
 
-		// commons-net
-		TextView commonsnetLicense = (TextView) findViewById(R.id.commonsnet);
-		commonsnetLicense.setText(readFile(R.raw.license_commons_net));
+        // processing
+        TextView processingLicense = (TextView) findViewById(R.id.processing);
+        processingLicense.setText(readFile(R.raw.license_processing));
 
-		// eventbus
-		TextView eventbusLicense = (TextView) findViewById(R.id.eventbus);
-		eventbusLicense.setText(readFile(R.raw.license_eventbus));
-
-		// gson
+        // gson
 		TextView gsonLicense = (TextView) findViewById(R.id.gson);
 		gsonLicense.setText(readFile(R.raw.license_gson));
 
-		// ioio
-		TextView ioioLicense = (TextView) findViewById(R.id.ioio);
-		ioioLicense.setText(readFile(R.raw.license_ioiolib));
+        // usb-serial
+        TextView usbSerialLicense = (TextView) findViewById(R.id.usb_serial);
+        usbSerialLicense.setText(readFile(R.raw.license_usbserial));
 
-		// rhino
+        // rhino
 		TextView rhinoLicense = (TextView) findViewById(R.id.rhino);
 		rhinoLicense.setText(readFile(R.raw.license_mozilla_rhino));
 
-		// nano
+		// nano httpd
 		TextView nanoLicense = (TextView) findViewById(R.id.nano);
-		nanoLicense.setText(readFile(R.raw.license_nano));
-	}
+		nanoLicense.setText(readFile(R.raw.license_nano_httpd));
+
+        // zip4j
+        TextView zip4jLicense = (TextView) findViewById(R.id.zip4j);
+        zip4jLicense.setText(readFile(R.raw.license_zip4j));
+
+    }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
