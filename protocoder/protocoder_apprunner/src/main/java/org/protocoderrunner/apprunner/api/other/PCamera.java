@@ -40,13 +40,13 @@ import org.protocoderrunner.fragments.CameraNew;
 
 import java.io.File;
 
-public class PCameraNew extends CameraNew implements PViewInterface {
+public class PCamera extends CameraNew implements PViewInterface {
 
 
-    private final PCameraNew cam;
+    private final PCamera cam;
     protected Activity a;
 
-	public PCameraNew(Activity a, int camera, int color) {
+	public PCamera(Activity a, int camera, int color) {
 		super(a, camera, color);
         this.a = a;
         cam = this;
