@@ -105,7 +105,7 @@ public class PSqLite extends PInterface {
     @ProtocoderScript
     @APIMethod(description = "Exectutes SQL sentence in the database", example = "")
     @APIParam(params = { "table", "fields" })
-	public void execSql(String table, ArrayList<DBDataType> fields) {
+	public void insert(String table, ArrayList<DBDataType> fields) {
 
 		String names = "";
 		String values = "";
