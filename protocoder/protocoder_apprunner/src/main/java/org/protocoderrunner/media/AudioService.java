@@ -48,16 +48,19 @@ import android.os.IBinder;
 
 public class AudioService {
 
-	public static PdService pdService = null;
+    public static final String TAG = "PdAudioService";
+
+    public static PdService pdService = null;
 	public static String file;
 
 	public static final ServiceConnection pdConnection = new ServiceConnection() {
 
-		@Override
+
+        @Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			pdService = ((PdService.PdBinder) service).getService();
 
-			MLog.d("qq", "service connected");
+			MLog.d(TAG, "service connected");
 
 			try {
 				initPd();
@@ -97,6 +100,8 @@ public class AudioService {
 		int micChannels = AudioParameters.suggestInputChannels();
 		L.d("MIC", "mic channels" + micChannels);
 		pdService.initAudio(sampleRate, micChannels, 2, 8);
+
+
 		start();
 
 	}

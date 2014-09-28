@@ -709,7 +709,7 @@ public class PUI extends PUIGeneric {
     @ProtocoderScript
     @APIMethod(description = "Changes the background color using Hex", example = "")
     @APIParam(params = { "hex" })
-    public void backgroundColor(String c) {
+    public void setBackgroundColor(String c) {
         initializeLayout();
         holderLayout.setBackgroundColor(Color.parseColor(c));
     }
