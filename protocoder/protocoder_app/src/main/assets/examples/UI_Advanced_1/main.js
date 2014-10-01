@@ -8,7 +8,7 @@
 ui.setFullscreen();
 
 // forces portrait mode 
-ui.setPortrait();
+ui.setScreenMode("portrait");
 
 // prevents the app to scroll vertically which is nice when
 // you have some inner widgets that might scroll on touch events 
@@ -17,8 +17,8 @@ ui.allowScroll(false);
 //adding a card, basically they group rows of n elements 
 var card = ui.addCard("label", 0, 0, ui.screenWidth, 200); 
 var r = card.addRow(2); // add a row to the card with two slots 
-r.addView(ui.newButton("show", function() { ui.show(pad) })); // add firt view
-r.addView(ui.newButton("hide", function() { ui.hide(pad); })); // add second view
+r.addView(ui.newButton("show", function() { ui.show(pad. true) })); // add firt view
+r.addView(ui.newButton("hide", function() { ui.show(pad, false); })); // add second view
 
 //this is a touchable pad 
 var pad = ui.addXYPad(10, 210, ui.screenWidth - 20, 400, function(e) {
