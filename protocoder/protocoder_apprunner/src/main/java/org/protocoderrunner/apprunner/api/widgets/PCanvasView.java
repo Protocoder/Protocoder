@@ -45,6 +45,7 @@ import android.view.View;
 
 import org.protocoderrunner.apprunner.api.PUtil;
 import org.protocoderrunner.sensors.WhatIsRunning;
+import org.protocoderrunner.utils.MLog;
 
 import java.util.HashMap;
 import java.util.Queue;
@@ -52,6 +53,8 @@ import java.util.Vector;
 
 
 public class PCanvasView extends View implements PViewInterface {
+
+    private static final String TAG = "PCanvasView";
 
     public PorterDuff.Mode FILTER_ADD = PorterDuff.Mode.ADD;
     public PorterDuff.Mode FILTER_XOR = PorterDuff.Mode.XOR;
@@ -105,8 +108,8 @@ public class PCanvasView extends View implements PViewInterface {
 
     private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Canvas mCanvas;
-    private Bitmap bmp;
-    private final Vector<Bitmap> mLayerFifo;
+    private Bitmap mCurrentBmp;
+    private final Vector<Layer> mLayerFifo;
     private PCanvasInterfaceDraw pCanvasInterfaceDraw;
     private PCanvasInterfaceTouch pCanvasInterfaceTouch;
     private int currentLayer = -1;
@@ -123,10 +126,15 @@ public class PCanvasView extends View implements PViewInterface {
         mWidth = w;
         mHeight = h;
 
-        bmp = createNewLayer();
-        mLayerFifo = new Vector<Bitmap>();
+        mLayerFifo = new Vector<Layer>();
 
-        mCanvas = new Canvas(bmp);
+        Layer layer = createNewLayer();
+        layer.visible = true;
+        mCurrentBmp = layer.bmp;
+        mLayerFifo.add(++currentLayer, layer);
+
+        mCanvas = new Canvas(mCurrentBmp);
+
         draw(mCanvas);
         mPaintFill = new Paint();
         mPaintStroke = new Paint();
@@ -144,7 +152,15 @@ public class PCanvasView extends View implements PViewInterface {
     @Override
     protected void onDraw(Canvas c) {
         super.onDraw(c);
-        c.drawBitmap(bmp, 0, 0, null);
+
+        //draw all the layers
+        for (Layer layer : mLayerFifo) {
+           if(layer.visible) {
+               MLog.network(context, TAG, "visible " + layer.visible);
+               c.drawBitmap(layer.bmp, 0, 0, null);
+           }
+        }
+
     }
 
     //on touch
@@ -422,32 +438,46 @@ public class PCanvasView extends View implements PViewInterface {
         return this;
     }
 
-    public int saveLayer() {
-        //save current bitmap
-        mLayerFifo.add(++currentLayer, bmp);
+    public int newLayer() {
+        //create a new bitmap
+        Layer layer = createNewLayer();
+        layer.visible = true;
+        mLayerFifo.add(++currentLayer, layer);
+        mCurrentBmp = layer.bmp;
+        mCanvas.setBitmap(mCurrentBmp);
 
         return currentLayer;
-    }
-
-    public void newLayer() {
-        //create a new bitmap
-        bmp = createNewLayer();
-        mCanvas.setBitmap(bmp);
     }
 
     public void deleteLayer(int pos) {
         mLayerFifo.remove(pos);
     }
 
-    public PCanvasView setLayer(int pos) {
-        bmp = mLayerFifo.get(pos);
+    public PCanvasView setLayer(int pos, boolean hideAll) {
+        //all layers off
+       if (hideAll) {
+           for (Layer layer : mLayerFifo) {
+               layer.visible = false;
+           }
+           ;
+       }
+
+        //desired layer on
+        Layer layer = mLayerFifo.get(pos);
+        layer.visible = true;
+        mCurrentBmp = layer.bmp;
+        mCanvas.setBitmap(mCurrentBmp);
+
+        refresh();
 
         return this;
     }
 
-    public PCanvasView drawLayer(int pos) {
-        Bitmap _bmp = mLayerFifo.get(pos);
-        mCanvas.drawBitmap(_bmp, 0, 0, null);
+    public PCanvasView enableLayer(int pos, boolean b) {
+        Layer layer = mLayerFifo.get(pos);
+        layer.visible = b;
+        mCurrentBmp = layer.bmp;
+
         refresh();
 
         return this;
@@ -471,17 +501,22 @@ public class PCanvasView extends View implements PViewInterface {
         return rectf;
     }
 
-    private Bitmap createNewLayer() {
+    private Layer createNewLayer() {
         Bitmap.Config conf = Bitmap.Config.ARGB_8888;
         Bitmap _bmp = Bitmap.createBitmap(mWidth, mHeight, conf);
+        Layer layer = new Layer(_bmp);
 
-        return _bmp;
+        return layer;
     }
 
 
     class Layer {
         public boolean visible = false;
         Bitmap bmp;
+
+        Layer(Bitmap bmp) {
+            this.bmp = bmp;
+        }
     }
     //drawBitmap
     //drawLines
