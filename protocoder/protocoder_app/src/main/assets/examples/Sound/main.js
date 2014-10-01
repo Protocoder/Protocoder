@@ -4,7 +4,7 @@
 */ 
 
 media.setVolume(100);
-ui.enableVolumeKeys(true);
+device.enableVolumeKeys(true);
 
 ui.addButton("Meow", 0, 0, 500, 100, function() { 
 	media.playSound("meow.ogg");
