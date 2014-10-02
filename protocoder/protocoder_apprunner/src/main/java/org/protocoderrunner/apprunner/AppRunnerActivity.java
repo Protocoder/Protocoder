@@ -194,8 +194,6 @@ public class AppRunnerActivity extends BaseActivity {
 				finish();
 			}
 
-
-
 //    TODO Protocoder L
 //        ActivityManager activityManager = (ActivityManager) a.get().getSystemService(a.get().ACTIVITY_SERVICE);
 //        List<ActivityManager.AppTask> tasks = activityManager.getAppTasks();
@@ -204,17 +202,14 @@ public class AppRunnerActivity extends BaseActivity {
 //
 //        }
 
-
-
 			// get projects intent
 			String projectName = intent.getStringExtra(Project.NAME);
-			int projectType = intent.getIntExtra(Project.TYPE, -1);
+			String projectFolder = intent.getStringExtra(Project.FOLDER);
 			boolean wakeUpScreen = intent.getBooleanExtra("wakeUpScreen", false);
 
-			MLog.d(TAG, " " + projectName + " " + projectType);
-			currentProject = ProjectManager.getInstance().get(projectName, projectType);
+			MLog.d(TAG, " " + projectName + " in " + projectFolder);
+			currentProject = ProjectManager.getInstance().get(projectFolder, projectName);
 			ProjectManager.getInstance().setCurrentProject(currentProject);
-			MLog.d(TAG, "launching " + projectName + " " + projectType);
 
 			AppRunnerSettings.get().project = currentProject;
 			String script = ProjectManager.getInstance().getCode(currentProject);
@@ -229,8 +224,6 @@ public class AppRunnerActivity extends BaseActivity {
 			}
 
             //protocoder app settings
-
-
 			try {
 				MLog.d(TAG, "starting websocket server");
 				ws = CustomWebsocketServer.getInstance(this);
@@ -287,13 +280,10 @@ public class AppRunnerActivity extends BaseActivity {
             interp.callJsFunction("setup");
             interp.eval(AppRunnerInterpreter.SCRIPT_POSTFIX);
 
-			// actionbar color
+			// TODO fix actionbar color
 			Integer actionBarColor = null;
-			if (projectType == ProjectManager.PROJECT_EXAMPLE) {
-				actionBarColor = getResources().getColor(R.color.project_example_color);
-			} else if (projectType == ProjectManager.PROJECT_USER_MADE) {
-				actionBarColor = getResources().getColor(R.color.project_user_color);
-			}
+			actionBarColor = getResources().getColor(R.color.project_example_color);
+
 
             //TOFIX in android-l
 			if (actionBarSet == false) {
@@ -417,7 +407,6 @@ public class AppRunnerActivity extends BaseActivity {
 		interp = null;
 		IDEcommunication.getInstance(this).ready(false);
 		WhatIsRunning.getInstance().stopAll();
-
 	}
 
 	@Override
@@ -609,7 +598,7 @@ public class AppRunnerActivity extends BaseActivity {
 //
 //			bundle.putString(Project.NAME, currentProject.getName());
 //			//bundle.putString(, currentProject.getStoragePath());
-//			bundle.putInt(Project.TYPE, currentProject.getType());
+//			bundle.putInt(Project.TYPE, currentProject.getFolder());
 //			editorFragment.setArguments(bundle);
 //			editorFragment.addListener(new EditorFragmentListener() {
 //

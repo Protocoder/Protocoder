@@ -518,9 +518,6 @@ public class PCanvasView extends View implements PViewInterface {
             this.bmp = bmp;
         }
     }
-    //drawBitmap
-    //drawLines
-    //path
-    //textOnPath
+
 
 }

@@ -133,17 +133,17 @@ public class EditorFragment extends BaseFragment {
 		Bundle bundle = getArguments();
 		if (bundle != null) {
 			String projectName = bundle.getString(Project.NAME);
-			int projectType = bundle.getInt(Project.TYPE, -1);
+			String projectFolder = bundle.getString(Project.FOLDER);
 			MLog.d("mm", projectName);
 			if (projectName != "") {
-				loadProject(ProjectManager.getInstance().get(projectName, projectType));
+				loadProject(ProjectManager.getInstance().get(projectName, projectFolder));
 			}
 		}
 
 		edit.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				MLog.d("qq", "" + getCurrentCursorLine(edit.getEditableText()));
+				MLog.d(TAG, "" + getCurrentCursorLine(edit.getEditableText()));
 				if (listener != null) {
 					listener.onLineTouched();
 				}
@@ -365,8 +365,8 @@ public class EditorFragment extends BaseFragment {
 
 			fileFragment = new FileManagerFragment();
 			Bundle bundle = new Bundle();
-			bundle.putString("name", currentProject.name);
-			bundle.putInt("type", currentProject.type);
+			bundle.putString(Project.NAME, currentProject.name);
+			bundle.putString(Project.FOLDER, currentProject.folder);
 			fileFragment.setArguments(bundle);
 			ft.add(R.id.fragmentFileManager, fileFragment).addToBackStack("q");
 

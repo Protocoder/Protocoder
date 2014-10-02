@@ -184,7 +184,7 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 				// TODO its pretty hack so this deserves coding it again
 				Project p = ProjectManager.getInstance().getCurrentProject();
 
-				String projectFolder = "/" + p.getTypeName() + "/" + p.getName();
+				String projectFolder = "/" + p.getFolder() + "/" + p.getName();
 				// MLog.d("qq", "project folder is " + projectFolder);
 				if (uri.replace(projectURLPrefix, "").contains(projectFolder)) {
 					// MLog.d("qq", "inside project");
@@ -201,23 +201,12 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 			if (!files.isEmpty()) {
 
 				String name = parms.getProperty("name").toString();
-				String fileType = parms.getProperty("fileType").toString();
+				String folder = parms.getProperty("fileType").toString();
 
-				int projectType = -1;
-
-				if (fileType.equals("projects")) {
-					projectType = ProjectManager.PROJECT_USER_MADE;
-				} else if (fileType.equals("examples")) {
-					projectType = ProjectManager.PROJECT_EXAMPLE;
-				}
-
-				Project p = ProjectManager.getInstance().get(name, projectType);
+				Project p = ProjectManager.getInstance().get(folder, name);
 
 				File src = new File(files.getProperty("pic").toString());
 				File dst = new File(p.getStoragePath() + "/" + parms.getProperty("pic").toString());
-				// MLog.d("qwqw", p.getStoragePath() + "/" +
-				// parms.getProperty("pic").toString());
-				// MLog.d(TAG, " " + src.toString() + " " + dst.toString());
 
 				FileIO.copyFile(src, dst);
 
@@ -245,9 +234,10 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 				JSONObject obj = new JSONObject(params);
 
 				Project foundProject;
-				String name, url, newCode;
-				String type;
-				int projectType = -1;
+				String name;
+                String url;
+                String newCode;
+				String folder;
 
 				MLog.d(TAG, "params " + obj.toString(2));
 
@@ -256,15 +246,9 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 				if (cmd.equals("fetch_code")) {
 					MLog.d(TAG, "--> fetch code");
 					name = obj.getString("name");
-					type = obj.getString("type");
+					folder = obj.getString("type");
 
-					if (type.equals("projects")) {
-						projectType = ProjectManager.PROJECT_USER_MADE;
-					} else if (type.equals("examples")) {
-						projectType = ProjectManager.PROJECT_EXAMPLE;
-					}
-
-					Project p = ProjectManager.getInstance().get(name, projectType);
+					Project p = ProjectManager.getInstance().get(folder, name);
 
 					// TODO add type
 					data.put("code", ProjectManager.getInstance().getCode(p));
@@ -273,14 +257,9 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 				} else if (cmd.equals("list_apps")) {
 					MLog.d(TAG, "--> list apps");
 
-					type = obj.getString("filter");
+					folder = obj.getString("filter");
 
-					if (type.equals("projects")) {
-						projectType = ProjectManager.PROJECT_USER_MADE;
-					} else if (type.equals("examples")) {
-						projectType = ProjectManager.PROJECT_EXAMPLE;
-					}
-					ArrayList<Project> projects = ProjectManager.getInstance().list(projectType);
+					ArrayList<Project> projects = ProjectManager.getInstance().list(folder);
 					JSONArray projectsArray = new JSONArray();
 					for (Project project : projects) {
 						projectsArray.put(ProjectManager.getInstance().toJson(project));
@@ -292,15 +271,9 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 					MLog.d(TAG, "--> run app");
 
 					name = obj.getString("name");
-					type = obj.getString("type");
+					folder = obj.getString("type");
 
-					if (type.equals("projects")) {
-						projectType = ProjectManager.PROJECT_USER_MADE;
-					} else if (type.equals("examples")) {
-						projectType = ProjectManager.PROJECT_EXAMPLE;
-					}
-
-					Project p = ProjectManager.getInstance().get(name, projectType);
+					Project p = ProjectManager.getInstance().get(folder, name);
 					ProjectManager.getInstance().setRemoteIP(obj.getString("remoteIP"));
 					ProjectEvent evt = new ProjectEvent(p, "run");
 					EventBus.getDefault().post(evt);
@@ -326,16 +299,10 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 					MLog.d(TAG, "fileName -> " + fileName);
 					// MLog.d(TAG, "code -> " + newCode);
 
-					type = parms.get("type").toString();
-
-					if (type.equals("projects")) {
-						projectType = ProjectManager.PROJECT_USER_MADE;
-					} else if (type.equals("examples")) {
-						projectType = ProjectManager.PROJECT_EXAMPLE;
-					}
+					folder = parms.get("type").toString();
 
 					// add type
-					Project p = ProjectManager.getInstance().get(name, projectType);
+					Project p = ProjectManager.getInstance().get(folder, name);
 					ProjectManager.getInstance().writeNewCode(p, newCode, fileName);
 					data.put("project", ProjectManager.getInstance().toJson(p));
 					ProjectEvent evt = new ProjectEvent(p, "save");
@@ -347,15 +314,9 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 				} else if (cmd.equals("list_files_in_project")) {
 					MLog.d(TAG, "--> create new project");
 					name = obj.getString("name");
-					type = obj.getString("type");
+					folder = obj.getString("type");
 
-					if (type.equals("projects")) {
-						projectType = ProjectManager.PROJECT_USER_MADE;
-					} else if (type.equals("examples")) {
-						projectType = ProjectManager.PROJECT_EXAMPLE;
-					}
-
-					Project p = new Project(name, projectType);
+					Project p = new Project(folder, name);
 					JSONArray array = ProjectManager.getInstance().listFilesInProjectJSON(p);
 					data.put("files", array);
 					// ProjectEvent evt = new ProjectEvent(p, "new");
@@ -365,26 +326,19 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 					MLog.d(TAG, "--> create new project");
 
 					name = obj.getString("name");
-					Project p = new Project(name, "", ProjectManager.PROJECT_USER_MADE);
+					Project p = new Project(ProjectManager.FOLDER_USER_PROJECTS, name);
 					ProjectEvent evt = new ProjectEvent(p, "new");
 					EventBus.getDefault().post(evt);
 
-					Project newProject = ProjectManager.getInstance().addNewProject(ctx.get(), name, name,
-							ProjectManager.PROJECT_USER_MADE);
+					Project newProject = ProjectManager.getInstance().addNewProject(ctx.get(), name, ProjectManager.FOLDER_USER_PROJECTS, name);
 
 					// remove app
 				} else if (cmd.equals("remove_app")) {
 					MLog.d(TAG, "--> remove app");
 					name = obj.getString("name");
-					type = obj.getString("type");
+					folder = obj.getString("type");
 
-					if (type.equals("projects")) {
-						projectType = ProjectManager.PROJECT_USER_MADE;
-					} else if (type.equals("examples")) {
-						projectType = ProjectManager.PROJECT_EXAMPLE;
-					}
-
-					Project p = new Project(name, projectType);
+					Project p = new Project(folder, name);
 					ProjectManager.getInstance().deleteProject(p);
 					ProjectEvent evt = new ProjectEvent(p, "update");
 					EventBus.getDefault().post(evt);

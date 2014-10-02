@@ -24,11 +24,11 @@ public class AppRunnerService extends Service {
 		interp.createInterpreter(false);
 
 		String projectName = intent.getStringExtra(Project.NAME);
-		int projectType = intent.getIntExtra(Project.TYPE, -1);
+		String projectFolder = intent.getStringExtra(Project.FOLDER);
 
-		currentProject = ProjectManager.getInstance().get(projectName, projectType);
+		currentProject = ProjectManager.getInstance().get(projectFolder, projectName);
 		ProjectManager.getInstance().setCurrentProject(currentProject);
-		MLog.d(TAG, "launching " + projectName + " " + projectType);
+		MLog.d(TAG, "launching " + projectName + " in " + projectFolder);
 
 		AppRunnerSettings.get().project = currentProject;
 		String script = ProjectManager.getInstance().getCode(currentProject);

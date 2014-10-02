@@ -52,22 +52,12 @@ public class Events {
 		public String getAction() {
 			return action;
 		}
-
 		public void setAction(String newAction) {
 			action = newAction;
 		}
-
-		public String getFile() {
-			return project.getStoragePath();
-		}
-
-		public String getName() {
-			return (name == null) ? project.getName() : name;
-		}
-
 		public Project getProject() {
 			if (project == null) {
-				project = ProjectManager.getInstance().get(getName(), ProjectManager.type);
+				project = ProjectManager.getInstance().get(project.getFolder(), project.getName());
 			}
 			return project;
 		}
@@ -79,7 +69,6 @@ public class Events {
 		public ExecuteCodeEvent(String code) {
 			this.code = code;
 		}
-
 		public String getCode() {
 			return code;
 		}
@@ -93,11 +82,9 @@ public class Events {
 			msg = aMsg;
 			tag = aTag;
 		}
-
 		public String getMessage() {
 			return msg;
 		}
-
 		public String getTag() {
 			return tag;
 		}

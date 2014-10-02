@@ -30,32 +30,16 @@
 package org.protocoder;
 
 import java.lang.reflect.Field;
-import java.net.UnknownHostException;
-
-import org.java_websocket.drafts.Draft_17;
+import org.protocoder.appApi.Protocoder;
 import org.protocoder.fragments.PreferencesFragment;
 import org.protocoder.network.ProtocoderHttpServer;
-import org.protocoder.projectlist.ProjectsPagerAdapter;
-import org.protocoderrunner.AppSettings;
-import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.base.BaseActivity;
-import org.protocoderrunner.base.BaseMainApp;
 import org.protocoderrunner.events.Events.ProjectEvent;
 import org.protocoderrunner.project.Project;
-import org.protocoderrunner.project.ProjectManager;
 import org.protocoder.fragments.NewProjectDialogFragment;
 import org.protocoderrunner.network.CustomWebsocketServer;
-import org.protocoderrunner.network.IDEcommunication;
-import org.protocoderrunner.network.NetworkUtils;
-import org.protocoder.projectlist.ListFragmentExamples;
-import org.protocoder.projectlist.ListFragmentUserProjects;
-import org.protocoderrunner.utils.AndroidUtils;
+import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.MLog;
-import org.protocoder.views.ProjectSelectorStrip;
-
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.BroadcastReceiver;
@@ -65,59 +49,36 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.FileObserver;
-import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 import de.greenrobot.event.EventBus;
 
 @SuppressLint("NewApi")
-public class MainActivity extends BaseActivity implements NewProjectDialogFragment.NewProjectDialogListener {
+public class MainActivity extends BaseActivity {
 
 	private static final String TAG = "MainActivity";
 
-	Context c;
-	private final int mProjectRequestCode = 1;
-	private Intent currentProjectApplicationIntent;
-
-	// fragments that hold the projects
-	private ListFragmentUserProjects userProjectListFragment;
-	private ListFragmentExamples exampleListFragment;
-
+	MainActivity c;
 	Menu mMenu;
-	ProjectsPagerAdapter mProjectPagerAdapter;
-	ViewPager mViewPager;
-	private TextView textIP;
-	private LinearLayout mIpContainer;
-	protected int textIPHeight;
 
 	private FileObserver observer;
 
 	// connection
 	BroadcastReceiver mStopServerReceiver;
-	ProtocoderHttpServer httpServer;
-	private CustomWebsocketServer ws;
-	private ConnectivityChangeReceiver connectivityChangeReceiver;
-	int usbEnabled = 0;
 
-	@Override
+	private ConnectivityChangeReceiver connectivityChangeReceiver;
+    private Protocoder mProtocoder;
+
+    @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
@@ -152,65 +113,48 @@ public class MainActivity extends BaseActivity implements NewProjectDialogFragme
 		// contentHolder.setPadding(0, actionBarHeight, 0, 0);
 		// }
 
-		// Instantiate fragments
-		userProjectListFragment = new ListFragmentUserProjects();
-		exampleListFragment = new ListFragmentExamples();
 
-		mProjectPagerAdapter = new ProjectsPagerAdapter(getSupportFragmentManager());
-		mProjectPagerAdapter.setExamplesFragment(exampleListFragment);
-		mProjectPagerAdapter.setProjectsFragment(userProjectListFragment);
+       /*
+        *  Views
+        */
 
-		mViewPager = (ViewPager) findViewById(R.id.pager);
-		mViewPager.setAdapter(mProjectPagerAdapter);
+        mProtocoder = Protocoder.getInstance(this);
 
-		final int c0 = getResources().getColor(R.color.project_user_color);
-		final int c1 = getResources().getColor(R.color.project_example_color);
+        //colors
+        final int c0 = getResources().getColor(R.color.project_user_color);
+        final int c1 = getResources().getColor(R.color.project_example_color);
 
-		final ProjectSelectorStrip strip = (ProjectSelectorStrip) findViewById(R.id.pager_title_strip);
-		mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
+        Intent.ShortcutIconResource icon_project = Intent.ShortcutIconResource.fromContext(this, R.drawable.ic_script);
+        Intent.ShortcutIconResource icon_example = Intent.ShortcutIconResource.fromContext(this, R.drawable.ic_script_example);
 
-			@Override
-			public void onPageSelected(int arg0) {
-			}
+        // Instantiate fragments
+        mProtocoder.protoScripts.addScriptList(icon_project, "projects", c0, false);
+        mProtocoder.protoScripts.addScriptList(icon_example, "examples", c1, true);
 
-			@Override
-			public void onPageScrolled(int arg0, float arg1, int arg2) {
+        //start the servers
+       // mProtocoder.app.startServers();
 
-				int c = AndroidUtils.calculateColor(arg0 + arg1, c0, c1);
-				strip.setBackgroundColor(c);
-
-			}
-
-			@Override
-			public void onPageScrollStateChanged(int arg0) {
-			}
-		});
-
-		startServers();
-
-		observer = new FileObserver(BaseMainApp.projectsDir,
-		// set up a file observer to watch this directory on sd card
-				FileObserver.CREATE | FileObserver.DELETE) {
+        // Check when a file is changed in the protocoder dir
+		observer = new FileObserver(ProjectManager.FOLDER_USER_PROJECTS, FileObserver.CREATE | FileObserver.DELETE) {
 
 			@Override
 			public void onEvent(int event, String file) {
 				if ((FileObserver.CREATE & event) != 0) {
 
-					MLog.d(TAG, "File created [" + BaseMainApp.projectsDir + "/" + file + "]");
+					MLog.d(TAG, "File created [" + ProjectManager.FOLDER_USER_PROJECTS + "/" + file + "]");
 
 					// check if its a "create" and not equal to probe because
 					// thats created every time camera is
 					// launched
 				} else if ((FileObserver.DELETE & event) != 0) {
-					MLog.d(TAG, "File deleted [" + BaseMainApp.projectsDir + "/" + file + "]");
+					MLog.d(TAG, "File deleted [" + ProjectManager.FOLDER_USER_PROJECTS + "/" + file + "]");
 
 				}
 			}
 		};
 
-		connectivityChangeReceiver = new ConnectivityChangeReceiver();
-
-	}
+        connectivityChangeReceiver = new ConnectivityChangeReceiver();
+    }
 
 	/**
 	 * onResume
@@ -222,7 +166,6 @@ public class MainActivity extends BaseActivity implements NewProjectDialogFragme
         //set settings
         setScreenAlwaysOn(PreferencesFragment.getScreenOn(this));
 
-
         MLog.d(TAG, "Registering as an EventBus listener in MainActivity");
 		EventBus.getDefault().register(this);
 
@@ -230,13 +173,13 @@ public class MainActivity extends BaseActivity implements NewProjectDialogFragme
 
 			@Override
 			public void onReceive(Context context, Intent intent) {
-				hardKillConnections();
+                mProtocoder.app.hardKillConnections();
 			}
 		};
 
 		registerReceiver(connectivityChangeReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
-		startServers();
+        mProtocoder.app.startServers();
 		IntentFilter filterSend = new IntentFilter();
 		filterSend.addAction("org.protocoder.intent.action.STOP_SERVER");
 		registerReceiver(mStopServerReceiver, filterSend);
@@ -253,7 +196,7 @@ public class MainActivity extends BaseActivity implements NewProjectDialogFragme
 		} catch (Exception e) {
 			// presumably, not relevant
 		}
-	}
+    }
 
 	/**
 	 * onPause
@@ -280,138 +223,10 @@ public class MainActivity extends BaseActivity implements NewProjectDialogFragme
 			vg.invalidate();
 			vg.removeAllViews();
 		}
-		killConnections();
+		mProtocoder.app.killConnections();
 		// TODO add stop websocket
 	}
 
-	/**
-	 * Starts the remote service connection
-	 */
-	private int startServers() {
-
-		// check if usb is enabled
-		usbEnabled = Settings.Secure.getInt(getContentResolver(), Settings.Secure.ADB_ENABLED, 0);
-
-		// Create the IP text view
-		textIP = (TextView) findViewById(R.id.ip);
-		textIP.setOnClickListener(null);// Remove the old listener explicitly
-		textIP.setBackgroundResource(0);
-		mIpContainer = (LinearLayout) findViewById(R.id.ip_container);
-		updateStartStopActionbarItem();
-
-		// start webserver
-		httpServer = ProtocoderHttpServer.getInstance(getApplicationContext(), AppSettings.HTTP_PORT);
-
-		// websocket
-		try {
-			ws = CustomWebsocketServer.getInstance(this, AppSettings.WEBSOCKET_PORT, new Draft_17());
-			IDEcommunication.getInstance(this).ready(false);
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		// check if there is a WIFI connection or we can connect via USB
-		if (NetworkUtils.getLocalIpAddress(this).equals("-1")) {
-			textIP.setText("No WIFI, still you can hack via USB using the companion app");
-		} else {
-			textIP.setText("Hack via your browser @ http://" + NetworkUtils.getLocalIpAddress(this) + ":"
-					+ AppSettings.HTTP_PORT);
-		}
-
-		if (httpServer != null) {// If no instance of HTTPServer, we set the IP
-			// address view to gone.
-			textIP.setVisibility(View.VISIBLE);
-		} else {
-			textIP.setVisibility(View.GONE);
-		}
-
-		// Add animations
-		ViewTreeObserver vto = mIpContainer.getViewTreeObserver();
-		vto.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
-			@Override
-			public void onGlobalLayout() {
-				ViewTreeObserver obs = mIpContainer.getViewTreeObserver();
-
-				textIPHeight = mIpContainer.getHeight();
-				mIpContainer.setTranslationY(textIPHeight);
-
-				// FIXME: This animation should be done with an xml file
-				mIpContainer.setAlpha(0);
-				ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(mIpContainer, View.ALPHA, 1); //
-				alphaAnimator.setDuration(1200); //
-
-				final ObjectAnimator shiftAnimator = ObjectAnimator.ofFloat(mIpContainer, View.TRANSLATION_Y, 0); // shiftAnimator.setRepeatCount(1);
-				shiftAnimator.setRepeatMode(ValueAnimator.REVERSE);
-				shiftAnimator.setDuration(1200);
-				shiftAnimator.setInterpolator(new DecelerateInterpolator());
-
-				final AnimatorSet setAnimation = new AnimatorSet();
-
-				setAnimation.play(alphaAnimator).with(shiftAnimator);
-				setAnimation.start();
-
-				if (AndroidUtils.isVersionMinSupported()) {
-					obs.removeOnGlobalLayoutListener(this);
-				} else {
-					obs.removeGlobalOnLayoutListener(this);
-				}
-			}
-
-		});
-
-		return 1;
-	}
-
-	/**
-	 * Unbinds service and stops the http server
-	 */
-	private void killConnections() {
-		if (httpServer != null) {
-			httpServer.close();
-			httpServer = null;
-		}
-		textIP.setText(getResources().getString(R.string.start_the_server));
-		textIP.setOnClickListener(null);// Remove the old listener explicitly
-		textIP.setBackgroundResource(0);
-	}
-
-	/**
-	 * Explicitly kills connections, with UI impact
-	 */
-	private void hardKillConnections() {
-		if (httpServer != null) {
-			httpServer.stop();
-			httpServer = null;
-		}
-		textIP.setText(getResources().getString(R.string.start_the_server));
-		updateStartStopActionbarItem();
-		textIP.setOnClickListener(null);// Remove the old listener explicitly
-		textIP.setBackgroundResource(R.drawable.transparent_blue_button);
-		textIP.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				startServers();
-				updateStartStopActionbarItem();
-			}
-		});
-
-	}
-
-	private void updateStartStopActionbarItem() {
-		getActionBar().show();
-		if (mMenu != null) {
-			/*
-			 * MenuItem stopServerAction = mMenu.findItem(R.id.menu_start_stop);
-			 * if (httpServer != null) {
-			 * stopServerAction.setTitle(getResources()
-			 * .getString(R.string.menu_label_stop_server)); } else {
-			 * stopServerAction
-			 * .setTitle(getResources().getString(R.string.menu_label_start_server
-			 * )); }
-			 */
-		}
-	}
 
 	// TODO call intent and kill it in an appropiate way
 	public void onEventMainThread(ProjectEvent evt) {
@@ -419,57 +234,16 @@ public class MainActivity extends BaseActivity implements NewProjectDialogFragme
 		MLog.d(TAG, "event -> " + evt.getAction());
 
 		if (evt.getAction() == "run") {
-			if (currentProjectApplicationIntent != null) {
-				finishActivity(mProjectRequestCode);
-				currentProjectApplicationIntent = null;
-			}
-
-			try {
-				currentProjectApplicationIntent = new Intent(MainActivity.this, AppRunnerActivity.class);
-
-				Project p = evt.getProject();
-                if (AndroidUtils.isVersionL()) {
-                    //TODO enable version Android-L  
-                    //currentProjectApplicationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-                } else {
-                    currentProjectApplicationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                }
-
-
-                currentProjectApplicationIntent.putExtra(Project.NAME, p.getName());
-				currentProjectApplicationIntent.putExtra(Project.TYPE, p.getType());
-
-
-				startActivityForResult(currentProjectApplicationIntent, mProjectRequestCode);
-			} catch (Exception e) {
-				MLog.d(TAG, "Error launching script");
-			}
-
+            Project p = evt.getProject();
+            Protocoder.getInstance(this).protoScripts.run(p.getFolder(), p.getName());
 		} else if (evt.getAction() == "save") {
-			MLog.d(TAG, "saving project " + evt.getProject().getName());
-
-			if (evt.getProject().getType() == ProjectManager.PROJECT_EXAMPLE) {
-				if (exampleListFragment != null) {
-					exampleListFragment.projectRefresh(evt.getProject().getName());
-				}
-			} else if (evt.getProject().getType() == ProjectManager.PROJECT_USER_MADE) {
-				if (userProjectListFragment != null) {
-					userProjectListFragment.projectRefresh(evt.getProject().getName());
-				}
-			}
-
+            Project p = evt.getProject();
+            Protocoder.getInstance(this).protoScripts.refresh(p.getFolder(), p.getName());
 		} else if (evt.getAction() == "new") {
 			MLog.d(TAG, "creating new project " + evt.getProject().getName());
-			newProject(evt.getProject().getName());
+            Protocoder.getInstance(this).protoScripts.create("projects", evt.getProject().getName());
 		} else if (evt.getAction() == "update") {
-			MLog.d(TAG, "update list" + evt.getProject().getName());
-			if (exampleListFragment != null) {
-				exampleListFragment.refreshProjects();
-			}
-
-			if (userProjectListFragment != null) {
-				userProjectListFragment.refreshProjects();
-			}
+            Protocoder.getInstance(this).protoScripts.listRefresh();
 		}
 
 	}
@@ -494,22 +268,10 @@ public class MainActivity extends BaseActivity implements NewProjectDialogFragme
 			showEditDialog();
 			return true;
 		} else if (itemId == R.id.menu_help) {
-			Intent aboutActivityIntent = new Intent(this, AboutActivity.class);
-			startActivity(aboutActivityIntent);
-			overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
+            Protocoder.getInstance(this).app.showHelp(true);
 			return true;
-//		} else if (itemId == R.id.menu_start_stop) {
-//			if (httpServer != null) {
-//				hardKillConnections();
-//			} else {
-//				startServers();
-//			}
-//			updateStartStopActionbarItem();
-//			return true;
 		} else if (itemId == R.id.menu_settings) {
-			Intent preferencesIntent = new Intent(this, SetPreferenceActivity.class);
-			startActivity(preferencesIntent);
-			overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
+		    Protocoder.getInstance(this).app.showSettings(true);
 			return true;
 		} else {
 			return super.onOptionsItemSelected(item);
@@ -523,23 +285,17 @@ public class MainActivity extends BaseActivity implements NewProjectDialogFragme
 		FragmentManager fm = getSupportFragmentManager();
 		NewProjectDialogFragment newProjectDialog = new NewProjectDialogFragment();
 		newProjectDialog.show(fm, "fragment_edit_name");
-
+       // implements NewProjectDialogFragment.NewProjectDialogListener
+        newProjectDialog.setListener(new NewProjectDialogFragment.NewProjectDialogListener() {
+            @Override
+            public void onFinishEditDialog(String inputText) {
+                Toast.makeText(c, "Creating " + inputText, Toast.LENGTH_SHORT).show();
+                Protocoder.getInstance(c).protoScripts.create("projects", inputText);
+            }
+        });
 	}
 
-	@Override
-	public void onFinishEditDialog(String inputText) {
-		Toast.makeText(this, "Creating " + inputText, Toast.LENGTH_SHORT).show();
 
-		newProject(inputText);
-	}
-
-	public void newProject(String inputText) {
-		Project newProject = ProjectManager.getInstance().addNewProject(c, inputText, inputText,
-				ProjectManager.PROJECT_USER_MADE);
-
-		userProjectListFragment.projects.add(newProject);
-		userProjectListFragment.notifyAddedProject();
-	}
 
 	/*
 	 * Key management
@@ -586,7 +342,7 @@ public class MainActivity extends BaseActivity implements NewProjectDialogFragme
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			debugIntent(intent, "");
-			startServers();
+            mProtocoder.app.startServers();
 		}
 
 		private void debugIntent(Intent intent, String tag) {

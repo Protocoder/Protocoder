@@ -73,16 +73,16 @@ import de.greenrobot.event.EventBus;
 @SuppressLint("NewApi")
 public class ListFragmentBase extends BaseFragment {
 
-	// icon for shortcuts
-	ShortcutIconResource icon;
-
 	public ArrayList<Project> projects;
 	protected ProjectAdapter projectAdapter;
 	protected GridView gridView;
-	int projectType;
+	public String projectFolder;
 	boolean listMode;
+    public ShortcutIconResource icon;
+    public int color;
+    public boolean orderByName;
 
-	public ListFragmentBase() {
+    public ListFragmentBase() {
 	}
 
 	@Override
@@ -154,8 +154,8 @@ public class ListFragmentBase extends BaseFragment {
 	}
 
 	public void refreshProjects() {
-		projects = ProjectManager.getInstance().list(projectType);
-		projectAdapter = new ProjectAdapter(getActivity(), projects, projectType, listMode);
+		projects = ProjectManager.getInstance().list(projectFolder);
+		projectAdapter = new ProjectAdapter(getActivity(), projectFolder, projects, listMode);
 		gridView.setAdapter(projectAdapter);
 		notifyAddedProject();
 	}
@@ -223,7 +223,7 @@ public class ListFragmentBase extends BaseFragment {
 			Bundle bundle = new Bundle();
 			bundle.putString(Project.NAME, project.getName());
 			bundle.putString(Project.URL, project.getStoragePath());
-			bundle.putInt(Project.TYPE, projectType);
+			bundle.putString(Project.FOLDER, project.getFolder());
 
 			editorFragment.setArguments(bundle);
 			((MainActivity) getActivity()).addFragment(editorFragment, R.id.fragmentEditor, "editorFragment", true);
@@ -257,17 +257,13 @@ public class ListFragmentBase extends BaseFragment {
 
 				String script = ProjectManager.getInstance().getCode(project);
 				shortcutIntent.putExtra(Project.NAME, project.getName());
-				shortcutIntent.putExtra(Project.TYPE, project.getType());
+				shortcutIntent.putExtra(Project.FOLDER, project.getFolder());
 
 				final Intent putShortCutIntent = new Intent();
 
 				putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
 				putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, project.getName());
-				putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon); // can
-																						// also
-																						// be
-																						// ignored
-																						// too
+				putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);
 				putShortCutIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
 				getActivity().sendBroadcast(putShortCutIntent);
 			} catch (Exception e) {

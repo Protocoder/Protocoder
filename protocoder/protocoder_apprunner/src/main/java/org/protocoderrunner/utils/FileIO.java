@@ -75,11 +75,6 @@ public class FileIO {
 	/**
 	 * Write the data to the file indicate by fileName. The file is created if
 	 * it doesn't exist.
-	 * 
-	 * @param activity
-	 * @param data
-	 * @param fileName
-	 * @throws IOException
 	 */
 	public static void write(Activity activity, String data, String fileName) throws IOException {
 		FileOutputStream fo = activity.openFileOutput(fileName, 0);
@@ -91,11 +86,6 @@ public class FileIO {
 
 	/**
 	 * Read the contents of the file indicated by fileName
-	 * 
-	 * @param activity
-	 * @param fileName
-	 * @return the contents
-	 * @throws IOException
 	 */
 	public static String read(Context activity, String fileName) throws IOException {
 		if (fileName.contains("/0/")) {
@@ -114,11 +104,6 @@ public class FileIO {
 
 	/**
 	 * Read the contents of a file in the assets directory indicated by fileName
-	 * 
-	 * @param activity
-	 * @params fileName
-	 * @return the contents
-	 * @throws IOException
 	 */
 	public static String readFromAssets(Context activity, String fileName) throws IOException {
 		AssetManager am = activity.getAssets();
@@ -127,10 +112,6 @@ public class FileIO {
 
 	/**
 	 * Read the contents of the file indicated by fileName
-	 *
-	 * @param fileName
-	 * @return the contents
-	 * @throws IOException
 	 */
 	public static String read(InputStream is) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -174,7 +155,6 @@ public class FileIO {
 		MLog.d(TAG, "Writing string to file name: " + name + " code: " + code);
 		String filename = name.replaceAll("[^a-zA-Z0-9-_\\. ]", "_");
 		String baseDir = url + File.separator + filename;
-		MLog.d(TAG, "The base directory is:" + baseDir);
 		File dir = new File(baseDir);
 		dir.mkdirs();
 		File f = new File(dir.getAbsoluteFile() + File.separator + "main.js");
@@ -182,9 +162,7 @@ public class FileIO {
 		try {
 			if (!f.exists()) {
 				f.createNewFile();
-				MLog.d(TAG, "New file is being created!");
 			} else {
-				MLog.d(TAG, "The file already exists!");
 				// We should probably do something here to handle multiple file
 				// cases
 			}
@@ -199,7 +177,6 @@ public class FileIO {
 			e.printStackTrace();
 			MLog.e(TAG, e.toString());
 		}
-		MLog.d(TAG, "Absolute path of new file: " + f.getAbsolutePath());
 		return f.getAbsolutePath();
 	}
 
@@ -258,7 +235,7 @@ public class FileIO {
 			if (assets.length == 0) {
 				copyFile(c, path);
 			} else {
-				String fullPath = BaseMainApp.baseDir + "/" + path;
+				String fullPath = ProjectManager.getInstance().getBaseDir() + "/" + path;
 				File dir = new File(fullPath);
 				if (!dir.exists()) {
 					dir.mkdir();
@@ -279,7 +256,7 @@ public class FileIO {
 		OutputStream out = null;
 		try {
 			in = assetManager.open(filename);
-			String newFileName = BaseMainApp.baseDir + filename;
+			String newFileName = ProjectManager.getInstance().getBaseDir() + filename;
 			out = new FileOutputStream(newFileName);
 
 			byte[] buffer = new byte[1024];

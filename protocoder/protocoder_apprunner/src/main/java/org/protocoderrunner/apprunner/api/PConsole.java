@@ -85,5 +85,13 @@ public class PConsole extends PInterface {
     public void size(int textSize) {
 
     }
+
+    public void logC(String text) {
+
+    }
+
+    public void backgroundColor(String color) {
+
+    }
 }
 

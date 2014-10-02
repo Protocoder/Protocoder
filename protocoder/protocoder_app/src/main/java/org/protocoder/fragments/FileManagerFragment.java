@@ -71,9 +71,8 @@ public class FileManagerFragment extends BaseFragment {
 	public ArrayList<File> files;
 	protected FileAdapter projectAdapter;
 	protected ListView llFileView;
-	int projectType;
 	private String name;
-	private int type;
+	private String folder;
 
 	public FileManagerFragment() {
 	}
@@ -85,8 +84,8 @@ public class FileManagerFragment extends BaseFragment {
 		Bundle bundle = getArguments();
 
 		if (bundle != null) {
-			this.name = bundle.getString("name");
-			this.type = bundle.getInt("type");
+			this.name = bundle.getString(Project.NAME);
+			this.folder = bundle.getString(Project.FOLDER);
 		}
 	}
 
@@ -97,11 +96,11 @@ public class FileManagerFragment extends BaseFragment {
 
 		// Get ListView and set adapter
 		llFileView = (ListView) v.findViewById(R.id.llFile);
-		Project p = ProjectManager.getInstance().get(name, type);
+		Project p = ProjectManager.getInstance().get(folder, name);
 		files = ProjectManager.getInstance().listFilesInProject(p);
 
 		// get files
-		projectAdapter = new FileAdapter(getActivity(), files, projectType);
+		projectAdapter = new FileAdapter(getActivity(), folder, files);
 		llFileView.setEmptyView(v.findViewById(R.id.empty_list_view));
 		// set the emptystate
 		llFileView.setAdapter(projectAdapter);
@@ -226,7 +225,7 @@ public class FileManagerFragment extends BaseFragment {
 		try {
 			getActivity().startActivity(newIntent);
 		} catch (android.content.ActivityNotFoundException e) {
-			Toast.makeText(getActivity(), "No handler for this type of file.", 4000).show();
+			Toast.makeText(getActivity(), "No handler for this type of file.", Toast.LENGTH_LONG).show();
 		}
 
 		Intent myIntent = new Intent(Intent.ACTION_VIEW);
@@ -281,12 +280,12 @@ public class FileManagerFragment extends BaseFragment {
 		private final WeakReference<Context> mContext;
 
 		ArrayList<File> files;
-		private final int projectType;
+		private final String projectFolder;
 
-		public FileAdapter(Context c, ArrayList<File> files, int projectType) {
+		public FileAdapter(Context c, String projectFolder, ArrayList<File> files) {
 			mContext = new WeakReference<Context>(c);
 			this.files = files;
-			this.projectType = projectType;
+			this.projectFolder = projectFolder;
 		}
 
 		@Override

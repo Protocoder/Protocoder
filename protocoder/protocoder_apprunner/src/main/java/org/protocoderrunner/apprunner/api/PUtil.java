@@ -39,6 +39,7 @@ import org.protocoderrunner.apprunner.AppRunnerSettings;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.sensors.WhatIsRunning;
+import org.protocoderrunner.utils.MLog;
 
 import android.animation.TimeInterpolator;
 import android.animation.ValueAnimator;
@@ -214,14 +215,14 @@ public class PUtil extends PInterface {
 		return px * onepx;
 	}
 
-    public interface  AnimCB {
+    public interface AnimCB {
         void event(float data);
     }
 
     @ProtocoderScript
     @APIMethod(description = "Animate a variable from min to max in a specified time using 'bounce', 'linear', 'decelerate', 'anticipate', 'aovershoot', 'accelerate' type  ", example = "")
     @APIParam(params = { "" })
-    public ValueAnimator anim(float min, float max, int time, String type, final AnimCB callback) {
+    public ValueAnimator anim(String type, float min, float max, int time, final AnimCB callback) {
         TimeInterpolator interpolator = null;
         if (type.equals("bounce")) {
             interpolator = new BounceInterpolator();
@@ -245,6 +246,7 @@ public class PUtil extends PInterface {
             public void onAnimationUpdate(ValueAnimator animation) {
                 Float value = (Float) animation.getAnimatedValue();
                 callback.event(value);
+                MLog.d(TAG, "val " + value + " " + animation.getAnimatedValue());
             }
         });
 

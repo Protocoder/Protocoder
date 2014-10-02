@@ -1,0 +1,104 @@
+/*
+ * Protocoder
+ * A prototyping platform for Android devices
+ *
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
+ * Copyright (C) 2014 Victor Diaz
+ * Copyright (C) 2013 Motorola Mobility LLC
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the Software
+ * is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ */
+package org.protocoder.appApi;
+
+import android.app.Activity;
+import android.content.Context;
+
+import org.protocoder.network.ProtocoderHttpServer;
+import org.protocoderrunner.apprunner.api.PApp;
+import org.protocoderrunner.apprunner.api.PBoards;
+import org.protocoderrunner.apprunner.api.PConsole;
+import org.protocoderrunner.apprunner.api.PDashboard;
+import org.protocoderrunner.apprunner.api.PDevice;
+import org.protocoderrunner.apprunner.api.PFileIO;
+import org.protocoderrunner.apprunner.api.PMedia;
+import org.protocoderrunner.apprunner.api.PNetwork;
+import org.protocoderrunner.apprunner.api.PProtocoder;
+import org.protocoderrunner.apprunner.api.PSensors;
+import org.protocoderrunner.apprunner.api.PUI;
+import org.protocoderrunner.apprunner.api.PUtil;
+import org.protocoderrunner.utils.MLog;
+
+import java.io.IOException;
+
+public class Protocoder {
+
+    public static Activity a;
+    private static Protocoder instance;
+
+    public App app;
+    public ProtoScripts protoScripts;
+    public WebEditor webEditor;
+
+    PApp pApp;
+    PConsole pConsole;
+    PDashboard pDashboard;
+    PDevice pDevice;
+    PFileIO pFileIO;
+    PMedia pMedia;
+    PNetwork pNetwork;
+    PProtocoder pProtocoder;
+    PSensors pSensors;
+    PUI pUi;
+    PUtil pUtil;
+
+
+    //instantiate the objects that can be accessed from the interpreter
+
+
+    Protocoder() {
+        //pApp = new PApp(a);
+        //pConsole = new PConsole(a);
+        //pDashboard = new PDashboard(a);
+        //pDevice = new PDevice(a);
+        //pFileIO = new PFileIO(a);
+        //pMedia = new PMedia((org.protocoderrunner.apprunner.AppRunnerActivity) a);
+        //pNetwork = new PNetwork(a);
+        //pProtocoder = new PProtocoder(a);
+        //pSensors = new PSensors((org.protocoderrunner.apprunner.AppRunnerActivity) a);
+        //pUi = new PUI(a);
+        //pUtil  = new PUtil(a);
+
+        app = new App(this);
+        protoScripts = new ProtoScripts(this);
+        webEditor = new WebEditor(this);
+    }
+
+
+    public static Protocoder getInstance(Activity activity) {
+        a = activity;
+        if (instance == null) {
+            instance = new Protocoder();
+        }
+
+        return instance;
+    }
+
+}
