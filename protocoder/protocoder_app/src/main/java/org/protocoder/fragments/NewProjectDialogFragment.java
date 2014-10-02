@@ -29,6 +29,7 @@
 
 package org.protocoder.fragments;
 
+import org.protocoder.MainActivity;
 import org.protocoder.R;
 
 import android.app.AlertDialog;
@@ -46,13 +47,16 @@ import android.widget.TextView.OnEditorActionListener;
 
 public class NewProjectDialogFragment extends DialogFragment implements OnEditorActionListener {
 
-	public interface NewProjectDialogListener {
+
+    public interface NewProjectDialogListener {
 		void onFinishEditDialog(String inputText);
 	}
 
 	private EditText mEditText;
+    private NewProjectDialogListener mListener;
 
-	public NewProjectDialogFragment() {
+
+    public NewProjectDialogFragment() {
 
 	}
 
@@ -98,8 +102,12 @@ public class NewProjectDialogFragment extends DialogFragment implements OnEditor
 		return false;
 	}
 
+    public void setListener(NewProjectDialogListener listener) {
+        this.mListener = listener;
+        
+    }
 	public void doOK() {
 		NewProjectDialogListener activity = (NewProjectDialogListener) getActivity();
-		activity.onFinishEditDialog(mEditText.getText().toString());
+		mListener.onFinishEditDialog(mEditText.getText().toString());
 	}
 }

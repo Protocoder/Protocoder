@@ -92,9 +92,9 @@ public class PDevice extends PInterface {
 	@ProtocoderScript
 	@APIMethod(description = "makes the phone vibrate", example = "android.vibrate(500);")
 	@APIParam(params = { "duration" })
-	public void vibrate(String duration) {
+	public void vibrate(int duration) {
 		Vibrator v = (Vibrator) a.get().getSystemService(Context.VIBRATOR_SERVICE);
-		v.vibrate(Integer.parseInt(duration));
+		v.vibrate(duration);
 	}
 
 	@ProtocoderScript

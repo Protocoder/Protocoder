@@ -48,13 +48,13 @@ public class ProjectAdapter extends BaseAdapter {
 	private final WeakReference<Context> mContext;
 
 	ArrayList<Project> projects;
-	private final int projectType;
+	private final String projectFolder;
 	private final boolean listMode;
 
-	public ProjectAdapter(Context c, ArrayList<Project> projects, int projectType, boolean listMode) {
+	public ProjectAdapter(Context c, String projectFolder, ArrayList<Project> projects, boolean listMode) {
 		mContext = new WeakReference<Context>(c);
 		this.projects = projects;
-		this.projectType = projectType;
+		this.projectFolder = projectFolder;
 		this.listMode = listMode;
 	}
 
@@ -84,11 +84,8 @@ public class ProjectAdapter extends BaseAdapter {
 
 			customView.setText(projects.get(position).getName());
 
-			if (projectType == ProjectManager.PROJECT_USER_MADE) {
-				customView.setImage(R.drawable.ic_script);
-			} else {
-				customView.setImage(R.drawable.ic_script_example);
-			}
+            //TODO enable again colors
+		    customView.setImage(R.drawable.ic_script);
 
 			ImageView imageView = (ImageView) customView.findViewById(R.id.card_menu_button);
 			imageView.setOnClickListener(new OnClickListener() {

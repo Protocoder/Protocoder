@@ -49,6 +49,7 @@ import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.apprunner.api.other.ApplicationInfo;
 import org.protocoderrunner.apprunner.api.other.PDeviceEditor;
 import org.protocoderrunner.apprunner.api.other.PWebEditor;
+import org.protocoderrunner.project.Project;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.MLog;
 
@@ -128,20 +129,14 @@ public class PProtocoder extends PInterface {
 
     @ProtocoderScript
 	@APIMethod(description = "Launch another script given its name and type", example = "")
-	@APIParam(params = { "name", "type" })
+	@APIParam(params = { "folder", "name" })
 	@APIVersion(minLevel = "2")
 	@APIRequires("android.permission.INTERNET")
-	public void launchScript(String name, String typeString) {
+	public void launchScript(String folder, String name) {
 		Intent intent = new Intent(a.get(), AppRunnerActivity.class);
-		intent.putExtra("projectName", name);
+		intent.putExtra(Project.FOLDER, name);
+		intent.putExtra(Project.NAME, name);
 
-		int type = -1;
-		if (typeString.equals("examples")) {
-			type = ProjectManager.PROJECT_EXAMPLE;
-		} else if (typeString.equals("projects")) {
-			type = ProjectManager.PROJECT_USER_MADE;
-		}
-		intent.putExtra("projectType", type);
 		// a.get().startActivity(intent);
 		// String code = StrUtils.generateRandomString();
 		a.get().startActivityForResult(intent, 22);

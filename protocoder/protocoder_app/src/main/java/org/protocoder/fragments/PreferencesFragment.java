@@ -119,7 +119,7 @@ public class PreferencesFragment extends PreferenceFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         progress.show();
 
-                        ProjectManager.getInstance().install(getActivity(), BaseMainApp.TYPE_EXAMPLE_STRING,
+                        ProjectManager.getInstance().install(getActivity(), ProjectManager.FOLDER_EXAMPLES,
                                 new InstallListener() {
 
                                     @Override

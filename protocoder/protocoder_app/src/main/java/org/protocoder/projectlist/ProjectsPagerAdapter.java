@@ -33,54 +33,37 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import java.util.Vector;
+
 public class ProjectsPagerAdapter extends FragmentStatePagerAdapter {
 
-	private Fragment fragmentProjects;
-	private Fragment fragmentExamples;
+	private Vector<ListFragmentBase> fragments;
 
 	public ProjectsPagerAdapter(FragmentManager fm) {
 		super(fm);
+
+        fragments = new Vector<>();
 	}
 
 	@Override
 	public Fragment getItem(int i) {
+		ListFragmentBase f = fragments.get(i);
 
-		Fragment f;
-
-		if (i == 0) {
-			f = fragmentProjects;
-		} else {
-			f = fragmentExamples;
-		}
 		return f;
-		// return fragment;
 	}
 
 	@Override
 	public int getCount() {
-		// For this contrived example, we have a 100-object collection.
-		return 2;
+		return fragments.size();
 	}
 
 	@Override
 	public CharSequence getPageTitle(int position) {
-		String r;
-
-		if (position == 0) {
-			r = "My Projects";
-		} else {
-			r = "Examples";
-		}
-
-		return r;
+		return fragments.get(position).projectFolder;
 	}
 
-	public void setProjectsFragment(Fragment f) {
-		fragmentProjects = f;
+    public void addFragment(ListFragmentBase f) {
+        fragments.add(f);
+    }
 
-	}
-
-	public void setExamplesFragment(Fragment f) {
-		fragmentExamples = f;
-	}
 }

@@ -88,14 +88,16 @@ public class ProtoAppInstallerActivity extends BaseActivity {
         projectName = f.getName().replaceFirst("[.][^.]+$", "");
         MLog.d(TAG, projectName);
 
-        if (ProjectManager.getInstance().isProjectExisting(projectName)) {
+        final String folder = ProjectManager.FOLDER_USER_PROJECTS;
+
+        if (ProjectManager.getInstance().isProjectExisting(folder, projectName)) {
             txtWarning.setVisibility(View.VISIBLE);
         }
 
         btnInstall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                install();
+                install(folder);
             }
         });
 
@@ -130,14 +132,14 @@ public class ProtoAppInstallerActivity extends BaseActivity {
 
     }
 
-    private void install() {
+    private void install(String folder) {
         progress.setVisibility(View.VISIBLE);
 
         if(urlData != null) {
             //check if project already exist
 
             // install project
-            boolean ok = ProjectManager.getInstance().installProject(urlData.getPath());
+            boolean ok = ProjectManager.getInstance().installProject(folder, urlData.getPath());
             MLog.d(TAG, "installed " + ok);
             progress.setVisibility(View.GONE);
 

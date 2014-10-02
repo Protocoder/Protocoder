@@ -42,45 +42,53 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.protocoderrunner.AppSettings;
-import org.protocoderrunner.base.BaseMainApp;
 import org.protocoderrunner.utils.FileIO;
 import org.protocoderrunner.utils.MLog;
 
 import android.content.Context;
-import android.util.Log;
+import android.os.Environment;
 
 public class ProjectManager {
 
     private static final String TAG = "ProjectManager";
-
-    public static final int PROJECT_USER_MADE = 0;
-    public static final int PROJECT_EXAMPLE = 1;
-    public static int type;
+    public static String MAIN_FILE_NAME = "main.js";
+    public static final String FOLDER_EXAMPLES = "examples";
+    public static final String FOLDER_USER_PROJECTS = "projects";
     private static String PROTOCODER_EXTENSION = ".proto";
+
     private Project currentProject;
-    String mainFileStr = "main.js";
     private String remoteIP;
 
-    private static ProjectManager INSTANCE;
+    private static ProjectManager instance;
 
     public static ProjectManager getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new ProjectManager();
+        if (instance == null) {
+            instance = new ProjectManager();
         }
 
-        return INSTANCE;
+        return instance;
     }
 
-    public String getBackupFolder() {
-        return BaseMainApp.backupDir;
+    public String getBackupFolderUrl() {
+        return getProjectFolderUrl("backup");
+    }
 
+    public String getProjectFolderUrl(String folder) {
+        return getBaseDir() + folder;
+    }
+
+    public String getBaseDir() {
+        String baseDir = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + AppSettings.APP_FOLDER
+                + File.separator;
+
+        return baseDir;
     }
 
     public String createBackup(Project p) {
 
         // TODO: Use a thread
 
-        String givenName = getBackupFolder() + File.separator + p.getTypeName() + "_" + p.getName();
+        String givenName = getBackupFolderUrl() + File.separator + p.getFolder() + "_" + p.getName();
 
         //check if file exists and rename it if so
         File f = new File(givenName + ProjectManager.PROTOCODER_EXTENSION);
@@ -100,8 +108,8 @@ public class ProjectManager {
         return f.getAbsolutePath();
     }
 
-    public boolean isProjectExisting(String name) {
-        ArrayList<Project> projects = list(PROJECT_USER_MADE);
+    public boolean isProjectExisting(String folder, String name) {
+        ArrayList<Project> projects = list(folder);
 
         for (int i = 0; i < projects.size(); i++) {
             if (projects.get(i).getName().equals(name)) {
@@ -113,13 +121,13 @@ public class ProjectManager {
         return false;
     }
 
-    public boolean installProject(String zipFilePath) {
+    public boolean installProject(String folder, String zipFilePath) {
 
         // TODO: Use a thread
 
         //decompress
         try {
-            FileIO.extractZip(zipFilePath, BaseMainApp.projectsDir);
+            FileIO.extractZip(zipFilePath, getProjectFolderUrl(folder));
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -137,7 +145,7 @@ public class ProjectManager {
 
             @Override
             public void run() {
-                File dir = new File(BaseMainApp.baseDir + "/" + assetsName);
+                File dir = new File(getBaseDir() + "/" + assetsName);
                 FileIO.deleteDir(dir);
                 FileIO.copyFileOrDir(c.getApplicationContext(), assetsName);
                 l.onReady();
@@ -147,7 +155,7 @@ public class ProjectManager {
 
     public String getCode(Project p) {
         String out = null;
-        File f = new File(p.getStoragePath() + File.separator + mainFileStr);
+        File f = new File(p.getStoragePath() + File.separator + MAIN_FILE_NAME);
         try {
             InputStream in = new FileInputStream(f);
             ByteArrayOutputStream buf = new ByteArrayOutputStream();
@@ -198,38 +206,20 @@ public class ProjectManager {
         JSONObject json = new JSONObject();
         try {
             json.put("name", p.getName());
-            json.put("type", p.getType());
+            json.put("folder", p.getFolder());
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return json;
     }
 
-    public ArrayList<Project> list(int type) {
+    public ArrayList<Project> list(String folder) {
         ArrayList<Project> projects = new ArrayList<Project>();
         File dir = null;
 
-        // MLog.d(TAG, "project type" + type + " " + PROJECT_USER_MADE + " " +
-        // PROJECT_EXAMPLE);
-
-        switch (type) {
-            case PROJECT_USER_MADE:
-                dir = new File(BaseMainApp.projectsDir);
-                if (!dir.exists()) {
-                    dir.mkdir();
-                }
-
-                break;
-
-            case PROJECT_EXAMPLE:
-                dir = new File(BaseMainApp.examplesDir);
-                if (!dir.exists()) {
-                    dir.mkdir();
-                }
-
-                break;
-            default:
-                break;
+        dir = new File(getProjectFolderUrl(folder));
+        if (!dir.exists()) {
+            dir.mkdir();
         }
 
         File[] all_projects = dir.listFiles();
@@ -237,18 +227,18 @@ public class ProjectManager {
         for (File file : all_projects) {
             String projectURL = file.getAbsolutePath();
             String projectName = file.getName();
-            // MLog.d("PROJECT", "Adding project named " + projectName);
+
             boolean containsReadme = false;
             boolean containsTutorial = false;
-            projects.add(new Project(projectName, projectURL, type, containsReadme, containsTutorial));
+            projects.add(new Project(folder, projectName, containsReadme, containsTutorial));
         }
 
         return projects;
     }
 
-    public Project get(String name, int type) {
-        MLog.d(TAG, "looking for project " + name + " " + type);
-        ArrayList<Project> projects = list(type);
+    public Project get(String folder, String name) {
+        MLog.d(TAG, "looking for project " + name + " in " + folder);
+        ArrayList<Project> projects = list(folder);
         for (Project project : projects) {
             if (name.equals(project.getName())) {
                 setCurrentProject(project);
@@ -258,18 +248,16 @@ public class ProjectManager {
         return null;
     }
 
-    public Project addNewProject(Context c, String newProjectName, String fileName, int type) {
+    public Project addNewProject(Context c, String newProjectName, String folder, String fileName) {
         String newTemplateCode = FileIO.readAssetFile(c, "templates/new.js");
 
         if (newTemplateCode == null) {
             newTemplateCode = "";
         }
-        String file = FileIO.writeStringToFile(BaseMainApp.projectsDir, newProjectName, newTemplateCode);
-
-        Project newProject = new Project(newProjectName, file, type);
+        FileIO.writeStringToFile(getProjectFolderUrl(folder), newProjectName, newTemplateCode);
+        Project newProject = new Project(folder, newProjectName);
 
         return newProject;
-
     }
 
     public ArrayList<File> listFilesInProject(Project p) {
@@ -311,15 +299,13 @@ public class ProjectManager {
 
     // TODO fix this hack
     public String getProjectURL(Project p) {
-        String projectURL = p.getStoragePath();
+        String projectURL = getProjectFolderUrl(p.folder) + "/" + p.getName();
 
         return projectURL;
-
     }
 
     public void setCurrentProject(Project project) {
         currentProject = project;
-
     }
 
     public Project getCurrentProject() {

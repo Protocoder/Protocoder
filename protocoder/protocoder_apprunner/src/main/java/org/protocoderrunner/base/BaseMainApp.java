@@ -32,6 +32,7 @@ package org.protocoderrunner.base;
 import java.io.File;
 
 import org.protocoderrunner.AppSettings;
+import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.FileIO;
 
 import android.app.Application;
@@ -40,27 +41,7 @@ import android.os.Environment;
 
 public class BaseMainApp extends Application {
 
-	public static SharedPreferences app_preferences;
-	public static String baseDir;
-	public static String projectsDir;
-	public static String examplesDir;
-    public static String backupDir;
-
-    public static Application instance;
-	public static String TYPE_EXAMPLE_STRING = "examples";
-	public static String TYPE_PROJECT_STRING = "projects";
-	public static String TYPE_PROJECT_BACKUP = "backups";
-
 	public BaseMainApp() {
-		baseDir = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + AppSettings.APP_FOLDER
-				+ File.separator;
-
-		// baseDir = getFilesDir()+ File.separator +
-		// AppSettings.APP_FOLDER + File.separator;
-
-		projectsDir = baseDir + TYPE_PROJECT_STRING;
-		examplesDir = baseDir + TYPE_EXAMPLE_STRING;
-		backupDir = baseDir + TYPE_PROJECT_BACKUP;
 
 	}
 
@@ -69,6 +50,6 @@ public class BaseMainApp extends Application {
 		super.onCreate();
 
 		// Copy all example apps to the base directory
-		FileIO.copyAssetFolder(getAssets(), "ExampleApps", baseDir);
+		FileIO.copyAssetFolder(getAssets(), "ExampleApps", ProjectManager.getInstance().getBaseDir());
 	}
 }

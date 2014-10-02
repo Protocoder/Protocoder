@@ -35,41 +35,28 @@ import org.protocoderrunner.base.BaseMainApp;
 
 public class Project {
 
-	public final static String TYPE = "projectType";
+	//public final static String TYPE = "projectType";
+	public final static String FOLDER = "projectFolder";
 	public final static String NAME = "projectName";
 	public final static String URL = "projectUrl";
 	public final static String LOAD_FROM = "projectLoadFrom";
     public static final String FORMAT = "projectFormat";
 
     public String name;
-	public String storagePath;
-	public int type;
-	public boolean containsReadme;
-	public boolean containsTutorial;
+    public String folder;
+	public boolean containsReadme = false;
+	public boolean containsTutorial = false;
 
-	public Project(String projectName, String storagePath, int type, boolean containsReadme, boolean containsTutorial) {
-		this.name = projectName;
-		this.storagePath = storagePath;
-		this.type = type;
-
+	public Project(String folder, String projectName, boolean containsReadme, boolean containsTutorial) {
+		this.folder = folder;
+        this.name = projectName;
 		this.containsReadme = containsReadme;
 		this.containsTutorial = containsTutorial;
 	}
 
-	public Project(String projectName, int type) {
+	public Project(String folder, String projectName) {
+        this.folder = folder;
 		this.name = projectName;
-
-		if (type == ProjectManager.PROJECT_USER_MADE) {
-			this.storagePath = BaseMainApp.projectsDir + File.separator + projectName;
-		} else {
-			this.storagePath = BaseMainApp.examplesDir + File.separator + projectName;
-		}
-		this.type = type;
-
-	}
-
-	public Project(String name, String projecURL, int projectType) {
-		this(name, projecURL, projectType, false, false);
 	}
 
 	public String getName() {
@@ -77,28 +64,22 @@ public class Project {
 	}
 
 	public String getStoragePath() {
-		return this.storagePath;
+		return ProjectManager.getInstance().getProjectURL(this);
 	}
 
 	public String getServingURL() {
 		String url = "http://" + ProjectManager.getInstance().getRemoteIP();
-		url += "apps/" + this.getTypeName() + "/" + this.getName() + "/";
+		url += "apps/" + this.getFolder() + "/" + this.getName() + "/";
 		return url;
 	}
 
-	public int getType() {
-		return this.type;
+	public String getFolder() {
+		return this.folder;
 	}
 
 
-    public String getTypeName() {
-        String pname = "";
-        if (this.type == ProjectManager.PROJECT_USER_MADE) {
-            pname = BaseMainApp.TYPE_PROJECT_STRING;
-        } else if (this.type == ProjectManager.PROJECT_EXAMPLE) {
-            pname = BaseMainApp.TYPE_EXAMPLE_STRING;
-        }
-        return pname;
-    }
+    //public String getTypeName() {
+    //    return folder;
+    //}
 
 }

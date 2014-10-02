@@ -117,7 +117,7 @@ public class SchedulerManager {
 
 		// Project p = ProjectManager.getInstance().getCurrentProject();
 		intent.putExtra(Project.NAME, p.getName());
-		intent.putExtra(Project.TYPE, p.getType());
+		intent.putExtra(Project.FOLDER, p.getFolder());
 
 		PendingIntent sender = PendingIntent.getBroadcast(c, id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
