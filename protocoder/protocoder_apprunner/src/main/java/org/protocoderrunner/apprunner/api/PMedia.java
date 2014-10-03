@@ -114,10 +114,10 @@ public class PMedia extends PInterface {
     @ProtocoderScript
     @APIMethod(description = "Routes the audio through the speakers", example = "media.playSound(fileName);")
     @APIParam(params = { "" })
-    public void setAudioOnSpeakers() {
+    public void setAudioOnSpeakers(boolean b) {
         AudioManager audioManager = (AudioManager) a.get().getSystemService(Context.AUDIO_SERVICE);
-        // audioManager.setMode(AudioManager.MODE_IN_CALL);
-        audioManager.setSpeakerphoneOn(true);
+        audioManager.setMode(AudioManager.MODE_IN_CALL);
+        audioManager.setSpeakerphoneOn(!b);
     }
 
     @ProtocoderScript
