@@ -32,10 +32,13 @@ package org.protocoderrunner.apprunner.api.widgets;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ComposePathEffect;
+import android.graphics.ComposeShader;
 import android.graphics.DashPathEffect;
+import android.graphics.LinearGradient;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -45,6 +48,8 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.Shader;
+import android.graphics.SweepGradient;
 import android.graphics.Typeface;
 import android.view.MotionEvent;
 import android.view.View;
@@ -59,6 +64,8 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Queue;
 import java.util.Vector;
+
+import static android.graphics.Shader.*;
 
 
 public class PCanvasView extends View implements PViewInterface {
@@ -83,6 +90,10 @@ public class PCanvasView extends View implements PViewInterface {
     public PorterDuff.Mode FILTER_SRC_IN = PorterDuff.Mode.SRC_IN;
     public PorterDuff.Mode FILTER_SRC_OUT = PorterDuff.Mode.SRC_OUT;
     public PorterDuff.Mode FILTER_SRC_OVER = PorterDuff.Mode.SRC_OVER;
+
+    public TileMode MODE_CLAMP = Shader.TileMode.CLAMP;
+    public TileMode MODE_MIRROR = TileMode.MIRROR;
+    public TileMode MODE_REPEAT = TileMode.REPEAT;
 
     public boolean MODE_CORNER = true;
     public boolean MODE_CENTER = false;
@@ -580,6 +591,47 @@ public class PCanvasView extends View implements PViewInterface {
         return this;
     }
 
+    public Shader createBitmapShader(Bitmap bitmap, TileMode mode) {
+        BitmapShader shader = new BitmapShader(bitmap, mode, mode);
+
+        return shader;
+    }
+
+    public Shader linearShader(float x1, float y1, float x2, float y2, String c1, String c2, TileMode mode) {
+        Shader shader = new LinearGradient(x1, x2, y1, y2, Color.parseColor(c1), Color.parseColor(c2), TileMode.CLAMP);
+        return shader;
+    }
+
+
+    public Shader linearShader(float x1, float y1, float x2, float y2, String[] colorsStr, float[] positions, TileMode mode) {
+        int colors[] = new int[colorsStr.length];
+        for (int i = 0; i < colors.length; i++) {
+            colors[i] = Color.parseColor(colorsStr[i]);
+        }
+        Shader shader = new LinearGradient(x1, y1, x2, y2, colors, positions, TileMode.CLAMP);
+
+        return shader;
+    }
+
+    public Shader sweepShader(int x, int y, String c1, String c2) {
+        Shader shader = new SweepGradient(x, y, Color.parseColor(c2), Color.parseColor(c2));
+
+        return shader;
+    }
+
+    public Shader composeShader(Shader s1, Shader s2, PorterDuff.Mode mode) {
+        Shader shader = new ComposeShader(s1, s2, mode);
+
+        return shader;
+    }
+
+    public void setShader(Bitmap bitmap, TileMode mode) {
+        BitmapShader shader = new BitmapShader(bitmap, mode, mode);
+
+        mPaintBackground = new Paint();
+        paint.setAntiAlias(true);
+        paint.setShader(shader);
+    }
 
     private RectF place(float x, float y, float width, float height) {
         RectF rectf = null;
@@ -609,6 +661,5 @@ public class PCanvasView extends View implements PViewInterface {
             this.bmp = bmp;
         }
     }
-
 
 }
