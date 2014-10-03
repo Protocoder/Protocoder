@@ -252,6 +252,7 @@ public class App {
     /**
      * Unbinds service and stops the http server
      */
+    // TODO add stop websocket
     public void killConnections() {
         if (httpServer != null) {
             httpServer.close();

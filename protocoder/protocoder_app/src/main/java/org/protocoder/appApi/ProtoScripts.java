@@ -30,10 +30,13 @@
 package org.protocoder.appApi;
 
 import android.content.Intent;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.widget.Toast;
 
 import org.protocoder.MainActivity;
 import org.protocoder.R;
+import org.protocoder.fragments.NewProjectDialogFragment;
 import org.protocoder.projectlist.ListFragmentBase;
 import org.protocoder.projectlist.ProjectsPagerAdapter;
 import org.protocoder.views.ProjectSelectorStrip;
@@ -52,6 +55,7 @@ public class ProtoScripts {
     private final Protocoder protocoder;
 
     private final int mProjectRequestCode = 1;
+    private final MainActivity ac;
     private Intent currentProjectApplicationIntent;
 
 
@@ -67,7 +71,7 @@ public class ProtoScripts {
         //init views
         ViewPager mViewPager;
 
-        MainActivity ac = (MainActivity) protocoder.a;
+        ac = (MainActivity) protocoder.a;
         mProjectPagerAdapter = new ProjectsPagerAdapter(ac.getSupportFragmentManager());
         final ProjectSelectorStrip strip = (ProjectSelectorStrip) protocoder.a.findViewById(R.id.pager_title_strip);
 
@@ -149,8 +153,10 @@ public class ProtoScripts {
 
 
     public void create(String folder, String appName) {
+        //create file
         Project newProject = ProjectManager.getInstance().addNewProject(protocoder.a, appName, folder, appName);
 
+        //notify ui
         ListFragmentBase f = mFragmentList.get(folder);
         f.projects.add(newProject);
         f.notifyAddedProject();
@@ -170,6 +176,20 @@ public class ProtoScripts {
     }
     public void exportProto(String folder, String fileName) {
 
+    }
+
+    public void showEditDialog() {
+        FragmentManager fm = ac.getSupportFragmentManager();
+        NewProjectDialogFragment newProjectDialog = new NewProjectDialogFragment();
+        newProjectDialog.show(fm, "fragment_edit_name");
+        // implements NewProjectDialogFragment.NewProjectDialogListener
+        newProjectDialog.setListener(new NewProjectDialogFragment.NewProjectDialogListener() {
+            @Override
+            public void onFinishEditDialog(String inputText) {
+                Toast.makeText(ac, "Creating " + inputText, Toast.LENGTH_SHORT).show();
+                Protocoder.getInstance(ac).protoScripts.create(ProjectManager.FOLDER_USER_PROJECTS, inputText);
+            }
+        });
     }
 
 

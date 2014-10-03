@@ -136,7 +136,7 @@ public class EditorFragment extends BaseFragment {
 			String projectFolder = bundle.getString(Project.FOLDER);
 			MLog.d("mm", projectName);
 			if (projectName != "") {
-				loadProject(ProjectManager.getInstance().get(projectName, projectFolder));
+				loadProject(ProjectManager.getInstance().get(projectFolder, projectName));
 			}
 		}
 
