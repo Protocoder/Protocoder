@@ -34,19 +34,28 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ComposePathEffect;
+import android.graphics.DashPathEffect;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PathDashPathEffect;
+import android.graphics.PathEffect;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.view.MotionEvent;
 import android.view.View;
 
 import org.protocoderrunner.apprunner.api.PUtil;
+import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.sensors.WhatIsRunning;
+import org.protocoderrunner.utils.Image;
 import org.protocoderrunner.utils.MLog;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Queue;
 import java.util.Vector;
@@ -96,6 +105,8 @@ public class PCanvasView extends View implements PViewInterface {
 
     private boolean mAutoDraw;
     private boolean mModeCorner = MODE_CORNER;
+    private boolean strokeOn = false;
+    private boolean fillOn = true;
 
 
     public interface PCanvasInterfaceDraw {
@@ -272,33 +283,59 @@ public class PCanvasView extends View implements PViewInterface {
     }
 
     //TODO
-    public PCanvasView path(float x1, float y1, float x2, float y2) {
+    public Path createPath(float[][] points, boolean close) {
         Path path = new Path();
-        path.lineTo(x1, y1);
-        mCanvas.drawPath(path, mPaintStroke);
+
+        path.moveTo(points[0][0], points[0][1]);
+
+        for (int i = 1; i < points.length; i++) {
+            path.lineTo(points[i][0], points[i][1]);
+        }
+        if (close) {
+            path.close();
+        }
+
+        return path;
+    }
+
+    public PCanvasView path(Path path) {
+        if (fillOn)   mCanvas.drawPath(path, mPaintFill);
+        if (strokeOn) mCanvas.drawPath(path, mPaintStroke);
         refresh();
+
         return this;
     }
 
+
+    public PCanvasView strokeDashed(float[] intervals, float phase) {
+
+        // Stamp a concave arrow along the line
+        PathEffect effect = new DashPathEffect(intervals, phase);
+        mPaintStroke.setPathEffect(effect);
+
+        return this;
+    }
+
+
     public PCanvasView ellipse(float x1, float y1, float width, float height) {
-        mCanvas.drawOval(place(x1, y1, width, height), mPaintFill);
-        mCanvas.drawOval(place(x1, y1, width, height), mPaintStroke);
+        if (fillOn)   mCanvas.drawOval(place(x1, y1, width, height), mPaintFill);
+        if (strokeOn) mCanvas.drawOval(place(x1, y1, width, height), mPaintStroke);
         refresh();
 
         return this;
     }
 
     public PCanvasView rect(float x1, float y1, float width, float height) {
-        mCanvas.drawRect(place(x1, y1, width, height), mPaintFill);
-        mCanvas.drawRect(place(x1, y1, width, height), mPaintStroke);
+        if (fillOn)   mCanvas.drawRect(place(x1, y1, width, height), mPaintFill);
+        if (strokeOn) mCanvas.drawRect(place(x1, y1, width, height), mPaintStroke);
         refresh();
 
         return this;
     }
 
     public PCanvasView rect(float x1, float y1, float width, float height, float rx, float ry) {
-        mCanvas.drawRoundRect(place(x1, y1, width, height), rx, ry, mPaintFill);
-        mCanvas.drawRoundRect(place(x1, y1, width, height), rx, ry, mPaintStroke);
+        if (fillOn)   mCanvas.drawRoundRect(place(x1, y1, width, height), rx, ry, mPaintFill);
+        if (strokeOn) mCanvas.drawRoundRect(place(x1, y1, width, height), rx, ry, mPaintStroke);
 
         refresh();
 
@@ -306,16 +343,51 @@ public class PCanvasView extends View implements PViewInterface {
     }
 
     public PCanvasView arc(float x1, float y1, float x2, float y2, float initAngle, float sweepAngle, boolean center) {
-        mCanvas.drawArc(place(x1, y1, x2, y2), initAngle, sweepAngle, center, mPaintFill);
-        mCanvas.drawArc(place(x1, y1, x2, y2), initAngle, sweepAngle, center, mPaintStroke);
+        if (fillOn)   mCanvas.drawArc(place(x1, y1, x2, y2), initAngle, sweepAngle, center, mPaintFill);
+        if (strokeOn) mCanvas.drawArc(place(x1, y1, x2, y2), initAngle, sweepAngle, center, mPaintStroke);
         refresh();
 
         return this;
     }
 
     public PCanvasView text(String text, float x, float y) {
-        mCanvas.drawText(text, x, y, mPaintFill);
-        mCanvas.drawText(text, x, y, mPaintStroke);
+        if (fillOn)   mCanvas.drawText(text, x, y, mPaintFill);
+        if (strokeOn) mCanvas.drawText(text, x, y, mPaintStroke);
+        refresh();
+
+        return this;
+    }
+
+    public PCanvasView text(String text,Path path, float initOffset, float outOffset) {
+        if (fillOn)   mCanvas.drawTextOnPath(text, path, initOffset, outOffset, mPaintFill);
+        if (strokeOn) mCanvas.drawTextOnPath(text, path, initOffset, outOffset, mPaintStroke);
+
+        refresh();
+
+        return this;
+    }
+
+    public Bitmap loadImage(String imagePath) {
+        return Image.loadBitmap(ProjectManager.getInstance().getCurrentProject().getStoragePath() + File.separator + imagePath);
+    }
+
+    public PCanvasView image(Bitmap bmp, int x, int y) {
+        //if (fillOn)
+            mCanvas.drawBitmap(bmp, x, y, mPaintBackground);
+        //if (strokeOn) mCanvas.drawBitmap(bmp, x, y, mPaintStroke);
+        refresh();
+
+        return this;
+    }
+
+
+    public PCanvasView image(Bitmap bmp, int x, int y, int w, int h) {
+        Rect rectSrc = new Rect(0, 0, bmp.getWidth(), bmp.getHeight());
+        RectF rectDst = new RectF(x, y, x + w, y + h);
+        //if (fillOn)
+
+        //if (strokeOn)
+            mCanvas.drawBitmap(bmp, rectSrc, rectDst, mPaintStroke);
         refresh();
 
         return this;
@@ -329,28 +401,41 @@ public class PCanvasView extends View implements PViewInterface {
     public PCanvasView fill(int r, int g, int b, int alpha) {
         mPaintFill.setStyle(Paint.Style.FILL);
         mPaintFill.setARGB(alpha, r, g, b);
+        fillOn = true;
 
         return this;
     }
 
     public PCanvasView fill(int r, int g, int b) {
         fill(r, g, b, 255);
+        fillOn = true;
 
         return this;
+    }
+
+    public void noFill() {
+        fillOn = false;
+
     }
 
 
     public PCanvasView stroke(int r, int g, int b, int alpha) {
         mPaintStroke.setStyle(Paint.Style.STROKE);
         mPaintStroke.setARGB(alpha, r, g, b);
+        strokeOn = true;
 
         return this;
     }
 
     public PCanvasView stroke(int r, int g, int b) {
         stroke(r, g, b, 255);
+        strokeOn = true;
 
         return this;
+    }
+
+    public void noStroke() {
+        strokeOn = false;
     }
 
     public PCanvasView strokeWidth(float w) {
@@ -387,9 +472,15 @@ public class PCanvasView extends View implements PViewInterface {
         return this;
     }
 
-    public PCanvasView shadow(int x, int y, float radius, String colorHex) {
+    public PCanvasView shadowFill(int x, int y, float radius, String colorHex) {
         int c = Color.parseColor(colorHex);
         mPaintFill.setShadowLayer(radius, x, y, c);
+
+        return this;
+    }
+
+    public PCanvasView shadowStroke(int x, int y, float radius, String colorHex) {
+        int c = Color.parseColor(colorHex);
         mPaintStroke.setShadowLayer(radius, x, y, c);
 
         return this;
