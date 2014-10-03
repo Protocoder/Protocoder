@@ -5,8 +5,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import org.protocoderrunner.utils.MLog;
-
 /**
  * Created by victormanueldiazbarrales on 29/07/14.
  */
@@ -23,7 +21,7 @@ public class PGridRow extends LinearLayout {
     public PGridRow addViewInRow(View v) {
         LinearLayout.LayoutParams lParams = (LinearLayout.LayoutParams) getLayoutParams(); //or create new LayoutParams...
 
-        if (v.getClass().equals(PSeekBar.class)) {
+        if (v.getClass().equals(PSlider.class)) {
             lParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         } else {
             lParams.height = ViewGroup.LayoutParams.MATCH_PARENT;

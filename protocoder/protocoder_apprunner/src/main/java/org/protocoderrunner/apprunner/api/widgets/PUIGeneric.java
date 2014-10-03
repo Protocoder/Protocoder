@@ -57,6 +57,7 @@ import org.protocoderrunner.fragments.CameraFragment;
 import org.protocoderrunner.fragments.CustomVideoTextureView;
 import org.protocoderrunner.utils.AndroidUtils;
 import org.protocoderrunner.utils.FileIO;
+import org.protocoderrunner.utils.Image;
 import org.protocoderrunner.utils.MLog;
 import org.protocoderrunner.apprunner.api.widgets.PPadView.TouchEvent;
 import org.protocoderrunner.views.TouchAreaView;
@@ -439,19 +440,19 @@ public class PUIGeneric extends PInterface {
 
 	// --------- seekbar ---------//
 	public interface addGenericSliderCB {
-		void event(int progress);
+		void event(float progress);
 	}
 
     @ProtocoderScript
     @APIMethod(description = "Creates a new slider", example = "")
     @APIParam(params = { "max", "progress", "function(progress)" })
-	public PSeekBar newSlider(int max, int progress, final addGenericSliderCB callbackfn) {
+	public PSlider newSlider(float min, float max, final addGenericSliderCB callbackfn) {
 
 		initializeLayout();
 		// Create the position the view
-		PSeekBar sb = new PSeekBar(a.get());
+		final PSlider sb = new PSlider(a.get());
+        sb.setMin(min);
 		sb.setMax(max);
-		sb.setProgress(progress);
 
 		// Add the change listener
 		sb.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
@@ -466,7 +467,7 @@ public class PUIGeneric extends PInterface {
 
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-				callbackfn.event(progress);
+				callbackfn.event(sb.valueToFloat(progress));
 			}
 		});
 
@@ -863,10 +864,10 @@ public class PUIGeneric extends PInterface {
 
                     //hslider
                 } else if (type.equals("hslider")) {
-                    PSeekBar slider = newSlider(1024, 0, new addGenericSliderCB() {
+                    PSlider slider = newSlider(1024, 0, new addGenericSliderCB() {
                         @Override
-                        public void event(int progress) {
-                            cbData.addPE("data", progress / 1024);
+                        public void event(float progress) {
+                            cbData.addPE("data", progress);
                             callbackfn.event(cbData);
 
                         }
@@ -1078,10 +1079,7 @@ public class PUIGeneric extends PInterface {
 //						e.printStackTrace();
 //					}
 				} else {
-					// Get the bitmap with appropriate options
-					final BitmapFactory.Options options = new BitmapFactory.Options();
-					options.inPurgeable = true;
-					Bitmap bmp = BitmapFactory.decodeFile(imagePath, options);
+				    Bitmap bmp = Image.loadBitmap(imagePath);
 					return bmp;
 				}
 			}
@@ -1103,6 +1101,8 @@ public class PUIGeneric extends PInterface {
 			}
 		}
 	}
+
+
 
 	/**
 	 * This class lets us set the background asynchronously
