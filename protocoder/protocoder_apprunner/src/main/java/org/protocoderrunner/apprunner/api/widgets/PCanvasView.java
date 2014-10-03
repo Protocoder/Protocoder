@@ -178,7 +178,6 @@ public class PCanvasView extends View implements PViewInterface {
         //draw all the layers
         for (Layer layer : mLayerFifo) {
            if(layer.visible) {
-               MLog.network(context, TAG, "visible " + layer.visible);
                c.drawBitmap(layer.bmp, 0, 0, null);
            }
         }
@@ -598,7 +597,7 @@ public class PCanvasView extends View implements PViewInterface {
     }
 
     public Shader linearShader(float x1, float y1, float x2, float y2, String c1, String c2, TileMode mode) {
-        Shader shader = new LinearGradient(x1, x2, y1, y2, Color.parseColor(c1), Color.parseColor(c2), TileMode.CLAMP);
+        Shader shader = new LinearGradient(x1, y1, x2, y2, Color.parseColor(c1), Color.parseColor(c2), mode);
         return shader;
     }
 
@@ -608,13 +607,13 @@ public class PCanvasView extends View implements PViewInterface {
         for (int i = 0; i < colors.length; i++) {
             colors[i] = Color.parseColor(colorsStr[i]);
         }
-        Shader shader = new LinearGradient(x1, y1, x2, y2, colors, positions, TileMode.CLAMP);
+        Shader shader = new LinearGradient(x1, y1, x2, y2, colors, positions, mode);
 
         return shader;
     }
 
     public Shader sweepShader(int x, int y, String c1, String c2) {
-        Shader shader = new SweepGradient(x, y, Color.parseColor(c2), Color.parseColor(c2));
+        Shader shader = new SweepGradient(x, y, Color.parseColor(c1), Color.parseColor(c2));
 
         return shader;
     }
@@ -625,12 +624,9 @@ public class PCanvasView extends View implements PViewInterface {
         return shader;
     }
 
-    public void setShader(Bitmap bitmap, TileMode mode) {
-        BitmapShader shader = new BitmapShader(bitmap, mode, mode);
-
-        mPaintBackground = new Paint();
-        paint.setAntiAlias(true);
-        paint.setShader(shader);
+    public void setShader(Shader shader, TileMode mode) {
+        mPaintFill.setAntiAlias(true);
+        mPaintFill.setShader(shader);
     }
 
     private RectF place(float x, float y, float width, float height) {
