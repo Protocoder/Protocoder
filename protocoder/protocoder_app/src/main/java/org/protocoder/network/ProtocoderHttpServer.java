@@ -78,7 +78,7 @@ import org.protocoderrunner.apprunner.api.widgets.PPlotView;
 import org.protocoderrunner.apprunner.api.widgets.PProgressBar;
 import org.protocoderrunner.apprunner.api.widgets.PRadioButton;
 import org.protocoderrunner.apprunner.api.widgets.PRow;
-import org.protocoderrunner.apprunner.api.widgets.PSeekBar;
+import org.protocoderrunner.apprunner.api.widgets.PSlider;
 import org.protocoderrunner.apprunner.api.widgets.PSwitch;
 import org.protocoderrunner.apprunner.api.widgets.PTextView;
 import org.protocoderrunner.apprunner.api.widgets.PToggleButton;
@@ -393,7 +393,7 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 
 					APIManager.getInstance().addClass(PRadioButton.class);
 					APIManager.getInstance().addClass(PRow.class);
-					APIManager.getInstance().addClass(PSeekBar.class);
+					APIManager.getInstance().addClass(PSlider.class);
 					APIManager.getInstance().addClass(PSwitch.class);
 					APIManager.getInstance().addClass(PTextView.class);
 					APIManager.getInstance().addClass(PToggleButton.class);

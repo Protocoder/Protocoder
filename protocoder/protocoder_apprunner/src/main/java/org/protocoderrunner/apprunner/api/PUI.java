@@ -87,7 +87,7 @@ import org.protocoderrunner.apprunner.api.widgets.PMap;
 import org.protocoderrunner.apprunner.api.widgets.PPlotView;
 import org.protocoderrunner.apprunner.api.widgets.PProgressBar;
 import org.protocoderrunner.apprunner.api.widgets.PRadioButton;
-import org.protocoderrunner.apprunner.api.widgets.PSeekBar;
+import org.protocoderrunner.apprunner.api.widgets.PSlider;
 import org.protocoderrunner.apprunner.api.widgets.PSpinner;
 import org.protocoderrunner.apprunner.api.widgets.PSwitch;
 import org.protocoderrunner.apprunner.api.widgets.PTextView;
@@ -832,8 +832,8 @@ public class PUI extends PUIGeneric {
 	@ProtocoderScript
     @APIMethod(description = "Adds a slider", example = "")
     @APIParam(params = { "x", "y", "w", "h", "max", "progress", "function(progress)" })
-	public PSeekBar addSlider(int x, int y, int w, int h, int max, int progress, final addGenericSliderCB callbackfn) {
-		PSeekBar sb = newSlider(max, progress, callbackfn);
+	public PSlider addSlider(int x, int y, int w, int h, int min, int max, final addGenericSliderCB callbackfn) {
+		PSlider sb = newSlider(min, max, callbackfn);
 		addViewAbsolute(sb, x, y, w, -1);
 		return sb;
 
