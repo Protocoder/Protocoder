@@ -120,19 +120,7 @@ public class MainActivity extends BaseActivity {
 
         mProtocoder = Protocoder.getInstance(this);
 
-        //colors
-        final int c0 = getResources().getColor(R.color.project_user_color);
-        final int c1 = getResources().getColor(R.color.project_example_color);
-
-        Intent.ShortcutIconResource icon_project = Intent.ShortcutIconResource.fromContext(this, R.drawable.ic_script);
-        Intent.ShortcutIconResource icon_example = Intent.ShortcutIconResource.fromContext(this, R.drawable.ic_script_example);
-
-        // Instantiate fragments
-        mProtocoder.protoScripts.addScriptList(icon_project, "projects", c0, false);
-        mProtocoder.protoScripts.addScriptList(icon_example, "examples", c1, true);
-
-        //start the servers
-       // mProtocoder.app.startServers();
+        addFragments();
 
         // Check when a file is changed in the protocoder dir
 		observer = new FileObserver(ProjectManager.FOLDER_USER_PROJECTS, FileObserver.CREATE | FileObserver.DELETE) {
@@ -156,7 +144,20 @@ public class MainActivity extends BaseActivity {
         connectivityChangeReceiver = new ConnectivityChangeReceiver();
     }
 
-	/**
+    private void addFragments() {
+        //colors
+        final int c0 = getResources().getColor(R.color.project_user_color);
+        final int c1 = getResources().getColor(R.color.project_example_color);
+
+        Intent.ShortcutIconResource icon_project = Intent.ShortcutIconResource.fromContext(this, R.drawable.ic_script);
+        Intent.ShortcutIconResource icon_example = Intent.ShortcutIconResource.fromContext(this, R.drawable.ic_script_example);
+
+        // Instantiate fragments
+        mProtocoder.protoScripts.addScriptList(icon_project, "projects", c0, false);
+        mProtocoder.protoScripts.addScriptList(icon_example, "examples", c1, true);
+    }
+
+    /**
 	 * onResume
 	 */
 	@Override
@@ -224,7 +225,6 @@ public class MainActivity extends BaseActivity {
 			vg.removeAllViews();
 		}
 		mProtocoder.app.killConnections();
-		// TODO add stop websocket
 	}
 
 
@@ -235,15 +235,15 @@ public class MainActivity extends BaseActivity {
 
 		if (evt.getAction() == "run") {
             Project p = evt.getProject();
-            Protocoder.getInstance(this).protoScripts.run(p.getFolder(), p.getName());
+            mProtocoder.protoScripts.run(p.getFolder(), p.getName());
 		} else if (evt.getAction() == "save") {
             Project p = evt.getProject();
-            Protocoder.getInstance(this).protoScripts.refresh(p.getFolder(), p.getName());
+            mProtocoder.protoScripts.refresh(p.getFolder(), p.getName());
 		} else if (evt.getAction() == "new") {
 			MLog.d(TAG, "creating new project " + evt.getProject().getName());
-            Protocoder.getInstance(this).protoScripts.create("projects", evt.getProject().getName());
+            mProtocoder.protoScripts.create("projects", evt.getProject().getName());
 		} else if (evt.getAction() == "update") {
-            Protocoder.getInstance(this).protoScripts.listRefresh();
+            mProtocoder.protoScripts.listRefresh();
 		}
 
 	}
@@ -265,7 +265,7 @@ public class MainActivity extends BaseActivity {
 		if (itemId == android.R.id.home) {
 			return true;
 		} else if (itemId == R.id.menu_new) {
-			showEditDialog();
+			Protocoder.getInstance(this).protoScripts.showEditDialog();
 			return true;
 		} else if (itemId == R.id.menu_help) {
             Protocoder.getInstance(this).app.showHelp(true);
@@ -277,25 +277,6 @@ public class MainActivity extends BaseActivity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
-
-	/*
-	 * New project dialog
-	 */
-	private void showEditDialog() {
-		FragmentManager fm = getSupportFragmentManager();
-		NewProjectDialogFragment newProjectDialog = new NewProjectDialogFragment();
-		newProjectDialog.show(fm, "fragment_edit_name");
-       // implements NewProjectDialogFragment.NewProjectDialogListener
-        newProjectDialog.setListener(new NewProjectDialogFragment.NewProjectDialogListener() {
-            @Override
-            public void onFinishEditDialog(String inputText) {
-                Toast.makeText(c, "Creating " + inputText, Toast.LENGTH_SHORT).show();
-                Protocoder.getInstance(c).protoScripts.create("projects", inputText);
-            }
-        });
-	}
-
-
 
 	/*
 	 * Key management

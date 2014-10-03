@@ -107,7 +107,6 @@ public class NewProjectDialogFragment extends DialogFragment implements OnEditor
         
     }
 	public void doOK() {
-		NewProjectDialogListener activity = (NewProjectDialogListener) getActivity();
 		mListener.onFinishEditDialog(mEditText.getText().toString());
 	}
 }
