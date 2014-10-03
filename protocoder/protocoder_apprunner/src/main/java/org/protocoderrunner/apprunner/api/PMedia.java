@@ -30,9 +30,11 @@
 package org.protocoderrunner.apprunner.api;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
@@ -66,10 +68,13 @@ import java.util.Locale;
 
 public class PMedia extends PInterface {
 
-	String TAG = "PMedia";
-	startVoiceRecognitionCB onVoiceRecognitionfn;
+    String TAG = "PMedia";
+	StartVoiceRecognitionCB onVoiceRecognitionfn;
 
-	public PMedia(AppRunnerActivity a) {
+    private HeadSetReceiver headsetPluggedReceiver;
+    private MicPluggedCB headsetCallbackfn;
+
+    public PMedia(AppRunnerActivity a) {
 		super(a);
 
 		a.addVoiceRecognitionListener(new onVoiceRecognitionListener() {
@@ -361,14 +366,14 @@ public class PMedia extends PInterface {
 
 
 	// --------- startVoiceRecognition ---------//
-	interface startVoiceRecognitionCB {
+	interface StartVoiceRecognitionCB {
 		void event(String responseString);
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Fires the voice recognition and returns the best match", example = "media.startVoiceRecognition(function(text) { console.log(text) } );")
 	@APIParam(params = { "function(recognizedText)" })
-	public void startVoiceRecognition(final startVoiceRecognitionCB callbackfn) {
+	public void startVoiceRecognition(final StartVoiceRecognitionCB callbackfn) {
 		onVoiceRecognitionfn = callbackfn;
 
 		Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -384,7 +389,8 @@ public class PMedia extends PInterface {
 
 	public void stop() {
 		stopRecording();
-	}
+        a.get().unregisterReceiver(headsetPluggedReceiver);
+    }
 
 
     @ProtocoderScript
@@ -393,4 +399,42 @@ public class PMedia extends PInterface {
     public void startMidiDevice(final PMidi.MidiDeviceEventCB callbackfn) {
         PMidi pMidi = new PMidi(a.get(), callbackfn);
     }
+
+    public boolean isHeadsetPlugged() {
+        AudioManager audioManager = (AudioManager) a.get().getSystemService(Context.AUDIO_SERVICE);
+        return audioManager.isWiredHeadsetOn();
+    }
+
+    interface MicPluggedCB {
+        void event(boolean b);
+    }
+
+    public void startHeadsetListener(MicPluggedCB callbackfn) {
+        WhatIsRunning.getInstance().add(this);
+        headsetCallbackfn = callbackfn;
+
+        IntentFilter filter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
+        headsetPluggedReceiver = new HeadSetReceiver();
+        a.get().registerReceiver(headsetPluggedReceiver, filter);
+    }
+
+    private class HeadSetReceiver extends BroadcastReceiver {
+        @Override public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Intent.ACTION_HEADSET_PLUG)) {
+                int state = intent.getIntExtra("state", -1);
+                switch (state) {
+                    case 0:
+                        Log.d(TAG, "Headset unplugged");
+                        headsetCallbackfn.event(false);
+                        break;
+                    case 1:
+                        Log.d(TAG, "Headset plugged");
+                        headsetCallbackfn.event(true);
+                        break;
+                }
+            }
+        }
+    }
+
 }
+
