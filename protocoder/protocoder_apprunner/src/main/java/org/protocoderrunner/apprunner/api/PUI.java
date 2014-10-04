@@ -232,32 +232,38 @@ public class PUI extends PUIGeneric {
 	}
 
 	@ProtocoderScript
-	@APIMethod(description = "Sets the fullscreen. Use this at the beginning of your script", example = "")
-	public void setFullscreen() {
-		noActionBarAllowed = true;
-		a.get().setFullScreen();
-        isFullscreenMode = true;
+	@APIMethod(description = "Sets the fullscreen / immersive / dimBars mode", example = "")
+    @APIParam(params = { "mode={fullscreen, immersive, lightsOut}" })
+    public void setUiMode(String mode) {
+        if (mode.equals("fullscreen")) {
+            noActionBarAllowed = true;
+            a.get().setFullScreen();
+            isFullscreenMode = true;
+        } else if (mode.equals("lightsOut")) {
+            a.get().lightsOutMode();
+        } else if (mode.equals("immersive")) {
+            noActionBarAllowed = true;
+            isImmersiveMode = true;
+            a.get().setImmersive();
+            updateScreenSizes();
+        //do nothing
+        } else {
+
+        }
+
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Sets the immersive mode hidding all the system bars. Use this at the beginning of your script. Only works in > 4.4", example = "")
 	public void setImmersive() {
-		noActionBarAllowed = true;
-        isImmersiveMode = true;
-        a.get().setImmersive();
-        updateScreenSizes();
+
     }
 
-	@ProtocoderScript
-	@APIMethod(description = "Dim all system bars", example = "")
-	public void setLightsOut() {
-		a.get().lightsOutMode();
-	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Forces landscape mode in the app", example = "")
     @APIParam(params = {"mode={'landscape', 'portrait', 'other'"})
-	public void setScreenMode(String mode) {
+	public void setScreenOrientation(String mode) {
         if (mode.equals("landscape")) {
             a.get().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         } else if(mode.equals("portrait")) {
@@ -505,16 +511,27 @@ public class PUI extends PUIGeneric {
 		animatorSet.start();
 	}
 
-	@ProtocoderScript
+    @ProtocoderScript
     @APIMethod(description = "Makes the view blink", example = "")
     @APIParam(params = { "View", "num" })
-	public void blink(View v, int num) {
-		ObjectAnimator anim = ObjectAnimator.ofFloat(v, "alpha", 1f, 0f, 1f);
-		anim.setDuration(AppSettings.animGeneralSpeed);
-		anim.setInterpolator(new CycleInterpolator(1));
-		anim.setRepeatCount(num);
-		anim.start();
-	}
+    public void blink(View v, int num) {
+        ObjectAnimator anim = ObjectAnimator.ofFloat(v, "alpha", 1f, 0f, 1f);
+        anim.setDuration(AppSettings.animGeneralSpeed);
+        anim.setInterpolator(new CycleInterpolator(1));
+        anim.setRepeatCount(num);
+        anim.start();
+    }
+
+    @ProtocoderScript
+    @APIMethod(description = "Makes the view blink", example = "")
+    @APIParam(params = { "View", "speed", "num" })
+    public void blink(View v, int speed, int num) {
+        ObjectAnimator anim = ObjectAnimator.ofFloat(v, "alpha", 1f, 0f, 1f);
+        anim.setDuration(speed);
+        //anim.setInterpolator(new CycleInterpolator(num));
+        anim.setRepeatCount(num);
+        anim.start();
+    }
 
 	@ProtocoderScript
     @APIMethod(description = "Rotates the view in the x axis", example = "")
@@ -536,8 +553,8 @@ public class PUI extends PUIGeneric {
 	@ProtocoderScript
     @APIMethod(description = "Changes the alpha of a view", example = "")
     @APIParam(params = { "View", "float={0,1}" })
-	public void alpha(View v, float deg) {
-		v.animate().alpha(deg).setDuration(AppSettings.animGeneralSpeed);
+	public void alpha(View v, float alpha) {
+		v.animate().alpha(alpha).setDuration(AppSettings.animGeneralSpeed);
 	}
 
 	@ProtocoderScript
@@ -952,10 +969,21 @@ public class PUI extends PUIGeneric {
     @ProtocoderScript
     @APIMethod(description = "Adds an image", example = "")
 	@APIParam(params = { "x", "y", "w", "h", "imagePath" })
-	public PImageView addImage(int x, int y, int w, int h, String imagePath) {
+	public PImageView addImage(String imagePath, int x, int y, int w, int h) {
 
 		final PImageView iv = newImage(imagePath);
 		addViewAbsolute(iv, x, y, w, h);
+
+		return iv;
+	}
+
+    @ProtocoderScript
+    @APIMethod(description = "Adds an image", example = "")
+	@APIParam(params = { "x", "y", "imagePath" })
+	public PImageView addImage(String imagePath, int x, int y) {
+
+		final PImageView iv = newImage(imagePath);
+		addViewAbsolute(iv, x, y, -1, -1);
 
 		return iv;
 	}
@@ -994,17 +1022,25 @@ public class PUI extends PUIGeneric {
         return grid;
     }
 
+    @ProtocoderScript
+    @APIMethod(description = "Adds a canvas view", example = "")
+    @APIParam(params = { "x", "y", "w", "h" })
+    public PCanvasView addCanvas(int x, int y, int w, int h, boolean autoDraw) {
+
+        PCanvasView canvasView = newCanvas(w, h);
+        canvasView.autoDraw(autoDraw);
+        addViewAbsolute(canvasView, x, y, w, h);
+
+        return canvasView;
+    }
+
 
 	@ProtocoderScript
     @APIMethod(description = "Adds a canvas view", example = "")
     @APIParam(params = { "x", "y", "w", "h" })
 	public PCanvasView addCanvas(int x, int y, int w, int h) {
-
-		PCanvasView canvasView = newCanvas(w, h);
-		addViewAbsolute(canvasView, x, y, w, h);
-
-		return canvasView;
-	}
+        return addCanvas(x, y, w, h, false);
+    }
 
 	public PList addList(int x, int y, int w, int h) {
 		PList plist = new PList(a.get());
