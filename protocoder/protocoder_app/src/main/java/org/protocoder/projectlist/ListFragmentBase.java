@@ -154,7 +154,8 @@ public class ListFragmentBase extends BaseFragment {
 	}
 
 	public void refreshProjects() {
-		projects = ProjectManager.getInstance().list(projectFolder);
+		projects = ProjectManager.getInstance().list(projectFolder, orderByName);
+
 		projectAdapter = new ProjectAdapter(getActivity(), projectFolder, projects, listMode);
 		gridView.setAdapter(projectAdapter);
 		notifyAddedProject();
@@ -327,7 +328,7 @@ public class ListFragmentBase extends BaseFragment {
 
 	public void projectRefresh(String projectName) {
 		View v = gridView.findViewWithTag(projectName);
-		ProjectAnimations.projectRefresh(v);
+        v.animate().alpha(0).setDuration(500);
 	}
 
 	public void onEventMainThread(ProjectEvent evt) {

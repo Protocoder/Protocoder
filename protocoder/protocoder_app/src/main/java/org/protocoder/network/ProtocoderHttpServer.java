@@ -259,7 +259,7 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 
 					folder = obj.getString("filter");
 
-					ArrayList<Project> projects = ProjectManager.getInstance().list(folder);
+					ArrayList<Project> projects = ProjectManager.getInstance().list(folder, false);
 					JSONArray projectsArray = new JSONArray();
 					for (Project project : projects) {
 						projectsArray.put(ProjectManager.getInstance().toJson(project));

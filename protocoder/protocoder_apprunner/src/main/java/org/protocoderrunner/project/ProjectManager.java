@@ -37,6 +37,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -109,7 +110,7 @@ public class ProjectManager {
     }
 
     public boolean isProjectExisting(String folder, String name) {
-        ArrayList<Project> projects = list(folder);
+        ArrayList<Project> projects = list(folder, false);
 
         for (int i = 0; i < projects.size(); i++) {
             if (projects.get(i).getName().equals(name)) {
@@ -213,7 +214,7 @@ public class ProjectManager {
         return json;
     }
 
-    public ArrayList<Project> list(String folder) {
+    public ArrayList<Project> list(String folder, boolean orderByName) {
         ArrayList<Project> projects = new ArrayList<Project>();
         File dir = null;
 
@@ -223,6 +224,10 @@ public class ProjectManager {
         }
 
         File[] all_projects = dir.listFiles();
+
+        if (orderByName) {
+            Arrays.sort(all_projects);
+        }
 
         for (File file : all_projects) {
             String projectURL = file.getAbsolutePath();
@@ -238,7 +243,7 @@ public class ProjectManager {
 
     public Project get(String folder, String name) {
         MLog.d(TAG, "looking for project " + name + " in " + folder);
-        ArrayList<Project> projects = list(folder);
+        ArrayList<Project> projects = list(folder, false);
         for (Project project : projects) {
             if (name.equals(project.getName())) {
                 setCurrentProject(project);
