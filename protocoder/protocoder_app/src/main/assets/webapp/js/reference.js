@@ -32,7 +32,7 @@ Reference.prototype.parseHelp = function (docString) {
 	        var method = n;
 
 	        //className 
-	        var m = $('<div id ="method_'+ method.name +'" class = "APImethod"></div>');
+	        var m = $('<div id ="method_'+ method.name +'" title = "' + method.description + '" class = "APImethod"></div>');
 	        $("#sidebar_container #reference #class_"+className + " .methods").append(m);
 	      
 			//method [return] methodName [parameters]      
@@ -48,7 +48,7 @@ Reference.prototype.parseHelp = function (docString) {
 	        
 	        //add description if exist 
 	        if (method.description != undefined) { 
-	        	$("#method_"+method.name).append('<p id = "description"> '+ "here goes description" /*method.description*/ +' </p>');
+	        	$("#method_"+method.name).append('<p id = "description"> '+ method.description +' </p>');
 	        }
 
 	        //add example if exist 
