@@ -114,7 +114,7 @@ public class PCanvasView extends View implements PViewInterface {
     private Paint mPaintStroke;
     private Paint mPaintBackground;
 
-    private boolean mAutoDraw;
+    private boolean mAutoDraw = false;
     private boolean mModeCorner = MODE_CORNER;
     private boolean strokeOn = false;
     private boolean fillOn = true;
@@ -221,9 +221,13 @@ public class PCanvasView extends View implements PViewInterface {
     }
 
     public void refresh() {
-        if (!mAutoDraw) {
+        if (mAutoDraw) {
             invalidate();
         }
+    }
+
+    public void autoDraw(boolean b) {
+        mAutoDraw = b;
     }
 
     public Canvas getCanvas() {
@@ -260,6 +264,15 @@ public class PCanvasView extends View implements PViewInterface {
         mPaintBackground.setStyle(Paint.Style.FILL);
         mPaintBackground.setARGB(alpha, r, g, b);
         mCanvas.drawRect(0, 0, mWidth, mHeight, mPaintBackground);
+        refresh();
+
+        return this;
+    }
+
+    //TODO drawPaint o drawARGB
+    public PCanvasView background(int r, int g, int b) {
+        background(r, g, b, 255);
+
         refresh();
 
         return this;
