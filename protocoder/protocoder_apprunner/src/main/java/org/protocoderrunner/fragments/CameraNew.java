@@ -36,7 +36,9 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
+import android.graphics.YuvImage;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.hardware.Camera.Parameters;
@@ -44,6 +46,7 @@ import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.PreviewCallback;
 import android.media.AudioManager;
 import android.media.CamcorderProfile;
+import android.media.FaceDetector;
 import android.media.MediaRecorder;
 import android.media.SoundPool;
 import android.net.Uri;
@@ -51,12 +54,15 @@ import android.os.Build;
 import android.util.Log;
 import android.view.TextureView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import org.protocoderrunner.R;
 import org.protocoderrunner.utils.AndroidUtils;
 import org.protocoderrunner.utils.MLog;
 import org.protocoderrunner.utils.TimeUtils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -91,9 +97,11 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
 	private View v;
 
 	private Vector<CameraListener> listeners = new Vector<CameraListener>();
+    private CallbackBmp callbackBmp;
+    private CallbackStream callbackStream;
 
 
-	public interface CameraListener {
+    public interface CameraListener {
 
 		public void onPicTaken();
 
@@ -189,12 +197,53 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
 
             @Override
             public void onPreviewFrame(byte[] data, Camera camera) {
+                Camera.Parameters parameters = camera.getParameters();
+                int width = parameters.getPreviewSize().width;
+                int height = parameters.getPreviewSize().height;
 
+                YuvImage yuv = new YuvImage(data, parameters.getPreviewFormat(), width, height, null);
+
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                yuv.compressToJpeg(new Rect(0, 0, width, height), 50, out);
+
+
+
+
+                byte[] bytes = out.toByteArray();
+
+                BitmapFactory.Options bitmap_options = new BitmapFactory.Options();
+                bitmap_options.inPreferredConfig = Bitmap.Config.RGB_565;
+
+                final Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, bitmap_options);
+
+                if (callbackBmp != null) callbackBmp.event(bitmap);
+                if (callbackStream != null)  callbackStream.event(bitmap);
             }
         });
 
         //set shadow
         //AndroidUtils.setViewGenericShadow(this, width, height);
+
+    }
+
+
+    protected interface CallbackBmp {
+        public void event(Bitmap bmp);
+    }
+    
+    public void addCallbackBmp(CallbackBmp callbackBmp) {
+        this.callbackBmp = callbackBmp;
+    }
+
+    interface CallbackStream {
+        public void event(Bitmap bmp);
+    }
+
+    public void addCallbackStream(CallbackStream callbackStream) {
+        this.callbackStream = callbackStream;
+    }
+
+    public void addFaceDetector() {
 
     }
 
