@@ -30,7 +30,9 @@
 package org.protocoderrunner.apprunner.api;
 
 import android.app.Activity;
+import android.os.FileObserver;
 
+import org.json.JSONObject;
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
@@ -38,8 +40,11 @@ import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.apprunner.api.other.PSqLite;
 import org.protocoderrunner.apprunner.api.other.ProtocoderNativeArray;
+import org.protocoderrunner.network.CustomWebsocketServer;
 import org.protocoderrunner.project.ProjectManager;
+import org.protocoderrunner.sensors.WhatIsRunning;
 import org.protocoderrunner.utils.FileIO;
+import org.protocoderrunner.utils.MLog;
 
 import java.io.File;
 
@@ -48,9 +53,11 @@ import net.lingala.zip4j.exception.ZipException;
 public class PFileIO extends PInterface {
 
 	String TAG = "PFileIO";
+    private FileObserver fileObserver;
 
-	public PFileIO(Activity a) {
+    public PFileIO(Activity a) {
 		super(a);
+        WhatIsRunning.getInstance().add(this);
 	}
 
 	@ProtocoderScript
@@ -175,5 +182,40 @@ public class PFileIO extends PInterface {
             }
         });
         t.start();
+    }
+
+    public interface FileObserverCB {
+        public void event(String action, String data);
+    }
+
+
+    @ProtocoderScript
+    @APIMethod(description = "Observer file changes in a folder", example = "")
+    @APIParam(params = { "path", "function(action, file" })
+    public void observeFolder(String path, final FileObserverCB callback) {
+
+         fileObserver = new FileObserver(ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/" + path, FileObserver.CREATE | FileObserver.MODIFY |  FileObserver.DELETE) {
+
+             @Override
+             public void onEvent(int event, String file) {
+
+                 if ((FileObserver.CREATE & event) != 0) {
+                     callback.event("create", file);
+                 } else if ((FileObserver.DELETE & event) != 0) {
+                     callback.event("delete", file);
+                 } else if ((FileObserver.MODIFY & event) != 0) {
+                     callback.event("modify", file);
+                 }
+             }
+
+         };
+        fileObserver.startWatching();
+    }
+
+    public void stop() {
+        if (fileObserver != null) {
+            fileObserver.stopWatching();
+            fileObserver = null;
+        }
     }
 }
