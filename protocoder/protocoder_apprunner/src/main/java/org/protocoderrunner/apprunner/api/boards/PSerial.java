@@ -29,18 +29,6 @@
 
 package org.protocoderrunner.apprunner.api.boards;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.apprunner.ProtocoderScript;
-import org.protocoderrunner.sensors.WhatIsRunning;
-import org.protocoderrunner.utils.MLog;
-
 import android.app.Activity;
 import android.content.Context;
 import android.hardware.usb.UsbDeviceConnection;
@@ -50,6 +38,17 @@ import com.hoho.android.usbserial.driver.UsbSerialDriver;
 import com.hoho.android.usbserial.driver.UsbSerialPort;
 import com.hoho.android.usbserial.driver.UsbSerialProber;
 import com.hoho.android.usbserial.util.SerialInputOutputManager;
+
+import org.protocoderrunner.apidoc.annotation.APIMethod;
+import org.protocoderrunner.apprunner.PInterface;
+import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.sensors.WhatIsRunning;
+import org.protocoderrunner.utils.MLog;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class PSerial extends PInterface {
 
@@ -65,7 +64,7 @@ public class PSerial extends PInterface {
     private final ExecutorService mExecutor = Executors.newSingleThreadExecutor();
 	String msg = "";
 
-	public PSerial(Activity a) {
+	public PSerial(Context a) {
 		super(a);
 
 	}

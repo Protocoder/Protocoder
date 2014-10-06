@@ -29,39 +29,6 @@
 
 package org.protocoderrunner.apprunner.api.widgets;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.json.JSONArray;
-import org.mozilla.javascript.NativeArray;
-import org.osmdroid.events.DelayedMapListener;
-import org.osmdroid.events.MapListener;
-import org.osmdroid.events.ScrollEvent;
-import org.osmdroid.events.ZoomEvent;
-import org.protocoderrunner.R;
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
-import org.protocoderrunner.apprunner.AppRunnerSettings;
-import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.apprunner.ProtocoderScript;
-import org.protocoderrunner.apprunner.api.other.PCamera;
-import org.protocoderrunner.apprunner.api.other.PVideo;
-import org.protocoderrunner.apprunner.api.other.ProtocoderNativeObject;
-import org.protocoderrunner.base.BaseActivity;
-import org.protocoderrunner.fragments.CameraFragment;
-import org.protocoderrunner.fragments.CustomVideoTextureView;
-import org.protocoderrunner.utils.AndroidUtils;
-import org.protocoderrunner.utils.FileIO;
-import org.protocoderrunner.utils.Image;
-import org.protocoderrunner.utils.MLog;
-import org.protocoderrunner.apprunner.api.widgets.PPadView.TouchEvent;
-import org.protocoderrunner.views.TouchAreaView;
-
 import android.animation.LayoutTransition;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -84,16 +51,51 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
+import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Space;
 
-//import com.caverock.androidsvg.SVG;
-//import com.caverock.androidsvg.SVGParseException;
 import com.larvalabs.svgandroid.SVG;
 import com.larvalabs.svgandroid.SVGBuilder;
 import com.larvalabs.svgandroid.SVGParser;
+
+import org.json.JSONArray;
+import org.mozilla.javascript.NativeArray;
+import org.osmdroid.events.DelayedMapListener;
+import org.osmdroid.events.MapListener;
+import org.osmdroid.events.ScrollEvent;
+import org.osmdroid.events.ZoomEvent;
+import org.protocoderrunner.R;
+import org.protocoderrunner.apidoc.annotation.APIMethod;
+import org.protocoderrunner.apidoc.annotation.APIParam;
+import org.protocoderrunner.apprunner.AppRunnerSettings;
+import org.protocoderrunner.apprunner.PInterface;
+import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.apprunner.api.other.PCamera;
+import org.protocoderrunner.apprunner.api.other.PVideo;
+import org.protocoderrunner.apprunner.api.other.ProtocoderNativeObject;
+import org.protocoderrunner.apprunner.api.widgets.PPadView.TouchEvent;
+import org.protocoderrunner.base.BaseActivity;
+import org.protocoderrunner.fragments.CameraFragment;
+import org.protocoderrunner.fragments.CustomVideoTextureView;
+import org.protocoderrunner.utils.AndroidUtils;
+import org.protocoderrunner.utils.FileIO;
+import org.protocoderrunner.utils.Image;
+import org.protocoderrunner.utils.MLog;
+import org.protocoderrunner.views.TouchAreaView;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+//import com.caverock.androidsvg.SVG;
+//import com.caverock.androidsvg.SVGParseException;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class PUIGeneric extends PInterface {
@@ -139,7 +141,7 @@ public class PUIGeneric extends PInterface {
 
         //if in immersive mode then add the navigation bar height
         if (isImmersiveMode) {
-            screenHeight += a.get().getNavigationBarHeight();
+            screenHeight += appRunnerActivity.get().getNavigationBarHeight();
         }
 
         sw = screenWidth;
@@ -193,8 +195,8 @@ public class PUIGeneric extends PInterface {
 			holderLayout.addView(bgImageView, layoutParams);
 
 			// set the layout
-			a.get().initLayout();
-			a.get().addScriptedLayout(holderLayout);
+			appRunnerActivity.get().initLayout();
+			appRunnerActivity.get().addScriptedLayout(holderLayout);
 			holderLayout.addView(sv);
 
 			isMainLayoutSetup = true;
@@ -565,8 +567,32 @@ public class PUIGeneric extends PInterface {
 		themeWidget(et);
 
 		return et;
-
 	}
+
+
+    // --------- getRequest ---------//
+    public interface NewGenericNumberPickerCB {
+        void event(int val);
+    }
+
+    @ProtocoderScript
+    @APIMethod(description = "Creates a new number picker", example = "")
+    @APIParam(params = { "from", "to", "function(data)" })
+    public PNumberPicker newNumberPicker(int from, int to, final NewGenericNumberPickerCB callback) {
+        initializeLayout();
+        PNumberPicker pNumberPicker = new PNumberPicker(a.get());
+        pNumberPicker.setMinValue(from);
+        pNumberPicker.setMaxValue(to);
+        pNumberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                callback.event(newVal);
+            }
+        });
+
+        return pNumberPicker;
+    }
+
 
 	// --------- Toggle ---------//
 	public interface addGenericToggleCB {
@@ -946,7 +972,7 @@ public class PUIGeneric extends PInterface {
     @APIParam(params = { "width", "height" })
     public PCanvasView newCanvas(int w, int h) {
         initializeLayout();
-        PCanvasView canvasView = new PCanvasView(a.get(), w, h);
+        PCanvasView canvasView = new PCanvasView(a.get());
 
         return canvasView;
     }
@@ -956,7 +982,7 @@ public class PUIGeneric extends PInterface {
     @APIParam(params = { "" })
     public PWebView newWebview() {
         initializeLayout();
-        PWebView webView = new PWebView(a);
+        PWebView webView = new PWebView(a.get());
 
         return webView;
     }
@@ -1088,7 +1114,9 @@ public class PUIGeneric extends PInterface {
 
 		@Override
 		protected void onPostExecute(Object result) {
-			if (fileExtension.equals("svg")) {
+            bgImage.setScaleType(ScaleType.FIT_XY);
+
+            if (fileExtension.equals("svg")) {
 				MLog.d("svg", "is SVG 2 " + result);
 				bgImage.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 				bgImage.setImageDrawable((Drawable) result);

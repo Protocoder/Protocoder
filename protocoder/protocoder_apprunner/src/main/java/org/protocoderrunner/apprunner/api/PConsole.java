@@ -30,7 +30,6 @@
 package org.protocoderrunner.apprunner.api;
 
 import android.app.Activity;
-import android.support.v4.app.FragmentActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -86,8 +85,12 @@ public class PConsole extends PInterface {
 
     }
 
-    public void logC(String text) {
+    public void logC(String text, String color) {
 
+    }
+
+    public void textColor(String color) {
+        
     }
 
     public void backgroundColor(String color) {

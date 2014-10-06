@@ -29,25 +29,12 @@
 
 package org.protocoderrunner.apprunner.api;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
-import org.protocoderrunner.apprunner.AppRunnerSettings;
-import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.apprunner.ProtocoderScript;
-import org.protocoderrunner.sensors.WhatIsRunning;
-import org.protocoderrunner.utils.MLog;
-
 import android.animation.TimeInterpolator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Interpolator;
 import android.graphics.Typeface;
 import android.media.FaceDetector;
 import android.os.Handler;
@@ -59,6 +46,18 @@ import android.view.animation.AnticipateOvershootInterpolator;
 import android.view.animation.BounceInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
+
+import org.protocoderrunner.apidoc.annotation.APIMethod;
+import org.protocoderrunner.apidoc.annotation.APIParam;
+import org.protocoderrunner.apprunner.AppRunnerSettings;
+import org.protocoderrunner.apprunner.PInterface;
+import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.sensors.WhatIsRunning;
+import org.protocoderrunner.utils.MLog;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class PUtil extends PInterface {
 

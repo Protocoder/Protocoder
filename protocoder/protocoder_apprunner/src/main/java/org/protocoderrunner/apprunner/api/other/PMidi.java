@@ -1,33 +1,18 @@
 package org.protocoderrunner.apprunner.api.other;
 
 import android.app.Activity;
+import android.content.Context;
 import android.hardware.usb.UsbDevice;
-import android.media.AudioFormat;
-import android.media.AudioTrack;
 import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.Spinner;
-import android.widget.Toast;
-import android.widget.ToggleButton;
 
-import org.protocoderrunner.R;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.sensors.WhatIsRunning;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import jp.kshoji.driver.midi.device.MidiInputDevice;
-import jp.kshoji.driver.midi.device.MidiOutputDevice;
 
 public class PMidi extends PInterface {
 
@@ -60,7 +45,7 @@ public class PMidi extends PInterface {
 
     MidiDeviceEventCB midiEvent;
 
-    public PMidi(Activity appActivity, MidiDeviceEventCB callbackfn) {
+    public PMidi(Context appActivity, MidiDeviceEventCB callbackfn) {
         super(appActivity);
 
         this.midiEvent = callbackfn;

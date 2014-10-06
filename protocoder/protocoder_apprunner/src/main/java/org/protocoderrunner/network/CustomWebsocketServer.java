@@ -29,12 +29,7 @@
 
 package org.protocoderrunner.network;
 
-import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import android.content.Context;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.drafts.Draft;
@@ -44,7 +39,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.protocoderrunner.utils.MLog;
 
-import android.content.Context;
+import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 public class CustomWebsocketServer extends WebSocketServer {
 	private static CustomWebsocketServer inst;

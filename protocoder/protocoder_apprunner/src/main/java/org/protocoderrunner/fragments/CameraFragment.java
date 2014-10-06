@@ -29,19 +29,6 @@
 
 package org.protocoderrunner.fragments;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Vector;
-
-import org.protocoderrunner.R;
-import org.protocoderrunner.apprunner.api.PDashboard;
-import org.protocoderrunner.utils.MLog;
-import org.protocoderrunner.utils.TimeUtils;
-
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -75,6 +62,18 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import org.protocoderrunner.R;
+import org.protocoderrunner.utils.MLog;
+import org.protocoderrunner.utils.TimeUtils;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Vector;
 
 @TargetApi(Build.VERSION_CODES.GINGERBREAD)
 @SuppressLint("NewApi")

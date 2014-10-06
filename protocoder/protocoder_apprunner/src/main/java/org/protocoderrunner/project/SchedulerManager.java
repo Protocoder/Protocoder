@@ -29,15 +29,15 @@
 
 package org.protocoderrunner.project;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-
-import org.protocoderrunner.services.AlarmReceiver;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+
+import org.protocoderrunner.services.AlarmReceiver;
+
+import java.util.ArrayList;
+import java.util.Calendar;
 
 public class SchedulerManager {
 

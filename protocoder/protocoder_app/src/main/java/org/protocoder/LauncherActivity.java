@@ -29,13 +29,13 @@
 
 package org.protocoder;
 
-import org.protocoder.fragments.PreferencesFragment;
-import org.protocoderrunner.base.BaseActivity;
-import org.protocoderrunner.utils.StrUtils;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
+import org.protocoder.fragments.PreferencesFragment;
+import org.protocoderrunner.base.BaseActivity;
+import org.protocoderrunner.utils.StrUtils;
 
 public class LauncherActivity extends BaseActivity {
 

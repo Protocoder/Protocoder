@@ -29,10 +29,6 @@
 
 package org.protocoder.fragments;
 
-import org.protocoder.fragments.BaseWebviewFragment;
-import org.protocoder.R;
-import org.protocoderrunner.utils.MLog;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Picture;
@@ -54,6 +50,9 @@ import android.webkit.WebView.PictureListener;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.VideoView;
+
+import org.protocoder.R;
+import org.protocoderrunner.utils.MLog;
 
 public class WebViewFragment extends BaseWebviewFragment {
 

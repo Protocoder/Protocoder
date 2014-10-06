@@ -9,7 +9,6 @@ import org.mozilla.javascript.NativeArray;
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.ProtocoderScript;
-import org.protocoderrunner.utils.MLog;
 
 import java.net.URI;
 

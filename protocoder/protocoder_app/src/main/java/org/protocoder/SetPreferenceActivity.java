@@ -29,9 +29,6 @@
 
 package org.protocoder;
 
-import org.protocoder.fragments.PreferencesFragment;
-import org.protocoderrunner.base.BaseActivity;
-
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.Intent;
@@ -39,6 +36,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
+
+import org.protocoder.fragments.PreferencesFragment;
+import org.protocoderrunner.base.BaseActivity;
 
 public class SetPreferenceActivity extends BaseActivity {
 

@@ -29,17 +29,18 @@
 
 package org.protocoderrunner.apprunner.api.widgets;
 
-import java.io.File;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Shader;
+import android.graphics.drawable.BitmapDrawable;
+import android.widget.ImageView;
 
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 
-import android.content.Context;
-import android.graphics.Shader;
-import android.graphics.drawable.BitmapDrawable;
-import android.widget.ImageView;
+import java.io.File;
 
 public class PImageView extends ImageView implements PViewInterface {
 
@@ -65,6 +66,10 @@ public class PImageView extends ImageView implements PViewInterface {
 
         return this;
 	}
+
+    public void setImage(Bitmap bmp) {
+        this.setImageBitmap(bmp);
+    }
 
     @ProtocoderScript
     @APIMethod(description = "Sets a tiled image", example = "")

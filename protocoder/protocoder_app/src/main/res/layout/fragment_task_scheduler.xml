@@ -78,7 +78,7 @@
         android:layout_above="@+id/button1"
         android:layout_below="@id/description"
         android:layout_margin="12dp"
-        android:background="@drawable/card_bg"
+        android:background="@drawable/generic_item_card_bg"
         android:orientation="vertical" >
 
     </ListView>

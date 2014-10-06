@@ -54,7 +54,6 @@ import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.sensors.WhatIsRunning;
 import org.protocoderrunner.utils.Intents;
-import org.protocoderrunner.utils.MLog;
 
 public class PDevice extends PInterface {
 
@@ -115,7 +114,7 @@ public class PDevice extends PInterface {
 	@APIParam(params = { "function(number, message)" })
 	public void onSmsReceived(final onSmsReceivedCB fn) {
 
-        a.get().addOnSmsReceivedListener(new onSmsReceivedListener() {
+        appRunnerActivity.get().addOnSmsReceivedListener(new onSmsReceivedListener() {
 
             @Override
             public void onSmsReceived(String number, String msg) {
@@ -128,59 +127,59 @@ public class PDevice extends PInterface {
 	@APIMethod(description = "Set brightness", example = "")
 	@APIParam(params = { "brightness" })
 	public void setBrightness(float val) {
-		a.get().setBrightness(val);
+		appRunnerActivity.get().setBrightness(val);
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Set the global brightness from 0 to 255", example = "")
     @APIParam(params = { "brightness" })
     public void setGlobalBrightness(int b) {
-		a.get().setGlobalBrightness(b);
+		appRunnerActivity.get().setGlobalBrightness(b);
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Get the current brightness", example = "")
 	public float getBrightness() {
-		return a.get().getCurrentBrightness();
+		return appRunnerActivity.get().getCurrentBrightness();
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Set the screen always on", example = "")
     @APIParam(params = { "boolean" })
     public void screenAlwaysOn(boolean b) {
-		a.get().setScreenAlwaysOn(b);
+		appRunnerActivity.get().setScreenAlwaysOn(b);
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Check if the scrren is on", example = "")
 	public boolean isScreenOn() {
-		return a.get().isScreenOn();
+		return appRunnerActivity.get().isScreenOn();
 	}
 
 	// @ProtocoderScript
 	// @APIMethod(description = "", example = "")
 	public void goToSleep() {
-		a.get().goToSleep();
+		appRunnerActivity.get().goToSleep();
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Set the screen timeout", example = "")
     @APIParam(params = { "time" })
     public void setScreenTimeout(int time) {
-		a.get().setScreenTimeout(time);
+		appRunnerActivity.get().setScreenTimeout(time);
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Check if is in airplane mode", example = "")
 	public boolean isAirplaneMode() {
-		return a.get().isAirplaneMode();
+		return appRunnerActivity.get().isAirplaneMode();
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Check what type of device is", example = "")
     @APIParam(params = { "" })
     public String getType() {
-        if (a.get().isTablet()) {
+        if (appRunnerActivity.get().isTablet()) {
             return "tablet";
         } else {
             return "phone";
@@ -191,7 +190,7 @@ public class PDevice extends PInterface {
 	@APIMethod(description = "Prevent the device suspend at any time. Good for long living operations.", example = "")
     @APIParam(params = { "boolean" })
     public void setWakeLock(boolean b) {
-		a.get().setWakeLock(b);
+		appRunnerActivity.get().setWakeLock(b);
 	}
 
 	@ProtocoderScript
@@ -364,14 +363,14 @@ public class PDevice extends PInterface {
     @APIMethod(description = "", example = "")
     @APIParam(params = { "boolean" })
     public void enableVolumeKeys(boolean b) {
-        a.get().keyVolumeEnabled = b;
+        appRunnerActivity.get().keyVolumeEnabled = b;
     }
 
     @ProtocoderScript
     @APIMethod(description = "", example = "")
     @APIParam(params = { "boolean" })
     public void enableBackKey(boolean b) {
-        a.get().keyBackEnabled = b;
+        appRunnerActivity.get().keyBackEnabled = b;
     }
 
     public interface onKeyListener {
@@ -409,7 +408,7 @@ public class PDevice extends PInterface {
 
 		// density dpi
 		DisplayMetrics metrics = new DisplayMetrics();
-		a.get().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		appRunnerActivity.get().getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		deviceInfo.screenDpi = metrics.densityDpi;
 
 		// id

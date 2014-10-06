@@ -35,8 +35,6 @@ import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
@@ -47,23 +45,18 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-//import android.support.v7.graphics.Palette;
 import android.text.InputType;
 import android.view.GestureDetector;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.View.OnTouchListener;
-import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.CycleInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.NumberPicker;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -91,6 +84,7 @@ import org.protocoderrunner.apprunner.api.widgets.PImageView;
 import org.protocoderrunner.apprunner.api.widgets.PList;
 import org.protocoderrunner.apprunner.api.widgets.PMap;
 import org.protocoderrunner.apprunner.api.widgets.PNumberPicker;
+import org.protocoderrunner.apprunner.api.widgets.PPadView;
 import org.protocoderrunner.apprunner.api.widgets.PPlotView;
 import org.protocoderrunner.apprunner.api.widgets.PPopupCustomFragment;
 import org.protocoderrunner.apprunner.api.widgets.PProgressBar;
@@ -105,7 +99,6 @@ import org.protocoderrunner.apprunner.api.widgets.PWebView;
 import org.protocoderrunner.apprunner.api.widgets.PWindow;
 import org.protocoderrunner.sensors.WhatIsRunning;
 import org.protocoderrunner.utils.AndroidUtils;
-import org.protocoderrunner.apprunner.api.widgets.PPadView;
 import org.protocoderrunner.views.TouchAreaView;
 
 import java.io.File;
@@ -113,6 +106,8 @@ import java.io.File;
 import processing.core.PApplet;
 
 import static android.view.ScaleGestureDetector.OnScaleGestureListener;
+
+//import android.support.v7.graphics.Palette;
 
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -162,8 +157,8 @@ public class PUI extends PUIGeneric {
 			return;
 		}
 
-		a.get().setActionBar(null, null);
-		a.get().actionBar.setTitle(title);
+		appRunnerActivity.get().setActionBar(null, null);
+		appRunnerActivity.get().actionBar.setTitle(title);
 	}
 
 	@ProtocoderScript
@@ -174,8 +169,8 @@ public class PUI extends PUIGeneric {
 			return;
 		}
 
-		a.get().setActionBar(null, null);
-		a.get().actionBar.setSubtitle(title);
+		appRunnerActivity.get().setActionBar(null, null);
+		appRunnerActivity.get().actionBar.setSubtitle(title);
 	}
 
 	@ProtocoderScript
@@ -188,9 +183,9 @@ public class PUI extends PUIGeneric {
 
 		//a.get().setActionBar(null, null);
 		if (b) {
-			a.get().actionBar.show();
+			appRunnerActivity.get().actionBar.show();
 		} else {
-			a.get().actionBar.hide();
+			appRunnerActivity.get().actionBar.hide();
 		}
 	}
 
@@ -202,7 +197,7 @@ public class PUI extends PUIGeneric {
 			return;
 		}
 		int c = Color.argb(alpha, r, g, b);
-		a.get().setActionBar(c, null);
+		appRunnerActivity.get().setActionBar(c, null);
 	}
 
 	@ProtocoderScript
@@ -214,7 +209,7 @@ public class PUI extends PUIGeneric {
 		}
 
 		int c = Color.argb(alpha, r, g, b);
-		a.get().setActionBar(null, c);
+		appRunnerActivity.get().setActionBar(null, c);
 	}
 
 	@ProtocoderScript
@@ -228,7 +223,7 @@ public class PUI extends PUIGeneric {
 		Bitmap myBitmap = BitmapFactory.decodeFile(AppRunnerSettings.get().project.getStoragePath() + imagePath);
 		Drawable icon = new BitmapDrawable(a.get().getResources(), myBitmap);
 
-		a.get().actionBar.setIcon(icon);
+		appRunnerActivity.get().actionBar.setIcon(icon);
 	}
 
     //TODO doesnt work properly
@@ -236,7 +231,7 @@ public class PUI extends PUIGeneric {
 	@APIMethod(description = "Shows/Hide the home bar", example = "")
 	@APIParam(params = { "boolean" })
 	public void showHomeBar(boolean b) {
-		a.get().showHomeBar(b);
+		appRunnerActivity.get().showHomeBar(b);
 	}
 
 	@ProtocoderScript
@@ -245,14 +240,14 @@ public class PUI extends PUIGeneric {
     public void setUiMode(String mode) {
         if (mode.equals("fullscreen")) {
             noActionBarAllowed = true;
-            a.get().setFullScreen();
+            appRunnerActivity.get().setFullScreen();
             isFullscreenMode = true;
         } else if (mode.equals("lightsOut")) {
-            a.get().lightsOutMode();
+            appRunnerActivity.get().lightsOutMode();
         } else if (mode.equals("immersive")) {
             noActionBarAllowed = true;
             isImmersiveMode = true;
-            a.get().setImmersive();
+            appRunnerActivity.get().setImmersive();
             updateScreenSizes();
         //do nothing
         } else {
@@ -273,11 +268,11 @@ public class PUI extends PUIGeneric {
     @APIParam(params = {"mode={'landscape', 'portrait', 'other'"})
 	public void setScreenOrientation(String mode) {
         if (mode.equals("landscape")) {
-            a.get().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            appRunnerActivity.get().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         } else if(mode.equals("portrait")) {
-            a.get().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            appRunnerActivity.get().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         } else {
-            a.get().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+            appRunnerActivity.get().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
         }
 	}
 
@@ -1088,7 +1083,7 @@ public class PUI extends PUIGeneric {
         bundle.putString("mode", mode);
         p.setArguments(bundle);
 
-		FragmentTransaction ft = a.get().getSupportFragmentManager().beginTransaction();
+		FragmentTransaction ft = appRunnerActivity.get().getSupportFragmentManager().beginTransaction();
 		ft.add(fl.getId(), p, String.valueOf(fl.getId()));
 
 		// ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
@@ -1290,7 +1285,7 @@ public class PUI extends PUIGeneric {
 
         PPopupCustomFragment pPopupCustomFragment = new PPopupCustomFragment();
 
-        android.app.FragmentManager fm = a.get().getFragmentManager();
+        android.app.FragmentManager fm = appRunnerActivity.get().getFragmentManager();
         pPopupCustomFragment.show(fm, "popUpCustom");
 
         return pPopupCustomFragment;
@@ -1327,12 +1322,12 @@ public class PUI extends PUIGeneric {
 		InputMethodManager imm = (InputMethodManager) a.get().getSystemService(a.get().INPUT_METHOD_SERVICE);
 
 		if (show) {
-			imm.showSoftInput(a.get().getCurrentFocus(), InputMethodManager.SHOW_FORCED);
+			imm.showSoftInput(appRunnerActivity.get().getCurrentFocus(), InputMethodManager.SHOW_FORCED);
 			uiAbsoluteLayout.setFocusable(true);
 			uiAbsoluteLayout.setFocusableInTouchMode(true);
 
 		} else {
-			imm.hideSoftInputFromWindow(a.get().getCurrentFocus().getWindowToken(), 0);
+			imm.hideSoftInputFromWindow(appRunnerActivity.get().getCurrentFocus().getWindowToken(), 0);
 		}
 	}
 

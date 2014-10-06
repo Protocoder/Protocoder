@@ -29,11 +29,6 @@
 
 package org.protocoderrunner.hardware;
 
-import ioio.lib.api.IOIO;
-
-import org.protocoderrunner.utils.MLog;
-import org.protocoderrunner.utils.SysFs;
-
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -41,11 +36,16 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 
+import org.protocoderrunner.utils.MLog;
+import org.protocoderrunner.utils.SysFs;
+
+import ioio.lib.api.IOIO;
+
 public class IOIOBoard extends HardwareBase {
 
 	private static String TAG = "IOIOBoard";
 
-	private final Activity activity_;
+	private final Context activity_;
 	private IOIOBoardService service_;
 	private Intent serviceIntent_;
 	private Boolean serviceBound = false;
@@ -70,7 +70,7 @@ public class IOIOBoard extends HardwareBase {
 		}
 	};
 
-	public IOIOBoard(Activity activity, HardwareCallback callback) {
+	public IOIOBoard(Context activity, HardwareCallback callback) {
 		super(callback);
 		activity_ = activity;
 	}

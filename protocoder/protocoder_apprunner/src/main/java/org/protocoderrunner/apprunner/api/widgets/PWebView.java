@@ -29,22 +29,23 @@
 
 package org.protocoderrunner.apprunner.api.widgets;
 
-import java.lang.ref.WeakReference;
-
-import org.protocoderrunner.apprunner.AppRunnerActivity;
-import org.protocoderrunner.apprunner.api.PApp;
-import org.protocoderrunner.views.CustomWebView;
-
+import android.content.Context;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import org.protocoderrunner.apprunner.AppRunnerActivity;
+import org.protocoderrunner.apprunner.api.PApp;
+import org.protocoderrunner.views.CustomWebView;
+
+import java.lang.ref.WeakReference;
+
 public class PWebView extends CustomWebView implements PViewInterface {
 
-	public PWebView(WeakReference<AppRunnerActivity> a) {
-		super(a.get());
+	public PWebView(Context a) {
+		super(a);
 
         this.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 		WebSettings webSettings = this.getSettings();
@@ -74,7 +75,7 @@ public class PWebView extends CustomWebView implements PViewInterface {
 
         WebViewClient webViewClient = new CustomWebViewClient();
         this.setWebViewClient(webViewClient);
-		this.addJavascriptInterface(new PApp(a.get()), "app");
+		this.addJavascriptInterface(new PApp(a), "app");
 
 	}
 

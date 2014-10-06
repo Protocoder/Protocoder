@@ -29,8 +29,6 @@
 
 package org.protocoderrunner.apprunner.api.widgets;
 
-import java.lang.ref.WeakReference;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +39,8 @@ import android.widget.TextView;
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.ProtocoderScript;
+
+import java.lang.ref.WeakReference;
 
 public class PListItem extends LinearLayout {
 

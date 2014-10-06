@@ -35,14 +35,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ComposePathEffect;
 import android.graphics.ComposeShader;
 import android.graphics.DashPathEffect;
 import android.graphics.LinearGradient;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.PathDashPathEffect;
 import android.graphics.PathEffect;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -61,11 +58,9 @@ import org.protocoderrunner.utils.Image;
 import org.protocoderrunner.utils.MLog;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Queue;
 import java.util.Vector;
 
-import static android.graphics.Shader.*;
+import static android.graphics.Shader.TileMode;
 
 
 public class PCanvasView extends View implements PViewInterface {
@@ -108,8 +103,6 @@ public class PCanvasView extends View implements PViewInterface {
 
     private final Context context;
     private PUtil.Looper loop;
-    private int mWidth;
-    private int mHeight;
     private Paint mPaintFill;
     private Paint mPaintStroke;
     private Paint mPaintBackground;
@@ -118,6 +111,7 @@ public class PCanvasView extends View implements PViewInterface {
     private boolean mModeCorner = MODE_CORNER;
     private boolean strokeOn = false;
     private boolean fillOn = true;
+    private boolean init = false;
 
 
     public interface PCanvasInterfaceDraw {
@@ -131,22 +125,15 @@ public class PCanvasView extends View implements PViewInterface {
     private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Canvas mCanvas;
     private Bitmap mCurrentBmp;
-    private final Vector<Layer> mLayerFifo;
+    private Vector<Layer> mLayerFifo;
     private PCanvasInterfaceDraw pCanvasInterfaceDraw;
     private PCanvasInterfaceTouch pCanvasInterfaceTouch;
     private int currentLayer = -1;
 
 
-    //on create
-    public PCanvasView(Context context, int w, int h, PCanvasInterfaceDraw pCanvasInterfaceDraw, PCanvasInterfaceTouch pCanvasInterfaceTouch) {
-        super(context);
-        this.context = context;
+    public void init() {
+        MLog.d(TAG, "eieiieieieieieiei " + currentLayer);
         WhatIsRunning.getInstance().add(this);
-        this.pCanvasInterfaceDraw = pCanvasInterfaceDraw;
-        this.pCanvasInterfaceTouch = pCanvasInterfaceTouch;
-
-        mWidth = w;
-        mHeight = h;
 
         mLayerFifo = new Vector<Layer>();
 
@@ -166,8 +153,12 @@ public class PCanvasView extends View implements PViewInterface {
         mPaintBackground = new Paint();
     }
 
-    public PCanvasView(Context context, int w, int h) {
-        this(context, w, h, null, null);
+
+    public PCanvasView(Context context) {
+        super(context);
+        this.context = context;
+
+        init();
     }
 
     //on draw
@@ -238,13 +229,20 @@ public class PCanvasView extends View implements PViewInterface {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
+
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        mWidth = w;
-        mHeight = h;
+
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+
+        //init();
     }
 
     @Override
@@ -263,7 +261,7 @@ public class PCanvasView extends View implements PViewInterface {
     public PCanvasView background(int r, int g, int b, int alpha) {
         mPaintBackground.setStyle(Paint.Style.FILL);
         mPaintBackground.setARGB(alpha, r, g, b);
-        mCanvas.drawRect(0, 0, mWidth, mHeight, mPaintBackground);
+        mCanvas.drawRect(0, 0, getWidth(), getHeight(), mPaintBackground);
         refresh();
 
         return this;
@@ -655,7 +653,7 @@ public class PCanvasView extends View implements PViewInterface {
 
     private Layer createNewLayer() {
         Bitmap.Config conf = Bitmap.Config.ARGB_8888;
-        Bitmap _bmp = Bitmap.createBitmap(mWidth, mHeight, conf);
+        Bitmap _bmp = Bitmap.createBitmap(getWidth(), getHeight(), conf);
         Layer layer = new Layer(_bmp);
 
         return layer;

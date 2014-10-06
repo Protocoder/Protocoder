@@ -29,8 +29,10 @@
 
 package org.protocoderrunner.media;
 
-import java.io.File;
-import java.io.IOException;
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
 
 import org.protocoderrunner.R;
 import org.protocoderrunner.apprunner.AppRunnerActivity;
@@ -41,10 +43,8 @@ import org.puredata.android.service.PdService;
 import org.puredata.core.PdBase;
 import org.puredata.core.utils.IoUtils;
 
-import android.content.ComponentName;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.IBinder;
+import java.io.File;
+import java.io.IOException;
 
 public class AudioService {
 

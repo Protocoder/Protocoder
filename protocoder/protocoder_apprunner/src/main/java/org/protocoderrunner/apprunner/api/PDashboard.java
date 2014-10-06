@@ -42,9 +42,9 @@ import org.protocoderrunner.apprunner.api.dashboard.PDashboardButton;
 import org.protocoderrunner.apprunner.api.dashboard.PDashboardHTML;
 import org.protocoderrunner.apprunner.api.dashboard.PDashboardImage;
 import org.protocoderrunner.apprunner.api.dashboard.PDashboardInput;
-import org.protocoderrunner.apprunner.api.dashboard.PDashboardText;
 import org.protocoderrunner.apprunner.api.dashboard.PDashboardPlot;
 import org.protocoderrunner.apprunner.api.dashboard.PDashboardSlider;
+import org.protocoderrunner.apprunner.api.dashboard.PDashboardText;
 import org.protocoderrunner.apprunner.api.dashboard.PDashboardVideoCamera;
 import org.protocoderrunner.network.CustomWebsocketServer;
 

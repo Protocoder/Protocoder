@@ -29,18 +29,6 @@
 
 package org.protocoder;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
-import org.protocoder.fragments.PreferencesFragment;
-import org.protocoderrunner.base.BaseActivity;
-import org.protocoderrunner.base.BaseMainApp;
-import org.protocoderrunner.project.ProjectManager;
-import org.protocoderrunner.project.ProjectManager.InstallListener;
-import org.protocoderrunner.utils.MLog;
-import org.protocoderrunner.utils.StrUtils;
-
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.ProgressDialog;
@@ -50,6 +38,17 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+
+import org.protocoder.fragments.PreferencesFragment;
+import org.protocoderrunner.base.BaseActivity;
+import org.protocoderrunner.project.ProjectManager;
+import org.protocoderrunner.project.ProjectManager.InstallListener;
+import org.protocoderrunner.utils.MLog;
+import org.protocoderrunner.utils.StrUtils;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 @SuppressLint("NewApi")
 public class WelcomeActivity extends BaseActivity {

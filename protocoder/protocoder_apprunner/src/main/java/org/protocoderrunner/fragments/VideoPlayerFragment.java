@@ -29,10 +29,6 @@
 
 package org.protocoderrunner.fragments;
 
-import java.util.Vector;
-
-import org.protocoderrunner.utils.MLog;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.media.MediaPlayer;
@@ -43,6 +39,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.MediaController;
 import android.widget.VideoView;
+
+import org.protocoderrunner.utils.MLog;
+
+import java.util.Vector;
 
 @SuppressLint("NewApi")
 public class VideoPlayerFragment extends VideoView {

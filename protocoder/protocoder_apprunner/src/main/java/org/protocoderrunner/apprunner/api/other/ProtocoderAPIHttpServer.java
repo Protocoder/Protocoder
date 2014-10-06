@@ -29,12 +29,7 @@
 
 package org.protocoderrunner.apprunner.api.other;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.ref.WeakReference;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import android.content.Context;
 
 import org.json.JSONObject;
 import org.protocoderrunner.apidoc.annotation.APIMethod;
@@ -47,7 +42,12 @@ import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.FileIO;
 import org.protocoderrunner.utils.MLog;
 
-import android.content.Context;
+import java.io.File;
+import java.io.IOException;
+import java.lang.ref.WeakReference;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * An example of subclassing NanoHTTPD to make a custom HTTP server.

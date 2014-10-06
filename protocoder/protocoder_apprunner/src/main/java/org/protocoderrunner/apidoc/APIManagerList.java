@@ -29,13 +29,13 @@
 
 package org.protocoderrunner.apidoc;
 
+import org.protocoderrunner.utils.MLog;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Vector;
-
-import org.protocoderrunner.utils.MLog;
 
 public class APIManagerList {
 

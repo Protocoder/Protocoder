@@ -1,9 +1,5 @@
 package org.protocoderrunner.sensors;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.Locale;
-
 import android.content.Context;
 import android.nfc.FormatException;
 import android.nfc.NdefMessage;
@@ -12,6 +8,10 @@ import android.nfc.Tag;
 import android.nfc.TagLostException;
 import android.nfc.tech.Ndef;
 import android.nfc.tech.NdefFormatable;
+
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.Locale;
 
 public class NFCUtil {
 

@@ -29,18 +29,17 @@
 
 package org.protocoderrunner.apprunner.api.dashboard;
 
-import java.net.UnknownHostException;
+import android.app.Activity;
+import android.content.Context;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.network.CustomWebsocketServer;
 import org.protocoderrunner.network.CustomWebsocketServer.WebSocketListener;
 import org.protocoderrunner.utils.StrUtils;
 
-import android.app.Activity;
+import java.net.UnknownHostException;
 
 public class PDashboardButton extends PInterface {
 
@@ -48,7 +47,7 @@ public class PDashboardButton extends PInterface {
 	String id;
 	String name;
 
-	public PDashboardButton(Activity a) {
+	public PDashboardButton(Context a) {
 		super(a);
 	}
 

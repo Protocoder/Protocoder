@@ -37,7 +37,7 @@ import java.util.Vector;
 
 public class ProjectsPagerAdapter extends FragmentStatePagerAdapter {
 
-	private Vector<ListFragmentBase> fragments;
+	private Vector<ProjectListFragment> fragments;
 
 	public ProjectsPagerAdapter(FragmentManager fm) {
 		super(fm);
@@ -47,7 +47,7 @@ public class ProjectsPagerAdapter extends FragmentStatePagerAdapter {
 
 	@Override
 	public Fragment getItem(int i) {
-		ListFragmentBase f = fragments.get(i);
+		ProjectListFragment f = fragments.get(i);
 
 		return f;
 	}
@@ -62,7 +62,7 @@ public class ProjectsPagerAdapter extends FragmentStatePagerAdapter {
 		return fragments.get(position).projectFolder;
 	}
 
-    public void addFragment(ListFragmentBase f) {
+    public void addFragment(ProjectListFragment f) {
         fragments.add(f);
     }
 

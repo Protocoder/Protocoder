@@ -29,7 +29,8 @@
 
 package org.protocoderrunner.apprunner.api.dashboard;
 
-import java.net.UnknownHostException;
+import android.app.Activity;
+import android.content.Context;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,17 +39,16 @@ import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.network.CustomWebsocketServer;
-import org.protocoderrunner.utils.MLog;
 import org.protocoderrunner.utils.StrUtils;
 
-import android.app.Activity;
+import java.net.UnknownHostException;
 
 public class PDashboardImage extends PInterface {
 
 	private static final String TAG = "PDashboardImage";
 	String id;
 
-	public PDashboardImage(Activity a) {
+	public PDashboardImage(Context a) {
 		super(a);
 	}
 

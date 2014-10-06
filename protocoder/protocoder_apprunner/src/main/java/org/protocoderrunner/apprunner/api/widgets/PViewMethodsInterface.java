@@ -1,10 +1,7 @@
 package org.protocoderrunner.apprunner.api.widgets;
 
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.View;
-
-import processing.core.PFont;
 
 /**
  * Created by victormanueldiazbarrales on 25/07/14.

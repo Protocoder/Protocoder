@@ -29,12 +29,12 @@
 
 package org.protocoderrunner.sensors;
 
-import java.util.Vector;
-
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+
+import java.util.Vector;
 
 public class CustomSensorManager {
 

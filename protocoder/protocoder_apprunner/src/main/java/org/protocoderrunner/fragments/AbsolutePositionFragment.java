@@ -29,9 +29,6 @@
 
 package org.protocoderrunner.fragments;
 
-import org.protocoderrunner.R;
-import org.protocoderrunner.base.BaseFragment;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -41,6 +38,9 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+
+import org.protocoderrunner.R;
+import org.protocoderrunner.base.BaseFragment;
 
 public class AbsolutePositionFragment extends BaseFragment {
 

@@ -29,7 +29,8 @@
 
 package org.protocoderrunner.apprunner.api.other;
 
-import java.io.File;
+import android.app.Activity;
+import android.content.Context;
 
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
@@ -38,15 +39,15 @@ import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.apprunner.api.widgets.PViewInterface;
 import org.protocoderrunner.fragments.CustomVideoTextureView;
 
-import android.app.Activity;
+import java.io.File;
 
 public class PVideo extends CustomVideoTextureView implements PViewInterface {
 
-	protected Activity a;
+	protected Context c;
 
-	public PVideo(Activity a) {
-		super(a);
-		this.a = a;
+	public PVideo(Context c) {
+		super(c);
+		this.c = c;
 	}
 
 	@Override

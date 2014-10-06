@@ -81,7 +81,7 @@ public class PSensors extends PInterface {
 
 		sensorsSpeed = SensorManager.SENSOR_DELAY_FASTEST;
 
-		a.get().addNFCReadListener(new onNFCListener() {
+		appRunnerActivity.get().addNFCReadListener(new onNFCListener() {
 			@Override
 			public void onNewTag(String id, String data) {
 				onNFCfn.event(id, data);
@@ -273,7 +273,7 @@ public class PSensors extends PInterface {
 	@APIMethod(description = "Gives back data when a NFC tag is approached", example = "")
 	@APIParam(params = { "function(id, data)" })
 	public void onNFC(final onNFCCB fn) {
-		a.get().initializeNFC();
+		appRunnerActivity.get().initializeNFC();
 
 		onNFCfn = fn;
 	}
@@ -288,9 +288,9 @@ public class PSensors extends PInterface {
 	@APIParam(params = { "function()" })
 	public void writeNFC(String data, final writeNFCCB fn) {
 		NFCUtil.nfcMsg = data;
-		a.get().initializeNFC();
+		appRunnerActivity.get().initializeNFC();
 
-		a.get().addNFCWrittenListener(new onNFCWrittenListener() {
+		appRunnerActivity.get().addNFCWrittenListener(new onNFCWrittenListener() {
 
 			@Override
 			public void onNewTag() {

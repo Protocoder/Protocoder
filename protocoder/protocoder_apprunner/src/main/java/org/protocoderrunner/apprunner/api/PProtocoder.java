@@ -29,10 +29,21 @@
 
 package org.protocoderrunner.apprunner.api;
 
-import java.io.FileOutputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Environment;
+import android.preference.PreferenceManager;
+import android.util.Log;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
@@ -53,21 +64,10 @@ import org.protocoderrunner.project.Project;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.MLog;
 
-import android.app.Activity;
-import android.content.ComponentName;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.pm.ResolveInfo;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Environment;
-import android.preference.PreferenceManager;
-import android.util.Log;
+import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /*
  * This class only contains methods used during app creation. These methods shouldnt be used
@@ -106,8 +106,6 @@ public class PProtocoder extends PInterface {
     @APIMethod(description = "Returns an object to manipulate the device app webIDE", example = "")
     @APIParam(params = { })
     public PWebEditor webEditor() {
-        a.get().initLayout();
-
         PWebEditor pWebEditor = new PWebEditor(a.get());
 
         return pWebEditor;
@@ -118,7 +116,7 @@ public class PProtocoder extends PInterface {
     @APIMethod(description = "Returns an object to manipulate the device app", example = "")
     @APIParam(params = { })
     public PDeviceEditor deviceEditor() {
-        a.get().initLayout();
+        appRunnerActivity.get().initLayout();
 
         PDeviceEditor pEditor = new PDeviceEditor(a.get());
 
@@ -139,7 +137,7 @@ public class PProtocoder extends PInterface {
 
 		// a.get().startActivity(intent);
 		// String code = StrUtils.generateRandomString();
-		a.get().startActivityForResult(intent, 22);
+		appRunnerActivity.get().startActivityForResult(intent, 22);
 	}
 
     //TODO this is a place holder
@@ -150,8 +148,8 @@ public class PProtocoder extends PInterface {
 	public void returnValueToScript(String returnValue) {
 		Intent output = new Intent();
 		output.putExtra("return", returnValue);
-		a.get().setResult(22, output);
-		a.get().finish();
+		appRunnerActivity.get().setResult(22, output);
+		appRunnerActivity.get().finish();
 	}
 
 
@@ -163,8 +161,8 @@ public class PProtocoder extends PInterface {
         conData.putString("param_result", data);
         Intent intent = new Intent();
         intent.putExtras(conData);
-        a.get().setResult(a.get().RESULT_OK, intent);
-        a.get().finish();
+        appRunnerActivity.get().setResult(appRunnerActivity.get().RESULT_OK, intent);
+        appRunnerActivity.get().finish();
 
     }
 
@@ -195,7 +193,7 @@ public class PProtocoder extends PInterface {
             }
         };
 
-        a.get().interp.addDebugger(debugger);
+        appRunnerActivity.get().interp.addDebugger(debugger);
 
 
     }

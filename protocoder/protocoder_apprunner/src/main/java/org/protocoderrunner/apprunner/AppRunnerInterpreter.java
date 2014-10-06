@@ -29,8 +29,8 @@
 
 package org.protocoderrunner.apprunner;
 
-import java.util.HashMap;
-import java.util.concurrent.atomic.AtomicReference;
+import android.app.Activity;
+import android.util.Log;
 
 import org.mozilla.javascript.Callable;
 import org.mozilla.javascript.Context;
@@ -42,22 +42,9 @@ import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.commonjs.module.Require;
 import org.mozilla.javascript.debug.Debugger;
-import org.protocoderrunner.apprunner.api.PApp;
-import org.protocoderrunner.apprunner.api.PBoards;
-import org.protocoderrunner.apprunner.api.PConsole;
-import org.protocoderrunner.apprunner.api.PDashboard;
-import org.protocoderrunner.apprunner.api.PDevice;
-import org.protocoderrunner.apprunner.api.PFileIO;
-import org.protocoderrunner.apprunner.api.PMedia;
-import org.protocoderrunner.apprunner.api.PNetwork;
-import org.protocoderrunner.apprunner.api.PProtocoder;
-import org.protocoderrunner.apprunner.api.PSensors;
-import org.protocoderrunner.apprunner.api.PUI;
-import org.protocoderrunner.apprunner.api.PUtil;
 import org.protocoderrunner.utils.MLog;
 
-import android.app.Activity;
-import android.util.Log;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Original sourcecode from Droid Script :

@@ -29,31 +29,14 @@
 
 package org.protocoder.projectlist;
 
-import java.io.File;
-import java.util.ArrayList;
-
-import org.protocoder.MainActivity;
-import org.protocoder.fragments.PreferencesFragment;
-import org.protocoder.R;
-import org.protocoderrunner.apprunner.AppRunnerActivity;
-import org.protocoderrunner.base.BaseFragment;
-import org.protocoderrunner.events.Events.ProjectEvent;
-import org.protocoderrunner.project.Project;
-import org.protocoderrunner.project.ProjectManager;
-import org.protocoder.fragments.EditorFragment;
-import org.protocoderrunner.utils.MLog;
-
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.Intent.ShortcutIconResource;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -63,26 +46,43 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.CycleInterpolator;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
-import android.widget.Toast;
+
+import org.protocoder.R;
+import org.protocoder.appApi.Protocoder;
+import org.protocoder.fragments.PreferencesFragment;
+import org.protocoderrunner.base.BaseFragment;
+import org.protocoderrunner.events.Events.ProjectEvent;
+import org.protocoderrunner.project.Project;
+import org.protocoderrunner.project.ProjectManager;
+import org.protocoderrunner.utils.MLog;
+
+import java.util.ArrayList;
+
 import de.greenrobot.event.EventBus;
 
 @SuppressLint("NewApi")
-public class ListFragmentBase extends BaseFragment {
+public class ProjectListFragment extends BaseFragment {
 
-	public ArrayList<Project> projects;
-	protected ProjectAdapter projectAdapter;
+    private String TAG = "ProjectListFragment";
+
+    public ArrayList<Project> projects;
+	protected ProjectItemAdapter projectAdapter;
 	protected GridView gridView;
 	public String projectFolder;
 	boolean listMode;
-    public ShortcutIconResource icon;
     public int color;
     public boolean orderByName;
+    public int num = 0;
+    public static int totalNum = 0;
+    public Intent.ShortcutIconResource icon;
 
-    public ListFragmentBase() {
+    public ProjectListFragment() {
+        num = totalNum++;
 	}
 
 	@Override
@@ -156,7 +156,7 @@ public class ListFragmentBase extends BaseFragment {
 	public void refreshProjects() {
 		projects = ProjectManager.getInstance().list(projectFolder, orderByName);
 
-		projectAdapter = new ProjectAdapter(getActivity(), projectFolder, projects, listMode);
+		projectAdapter = new ProjectItemAdapter(getActivity(), projectFolder, projects, listMode);
 		gridView.setAdapter(projectAdapter);
 		notifyAddedProject();
 	}
@@ -170,6 +170,47 @@ public class ListFragmentBase extends BaseFragment {
 		projectAdapter.notifyDataSetChanged();
 		gridView.invalidateViews();
 	}
+
+
+    public int findAppIdByName(String appName) {
+        int id = -1;
+
+        for (int i = 0; i < projects.size(); i++) {
+            String name = projects.get(i).getName();
+            if (name.equals(appName)) {
+                id = i;
+                break;
+            }
+        }
+
+        return id;
+    }
+    public int findAppPosByName(String appName) {
+        int pos = -1;
+
+        for (int i = 0; i < projects.size(); i++) {
+            String name = projects.get(i).getName();
+            if (name.equals(appName)) {
+                pos = (int) projectAdapter.getItemId(i);
+                break;
+            }
+        }
+
+        return pos;
+    }
+
+    public void goTo(int pos) {
+        if (pos != -1) gridView.smoothScrollToPosition(pos);
+    }
+
+    public void highlight(String projectName, boolean b) {
+
+        View v = gridView.findViewWithTag(projectName);
+        v.setSelected(b);
+        projectAdapter.projects.get(findAppIdByName(projectName)).selected = true;
+        //v.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
+
+    }
 
 	public void clear() {
 		gridView.removeAllViews();
@@ -215,22 +256,15 @@ public class ListFragmentBase extends BaseFragment {
 
 		int itemId = item.getItemId();
 		if (itemId == R.id.menu_project_list_run) {
-			ProjectEvent evt = new ProjectEvent(project, "run");
-			EventBus.getDefault().post(evt);
-			getActivity().overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
+            Protocoder.getInstance(getActivity()).protoScripts.run(project.getFolder(), project.getName());
 			return true;
 		} else if (itemId == R.id.menu_project_list_edit) {
-			EditorFragment editorFragment = new EditorFragment();
-			Bundle bundle = new Bundle();
-			bundle.putString(Project.NAME, project.getName());
-			bundle.putString(Project.URL, project.getStoragePath());
-			bundle.putString(Project.FOLDER, project.getFolder());
-
-			editorFragment.setArguments(bundle);
-			((MainActivity) getActivity()).addFragment(editorFragment, R.id.fragmentEditor, "editorFragment", true);
+            Protocoder.getInstance(getActivity()).app.editor.show(true, project);
 			return true;
 		} else if (itemId == R.id.menu_project_list_delete) {
-			DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            Protocoder.getInstance(getActivity()).protoScripts.delete(project.getFolder(), project.getName());
+
+            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					switch (which) {
@@ -250,54 +284,13 @@ public class ListFragmentBase extends BaseFragment {
 					.setNegativeButton("No", dialogClickListener).show();
 			return true;
 		} else if (itemId == R.id.menu_project_list_add_shortcut) {
-			try {
-
-				Intent shortcutIntent = new Intent(getActivity(), AppRunnerActivity.class);
-				shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-				String script = ProjectManager.getInstance().getCode(project);
-				shortcutIntent.putExtra(Project.NAME, project.getName());
-				shortcutIntent.putExtra(Project.FOLDER, project.getFolder());
-
-				final Intent putShortCutIntent = new Intent();
-
-				putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
-				putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, project.getName());
-				putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);
-				putShortCutIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
-				getActivity().sendBroadcast(putShortCutIntent);
-			} catch (Exception e) {
-				// TODO
-			}
-			// Show toast
-			Toast.makeText(getActivity(), "Adding shortcut for " + project.getName(), Toast.LENGTH_SHORT).show();
+		    Protocoder.getInstance(getActivity()).protoScripts.addShortcut(project.getFolder(), project.getName());
 			return true;
 		} else if (itemId == R.id.menu_project_list_share_with) {
-			Intent sendIntent = new Intent();
-			sendIntent.setAction(Intent.ACTION_SEND);
-			sendIntent.putExtra(Intent.EXTRA_TEXT, ProjectManager.getInstance().getCode(project));
-			sendIntent.setType("text/plain");
-			startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
-			return true;
+            Protocoder.getInstance(getActivity()).protoScripts.shareMainJsDialog(project.getFolder(), project.getName());
+            return true;
         } else if (itemId == R.id.menu_project_list_share_proto_file) {
-
-            final ProgressDialog progress = new ProgressDialog(getActivity());
-            progress.setTitle("Exporting .proto");
-            progress.setMessage("Your project will be ready soon!");
-            progress.setCancelable(true);
-            progress.setCanceledOnTouchOutside(false);
-            progress.show();
-
-            String zipFilePath = ProjectManager.getInstance().createBackup(project);
-            Intent shareIntent = new Intent();
-            shareIntent.setAction(Intent.ACTION_SEND);
-            shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(zipFilePath)));
-            shareIntent.setType("application/zip");
-
-            progress.dismiss();
-
-            startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.share_proto_file)));
+            Protocoder.getInstance(getActivity()).protoScripts.shareProtoFileDialog(project.getFolder(), project.getName());
 			return true;
 		} else {
 			return super.onContextItemSelected(item);
@@ -328,7 +321,7 @@ public class ListFragmentBase extends BaseFragment {
 
 	public void projectRefresh(String projectName) {
 		View v = gridView.findViewWithTag(projectName);
-        v.animate().alpha(0).setDuration(500);
+        v.animate().alpha(0).setDuration(500).setInterpolator(new CycleInterpolator(1));
 	}
 
 	public void onEventMainThread(ProjectEvent evt) {

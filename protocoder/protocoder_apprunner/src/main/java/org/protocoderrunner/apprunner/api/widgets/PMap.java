@@ -29,7 +29,10 @@
 
 package org.protocoderrunner.apprunner.api.widgets;
 
-import java.util.ArrayList;
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 import org.osmdroid.DefaultResourceProxyImpl;
 import org.osmdroid.api.IMapController;
@@ -54,10 +57,7 @@ import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.utils.MLog;
 
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.util.Log;
+import java.util.ArrayList;
 
 public class PMap extends MapView {
 

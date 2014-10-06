@@ -29,6 +29,8 @@
 
 package org.protocoderrunner.network;
 
+import org.protocoderrunner.utils.MLog;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -36,8 +38,6 @@ import java.net.SocketAddress;
 import java.net.UnknownHostException;
 import java.nio.channels.DatagramChannel;
 import java.util.Vector;
-
-import org.protocoderrunner.utils.MLog;
 
 import de.sciss.net.OSCListener;
 import de.sciss.net.OSCMessage;

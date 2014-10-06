@@ -29,24 +29,24 @@
 
 package org.protocoderrunner.utils;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.os.Build;
+import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+
+import org.protocoderrunner.AppSettings;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-
-import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.Path;
-import android.graphics.Rect;
-import android.os.Build;
-import android.util.DisplayMetrics;
-import android.view.MotionEvent;
-import android.view.View;
-
-import org.protocoderrunner.AppSettings;
-import org.protocoderrunner.apprunner.logger.L;
 
 public class AndroidUtils {
 
@@ -236,6 +236,19 @@ public class AndroidUtils {
         return (startA + (int) (fraction * (endA - startA))) << 24
                 | (startR + (int) (fraction * (endR - startR))) << 16
                 | (startG + (int) (fraction * (endG - startG))) << 8 | ((startB + (int) (fraction * (endB - startB))));
+    }
+
+    public static void debugIntent(String tag, Intent intent) {
+        MLog.v(tag, "action: " + intent.getAction());
+        MLog.v(tag, "component: " + intent.getComponent());
+        Bundle extras = intent.getExtras();
+        if (extras != null) {
+            for (String key : extras.keySet()) {
+                MLog.v(tag, "key [" + key + "]: " + extras.get(key));
+            }
+        } else {
+            MLog.v(tag, "no extras");
+        }
     }
 
 }

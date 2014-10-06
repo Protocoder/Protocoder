@@ -29,12 +29,6 @@
 
 package org.protocoderrunner.base;
 
-import java.util.ArrayList;
-
-import org.protocoderrunner.AppSettings;
-import org.protocoderrunner.media.Audio;
-import org.protocoderrunner.utils.MLog;
-
 import android.R;
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
@@ -58,6 +52,12 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+
+import org.protocoderrunner.AppSettings;
+import org.protocoderrunner.media.Audio;
+import org.protocoderrunner.utils.MLog;
+
+import java.util.ArrayList;
 
 @SuppressLint("NewApi")
 public class BaseActivity extends FragmentActivity {

@@ -35,7 +35,6 @@ import android.graphics.Typeface;
 import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Gravity;
-import android.view.View;
 import android.widget.TextView;
 
 import org.protocoderrunner.apidoc.annotation.APIMethod;

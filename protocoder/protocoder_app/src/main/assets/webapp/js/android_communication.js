@@ -289,17 +289,13 @@ Communication.prototype.initWebsockets = function () {
 
     if (result.type == "console") { 
       if (result.action == "log") { 
-	       var log = result.values.val;
-
-
 	       //limit to 1000 the num of log entries that can be displayed 
 	       if (self.countLogs > 1000) { 
 				$("#console_wrapper #console p").slice(0, 100).remove(); 
 				self.countLogs -= 100;
 			}
 
-
-	       $("#console_wrapper #console").append('<p>' + log + '</p>');        
+	       $("#console_wrapper #console").append('<p>' + result.values.val + '</p>');        
 	       var c = $("#console_wrapper #console")[0];
 	       c.scrollTop = c.scrollHeight;
 
@@ -307,6 +303,14 @@ Communication.prototype.initWebsockets = function () {
        } else if (result.action == "clear") { 
        		$("#console_wrapper #console").empty();
        		self.countLogs = 0;
+       } else if (result.action == "backgroundColor") {
+
+       } else if (result.action == "textColor") {
+
+       } else if (result.action == "textSize") {
+
+       } else if (result.action == "show") {
+       		protocoder.ui.showConsole(result.values.val);
        }
     }
 

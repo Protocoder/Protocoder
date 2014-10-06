@@ -30,6 +30,7 @@
 package org.protocoderrunner.apprunner.api.other;
 
 import android.app.Activity;
+import android.content.Context;
 
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
@@ -39,7 +40,7 @@ import org.protocoderrunner.apprunner.ProtocoderScript;
 
 public class PDeviceEditor extends PInterface {
 
-	public PDeviceEditor(Activity a) {
+	public PDeviceEditor(Context a) {
 		super(a);
 
 	}

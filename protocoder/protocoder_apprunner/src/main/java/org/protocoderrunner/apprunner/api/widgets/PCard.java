@@ -29,11 +29,6 @@
 
 package org.protocoderrunner.apprunner.api.widgets;
 
-import org.protocoderrunner.R;
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
-import org.protocoderrunner.apprunner.ProtocoderScript;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.view.Gravity;
@@ -41,6 +36,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import org.protocoderrunner.R;
+import org.protocoderrunner.apidoc.annotation.APIMethod;
+import org.protocoderrunner.apidoc.annotation.APIParam;
+import org.protocoderrunner.apprunner.ProtocoderScript;
 
 public class PCard extends LinearLayout implements PViewInterface {
 

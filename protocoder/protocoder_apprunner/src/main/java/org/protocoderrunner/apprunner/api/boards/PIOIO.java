@@ -30,6 +30,7 @@
 package org.protocoderrunner.apprunner.api.boards;
 
 import android.app.Activity;
+import android.content.Context;
 
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
@@ -56,7 +57,7 @@ public class PIOIO extends PInterface implements HardwareCallback {
 	private IOIO mIoio;
 	private startCB mIoioCallbackfn;
 
-	public PIOIO(Activity a) {
+	public PIOIO(Context a) {
 		super(a);
 	}
 
@@ -176,7 +177,7 @@ public class PIOIO extends PInterface implements HardwareCallback {
 
 	@Override
 	public void onComplete() {
-		this.a.get().finish();
+		this.appRunnerActivity.get().finish();
 	}
 
 }

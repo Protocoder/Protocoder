@@ -29,15 +29,6 @@
 
 package org.protocoder.fragments;
 
-import java.io.File;
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-
-import org.protocoder.R;
-import org.protocoderrunner.base.BaseFragment;
-import org.protocoderrunner.project.Project;
-import org.protocoderrunner.project.ProjectManager;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -64,6 +55,15 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.protocoder.R;
+import org.protocoderrunner.base.BaseFragment;
+import org.protocoderrunner.project.Project;
+import org.protocoderrunner.project.ProjectManager;
+
+import java.io.File;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 @SuppressLint("NewApi")
 public class FileManagerFragment extends BaseFragment {

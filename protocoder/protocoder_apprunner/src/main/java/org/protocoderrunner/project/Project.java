@@ -29,10 +29,6 @@
 
 package org.protocoderrunner.project;
 
-import java.io.File;
-
-import org.protocoderrunner.base.BaseMainApp;
-
 public class Project {
 
 	//public final static String TYPE = "projectType";
@@ -46,8 +42,9 @@ public class Project {
     public String folder;
 	public boolean containsReadme = false;
 	public boolean containsTutorial = false;
+    public boolean selected = false;
 
-	public Project(String folder, String projectName, boolean containsReadme, boolean containsTutorial) {
+    public Project(String folder, String projectName, boolean containsReadme, boolean containsTutorial) {
 		this.folder = folder;
         this.name = projectName;
 		this.containsReadme = containsReadme;

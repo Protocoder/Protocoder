@@ -29,15 +29,6 @@
 
 package org.protocoderrunner.views;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.List;
-import java.util.Vector;
-
-import org.protocoderrunner.utils.MLog;
-
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -55,6 +46,15 @@ import android.media.MediaRecorder;
 import android.os.Build;
 import android.view.TextureView;
 import android.view.View;
+
+import org.protocoderrunner.utils.MLog;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.List;
+import java.util.Vector;
 
 @TargetApi(Build.VERSION_CODES.GINGERBREAD)
 @SuppressLint("NewApi")

@@ -28,16 +28,43 @@
  */
 package org.protocoder.appApi;
 
+import android.os.Bundle;
+
+import org.protocoder.R;
+import org.protocoder.fragments.EditorFragment;
+import org.protocoderrunner.project.Project;
+
 public class Editor {
 
     Protocoder protocoder;
+    private EditorFragment editorFragment;
 
     Editor(Protocoder protocoder) {
         this.protocoder = protocoder;
     }
 
-    public void show(boolean b) {
+    public void show(boolean show, Project project) {
+        //protocoder.app.highlight(null);
+        //protocoder.app.shake();
+        //protocoder.protoScripts.goTo("examples");
+        //protocoder.protoScripts.goTo("examples", "Video");
+        //protocoder.protoScripts.highlight("examples", "Video");
 
+        if (show) {
+            editorFragment = new EditorFragment();
+            if (project != null) {
+                Bundle bundle = new Bundle();
+                bundle.putString(Project.NAME, project.getName());
+                bundle.putString(Project.URL, project.getStoragePath());
+                bundle.putString(Project.FOLDER, project.getFolder());
+
+                editorFragment.setArguments(bundle);
+            }
+            protocoder.a.addFragment(editorFragment, R.id.fragmentEditor, "editorFragment", true);
+        } else {
+            protocoder.a.removeFragment(editorFragment);
+            editorFragment = null;
+        }
     }
 
     public void openTab(String fileName) {
@@ -49,4 +76,6 @@ public class Editor {
     public void closeAllTabs() {
 
     }
+
+
 }

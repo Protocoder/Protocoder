@@ -29,10 +29,6 @@
 
 package org.protocoderrunner.utils;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -42,6 +38,10 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.provider.MediaStore;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Intents {
 

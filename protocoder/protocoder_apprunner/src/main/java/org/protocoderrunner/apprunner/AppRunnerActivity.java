@@ -28,39 +28,6 @@
 
 package org.protocoderrunner.apprunner;
 
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.protocoderrunner.AppSettings;
-import org.protocoderrunner.R;
-
-import org.protocoderrunner.apprunner.api.PApp;
-import org.protocoderrunner.apprunner.api.PBoards;
-import org.protocoderrunner.apprunner.api.PConsole;
-import org.protocoderrunner.apprunner.api.PDashboard;
-import org.protocoderrunner.apprunner.api.PDevice;
-import org.protocoderrunner.apprunner.api.PFileIO;
-import org.protocoderrunner.apprunner.api.PMedia;
-import org.protocoderrunner.apprunner.api.PNetwork;
-import org.protocoderrunner.apprunner.api.PProtocoder;
-import org.protocoderrunner.apprunner.api.PSensors;
-import org.protocoderrunner.apprunner.api.PUI;
-import org.protocoderrunner.apprunner.api.PUtil;
-import org.protocoderrunner.apprunner.api.other.PProtocoderLiveCodingFeedback;
-import org.protocoderrunner.base.BaseActivity;
-import org.protocoderrunner.events.Events;
-import org.protocoderrunner.project.Project;
-import org.protocoderrunner.project.ProjectManager;
-import org.protocoderrunner.network.CustomWebsocketServer;
-import org.protocoderrunner.network.IDEcommunication;
-import org.protocoderrunner.sensors.NFCUtil;
-import org.protocoderrunner.sensors.WhatIsRunning;
-import org.protocoderrunner.utils.MLog;
-import org.protocoderrunner.utils.StrUtils;
-import org.protocoderrunner.apprunner.api.widgets.PPadView;
-
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.annotation.SuppressLint;
@@ -98,6 +65,38 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.protocoderrunner.AppSettings;
+import org.protocoderrunner.R;
+import org.protocoderrunner.apprunner.api.PApp;
+import org.protocoderrunner.apprunner.api.PBoards;
+import org.protocoderrunner.apprunner.api.PConsole;
+import org.protocoderrunner.apprunner.api.PDashboard;
+import org.protocoderrunner.apprunner.api.PDevice;
+import org.protocoderrunner.apprunner.api.PFileIO;
+import org.protocoderrunner.apprunner.api.PMedia;
+import org.protocoderrunner.apprunner.api.PNetwork;
+import org.protocoderrunner.apprunner.api.PProtocoder;
+import org.protocoderrunner.apprunner.api.PSensors;
+import org.protocoderrunner.apprunner.api.PUI;
+import org.protocoderrunner.apprunner.api.PUtil;
+import org.protocoderrunner.apprunner.api.other.PProtocoderLiveCodingFeedback;
+import org.protocoderrunner.apprunner.api.widgets.PPadView;
+import org.protocoderrunner.base.BaseActivity;
+import org.protocoderrunner.events.Events;
+import org.protocoderrunner.network.CustomWebsocketServer;
+import org.protocoderrunner.network.IDEcommunication;
+import org.protocoderrunner.project.Project;
+import org.protocoderrunner.project.ProjectManager;
+import org.protocoderrunner.sensors.NFCUtil;
+import org.protocoderrunner.sensors.WhatIsRunning;
+import org.protocoderrunner.utils.MLog;
+import org.protocoderrunner.utils.StrUtils;
+
+import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
 
@@ -695,25 +694,32 @@ public class AppRunnerActivity extends BaseActivity {
 			public void onEvent(int event, String file) {
 
 				CustomWebsocketServer ws;
-				try {
-					JSONObject msg = new JSONObject();
-					msg.put("type", "ide");
-					msg.put("action", "new_files_in_project");
-					ws = CustomWebsocketServer.getInstance(getApplicationContext());
-					ws.send(msg);
-				} catch (UnknownHostException e) {
-					e.printStackTrace();
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				if ((FileObserver.CREATE & event) != 0) {
+
+                JSONObject msg = new JSONObject();
+                String action = null;
+
+                if ((FileObserver.CREATE & event) != 0) {
 					MLog.d(TAG, "created " + file);
+                    action = "new_files_in_project";
 
-				} else if ((FileObserver.DELETE & event) != 0) {
+                } else if ((FileObserver.DELETE & event) != 0) {
 					MLog.d(TAG, "deleted file " + file);
-
+                    action = "deleted_files_in_project";
 				}
+
+                try {
+                    msg.put("action", action);
+                    msg.put("type", "ide");
+                    ws = CustomWebsocketServer.getInstance(getApplicationContext());
+                    ws.send(msg);
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+
 			}
 		};
 

@@ -29,19 +29,21 @@
 
 package org.protocoder.appApi;
 
+import android.app.Activity;
+
 import org.protocoderrunner.apprunner.api.PConsole;
 import org.protocoderrunner.apprunner.api.PDashboard;
 
 public class WebEditor {
 
     private final Protocoder protocoder;
-    private final PDashboard dashboard = null;
+    private PDashboard dashboard = null;
     public PConsole console = null;
 
     WebEditor(Protocoder protocoder) {
         this.protocoder = protocoder;
-        //console = new PConsole(Protocoder.a);
-        //dashboard = new PDashboard(Protocoder.a);
+       // console = new PConsole((Activity) Protocoder.a);
+       // dashboard = new PDashboard((Activity) Protocoder.a);
     }
 
     public void open(String folder, String appName) {

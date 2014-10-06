@@ -1,9 +1,6 @@
 package org.protocoderrunner.apprunner.api.widgets;
 
 import android.content.Context;
-import android.view.ViewGroup;
-import android.widget.GridLayout;
-import android.widget.GridView;
 import android.widget.LinearLayout;
 
 import org.mozilla.javascript.NativeArray;

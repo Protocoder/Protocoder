@@ -29,11 +29,9 @@
 package org.protocoder.appApi;
 
 import android.app.Activity;
-import android.content.Context;
 
-import org.protocoder.network.ProtocoderHttpServer;
+import org.protocoder.MainActivity;
 import org.protocoderrunner.apprunner.api.PApp;
-import org.protocoderrunner.apprunner.api.PBoards;
 import org.protocoderrunner.apprunner.api.PConsole;
 import org.protocoderrunner.apprunner.api.PDashboard;
 import org.protocoderrunner.apprunner.api.PDevice;
@@ -44,13 +42,10 @@ import org.protocoderrunner.apprunner.api.PProtocoder;
 import org.protocoderrunner.apprunner.api.PSensors;
 import org.protocoderrunner.apprunner.api.PUI;
 import org.protocoderrunner.apprunner.api.PUtil;
-import org.protocoderrunner.utils.MLog;
-
-import java.io.IOException;
 
 public class Protocoder {
 
-    public static Activity a;
+    public static MainActivity a;
     private static Protocoder instance;
 
     public App app;
@@ -68,7 +63,6 @@ public class Protocoder {
     PSensors pSensors;
     PUI pUi;
     PUtil pUtil;
-
 
     //instantiate the objects that can be accessed from the interpreter
 
@@ -93,7 +87,7 @@ public class Protocoder {
 
 
     public static Protocoder getInstance(Activity activity) {
-        a = activity;
+        a = (MainActivity) activity;
         if (instance == null) {
             instance = new Protocoder();
         }

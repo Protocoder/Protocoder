@@ -34,10 +34,6 @@ package org.protocoderrunner.views;
  * add values to it 
  * 
  */
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Vector;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -50,7 +46,10 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import org.protocoderrunner.utils.AndroidUtils;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Vector;
 
 public class PlotView extends View {
 	private static final String TAG = "PlotView";

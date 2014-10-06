@@ -29,14 +29,14 @@
 
 package org.protocoder;
 
-import org.protocoderrunner.base.BaseActivity;
-import org.protocoderrunner.utils.MLog;
-
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+
+import org.protocoderrunner.base.BaseActivity;
+import org.protocoderrunner.utils.MLog;
 
 @SuppressLint("NewApi")
 public class AboutActivity extends BaseActivity {

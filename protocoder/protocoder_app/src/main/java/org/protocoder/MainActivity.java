@@ -29,17 +29,6 @@
 
 package org.protocoder;
 
-import java.lang.reflect.Field;
-import org.protocoder.appApi.Protocoder;
-import org.protocoder.fragments.PreferencesFragment;
-import org.protocoder.network.ProtocoderHttpServer;
-import org.protocoderrunner.base.BaseActivity;
-import org.protocoderrunner.events.Events.ProjectEvent;
-import org.protocoderrunner.project.Project;
-import org.protocoder.fragments.NewProjectDialogFragment;
-import org.protocoderrunner.network.CustomWebsocketServer;
-import org.protocoderrunner.project.ProjectManager;
-import org.protocoderrunner.utils.MLog;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.BroadcastReceiver;
@@ -50,7 +39,6 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.FileObserver;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -59,7 +47,18 @@ import android.view.MenuItem;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.Toast;
+
+import org.protocoder.appApi.Protocoder;
+import org.protocoder.fragments.PreferencesFragment;
+import org.protocoderrunner.base.BaseActivity;
+import org.protocoderrunner.events.Events.ProjectEvent;
+import org.protocoderrunner.project.Project;
+import org.protocoderrunner.project.ProjectManager;
+import org.protocoderrunner.utils.AndroidUtils;
+import org.protocoderrunner.utils.MLog;
+
+import java.lang.reflect.Field;
+
 import de.greenrobot.event.EventBus;
 
 @SuppressLint("NewApi")
@@ -81,37 +80,12 @@ public class MainActivity extends BaseActivity {
     @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		// TOFIX set action bar overlay
-		// if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-		// requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
-		// }
-
 		setContentView(R.layout.activity_forfragments);
 		c = this;
 
 		// Create the action bar programmatically
 		ActionBar actionBar = getActionBar();
 		actionBar.setHomeButtonEnabled(true);
-		// actionBar.setIcon(R.drawable.icon);
-		// getWindow().setBackgroundDrawable(new
-		// ColorDrawable(android.graphics.Color.TRANSPARENT));
-		// getActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.transparent));
-
-		// bg
-		// PApplet p = new ProcessingSketchDefaultRenderer1();
-		// addFragment(p, R.id.bgProcessing, false);
-
-		// TOFIX set action bar padding
-		// if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-		// RelativeLayout contentHolder = (RelativeLayout)
-		// findViewById(R.id.contentHolder);
-		// TypedValue tv = new TypedValue();
-		// getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true);
-		// int actionBarHeight = (int)
-		// getResources().getDimension(tv.resourceId);
-		// contentHolder.setPadding(0, actionBarHeight, 0, 0);
-		// }
 
 
        /*
@@ -241,7 +215,7 @@ public class MainActivity extends BaseActivity {
             mProtocoder.protoScripts.refresh(p.getFolder(), p.getName());
 		} else if (evt.getAction() == "new") {
 			MLog.d(TAG, "creating new project " + evt.getProject().getName());
-            mProtocoder.protoScripts.create("projects", evt.getProject().getName());
+            mProtocoder.protoScripts.createProject("projects", evt.getProject().getName());
 		} else if (evt.getAction() == "update") {
             mProtocoder.protoScripts.listRefresh();
 		}
@@ -265,7 +239,7 @@ public class MainActivity extends BaseActivity {
 		if (itemId == android.R.id.home) {
 			return true;
 		} else if (itemId == R.id.menu_new) {
-			Protocoder.getInstance(this).protoScripts.showEditDialog();
+			Protocoder.getInstance(this).protoScripts.createProjectDialog();
 			return true;
 		} else if (itemId == R.id.menu_help) {
             Protocoder.getInstance(this).app.showHelp(true);
@@ -322,22 +296,8 @@ public class MainActivity extends BaseActivity {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			debugIntent(intent, "");
+			AndroidUtils.debugIntent("connectivityChangerReceiver", intent);
             mProtocoder.app.startServers();
 		}
-
-		private void debugIntent(Intent intent, String tag) {
-			Log.v(tag, "action: " + intent.getAction());
-			Log.v(tag, "component: " + intent.getComponent());
-			Bundle extras = intent.getExtras();
-			if (extras != null) {
-				for (String key : extras.keySet()) {
-					Log.v(tag, "key [" + key + "]: " + extras.get(key));
-				}
-			} else {
-				Log.v(tag, "no extras");
-			}
-		}
-
 	}
 }
