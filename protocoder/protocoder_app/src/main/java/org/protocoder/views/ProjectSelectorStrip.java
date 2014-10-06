@@ -16,13 +16,13 @@ package org.protocoder.views;
  * limitations under the License.
  */
 
-import org.protocoderrunner.utils.MLog;
-
 import android.content.Context;
 import android.support.v4.view.PagerTitleStrip;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+
+import org.protocoderrunner.utils.MLog;
 
 public class ProjectSelectorStrip extends PagerTitleStrip {
 	private static final String TAG = "PagerTabStrip";

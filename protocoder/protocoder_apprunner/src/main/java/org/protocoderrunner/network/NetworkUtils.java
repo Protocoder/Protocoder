@@ -29,6 +29,20 @@
 
 package org.protocoderrunner.network;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.DhcpInfo;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
+import android.os.PowerManager;
+import android.text.format.Formatter;
+import android.util.Log;
+
+import org.protocoderrunner.apprunner.AppRunnerSettings;
+import org.protocoderrunner.utils.MLog;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -43,20 +57,6 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.ByteOrder;
 import java.util.Enumeration;
-
-import org.protocoderrunner.apprunner.AppRunnerSettings;
-import org.protocoderrunner.utils.MLog;
-
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.DhcpInfo;
-import android.net.NetworkInfo;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
-import android.os.AsyncTask;
-import android.os.PowerManager;
-import android.text.format.Formatter;
-import android.util.Log;
 
 public class NetworkUtils {
 

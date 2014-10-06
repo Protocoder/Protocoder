@@ -29,16 +29,6 @@
 
 package org.protocoder.fragments;
 
-import org.apache.commons.lang3.StringUtils;
-import org.protocoder.R;
-import org.protocoderrunner.base.BaseFragment;
-import org.protocoderrunner.events.Events;
-import org.protocoderrunner.project.Project;
-import org.protocoderrunner.project.ProjectManager;
-import org.protocoderrunner.utils.Fonts;
-import org.protocoderrunner.utils.MLog;
-import org.protocoderrunner.utils.TextUtils;
-
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -57,6 +47,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import org.apache.commons.lang3.StringUtils;
+import org.protocoder.R;
+import org.protocoderrunner.base.BaseFragment;
+import org.protocoderrunner.events.Events;
+import org.protocoderrunner.project.Project;
+import org.protocoderrunner.project.ProjectManager;
+import org.protocoderrunner.utils.Fonts;
+import org.protocoderrunner.utils.MLog;
+import org.protocoderrunner.utils.TextUtils;
+
 import de.greenrobot.event.EventBus;
 
 @SuppressLint("NewApi")

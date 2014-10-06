@@ -30,6 +30,7 @@
 package org.protocoderrunner.apprunner.api.other;
 
 import android.app.Activity;
+import android.content.Context;
 
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
@@ -44,9 +45,9 @@ public class PCamera extends CameraNew implements PViewInterface {
 
 
     private final PCamera cam;
-    protected Activity a;
+    protected Context a;
 
-	public PCamera(Activity a, int camera, int color) {
+	public PCamera(Context a, int camera, int color) {
 		super(a, camera, color);
         this.a = a;
         cam = this;
@@ -79,6 +80,18 @@ public class PCamera extends CameraNew implements PViewInterface {
             }
         });
 	}
+
+
+
+    @ProtocoderScript
+    @APIParam(params = { "fileName", "function()" })
+    @APIMethod(description = "Takes a picture and saves it to fileName", example = "camera.takePicture();")
+	// @APIRequires()
+	public void onNewFrame(final CameraNew.CallbackBmp callbackfn) {
+        cam.addCallbackBmp(callbackfn);
+	}
+
+
 
     @ProtocoderScript
     @APIMethod(description = "Records a video in fileName", example = "")

@@ -29,13 +29,6 @@
 
 package org.protocoderrunner.apprunner.logger;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import org.protocoderrunner.R;
-import org.protocoderrunner.base.BaseFragment;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
@@ -48,6 +41,13 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import org.protocoderrunner.R;
+import org.protocoderrunner.base.BaseFragment;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 @SuppressLint("NewApi")
 public class OverlayLogger extends BaseFragment {

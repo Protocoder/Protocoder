@@ -29,12 +29,6 @@
 
 package org.protocoderrunner.sensors;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
-
-import org.protocoderrunner.utils.MLog;
-
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Service;
@@ -50,6 +44,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
+
+import org.protocoderrunner.utils.MLog;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 @TargetApi(Build.VERSION_CODES.GINGERBREAD)
 public class GPSManagerGopi extends Service implements LocationListener {

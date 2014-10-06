@@ -1,7 +1,7 @@
 /*
- * Protocoder 
- * A prototyping platform for Android devices 
- * 
+ * Protocoder
+ * A prototyping platform for Android devices
+ *
  * Victor Diaz Barrales victormdb@gmail.com
  *
  * Copyright (C) 2014 Victor Diaz
@@ -12,39 +12,45 @@
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
  * and/or sell copies of the Software, and to permit persons to whom the Software
- * is furnished to do so, subject to the following conditions: 
- * 
- * The above copyright notice and this permission notice shall be included in all 
+ * is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
  * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- * 
+ *
  */
 
-package org.protocoderrunner.base;
+package org.protocoder.appApi;
 
-import android.app.Application;
+import java.util.Date;
 
-import org.protocoderrunner.project.ProjectManager;
-import org.protocoderrunner.utils.FileIO;
+public class Schedule {
 
-public class BaseMainApp extends Application {
+    Schedule() {
 
-	public BaseMainApp() {
+    }
 
-	}
+    public void getList() {
 
-	@Override
-	public void onCreate() {
-		super.onCreate();
+    }
 
-		// Copy all example apps to the base directory
-		FileIO.copyAssetFolder(getAssets(), "ExampleApps", ProjectManager.getInstance().getBaseDir());
-	}
+    public void clearList() {
+
+    }
+
+    public void addApp(String folder, String appName, Date time) {
+
+    }
+
+    public void clearApp(String id) {
+
+    }
+
 }

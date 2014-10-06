@@ -1,12 +1,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient"
     android:orientation="vertical"
     android:gravity="center"
-    tools:context=".BeamActivity" >
+    tools:context=".BeamActivity">
 
     <ImageView
         android:id="@+id/defaultIconView"

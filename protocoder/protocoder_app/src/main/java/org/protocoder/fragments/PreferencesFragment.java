@@ -29,13 +29,6 @@
 
 package org.protocoder.fragments;
 
-import org.protocoder.LicenseActivity;
-import org.protocoder.R;
-import org.protocoderrunner.base.BaseMainApp;
-import org.protocoderrunner.base.BaseNotification;
-import org.protocoderrunner.project.ProjectManager;
-import org.protocoderrunner.project.ProjectManager.InstallListener;
-
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -55,7 +48,12 @@ import android.preference.TwoStatePreference;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+
+import org.protocoder.LicenseActivity;
+import org.protocoder.R;
+import org.protocoderrunner.base.BaseNotification;
+import org.protocoderrunner.project.ProjectManager;
+import org.protocoderrunner.project.ProjectManager.InstallListener;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class PreferencesFragment extends PreferenceFragment {

@@ -32,7 +32,8 @@ package org.protocoderrunner.apprunner.api;
 import android.app.Activity;
 import android.os.FileObserver;
 
-import org.json.JSONObject;
+import net.lingala.zip4j.exception.ZipException;
+
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
@@ -40,15 +41,11 @@ import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.apprunner.api.other.PSqLite;
 import org.protocoderrunner.apprunner.api.other.ProtocoderNativeArray;
-import org.protocoderrunner.network.CustomWebsocketServer;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.sensors.WhatIsRunning;
 import org.protocoderrunner.utils.FileIO;
-import org.protocoderrunner.utils.MLog;
 
 import java.io.File;
-
-import net.lingala.zip4j.exception.ZipException;
 
 public class PFileIO extends PInterface {
 

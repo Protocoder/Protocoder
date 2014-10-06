@@ -29,8 +29,6 @@
 
 package org.protocoderrunner.apprunner.api.widgets;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -39,6 +37,8 @@ import android.widget.ListView;
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.ProtocoderScript;
+
+import java.util.ArrayList;
 
 public class PList extends LinearLayout implements PViewInterface {
 

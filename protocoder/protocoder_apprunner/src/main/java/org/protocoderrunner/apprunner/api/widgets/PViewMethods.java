@@ -1,6 +1,5 @@
 package org.protocoderrunner.apprunner.api.widgets;
 
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.View;
 

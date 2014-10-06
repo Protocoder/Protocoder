@@ -46,7 +46,6 @@ import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.PreviewCallback;
 import android.media.AudioManager;
 import android.media.CamcorderProfile;
-import android.media.FaceDetector;
 import android.media.MediaRecorder;
 import android.media.SoundPool;
 import android.net.Uri;
@@ -54,11 +53,8 @@ import android.os.Build;
 import android.util.Log;
 import android.view.TextureView;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import org.protocoderrunner.R;
-import org.protocoderrunner.utils.AndroidUtils;
 import org.protocoderrunner.utils.MLog;
 import org.protocoderrunner.utils.TimeUtils;
 

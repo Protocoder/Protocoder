@@ -108,7 +108,7 @@ public class PMedia extends PInterface {
 	@APIMethod(description = "Set the main volume", example = "media.playSound(fileName);")
 	@APIParam(params = { "volume" })
 	public void setVolume(int volume) {
-		a.get().setVolume(volume);
+		appRunnerActivity.get().setVolume(volume);
 	}
 
     @ProtocoderScript
@@ -124,7 +124,7 @@ public class PMedia extends PInterface {
     @APIMethod(description = "Enable sounds effects (default false)", example = "")
     @APIParam(params = { "boolean" })
     public void enableSoundEffects(boolean b) {
-        a.get().setEnableSoundEffects(b);
+        appRunnerActivity.get().setEnableSoundEffects(b);
     }
 
     // --------- initPDPatch ---------//
@@ -379,7 +379,7 @@ public class PMedia extends PInterface {
 		Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
 		intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
 		intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Tell me something!");
-		a.get().startActivityForResult(intent, AppRunnerActivity.VOICE_RECOGNITION_REQUEST_CODE);
+		appRunnerActivity.get().startActivityForResult(intent, AppRunnerActivity.VOICE_RECOGNITION_REQUEST_CODE);
 
 	}
 

@@ -29,6 +29,16 @@
 
 package org.protocoderrunner.project;
 
+import android.content.Context;
+import android.os.Environment;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.protocoderrunner.AppSettings;
+import org.protocoderrunner.utils.FileIO;
+import org.protocoderrunner.utils.MLog;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,16 +48,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.protocoderrunner.AppSettings;
-import org.protocoderrunner.utils.FileIO;
-import org.protocoderrunner.utils.MLog;
-
-import android.content.Context;
-import android.os.Environment;
 
 public class ProjectManager {
 

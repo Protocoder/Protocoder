@@ -1,11 +1,5 @@
 package org.protocoderrunner.apprunner.api.other;
 
-import org.protocoderrunner.R;
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
-import org.protocoderrunner.apprunner.ProtocoderScript;
-import org.protocoderrunner.utils.MLog;
-
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.AnimatorInflater;
@@ -25,6 +19,12 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import org.protocoderrunner.R;
+import org.protocoderrunner.apidoc.annotation.APIMethod;
+import org.protocoderrunner.apidoc.annotation.APIParam;
+import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.utils.MLog;
 
 public class PProtocoderLiveCodingFeedback {
 

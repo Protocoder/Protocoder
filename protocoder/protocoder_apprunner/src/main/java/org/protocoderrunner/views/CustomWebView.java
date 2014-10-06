@@ -29,16 +29,16 @@
 
 package org.protocoderrunner.views;
 
-import java.io.File;
-import java.lang.ref.WeakReference;
-
-import org.protocoderrunner.apprunner.AppRunnerActivity;
-import org.protocoderrunner.apprunner.AppRunnerSettings;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.webkit.WebView;
+
+import org.protocoderrunner.apprunner.AppRunnerActivity;
+import org.protocoderrunner.apprunner.AppRunnerSettings;
+
+import java.io.File;
+import java.lang.ref.WeakReference;
 
 /*
  * http://stackoverflow.com/questions/13257990/android-webview-inside-scrollview-scrolls-only-scrollview

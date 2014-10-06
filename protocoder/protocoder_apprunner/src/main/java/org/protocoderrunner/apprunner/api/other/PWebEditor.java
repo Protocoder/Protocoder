@@ -29,16 +29,17 @@
 
 package org.protocoderrunner.apprunner.api.other;
 
+import android.app.Activity;
+import android.content.Context;
+
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 
-import android.app.Activity;
-
 public class PWebEditor extends PInterface {
 
-	public PWebEditor(Activity a) {
+	public PWebEditor(Context a) {
 		super(a);
 
 	}

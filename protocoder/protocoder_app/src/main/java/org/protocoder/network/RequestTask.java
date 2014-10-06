@@ -29,8 +29,7 @@
 
 package org.protocoder.network;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import android.os.AsyncTask;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -40,7 +39,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import android.os.AsyncTask;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 public class RequestTask extends AsyncTask<String, String, String> {
 

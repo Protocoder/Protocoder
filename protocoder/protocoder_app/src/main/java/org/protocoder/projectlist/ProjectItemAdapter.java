@@ -29,13 +29,6 @@
 
 package org.protocoder.projectlist;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-
-import org.protocoder.R;
-import org.protocoderrunner.project.Project;
-import org.protocoderrunner.project.ProjectManager;
-
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -44,14 +37,22 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
-public class ProjectAdapter extends BaseAdapter {
-	private final WeakReference<Context> mContext;
+import org.protocoder.R;
+import org.protocoderrunner.project.Project;
+import org.protocoderrunner.utils.MLog;
+
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+
+public class ProjectItemAdapter extends BaseAdapter {
+    private static final String TAG = "ProjectItemAdapter";
+    private final WeakReference<Context> mContext;
 
 	ArrayList<Project> projects;
 	private final String projectFolder;
 	private final boolean listMode;
 
-	public ProjectAdapter(Context c, String projectFolder, ArrayList<Project> projects, boolean listMode) {
+	public ProjectItemAdapter(Context c, String projectFolder, ArrayList<Project> projects, boolean listMode) {
 		mContext = new WeakReference<Context>(c);
 		this.projects = projects;
 		this.projectFolder = projectFolder;
@@ -78,7 +79,9 @@ public class ProjectAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		final ProjectItem customView;
 
-		if (convertView == null) { // if it's not recycled, initialize some
+        Project p = projects.get(position);
+
+        if (convertView == null) { // if it's not recycled, initialize some
 			// attributes
 			customView = new ProjectItem(mContext.get(), listMode);
 
@@ -95,18 +98,20 @@ public class ProjectAdapter extends BaseAdapter {
 				}
 			});
 			imageView.setOnLongClickListener(new OnLongClickListener() {
-				@Override
-				public boolean onLongClick(View v) {
-					customView.showContextMenu();
-					return true;
-				}
-			});
+                @Override
+                public boolean onLongClick(View v) {
+                    customView.showContextMenu();
+                    return true;
+                }
+            });
 
 		} else {
 			customView = (ProjectItem) convertView;
-			customView.setText(projects.get(position).getName());
+			customView.setText(p.getName());
 		}
 		customView.setTag(projects.get(position).getName());
+        customView.setSelected(p.selected);
+        MLog.d(TAG, "is selected " + p.selected);
 
 		if (getCount() - 1 == position) {
 			customView.setPadding(0, 0, 0, 100);

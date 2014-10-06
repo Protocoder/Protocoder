@@ -30,16 +30,13 @@
 package org.protocoderrunner.apprunner.api.dashboard;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.network.CustomWebsocketServer;
-import org.protocoderrunner.network.CustomWebsocketServer.WebSocketListener;
-import org.protocoderrunner.utils.StrUtils;
 
 import java.net.UnknownHostException;
 
@@ -47,7 +44,7 @@ public class PDashboardBackground extends PInterface {
 
 	private static final String TAG = "PDashboardBackground";
 
-	public PDashboardBackground(Activity a) {
+	public PDashboardBackground(Context a) {
 		super(a);
 	}
 

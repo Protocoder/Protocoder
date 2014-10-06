@@ -29,17 +29,17 @@
 
 package org.protocoderrunner.apprunner.api.widgets;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-
-import org.protocoderrunner.R;
-
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+
+import org.protocoderrunner.R;
+
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 public class PListAdapter extends BaseAdapter {
 	private final WeakReference<Context> mContext;

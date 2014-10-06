@@ -35,8 +35,10 @@ import android.content.Intent;
 import android.provider.Settings;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.animation.CycleInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.java_websocket.drafts.Draft_17;
@@ -44,6 +46,7 @@ import org.protocoder.AboutActivity;
 import org.protocoder.R;
 import org.protocoder.SetPreferenceActivity;
 import org.protocoder.network.ProtocoderHttpServer;
+import org.protocoder.views.Overlay;
 import org.protocoderrunner.AppSettings;
 import org.protocoderrunner.network.CustomWebsocketServer;
 import org.protocoderrunner.network.IDEcommunication;
@@ -55,14 +58,19 @@ import java.net.UnknownHostException;
 public class App {
 
     private final Protocoder protocoder;
-    public Editor editor;
 
+    //Servers
     private ProtocoderHttpServer httpServer;
     private CustomWebsocketServer ws;
 
+    //Views
+    private RelativeLayout mainAppView;
     private TextView textIP;
     private LinearLayout mIpContainer;
     protected int textIPHeight;
+    private Overlay overlay;
+
+    public Editor editor;
 
     int usbEnabled = 0;
 
@@ -76,6 +84,8 @@ public class App {
 
 
     public void init() {
+
+        mainAppView = (RelativeLayout) protocoder.a.findViewById(R.id.mainAppView);
         // Create the IP text view
         textIP = (TextView) protocoder.a.findViewById(R.id.ip);
         textIP.setOnClickListener(null);// Remove the old listener explicitly
@@ -115,6 +125,14 @@ public class App {
             }
 
         });
+
+
+        //overlay = new Overlay(protocoder.a);
+        //overlay.setLayoutParams(new LinearLayout.LayoutParams(
+        //        LinearLayout.LayoutParams.MATCH_PARENT,
+        //        LinearLayout.LayoutParams.MATCH_PARENT));
+
+        //mainAppView.addView(overlay);
     }
 
 
@@ -122,21 +140,21 @@ public class App {
 
         if (show) {
             Intent aboutActivityIntent = new Intent(protocoder.a, AboutActivity.class);
-            protocoder.a.startActivity(aboutActivityIntent);
-            protocoder.a.overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
+           protocoder.a.startActivity(aboutActivityIntent);
+           protocoder.a.overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
+
+            //HelpFragment helpFragment = new HelpFragment();
+            //Bundle bundle = new Bundle();
+            //bundle.putString(Project.NAME, project.getName());
+            //bundle.putString(Project.URL, project.getStoragePath());
+            //bundle.putString(Project.FOLDER, project.getFolder());
+
+            //helpFragment.setArguments(bundle);
+            //MainActivity ma = (MainActivity) (protocoder.a);
+            //ma.addFragment(helpFragment, R.id.fragmentEditor, "helpFragment", true);
         } else {
 
         }
-    }
-
-
-    public void showAbout(boolean show) {
-        if (show) {
-
-        } else {
-
-        }
-
     }
 
     public void showNumberConections() {
@@ -180,14 +198,15 @@ public class App {
         }
     }
     public void highlight(String color) {
-
+        overlay.setFrame();
     }
     public void vibrate(int time) {
         protocoder.pDevice.vibrate(time);
     }
 
-    public void shake(int time) {
-
+    public void shake() {
+        View v = (View) mainAppView.getParent().getParent();
+        v.animate().rotation(10).translationX(100).setDuration(1000).setInterpolator(new CycleInterpolator(1)).start();
     }
 
     //"noise", "blipy", "hipster", "color"
@@ -195,7 +214,7 @@ public class App {
 
     }
     public void close() {
-
+        protocoder.a.superMegaForceKill();
     }
     public void restart() {
 
@@ -271,5 +290,30 @@ public class App {
         }
         protocoder.app.setIp(protocoder.a.getResources().getString(R.string.start_the_server));
     }
+
+
+    //showPopUp={true, false}
+    public void checkNewVersion() {
+
+    }
+
+    //JSON
+    public void sendDeviceStats() {
+
+    }
+
+    //JSON
+    public void sendCrashStats() {
+
+    }
+
+    public void getListLibraries() {
+
+    }
+
+    public void getListCommunityLibraries() {
+
+    }
+
 
 }

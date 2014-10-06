@@ -29,12 +29,12 @@
 
 package org.protocoderrunner.utils;
 
+import android.content.Context;
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.protocoderrunner.network.CustomWebsocketServer;
-
-import android.content.Context;
-import android.util.Log;
 
 import java.net.UnknownHostException;
 
@@ -45,6 +45,7 @@ public class MLog {
 	private static final int LOG_E = 1;
 	private static final int LOG_I = 2;
 	private static final int LOG_W = 3;
+	private static final int LOG_V = 4;
 
 	public static boolean network = true;
 	public static boolean device = true;
@@ -66,7 +67,10 @@ public class MLog {
 
 	public static void w(String tag, String msg) {
 		generic(LOG_W, tag, msg);
+	}
 
+	public static void v(String tag, String msg) {
+		generic(LOG_V, tag, msg);
 	}
 
 	public static void generic(int type, final String tag, final String msg) {

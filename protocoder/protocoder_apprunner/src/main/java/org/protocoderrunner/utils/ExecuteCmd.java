@@ -35,7 +35,6 @@ import android.os.Message;
 import android.util.Log;
 
 import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.sensors.WhatIsRunning;
 

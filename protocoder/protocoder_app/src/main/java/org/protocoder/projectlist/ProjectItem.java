@@ -29,10 +29,6 @@
 
 package org.protocoder.projectlist;
 
-import java.lang.ref.WeakReference;
-
-import org.protocoder.R;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -47,6 +43,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.protocoder.R;
+
+import java.lang.ref.WeakReference;
+
 public class ProjectItem extends LinearLayout {
 
 	private WeakReference<View> v;
@@ -60,7 +60,7 @@ public class ProjectItem extends LinearLayout {
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		if (listMode) {
-			this.v = new WeakReference<View>(inflater.inflate(R.layout.view_project_item_, this, true));
+			this.v = new WeakReference<View>(inflater.inflate(R.layout.view_project_item_list, this, true));
 		} else {
 			this.v = new WeakReference<View>(inflater.inflate(R.layout.view_project_item, this, true));
 		}

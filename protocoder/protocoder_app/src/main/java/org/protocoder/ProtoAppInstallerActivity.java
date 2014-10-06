@@ -33,14 +33,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.MLog;

@@ -35,10 +35,9 @@ import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
-import org.protocoderrunner.apprunner.api.boards.PIOIO;
 import org.protocoderrunner.apprunner.api.boards.PArduino;
+import org.protocoderrunner.apprunner.api.boards.PIOIO;
 import org.protocoderrunner.apprunner.api.boards.PSerial;
-import org.protocoderrunner.utils.MLog;
 
 public class PBoards extends PInterface {
 

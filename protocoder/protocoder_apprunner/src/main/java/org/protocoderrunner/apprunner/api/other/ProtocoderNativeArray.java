@@ -1,7 +1,6 @@
 package org.protocoderrunner.apprunner.api.other;
 
 import org.mozilla.javascript.NativeArray;
-import org.mozilla.javascript.NativeObject;
 
 /**
  * Created by victormanueldiazbarrales on 03/08/14.

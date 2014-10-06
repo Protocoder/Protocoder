@@ -29,8 +29,6 @@
 
 package org.protocoder.fragments;
 
-import org.protocoder.R;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -43,6 +41,8 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+
+import org.protocoder.R;
 
 public class NewTaskSchedulerFragment extends DialogFragment implements OnEditorActionListener {
 

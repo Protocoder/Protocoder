@@ -30,6 +30,7 @@
 package org.protocoderrunner.apprunner.api.boards;
 
 import android.app.Activity;
+import android.content.Context;
 
 import com.physicaloid.lib.Boards;
 import com.physicaloid.lib.Physicaloid;
@@ -88,7 +89,7 @@ public class PArduino extends PInterface {
     public static final Boards NONE = Boards.NONE;
 
 
-    public PArduino(Activity a) {
+    public PArduino(Context a) {
 		super(a);
     }
 

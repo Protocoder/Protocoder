@@ -29,12 +29,12 @@
 
 package org.protocoderrunner.apprunner.api.other;
 
+import android.app.Activity;
+
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
-
-import android.app.Activity;
 
 public class SignalUtils extends PInterface {
 

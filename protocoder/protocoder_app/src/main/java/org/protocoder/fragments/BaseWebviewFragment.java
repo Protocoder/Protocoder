@@ -29,10 +29,6 @@
 
 package org.protocoder.fragments;
 
-import org.protocoder.R;
-import org.protocoderrunner.base.BaseFragment;
-import org.protocoderrunner.utils.MLog;
-
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
@@ -43,6 +39,10 @@ import android.webkit.GeolocationPermissions;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+
+import org.protocoder.R;
+import org.protocoderrunner.base.BaseFragment;
+import org.protocoderrunner.utils.MLog;
 
 @SuppressLint({ "NewApi", "ValidFragment" })
 public class BaseWebviewFragment extends BaseFragment {

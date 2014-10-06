@@ -34,8 +34,6 @@ package org.protocoderrunner.apprunner.api.widgets;
  * add values to it 
  * 
  */
-import java.util.HashMap;
-import java.util.Map;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -52,7 +50,9 @@ import android.view.View;
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.ProtocoderScript;
-import org.protocoderrunner.utils.AndroidUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class PPadView extends View {
 	private static final String TAG = "TouchAreaView";

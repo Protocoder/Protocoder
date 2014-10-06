@@ -29,12 +29,6 @@
 
 package org.protocoderrunner.fragments;
 
-import java.io.IOException;
-import java.util.Vector;
-
-import org.protocoderrunner.utils.AndroidUtils;
-import org.protocoderrunner.utils.MLog;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
@@ -48,6 +42,11 @@ import android.media.MediaPlayer.OnVideoSizeChangedListener;
 import android.os.Handler;
 import android.view.Surface;
 import android.view.TextureView;
+
+import org.protocoderrunner.utils.MLog;
+
+import java.io.IOException;
+import java.util.Vector;
 
 @SuppressLint("NewApi")
 public class CustomVideoTextureView extends TextureView implements TextureView.SurfaceTextureListener,

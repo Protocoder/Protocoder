@@ -5,7 +5,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="5dp"
-        android:background="@drawable/card_item_bg"
+        android:background="@drawable/project_item_card_bg"
         android:gravity="center" >
 
         <LinearLayout

@@ -29,13 +29,13 @@
 
 package org.protocoderrunner.utils;
 
+import android.content.Context;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import android.content.Context;
 
 public class Template {
 

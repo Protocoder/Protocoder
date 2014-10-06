@@ -29,10 +29,10 @@
 
 package org.protocoderrunner.apprunner.api.widgets;
 
-import org.protocoderrunner.apprunner.AppRunnerActivity;
-
 import android.content.Context;
 import android.widget.ProgressBar;
+
+import org.protocoderrunner.apprunner.AppRunnerActivity;
 
 public class PProgressBar extends ProgressBar implements PViewInterface {
 
@@ -42,7 +42,7 @@ public class PProgressBar extends ProgressBar implements PViewInterface {
 		// setProgressDrawable(getResources().getDrawable(R.drawable.ui_seekbar_progress));
 	}
 
-	public PProgressBar(AppRunnerActivity a, int style) {
+	public PProgressBar(Context a, int style) {
 		super(a, null, style);
 
 		this.setProgress(0);

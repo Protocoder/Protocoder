@@ -1,10 +1,10 @@
 package org.protocoderrunner.views;
 
-import org.protocoderrunner.utils.MLog;
-
 import android.content.Context;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
+
+import org.protocoderrunner.utils.MLog;
 
 public class TouchableWrapper extends FrameLayout {
 

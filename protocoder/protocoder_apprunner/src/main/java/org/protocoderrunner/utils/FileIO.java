@@ -29,6 +29,19 @@
 
 package org.protocoderrunner.utils;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.res.AssetManager;
+import android.util.Log;
+
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
+import net.lingala.zip4j.model.ZipParameters;
+import net.lingala.zip4j.util.Zip4jConstants;
+
+import org.protocoderrunner.apprunner.AppRunnerSettings;
+import org.protocoderrunner.project.ProjectManager;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -52,21 +65,6 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
-import org.protocoderrunner.apprunner.AppRunnerSettings;
-import org.protocoderrunner.base.BaseMainApp;
-import org.protocoderrunner.project.Project;
-import org.protocoderrunner.project.ProjectManager;
-
-import android.app.Activity;
-import android.content.Context;
-import android.content.res.AssetManager;
-import android.util.Log;
-
-import net.lingala.zip4j.core.ZipFile;
-import net.lingala.zip4j.exception.ZipException;
-import net.lingala.zip4j.model.ZipParameters;
-import net.lingala.zip4j.util.Zip4jConstants;
 
 public class FileIO {
 

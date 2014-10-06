@@ -29,16 +29,16 @@
 
 package org.protocoderrunner.hardware;
 
+import android.content.Intent;
+import android.os.Binder;
+import android.os.IBinder;
+
+import org.protocoderrunner.utils.MLog;
+
 import ioio.lib.api.exception.ConnectionLostException;
 import ioio.lib.util.BaseIOIOLooper;
 import ioio.lib.util.IOIOLooper;
 import ioio.lib.util.android.IOIOService;
-
-import org.protocoderrunner.utils.MLog;
-
-import android.content.Intent;
-import android.os.Binder;
-import android.os.IBinder;
 
 public class IOIOBoardService extends IOIOService {
 	public static final int SET_CALLBACK = 1;

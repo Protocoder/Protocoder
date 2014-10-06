@@ -29,6 +29,8 @@
 
 package org.protocoderrunner.utils;
 
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataOutputStream;
@@ -38,8 +40,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
-import android.util.Log;
 
 public class SysFs {
 

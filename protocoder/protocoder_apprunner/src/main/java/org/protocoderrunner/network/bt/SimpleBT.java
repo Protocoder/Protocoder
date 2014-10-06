@@ -1,11 +1,5 @@
 package org.protocoderrunner.network.bt;
 
-import java.util.Set;
-import java.util.Vector;
-
-import org.protocoderrunner.apprunner.api.PNetwork;
-import org.protocoderrunner.sensors.WhatIsRunningInterface;
-
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -17,6 +11,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
+
+import org.protocoderrunner.apprunner.api.PNetwork;
+import org.protocoderrunner.sensors.WhatIsRunningInterface;
+
+import java.util.Set;
+import java.util.Vector;
 
 public class SimpleBT implements WhatIsRunningInterface {
 	private static final String TAG = "BT";

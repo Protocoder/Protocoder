@@ -30,6 +30,7 @@
 package org.protocoderrunner.apprunner.api.dashboard;
 
 import android.app.Activity;
+import android.content.Context;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,7 +38,6 @@ import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.network.CustomWebsocketServer;
-import org.protocoderrunner.utils.MLog;
 import org.protocoderrunner.utils.StrUtils;
 
 import java.net.UnknownHostException;
@@ -49,7 +49,7 @@ public class PDashboardVideoCamera extends PInterface {
 
 
     //TODO this is just a scaffold needs to be implemented
-	public PDashboardVideoCamera(Activity a) {
+	public PDashboardVideoCamera(Context a) {
 		super(a);
 	}
 

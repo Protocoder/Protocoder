@@ -76,11 +76,11 @@ import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.apprunner.api.other.PSocketIOClient;
+import org.protocoderrunner.apprunner.api.other.ProtocoderAPIHttpServer;
 import org.protocoderrunner.apprunner.api.other.ProtocoderNativeArray;
 import org.protocoderrunner.network.NetworkUtils;
 import org.protocoderrunner.network.NetworkUtils.DownloadTask.DownloadListener;
 import org.protocoderrunner.network.OSC;
-import org.protocoderrunner.apprunner.api.other.ProtocoderAPIHttpServer;
 import org.protocoderrunner.network.ServiceDiscovery;
 import org.protocoderrunner.network.bt.SimpleBT;
 import org.protocoderrunner.project.ProjectManager;
@@ -755,9 +755,9 @@ public class PNetwork extends PInterface {
         if (mBtStarted) {
             return simpleBT;
         }
-		simpleBT = new SimpleBT(a.get());
+		simpleBT = new SimpleBT(appRunnerActivity.get());
 		simpleBT.start();
-		(a.get()).addBluetoothListener(new onBluetoothListener() {
+		(appRunnerActivity.get()).addBluetoothListener(new onBluetoothListener() {
 
 			@Override
 			public void onDeviceFound(String name, String macAddress, float strength) {
@@ -808,7 +808,7 @@ public class PNetwork extends PInterface {
             arrayStrings[i] = (String) nativeArray.get(i, null);
         }
 
-        a.get().pUi.popupChoice("Connect to device", arrayStrings, new PUI.choiceDialogCB() {
+        appRunnerActivity.get().pUi.popupChoice("Connect to device", arrayStrings, new PUI.choiceDialogCB() {
             @Override
             public void event(String string) {
                 connectBluetoothSerialByMac(string.split(" ")[1], callbackfn);
@@ -1030,7 +1030,7 @@ public class PNetwork extends PInterface {
     @APIMethod(description = "Register a discovery service", example = "")
     @APIParam(params = { "serviceName, serviceType, port, function(name, status)" })
     public void registerService(String serviceName, String serviceType, int port, ServiceDiscovery.CreateCB callbackfn) {
-        ServiceDiscovery.Create rD = new ServiceDiscovery().create(a.get(), serviceName, serviceType, port, callbackfn);
+        ServiceDiscovery.Create rD = new ServiceDiscovery().create(appRunnerActivity.get(), serviceName, serviceType, port, callbackfn);
         WhatIsRunning.getInstance().add(rD);
     }
 
@@ -1038,7 +1038,7 @@ public class PNetwork extends PInterface {
     @APIMethod(description = "Discover services in the current network", example = "")
     @APIParam(params = { "serviceType, function(name, jsonData)" })
     public void discoverServices(final String serviceType, ServiceDiscovery.DiscoverCB callbackfn) {
-        ServiceDiscovery.Discover sD = new ServiceDiscovery().discover(a.get(), serviceType, callbackfn);
+        ServiceDiscovery.Discover sD = new ServiceDiscovery().discover(appRunnerActivity.get(), serviceType, callbackfn);
         WhatIsRunning.getInstance().add(sD);
 
     }

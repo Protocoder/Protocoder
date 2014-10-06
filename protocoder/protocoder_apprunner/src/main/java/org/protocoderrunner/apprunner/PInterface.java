@@ -29,24 +29,27 @@
 
 package org.protocoderrunner.apprunner;
 
-import java.lang.ref.WeakReference;
-
 import android.app.Activity;
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
+import java.lang.ref.WeakReference;
+
 public class PInterface {
 
-	public Handler mHandler = new Handler(Looper.getMainLooper());
+    public Handler mHandler = new Handler(Looper.getMainLooper());
 
 	protected String TAG = getClass().getSimpleName();
 
-	public WeakReference<AppRunnerActivity> a;
+	public WeakReference<Context> a;
+	public WeakReference<AppRunnerActivity> appRunnerActivity;
 
-	public PInterface(Activity appActivity) {
+	public PInterface(Context appActivity) {
 		super();
-		this.a = new WeakReference<AppRunnerActivity>((AppRunnerActivity) appActivity);
-	}
+		this.a = new WeakReference<Context>(appActivity);
+        this.appRunnerActivity = new WeakReference<AppRunnerActivity>((AppRunnerActivity) appActivity);
+        }
 
 	// public <T> void callback(String fn, T... args) {
 	// a.get().interp.callback(fn, args);

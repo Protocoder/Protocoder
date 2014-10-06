@@ -29,13 +29,13 @@
 
 package org.protocoderrunner.apprunner.api.widgets;
 
+import android.content.Context;
+import android.graphics.Color;
+
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.views.PlotView;
-
-import android.content.Context;
-import android.graphics.Color;
 
 public class PPlotView extends PlotView implements PViewInterface {
 

@@ -29,6 +29,20 @@
 
 package org.protocoderrunner.apprunner.api;
 
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.MediaStore;
+import android.provider.MediaStore.MediaColumns;
+import android.support.v4.app.NotificationCompat;
+
 import org.protocoderrunner.R;
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
@@ -41,19 +55,6 @@ import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.project.SchedulerManager;
 import org.protocoderrunner.utils.ExecuteCmd;
 import org.protocoderrunner.utils.FileIO;
-
-import android.annotation.TargetApi;
-import android.app.Activity;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
-import android.content.ContentValues;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
-import android.provider.MediaStore;
-import android.provider.MediaStore.MediaColumns;
-import android.support.v4.app.NotificationCompat;
 
 public class PApp extends PInterface {
 
@@ -68,7 +69,7 @@ public class PApp extends PInterface {
 		public void onStop();
 	}
 
-	public PApp(Activity a) {
+	public PApp(Context a) {
 		super(a);
 
 	}
@@ -77,7 +78,7 @@ public class PApp extends PInterface {
 	@ProtocoderScript
 	@APIMethod(description = "get the script runner context", example = "")
 	public AppRunnerActivity getContext() {
-		return a.get();
+		return (AppRunnerActivity) a.get();
 	}
 
     //TODO
@@ -107,7 +108,7 @@ public class PApp extends PInterface {
 	@ProtocoderScript
 	@APIMethod(description = "close the running script", example = "")
 	public void close() {
-		a.get().finish();
+        ((AppRunnerActivity) a.get()).finish();
 	}
 
 	@android.webkit.JavascriptInterface
@@ -115,7 +116,7 @@ public class PApp extends PInterface {
 	@APIMethod(description = "evaluate a script", example = "")
 	@APIParam(params = { "code" })
 	public void eval(String code) {
-		a.get().interp.eval(code);
+        ((AppRunnerActivity) a.get()).interp.eval(code);
 	}
 
 	@ProtocoderScript
@@ -123,8 +124,7 @@ public class PApp extends PInterface {
 	@APIParam(params = { "fileName" })
 	public void load(String filename) {
 		String code = FileIO.loadFile(filename);
-
-		a.get().interp.eval(code);
+        ((AppRunnerActivity) a.get()).interp.eval(code);
 	}
 
     @ProtocoderScript
@@ -132,8 +132,7 @@ public class PApp extends PInterface {
 	@APIParam(params = { "libraryName" })
 	public void loadLibrary(String name) {
 		String code = FileIO.loadFile("../../libraries/" + name + "/main.js");
-
-		a.get().interp.eval(code);
+        ((AppRunnerActivity) a.get()).interp.eval(code);
 	}
 
     //TODO way to cancel notification and come back to the script
@@ -233,9 +232,9 @@ public class PApp extends PInterface {
     @APIMethod(description = "shows a feedback overlay with the live-executed code", example = "")
     @APIParam(params = { })
     public PProtocoderLiveCodingFeedback liveCodingFeedback() {
-        a.get().initLayout();
+        appRunnerActivity.get().initLayout();
 
-        PProtocoderLiveCodingFeedback l = a.get().liveCoding;
+        PProtocoderLiveCodingFeedback l = appRunnerActivity.get().liveCoding;
         l.enable = true;
 
         return l;

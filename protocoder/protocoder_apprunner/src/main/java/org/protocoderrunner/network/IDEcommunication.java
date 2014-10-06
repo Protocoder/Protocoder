@@ -1,12 +1,12 @@
 package org.protocoderrunner.network;
 
-import java.lang.ref.WeakReference;
-import java.net.UnknownHostException;
+import android.app.Activity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
+import java.lang.ref.WeakReference;
+import java.net.UnknownHostException;
 
 public class IDEcommunication {
 

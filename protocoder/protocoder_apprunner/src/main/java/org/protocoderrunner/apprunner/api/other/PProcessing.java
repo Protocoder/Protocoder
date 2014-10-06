@@ -1,15 +1,14 @@
 package org.protocoderrunner.apprunner.api.other;
 
-import processing.core.PApplet;
-import processing.core.PConstants;
-import processing.core.PGraphics;
 import android.os.Bundle;
 import android.os.Looper;
-import android.util.Log;
 
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.ProtocoderScript;
+
+import processing.core.PApplet;
+import processing.core.PGraphics;
 
 public class PProcessing extends PApplet {
 	private PInterfaceDraw pfnDraw;

@@ -1,28 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainAppView"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:gravity="bottom"
     android:visibility="visible"
     android:background="@color/white" >
-
-    <!--
-    <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:scaleType="centerCrop"
-        android:src="@drawable/bg" />
-    -->
-
-    <FrameLayout
-        android:id="@+id/bgProcessing"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true" />
 
     <RelativeLayout
         android:id="@+id/contentHolder"
@@ -68,14 +51,6 @@
             android:layout_alignParentRight="true"
             android:orientation="vertical" >
 
-            <!--
-             <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="5dp"
-            android:background="#77ffffff"
-            android:contentDescription="@null" />
-            -->
-
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -109,6 +84,8 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true" >
         </FrameLayout>
+
+
     </RelativeLayout>
 
 </RelativeLayout>

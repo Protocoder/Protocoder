@@ -29,11 +29,6 @@
 
 package org.protocoder.fragments;
 
-import java.io.IOException;
-
-import org.protocoderrunner.utils.FileIO;
-import org.protocoderrunner.utils.MLog;
-
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
@@ -43,6 +38,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
+
+import org.protocoderrunner.utils.FileIO;
+import org.protocoderrunner.utils.MLog;
+
+import java.io.IOException;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class HelpFragment extends BaseWebviewFragment {

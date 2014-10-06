@@ -29,7 +29,8 @@
 
 package org.protocoderrunner.apprunner.api.dashboard;
 
-import java.net.UnknownHostException;
+import android.app.Activity;
+import android.content.Context;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,14 +41,14 @@ import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.network.CustomWebsocketServer;
 import org.protocoderrunner.utils.StrUtils;
 
-import android.app.Activity;
+import java.net.UnknownHostException;
 
 public class PDashboardText extends PInterface {
 
 	private static final String TAG = "PDashboardText";
 	String id;
 
-	public PDashboardText(Activity a) {
+	public PDashboardText(Context a) {
 		super(a);
 	}
 
