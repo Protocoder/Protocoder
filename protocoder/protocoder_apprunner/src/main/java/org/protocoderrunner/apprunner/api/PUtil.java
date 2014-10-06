@@ -45,9 +45,11 @@ import android.animation.TimeInterpolator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Interpolator;
 import android.graphics.Typeface;
+import android.media.FaceDetector;
 import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -265,6 +267,17 @@ public class PUtil extends PInterface {
     @APIParam(params = { "fontFile" })
     public Typeface loadFont(String fontName) {
         return Typeface.createFromFile(AppRunnerSettings.get().project.getStoragePath() + File.separator + fontName);
+    }
+
+    @ProtocoderScript
+    @APIMethod(description = "Detect faces in a bitmap", example = "")
+    @APIParam(params = { "fontFile" })
+    public int detectFaces(Bitmap bmp, int num_faces) {
+        FaceDetector face_detector = new FaceDetector(bmp.getWidth(), bmp.getHeight(), num_faces);
+        FaceDetector.Face[] faces = new FaceDetector.Face[num_faces];
+        int face_count = face_detector.findFaces(bmp, faces);
+
+        return face_count;
     }
 
 }
