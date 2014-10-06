@@ -35,6 +35,8 @@ import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
@@ -45,19 +47,23 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 //import android.support.v7.graphics.Palette;
 import android.text.InputType;
 import android.view.GestureDetector;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.CycleInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.NumberPicker;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -84,7 +90,9 @@ import org.protocoderrunner.apprunner.api.widgets.PImageButton;
 import org.protocoderrunner.apprunner.api.widgets.PImageView;
 import org.protocoderrunner.apprunner.api.widgets.PList;
 import org.protocoderrunner.apprunner.api.widgets.PMap;
+import org.protocoderrunner.apprunner.api.widgets.PNumberPicker;
 import org.protocoderrunner.apprunner.api.widgets.PPlotView;
+import org.protocoderrunner.apprunner.api.widgets.PPopupCustomFragment;
 import org.protocoderrunner.apprunner.api.widgets.PProgressBar;
 import org.protocoderrunner.apprunner.api.widgets.PRadioButton;
 import org.protocoderrunner.apprunner.api.widgets.PSlider;
@@ -916,6 +924,16 @@ public class PUI extends PUIGeneric {
 		return et;
 	}
 
+
+    //number picker
+    @ProtocoderScript
+    @APIMethod(description = "Adds a number picker", example = "")
+    @APIParam(params = { "from", "to", "x", "y", "w", "h" })
+    public void addNumberPicker(int from, int to, int x, int y, int w, int h, NewGenericNumberPickerCB callback) {
+        PNumberPicker np = newNumberPicker(from, to, callback);
+        addViewAbsolute(np, x, y, w, h);
+    }
+
 	@ProtocoderScript
     @APIMethod(description = "Adds a toggle", example = "")
     @APIParam(params = { "text", "x", "y", "w", "h", "checked", "function(checked)" })
@@ -1173,7 +1191,7 @@ public class PUI extends PUIGeneric {
     @ProtocoderScript
     @APIMethod(description = "Shows a popup with a given text", example = "")
 	@APIParam(params = { "title", "function(boolean)" })
-	public void popup(String title, String ok, String cancel, final popupCB callbackfn) {
+	public void popupInfo(String title, String ok, String cancel, final popupCB callbackfn) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(a.get());
 		builder.setTitle(title);
 
@@ -1213,7 +1231,7 @@ public class PUI extends PUIGeneric {
     @ProtocoderScript
     @APIMethod(description = "Shows an input dialog", example = "")
 	@APIParam(params = { "title", "function(text)" })
-	public void inputDialog(String title, final inputDialogCB callbackfn) {
+	public void popupInput(String title, final inputDialogCB callbackfn) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(a.get());
 		builder.setTitle(title);
 
@@ -1249,7 +1267,7 @@ public class PUI extends PUIGeneric {
     @ProtocoderScript
     @APIMethod(description = "Shows a choice dialog using a given array of strings", example = "")
 	@APIParam(params = { "title", "arrayStrings", "function(text)" })
-	public void choiceDialog(String title, final String[] choices, final choiceDialogCB callbackfn) {
+	public void popupChoice(String title, final String[] choices, final choiceDialogCB callbackfn) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(a.get());
 		builder.setTitle(title);
 
@@ -1265,6 +1283,18 @@ public class PUI extends PUIGeneric {
 
 		builder.show();
 	}
+
+
+    //TODO it works but need a way to wait for it to be shown
+    public PPopupCustomFragment popupCustom() {
+
+        PPopupCustomFragment pPopupCustomFragment = new PPopupCustomFragment();
+
+        android.app.FragmentManager fm = a.get().getFragmentManager();
+        pPopupCustomFragment.show(fm, "popUpCustom");
+
+        return pPopupCustomFragment;
+    }
 
 	@ProtocoderScript
 	@APIMethod(description = "Takes a screenshot of the whole app and stores it to a given file name", example = "")
