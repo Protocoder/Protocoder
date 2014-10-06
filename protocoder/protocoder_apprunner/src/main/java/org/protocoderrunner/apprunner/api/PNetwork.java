@@ -808,7 +808,7 @@ public class PNetwork extends PInterface {
             arrayStrings[i] = (String) nativeArray.get(i, null);
         }
 
-        a.get().pUi.choiceDialog("Connect to device", arrayStrings, new PUI.choiceDialogCB() {
+        a.get().pUi.popupChoice("Connect to device", arrayStrings, new PUI.choiceDialogCB() {
             @Override
             public void event(String string) {
                 connectBluetoothSerialByMac(string.split(" ")[1], callbackfn);
