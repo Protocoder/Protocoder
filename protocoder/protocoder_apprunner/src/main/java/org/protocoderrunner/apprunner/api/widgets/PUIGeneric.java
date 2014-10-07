@@ -972,7 +972,7 @@ public class PUIGeneric extends PInterface {
     @APIParam(params = { "width", "height" })
     public PCanvasView newCanvas(int w, int h) {
         initializeLayout();
-        PCanvasView canvasView = new PCanvasView(a.get());
+        PCanvasView canvasView = new PCanvasView(a.get(), w, h);
 
         return canvasView;
     }

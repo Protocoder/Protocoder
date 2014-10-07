@@ -52,6 +52,7 @@ import org.protocoderrunner.network.CustomWebsocketServer;
 import org.protocoderrunner.network.IDEcommunication;
 import org.protocoderrunner.network.NetworkUtils;
 import org.protocoderrunner.utils.AndroidUtils;
+import org.protocoderrunner.utils.MLog;
 
 import java.net.UnknownHostException;
 
@@ -68,7 +69,7 @@ public class App {
     private TextView textIP;
     private LinearLayout mIpContainer;
     protected int textIPHeight;
-    private Overlay overlay;
+    public Overlay overlay;
 
     public Editor editor;
 
@@ -127,12 +128,18 @@ public class App {
         });
 
 
-        //overlay = new Overlay(protocoder.a);
-        //overlay.setLayoutParams(new LinearLayout.LayoutParams(
-        //        LinearLayout.LayoutParams.MATCH_PARENT,
-        //        LinearLayout.LayoutParams.MATCH_PARENT));
-
-        //mainAppView.addView(overlay);
+//        overlay = new Overlay(protocoder.a);
+//        overlay.setLayoutParams(new LinearLayout.LayoutParams(
+//                LinearLayout.LayoutParams.MATCH_PARENT,
+//                LinearLayout.LayoutParams.MATCH_PARENT));
+//        mainAppView.addView(overlay);
+//
+//        try {
+//            overlay.setFrame();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            MLog.d("qq", e.getStackTrace().toString());
+//        }
     }
 
 
@@ -201,7 +208,7 @@ public class App {
         overlay.setFrame();
     }
     public void vibrate(int time) {
-        protocoder.pDevice.vibrate(time);
+        //protocoder.pDevice.vibrate(time);
     }
 
     public void shake() {

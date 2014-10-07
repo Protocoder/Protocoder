@@ -49,6 +49,7 @@ public class Editor {
         //protocoder.protoScripts.goTo("examples");
         //protocoder.protoScripts.goTo("examples", "Video");
         //protocoder.protoScripts.highlight("examples", "Video");
+        //protocoder.webEditor.console.log("hola");
 
         if (show) {
             editorFragment = new EditorFragment();

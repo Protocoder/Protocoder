@@ -111,7 +111,9 @@ public class PCanvasView extends View implements PViewInterface {
     private boolean mModeCorner = MODE_CORNER;
     private boolean strokeOn = false;
     private boolean fillOn = true;
-    private boolean init = false;
+    private boolean viewIsInit = false;
+    private int mWidth;
+    private int mHeight;
 
 
     public interface PCanvasInterfaceDraw {
@@ -132,8 +134,21 @@ public class PCanvasView extends View implements PViewInterface {
 
 
     public void init() {
-        MLog.d(TAG, "eieiieieieieieiei " + currentLayer);
+        MLog.d(TAG, "init");
         WhatIsRunning.getInstance().add(this);
+
+        mPaintFill = new Paint();
+        mPaintStroke = new Paint();
+        mPaintFill.setAntiAlias(true);
+        mPaintStroke.setAntiAlias(true);
+
+        mPaintBackground = new Paint();
+
+    }
+
+    public void initLayers() {
+        //initLayers
+        MLog.d(TAG, "initLayers");
 
         mLayerFifo = new Vector<Layer>();
 
@@ -143,36 +158,60 @@ public class PCanvasView extends View implements PViewInterface {
         mLayerFifo.add(++currentLayer, layer);
 
         mCanvas = new Canvas(mCurrentBmp);
-
         draw(mCanvas);
-        mPaintFill = new Paint();
-        mPaintStroke = new Paint();
-        mPaintFill.setAntiAlias(true);
-        mPaintStroke.setAntiAlias(true);
-
-        mPaintBackground = new Paint();
+        viewIsInit = true;
+        MLog.d(TAG, "viewIsInit " + viewIsInit);
     }
 
 
     public PCanvasView(Context context) {
         super(context);
-        this.context = context;
+        MLog.d(TAG, "onCreate");
 
+        this.context = context;
         init();
+        initLayers();
+    }
+
+
+
+    public PCanvasView(Context context, int w, int h) {
+        super(context);
+        MLog.d(TAG, "onCreate");
+        mWidth = w;
+        mHeight = h;
+
+        this.context = context;
+        init();
+        initLayers();
+    }
+
+
+
+
+    @Override
+    protected synchronized void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        MLog.d(TAG, "onMeasure");
+
+        setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
     }
 
     //on draw
     @Override
-    protected void onDraw(Canvas c) {
-        super.onDraw(c);
+    protected synchronized void onDraw(Canvas c) {
+        MLog.d(TAG, "onDraw " + viewIsInit);
+        if (viewIsInit) {
+            super.onDraw(c);
 
-        //draw all the layers
-        for (Layer layer : mLayerFifo) {
-           if(layer.visible) {
-               c.drawBitmap(layer.bmp, 0, 0, null);
-           }
+            //draw all the layers
+            for (Layer layer : mLayerFifo) {
+               if(layer.visible) {
+                   c.drawBitmap(layer.bmp, 0, 0, null);
+               }
+            }
+
         }
-
     }
 
     //on touch
@@ -197,7 +236,6 @@ public class PCanvasView extends View implements PViewInterface {
             loop.stop();
             loop = null;
         }
-
 
         PUtil util = new PUtil((Activity) context);
         loop = util.loop(ms, new PUtil.LooperCB() {
@@ -230,23 +268,39 @@ public class PCanvasView extends View implements PViewInterface {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
 
+        MLog.d(TAG, "onAttachedToWindow");
+
+
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
+        MLog.d(TAG, "onSizeChanged " + getWidth() + " " + getHeight());
+
+        //enable this
+        //Bitmap.Config conf = Bitmap.Config.ARGB_8888;
+        //Bitmap _bmp = Bitmap.createBitmap(getWidth(), getHeight(), conf);
+        //mCurrentBmp = _bmp;
+        //mCanvas = new Canvas(mCurrentBmp);
+        //draw(mCanvas);
+
+        //mLayerFifo.get(0).bmp = _bmp;
 
     }
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
+        MLog.d(TAG, "onLayout");
 
         //init();
     }
 
     @Override
     protected void onDetachedFromWindow() {
+        MLog.d(TAG, "onDetachedFromwindow");
+
         stop();
         super.onDetachedFromWindow();
     }
@@ -261,7 +315,7 @@ public class PCanvasView extends View implements PViewInterface {
     public PCanvasView background(int r, int g, int b, int alpha) {
         mPaintBackground.setStyle(Paint.Style.FILL);
         mPaintBackground.setARGB(alpha, r, g, b);
-        mCanvas.drawRect(0, 0, getWidth(), getHeight(), mPaintBackground);
+        mCanvas.drawRect(0, 0, mWidth, mHeight, mPaintBackground);
         refresh();
 
         return this;
@@ -652,8 +706,9 @@ public class PCanvasView extends View implements PViewInterface {
     }
 
     private Layer createNewLayer() {
+        MLog.d(TAG, "createNewLayer of " + mWidth + " " + mHeight);
         Bitmap.Config conf = Bitmap.Config.ARGB_8888;
-        Bitmap _bmp = Bitmap.createBitmap(getWidth(), getHeight(), conf);
+        Bitmap _bmp = Bitmap.createBitmap(mWidth, mHeight, conf);
         Layer layer = new Layer(_bmp);
 
         return layer;

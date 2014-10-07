@@ -48,8 +48,13 @@ public class PInterface {
 	public PInterface(Context appActivity) {
 		super();
 		this.a = new WeakReference<Context>(appActivity);
-        this.appRunnerActivity = new WeakReference<AppRunnerActivity>((AppRunnerActivity) appActivity);
+
+        try {
+            this.appRunnerActivity = new WeakReference<AppRunnerActivity>((AppRunnerActivity) appActivity);
+        }catch (Exception e) {
+
         }
+    }
 
 	// public <T> void callback(String fn, T... args) {
 	// a.get().interp.callback(fn, args);

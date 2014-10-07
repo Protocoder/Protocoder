@@ -237,7 +237,7 @@ public class PUI extends PUIGeneric {
 	@ProtocoderScript
 	@APIMethod(description = "Sets the fullscreen / immersive / dimBars mode", example = "")
     @APIParam(params = { "mode={fullscreen, immersive, lightsOut}" })
-    public void setUiMode(String mode) {
+    public void setScreenMode(String mode) {
         if (mode.equals("fullscreen")) {
             noActionBarAllowed = true;
             appRunnerActivity.get().setFullScreen();
@@ -246,7 +246,7 @@ public class PUI extends PUIGeneric {
             appRunnerActivity.get().lightsOutMode();
         } else if (mode.equals("immersive")) {
             noActionBarAllowed = true;
-            isImmersiveMode = true;
+           // isImmersiveMode = true;
             appRunnerActivity.get().setImmersive();
             updateScreenSizes();
         //do nothing
@@ -255,13 +255,6 @@ public class PUI extends PUIGeneric {
         }
 
 	}
-
-	@ProtocoderScript
-	@APIMethod(description = "Sets the immersive mode hidding all the system bars. Use this at the beginning of your script. Only works in > 4.4", example = "")
-	public void setImmersive() {
-
-    }
-
 
 	@ProtocoderScript
 	@APIMethod(description = "Forces landscape mode in the app", example = "")
