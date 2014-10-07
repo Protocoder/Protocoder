@@ -190,7 +190,7 @@ Dashboard.prototype.setBackgroundColor = function(r, g, b, a) {
 
 Dashboard.prototype.addPlot = function(element, name, posx, posy, w, h, minLimit, maxLimit) {
   var _delay = 10;
-  var _n = 40;
+  var _n = 500;
   var minVal; 
   var maxVal;
   var newPlot = true;
