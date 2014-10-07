@@ -592,6 +592,20 @@ Ui.prototype.openNewWindow = function(f) {
 	window.open("http://192.168.1.100:8585", "_blank", "toolbar=no, location=no, status=no, resizable=yes, width=500, height=500, left=10, top=10");
 }
 
+Ui.prototype.consoleLog = function(text) {
+    //limit to 1000 the num of log entries that can be displayed 
+   if (self.countLogs > 1000) { 
+		$("#console_wrapper #console p").slice(0, 100).remove(); 
+		self.countLogs -= 100;
+	}
+
+   $("#console_wrapper #console").append(text);        
+   var c = $("#console_wrapper #console")[0];
+   c.scrollTop = c.scrollHeight;
+
+   self.countLogs++;
+}
+
 Ui.prototype.initUpload = function() {
 	that = this;
 	//console.log("initUpload");

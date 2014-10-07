@@ -33,6 +33,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -251,4 +252,15 @@ public class AndroidUtils {
         }
     }
 
+
+    public static String colorHexToHtmlRgba(String colorHex) {
+        int c = Color.parseColor(colorHex);
+        float alpha = (float) (Color.alpha(c) / 255.0); //html uses normalized values
+        int r = Color.red(c);
+        int g = Color.green(c);
+        int b = Color.blue(c);
+        String colorStr = "rgba(" + r + "," + g + "," + b + "," + alpha + ")";
+
+        return colorStr;
+    }
 }
