@@ -14,7 +14,7 @@ var altTxt = ui.addText("City : ",10,300,500,100);
 //where for each update it will show an image of your current location 
 
 //we start in latitude and longitude 0, 0
-var map	= ui.addImage(0, 400, 700,500, "https://maps.googleapis.com/maps/api/staticmap?center=0,0&zoom=20&size=700x500&sensor=false");
+var map	= ui.addImage("https://maps.googleapis.com/maps/api/staticmap?center=0,0&zoom=20&size=700x500&sensor=false", 0, 400, 700, 500);
 
 //for each GPS update the image and values are changed 
 sensors.startGPS(function (lat, lon, alt, speed, bearing) { 

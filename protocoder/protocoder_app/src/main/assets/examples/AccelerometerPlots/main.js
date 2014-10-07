@@ -13,7 +13,7 @@ var webPlot = dashboard.addPlot("accelerometer x", 400, 100, 250, 100, -12, 12);
 plot.setDefinition(2);
 
 //start button, when press add plots and start accelerometer 
-ui.addButton("Start Accelerometer", 0, 0, ui.screenWidth, 100, function() {
+ui.addButton("Start Accelerometer", 0, 0, ui.screenWidth, 200, function() {
         dashboard.show(true);
 
         sensors.startAccelerometer(function(x,y,z) {
@@ -26,7 +26,7 @@ ui.addButton("Start Accelerometer", 0, 0, ui.screenWidth, 100, function() {
 });
 
 //stop accelerometer 
-ui.addButton("Stop Accelerometer", 0, 100, ui.screenWidth, 100, function() { 
+ui.addButton("Stop Accelerometer", 0, 100, ui.screenWidth, 200, function() { 
     dashboard.show(false);
     sensors.stopAccelerometer();
 });

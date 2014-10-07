@@ -18,7 +18,7 @@ var client = network.connectWebsocket(uri, function(status, data) {
 	console.log(status, data);
 });
 
-ui.addButton("send data", 10, 10, 200, 100, function() {
+ui.addButton("send data", 10, 10, 200, 200, function() {
 	client.send("client ", "ping!");
 });
 

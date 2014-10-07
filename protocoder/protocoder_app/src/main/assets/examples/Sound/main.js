@@ -6,10 +6,10 @@
 media.setVolume(100);
 device.enableVolumeKeys(true);
 
-ui.addButton("Meow", 0, 0, 500, 100, function() { 
+ui.addButton("Meow", 0, 0, 500, 200, function() { 
 	media.playSound("meow.ogg");
 });
 
-ui.addButton("Record", 0, 200, 500, 100, function() {
+ui.addButton("Record", 0, 200, 500, 200, function() {
 	media.recordAudio("recording.mp4", true);
 })

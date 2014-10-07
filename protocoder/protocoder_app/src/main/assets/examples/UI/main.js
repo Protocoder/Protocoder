@@ -6,7 +6,7 @@
 //ui.setTitle("UI examples");
 ui.setTitleBgColor(0, 255, 0, 255);
 //ui.showTitleBar(true);
-ui.backgroundColor(255, 255, 255);
+ui.setBackgroundColor(255, 255, 255);
 ui.allowScroll(true);
 
 //ui.showVirtualKeys(true);
@@ -55,7 +55,7 @@ ui.addRadioButton("radio button", 0, 900, 500, 100, true, function(val) {
 console.log("hoalalalala");
 
 //Add an image
-ui.addImage(0, 1050, 300, 300, "patata2.png");
+ui.addImage("patata2.png", 0, 1050, 300, 300);
 
 //Add an image button with a background
 ui.addImageButton(400, 1050, 300, 300,"patata2.png", false, function(val){ 
@@ -63,7 +63,7 @@ ui.addImageButton(400, 1050, 300, 300,"patata2.png", false, function(val){
 });
 
 //Add an image loaded from the web
-ui.addImage(0, 1400, 500, 500, "http://www.protocoder.org/images/patata.png");
+ui.addImage("http://www.protocoder.org/images/patata.png", 0, 1400, 500, 500);
 
 //Add an image loaded from the web
 ui.addSwitch(0, 2000, 500, 100, true, function(val){ 
@@ -78,4 +78,4 @@ var label = ui.addText("hola fonts", 0, 2200, 300, 200);
 label.setTextSize(50);
 label.font(font);
  
-var img = ui.addImage(0, 2300, 500, 500, "awesome_tiger.svg");
+var img = ui.addImage( "awesome_tiger.svg", 0, 2300, 500, 500);

@@ -5,7 +5,7 @@
 */
 
 // this line must be at the very beginning of the script
-ui.setFullscreen();
+ui.setScreenMode("immersive");
 
 // forces portrait mode 
 ui.setScreenMode("portrait");

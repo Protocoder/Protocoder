@@ -10,7 +10,7 @@ var client = network.connectSocketIO(url, function(status, socket, data) {
     console.log(status, socket, data);
 });
 
-ui.addButton("Ping", 10, 10, 200, 100, function() {
+ui.addButton("Ping", 10, 10, 200, 200, function() {
     client.emit("ping", null);
 });
 

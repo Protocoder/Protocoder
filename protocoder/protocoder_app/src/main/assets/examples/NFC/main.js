@@ -14,7 +14,7 @@ sensors.onNFC(function (id, data) {
 
 //when we click 
 //the next touched nfc will be written with the data 
-ui.addButton("Write to NFC", 0, 200, 500, 100, function(){
+ui.addButton("Write to NFC", 0, 200, 500, 200, function(){
 	sensors.writeNFC("this is a test", function() {
 		nfcinfo.setText("data written");
 	});

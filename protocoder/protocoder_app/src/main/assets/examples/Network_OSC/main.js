@@ -8,12 +8,12 @@ network.startOSCServer(9000, function(name, data) {
 }); 
 
 var client;
-ui.addButton("Connect", 0, 0, 500, 100, function() { 
+ui.addButton("Connect", 0, 0, 500, 200, function() { 
     client = network.connectOSC("127.0.0.1", 9000);
 });
 
 
-ui.addButton("Send", 0, 100, 500, 100, function() { 
+ui.addButton("Send", 0, 200, 500, 200, function() { 
     var o = new Array();
     o.push("hola");
     o.push(2);
