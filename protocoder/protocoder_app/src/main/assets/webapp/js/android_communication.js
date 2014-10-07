@@ -289,28 +289,24 @@ Communication.prototype.initWebsockets = function () {
 
     if (result.type == "console") { 
       if (result.action == "log") { 
-	       //limit to 1000 the num of log entries that can be displayed 
-	       if (self.countLogs > 1000) { 
-				$("#console_wrapper #console p").slice(0, 100).remove(); 
-				self.countLogs -= 100;
-			}
-
-	       $("#console_wrapper #console").append('<p>' + result.values.val + '</p>');        
-	       var c = $("#console_wrapper #console")[0];
-	       c.scrollTop = c.scrollHeight;
-
-	       self.countLogs++;
+	  	protocoder.ui.consoleLog('<p>' + result.values.val + '</p>');
+	   } else if (result.action == "logC") {
+         protocoder.ui.consoleLog('<p style ="color:'+ result.values.color + '">' + result.values.val + '</p>'); 
        } else if (result.action == "clear") { 
-       		$("#console_wrapper #console").empty();
-       		self.countLogs = 0;
+       	 $("#console_wrapper #console").empty();
+       	 self.countLogs = 0;
        } else if (result.action == "backgroundColor") {
-
+       	 $("#console_wrapper").css("background-color", result.values.color)
        } else if (result.action == "textColor") {
-
+       		$('<style>#console p { color: ' + result.values.textColor + '; }</style>').appendTo('head');
        } else if (result.action == "textSize") {
-
+       		$('<style>#console p { font-size: ' + result.values.textSize + '; }</style>').appendTo('head');
        } else if (result.action == "show") {
-       		protocoder.ui.showConsole(result.values.val);
+	       	if (result.values.val == true) {
+	       		$("#console_wrapper").show();
+	       	} else {
+	       		$("#console_wrapper").hide();
+	       	}
        }
     }
 

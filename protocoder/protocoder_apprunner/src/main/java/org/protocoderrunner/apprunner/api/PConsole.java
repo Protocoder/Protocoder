@@ -30,6 +30,7 @@
 package org.protocoderrunner.apprunner.api;
 
 import android.app.Activity;
+import android.graphics.Color;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,63 +39,181 @@ import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.network.CustomWebsocketServer;
+import org.protocoderrunner.utils.AndroidUtils;
 
 import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class PConsole extends PInterface {
 
 	String TAG = "PConsole";
+    private boolean showTime = false;
 
-	public PConsole(Activity a) {
+    public PConsole(Activity a) {
 		super(a);
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "shows any HTML text in the webIde console", example = "")
 	@APIParam(params = { "text","text","..." })
-	public void log(String... outputs) throws JSONException, UnknownHostException {
+	public void log(String... outputs) {
 
 		StringBuilder builder = new StringBuilder();
+        builder.append(getCurrentTime());
 
 		for (String output : outputs) {
 			builder.append(" ").append(output);
 		}
 
-		JSONObject values = new JSONObject().put("val", builder.toString());
-        JSONObject msg = new JSONObject().put("type", "console").put("action", "log").put("values", values);
 
-		CustomWebsocketServer.getInstance(a.get()).send(msg);
+        JSONObject values = null;
+        JSONObject msg = null;
+        try {
+           values = new JSONObject().put("val", builder.toString());
+           msg = new JSONObject().put("type", "console").put("action", "log").put("values", values);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        send(msg);
 	}
 
-	@ProtocoderScript
+    @ProtocoderScript
 	@APIMethod(description = "clear the webIde console", example = "")
 	@APIParam(params = { "" })
-	public void clear() throws JSONException, UnknownHostException {
-		JSONObject msg = new JSONObject().put("type", "console").put("action", "clear");
+	public void clear() {
+        JSONObject msg = null;
+        try {
+            msg = new JSONObject().put("type", "console").put("action", "clear");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        send(msg);
+    }
 
-		CustomWebsocketServer.getInstance(a.get()).send(msg);
-	}
-
-    //TODO
+    @ProtocoderScript
+    @APIMethod(description = "show/hide the console", example = "")
+    @APIParam(params = { "boolean" })
     public void show(boolean b) {
+        JSONObject values = null;
+        JSONObject msg = null;
+        try {
+            values = new JSONObject().put("val", b);
+            msg = new JSONObject().put("type", "console").put("action", "show").put("values", values);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        send(msg);
+    }
+
+    @ProtocoderScript
+    @APIMethod(description = "Change the background color", example = "")
+    @APIParam(params = { "colorHex" })
+    public void backgroundColor(String colorHex) {
+        String color = AndroidUtils.colorHexToHtmlRgba(colorHex);
+
+        JSONObject values = null;
+        JSONObject msg = null;
+        try {
+            values = new JSONObject().put("color", color);
+            msg = new JSONObject().put("type", "console").put("action", "backgroundColor").put("values", values);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        send(msg);
+    }
+
+    @ProtocoderScript
+    @APIMethod(description = "Log using a defined colorHex", example = "")
+    @APIParam(params = { "colorHex" })
+    public void logC(String text, String colorHex) {
+        String color = AndroidUtils.colorHexToHtmlRgba(colorHex);
+
+        text = getCurrentTime() + " " + text;
+        JSONObject values = null;
+        JSONObject msg = null;
+        try {
+            values = new JSONObject().put("val", text).put("color", color);
+            msg = new JSONObject().put("type", "console").put("action", "logC").put("values", values);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        send(msg);
+    }
+
+
+    @ProtocoderScript
+    @APIMethod(description = "Changes the console text size", example = "")
+    @APIParam(params = { "size" })
+    public void textSize(int textSize) {
+
+        JSONObject values = null;
+        JSONObject msg = null;
+        try {
+            values = new JSONObject().put("textSize", textSize+"px");
+            msg = new JSONObject().put("type", "console").put("action", "textSize").put("values", values);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        send(msg);
+    }
+
+
+
+    @ProtocoderScript
+    @APIMethod(description = "Changes the console text color", example = "")
+    @APIParam(params = { "colorHex" })
+    public void textColor(String colorHex) {
+        String color = AndroidUtils.colorHexToHtmlRgba(colorHex);
+
+        JSONObject values = null;
+        JSONObject msg = null;
+        try {
+            values = new JSONObject().put("textColor", color);
+            msg = new JSONObject().put("type", "console").put("action", "textColor").put("values", values);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        send(msg);
 
     }
 
-    //TODO
-    public void size(int textSize) {
+    @ProtocoderScript
+    @APIMethod(description = "Enable/Disable time in the log", example = "")
+    @APIParam(params = { "boolean" })
+    public void showTime(boolean b) {
+        showTime = b;
 
     }
 
-    public void logC(String text, String color) {
 
+    private void send(JSONObject msg) {
+        try {
+            CustomWebsocketServer.getInstance(a.get()).send(msg);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void textColor(String color) {
-        
+    private String getCurrentTime() {
+        String time = "";
+
+        if (showTime) {
+            Calendar cal = Calendar.getInstance(TimeZone.getDefault());
+
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
+            time = sdf.format(cal.getTime()).toString();
+        }
+
+        return time;
     }
 
-    public void backgroundColor(String color) {
-
-    }
 }
 
