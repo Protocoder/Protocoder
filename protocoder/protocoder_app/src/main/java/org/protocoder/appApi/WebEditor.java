@@ -42,8 +42,8 @@ public class WebEditor {
 
     WebEditor(Protocoder protocoder) {
         this.protocoder = protocoder;
-       // console = new PConsole((Activity) Protocoder.a);
-       // dashboard = new PDashboard((Activity) Protocoder.a);
+        console = new PConsole(Protocoder.a);
+        dashboard = new PDashboard(Protocoder.a);
     }
 
     public void open(String folder, String appName) {

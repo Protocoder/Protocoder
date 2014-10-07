@@ -52,25 +52,21 @@ public class Protocoder {
     public ProtoScripts protoScripts;
     public WebEditor webEditor;
 
-    PApp pApp;
-    PConsole pConsole;
-    PDashboard pDashboard;
-    PDevice pDevice;
-    PFileIO pFileIO;
-    PMedia pMedia;
-    PNetwork pNetwork;
-    PProtocoder pProtocoder;
-    PSensors pSensors;
-    PUI pUi;
-    PUtil pUtil;
+    //PApp pApp;
+    //PDevice pDevice;
+    //PFileIO pFileIO;
+    //PMedia pMedia;
+    //PNetwork pNetwork;
+    //PProtocoder pProtocoder;
+    //PSensors pSensors;
+    //PUI pUi;
+    //PUtil pUtil;
 
     //instantiate the objects that can be accessed from the interpreter
 
 
     Protocoder() {
         //pApp = new PApp(a);
-        //pConsole = new PConsole(a);
-        //pDashboard = new PDashboard(a);
         //pDevice = new PDevice(a);
         //pFileIO = new PFileIO(a);
         //pMedia = new PMedia((org.protocoderrunner.apprunner.AppRunnerActivity) a);
