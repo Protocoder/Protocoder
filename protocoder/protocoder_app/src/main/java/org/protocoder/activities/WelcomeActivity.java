@@ -27,7 +27,7 @@
  * 
  */
 
-package org.protocoder;
+package org.protocoder.activities;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
@@ -39,7 +39,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import org.protocoder.fragments.PreferencesFragment;
+import org.protocoder.MainActivity;
+import org.protocoder.R;
+import org.protocoder.fragments.SettingsFragment;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.project.ProjectManager.InstallListener;
@@ -71,7 +73,7 @@ public class WelcomeActivity extends BaseActivity {
 		copyright.setText(readFile(R.raw.copyright_notice));
 
 		// first time id
-		PreferencesFragment.setId(this, StrUtils.generateRandomString());
+		SettingsFragment.setId(this, StrUtils.generateRandomString());
 	}
 
 	/**

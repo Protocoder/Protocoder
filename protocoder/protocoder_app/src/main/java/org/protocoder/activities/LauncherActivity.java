@@ -27,13 +27,15 @@
  * 
  */
 
-package org.protocoder;
+package org.protocoder.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import org.protocoder.fragments.PreferencesFragment;
+import org.protocoder.MainActivity;
+import org.protocoder.R;
+import org.protocoder.fragments.SettingsFragment;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.utils.StrUtils;
 
@@ -55,8 +57,8 @@ public class LauncherActivity extends BaseActivity {
 
 		if (firstLaunch) {
 			intent = new Intent(this, WelcomeActivity.class);
-            PreferencesFragment.setId(this, StrUtils.generateRandomString());
-            PreferencesFragment.setConnectionAlert(this, true);
+            SettingsFragment.setId(this, StrUtils.generateRandomString());
+            SettingsFragment.setConnectionAlert(this, true);
 		} else {
 			intent = new Intent(this, MainActivity.class);
 		}
