@@ -124,7 +124,6 @@ Communication.prototype.listFilesInProject = function (pName, pType) {
 } 
 
 Communication.prototype.runApp = function (project) {
-	console.log(project);
 	var obj = {};
 	obj.cmd = "run_app";
 	obj.name = project.name;
@@ -383,6 +382,10 @@ Communication.prototype.getCodeFor = function (projectName) {
    //get project 
    //console.log("get project --> " + projectName);
    ws.send('{type:get_code, name:"'+projectName+'"}');
+}
+
+Communication.prototype.highlight = function(folder, name) {
+   ws.send('{id: "protocoderApp", type:"project_highlight", folder:"'+folder+'", name:"'+name+'"}');
 }
 
 //save project 

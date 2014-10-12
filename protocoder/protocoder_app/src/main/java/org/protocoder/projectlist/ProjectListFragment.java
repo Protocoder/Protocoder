@@ -54,7 +54,7 @@ import android.widget.GridView;
 
 import org.protocoder.R;
 import org.protocoder.appApi.Protocoder;
-import org.protocoder.fragments.PreferencesFragment;
+import org.protocoder.fragments.SettingsFragment;
 import org.protocoderrunner.base.BaseFragment;
 import org.protocoderrunner.events.Events.ProjectEvent;
 import org.protocoderrunner.project.Project;
@@ -79,7 +79,7 @@ public class ProjectListFragment extends BaseFragment {
     public boolean orderByName;
     public int num = 0;
     public static int totalNum = 0;
-    public Intent.ShortcutIconResource icon;
+    //public Intent.ShortcutIconResource icon;
 
     public ProjectListFragment() {
         num = totalNum++;
@@ -92,14 +92,20 @@ public class ProjectListFragment extends BaseFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        //this.icon = getArguments().getString("icon");
 
-		View v = inflater.inflate(R.layout.fragment_project, container, false);
+        MLog.d(TAG, "createview " + getArguments().getString("folderName"));
+        this.projectFolder = getArguments().getString("folderName");
+        this.color = getArguments().getInt("color");
+        this.orderByName = getArguments().getBoolean("orderByName");
+
+        View v = inflater.inflate(R.layout.fragment_project, container, false);
 
 		// Get GridView and set adapter
 		gridView = (GridView) v.findViewById(R.id.gridview);
-		listMode = PreferencesFragment.getListPreference(getActivity());
+		listMode = SettingsFragment.getListPreference(getActivity());
 
-		MLog.d("mode", "" + listMode);
+		MLog.d(TAG, "fragment for " + projectFolder);
 		if (listMode) {
 			gridView.setNumColumns(1);
 		}
@@ -153,10 +159,30 @@ public class ProjectListFragment extends BaseFragment {
 		return v;
 	}
 
-	public void refreshProjects() {
-		projects = ProjectManager.getInstance().list(projectFolder, orderByName);
+    public static ProjectListFragment newInstance(int icon, String folderName, int color, boolean orderByName) {
+        ProjectListFragment myFragment = new ProjectListFragment();
 
-		projectAdapter = new ProjectItemAdapter(getActivity(), projectFolder, projects, listMode);
+        //this.icon = icon;
+        //this.projectFolder = folderName;
+        //this.color = color;
+        //this.orderByName = orderByName;
+        //Intent.ShortcutIconResource icon_project = Intent.ShortcutIconResource.fromContext(this, R.drawable.ic_script);
+
+        Bundle args = new Bundle();
+        args.putInt("icon", icon);
+        args.putString("folderName", folderName);
+        args.putInt("color", color);
+        args.putBoolean("orderByName", orderByName);
+        myFragment.setArguments(args);
+
+        return myFragment;
+    }
+
+	public void refreshProjects() {
+		projects = ProjectManager.getInstance().list(this.projectFolder, this.orderByName);
+        MLog.d(TAG, "refreshProjects " + this.projectFolder + " " + this.orderByName + " " + projects);
+
+		projectAdapter = new ProjectItemAdapter(getActivity(), this.projectFolder, this.projects, this.listMode);
 		gridView.setAdapter(projectAdapter);
 		notifyAddedProject();
 	}
@@ -187,6 +213,8 @@ public class ProjectListFragment extends BaseFragment {
     }
     public int findAppPosByName(String appName) {
         int pos = -1;
+
+        MLog.d(TAG, "findAppPosByName " + projects);
 
         for (int i = 0; i < projects.size(); i++) {
             String name = projects.get(i).getName();
@@ -259,7 +287,7 @@ public class ProjectListFragment extends BaseFragment {
             Protocoder.getInstance(getActivity()).protoScripts.run(project.getFolder(), project.getName());
 			return true;
 		} else if (itemId == R.id.menu_project_list_edit) {
-            Protocoder.getInstance(getActivity()).app.editor.show(true, project);
+            Protocoder.getInstance(getActivity()).app.editor.show(true, project.getFolder(), project.getName());
 			return true;
 		} else if (itemId == R.id.menu_project_list_delete) {
             Protocoder.getInstance(getActivity()).protoScripts.delete(project.getFolder(), project.getName());
@@ -300,7 +328,8 @@ public class ProjectListFragment extends BaseFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-	}
+        //icon = Intent.ShortcutIconResource.fromContext(getActivity(), R.drawable.ic_script_example);
+    }
 
 	@Override
 	public void onPause() {

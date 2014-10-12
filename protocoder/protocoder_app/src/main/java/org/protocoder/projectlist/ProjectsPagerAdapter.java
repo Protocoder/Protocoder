@@ -31,22 +31,30 @@ package org.protocoder.projectlist;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.view.View;
+import android.view.ViewGroup;
+
+import org.protocoderrunner.utils.MLog;
 
 import java.util.Vector;
 
-public class ProjectsPagerAdapter extends FragmentStatePagerAdapter {
+public class ProjectsPagerAdapter extends FragmentPagerAdapter {
 
 	private Vector<ProjectListFragment> fragments;
+    private String TAG = "ProjectsPagerAdapter";
 
-	public ProjectsPagerAdapter(FragmentManager fm) {
+    public ProjectsPagerAdapter(FragmentManager fm) {
 		super(fm);
+        MLog.d(TAG, "projects pager adapter created");
 
         fragments = new Vector<>();
 	}
 
 	@Override
 	public Fragment getItem(int i) {
+        MLog.d(TAG, "getting fragment " + i);
 		ProjectListFragment f = fragments.get(i);
 
 		return f;
@@ -59,11 +67,21 @@ public class ProjectsPagerAdapter extends FragmentStatePagerAdapter {
 
 	@Override
 	public CharSequence getPageTitle(int position) {
-		return fragments.get(position).projectFolder;
+        String name = fragments.get(position).projectFolder;
+        MLog.d(TAG, "qq " + name);
+		return name;
 	}
 
     public void addFragment(ProjectListFragment f) {
+        MLog.d(TAG, "pre addFragment size " + fragments.size());
+
         fragments.add(f);
+
+        MLog.d(TAG, "post addFragment size " + fragments.size() + f.projectFolder);
     }
 
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        super.destroyItem(container, position, object);
+    }
 }

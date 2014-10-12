@@ -32,6 +32,7 @@ package org.protocoderrunner.apprunner.api;
 import android.animation.TimeInterpolator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -64,11 +65,10 @@ public class PUtil extends PInterface {
 	private final Handler handler;
 	ArrayList<Runnable> rl = new ArrayList<Runnable>();
 
-	public PUtil(Activity a) {
+	public PUtil(Context a) {
 		super(a);
 		WhatIsRunning.getInstance().add(this);
 		handler = new Handler();
-
 	}
 
 	// --------- getRequest ---------//
@@ -137,7 +137,7 @@ public class PUtil extends PInterface {
 	}
 
 	// --------- delay ---------//
-	interface delayCB {
+	public interface delayCB {
 		void event();
 	}
 

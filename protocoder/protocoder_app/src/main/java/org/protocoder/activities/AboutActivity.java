@@ -27,7 +27,7 @@
  * 
  */
 
-package org.protocoder;
+package org.protocoder.activities;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
@@ -35,6 +35,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import org.protocoder.MainActivity;
+import org.protocoder.R;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.utils.MLog;
 

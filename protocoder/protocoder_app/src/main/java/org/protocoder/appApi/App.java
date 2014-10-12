@@ -42,9 +42,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.java_websocket.drafts.Draft_17;
-import org.protocoder.AboutActivity;
+import org.protocoder.activities.AboutActivity;
 import org.protocoder.R;
-import org.protocoder.SetPreferenceActivity;
+import org.protocoder.activities.SetPreferenceActivity;
 import org.protocoder.network.ProtocoderHttpServer;
 import org.protocoder.views.Overlay;
 import org.protocoderrunner.AppSettings;
@@ -52,7 +52,6 @@ import org.protocoderrunner.network.CustomWebsocketServer;
 import org.protocoderrunner.network.IDEcommunication;
 import org.protocoderrunner.network.NetworkUtils;
 import org.protocoderrunner.utils.AndroidUtils;
-import org.protocoderrunner.utils.MLog;
 
 import java.net.UnknownHostException;
 
@@ -259,17 +258,17 @@ public class App {
 
         // check if there is a WIFI connection or we can connect via USB
         if (NetworkUtils.getLocalIpAddress(protocoder.a).equals("-1")) {
-            protocoder.app.setIp("No WIFI, still you can hack via USB using the companion app");
+            setIp("No WIFI, still you can hack via USB using the companion app");
         } else {
-            protocoder.app.setIp("Hack via your browser @ http://" + NetworkUtils.getLocalIpAddress(protocoder.a) + ":"
+            setIp("Hack via your browser @ http://" + NetworkUtils.getLocalIpAddress(protocoder.a) + ":"
                     + AppSettings.HTTP_PORT);
         }
 
         if (httpServer != null) {// If no instance of HTTPServer, we set the IP
             // address view to gone.
-            protocoder.app.showNetworkBottomInfo(true);
+            showNetworkBottomInfo(true);
         } else {
-            protocoder.app.showNetworkBottomInfo(false);
+            showNetworkBottomInfo(false);
         }
 
         return 1;
@@ -284,7 +283,7 @@ public class App {
             httpServer.close();
             httpServer = null;
         }
-        protocoder.app.setIp(protocoder.a.getResources().getString(R.string.start_the_server));
+        setIp(protocoder.a.getResources().getString(R.string.start_the_server));
     }
 
     /**
@@ -295,7 +294,7 @@ public class App {
             httpServer.stop();
             httpServer = null;
         }
-        protocoder.app.setIp(protocoder.a.getResources().getString(R.string.start_the_server));
+        setIp(protocoder.a.getResources().getString(R.string.start_the_server));
     }
 
 

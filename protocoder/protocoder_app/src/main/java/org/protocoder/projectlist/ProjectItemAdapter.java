@@ -111,7 +111,7 @@ public class ProjectItemAdapter extends BaseAdapter {
 		}
 		customView.setTag(projects.get(position).getName());
         customView.setSelected(p.selected);
-        MLog.d(TAG, "is selected " + p.selected);
+        //MLog.d(TAG, "is selected " + p.selected);
 
 		if (getCount() - 1 == position) {
 			customView.setPadding(0, 0, 0, 100);

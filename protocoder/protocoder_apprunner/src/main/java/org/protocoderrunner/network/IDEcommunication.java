@@ -4,18 +4,56 @@ import android.app.Activity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.protocoderrunner.events.Events;
+import org.protocoderrunner.utils.MLog;
+import org.protocoderrunner.utils.StrUtils;
 
 import java.lang.ref.WeakReference;
 import java.net.UnknownHostException;
 
+import de.greenrobot.event.EventBus;
+
 public class IDEcommunication {
 
+    private String TAG = "IDECommunication";
 	private static IDEcommunication inst;
 	public WeakReference<Activity> a;
+    CustomWebsocketServer ws;
 
 	public IDEcommunication(Activity appActivity) {
 		this.a = new WeakReference<Activity>((Activity) appActivity);
-	}
+
+        try {
+            ws = CustomWebsocketServer.getInstance(a.get());
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+
+        ws.addListener("protocoderApp", new CustomWebsocketServer.WebSocketListener() {
+            @Override
+            public void onUpdated(JSONObject jsonObject) {
+                try {
+                    String type = jsonObject.getString("type");
+
+                    if (type.equals("project_highlight")) {
+                        String folder = jsonObject.getString("folder");
+                        String name = jsonObject.getString("name");
+
+
+                        MLog.d(TAG, "selected " + folder + " " + name);
+
+                        Events.SelectedProjectEvent evt = new Events.SelectedProjectEvent(folder, name);
+                        EventBus.getDefault().post(evt);
+
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+    }
 
 	// Singleton (one app view, different URLs)
 	public static IDEcommunication getInstance(Activity a) {
@@ -41,14 +79,7 @@ public class IDEcommunication {
 			e1.printStackTrace();
 		}
 
-		try {
-			CustomWebsocketServer ws = CustomWebsocketServer.getInstance(a.get());
-			ws.send(msg);
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
+        ws.send(msg);
 	}
 
 }

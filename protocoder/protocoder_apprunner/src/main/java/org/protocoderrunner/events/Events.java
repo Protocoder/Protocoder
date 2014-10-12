@@ -89,4 +89,20 @@ public class Events {
 			return tag;
 		}
 	}
+
+    public static class SelectedProjectEvent {
+        private String folder;
+        private String name;
+
+        public SelectedProjectEvent(String folder, String name) {
+            this.folder = folder;
+            this.name = name;
+        }
+        public String getFolder() {
+            return this.folder;
+        }
+        public String getName() {
+            return this.name;
+        }
+    }
 }

@@ -37,7 +37,7 @@ import org.protocoderrunner.apprunner.api.PDashboard;
 public class WebEditor {
 
     private final Protocoder protocoder;
-    private PDashboard dashboard = null;
+    public PDashboard dashboard = null;
     public PConsole console = null;
 
     WebEditor(Protocoder protocoder) {

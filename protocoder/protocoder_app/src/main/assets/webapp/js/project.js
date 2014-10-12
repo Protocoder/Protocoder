@@ -31,27 +31,33 @@ function setProjectList(filter, data) {
    //console.log("-->", k, project); 
    //console.log('#list_projects #'+div+" #ul");
    // console.log("binding -> " + div + " #"+project.name);
-  $('<li id ="'+project.name+'"><span>' + project.name + '</span><div id ="actions"> <div id ="cont"> <i id = "rename" class="fa fa-pencil"></i> <i id = "delete" class="fa fa-trash-o"> </i>   </div> </div> </li>').click(function () {
-      currentProject = project;
-      currentProject.type = filter;
-      protocoder.communication.fetchCode(project.name, project.type);
-      protocoder.ui.showProjects(false);
+  $('<li id ="'+project.name+'"><span>' + project.name + '</span><div id ="actions"> <div id ="cont"> <i id = "rename" class="fa fa-pencil"></i> <i id = "delete" class="fa fa-trash-o"> </i>   </div> </div> </li>')
+      .click(function () {
+        currentProject = project;
+        currentProject.type = filter;
+        protocoder.communication.fetchCode(project.name, project.type);
+        protocoder.ui.showProjects(false);
 
-      $("#list_projects #" + project.name + " #rename").click(function(e) { 
-        console.log("rename");
-        protocoder.communication.renameProject(project);
-        e.stopPropagation();
+        $("#list_projects #" + project.name + " #rename").click(function(e) { 
+          console.log("rename");
+          protocoder.communication.renameProject(project);
+          e.stopPropagation();
 
-      });
+        });
 
-      $("#list_projects #" + project.name + " #delete").click(function(e) { 
-        console.log("delete");
-        protocoder.communication.removeApp(project);
-        e.stopPropagation();
-      });
+        $("#list_projects #" + project.name + " #delete").click(function(e) { 
+          console.log("delete");
+          protocoder.communication.removeApp(project);
+          e.stopPropagation();
+        });
+      })
+      .hover(function() {
+        console.log("hover " + filter + " " + project.name)
+        protocoder.communication.highlight(filter, project.name);
 
+      })
+      .appendTo('#list_projects #'+div+" ul");
 
-    }).appendTo('#list_projects #'+div+" ul");
     obj.items.push(project.name);
   });
 
