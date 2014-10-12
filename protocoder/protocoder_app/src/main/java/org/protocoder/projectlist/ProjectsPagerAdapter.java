@@ -38,11 +38,14 @@ import android.view.ViewGroup;
 
 import org.protocoderrunner.utils.MLog;
 
+import java.util.HashMap;
 import java.util.Vector;
 
 public class ProjectsPagerAdapter extends FragmentPagerAdapter {
 
-	private Vector<ProjectListFragment> fragments;
+	public Vector<ProjectListFragment> fragments;
+    public Vector<String> fragmentNames;
+
     private String TAG = "ProjectsPagerAdapter";
 
     public ProjectsPagerAdapter(FragmentManager fm) {
@@ -50,7 +53,9 @@ public class ProjectsPagerAdapter extends FragmentPagerAdapter {
         MLog.d(TAG, "projects pager adapter created");
 
         fragments = new Vector<>();
-	}
+        fragmentNames = new Vector<>();
+
+    }
 
 	@Override
 	public Fragment getItem(int i) {
@@ -72,16 +77,39 @@ public class ProjectsPagerAdapter extends FragmentPagerAdapter {
 		return name;
 	}
 
-    public void addFragment(ProjectListFragment f) {
+    public void addFragment(String name, ProjectListFragment f) {
         MLog.d(TAG, "pre addFragment size " + fragments.size());
 
         fragments.add(f);
+        fragmentNames.add(name);
 
         MLog.d(TAG, "post addFragment size " + fragments.size() + f.projectFolder);
+    }
+
+    public int getFragmentNumByName(String fragmentName) {
+        int num = -1;
+
+        for (int i = 0; i < fragments.size(); i++) {
+            String name = fragments.get(i).projectFolder;
+            if (name.equals(fragmentName)) {
+                num = i;
+                break;
+            }
+        }
+
+        return num;
+    }
+
+
+    public ProjectListFragment getFragmentByName(String folder) {
+        int loc = getFragmentNumByName(folder);
+        return fragments.get(loc);
     }
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         super.destroyItem(container, position, object);
     }
+
+
 }

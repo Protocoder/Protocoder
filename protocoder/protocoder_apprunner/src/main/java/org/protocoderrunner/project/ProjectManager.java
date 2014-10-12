@@ -242,7 +242,6 @@ public class ProjectManager {
     }
 
     public Project get(String folder, String name) {
-        MLog.d(TAG, "looking for project " + name + " in " + folder);
         ArrayList<Project> projects = list(folder, false);
         for (Project project : projects) {
             if (name.equals(project.getName())) {

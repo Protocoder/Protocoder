@@ -34,9 +34,9 @@ import android.animation.Animator.AnimatorListener;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -70,7 +70,7 @@ public class ProjectListFragment extends BaseFragment {
 
     private String TAG = "ProjectListFragment";
 
-    public ArrayList<Project> projects;
+    public ArrayList<Project> mProjects;
 	protected ProjectItemAdapter projectAdapter;
 	protected GridView gridView;
 	public String projectFolder;
@@ -88,20 +88,23 @@ public class ProjectListFragment extends BaseFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-	}
+        MLog.d(TAG, "onCreate " + getArguments().getString("folderName"));
+        this.projectFolder = getArguments().getString("folderName");
+        this.color = getArguments().getInt("color");
+        this.orderByName = getArguments().getBoolean("orderByName");
+
+        mProjects = ProjectManager.getInstance().list(this.projectFolder, this.orderByName);
+    }
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //this.icon = getArguments().getString("icon");
 
-        MLog.d(TAG, "createview " + getArguments().getString("folderName"));
-        this.projectFolder = getArguments().getString("folderName");
-        this.color = getArguments().getInt("color");
-        this.orderByName = getArguments().getBoolean("orderByName");
+        MLog.d(TAG, "onCreateView " + getArguments().getString("folderName"));
 
         View v = inflater.inflate(R.layout.fragment_project, container, false);
 
-		// Get GridView and set adapter
+        // Get GridView and set adapter
 		gridView = (GridView) v.findViewById(R.id.gridview);
 		listMode = SettingsFragment.getListPreference(getActivity());
 
@@ -111,7 +114,6 @@ public class ProjectListFragment extends BaseFragment {
 		}
 		// set the empty state
 		gridView.setEmptyView(v.findViewById(R.id.empty_grid_view));
-		refreshProjects();
 
 		registerForContextMenu(gridView);
 
@@ -147,7 +149,7 @@ public class ProjectListFragment extends BaseFragment {
 					}
 				});
 				animSpin.start();
-				Project project = projects.get(position);
+				Project project = mProjects.get(position);
 				ProjectEvent evt = new ProjectEvent(project, "run");
 				EventBus.getDefault().post(evt);
 				getActivity().overridePendingTransition(R.anim.splash_slide_in_anim_set,
@@ -156,17 +158,33 @@ public class ProjectListFragment extends BaseFragment {
 			}
 		});
 
-		return v;
+
+        return v;
 	}
+
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        MLog.d(TAG, "onActivityCreated");
+        //setRetainInstance(true);
+
+        //icon = Intent.ShortcutIconResource.fromContext(getActivity(), R.drawable.ic_script_example);
+        projectAdapter = new ProjectItemAdapter(getActivity(), this.projectFolder, this.mProjects, this.listMode);
+        gridView.setAdapter(projectAdapter);
+
+        notifyAddedProject();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        MLog.d(TAG, "onAttach");
+
+    }
 
     public static ProjectListFragment newInstance(int icon, String folderName, int color, boolean orderByName) {
         ProjectListFragment myFragment = new ProjectListFragment();
-
-        //this.icon = icon;
-        //this.projectFolder = folderName;
-        //this.color = color;
-        //this.orderByName = orderByName;
-        //Intent.ShortcutIconResource icon_project = Intent.ShortcutIconResource.fromContext(this, R.drawable.ic_script);
 
         Bundle args = new Bundle();
         args.putInt("icon", icon);
@@ -179,19 +197,15 @@ public class ProjectListFragment extends BaseFragment {
     }
 
 	public void refreshProjects() {
-		projects = ProjectManager.getInstance().list(this.projectFolder, this.orderByName);
-        MLog.d(TAG, "refreshProjects " + this.projectFolder + " " + this.orderByName + " " + projects);
-
-		projectAdapter = new ProjectItemAdapter(getActivity(), this.projectFolder, this.projects, this.listMode);
-		gridView.setAdapter(projectAdapter);
-		notifyAddedProject();
-	}
+        mProjects = ProjectManager.getInstance().list(this.projectFolder, this.orderByName);
+    	notifyAddedProject();
+    }
 
 	protected void deleteProject(int position) {
-		Project p = projects.get(position);
+		Project p = mProjects.get(position);
 		ProjectManager.getInstance().deleteProject(p);
 
-		projects.remove(position);
+		mProjects.remove(position);
 
 		projectAdapter.notifyDataSetChanged();
 		gridView.invalidateViews();
@@ -201,8 +215,8 @@ public class ProjectListFragment extends BaseFragment {
     public int findAppIdByName(String appName) {
         int id = -1;
 
-        for (int i = 0; i < projects.size(); i++) {
-            String name = projects.get(i).getName();
+        for (int i = 0; i < mProjects.size(); i++) {
+            String name = mProjects.get(i).getName();
             if (name.equals(appName)) {
                 id = i;
                 break;
@@ -213,11 +227,11 @@ public class ProjectListFragment extends BaseFragment {
     }
     public int findAppPosByName(String appName) {
         int pos = -1;
+      
+        MLog.d(TAG, "findAppPosByName " + appName + " " + mProjects);
 
-        MLog.d(TAG, "findAppPosByName " + projects);
-
-        for (int i = 0; i < projects.size(); i++) {
-            String name = projects.get(i).getName();
+        for (int i = 0; i < mProjects.size(); i++) {
+            String name = mProjects.get(i).getName();
             if (name.equals(appName)) {
                 pos = (int) projectAdapter.getItemId(i);
                 break;
@@ -280,7 +294,7 @@ public class ProjectListFragment extends BaseFragment {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 		final int index = info.position;
 
-		Project project = projects.get(index);
+		Project project = mProjects.get(index);
 
 		int itemId = item.getItemId();
 		if (itemId == R.id.menu_project_list_run) {
@@ -297,12 +311,10 @@ public class ProjectListFragment extends BaseFragment {
 				public void onClick(DialogInterface dialog, int which) {
 					switch (which) {
 					case DialogInterface.BUTTON_POSITIVE:
-						// Yes button clicked
 						deleteProject(index);
 						break;
 
 					case DialogInterface.BUTTON_NEGATIVE:
-						// No button clicked
 						break;
 					}
 				}
@@ -325,30 +337,36 @@ public class ProjectListFragment extends BaseFragment {
 		}
 	}
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-        //icon = Intent.ShortcutIconResource.fromContext(getActivity(), R.drawable.ic_script_example);
-    }
 
 	@Override
 	public void onPause() {
 		super.onPause();
 
-	}
+        MLog.d(TAG, "onPause");
+
+    }
 
 	@Override
 	public void onResume() {
 		super.onResume();
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
+
+        MLog.d(TAG, "onResume");
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-	}
+        MLog.d(TAG, "onDestroy");
+    }
 
-	public void projectRefresh(String projectName) {
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        MLog.d(TAG, "onDestroyView");
+    }
+
+    public void projectRefresh(String projectName) {
 		View v = gridView.findViewWithTag(projectName);
         v.animate().alpha(0).setDuration(500).setInterpolator(new CycleInterpolator(1));
 	}
