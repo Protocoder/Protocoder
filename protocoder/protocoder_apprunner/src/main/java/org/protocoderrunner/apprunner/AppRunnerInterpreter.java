@@ -47,7 +47,7 @@ import org.protocoderrunner.utils.MLog;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * Original sourcecode from Droid Script :
+ * Derived from Droid Script :
  * https://github.com/divineprog/droidscript Copyright (c) Mikael Kindborg 2010
  * Source code license: MIT
  */
@@ -70,21 +70,6 @@ public class  AppRunnerInterpreter {
 		// this.a = new WeakReference<AppRunnerActivity>((AppRunnerActivity)
 		// mainScriptContext);
 		this.a = context;
-
-
-        //old way of adding objects to javascript
-//        this.addInterface(PApp.class);
-//		this.addInterface(PBoards.class);
-//		this.addInterface(PConsole.class);
-//		this.addInterface(PDashboard.class);
-//		this.addInterface(PDevice.class);
-//		this.addInterface(PFileIO.class);
-//		this.addInterface(PMedia.class);
-//		this.addInterface(PNetwork.class);
-//		this.addInterface(PProtocoder.class);
-//		this.addInterface(PSensors.class);
-//		this.addInterface(PUI.class);
-//		this.addInterface(PUtil.class);
 
 	}
 
@@ -142,7 +127,7 @@ public class  AppRunnerInterpreter {
 		}
 	}
 
-	protected void createInterpreter(boolean isActivity) {
+	public void createInterpreter(boolean isActivity) {
 		// Initialize global mainScriptContext factory with our custom factory.
 		if (null == contextFactory) {
 			contextFactory = new ScriptContextFactory(this);
