@@ -1178,10 +1178,11 @@ public class PUI extends PUIGeneric {
 
     @ProtocoderScript
     @APIMethod(description = "Shows a popup with a given text", example = "")
-	@APIParam(params = { "title", "function(boolean)" })
-	public void popupInfo(String title, String ok, String cancel, final popupCB callbackfn) {
+	@APIParam(params = { "title", "message", "okButton", "cancelButton", "function(boolean)" })
+	public void popupInfo(String title, String msg, String ok, String cancel, final popupCB callbackfn) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(a.get());
 		builder.setTitle(title);
+        builder.setMessage(msg);
 
 		if (!ok.isEmpty()) {
 			// Set up the buttons
