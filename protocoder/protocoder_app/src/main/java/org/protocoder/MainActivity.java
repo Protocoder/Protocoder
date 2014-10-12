@@ -112,7 +112,12 @@ public class MainActivity extends BaseActivity {
        /*
         *  Views
         */
-        addFragments();
+
+        if (savedInstanceState == null) {
+            addFragments();
+        } else {
+            mProtocoder.protoScripts.reinitScriptList();
+        }
 
         // Check when a file is changed in the protocoder dir
 		observer = new FileObserver(ProjectManager.FOLDER_USER_PROJECTS, FileObserver.CREATE | FileObserver.DELETE) {
@@ -156,6 +161,12 @@ public class MainActivity extends BaseActivity {
         mProtocoder.protoScripts.addScriptList(R.drawable.ic_script_example, "examples", c1, true);
 
         MLog.d(TAG, "fragments added ");
+    }
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
     /**

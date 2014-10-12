@@ -30,19 +30,17 @@
 package org.protocoder.appApi;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.widget.Toast;
 
-import org.protocoder.MainActivity;
 import org.protocoder.R;
 import org.protocoder.fragments.NewProjectDialogFragment;
 import org.protocoder.projectlist.ProjectListFragment;
 import org.protocoder.projectlist.ProjectsPagerAdapter;
-import org.protocoder.projectlist.ZoomOutPageTransformer;
 import org.protocoder.views.ProjectSelectorStrip;
 import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.apprunner.api.PUtil;
@@ -66,7 +64,6 @@ public class ProtoScripts {
     ProjectsPagerAdapter mProjectPagerAdapter;
 
     // fragments that hold the projects
-    private HashMap<String, ProjectListFragment> mFragmentList;
     private ViewPager mViewPager;
 
     ProtoScripts(Protocoder protocoder) {
@@ -75,9 +72,6 @@ public class ProtoScripts {
     }
 
     public void init() {
-        ProjectListFragment.totalNum = 0;
-        mFragmentList = new HashMap<>();
-
         //init views
         mProjectPagerAdapter = new ProjectsPagerAdapter(mProtocoder.a.getSupportFragmentManager());
 
@@ -110,13 +104,13 @@ public class ProtoScripts {
     }
 
     public void goTo(String folder) {
-        int num = mFragmentList.get(folder).num;
+        int num = mProjectPagerAdapter.getFragmentNumByName(folder);
         mViewPager.setCurrentItem(num, true);
     }
 
     public void goTo(String folder, String appName) {
         goTo(folder);
-        final ProjectListFragment plf = mFragmentList.get(folder);
+        final ProjectListFragment plf = mProjectPagerAdapter.getFragmentByName(folder);
         final int id = plf.findAppPosByName(appName);
 
         PUtil util = new PUtil(mProtocoder.a);
@@ -131,7 +125,8 @@ public class ProtoScripts {
     }
 
     public void highlight(String folder, String appName) {
-        mFragmentList.get(folder).highlight(appName, true);
+        final ProjectListFragment plf = mProjectPagerAdapter.getFragmentByName(folder);
+        plf.highlight(appName, true);
     }
 
 
@@ -152,15 +147,13 @@ public class ProtoScripts {
         listFragmentBase.color = color;
         listFragmentBase.orderByName = orderByName;
 
-        mFragmentList.put(name, listFragmentBase);
-
-        mProjectPagerAdapter.addFragment(listFragmentBase);
+        mProjectPagerAdapter.addFragment(name, listFragmentBase);
         mProjectPagerAdapter.notifyDataSetChanged();
-        MLog.d(TAG, "addScriptList size " + mFragmentList.size() + " " + name + " " + mFragmentList.size());
     }
 
+    //TODO
     public void refresh(String folder, String appName) {
-        mFragmentList.get(folder).projectRefresh(appName);
+        //mFragmentList.get(folder).projectRefresh(appName);
     }
 
     public void rename(String folder, String appName) {
@@ -193,15 +186,15 @@ public class ProtoScripts {
         }
     }
 
-
+    //TODO
     public void createProject(String folder, String appName) {
         //create file
         Project newProject = ProjectManager.getInstance().addNewProject(mProtocoder.a, appName, folder, appName);
 
         //notify ui
-        ProjectListFragment f = mFragmentList.get(folder);
-        f.projects.add(newProject);
-        f.notifyAddedProject();
+        //ProjectListFragment f = mFragmentList.get(folder);
+        //f.mProjects.add(newProject);
+        //f.notifyAddedProject();
     }
 
     public void delete(String folder, String appName) {
@@ -237,8 +230,8 @@ public class ProtoScripts {
 
 
     public void listRefresh() {
-        for (ProjectListFragment l : mFragmentList.values()) {
-            l.refreshProjects();
+        for (ProjectListFragment fragment : mProjectPagerAdapter.fragments) {
+            fragment.refreshProjects();
         }
     }
 
@@ -296,4 +289,26 @@ public class ProtoScripts {
         // Show toast
         Toast.makeText(mProtocoder.a, "Adding shortcut for " + p.getName(), Toast.LENGTH_SHORT).show();
     }
+
+    public void reinitScriptList() {
+        mProjectPagerAdapter.addFragment("", (ProjectListFragment) getFragment(0));
+        mProjectPagerAdapter.addFragment("", (ProjectListFragment) getFragment(1));
+        mProjectPagerAdapter.notifyDataSetChanged();
+    }
+
+
+
+    private Fragment getFragment(int position){
+        return mProtocoder.a.getSupportFragmentManager().findFragmentByTag(getFragmentTag(position));
+    }
+
+    private String getFragmentTag(int position) {
+        return "android:switcher:" + R.id.pager + ":" + position;
+    }
+
+    // public void reinitScriptList() {
+      //  ProjectListFragment f0 = (ProjectListFragment) mProjectPagerAdapter.getItem(0);
+      //  mProjectPagerAdapter.addFragment("", );
+
+   // }
 }
