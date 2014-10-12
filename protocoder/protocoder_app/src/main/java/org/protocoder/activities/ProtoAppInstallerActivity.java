@@ -27,7 +27,7 @@
  * 
  */
 
-package org.protocoder;
+package org.protocoder.activities;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -39,6 +39,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.protocoder.R;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.MLog;

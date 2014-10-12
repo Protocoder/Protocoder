@@ -27,7 +27,7 @@
  * 
  */
 
-package org.protocoder;
+package org.protocoder.activities;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
@@ -37,7 +37,9 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
 
-import org.protocoder.fragments.PreferencesFragment;
+import org.protocoder.MainActivity;
+import org.protocoder.R;
+import org.protocoder.fragments.SettingsFragment;
 import org.protocoderrunner.base.BaseActivity;
 
 public class SetPreferenceActivity extends BaseActivity {
@@ -47,7 +49,7 @@ public class SetPreferenceActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getFragmentManager().beginTransaction().replace(android.R.id.content, new PreferencesFragment()).commit();
+        getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment()).commit();
 
         // If a preference needs to be default true, we need this hack to make
         // sure it is hard set

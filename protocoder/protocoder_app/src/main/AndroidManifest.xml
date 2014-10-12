@@ -12,7 +12,7 @@
         android:label="@string/app_name"
         android:theme="@style/ProtocoderTheme" >
         <activity
-            android:name="org.protocoder.LauncherActivity"
+            android:name=".activities.LauncherActivity"
             android:icon="@drawable/protocoder_icon"
             android:label="@string/activity_name"
             android:logo="@drawable/protocoder_icon"
@@ -49,26 +49,26 @@
             android:logo="@drawable/protocoder_icon" >
         </activity>
         <activity
-            android:name="org.protocoder.AboutActivity"
+            android:name=".activities.AboutActivity"
             android:label="@string/activity_name" >
         </activity>
         <activity
-            android:name="org.protocoder.WelcomeActivity"
+            android:name=".activities.WelcomeActivity"
             android:label="@string/activity_name" >
             android:noHistory="true" >
         </activity>
         <activity
-            android:name="org.protocoder.LicenseActivity"
+            android:name=".activities.LicenseActivity"
             android:label="@string/settings_activity_name"
             android:noHistory="true" >
         </activity>
         <activity
-            android:name="org.protocoder.SetPreferenceActivity"
+            android:name=".activities.SetPreferenceActivity"
             android:label="@string/settings_activity_name"
             android:noHistory="true" >
         </activity>
 
-        <activity android:name="org.protocoder.ProtoAppInstallerActivity"
+        <activity android:name=".activities.ProtoAppInstallerActivity"
             android:label="@string/activity_name"
             android:logo="@drawable/protocoder_icon"
             >
