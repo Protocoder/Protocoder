@@ -33,6 +33,7 @@ import android.os.Bundle;
 import org.protocoder.R;
 import org.protocoder.fragments.EditorFragment;
 import org.protocoderrunner.project.Project;
+import org.protocoderrunner.project.ProjectManager;
 
 public class Editor {
 
@@ -43,13 +44,8 @@ public class Editor {
         this.protocoder = protocoder;
     }
 
-    public void show(boolean show, Project project) {
-        //protocoder.app.highlight(null);
-        //protocoder.app.shake();
-        //protocoder.protoScripts.goTo("examples");
-        //protocoder.protoScripts.goTo("examples", "Video");
-        //protocoder.protoScripts.highlight("examples", "Video");
-        //protocoder.webEditor.console.log("hola");
+    public void show(boolean show, String folder, String appName) {
+        Project project = ProjectManager.getInstance().get(folder, appName);
 
         if (show) {
             editorFragment = new EditorFragment();

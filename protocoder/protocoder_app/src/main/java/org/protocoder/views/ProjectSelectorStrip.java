@@ -49,7 +49,6 @@ public class ProjectSelectorStrip extends PagerTitleStrip {
 		final float x = ev.getX();
 		final float y = ev.getY();
 
-		MLog.d(TAG, x + " " + y);
 		switch (action) {
 
 		case MotionEvent.ACTION_MOVE:

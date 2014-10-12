@@ -49,14 +49,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.protocoder.LicenseActivity;
+import org.protocoder.activities.LicenseActivity;
 import org.protocoder.R;
 import org.protocoderrunner.base.BaseNotification;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.project.ProjectManager.InstallListener;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-public class PreferencesFragment extends PreferenceFragment {
+public class SettingsFragment extends PreferenceFragment {
 
 	protected static final String TAG = "PrefsFragment";
 

@@ -39,7 +39,6 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.FileObserver;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -49,9 +48,17 @@ import android.view.ViewGroup;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import org.protocoder.appApi.Protocoder;
-import org.protocoder.fragments.PreferencesFragment;
+import org.protocoder.fragments.SettingsFragment;
+import org.protocoderrunner.apprunner.AppRunnerInterpreter;
+import org.protocoderrunner.apprunner.api.PFileIO;
+import org.protocoderrunner.apprunner.api.PMedia;
+import org.protocoderrunner.apprunner.api.PNetwork;
+import org.protocoderrunner.apprunner.api.PUI;
+import org.protocoderrunner.apprunner.api.PUtil;
 import org.protocoderrunner.base.BaseActivity;
+import org.protocoderrunner.events.Events;
 import org.protocoderrunner.events.Events.ProjectEvent;
+import org.protocoderrunner.network.IDEcommunication;
 import org.protocoderrunner.project.Project;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.AndroidUtils;
@@ -76,6 +83,12 @@ public class MainActivity extends BaseActivity {
 
 	private ConnectivityChangeReceiver connectivityChangeReceiver;
     private Protocoder mProtocoder;
+    private PUtil mPUtil;
+    private PUI mPUi;
+    public AppRunnerInterpreter interp;
+    private PNetwork mPNetwork;
+    private PFileIO mPFileIO;
+    private PMedia mPMedia;
 
     @Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -87,13 +100,18 @@ public class MainActivity extends BaseActivity {
 		ActionBar actionBar = getActionBar();
 		actionBar.setHomeButtonEnabled(true);
 
+        mProtocoder = Protocoder.getInstance(this);
+        mProtocoder.init();
+        mPUtil = new PUtil(this);
+        mPUi = new PUI(this);
+        mPNetwork = new PNetwork(this);
+        mPFileIO = new PFileIO(this);
+        mPMedia = new PMedia(this);
+
 
        /*
         *  Views
         */
-
-        mProtocoder = Protocoder.getInstance(this);
-
         addFragments();
 
         // Check when a file is changed in the protocoder dir
@@ -116,19 +134,28 @@ public class MainActivity extends BaseActivity {
 		};
 
         connectivityChangeReceiver = new ConnectivityChangeReceiver();
+
+
+        interp = new AppRunnerInterpreter(this);
+        interp.createInterpreter(true);
+
+        interp.interpreter.addObjectToInterface("ui", mPUi);
+        interp.interpreter.addObjectToInterface("util", mPUtil);
+        interp.interpreter.addObjectToInterface("protocoder", mProtocoder);
+
     }
 
     private void addFragments() {
+        MLog.d(TAG, "fragments adding ");
+
         //colors
         final int c0 = getResources().getColor(R.color.project_user_color);
         final int c1 = getResources().getColor(R.color.project_example_color);
 
-        Intent.ShortcutIconResource icon_project = Intent.ShortcutIconResource.fromContext(this, R.drawable.ic_script);
-        Intent.ShortcutIconResource icon_example = Intent.ShortcutIconResource.fromContext(this, R.drawable.ic_script_example);
+        mProtocoder.protoScripts.addScriptList(R.drawable.ic_script, "projects", c0, false);
+        mProtocoder.protoScripts.addScriptList(R.drawable.ic_script_example, "examples", c1, true);
 
-        // Instantiate fragments
-        mProtocoder.protoScripts.addScriptList(icon_project, "projects", c0, false);
-        mProtocoder.protoScripts.addScriptList(icon_example, "examples", c1, true);
+        MLog.d(TAG, "fragments added ");
     }
 
     /**
@@ -139,7 +166,7 @@ public class MainActivity extends BaseActivity {
 		super.onResume();
 
         //set settings
-        setScreenAlwaysOn(PreferencesFragment.getScreenOn(this));
+        setScreenAlwaysOn(SettingsFragment.getScreenOn(this));
 
         MLog.d(TAG, "Registering as an EventBus listener in MainActivity");
 		EventBus.getDefault().register(this);
@@ -171,6 +198,8 @@ public class MainActivity extends BaseActivity {
 		} catch (Exception e) {
 			// presumably, not relevant
 		}
+
+        IDEcommunication.getInstance(this).ready(false);
     }
 
 	/**
@@ -219,10 +248,25 @@ public class MainActivity extends BaseActivity {
 		} else if (evt.getAction() == "update") {
             mProtocoder.protoScripts.listRefresh();
 		}
-
 	}
 
-	@Override
+
+    // execute lines
+    public void onEventMainThread(Events.ExecuteCodeEvent evt) {
+        String code = evt.getCode();
+        MLog.d(TAG, "event -> " + code);
+
+        interp.eval(code);
+    }
+
+    public void onEventMainThread(Events.SelectedProjectEvent evt) {
+        String folder = evt.getFolder();
+        String name = evt.getName();
+
+        mProtocoder.protoScripts.goTo(folder, name);
+    }
+
+    @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.main_activity_menu, menu);
