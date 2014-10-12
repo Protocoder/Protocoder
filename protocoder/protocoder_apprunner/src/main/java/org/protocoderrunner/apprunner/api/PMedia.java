@@ -69,23 +69,12 @@ import java.util.Locale;
 public class PMedia extends PInterface {
 
     String TAG = "PMedia";
-	StartVoiceRecognitionCB onVoiceRecognitionfn;
 
     private HeadSetReceiver headsetPluggedReceiver;
     private MicPluggedCB headsetCallbackfn;
 
-    public PMedia(AppRunnerActivity a) {
+    public PMedia(Context a) {
 		super(a);
-
-		a.addVoiceRecognitionListener(new onVoiceRecognitionListener() {
-
-			@Override
-			public void onNewResult(String text) {
-				MLog.d(TAG, "" + text);
-				onVoiceRecognitionfn.event(text);
-			}
-
-		});
 
 		WhatIsRunning.getInstance().add(this);
 	}
@@ -374,7 +363,15 @@ public class PMedia extends PInterface {
 	@APIMethod(description = "Fires the voice recognition and returns the best match", example = "media.startVoiceRecognition(function(text) { console.log(text) } );")
 	@APIParam(params = { "function(recognizedText)" })
 	public void startVoiceRecognition(final StartVoiceRecognitionCB callbackfn) {
-		onVoiceRecognitionfn = callbackfn;
+        ((AppRunnerActivity)a.get()).addVoiceRecognitionListener(new onVoiceRecognitionListener() {
+
+            @Override
+            public void onNewResult(String text) {
+                MLog.d(TAG, "" + text);
+                callbackfn.event(text);
+            }
+
+        });
 
 		Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
 		intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
