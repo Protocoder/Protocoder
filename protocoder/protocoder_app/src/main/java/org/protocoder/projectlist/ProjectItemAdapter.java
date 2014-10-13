@@ -39,7 +39,6 @@ import android.widget.ImageView;
 
 import org.protocoder.R;
 import org.protocoderrunner.project.Project;
-import org.protocoderrunner.utils.MLog;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

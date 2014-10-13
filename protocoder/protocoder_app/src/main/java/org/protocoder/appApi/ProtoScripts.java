@@ -50,7 +50,6 @@ import org.protocoderrunner.utils.AndroidUtils;
 import org.protocoderrunner.utils.MLog;
 
 import java.io.File;
-import java.util.HashMap;
 
 public class ProtoScripts {
 

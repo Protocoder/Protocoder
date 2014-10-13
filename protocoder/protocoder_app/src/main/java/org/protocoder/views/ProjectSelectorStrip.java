@@ -22,8 +22,6 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import org.protocoderrunner.utils.MLog;
-
 public class ProjectSelectorStrip extends PagerTitleStrip {
 	private static final String TAG = "PagerTabStrip";
 	private boolean mIgnoreTap;

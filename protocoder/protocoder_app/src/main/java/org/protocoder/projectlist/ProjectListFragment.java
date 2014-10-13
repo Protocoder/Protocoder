@@ -59,7 +59,6 @@ import org.protocoderrunner.base.BaseFragment;
 import org.protocoderrunner.events.Events.ProjectEvent;
 import org.protocoderrunner.project.Project;
 import org.protocoderrunner.project.ProjectManager;
-import org.protocoderrunner.utils.MLog;
 
 import java.util.ArrayList;
 
@@ -88,7 +87,7 @@ public class ProjectListFragment extends BaseFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        MLog.d(TAG, "onCreate " + getArguments().getString("folderName"));
+
         this.projectFolder = getArguments().getString("folderName");
         this.color = getArguments().getInt("color");
         this.orderByName = getArguments().getBoolean("orderByName");
@@ -100,15 +99,12 @@ public class ProjectListFragment extends BaseFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //this.icon = getArguments().getString("icon");
 
-        MLog.d(TAG, "onCreateView " + getArguments().getString("folderName"));
-
         View v = inflater.inflate(R.layout.fragment_project, container, false);
 
         // Get GridView and set adapter
 		gridView = (GridView) v.findViewById(R.id.gridview);
 		listMode = SettingsFragment.getListPreference(getActivity());
 
-		MLog.d(TAG, "fragment for " + projectFolder);
 		if (listMode) {
 			gridView.setNumColumns(1);
 		}
@@ -166,7 +162,6 @@ public class ProjectListFragment extends BaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        MLog.d(TAG, "onActivityCreated");
         //setRetainInstance(true);
 
         //icon = Intent.ShortcutIconResource.fromContext(getActivity(), R.drawable.ic_script_example);
@@ -179,7 +174,6 @@ public class ProjectListFragment extends BaseFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        MLog.d(TAG, "onAttach");
 
     }
 
@@ -227,8 +221,6 @@ public class ProjectListFragment extends BaseFragment {
     }
     public int findAppPosByName(String appName) {
         int pos = -1;
-      
-        MLog.d(TAG, "findAppPosByName " + appName + " " + mProjects);
 
         for (int i = 0; i < mProjects.size(); i++) {
             String name = mProjects.get(i).getName();
@@ -341,29 +333,22 @@ public class ProjectListFragment extends BaseFragment {
 	@Override
 	public void onPause() {
 		super.onPause();
-
-        MLog.d(TAG, "onPause");
-
     }
 
 	@Override
 	public void onResume() {
 		super.onResume();
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
-
-        MLog.d(TAG, "onResume");
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-        MLog.d(TAG, "onDestroy");
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        MLog.d(TAG, "onDestroyView");
     }
 
     public void projectRefresh(String projectName) {

@@ -32,13 +32,8 @@ package org.protocoder.projectlist;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.view.View;
 import android.view.ViewGroup;
 
-import org.protocoderrunner.utils.MLog;
-
-import java.util.HashMap;
 import java.util.Vector;
 
 public class ProjectsPagerAdapter extends FragmentPagerAdapter {
@@ -50,7 +45,6 @@ public class ProjectsPagerAdapter extends FragmentPagerAdapter {
 
     public ProjectsPagerAdapter(FragmentManager fm) {
 		super(fm);
-        MLog.d(TAG, "projects pager adapter created");
 
         fragments = new Vector<>();
         fragmentNames = new Vector<>();
@@ -59,7 +53,6 @@ public class ProjectsPagerAdapter extends FragmentPagerAdapter {
 
 	@Override
 	public Fragment getItem(int i) {
-        MLog.d(TAG, "getting fragment " + i);
 		ProjectListFragment f = fragments.get(i);
 
 		return f;
@@ -73,17 +66,12 @@ public class ProjectsPagerAdapter extends FragmentPagerAdapter {
 	@Override
 	public CharSequence getPageTitle(int position) {
         String name = fragments.get(position).projectFolder;
-        MLog.d(TAG, "qq " + name);
 		return name;
 	}
 
     public void addFragment(String name, ProjectListFragment f) {
-        MLog.d(TAG, "pre addFragment size " + fragments.size());
-
         fragments.add(f);
         fragmentNames.add(name);
-
-        MLog.d(TAG, "post addFragment size " + fragments.size() + f.projectFolder);
     }
 
     public int getFragmentNumByName(String fragmentName) {

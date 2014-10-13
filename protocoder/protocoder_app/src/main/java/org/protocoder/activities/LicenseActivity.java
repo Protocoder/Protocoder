@@ -30,10 +30,8 @@
 package org.protocoder.activities;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.view.Menu;
 import android.widget.TextView;
 

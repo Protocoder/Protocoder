@@ -42,8 +42,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.java_websocket.drafts.Draft_17;
-import org.protocoder.activities.AboutActivity;
 import org.protocoder.R;
+import org.protocoder.activities.AboutActivity;
 import org.protocoder.activities.SetPreferenceActivity;
 import org.protocoder.network.ProtocoderHttpServer;
 import org.protocoder.views.Overlay;

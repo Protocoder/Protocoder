@@ -30,7 +30,6 @@
 package org.protocoderrunner.apprunner.api;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
@@ -43,7 +42,6 @@ import android.provider.MediaStore;
 import android.provider.MediaStore.MediaColumns;
 import android.support.v4.app.NotificationCompat;
 
-import org.mozilla.javascript.NativeJSON;
 import org.mozilla.javascript.NativeObject;
 import org.protocoderrunner.R;
 import org.protocoderrunner.apidoc.annotation.APIMethod;
@@ -53,7 +51,6 @@ import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.apprunner.api.other.PEvents;
 import org.protocoderrunner.apprunner.api.other.PProtocoderLiveCodingFeedback;
-import org.protocoderrunner.apprunner.api.other.ProtocoderNativeObject;
 import org.protocoderrunner.project.Project;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.project.SchedulerManager;

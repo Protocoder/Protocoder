@@ -30,7 +30,6 @@
 package org.protocoderrunner.apprunner.api;
 
 import android.app.Activity;
-import android.graphics.Color;
 
 import org.json.JSONException;
 import org.json.JSONObject;

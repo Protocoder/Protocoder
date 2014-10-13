@@ -29,7 +29,6 @@
 
 package org.protocoderrunner.apprunner.api.dashboard;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 

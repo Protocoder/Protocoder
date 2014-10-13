@@ -32,8 +32,6 @@ package org.protocoderrunner.apprunner.api.widgets;
 import android.content.Context;
 import android.widget.ProgressBar;
 
-import org.protocoderrunner.apprunner.AppRunnerActivity;
-
 public class PProgressBar extends ProgressBar implements PViewInterface {
 
 	public PProgressBar(Context context) {

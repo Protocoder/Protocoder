@@ -29,7 +29,6 @@
 
 package org.protocoderrunner.apprunner;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
