@@ -49,8 +49,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.protocoder.activities.LicenseActivity;
 import org.protocoder.R;
+import org.protocoder.activities.LicenseActivity;
 import org.protocoderrunner.base.BaseNotification;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.project.ProjectManager.InstallListener;

@@ -29,7 +29,6 @@
 
 package org.protocoderrunner.apprunner.api.boards;
 
-import android.app.Activity;
 import android.content.Context;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;

@@ -31,7 +31,6 @@ package org.protocoderrunner.apprunner.api;
 
 import android.animation.TimeInterpolator;
 import android.animation.ValueAnimator;
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;

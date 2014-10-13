@@ -36,11 +36,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.apprunner.api.PApp;
 import org.protocoderrunner.views.CustomWebView;
-
-import java.lang.ref.WeakReference;
 
 public class PWebView extends CustomWebView implements PViewInterface {
 

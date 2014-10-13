@@ -29,8 +29,6 @@
 
 package org.protocoder.appApi;
 
-import android.app.Activity;
-
 import org.protocoderrunner.apprunner.api.PConsole;
 import org.protocoderrunner.apprunner.api.PDashboard;
 

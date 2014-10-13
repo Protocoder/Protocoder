@@ -1,6 +1,5 @@
 package org.protocoderrunner.apprunner.api.other;
 
-import android.app.Activity;
 import android.content.Context;
 import android.hardware.usb.UsbDevice;
 import android.os.Handler;

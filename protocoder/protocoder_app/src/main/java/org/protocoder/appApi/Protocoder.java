@@ -31,17 +31,6 @@ package org.protocoder.appApi;
 import android.app.Activity;
 
 import org.protocoder.MainActivity;
-import org.protocoderrunner.apprunner.api.PApp;
-import org.protocoderrunner.apprunner.api.PConsole;
-import org.protocoderrunner.apprunner.api.PDashboard;
-import org.protocoderrunner.apprunner.api.PDevice;
-import org.protocoderrunner.apprunner.api.PFileIO;
-import org.protocoderrunner.apprunner.api.PMedia;
-import org.protocoderrunner.apprunner.api.PNetwork;
-import org.protocoderrunner.apprunner.api.PProtocoder;
-import org.protocoderrunner.apprunner.api.PSensors;
-import org.protocoderrunner.apprunner.api.PUI;
-import org.protocoderrunner.apprunner.api.PUtil;
 
 public class Protocoder {
 
