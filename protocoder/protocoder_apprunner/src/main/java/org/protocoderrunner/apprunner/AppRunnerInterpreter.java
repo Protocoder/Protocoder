@@ -180,7 +180,6 @@ public class  AppRunnerInterpreter {
 					+ (error.sourceName() != null ? " " + error.sourceName() : "")
 					+ (error.lineSource() != null ? " " + error.lineSource() : "") + "\n" + error.getScriptStackTrace();
 
-			MLog.d(TAG, "lallala");
 
 			listener.onError(message);
 
