@@ -43,13 +43,17 @@ import android.provider.MediaStore;
 import android.provider.MediaStore.MediaColumns;
 import android.support.v4.app.NotificationCompat;
 
+import org.mozilla.javascript.NativeJSON;
+import org.mozilla.javascript.NativeObject;
 import org.protocoderrunner.R;
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.apprunner.api.other.PEvents;
 import org.protocoderrunner.apprunner.api.other.PProtocoderLiveCodingFeedback;
+import org.protocoderrunner.apprunner.api.other.ProtocoderNativeObject;
 import org.protocoderrunner.project.Project;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.project.SchedulerManager;
@@ -69,9 +73,11 @@ public class PApp extends PInterface {
 		public void onStop();
 	}
 
+    PEvents pevents;
+
 	public PApp(Context a) {
 		super(a);
-
+        pevents = new PEvents(a);
 	}
 
 
@@ -212,7 +218,7 @@ public class PApp extends PInterface {
     }
 
 	@ProtocoderScript
-	@APIMethod(description = "this function doesn't do anything", example = "")
+	@APIMethod(description = "this dummy function doesn't execute the callback", example = "")
     @APIParam(params = { "function()" })
     public void doNotExecute(DoNothingCB callbackfn) {
 
@@ -238,6 +244,27 @@ public class PApp extends PInterface {
         l.enable = true;
 
         return l;
+    }
+
+    @ProtocoderScript
+    @APIMethod(description = "sends a name event with a json object", example = "")
+    @APIParam(params = { "name", "jsonObject"})
+    public void sendEvent(String name, Object obj) {
+        pevents.sendEvent(name, (NativeObject) obj);
+    }
+
+    @ProtocoderScript
+    @APIMethod(description = "receives a named event with a json object", example = "")
+    @APIParam(params = { "name", "function(name, jsonObject)"})
+    public String listenEvent(String name, PEvents.EventCB callback) {
+        return pevents.add(name, callback);
+    }
+
+    @ProtocoderScript
+    @APIMethod(description = "receives a named event with a json object", example = "")
+    @APIParam(params = { "name", "function(name, jsonObject)"})
+    public void removeEvent(String id) {
+        pevents.remove(id);
     }
 
 //
