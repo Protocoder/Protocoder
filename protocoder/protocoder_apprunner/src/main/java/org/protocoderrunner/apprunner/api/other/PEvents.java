@@ -33,6 +33,7 @@ import android.content.Context;
 
 import org.mozilla.javascript.NativeObject;
 import org.protocoderrunner.apprunner.PInterface;
+import org.protocoderrunner.sensors.WhatIsRunning;
 import org.protocoderrunner.utils.StrUtils;
 
 import java.util.ArrayList;
@@ -48,6 +49,7 @@ public class PEvents extends PInterface {
     public PEvents(Context appActivity) {
         super(appActivity);
         eventsList = new ArrayList<EventItem>();
+        WhatIsRunning.getInstance().add(this);
     }
 
     public String add(String name, EventCB callback) {
@@ -85,6 +87,12 @@ public class PEvents extends PInterface {
             this.id = id;
             this.name = name;
             this.cb = cb;
+        }
+    }
+
+    public void stop() {
+        for (int i = 0; i < eventsList.size(); i++) {
+            eventsList.remove(i);
         }
     }
 
