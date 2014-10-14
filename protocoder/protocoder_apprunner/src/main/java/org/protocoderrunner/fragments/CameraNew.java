@@ -180,6 +180,7 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
             } else if (modeCamera == MODE_CAMERA_FRONT) {
 
             }
+            parameters.setPreviewSize(320, 240);
             mCamera.setParameters(parameters);
 
             mCamera.setPreviewTexture(surface);
@@ -200,10 +201,9 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
                 YuvImage yuv = new YuvImage(data, parameters.getPreviewFormat(), width, height, null);
 
                 ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+                //maybe pass the out to the callbacks and do each compression there?
                 yuv.compressToJpeg(new Rect(0, 0, width, height), 50, out);
-
-
-
 
                 byte[] bytes = out.toByteArray();
 
@@ -213,7 +213,7 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
                 final Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, bitmap_options);
 
                 if (callbackBmp != null) callbackBmp.event(bitmap);
-                if (callbackStream != null)  callbackStream.event(bitmap);
+                if (callbackStream != null)  callbackStream.event(out);
             }
         });
 
@@ -231,8 +231,10 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
         this.callbackBmp = callbackBmp;
     }
 
-    interface CallbackStream {
-        public void event(Bitmap bmp);
+
+
+    public interface CallbackStream {
+        public void event(ByteArrayOutputStream out);
     }
 
     public void addCallbackStream(CallbackStream callbackStream) {

@@ -78,7 +78,7 @@ import org.protocoderrunner.apprunner.api.other.PVideo;
 import org.protocoderrunner.apprunner.api.other.ProtocoderNativeObject;
 import org.protocoderrunner.apprunner.api.widgets.PPadView.TouchEvent;
 import org.protocoderrunner.base.BaseActivity;
-import org.protocoderrunner.fragments.CameraFragment;
+import org.protocoderrunner.fragments.CameraNew;
 import org.protocoderrunner.fragments.CustomVideoTextureView;
 import org.protocoderrunner.utils.AndroidUtils;
 import org.protocoderrunner.utils.FileIO;
@@ -994,9 +994,9 @@ public class PUIGeneric extends PInterface {
         initializeLayout();
 
         if (type == 1) {
-            type = CameraFragment.MODE_CAMERA_FRONT;
+            type = CameraNew.MODE_CAMERA_FRONT;
         } else {
-            type = CameraFragment.MODE_CAMERA_BACK;
+            type = CameraNew.MODE_CAMERA_BACK;
         }
 
 		PCamera jCamera = new PCamera(a.get(), type, PCamera.MODE_COLOR_COLOR);
