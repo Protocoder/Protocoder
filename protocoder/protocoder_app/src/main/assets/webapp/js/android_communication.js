@@ -240,7 +240,7 @@ Communication.prototype.initWebsockets = function () {
   }
   ws.onmessage = function(e) {
     // Receives a message.
-    console.log('message', e.data)
+    //console.log('message', e.data)
 
     //run_project
     if (e.data == "Connected") { 
@@ -344,6 +344,8 @@ Communication.prototype.initWebsockets = function () {
         protocoder.dashboard.setLabelText(result.values.id, result.values.val);
       } else if (result.action == "changeImage") { 
         protocoder.dashboard.changeImage(result.values.id, result.values.url);
+      } else if (result.action == "updateCamera") {
+      	protocoder.dashboard.updateCamera(result.values.id, result.values.src);
       }
 
     }

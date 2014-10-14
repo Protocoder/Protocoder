@@ -93,6 +93,14 @@ public class PCamera extends CameraNew implements PViewInterface {
 
 
     @ProtocoderScript
+    @APIParam(params = { "fileName", "function()" })
+    @APIMethod(description = "Takes a picture and saves it to fileName", example = "camera.takePicture();")
+    public void stream(int speed, int quality, int port, CameraNew.CallbackStream callbackfn) {
+        cam.addCallbackStream(callbackfn);
+    }
+
+
+    @ProtocoderScript
     @APIMethod(description = "Records a video in fileName", example = "")
     @APIParam(params = { "fileName" })
 	public void recordVideo(String file) {

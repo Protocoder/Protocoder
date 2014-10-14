@@ -54,7 +54,9 @@ Dashboard.prototype.addWidget = function(widget) {
     return this.addHTML(widget.id, widget.html, widget.x, widget.y); 
   } else if (widget.type == "background") { 
     return this.setBackgroundColor(widget.r, widget.g, widget.b, widget.a); 
-  } 
+  } else if (widget.type == "camera") {
+    return this.addCameraPreview(widget.id, widget.x, widget.y, widget.w, widget.h);
+  }
 
 }
 
@@ -165,28 +167,52 @@ Dashboard.prototype.addButton = function(element, name, posx, posy, w, h) {
 
 
 Dashboard.prototype.addCameraPreview = function(element, posx, posy, w, h) {
+  console.log("addCameraPreview " + element);
+
   $('<canvas class ="widget" id = "camera_' + element +'"> </canvas>')
           .appendTo("#overlay #container")
           .css({"width": w+"px", "height":h+"px","top":posy+"px","left":posx+"px"});
 } 
 
-Dashboard.prototype.updateCamera = function() {
-  var drawingCanvas = document.getElementById('camera_canvas');
+Dashboard.prototype.updateCamera = function(element, imgData) {
+  console.log("updateCamera " + element);
+
+  var drawingCanvas = document.getElementById('camera_' + element);
 
     if(drawingCanvas.getContext) {
       var context = drawingCanvas.getContext('2d');
       var cam = new Image();
       cam.onload = function() {
-         context.drawImage(cam, 0, 0, cam.width, cam.height);
+         context.drawImage(this, 0, 0, this.width, this.height);
       }
-      cam.src = 'cam.jpg?pwd=' + pwd;
-      setTimeout("update()", 500);
+      cam.onerror = function (stuff) {
+        console.log("Img Onerror:", stuff);
+      };
+
+      //
+      //var b64imgData=btoa(imgData); //Binary to ASCII, where it probably stands for
+      cam.src="data:image/jpeg;base64," + imgData;
+
+      //var blob = new Blob([imgData], {type: "image/jpeg"});
+      //var url = URL.createObjectURL(blob); 
+      //cam.src = url;
     } 
+}
+
+function qq( buffer ) {
+    var binary = '';
+    var bytes = new Uint8Array( buffer );
+    var len = bytes.byteLength;
+    for (var i = 0; i < len; i++) {
+        binary += String.fromCharCode( bytes[ i ] );
+    }
+    return window.btoa( binary );
 }
 
 Dashboard.prototype.setBackgroundColor = function(r, g, b, a) { 
   $("#overlay #container").css("background", "rgba("+r+","+g+","+b+","+a+")");
 }
+
 
 Dashboard.prototype.addPlot = function(element, name, posx, posy, w, h, minLimit, maxLimit) {
   var _delay = 10;
