@@ -80,25 +80,42 @@ public class PCamera extends CameraNew implements PViewInterface {
         });
 	}
 
-
-
     @ProtocoderScript
-    @APIParam(params = { "fileName", "function()" })
-    @APIMethod(description = "Takes a picture and saves it to fileName", example = "camera.takePicture();")
+    @APIParam(params = { "function(bitmap)" })
+    @APIMethod(description = "Gets bitmap frames ready to use", example = "camera.takePicture();")
 	// @APIRequires()
-	public void onNewFrame(final CameraNew.CallbackBmp callbackfn) {
+	public void onNewBitmap(final CameraNew.CallbackBmp callbackfn) {
         cam.addCallbackBmp(callbackfn);
 	}
 
-
-
     @ProtocoderScript
-    @APIParam(params = { "fileName", "function()" })
-    @APIMethod(description = "Takes a picture and saves it to fileName", example = "camera.takePicture();")
-    public void stream(int speed, int quality, int port, CameraNew.CallbackStream callbackfn) {
+    @APIParam(params = { "function(base64Image)" })
+    @APIMethod(description = "Get the frames ready to stream", example = "camera.takePicture();")
+    public void onNewStreamFrame(int maxFrames, CameraNew.CallbackStream callbackfn) {
         cam.addCallbackStream(callbackfn);
     }
 
+
+    @ProtocoderScript
+    @APIParam(params = { "width", "height" })
+    @APIMethod(description = "Set the camera preview resolution", example = "camera.takePicture();")
+    public void setPreviewSize(int w, int h) {
+        super.setPreviewSize(w, h);
+    }
+
+    @ProtocoderScript
+    @APIParam(params = { "width", "height" })
+    @APIMethod(description = "Set the camera picture resolution", example = "camera.takePicture();")
+    public void setPictureResolution(int w, int h) {
+        super.setPictureSize(w, h);
+    }
+
+    @ProtocoderScript
+    @APIParam(params = { "{'none', 'mono', 'sepia', 'negative', 'solarize', 'posterize', 'whiteboard', 'blackboard'}" })
+    @APIMethod(description = "Set the camera picture effect if supported", example = "camera.takePicture();")
+    public void setColorEffect(String effect) {
+        super.setColorEffect(effect);
+    }
 
     @ProtocoderScript
     @APIMethod(description = "Records a video in fileName", example = "")
@@ -125,7 +142,20 @@ public class PCamera extends CameraNew implements PViewInterface {
     @APIMethod(description = "Turns on/off the flash", example = "")
     @APIParam(params = { "" })
     public void turnOnFlash(boolean b) {
-		super.turnOnFlash(b);
-	}
+        super.turnOnFlash(b);
+    }
 
+    @ProtocoderScript
+    @APIMethod(description = "Turn the autofocus on/off", example = "")
+    @APIParam(params = { "" })
+    public void focus() {
+        super.focus(null);
+    }
+
+    @ProtocoderScript
+    @APIMethod(description = "Turn the autofocus on/off", example = "")
+    @APIParam(params = { "" })
+    public void focus(FocusCB callback) {
+        super.focus(callback);
+    }
 }
