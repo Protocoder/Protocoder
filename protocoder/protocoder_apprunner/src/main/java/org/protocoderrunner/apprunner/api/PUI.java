@@ -983,6 +983,18 @@ public class PUI extends PUIGeneric {
 		return iv;
 	}
 
+
+    @ProtocoderScript
+    @APIMethod(description = "Adds an image", example = "")
+    @APIParam(params = { "x", "y", "w", "h", "imagePath" })
+    public PImageView addImage(int x, int y, int w, int h) {
+
+        final PImageView iv = newImage(null);
+        addViewAbsolute(iv, x, y, w, h);
+
+        return iv;
+    }
+
     @ProtocoderScript
     @APIMethod(description = "Adds an image", example = "")
 	@APIParam(params = { "x", "y", "imagePath" })
@@ -1130,14 +1142,13 @@ public class PUI extends PUIGeneric {
     @ProtocoderScript
     @APIMethod(description = "Add camera view", example = "")
 	@APIParam(params = { "type", "x", "y", "w", "h" })
-	public PCamera addCameraView(int type, int x, int y, int w, int h) {
+	public PCamera addCameraView(String type, int x, int y, int w, int h) {
 
 		PCamera pCamera = newCamera(type);
         addViewAbsolute(pCamera, x, y, w, h);
 
 		return pCamera;
 	}
-
 
     @ProtocoderScript
     @APIMethod(description = "Adds a video view and starts playing the fileName", example = "")
