@@ -34,10 +34,12 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.media.FaceDetector;
 import android.os.Handler;
+import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -55,6 +57,7 @@ import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.sensors.WhatIsRunning;
 import org.protocoderrunner.utils.MLog;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -276,6 +279,24 @@ public class PUtil extends PInterface {
         int face_count = face_detector.findFaces(bmp, faces);
 
         return face_count;
+    }
+
+
+    @ProtocoderScript
+    @APIMethod(description = "Converts byte array to bmp", example = "")
+    @APIParam(params = { "fontFile" })
+    public Bitmap decodeBase64ToBitmap(String encodedImage) {
+        byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
+
+        MLog.d(TAG, "bytes--> " + decodedString);
+        BitmapFactory.Options bitmap_options = new BitmapFactory.Options();
+        bitmap_options.inPreferredConfig = Bitmap.Config.RGB_565;
+
+        final Bitmap bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length, bitmap_options);
+
+        MLog.d(TAG, "bitmap --> " + bitmap);
+
+        return bitmap;
     }
 
 }

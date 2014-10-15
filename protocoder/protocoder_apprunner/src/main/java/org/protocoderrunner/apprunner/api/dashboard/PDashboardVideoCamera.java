@@ -80,41 +80,11 @@ public class PDashboardVideoCamera extends PInterface {
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	public void update(ByteArrayOutputStream out, boolean b1, boolean b2) throws JSONException, UnknownHostException {
-        JSONObject values;
-
-        if (b1) {
-            byte[] bytes = out.toByteArray();
-            BitmapFactory.Options bitmap_options = new BitmapFactory.Options();
-            bitmap_options.inPreferredConfig = Bitmap.Config.RGB_565;
-
-            final Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, bitmap_options);
-
-             values = new JSONObject()
-                    .put("id", id)
-                    .put("type", "widget")
-                    .put("src", bitmap);
-
-        } else {
-
-            if (b2) {
-
-                String encodedImage = Base64.encodeToString(out.toByteArray(), Base64.DEFAULT);
-
-                values = new JSONObject()
-                        .put("id", id)
-                        .put("type", "widget")
-                        .put("src", encodedImage);
-
-            } else {
-                values = new JSONObject()
-                        .put("id", id)
-                        .put("type", "widget")
-                        .put("src", out.toByteArray());
-
-            }
-        }
-
+	public void update(String encodedImage, boolean b1, boolean b2) throws JSONException, UnknownHostException {
+        JSONObject values = new JSONObject()
+                .put("id", id)
+                .put("type", "widget")
+                .put("src", encodedImage);
 
         JSONObject msg = new JSONObject()
                 .put("type", "widget")

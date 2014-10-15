@@ -724,7 +724,9 @@ public class PUIGeneric extends PInterface {
 		initializeLayout();
 		// Create and position the image view
 		final PImageView iv = new PImageView(a.get());
-		iv.setImage(imagePath);
+        if (imagePath != null) {
+            iv.setImage(imagePath);
+        }
 
 		return iv;
 
@@ -990,16 +992,17 @@ public class PUIGeneric extends PInterface {
     @ProtocoderScript
     @APIMethod(description = "Creates a new camera view", example = "")
     @APIParam(params = { "type={0,1}" })
-	public PCamera newCamera(int type) {
+	public PCamera newCamera(String type) {
         initializeLayout();
 
-        if (type == 1) {
-            type = CameraNew.MODE_CAMERA_FRONT;
-        } else {
-            type = CameraNew.MODE_CAMERA_BACK;
+        int camNum = -1;
+        if (type.equals("front")) {
+            camNum = CameraNew.MODE_CAMERA_FRONT;
+        } else if (type.equals("back")) {
+            camNum = CameraNew.MODE_CAMERA_BACK;
         }
 
-		PCamera jCamera = new PCamera(a.get(), type, PCamera.MODE_COLOR_COLOR);
+		PCamera jCamera = new PCamera(a.get(), camNum, PCamera.MODE_COLOR_COLOR);
 
 		return jCamera;
 	}

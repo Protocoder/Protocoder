@@ -31,6 +31,7 @@ package org.protocoderrunner.fragments;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -50,7 +51,9 @@ import android.media.MediaRecorder;
 import android.media.SoundPool;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Base64;
 import android.util.Log;
+import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.Toast;
@@ -70,11 +73,13 @@ import java.util.Vector;
 @SuppressLint("NewApi")
 public class CameraNew extends TextureView implements TextureView.SurfaceTextureListener {
 
-	public static final int MODE_COLOR_BW = 0;
-	public static final int MODE_COLOR_COLOR = 1;
-	public static final int MODE_CAMERA_FRONT = 2;
-	public static final int MODE_CAMERA_BACK = 3;
-	int modeColor;
+	public static final int MODE_CAMERA_FRONT = 0;
+	public static final int MODE_CAMERA_BACK = 1;
+    public static final int MODE_COLOR_BW = 2;
+    public static final int MODE_COLOR_COLOR = 3;
+    private static int cameraRotation = 0;
+
+    int modeColor;
 	int modeCamera;
 	private int cameraId;
 
@@ -95,6 +100,8 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
 	private Vector<CameraListener> listeners = new Vector<CameraListener>();
     private CallbackBmp callbackBmp;
     private CallbackStream callbackStream;
+    private boolean frameProcessing = false;
+    private Parameters mParameters;
 
 
     public interface CameraListener {
@@ -152,73 +159,30 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
 
         if (modeCamera == MODE_CAMERA_FRONT) {
-            cameraId = getFrontCameraId();
+            cameraId = getCameraId(CameraInfo.CAMERA_FACING_FRONT);
             MLog.d(TAG, "" + cameraId);
             if (cameraId == -1) {
                 MLog.d(TAG, "there is no camera");
             }
             mCamera = Camera.open(cameraId);
         } else {
-            // cameraId = 0;
+            cameraId = 0;
             mCamera = Camera.open();
         }
 
+        mParameters = mCamera.getParameters();
+
+
         try {
-
-            Parameters parameters = mCamera.getParameters();
-
-            if (modeColor == MODE_COLOR_BW && parameters.getSupportedColorEffects() != null) {
-                // parameters.setColorEffect(Camera.Parameters.EFFECT_MONO);
-            }
-
-            if (c.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
-                // parameters.set("orientation", "portrait"); // For
-                // Android Version 2.2 and above
-                mCamera.setDisplayOrientation(90);
-                // For Android Version 2.0 and above
-                parameters.setRotation(90);
-            } else if (modeCamera == MODE_CAMERA_FRONT) {
-
-            }
-            parameters.setPreviewSize(320, 240);
-            mCamera.setParameters(parameters);
-
+            mCamera.setParameters(mParameters);
             mCamera.setPreviewTexture(surface);
 
         } catch (IOException exception) {
             mCamera.release();
         }
 
+        setCameraDisplayOrientation((Activity) c, cameraId, mCamera);
         mCamera.startPreview();
-        mCamera.setPreviewCallback(new PreviewCallback() {
-
-            @Override
-            public void onPreviewFrame(byte[] data, Camera camera) {
-                Camera.Parameters parameters = camera.getParameters();
-                int width = parameters.getPreviewSize().width;
-                int height = parameters.getPreviewSize().height;
-
-                YuvImage yuv = new YuvImage(data, parameters.getPreviewFormat(), width, height, null);
-
-                ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-                //maybe pass the out to the callbacks and do each compression there?
-                yuv.compressToJpeg(new Rect(0, 0, width, height), 50, out);
-
-                byte[] bytes = out.toByteArray();
-
-                BitmapFactory.Options bitmap_options = new BitmapFactory.Options();
-                bitmap_options.inPreferredConfig = Bitmap.Config.RGB_565;
-
-                final Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, bitmap_options);
-
-                if (callbackBmp != null) callbackBmp.event(bitmap);
-                if (callbackStream != null)  callbackStream.event(out);
-            }
-        });
-
-        //set shadow
-        //AndroidUtils.setViewGenericShadow(this, width, height);
 
     }
 
@@ -229,16 +193,84 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
     
     public void addCallbackBmp(CallbackBmp callbackBmp) {
         this.callbackBmp = callbackBmp;
+        startOnFrameProcessing();
     }
 
 
 
     public interface CallbackStream {
-        public void event(ByteArrayOutputStream out);
+        public void event(String out);
     }
 
     public void addCallbackStream(CallbackStream callbackStream) {
         this.callbackStream = callbackStream;
+        startOnFrameProcessing();
+    }
+
+    public void setPreviewSize(int w, int h) {
+        mParameters.setPreviewSize(w, h);
+        mCamera.setParameters(mParameters);
+    }
+
+    public void setPictureSize(int w, int h) {
+        mParameters.setPictureSize(320, 240);
+        mCamera.setParameters(mParameters);
+    }
+
+    public void setColorEffect(String mode) {
+        mParameters.setColorEffect(mode);
+        mCamera.setParameters(mParameters);
+    }
+
+
+    public void getProperties() {
+
+        Log.i(TAG, "Supported Exposure Modes:" + mParameters.get("exposure-mode-values"));
+        Log.i(TAG, "Supported White Balance Modes:" + mParameters.get("whitebalance-values"));
+        Log.i(TAG, "Supported White Balance Modes:" + mParameters.get("whitebalance-values"));
+        Log.i(TAG, "Supported White Balance Modes:" + mParameters.get("whitebalance"));
+        Log.i(TAG, "Supported White Balance Modes:" + mParameters.get("exposure"));
+    }
+
+
+    public void startOnFrameProcessing() {
+        if (frameProcessing == false) {
+            frameProcessing = true;
+            MLog.d(TAG, "startOnFrameProccesing");
+            mCamera.setPreviewCallback(new PreviewCallback() {
+
+                @Override
+                public void onPreviewFrame(byte[] data, Camera camera) {
+                    MLog.d(TAG, "onNewFrame");
+
+                    Camera.Parameters parameters = camera.getParameters();
+                    int width = parameters.getPreviewSize().width;
+                    int height = parameters.getPreviewSize().height;
+
+                    YuvImage yuv = new YuvImage(data, parameters.getPreviewFormat(), width, height, null);
+
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+                    //maybe pass the out to the callbacks and do each compression there?
+                    yuv.compressToJpeg(new Rect(0, 0, width, height), 50, out);
+
+                    byte[] bytes = out.toByteArray();
+
+                    BitmapFactory.Options bitmap_options = new BitmapFactory.Options();
+                    bitmap_options.inPreferredConfig = Bitmap.Config.RGB_565;
+
+
+                    if (callbackBmp != null) {
+                        final Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, bitmap_options);
+                        callbackBmp.event(bitmap);
+                    }
+                    if (callbackStream != null) {
+                        String encodedImage = Base64.encodeToString(out.toByteArray(), Base64.DEFAULT);
+                        callbackStream.event(encodedImage);
+                    }
+                }
+            });
+        }
     }
 
     public void addFaceDetector() {
@@ -276,6 +308,8 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
 			public void onPictureTaken(byte[] data, Camera camera) {
 
 				Bitmap bitmapPicture = BitmapFactory.decodeByteArray(data, 0, data.length);
+
+
 
 				// soundPool.play(shutterSound, 1f, 1f, 0, 0, 1);
 
@@ -441,22 +475,23 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
 	}
 
 	@SuppressLint("NewApi")
-	private int getFrontCameraId() {
+	private int getCameraId(int cameraId) {
 		CameraInfo ci = new CameraInfo();
 		for (int i = 0; i < Camera.getNumberOfCameras(); i++) {
 			Camera.getCameraInfo(i, ci);
-			if (ci.facing == CameraInfo.CAMERA_FACING_FRONT) {
+			if (ci.facing == cameraId) { //CameraInfo.CAMERA_FACING_FRONT) {
+                MLog.d(TAG, "returning " + i);
 				return i;
-			}
+			//} else (ci.facing == CameraInfo.CAMERA_FACING_BACK) {
+            //    return i;
+            }
 		}
 		return -1; // No front-facing camera found
 	}
 
     public boolean isFlashAvailable() {
-        MLog.d(TAG, "qq 1");
-       boolean b = c.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
-        MLog.d(TAG, "qq 2");
-        MLog.d(TAG, " " + b);
+        boolean b = c.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
+
         return b;
     }
 
@@ -476,6 +511,29 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
 		}
 	}
 
+    public boolean hasAutofocus() {
+        return c.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_AUTOFOCUS);
+    }
+
+    public interface FocusCB  {
+        public void event();
+    }
+
+    public void focus(final FocusCB callbackfn) {
+        if (hasAutofocus()) {
+            if (true) {
+                mCamera.autoFocus(new Camera.AutoFocusCallback() {
+                    @Override
+                    public void onAutoFocus(boolean success, Camera camera) {
+                        if (callbackfn != null) callbackfn.event();
+                    }
+                });
+            } else {
+                mCamera.cancelAutoFocus();
+            }
+        }
+    }
+
 	public void addListener(CameraListener listener) {
 		listeners.add(listener);
 	}
@@ -484,7 +542,35 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
 		listeners.remove(listener);
 	}
 
-	static public void decodeYUV420SP(int[] rgb, byte[] yuv420sp, int width, int height) {
+    public static void setCameraDisplayOrientation(Activity activity,
+                                                   int cameraId, android.hardware.Camera camera) {
+        android.hardware.Camera.CameraInfo info =
+                new android.hardware.Camera.CameraInfo();
+        android.hardware.Camera.getCameraInfo(cameraId, info);
+        int rotation = activity.getWindowManager().getDefaultDisplay()
+                .getRotation();
+        int degrees = 0;
+        switch (rotation) {
+            case Surface.ROTATION_0: degrees = 0; break;
+            case Surface.ROTATION_90: degrees = 90; break;
+            case Surface.ROTATION_180: degrees = 180; break;
+            case Surface.ROTATION_270: degrees = 270; break;
+        }
+
+        int result;
+        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            result = (info.orientation + degrees) % 360;
+            result = (360 - result) % 360;  // compensate the mirror
+        } else {  // back-facing
+            result = (info.orientation - degrees + 360) % 360;
+        }
+
+        cameraRotation = result;
+        camera.setDisplayOrientation(result);
+    }
+
+
+    static public void decodeYUV420SP(int[] rgb, byte[] yuv420sp, int width, int height) {
 		final int frameSize = width * height;
 
 		for (int j = 0, yp = 0; j < height; j++) {
