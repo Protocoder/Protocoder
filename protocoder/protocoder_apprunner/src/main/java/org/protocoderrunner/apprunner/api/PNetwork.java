@@ -309,27 +309,47 @@ public class PNetwork extends PInterface {
         WebSocketServer websocketServer = new WebSocketServer(inetSocket, Collections.singletonList(d)) {
 
             @Override
-            public void onClose(WebSocket arg0, int arg1, String arg2, boolean arg3) {
-                callbackfn.event("onClose", arg0, "");
+            public void onClose(final WebSocket arg0, int arg1, String arg2, boolean arg3) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        callbackfn.event("onClose", arg0, "");
+                    }
+                });
                 //MLog.d(TAG, "onClose");
             }
 
             @Override
-            public void onError(WebSocket arg0, Exception arg1) {
-                callbackfn.event("onError", arg0, "");
+            public void onError(final WebSocket arg0, Exception arg1) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        callbackfn.event("onError", arg0, "");
+                    }
+                });
                 //MLog.d(TAG, "onError");
             }
 
             @Override
-            public void onMessage(WebSocket arg0, String arg1) {
-                callbackfn.event("onMessage", arg0, arg1);
+            public void onMessage(final WebSocket arg0, final String arg1) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        callbackfn.event("onMessage", arg0, arg1);
+                    }
+                });
                 //MLog.d(TAG, "onMessage server");
 
             }
 
             @Override
-            public void onOpen(WebSocket arg0, ClientHandshake arg1) {
-                callbackfn.event("onOpen", arg0, "");
+            public void onOpen(final WebSocket arg0, ClientHandshake arg1) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        callbackfn.event("onOpen", arg0, "");
+                    }
+                });
                 //MLog.d(TAG, "onOpen");
             }
         };
@@ -357,27 +377,51 @@ public class PNetwork extends PInterface {
 
                 @Override
                 public void onOpen(ServerHandshake arg0) {
-                    callbackfn.event("onOpen", "");
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            callbackfn.event("onOpen", "");
+                        }
+                    });
                     //Log.d(TAG, "onOpen");
                 }
 
                 @Override
-                public void onMessage(String arg0) {
-                    callbackfn.event("onMessage", arg0);
+                public void onMessage(final String arg0) {
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            callbackfn.event("onMessage", arg0);
+                        }
+                    });
+
                     //Log.d(TAG, "onMessage client");
 
                 }
 
                 @Override
                 public void onError(Exception arg0) {
-                    callbackfn.event("onError", "");
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            callbackfn.event("onError", "");
+
+                        }
+                    });
+
                     //Log.d(TAG, "onError");
 
                 }
 
                 @Override
                 public void onClose(int arg0, String arg1, boolean arg2) {
-                    callbackfn.event("onClose", "");
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            callbackfn.event("onClose", "");
+                        }
+                    });
+
                     //Log.d(TAG, "onClose");
 
                 }
