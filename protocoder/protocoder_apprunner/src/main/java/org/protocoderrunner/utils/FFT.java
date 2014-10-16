@@ -1,8 +1,6 @@
 package org.protocoderrunner.utils;
 
-/* taken from funf project 
- * https://github.com/OpenSensing/funf-v3/blob/master/funf-open-sensing-framework/src/edu/mit/media/funf/FFT.java
- * */
+
 public class FFT {
 	int n, m;
 
