@@ -31,14 +31,18 @@ package org.protocoder.appApi;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 import android.widget.Toast;
 
 import org.protocoder.R;
 import org.protocoder.fragments.NewProjectDialogFragment;
+import org.protocoder.projectlist.ProjectItem;
 import org.protocoder.projectlist.ProjectListFragment;
 import org.protocoder.projectlist.ProjectsPagerAdapter;
 import org.protocoder.views.ProjectSelectorStrip;
@@ -120,12 +124,34 @@ public class ProtoScripts {
                 plf.goTo(id);
             }
         });
-
     }
 
     public void highlight(String folder, String appName) {
         final ProjectListFragment plf = mProjectPagerAdapter.getFragmentByName(folder);
-        plf.highlight(appName, true);
+        ProjectItem view = (ProjectItem) getViewByName(folder, appName);
+        int pos = plf.findAppPosByName(appName);
+
+        plf.projectAdapter.projects.get(pos).selected = true;
+        view.setHighlighted(true);
+    }
+
+
+    public void resetHighlighting(String folder) {
+        final ProjectListFragment plf = mProjectPagerAdapter.getFragmentByName(folder);
+        plf.resetHighlighting();
+    }
+
+    public View getViewByName(String folder, String appName) {
+        final ProjectListFragment plf = mProjectPagerAdapter.getFragmentByName(folder);
+        ProjectItem view = (ProjectItem) plf.getView(appName);
+
+        int pos = plf.findAppPosByName(appName);
+        //->
+        plf.projectAdapter.projects.get(pos).selected = true;
+        view.setHighlighted(true);
+
+
+        return view;
     }
 
 
@@ -150,9 +176,9 @@ public class ProtoScripts {
         mProjectPagerAdapter.notifyDataSetChanged();
     }
 
-    //TODO
     public void refresh(String folder, String appName) {
-        //mFragmentList.get(folder).projectRefresh(appName);
+        final ProjectListFragment plf = mProjectPagerAdapter.getFragmentByName(folder);
+        plf.projectRefresh(appName);
     }
 
     public void rename(String folder, String appName) {

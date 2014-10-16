@@ -39,7 +39,7 @@ public class IDEcommunication {
                         String name = jsonObject.getString("name");
 
 
-                        MLog.d(TAG, "selected " + folder + " " + name);
+                        //MLog.d(TAG, "selected " + folder + " " + name);
 
                         Events.SelectedProjectEvent evt = new Events.SelectedProjectEvent(folder, name);
                         EventBus.getDefault().post(evt);
