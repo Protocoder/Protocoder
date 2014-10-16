@@ -30,18 +30,28 @@
 package org.protocoderrunner.apprunner.api.other;
 
 import android.app.Activity;
+import android.content.Context;
 
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.utils.FFT;
 
 public class SignalUtils extends PInterface {
 
-	public SignalUtils(Activity a) {
-		super(a);
+    FFT fft;
+    double im[];
 
-	}
+	public SignalUtils(Context a, int n) {
+		super(a);
+        fft = new FFT(n);
+        im = new double[n];
+
+        for(int i = 0; i < n; i++){
+            im[i] = 0;
+        }
+    }
 
 	public LowPass lowpass() {
 		return null;
@@ -50,10 +60,10 @@ public class SignalUtils extends PInterface {
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "function()" })
-	public void fft(boolean visible) {
+	public double[] fft(double[] re) {
+		fft.fft(re, im.clone());
 
-		// FFT fft = new FFT(10);
-		// fft.fft(re, im);
+        return re;
 	}
 
 	class LowPass {
