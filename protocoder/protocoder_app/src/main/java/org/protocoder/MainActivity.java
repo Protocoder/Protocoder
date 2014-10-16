@@ -275,6 +275,8 @@ public class MainActivity extends BaseActivity {
         String name = evt.getName();
 
         mProtocoder.protoScripts.goTo(folder, name);
+        mProtocoder.protoScripts.resetHighlighting(folder);
+        mProtocoder.protoScripts.highlight(folder, name);
     }
 
     @Override

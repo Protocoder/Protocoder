@@ -54,6 +54,7 @@ import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.apprunner.api.other.SignalUtils;
 import org.protocoderrunner.sensors.WhatIsRunning;
 import org.protocoderrunner.utils.MLog;
 
@@ -297,6 +298,10 @@ public class PUtil extends PInterface {
         MLog.d(TAG, "bitmap --> " + bitmap);
 
         return bitmap;
+    }
+
+    public SignalUtils signal(int n) {
+        return new SignalUtils(a.get(), n);
     }
 
 }

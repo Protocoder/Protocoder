@@ -39,6 +39,7 @@ import android.widget.ImageView;
 
 import org.protocoder.R;
 import org.protocoderrunner.project.Project;
+import org.protocoderrunner.utils.MLog;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -47,7 +48,7 @@ public class ProjectItemAdapter extends BaseAdapter {
     private static final String TAG = "ProjectItemAdapter";
     private final WeakReference<Context> mContext;
 
-	ArrayList<Project> projects;
+	public ArrayList<Project> projects;
 	private final String projectFolder;
 	private final boolean listMode;
 
@@ -80,37 +81,24 @@ public class ProjectItemAdapter extends BaseAdapter {
 
         Project p = projects.get(position);
 
-        if (convertView == null) { // if it's not recycled, initialize some
-			// attributes
-			customView = new ProjectItem(mContext.get(), listMode);
+        //MLog.d(TAG, "getView " + p.getName());
 
-			customView.setText(projects.get(position).getName());
+        // if it's not recycled, initialize some attributes
+        if (convertView == null) {
+            //MLog.d(TAG, "getView " + p.getName() + " -> new");
+            customView = new ProjectItem(mContext.get(), listMode);
+			customView.setText(p.getName());
 
             //TODO enable again colors
 		    customView.setImage(R.drawable.ic_script);
-
-			ImageView imageView = (ImageView) customView.findViewById(R.id.card_menu_button);
-			imageView.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					customView.showContextMenu();
-				}
-			});
-			imageView.setOnLongClickListener(new OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    customView.showContextMenu();
-                    return true;
-                }
-            });
-
+        //if recycled
 		} else {
-			customView = (ProjectItem) convertView;
-			customView.setText(p.getName());
+            //MLog.d(TAG, "getView " + p.getName() + " -> recycled " + p.selected);
+
+            customView = (ProjectItem) convertView;
+			customView.reInit(p.getName(), p.selected);
 		}
 		customView.setTag(projects.get(position).getName());
-        customView.setSelected(p.selected);
-        //MLog.d(TAG, "is selected " + p.selected);
 
 		if (getCount() - 1 == position) {
 			customView.setPadding(0, 0, 0, 100);
@@ -120,4 +108,5 @@ public class ProjectItemAdapter extends BaseAdapter {
 
 		return customView;
 	}
+
 }

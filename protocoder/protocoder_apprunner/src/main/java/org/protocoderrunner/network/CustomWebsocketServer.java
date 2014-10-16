@@ -118,7 +118,7 @@ public class CustomWebsocketServer extends WebSocketServer {
 
 	@Override
 	public void onMessage(WebSocket conn, String message) {
-		MLog.d(TAG, "Received message " + message);
+		//MLog.d(TAG, "Received message " + message);
 		JSONObject json, res;
 		try {
 			json = new JSONObject(message);

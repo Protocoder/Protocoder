@@ -35,26 +35,33 @@ import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.protocoder.R;
+import org.protocoderrunner.utils.MLog;
 
 import java.lang.ref.WeakReference;
 
 public class ProjectItem extends LinearLayout {
 
-	private WeakReference<View> v;
+    private static final String TAG = "ProjectItem";
+    private final Drawable bg;
+    private WeakReference<View> v;
 	// private Context c;
 	private final WeakReference<Context> c;
 	private String t;
+    private boolean highlighted = false;
 
-	public ProjectItem(Context context, boolean listMode) {
+    public ProjectItem(Context context, boolean listMode) {
 		super(context);
 		this.c = new WeakReference<Context>(context);
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -64,6 +71,10 @@ public class ProjectItem extends LinearLayout {
 		} else {
 			this.v = new WeakReference<View>(inflater.inflate(R.layout.view_project_item, this, true));
 		}
+
+        FrameLayout fl = (FrameLayout) findViewById(R.id.viewProjectItemBackground);
+        bg = fl.getBackground();
+        setMenu();
 	}
 
 	public void setImage(int resId) {
@@ -79,6 +90,12 @@ public class ProjectItem extends LinearLayout {
 		// TextUtils.changeFont(c.get(), textView, Fonts.MENU_TITLE);
 		textView.setText(text);
 	}
+
+    public void reInit(String text, boolean selected) {
+        setText(text);
+        setHighlighted(selected);
+        MLog.d(TAG, "reInit " + t + " " + highlighted);
+    }
 
 	public void drawText(ImageView imageView, String t2) {
 
@@ -110,4 +127,38 @@ public class ProjectItem extends LinearLayout {
 		imageView.setImageDrawable(new BitmapDrawable(getResources(), tempBitmap));
 
 	}
+
+    public void setMenu() {
+        ImageView imageView = (ImageView) findViewById(R.id.card_menu_button);
+        imageView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showContextMenu();
+            }
+        });
+        imageView.setOnLongClickListener(new OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                showContextMenu();
+                return true;
+            }
+        });
+    }
+
+    public Drawable getBg() {
+        return bg;
+    }
+
+    public void setHighlighted(boolean highlighted) {
+        if (highlighted) {
+            getBg().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
+        } else {
+            getBg().clearColorFilter();
+        }
+        this.highlighted = highlighted;
+    }
+
+    public boolean isHighlighted() {
+        return highlighted;
+    }
 }

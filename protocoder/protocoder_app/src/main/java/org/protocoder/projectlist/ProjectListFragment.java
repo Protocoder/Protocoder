@@ -37,6 +37,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -59,6 +61,7 @@ import org.protocoderrunner.base.BaseFragment;
 import org.protocoderrunner.events.Events.ProjectEvent;
 import org.protocoderrunner.project.Project;
 import org.protocoderrunner.project.ProjectManager;
+import org.protocoderrunner.utils.MLog;
 
 import java.util.ArrayList;
 
@@ -70,7 +73,7 @@ public class ProjectListFragment extends BaseFragment {
     private String TAG = "ProjectListFragment";
 
     public ArrayList<Project> mProjects;
-	protected ProjectItemAdapter projectAdapter;
+	public ProjectItemAdapter projectAdapter;
 	protected GridView gridView;
 	public String projectFolder;
 	boolean listMode;
@@ -150,14 +153,11 @@ public class ProjectListFragment extends BaseFragment {
 				EventBus.getDefault().post(evt);
 				getActivity().overridePendingTransition(R.anim.splash_slide_in_anim_set,
 						R.anim.splash_slide_out_anim_set);
-
 			}
 		});
 
-
         return v;
 	}
-
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -233,17 +233,26 @@ public class ProjectListFragment extends BaseFragment {
         return pos;
     }
 
+    public View getViewByName(String appName) {
+        int pos = findAppPosByName(appName);
+        View view = projectAdapter.getView(pos, null, null);
+
+        return view;
+    }
+
     public void goTo(int pos) {
         if (pos != -1) gridView.smoothScrollToPosition(pos);
     }
 
-    public void highlight(String projectName, boolean b) {
+    public View highlight(String projectName, boolean b) {
 
         View v = gridView.findViewWithTag(projectName);
+        MLog.d(TAG, "view is " + v);
         v.setSelected(b);
         projectAdapter.projects.get(findAppIdByName(projectName)).selected = true;
-        //v.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
+        v.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
 
+        return v;
     }
 
 	public void clear() {
@@ -352,15 +361,31 @@ public class ProjectListFragment extends BaseFragment {
     }
 
     public void projectRefresh(String projectName) {
-		View v = gridView.findViewWithTag(projectName);
-        v.animate().alpha(0).setDuration(500).setInterpolator(new CycleInterpolator(1));
+        getView(projectName).animate().alpha(0).setDuration(500).setInterpolator(new CycleInterpolator(1));
 	}
+
+    public View getView(String projectName) {
+        return gridView.findViewWithTag(projectName);
+    }
+
+
+    public void resetHighlighting() {
+        for (int i = 0; i < mProjects.size(); i++) {
+            mProjects.get(i).selected = false;
+        }
+
+        for (int i = 0; i < gridView.getChildCount(); i++) {
+            ProjectItem v = (ProjectItem) gridView.getChildAt(i);
+            if (v.isHighlighted()) {
+                v.setHighlighted(false);
+            }
+        }
+    }
 
 	public void onEventMainThread(ProjectEvent evt) {
 		if (evt.getAction() == "run") {
 			projectRefresh(evt.getProject().getName());
 		}
-
 	}
 
 }
