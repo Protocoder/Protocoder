@@ -217,9 +217,9 @@ public class ProtoScripts {
         Project newProject = ProjectManager.getInstance().addNewProject(mProtocoder.a, appName, folder, appName);
 
         //notify ui
-        //ProjectListFragment f = mFragmentList.get(folder);
-        //f.mProjects.add(newProject);
-        //f.notifyAddedProject();
+        final ProjectListFragment plf = mProjectPagerAdapter.getFragmentByName(folder);
+        plf.mProjects.add(newProject);
+        plf.notifyAddedProject();
     }
 
     public void delete(String folder, String appName) {
