@@ -46,6 +46,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import org.protocoderrunner.utils.MLog;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -231,13 +233,17 @@ public class PlotView extends View {
 		}
 	}
 
+    public void plotInit(String plotName) {
+
+        if (plots.containsKey(plotName) == false) {
+            plots.put(plotName, new Plot(Color.BLUE));
+        }
+        invalidate();
+    }
 	public void setValue(String plotName, float v1) {
 
 		if (mReady) {
-
-			if (plots.containsKey(plotName) == false) {
-				plots.put(plotName, new Plot(Color.BLUE));
-			}
+            plotInit(plotName);
 
 			// shift points
 			Plot p = plots.get(plotName);
@@ -315,6 +321,29 @@ public class PlotView extends View {
         return this;
 	}
 
+    public int getSize() {
+        return mNumPoints;
+    }
+
+    public Float[] getArray(String plotName) {
+       Plot p = plots.get(plotName);
+       //MLog.d(TAG, "plot " + p);
+
+       return p.plotValues.toArray(new Float[p.plotValues.size()]);
+    }
+
+    public void setArray(String plotName, float[] values) {
+        Plot p = plots.get(plotName);
+
+        MLog.d(TAG, p.plotValues.size() + " " + values.length);
+
+        for (int i = 0; i < values.length; i++) {
+            p.plotValues.set(i, values[i]);
+           // p.plotValues.clear();
+           // p.plotValues.set
+        }
+        invalidate();
+    }
     //public void setBackgroundColor() {
 
     //}

@@ -101,4 +101,33 @@ public class PPlotView extends PlotView implements PViewInterface {
 		super.setValue(plotName, value);
 	}
 
+	@ProtocoderScript
+	@APIMethod(description = "Set an array of values in the plot", example = "")
+    @APIParam(params = { "plotName", "value" })
+    public void setArray(String plotName, float[] values) {
+		super.setArray(plotName, values);
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "Get the current values of the plot as an array", example = "")
+    @APIParam(params = { "plotName" })
+    public Float[] getArray(String plotName) {
+		return super.getArray(plotName);
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "Get the plot array size", example = "")
+    @APIParam(params = { "" })
+    public int getSize() {
+		return super.getSize();
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "Init a plot name", example = "")
+    @APIParam(params = { "" })
+    public void init(String name) {
+		super.plotInit(name);
+	}
+
+
 }
