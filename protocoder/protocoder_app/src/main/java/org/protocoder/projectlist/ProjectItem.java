@@ -94,7 +94,6 @@ public class ProjectItem extends LinearLayout {
     public void reInit(String text, boolean selected) {
         setText(text);
         setHighlighted(selected);
-        MLog.d(TAG, "reInit " + t + " " + highlighted);
     }
 
 	public void drawText(ImageView imageView, String t2) {

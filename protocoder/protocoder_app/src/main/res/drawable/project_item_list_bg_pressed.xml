@@ -5,7 +5,7 @@
         android:left="0dp"
         android:right="0dp">
         <shape android:shape="rectangle" >
-            <solid android:color="@color/transparent_focused" />
+            <solid android:color="@color/transparent_pressed" />
         </shape>
     </item>
 
