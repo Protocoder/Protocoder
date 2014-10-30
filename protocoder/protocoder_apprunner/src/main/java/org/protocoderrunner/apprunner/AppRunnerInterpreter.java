@@ -42,7 +42,6 @@ import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.commonjs.module.Require;
 import org.mozilla.javascript.debug.Debugger;
-import org.protocoderrunner.utils.MLog;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -59,18 +58,14 @@ public class  AppRunnerInterpreter {
 	static ScriptContextFactory contextFactory;
 	public Interpreter interpreter;
 	private final android.content.Context a;
-	private InterpreterInfo listener;
+	private InterpreterInfo mListener;
 
 	static String scriptPrefix = "//Prepend text for all scripts \n" + "var window = this; \n";
-
 	static final String SCRIPT_POSTFIX = "//Appends text for all scripts \n" + "function onAndroidPause(){ }  \n"
 			+ "// End of Append Section" + "\n";
 
 	public AppRunnerInterpreter(android.content.Context context) {
-		// this.a = new WeakReference<AppRunnerActivity>((AppRunnerActivity)
-		// mainScriptContext);
 		this.a = context;
-
 	}
 
 	public Object eval(final String code) {
@@ -93,13 +88,12 @@ public class  AppRunnerInterpreter {
 
 	public Object eval(final String code, final String sourceName) {
 		final AtomicReference<Object> result = new AtomicReference<Object>(null);
-
 		((Activity) a).runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				try {
 					result.set(interpreter.eval(code, sourceName));
-				} catch (Throwable e) {
+                } catch (Throwable e) {
 					reportError(e);
 					result.set(e);
 				}
@@ -159,29 +153,28 @@ public class  AppRunnerInterpreter {
 	}
 
     public void addDebugger(Debugger debugger) {
-        MLog.network(a.getApplicationContext(), TAG, "qq" + interpreter + " " + interpreter.mainScriptContext);
         interpreter.mainScriptContext.setDebugger(debugger, interpreter.mainScriptContext);
     }
 
-    public interface InterpreterInfo {
-		public void onError(String message);
+    interface InterpreterInfo {
+		void onError(String message);
 	}
 
 	public void addListener(InterpreterInfo listener) {
-		this.listener = listener;
-	}
+		this.mListener = listener;
+    }
 
 	public void reportError(Object e) {
-		// Create error message.
+        // Create error message.
 		String message = "";
 		if (e instanceof RhinoException) {
-			RhinoException error = (RhinoException) e;
+
+            RhinoException error = (RhinoException) e;
 			message = error.getMessage() + " " + error.lineNumber() + " (" + error.columnNumber() + "): "
 					+ (error.sourceName() != null ? " " + error.sourceName() : "")
 					+ (error.lineSource() != null ? " " + error.lineSource() : "") + "\n" + error.getScriptStackTrace();
 
-
-			listener.onError(message);
+			this.mListener.onError(message);
 
 		} else {
 			message = e.toString();
@@ -196,8 +189,8 @@ public class  AppRunnerInterpreter {
 	}
 
 	public static String extractCodeFromAppRunnerTags(String code) throws Exception {
-		String startDelimiter = "DROIDSCRIPT_BEGIN";
-		String stopDelimiter = "DROIDSCRIPT_END";
+		String startDelimiter = "PROTOCODERSCRIPT_BEGIN";
+		String stopDelimiter = "PROTOCODERSCRIPT_END";
 
 		// Find start delimiter
 		int start = code.indexOf(startDelimiter, 0);
@@ -338,7 +331,6 @@ public class  AppRunnerInterpreter {
 		}
 
 		public Object callJsFunction(String funName, Object... args) throws Throwable {
-			MLog.d(TAG, "calling " + funName);
 			Object fun = scope.get(funName, scope);
 
 			if (fun instanceof Function) {
