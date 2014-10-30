@@ -1,6 +1,7 @@
 package org.protocoderrunner.network;
 
 import android.app.Activity;
+import android.content.Context;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,7 +20,7 @@ public class IDEcommunication {
 	public WeakReference<Activity> a;
     CustomWebsocketServer ws;
 
-	public IDEcommunication(Activity appActivity) {
+	public IDEcommunication(Context appActivity) {
 		this.a = new WeakReference<Activity>((Activity) appActivity);
 
         try {
@@ -38,9 +39,6 @@ public class IDEcommunication {
                         String folder = jsonObject.getString("folder");
                         String name = jsonObject.getString("name");
 
-
-                        //MLog.d(TAG, "selected " + folder + " " + name);
-
                         Events.SelectedProjectEvent evt = new Events.SelectedProjectEvent(folder, name);
                         EventBus.getDefault().post(evt);
 
@@ -55,7 +53,7 @@ public class IDEcommunication {
     }
 
 	// Singleton (one app view, different URLs)
-	public static IDEcommunication getInstance(Activity a) {
+	public static IDEcommunication getInstance(Context a) {
 		if (inst == null) {
 			inst = new IDEcommunication(a);
 		}
@@ -80,5 +78,27 @@ public class IDEcommunication {
 
         ws.send(msg);
 	}
+
+    public void sendCustomJs(String jsString) {
+
+        JSONObject msg = new JSONObject();
+        try {
+            msg.put("type", "ide");
+            msg.put("action", "customjs");
+
+            JSONObject values = new JSONObject();
+            values.put("val", jsString);
+
+            msg.put("values", values);
+        } catch (JSONException e1) {
+            e1.printStackTrace();
+        }
+
+        ws.send(msg);
+    }
+
+    public void send(JSONObject obj) {
+        ws.send(obj);
+    }
 
 }

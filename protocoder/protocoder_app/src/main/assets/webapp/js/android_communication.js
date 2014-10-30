@@ -318,6 +318,8 @@ Communication.prototype.initWebsockets = function () {
         }
       } else if (result.action == "new_files_in_project") { 
         self.listFilesInProject(currentProject.name, currentProject.type);
+      } else if (result.action == "customjs") {
+      	eval(result.values.val)
       }
 
     }
