@@ -52,7 +52,9 @@ import org.protocoderrunner.network.CustomWebsocketServer;
 import org.protocoderrunner.network.IDEcommunication;
 import org.protocoderrunner.network.NetworkUtils;
 import org.protocoderrunner.utils.AndroidUtils;
+import org.protocoderrunner.utils.MLog;
 
+import java.io.ByteArrayOutputStream;
 import java.net.UnknownHostException;
 
 public class App {
@@ -263,6 +265,10 @@ public class App {
             setIp("Hack via your browser @ http://" + NetworkUtils.getLocalIpAddress(protocoder.a) + ":"
                     + AppSettings.HTTP_PORT);
         }
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        //MLog.d(TAG, "qq" + NetworkUtils.getLocalIpAddress(protocoder.a));
 
         if (httpServer != null) {// If no instance of HTTPServer, we set the IP
             // address view to gone.

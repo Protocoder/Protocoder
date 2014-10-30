@@ -52,7 +52,7 @@ function setProjectList(filter, data) {
         });
       })
       .hover(function() {
-        console.log("hover " + filter + " " + project.name)
+        //console.log("hover " + filter + " " + project.name)
         protocoder.communication.highlight(filter, project.name);
 
       })

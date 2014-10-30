@@ -186,7 +186,6 @@ Editor.prototype.init = function() {
 	    	liveExec.time = now;
 
 	    	if (that.liveExecRec.firstTime == null) {
-	    		console.log("qq");
 	    		that.liveExecRec.firstTime = now;
 	    	}
 
@@ -250,7 +249,7 @@ Editor.prototype.init = function() {
 
 
 Editor.prototype.runLiveExec = function(liveExec) {
-	console.log(liveExec);
+	//console.log(liveExec);
 
    	//get the code selected or the whole row 
 	if (liveExec.selectedText.length > 0) { 
@@ -258,7 +257,7 @@ Editor.prototype.runLiveExec = function(liveExec) {
 		protocoder.editor.highlight(liveExec.range);
 	} else { 
 		var currentLine = this.session.getDocument().$lines[liveExec.numLine]; 
-		console.log(liveExec.numLine + " " + currentLine + " " + currentLine.length);
+		//console.log(liveExec.numLine + " " + currentLine + " " + currentLine.length);
 		var range_line = new this.Range(liveExec.numLine, 0, liveExec.numLine, currentLine.length);
 
 
