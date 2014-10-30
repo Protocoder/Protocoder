@@ -35,6 +35,7 @@ import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.network.IDEcommunication;
 
 public class PWebEditor extends PInterface {
 
@@ -59,4 +60,10 @@ public class PWebEditor extends PInterface {
 
 	}
 
+    @ProtocoderScript
+    @APIMethod(description = "Execute custom js in the webIde", example = "")
+    @APIParam(params = { "jsText" })
+    public void sendJs(String js) {
+        IDEcommunication.getInstance(a.get()).sendCustomJs(js);
+    }
 }
