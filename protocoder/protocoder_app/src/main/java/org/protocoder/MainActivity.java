@@ -89,6 +89,7 @@ public class MainActivity extends BaseActivity {
     private PNetwork mPNetwork;
     private PFileIO mPFileIO;
     private PMedia mPMedia;
+    private boolean debugApp = false;
 
     @Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -140,14 +141,14 @@ public class MainActivity extends BaseActivity {
 
         connectivityChangeReceiver = new ConnectivityChangeReceiver();
 
+        if (debugApp) {
+            interp = new AppRunnerInterpreter(this);
+            interp.createInterpreter(true);
 
-        interp = new AppRunnerInterpreter(this);
-        interp.createInterpreter(true);
-
-        interp.interpreter.addObjectToInterface("ui", mPUi);
-        interp.interpreter.addObjectToInterface("util", mPUtil);
-        interp.interpreter.addObjectToInterface("protocoder", mProtocoder);
-
+            interp.interpreter.addObjectToInterface("ui", mPUi);
+            interp.interpreter.addObjectToInterface("util", mPUtil);
+            interp.interpreter.addObjectToInterface("protocoder", mProtocoder);
+        }
     }
 
     private void addFragments() {
@@ -267,7 +268,9 @@ public class MainActivity extends BaseActivity {
         String code = evt.getCode();
         MLog.d(TAG, "event -> " + code);
 
-        interp.eval(code);
+        if (debugApp) {
+            interp.eval(code);
+        }
     }
 
     public void onEventMainThread(Events.SelectedProjectEvent evt) {

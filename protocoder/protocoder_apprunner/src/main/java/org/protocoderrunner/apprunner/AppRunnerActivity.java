@@ -105,9 +105,10 @@ public class AppRunnerActivity extends BaseActivity {
 
 	private static final String TAG = "AppRunner";
 
-	private static ArrayList<Class> classes = new ArrayList<Class>();
 
-	private CustomWebsocketServer ws;
+    private Context context;
+    private static ArrayList<Class> classes = new ArrayList<Class>();
+
 	private BroadcastReceiver mIntentReceiver;
 	public AppRunnerInterpreter interp;
 	private FileObserver fileObserver;
@@ -164,6 +165,7 @@ public class AppRunnerActivity extends BaseActivity {
 		// getWindow().setBackgroundDrawable(new
 		// ColorDrawable(android.graphics.Color.TRANSPARENT));
 		super.onCreate(savedInstanceState);
+        context = this;
 
         //instantiate the objects that can be accessed from the interpreter
         pApp = new PApp(this);
@@ -222,14 +224,6 @@ public class AppRunnerActivity extends BaseActivity {
 						| WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 			}
 
-            //protocoder app settings
-			try {
-				MLog.d(TAG, "starting websocket server");
-				ws = CustomWebsocketServer.getInstance(this);
-			} catch (UnknownHostException e) {
-				MLog.d(TAG, "cannot start websocket server");
-				e.printStackTrace();
-			}
 
             //create a new interpreter and add the objects to it
             interp = new AppRunnerInterpreter(this);
@@ -247,9 +241,7 @@ public class AppRunnerActivity extends BaseActivity {
             interp.interpreter.addObjectToInterface("ui", pUi);
             interp.interpreter.addObjectToInterface("util", pUtil);
 
-
-
-            interp.addListener(new AppRunnerInterpreter.InterpreterInfo() {
+            AppRunnerInterpreter.InterpreterInfo appRunnerCb = new AppRunnerInterpreter.InterpreterInfo() {
 
 				@Override
 				public void onError(String message) {
@@ -261,23 +253,31 @@ public class AppRunnerActivity extends BaseActivity {
 					try {
 						obj.put("type", "error");
 						obj.put("values", message);
-						ws.send(obj);
+                        MLog.d(TAG, "error " + obj.toString(2));
+                        IDEcommunication.getInstance(context).send(obj);
 					} catch (JSONException er1) {
 						er1.printStackTrace();
 					}
 
 				}
-			});
+			};
 
-			// loading the libraries
+            MLog.d(TAG, "adding Listener 1");
+            MLog.d(TAG, "adding Listener " + interp + " " + appRunnerCb);
+            interp.addListener(appRunnerCb);
+            MLog.d(TAG, "adding Listener 2");
+
+
+            // loading the libraries
 			interp.eval(AppRunnerInterpreter.scriptPrefix);
 
 			// run the script
 			if (null != script) {
 				interp.eval(script, projectName);
 			}
-            interp.callJsFunction("setup");
             interp.eval(AppRunnerInterpreter.SCRIPT_POSTFIX);
+
+            interp.callJsFunction("setup");
 
 			// TODO fix actionbar color
 			Integer actionBarColor = null;
@@ -288,10 +288,10 @@ public class AppRunnerActivity extends BaseActivity {
 			if (actionBarSet == false) {
 				setActionBar(actionBarColor, getResources().getColor(R.color.white));
 			}
-
 			// Call the onCreate JavaScript function.
 			interp.callJsFunction("onCreate", savedInstanceState);
 
+            //audio
 			AudioManager audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 			int currentVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
 			this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
@@ -685,16 +685,11 @@ public class AppRunnerActivity extends BaseActivity {
 
 	public void startFileObserver() {
 
-		fileObserver = new FileObserver(currentProject.getStoragePath(),
-		// set up a file obs`erver to
-		// watch this directory on sd card
-				FileObserver.CREATE | FileObserver.DELETE) {
+        // set up a file observer to watch this directory on sd card
+        fileObserver = new FileObserver(currentProject.getStoragePath(), FileObserver.CREATE | FileObserver.DELETE) {
 
 			@Override
 			public void onEvent(int event, String file) {
-
-				CustomWebsocketServer ws;
-
                 JSONObject msg = new JSONObject();
                 String action = null;
 
@@ -710,12 +705,8 @@ public class AppRunnerActivity extends BaseActivity {
                 try {
                     msg.put("action", action);
                     msg.put("type", "ide");
-                    ws = CustomWebsocketServer.getInstance(getApplicationContext());
-                    ws.send(msg);
-                } catch (UnknownHostException e) {
-                    e.printStackTrace();
+                    IDEcommunication.getInstance(context).send(msg);
                 } catch (JSONException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
 

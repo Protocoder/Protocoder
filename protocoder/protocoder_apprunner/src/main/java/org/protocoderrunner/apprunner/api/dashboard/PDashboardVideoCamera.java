@@ -80,7 +80,7 @@ public class PDashboardVideoCamera extends PInterface {
 
 	@ProtocoderScript
 	@APIMethod(description = "", example = "")
-	public void update(String encodedImage, boolean b1, boolean b2) throws JSONException, UnknownHostException {
+	public void update(String encodedImage) throws JSONException, UnknownHostException {
         JSONObject values = new JSONObject()
                 .put("id", id)
                 .put("type", "widget")

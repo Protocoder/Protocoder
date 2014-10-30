@@ -95,7 +95,6 @@ public class PCamera extends CameraNew implements PViewInterface {
         cam.addCallbackStream(callbackfn);
     }
 
-
     @ProtocoderScript
     @APIParam(params = { "width", "height" })
     @APIMethod(description = "Set the camera preview resolution", example = "camera.takePicture();")
