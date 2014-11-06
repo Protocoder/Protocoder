@@ -6,6 +6,18 @@
 var Dashboard = function() { 
   this.widgets = new Array();
   this.status = false;
+  this.keyId = null;
+  this.keybinded = false;
+
+  //bind keys
+  that = this;
+  $("#overlay #container").keydown(function(event){
+    if (that.keybinded) {
+      ws.send('{type:key, id:'+ that.keyId +', val:'+event.keyCode+'}');
+    }
+  });
+
+
 
 }
 
@@ -37,6 +49,7 @@ Dashboard.prototype.toggle = function() {
 
 Dashboard.prototype.addWidget = function(widget) { 
   this.widgets.push(widget.id);
+  console.log(widget);
 
   if (widget.type == "plot") { 
     return this.addPlot(widget.id, widget.name, widget.x, widget.y, widget.w, widget.h, widget.minLimit, widget.maxLimit);
@@ -56,7 +69,14 @@ Dashboard.prototype.addWidget = function(widget) {
     return this.setBackgroundColor(widget.r, widget.g, widget.b, widget.a); 
   } else if (widget.type == "camera") {
     return this.addCameraPreview(widget.id, widget.x, widget.y, widget.w, widget.h);
-  }
+  } else if (widget.type == "custom") {
+    return this.addCustom(widget.id, widget.x, widget.y, widget.w, widget.h);
+  } else if (widget.type == "keyevent") {
+    this.keyId = widget.id;
+    this.keybinded = widget.enabled;
+  } 
+
+
 
 }
 
@@ -97,9 +117,6 @@ Dashboard.prototype.setLabelText = function(element, text) {
 Dashboard.prototype.changeImage = function(element, url) { 
   var img = $("#overlay #container #image_"+ element);
   img.attr("src", url);
-  console.log(url);
-  console.log("------");
-  console.log(img);
 }
 
 
@@ -164,6 +181,24 @@ Dashboard.prototype.addButton = function(element, name, posx, posy, w, h) {
             ws.send('{type:button, id:'+ element +'}');
           });
 } 
+
+
+Dashboard.prototype.addCustom = function(element, posx, posy, w, h) {
+  $('<div class ="widget" id = "custom_' + element +'"> </div>')
+          .appendTo("#overlay #container")
+          .css({"width": w+"px", "height":h+"px","top":posy+"px","left":posx+"px"});
+
+  return function(obj) {
+    ws.send('{type:custom, id:'+ element +', val:'+obj+'}');
+  };
+} 
+
+//Dashboard.prototype.sendCustom = 
+
+
+
+//load sound sends back a random id 
+//play sound plays the element in the array with the given id 
 
 
 Dashboard.prototype.addCameraPreview = function(element, posx, posy, w, h) {

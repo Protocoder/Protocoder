@@ -39,6 +39,7 @@ import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.apprunner.api.dashboard.PDashboardBackground;
 import org.protocoderrunner.apprunner.api.dashboard.PDashboardButton;
+import org.protocoderrunner.apprunner.api.dashboard.PDashboardCustomWidget;
 import org.protocoderrunner.apprunner.api.dashboard.PDashboardHTML;
 import org.protocoderrunner.apprunner.api.dashboard.PDashboardImage;
 import org.protocoderrunner.apprunner.api.dashboard.PDashboardInput;
@@ -47,6 +48,8 @@ import org.protocoderrunner.apprunner.api.dashboard.PDashboardSlider;
 import org.protocoderrunner.apprunner.api.dashboard.PDashboardText;
 import org.protocoderrunner.apprunner.api.dashboard.PDashboardVideoCamera;
 import org.protocoderrunner.network.CustomWebsocketServer;
+import org.protocoderrunner.utils.MLog;
+import org.protocoderrunner.utils.StrUtils;
 
 import java.net.UnknownHostException;
 
@@ -56,7 +59,7 @@ public class PDashboard extends PInterface {
 
 	public PDashboard(Activity a) {
 		super(a);
-	}
+    }
 
 	@ProtocoderScript
 	@APIMethod(description = "add a plot in the dashboad", example = "")
@@ -140,8 +143,7 @@ public class PDashboard extends PInterface {
 		return pWebAppImage;
 	}
 
-    //TODO is not working yet
-	//@ProtocoderScript
+	@ProtocoderScript
 	@APIMethod(description = "add a camera preview in the dashboard", example = "")
 	@APIParam(params = { "url", "x", "y", "w", "h" })
 	public PDashboardVideoCamera addCameraPreview(int x, int y, int w, int h) throws UnknownHostException, JSONException {
@@ -150,6 +152,17 @@ public class PDashboard extends PInterface {
 		pWebAppVideoCamera.add(x, y, w, h);
 
 		return pWebAppVideoCamera;
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "add a custom widget in the dashboard", example = "")
+	@APIParam(params = { "url", "x", "y", "w", "h", "function(obj)" })
+	public PDashboardCustomWidget addCustomWidget(String url, int x, int y, int w, int h, PDashboardCustomWidget.jDashboardAddCB callback) throws UnknownHostException, JSONException {
+
+		PDashboardCustomWidget pWebAppCustom = new PDashboardCustomWidget(a.get());
+		pWebAppCustom.add(url, x, y, w, h, callback);
+
+		return pWebAppCustom;
 	}
 
 	@ProtocoderScript
@@ -162,6 +175,52 @@ public class PDashboard extends PInterface {
         return pDashboardBackground;
 	}
 
+    private void initKeyEvents(final jDashboardKeyPressed callbackfn) throws UnknownHostException, JSONException {
+
+        String id = StrUtils.generateRandomString();
+
+        JSONObject values = new JSONObject()
+                .put("id", id)
+                .put("type", "keyevent")
+                .put("enabled", true);
+
+        JSONObject msg = new JSONObject()
+                .put("type", "widget")
+                .put("action", "add")
+                .put("values", values);
+
+        CustomWebsocketServer.getInstance(a.get()).send(msg);
+        CustomWebsocketServer.getInstance(a.get()).addListener(id, new CustomWebsocketServer.WebSocketListener() {
+
+            @Override
+            public void onUpdated(final JSONObject jsonObject) {
+                mHandler.post(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        try {
+                            callbackfn.event(jsonObject.getInt("val"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+
+    // --------- JDashboard add ---------//
+    public interface jDashboardKeyPressed {
+        void event(int val);
+    }
+
+    @ProtocoderScript
+    @APIMethod(description = "show/hide the dashboard", example = "")
+    @APIParam(params = { "boolean" })
+    public void onKeyPressed(jDashboardKeyPressed callback) throws UnknownHostException, JSONException {
+        initKeyEvents(callback);
+    }
 
 	@ProtocoderScript
 	@APIMethod(description = "show/hide the dashboard", example = "")
