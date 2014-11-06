@@ -152,7 +152,7 @@ public class PUI extends PUIGeneric {
     @ProtocoderScript
 	@APIMethod(description = "Set a title name", example = "")
 	@APIParam(params = { "titleName" })
-	public void setTitle(String title) {
+	public void setToolbarTitle(String title) {
 		if (noActionBarAllowed) {
 			return;
 		}
@@ -164,7 +164,7 @@ public class PUI extends PUIGeneric {
 	@ProtocoderScript
 	@APIMethod(description = "Sets a secondary title", example = "")
 	@APIParam(params = { "subtitleName" })
-	public void setSubtitle(String title) {
+	public void setToolbarSubtitle(String title) {
 		if (noActionBarAllowed) {
 			return;
 		}
@@ -176,7 +176,7 @@ public class PUI extends PUIGeneric {
 	@ProtocoderScript
 	@APIMethod(description = "Show/Hide title bar", example = "")
 	@APIParam(params = { "boolean" })
-	public void showTitleBar(Boolean b) {
+	public void showToolbar(Boolean b) {
 		if (noActionBarAllowed) {
 			return;
 		}
@@ -192,7 +192,7 @@ public class PUI extends PUIGeneric {
 	@ProtocoderScript
 	@APIMethod(description = "Changes the title bar color", example = "")
 	@APIParam(params = { "r", "g", "b", "a" })
-	public void setTitleBgColor(int r, int g, int b, int alpha) {
+	public void setToolbarBgColor(int r, int g, int b, int alpha) {
 		if (noActionBarAllowed) {
 			return;
 		}
@@ -203,7 +203,7 @@ public class PUI extends PUIGeneric {
 	@ProtocoderScript
 	@APIMethod(description = "Changes the title text color", example = "")
 	@APIParam(params = { "r", "g", "b", "a" })
-	public void setTitleTextColor(int r, int g, int b, int alpha) {
+	public void setToolbarTextColor(int r, int g, int b, int alpha) {
 		if (noActionBarAllowed) {
 			return;
 		}
@@ -215,7 +215,7 @@ public class PUI extends PUIGeneric {
 	@ProtocoderScript
 	@APIMethod(description = "Sets an image rather than text as a title", example = "")
 	@APIParam(params = { "imageName" })
-	public void setTitleImage(String imagePath) {
+	public void setToolbarImage(String imagePath) {
 		if (noActionBarAllowed) {
 			return;
 		}

@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="ProtocoderTheme" parent="@android:style/Theme.Holo.Light">
-        <item name="android:actionBarStyle">@style/ProtocoderTheme.ActionBarStyle</item>
+
+    <!-- ProtocoderThemeApp -->
+    <style name="ProtocoderAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:actionBarStyle">@style/ProtocoderAppTheme.ActionBarStyle</item>
         <item name="android:background">@color/transparent</item>
     </style>
 <!--         <item name="android:windowActionBarOverlay">true</item> -->
 
-    <style name="ProtocoderLaunchTheme" parent="@android:style/Theme.Holo.Light.NoActionBar"></style>
+    <!--<style name="ProtocoderLaunchTheme" parent="Theme.AppCompat.Light.NoActionBar"></style>-->
 
-    <style name="ProtocoderTheme.ActionBarStyle" parent="@android:style/Widget.Holo.Light.ActionBar">
+    <style name="ProtocoderAppTheme.ActionBarStyle" parent="Theme.AppCompat.Light">
         <item name="android:background">@color/white</item>
-        <item name="android:titleTextStyle">@style/ProtocoderTheme.ActionBar.TitleTextStyle</item>
+        <item name="android:titleTextStyle">@style/ProtocoderAppTheme.ActionBar.TitleTextStyle</item>
         <item name="android:selectableItemBackground">@drawable/actionbar_highlight</item>
         <item name="android:actionOverflowButtonStyle">@style/OverFlow</item>
         <item name="android:displayOptions">showHome|homeAsUp|showTitle</item>
@@ -22,9 +24,12 @@
         <item name="android:src">@drawable/ic_action_overflow</item>
     </style>
 
-    <style name="ProtocoderTheme.ActionBar.TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+    <style name="ProtocoderAppTheme.ActionBar.TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
         <item name="android:textColor">@color/title</item>
         <item name="android:fontFamily">sans-serif-light</item>
     </style>
+
+
+    <!-- ProtocoderThemeAppRunner -->
 
 </resources>

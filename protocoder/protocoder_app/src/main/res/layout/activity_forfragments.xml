@@ -7,12 +7,20 @@
     android:visibility="visible"
     android:background="@color/white" >
 
+    <android.support.v7.widget.Toolbar
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:id="@+id/my_awesome_toolbar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:minHeight="?attr/actionBarSize"
+        android:background="#FFFF8800" />
+
     <RelativeLayout
         android:id="@+id/contentHolder"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/my_awesome_toolbar"
         android:focusableInTouchMode="true"
         android:gravity="bottom"
         >

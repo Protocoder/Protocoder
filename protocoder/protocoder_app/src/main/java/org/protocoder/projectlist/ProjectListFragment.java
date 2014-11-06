@@ -54,6 +54,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
+import org.protocoder.MainActivity;
 import org.protocoder.R;
 import org.protocoder.appApi.Protocoder;
 import org.protocoder.fragments.SettingsFragment;
@@ -347,7 +348,10 @@ public class ProjectListFragment extends BaseFragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
+
+        if(!((MainActivity)getActivity()).isWear()) {
+            ((MainActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        }
 	}
 
 	@Override

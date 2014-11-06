@@ -30,9 +30,9 @@
 package org.protocoder.activities;
 
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
 import org.protocoder.MainActivity;
@@ -53,7 +53,7 @@ public class AboutActivity extends BaseActivity {
 		setContentView(R.layout.activity_about);
 
 		// Create the action bar programmatically
-		ActionBar actionBar = getActionBar();
+		ActionBar actionBar = getSupportActionBar();
 		actionBar.setTitle(R.string.about_activity_name);
 		actionBar.setDisplayHomeAsUpEnabled(true);
 	}
