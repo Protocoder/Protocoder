@@ -91,7 +91,7 @@ public class PCamera extends CameraNew implements PViewInterface {
     @ProtocoderScript
     @APIParam(params = { "function(base64Image)" })
     @APIMethod(description = "Get the frames ready to stream", example = "camera.takePicture();")
-    public void onNewStreamFrame(int maxFrames, CameraNew.CallbackStream callbackfn) {
+    public void onNewStreamFrame(CameraNew.CallbackStream callbackfn) {
         cam.addCallbackStream(callbackfn);
     }
 
