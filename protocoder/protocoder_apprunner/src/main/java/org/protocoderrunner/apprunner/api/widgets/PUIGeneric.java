@@ -38,7 +38,10 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -56,6 +59,7 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Space;
+import android.widget.TextView;
 
 import com.larvalabs.svgandroid.SVG;
 import com.larvalabs.svgandroid.SVGBuilder;
@@ -538,7 +542,7 @@ public class PUIGeneric extends PInterface {
 
 	// --------- getRequest ---------//
 	public interface addGenericInputCB {
-		void event();
+		void event(String txt);
 	}
 
     @ProtocoderScript
@@ -548,16 +552,32 @@ public class PUIGeneric extends PInterface {
 
 		initializeLayout();
 		// Create view
-		PEditText et = new PEditText(a.get());
+		final PEditText et = new PEditText(a.get());
 		et.setHint(label);
 
         if (callbackfn != null) {
             // On focus lost, we need to call the callback function
+            et.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    callbackfn.event(et.getText().toString());
+                }
+            });
+
             et.setOnFocusChangeListener(new OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
                     if (!hasFocus) {
-                        callbackfn.event();
                     }
                 }
             });
