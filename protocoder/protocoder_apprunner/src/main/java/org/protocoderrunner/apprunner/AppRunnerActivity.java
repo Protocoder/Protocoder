@@ -31,7 +31,6 @@ package org.protocoderrunner.apprunner;
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -52,6 +51,7 @@ import android.nfc.tech.NfcF;
 import android.os.Bundle;
 import android.os.FileObserver;
 import android.speech.RecognizerIntent;
+import android.support.v7.app.ActionBar;
 import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -891,7 +891,7 @@ public class AppRunnerActivity extends BaseActivity {
 
 		actionBarSet = true;
 		// Set up the actionbar
-		actionBar = getActionBar();
+		actionBar = getSupportActionBar();
 
 		if (actionBar != null) {
 

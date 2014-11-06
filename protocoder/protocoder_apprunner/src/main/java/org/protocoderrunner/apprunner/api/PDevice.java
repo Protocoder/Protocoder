@@ -146,7 +146,7 @@ public class PDevice extends PInterface {
 	@ProtocoderScript
 	@APIMethod(description = "Set the screen always on", example = "")
     @APIParam(params = { "boolean" })
-    public void screenAlwaysOn(boolean b) {
+    public void setScreenAlwaysOn(boolean b) {
 		appRunnerActivity.get().setScreenAlwaysOn(b);
 	}
 

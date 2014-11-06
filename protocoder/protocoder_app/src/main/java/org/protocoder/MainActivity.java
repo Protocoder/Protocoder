@@ -30,7 +30,6 @@
 package org.protocoder;
 
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -39,6 +38,8 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.FileObserver;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -98,9 +99,17 @@ public class MainActivity extends BaseActivity {
 		c = this;
 
 		// Create the action bar programmatically
-		ActionBar actionBar = getActionBar();
-		actionBar.setHomeButtonEnabled(true);
 
+        if (!isWear()) {
+
+
+            Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
+            setSupportActionBar(toolbar);
+
+
+            //ActionBar actionBar = getSupportActionBar();
+            //actionBar.setHomeButtonEnabled(true);
+        }
         mProtocoder = Protocoder.getInstance(this);
         mProtocoder.init();
         mPUtil = new PUtil(this);

@@ -65,8 +65,10 @@ public class WelcomeActivity extends BaseActivity {
 		setContentView(R.layout.activity_welcome);
 
 		// Create the action bar programmatically
-		ActionBar actionBar = getActionBar();
-		actionBar.setTitle(R.string.welcome_activity_name);
+		if (!isWear()) {
+            ActionBar actionBar = getActionBar();
+            actionBar.setTitle(R.string.welcome_activity_name);
+        }
 
 		// Set copyright
 		TextView copyright = (TextView) findViewById(R.id.copyright);

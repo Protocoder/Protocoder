@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="ProtocoderDark_Theme" parent="android:Theme.Holo.Light">
+    <style name="ProtocoderDarkTheme" parent="Theme.AppCompat.Light">
 
         <!-- <item name="android:windowNoTitle">true</item> -->
         <!-- <item name="android:listViewStyle">@style/MyListView</item> -->

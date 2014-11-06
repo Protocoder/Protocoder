@@ -29,7 +29,6 @@
 
 package org.protocoderrunner.base;
 
-import android.R;
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -47,6 +46,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
@@ -54,13 +54,14 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import org.protocoderrunner.AppSettings;
+import org.protocoderrunner.R;
 import org.protocoderrunner.media.Audio;
 import org.protocoderrunner.utils.MLog;
 
 import java.util.ArrayList;
 
 @SuppressLint("NewApi")
-public class BaseActivity extends FragmentActivity {
+public class BaseActivity extends ActionBarActivity {
 
 	private static final String TAG = "BaseActivity";
 	public boolean actionBarAllowed = true;
@@ -167,9 +168,8 @@ public class BaseActivity extends FragmentActivity {
 	}
 
 	public void goToSleep() {
-		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-		pm.goToSleep(100);
-
+		//PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+		//pm.goToSleep(100);
 	}
 
 	public boolean isAirplaneMode() {
@@ -204,7 +204,7 @@ public class BaseActivity extends FragmentActivity {
 	public void addFragment(Fragment fragment, int fragmentPosition, String tag, boolean addToBackStack) {
 
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+		ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
 		ft.add(fragmentPosition, fragment, tag);
 		// ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 		if (addToBackStack) {
@@ -218,7 +218,7 @@ public class BaseActivity extends FragmentActivity {
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		// FIXME: Because we have no tagging system we need to use the int as a
 		// tag, which may cause collisions
-		ft.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+		ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
 		ft.add(fragmentPosition, fragment, String.valueOf(fragmentPosition));
 		// ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 		if (addToBackStack) {
@@ -229,7 +229,7 @@ public class BaseActivity extends FragmentActivity {
 
 	public void removeFragment(Fragment fragment) {
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+		ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
 		ft.remove(fragment);
 		ft.commit();
 	}
@@ -239,6 +239,13 @@ public class BaseActivity extends FragmentActivity {
 		boolean large = ((this.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE);
 		return (xlarge || large);
 	}
+
+    public boolean isWear() {
+        boolean b = false;
+        b = getResources().getBoolean(R.bool.isWatch);
+
+        return b;
+    }
 
 	public void setBrightness(float f) {
 		WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
@@ -302,7 +309,7 @@ public class BaseActivity extends FragmentActivity {
 	@Override
 	public void onAttachedToWindow() {
 		if (AppSettings.OVERRIDE_HOME_BUTTONS) {
-			this.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD);
+			//this.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD);
 			super.onAttachedToWindow();
 		}
 	}
