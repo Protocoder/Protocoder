@@ -3,16 +3,16 @@
 *
 */ 
 
-//ui.setTitle("UI examples");
-ui.setTitleBgColor(0, 255, 0, 255);
-//ui.showTitleBar(true);
-ui.setBackgroundColor(255, 255, 255);
+//ui.setToolbarTitle("UI examples");
+ui.setToolbarBgColor(0, 255, 0, 255);
+//ui.showToolbar(true);
 ui.allowScroll(true);
 
 //ui.showVirtualKeys(true);
 
 //Set up the canvas with padding all around and a white background
 //ui.setPadding(16, 16, 16, 16);
+ui.setBackgroundColor(255, 255, 255);
 ui.setBackgroundImageTile("patata2.png");
 
 //Add a generic button
@@ -78,4 +78,5 @@ var label = ui.addText("hola fonts", 0, 2200, 300, 200);
 label.setTextSize(50);
 label.font(font);
  
+//apparently some devices cannot load svg files 
 var img = ui.addImage( "awesome_tiger.svg", 0, 2300, 500, 500);
