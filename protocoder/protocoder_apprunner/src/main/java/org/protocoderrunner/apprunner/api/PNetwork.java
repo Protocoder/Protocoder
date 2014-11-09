@@ -75,8 +75,8 @@ import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.apprunner.api.other.PSimpleHttpServer;
 import org.protocoderrunner.apprunner.api.other.PSocketIOClient;
-import org.protocoderrunner.apprunner.api.other.ProtocoderAPIHttpServer;
 import org.protocoderrunner.apprunner.api.other.ProtocoderNativeArray;
 import org.protocoderrunner.network.NetworkUtils;
 import org.protocoderrunner.network.NetworkUtils.DownloadTask.DownloadListener;
@@ -733,10 +733,10 @@ public class PNetwork extends PInterface {
 	@ProtocoderScript
 	@APIMethod(description = "Simple http server, serving the content of the project folder", example = "")
 	@APIParam(params = { "port", "function(responseString)" })
-	public ProtocoderAPIHttpServer startSimpleHttpServer(int port, final ProtocoderAPIHttpServer.HttpCB callbackfn) {
-        ProtocoderAPIHttpServer httpServer = null;
+	public PSimpleHttpServer startSimpleHttpServer(int port, final PSimpleHttpServer.HttpCB callbackfn) {
+        PSimpleHttpServer httpServer = null;
         try {
-			httpServer = new ProtocoderAPIHttpServer(a.get(), port, callbackfn);
+			httpServer = new PSimpleHttpServer(a.get(), port, callbackfn);
             WhatIsRunning.getInstance().add(httpServer);
 
 		} catch (IOException e) {

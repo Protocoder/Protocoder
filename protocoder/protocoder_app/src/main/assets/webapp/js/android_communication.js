@@ -8,6 +8,7 @@
 var Communication = function(useWebsockets) { 
   this.remoteIP = window.location.hostname;  
   //this.remoteIP = 'localhost';
+  //this.remoteIP = "192.168.10.14"
   this.remoteWSPORT = '8587';
   this.self = this; 
   this.countLogs = 0; 
@@ -204,24 +205,6 @@ Communication.prototype.getReference = function (id) {
 		protocoder.reference.parseHelp(doc.api);
 	});
 }
-
-
-Communication.prototype.getCamera = function () {
-	var url = 'http://'+localhost+':8080/takePic';
-
-	$.get(url, function(data) { 
-		
-		var img = $("<img />").attr('src', 'http://somedomain.com/image.jpg').load(function() {
-        if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth == 0) {
-            alert('broken image!');
-        } else {
-            $("#widgets").append(img);
-        }
-    });
-
-	});
-}
-
 
 /*
 *	Websockets section 

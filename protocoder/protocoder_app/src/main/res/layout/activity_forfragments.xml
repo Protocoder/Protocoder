@@ -14,7 +14,9 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:minHeight="?attr/actionBarSize"
-        android:background="#FFFF8800" />
+        android:background="#FFFF8800"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        />
 
     <RelativeLayout
         android:id="@+id/contentHolder"

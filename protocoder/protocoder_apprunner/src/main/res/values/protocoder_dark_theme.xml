@@ -8,7 +8,8 @@
         <item name="android:buttonStyle">@style/ProtocoderDark.Button</item>
         <item name="android:textViewStyle">@style/ProtocoderDark.TextView</item>
         <item name="android:seekBarStyle">@style/ProtocoderDark.SeekBar</item>
-      
+
+        <item name="android:windowContentOverlay">@null</item>
 		<!--  
 		<item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>

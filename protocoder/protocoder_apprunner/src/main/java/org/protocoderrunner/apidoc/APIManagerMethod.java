@@ -30,6 +30,7 @@
 package org.protocoderrunner.apidoc;
 
 class APIManagerMethod {
+    public int id;
 	public String name;
 	public String description;
 	public String example;

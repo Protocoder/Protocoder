@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us" class="no-js"  itemscope itemtype="http://schema.org/Article">
+
 <head>
     <title> protocoder </title>
+    <meta http-equiv="X-UA-Compatible" content="IE=9" >
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta http-equiv="editor-type">
@@ -27,7 +29,8 @@
     <script src="./libs/d3.v3/d3.v3.min.js"></script>
     <!-- Including the HTML5 Uploader plugin -->
     <script src="./libs/jquery.filedrop.js"></script>
-    <script src="./libs/buzz.min.js"></script>
+    <!-- <script src="./libs/buzz.min.js"></script> -->
+    <script src="./libs/lunr.min.js"></script>
 
     <script src="./libs/w2ui-1.2/w2ui-1.2.min.js" type="text/javascript" charset="utf-8"></script>
    
@@ -74,9 +77,9 @@ $(document).ready(function() {
     --> 
     <li id = "runBtn"><i class="icon fa fa-arrow-right"></i><span>run</span></li>
     <li id = "separator"></li>
-    <li id = "helpBtn"><i class="icon fa fa-question-circle"></i><!-- <span>QUICK bar</span> --></li>
+    <li id = "helpBtn"><i class="icon fa fa-question-circle"></i></li>
 
-    <li id = "sideBarBtn"><i class="icon fa fa-list"></i><!-- <span>QUICK bar</span> --></li>
+    <li id = "sideBarBtn"><i class="icon fa fa-list"></i></li>
   
     </ul>
 
@@ -127,9 +130,7 @@ $(document).ready(function() {
 
 <div id = "overlay"> 
     <div id = "toggle"><i class="icon fa fa-dashboard"></i></div>
-    <div id = "container" tabindex="0">
-    </div>
-
+    <div id = "container" tabindex="0"></div>
 </div>
 
 
