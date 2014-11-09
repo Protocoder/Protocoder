@@ -24,6 +24,7 @@
             android:inputType="textMultiLine|textFilter|textNoSuggestions"
             android:selectAllOnFocus="false"
             android:singleLine="false"
+            android:cursorVisible="true"
             android:textColor="#FFFFFFFF"
             android:textColorHighlight="#220000FF"
             android:textSize="14sp"

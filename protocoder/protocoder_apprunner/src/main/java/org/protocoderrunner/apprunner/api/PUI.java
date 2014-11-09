@@ -46,6 +46,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewCompat;
 import android.text.InputType;
 import android.view.GestureDetector;
 import android.view.MotionEvent;

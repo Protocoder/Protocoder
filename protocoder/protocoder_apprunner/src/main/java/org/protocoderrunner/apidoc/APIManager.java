@@ -60,6 +60,7 @@ public class APIManager {
 
 	private static final String TAG = "APIManager";
 	private static APIManager instance;
+    private static int methodCount = 0;
 
 	HashMap<String, API> apis = new HashMap<String, API>();
 	APIManagerDoc doc = new APIManagerDoc();
@@ -71,14 +72,15 @@ public class APIManager {
 	/**
 	 * add a new class to extract the methods
 	 * 
-	 * @param class1
+	 * @param c
 	 */
-	public void addClass(Class c) {
+	public void addClass(Class c, boolean b) {
 
 		try {
 			// api docs
 			APIManagerClass apiClass = new APIManagerClass();
 			apiClass.name = c.getSimpleName();
+            apiClass.isMainObject = b;
 			MLog.d(TAG, "" + c.getName());
 
 			// getting all the methods
@@ -87,6 +89,7 @@ public class APIManager {
 
 				// get method
 				APIManagerMethod apiMethod = new APIManagerMethod();
+                apiMethod.id = methodCount++;
 				apiMethod.name = element.getName();
 
 				// get parameter types

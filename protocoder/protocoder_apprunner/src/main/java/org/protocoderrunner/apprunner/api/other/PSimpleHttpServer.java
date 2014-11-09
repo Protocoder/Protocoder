@@ -52,7 +52,7 @@ import java.util.Properties;
 /**
  * An example of subclassing NanoHTTPD to make a custom HTTP server.
  */
-public class ProtocoderAPIHttpServer extends NanoHTTPD {
+public class PSimpleHttpServer extends NanoHTTPD {
 	public static final String TAG = "ProtocoderHttpServer";
 	private final WeakReference<Context> ctx;
 
@@ -92,7 +92,7 @@ public class ProtocoderAPIHttpServer extends NanoHTTPD {
         Response event(String uri, String method);
     }
 
-    public ProtocoderAPIHttpServer(Context aCtx, int port, HttpCB callbackfn) throws IOException {
+    public PSimpleHttpServer(Context aCtx, int port, HttpCB callbackfn) throws IOException {
         super(port);
         p = ProjectManager.getInstance().getCurrentProject();
 

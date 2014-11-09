@@ -80,7 +80,7 @@ Ui.prototype.init = function() {
 	$().w2layout({
 	    name: 'right_bar',
 	    panels: [
-	        { type: 'main', size: '70%', resizable: true, content: '<div id = "sidebar_container"><h1> QUICK REFERENCE</h1></div>' },
+	        { type: 'main', size: '70%', resizable: true, content: '<div id = "sidebar_container"><li id = "opts> </li></div>' },
 	        { type: 'bottom', size: '30%', resizable: true, hidden: false, content: 'bottom', 
 	 
 		}
