@@ -273,7 +273,7 @@ public class PUtil extends PInterface {
 
     @ProtocoderScript
     @APIMethod(description = "Detect faces in a bitmap", example = "")
-    @APIParam(params = { "fontFile" })
+    @APIParam(params = { "Bitmap", "numFaces" })
     public int detectFaces(Bitmap bmp, int num_faces) {
         FaceDetector face_detector = new FaceDetector(bmp.getWidth(), bmp.getHeight(), num_faces);
         FaceDetector.Face[] faces = new FaceDetector.Face[num_faces];
@@ -285,7 +285,7 @@ public class PUtil extends PInterface {
 
     @ProtocoderScript
     @APIMethod(description = "Converts byte array to bmp", example = "")
-    @APIParam(params = { "fontFile" })
+    @APIParam(params = { "encodedImage" })
     public Bitmap decodeBase64ToBitmap(String encodedImage) {
         byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
 

@@ -32,6 +32,7 @@ package org.protocoderrunner.apidoc;
 class APIManagerMethod {
     public int id;
 	public String name;
+    public String parent;
 	public String description;
 	public String example;
 	public String[] paramsType;
