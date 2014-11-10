@@ -22,11 +22,39 @@ Reference.prototype.parseHelp = function (docString) {
 	    this.ref('id');
 	})
 
-	var countReturns = 0;
+	this.countReturns = 0;
 
 	var container = "#sidebar_container"
 
 	$(container).load("reference2.html", function() {
+
+	$("#search input").on("input", function() { 
+		var w = $(this).val(); 
+
+		if (w != "") {
+			var resultId = protocoder.reference.index.search(w);
+
+			$("#search_result").show();
+			$("#browser").hide();
+
+			//empty previous results and populate 
+			$("#search_result .methods").empty();
+
+			$.each(resultId, function(k, v) { 
+				var result = protocoder.reference.searchById(v.ref); 
+				console.log(result);
+				that.insertMethodInCard(result, "#search_result .methods");
+			});
+		} else {
+			$("#search_result").hide();
+			$("#browser").show();
+		}
+	});
+
+	$('#search_result #close').click(function() {
+		$("#search_result").hide();
+		$("#browser").show();
+    });
 
 	//iterate through classes 
 	$.each(that.doc, function(k, v) {
@@ -34,7 +62,7 @@ Reference.prototype.parseHelp = function (docString) {
 	    //console.log(v);
 
 	    //class 
-	    var className = v.name.substr(1, v.name.length).toLowerCase();
+	    var className = v.name;
 
 	    //append to main area or secondary objects 
 	    //console.log("appending " + className + " " + v.isMainObject);
@@ -50,7 +78,9 @@ Reference.prototype.parseHelp = function (docString) {
     		.appendTo(container + " #ref_container " + where)
     		.click(function(){
     			$("#class_" + className).show();
-    			$("#api_class_backdrop").show();
+    			//TODO hide objects 
+    			$("#browser").hide();
+    			//$("#api_class_backdrop").show();
     		});
 
 
@@ -59,6 +89,7 @@ Reference.prototype.parseHelp = function (docString) {
 	    $('<i id = "close" class = "fa fa-times"></i>').appendTo("#class_" + className + " #title").click(function() {
 	    	$("#class_" + className).hide();
 	    	$("#api_class_backdrop").hide();
+    		$("#browser").show();
 	    });
 
 	    //iterate through api methods 
@@ -69,58 +100,64 @@ Reference.prototype.parseHelp = function (docString) {
 	        var method = n;
 
 	        that.index.add(method);
-
-	        //className 
-	        var m = $('<div id ="method_'+ method.name +'" title = "' + method.description + '" class = "APImethod"></div>');
-	        $(container + ' #ref_container #class_'+className + ' .methods').append(m);
-	      
-			//method [return] methodName [parameters]      
-			var parameters = "";
-			if (typeof method.parametersName !== "undefined") {
-				parameters = method.parametersName.join(", ");
-			}
-
-			//if return type is void dont show it 
-			if (method.returnType == "void") method.returnType = "";
-
-	        $(container + " #ref_container #class_"+className + " #method_"+method.name).append('<h3><span id = "returnType">'+  method.returnType + " </span><strong>" + className + "." + method.name + '</strong><i>(<span id = "params">' +  parameters + '</span>)</i></h3>');
-	        
-	        //add description if exist 
-	        if (method.description != undefined) { 
-	        	$("#method_"+method.name).append('<p id = "description"> '+ method.description +' </p>');
-	        }
-
-	        //add example if exist 
-	        if (method.example != undefined){ 
-				$("#method_"+method.name).append('<p id = "example"> '+ "here goes example" /* method.example */ +' </p>');
-	        	
-	        	/* 
-	        	$('<button> '+ method.name +' </button>')
-	        		.click(function() {
-	        			console.log("qq" + method.name)
-	        		})
-	        		.appendTo("#"+method.name);
-	        	*/
-	        	
-	        }
-
- 			//when click on reference insert text 
-	        m.click(function() { 
-	        	var returnType = "";
-	        	if (method.returnType != "") {
-	        		returnType = "var var" + countReturns++ + " = ";
-	        	}
-
-	        	// add curly braces when insert a callback
-                var p = parameters.replace(")", "){ " + '\n' + '\n' + "}");
-
-	        	protocoder.editor.editor.insert(returnType + "" + className + "." + method.name + "(" + p + ");"+'\n\n')
-	        });
-	       // console.log(method.name, method.description, method.example);
+	        that.insertMethodInCard(method, container + ' #ref_container #class_'+ method.parent + ' .methods');
 	    });
 	});
 
 	});
+}
+
+Reference.prototype.insertMethodInCard = function(method, where) {
+	//className 
+    var m = $('<div id ="method_'+ method.name +'" title = "' + method.description + '" class = "APImethod"></div>');
+  
+    console.log(where);
+    $(where).append(m);
+  
+	//method [return] methodName [parameters]      
+	var parameters = "";
+	if (typeof method.parametersName !== "undefined") {
+		parameters = method.parametersName.join(", ");
+	}
+
+	//if return type is void dont show it 
+	if (method.returnType == "void") method.returnType = "";
+
+    $(where + " #method_"+method.name).append('<h3><span id = "returnType">'+  method.returnType + " </span><strong>" + method.parent + "." + method.name + '</strong><i>(<span id = "params">' +  parameters + '</span>)</i></h3>');
+    
+    //add description if exist 
+    if (method.description != undefined) { 
+    	$("#method_"+method.name).append('<p id = "description"> '+ method.description +' </p>');
+    }
+
+    //add example if exist 
+    if (method.example != undefined){ 
+		$("#method_"+method.name).append('<p id = "example"> '+ "here goes example" /* method.example */ +' </p>');
+    	
+    	/* 
+    	$('<button> '+ method.name +' </button>')
+    		.click(function() {
+    			console.log("qq" + method.name)
+    		})
+    		.appendTo("#"+method.name);
+    	*/
+    	
+    }
+
+    that = this;
+	//when click on reference insert text 
+    m.click(function() { 
+    	var returnType = "";
+    	if (method.returnType != "") {
+    		returnType = "var var" + that.countReturns++ + " = ";
+    	}
+
+    	// add curly braces when insert a callback
+        var p = parameters.replace(")", "){ " + '\n' + '\n' + "}");
+
+    	protocoder.editor.editor.insert(returnType + "" + method.parent + "." + method.name + "(" + p + ");"+'\n\n')
+    });
+   // console.log(method.name, method.description, method.example);
 }
 
 Reference.prototype.searchById = function (searchId) {

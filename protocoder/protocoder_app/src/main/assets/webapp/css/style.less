@@ -749,7 +749,7 @@ body {
     	background: #0099cc;
 
     	color: white;
-    	padding:10px 10px 14px 10px;
+    	padding:10px 10px 15px 10px;
     	margin-top:0px;
     	margin-right:0px;
     	font-size:14px;
@@ -1163,11 +1163,12 @@ body {
 		#search {
 			margin: 0px 5px;
 
-			form {
+			form { 
+				position: relative;
 				margin-bottom: 8px;
 
 				input[type="text"] {
-					width: 78%;
+					width: 100%;
 					padding: 8px 8px 7px 8px;
 					border: 0px;
 					border-radius: 1px;
@@ -1180,16 +1181,16 @@ body {
 				}
 
 				#search_api_btn {
+					position: absolute;
 					width: 35px;
 					padding: 8px;
 					display: inline-block;
-					background: #82c0fd;
-					border: 0px;
-					box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.31);
 					font-size: 12px;
-					color: #ffffff;
+					color: #A1A1A1;
 					border-radius: 1px;
 					text-align: center;
+					top: 0px;
+					right: 0px;
 
 				}
 			}
@@ -1252,7 +1253,8 @@ body {
 			}
 
 			#api_class_backdrop {
-				background: rgba(0, 0, 0, 0.82);
+				background: linear-gradient(to bottom, rgba(30,87,153,0) 0%,rgba(0,0,0,0.78) 19%);
+				background: #dfdfdf;
 				height: 100%;
 				position: absolute;
 				width: 100%;
@@ -1276,7 +1278,7 @@ body {
 					border-radius: 2px;
 					box-shadow: 0px 2px 5px 1px rgba(0, 0, 0, 0.15);
 					display:none;
-					margin-top: 8px;
+					margin-top: 0px;
 
 					#title { 
 						#close {

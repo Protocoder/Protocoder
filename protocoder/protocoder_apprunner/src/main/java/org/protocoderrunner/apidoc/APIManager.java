@@ -79,7 +79,7 @@ public class APIManager {
 		try {
 			// api docs
 			APIManagerClass apiClass = new APIManagerClass();
-			apiClass.name = c.getSimpleName();
+			apiClass.name = c.getSimpleName().substring(1).toLowerCase();
             apiClass.isMainObject = b;
 			MLog.d(TAG, "" + c.getName());
 
@@ -90,6 +90,7 @@ public class APIManager {
 				// get method
 				APIManagerMethod apiMethod = new APIManagerMethod();
                 apiMethod.id = methodCount++;
+                apiMethod.parent = apiClass.name;
 				apiMethod.name = element.getName();
 
 				// get parameter types
