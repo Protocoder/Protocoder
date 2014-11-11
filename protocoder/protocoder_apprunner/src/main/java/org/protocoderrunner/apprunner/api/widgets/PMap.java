@@ -31,6 +31,7 @@ package org.protocoderrunner.apprunner.api.widgets;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
@@ -271,7 +272,6 @@ public class PMap extends MapView {
         return mapView.getBoundingBox().getCenter();
     }
 
-    //TODO place holder
     @ProtocoderScript
     @APIMethod(description = "Gets the current zoom of the map", example = "")
     @APIParam(params = { "" })
@@ -279,8 +279,6 @@ public class PMap extends MapView {
         return mapView.getZoomLevel();
     }
 
-
-    //TODO place holder
     @ProtocoderScript
     @APIMethod(description = "Set the zoom limits", example = "")
     @APIParam(params = { "min", "max" })
@@ -290,6 +288,22 @@ public class PMap extends MapView {
 
         return this;
     }
+
+    @ProtocoderScript
+    @APIMethod(description = "Get coordinates from the pixel position of the map", example = "")
+    @APIParam(params = { "x", "y" })
+    public org.osmdroid.api.IGeoPoint getCoordinatesFromPixels(int x, int y) {
+        return mapView.getProjection().fromPixels(x, y);
+    }
+
+    @ProtocoderScript
+    @APIMethod(description = "Get coordinates from the pixel position of the map", example = "")
+    @APIParam(params = { "x", "y" })
+    public Point getPixelsFromCoordinates(double lat, double lon) {
+        GeoPoint point = new GeoPoint(lat, lon);
+        return mapView.getProjection().toProjectedPixels(point, null);
+    }
+
 
 
 //    @Override
