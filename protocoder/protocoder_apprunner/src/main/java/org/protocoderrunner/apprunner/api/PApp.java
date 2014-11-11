@@ -50,7 +50,7 @@ import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.apprunner.api.other.PEvents;
-import org.protocoderrunner.apprunner.api.other.PProtocoderLiveCodingFeedback;
+import org.protocoderrunner.apprunner.api.other.PLiveCodingFeedback;
 import org.protocoderrunner.project.Project;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.project.SchedulerManager;
@@ -234,10 +234,10 @@ public class PApp extends PInterface {
     @ProtocoderScript
     @APIMethod(description = "shows a feedback overlay with the live-executed code", example = "")
     @APIParam(params = { })
-    public PProtocoderLiveCodingFeedback liveCodingFeedback() {
+    public PLiveCodingFeedback liveCodingFeedback() {
         appRunnerActivity.get().initLayout();
 
-        PProtocoderLiveCodingFeedback l = appRunnerActivity.get().liveCoding;
+        PLiveCodingFeedback l = appRunnerActivity.get().liveCoding;
         l.enable = true;
 
         return l;

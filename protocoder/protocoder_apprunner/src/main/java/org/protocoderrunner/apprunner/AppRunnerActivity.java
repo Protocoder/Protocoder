@@ -82,11 +82,10 @@ import org.protocoderrunner.apprunner.api.PProtocoder;
 import org.protocoderrunner.apprunner.api.PSensors;
 import org.protocoderrunner.apprunner.api.PUI;
 import org.protocoderrunner.apprunner.api.PUtil;
-import org.protocoderrunner.apprunner.api.other.PProtocoderLiveCodingFeedback;
+import org.protocoderrunner.apprunner.api.other.PLiveCodingFeedback;
 import org.protocoderrunner.apprunner.api.widgets.PPadView;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.events.Events;
-import org.protocoderrunner.network.CustomWebsocketServer;
 import org.protocoderrunner.network.IDEcommunication;
 import org.protocoderrunner.project.Project;
 import org.protocoderrunner.project.ProjectManager;
@@ -95,7 +94,6 @@ import org.protocoderrunner.sensors.WhatIsRunning;
 import org.protocoderrunner.utils.MLog;
 import org.protocoderrunner.utils.StrUtils;
 
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
@@ -142,7 +140,7 @@ public class AppRunnerActivity extends BaseActivity {
 	public boolean keyVolumeEnabled = true;
 	public boolean keyBackEnabled = true;
 
-	public PProtocoderLiveCodingFeedback liveCoding;
+	public PLiveCodingFeedback liveCoding;
 
     //API Objects for the interpreter
     public PApp pApp;
@@ -581,7 +579,7 @@ public class AppRunnerActivity extends BaseActivity {
 			consoleText.setPadding(textPadding, textPadding, textPadding, textPadding);
 			consoleRLayout.addView(consoleText);
 
-			liveCoding = new PProtocoderLiveCodingFeedback(this);
+			liveCoding = new PLiveCodingFeedback(this);
 			mainLayout.addView(liveCoding.add());
 
 			setContentView(mainLayout);
