@@ -87,7 +87,7 @@ public class App {
 
     public void init() {
 
-        mainAppView = (RelativeLayout) protocoder.a.findViewById(R.id.mainAppView);
+        mainAppView = (RelativeLayout) protocoder.a.findViewById(R.id.contentHolder);
         // Create the IP text view
         textIP = (TextView) protocoder.a.findViewById(R.id.ip);
         textIP.setOnClickListener(null);// Remove the old listener explicitly

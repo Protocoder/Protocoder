@@ -54,7 +54,6 @@ public class AboutActivity extends BaseActivity {
 
 		// Create the action bar programmatically
 		ActionBar actionBar = getSupportActionBar();
-		actionBar.setTitle(R.string.about_activity_name);
 		actionBar.setDisplayHomeAsUpEnabled(true);
 	}
 

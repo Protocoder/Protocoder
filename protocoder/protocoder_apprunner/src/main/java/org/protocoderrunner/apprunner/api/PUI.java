@@ -47,6 +47,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.graphics.Palette;
 import android.text.InputType;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -587,13 +588,11 @@ public class PUI extends PUIGeneric {
         v.setPivotY(pY);
     }
 
-    //TODO enable Android-L
-//    public Palette getPalette(Bitmap bmp) {
-//        Palette palette = Palette.generate(bmp);
-//        //palette.getVibrantColor();
-//
-//        return palette;
-//    }
+    public Palette getPalette(Bitmap bmp) {
+        Palette palette = Palette.generate(bmp);
+
+        return palette;
+    }
 
     class GestureDetectorReturn {
 		public String type;

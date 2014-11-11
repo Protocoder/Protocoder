@@ -30,11 +30,11 @@
 package org.protocoder.activities;
 
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -66,7 +66,7 @@ public class WelcomeActivity extends BaseActivity {
 
 		// Create the action bar programmatically
 		if (!isWear()) {
-            ActionBar actionBar = getActionBar();
+            ActionBar actionBar = getSupportActionBar();
             actionBar.setTitle(R.string.welcome_activity_name);
         }
 

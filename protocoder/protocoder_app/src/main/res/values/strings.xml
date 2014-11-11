@@ -89,6 +89,8 @@
     <string name="setting_id_title"> Device ID </string>
     <string name="setting_id_description">This ID is generated the first time you install the app. You can always change it!</string>
 
+
+    <string name="licenses_activity_name">About</string>
     <string name="licenses">Licenses</string>
     <string name="license_title_websockets">Android Websockets</string>
     <string name="license_title_svgandroid">Svg-Android</string>

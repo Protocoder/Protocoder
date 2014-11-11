@@ -51,31 +51,31 @@
         </activity>
         <activity
             android:name=".activities.AboutActivity"
-            android:theme="@style/ProtocoderAppTheme"
-            android:label="@string/activity_name" >
+            android:theme="@style/ProtocoderAppTheme.Toolbar"
+            android:label="@string/about_activity_name" >
         </activity>
         <activity
             android:name=".activities.WelcomeActivity"
-            android:theme="@style/ProtocoderAppTheme"
-            android:label="@string/activity_name" >
+            android:theme="@style/ProtocoderAppTheme.Toolbar"
+            android:label="@string/welcome_activity_name" >
             android:noHistory="true" >
         </activity>
         <activity
             android:name=".activities.LicenseActivity"
-            android:theme="@style/ProtocoderAppTheme"
-            android:label="@string/settings_activity_name"
+            android:theme="@style/ProtocoderAppTheme.Toolbar"
+            android:label="@string/licenses_activity_name"
             android:noHistory="true" >
         </activity>
         <activity
             android:name=".activities.SetPreferenceActivity"
-            android:theme="@style/ProtocoderAppTheme"
+            android:theme="@style/ProtocoderAppTheme.Toolbar"
             android:label="@string/settings_activity_name"
             android:noHistory="true" >
         </activity>
 
         <activity android:name=".activities.ProtoAppInstallerActivity"
             android:label="@string/activity_name"
-            android:theme="@style/ProtocoderAppTheme"
+            android:theme="@style/ProtocoderAppTheme.Toolbar"
             android:logo="@drawable/protocoder_icon"
             >
             <intent-filter>

@@ -30,11 +30,11 @@
 package org.protocoder.activities;
 
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
 import org.protocoder.MainActivity;
@@ -60,7 +60,7 @@ public class SetPreferenceActivity extends BaseActivity {
                 .putBoolean(getResources().getString(R.string.pref_curtain_notifications),
                         prefs.getBoolean(getResources().getString(R.string.pref_curtain_notifications), true)).commit();
 
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
