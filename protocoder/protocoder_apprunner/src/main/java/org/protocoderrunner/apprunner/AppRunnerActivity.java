@@ -452,14 +452,6 @@ public class AppRunnerActivity extends BaseActivity {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.makewithmoto.base.BaseActivity#onKeyDown(int,
-	 * android.view.KeyEvent)
-	 * 
-	 * key handling, it will pass it to the javascript interface
-	 */
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (onKeyListener != null) {
