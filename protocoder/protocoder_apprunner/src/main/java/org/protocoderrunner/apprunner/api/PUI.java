@@ -1184,7 +1184,7 @@ public class PUI extends PUIGeneric {
 
 
 	// --------- yesno dialog ---------//
-	interface popupCB {
+    public interface popupCB {
 		void event(boolean b);
 	}
 
@@ -1220,7 +1220,9 @@ public class PUI extends PUIGeneric {
 			});
 		}
 
-		builder.show();
+        if(!((Activity) a.get()).isFinishing()) {
+            builder.show();
+        }
 	}
 
 

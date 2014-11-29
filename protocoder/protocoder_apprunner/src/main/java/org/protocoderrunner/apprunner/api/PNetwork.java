@@ -33,6 +33,8 @@ import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -176,6 +178,18 @@ public class PNetwork extends PInterface {
         });
         t.start();
 
+    }
+
+
+
+    @ProtocoderScript
+    @APIMethod(description = "Check if internet connection is available", example = "")
+    @APIParam(params = {""})
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) a.get().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     @ProtocoderScript
@@ -595,7 +609,7 @@ public class PNetwork extends PInterface {
     }
 
     // --------- getRequest ---------//
-    interface HttpGetCB {
+    public interface HttpGetCB {
         void event(int eventType, String responseString);
     }
 

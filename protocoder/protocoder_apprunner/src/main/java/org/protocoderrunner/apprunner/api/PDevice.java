@@ -64,28 +64,11 @@ public class PDevice extends PInterface {
 
 
 	private BroadcastReceiver batteryReceiver;
+    private boolean keyInit = false;
 
-	public PDevice(Activity a) {
+    public PDevice(Activity a) {
 		super(a);
 		WhatIsRunning.getInstance().add(this);
-
-
-        ((AppRunnerActivity) a).addOnKeyListener(new onKeyListener() {
-
-            @Override
-            public void onKeyUp(int keyCode) {
-                if (mOnKeyUpfn != null) {
-                    mOnKeyUpfn.event(keyCode);
-                }
-            }
-
-            @Override
-            public void onKeyDown(int keyCode) {
-                if (mOnKeyDownfn != null) {
-                    mOnKeyDownfn.event(keyCode);
-                }
-            }
-        });
 
 	}
 
@@ -341,10 +324,33 @@ public class PDevice extends PInterface {
         void event(int eventType);
     }
 
+    public void keyInit() {
+        keyInit = true;
+        (appRunnerActivity.get()).addOnKeyListener(new onKeyListener() {
+
+            @Override
+            public void onKeyUp(int keyCode) {
+                if (mOnKeyUpfn != null) {
+                    mOnKeyUpfn.event(keyCode);
+                }
+            }
+
+            @Override
+            public void onKeyDown(int keyCode) {
+                if (mOnKeyDownfn != null) {
+                    mOnKeyDownfn.event(keyCode);
+                }
+            }
+        });
+    }
     @ProtocoderScript
     @APIMethod(description = "", example = "")
     @APIParam(params = { "function(keyNumber)" })
     public void onKeyDown(final OnKeyDownCB fn) {
+        if (!keyInit) {
+            keyInit();
+        }
+
         mOnKeyDownfn = fn;
     }
 
@@ -357,6 +363,10 @@ public class PDevice extends PInterface {
     @APIMethod(description = "", example = "")
     @APIParam(params = { "function(keyNumber)" })
     public void onKeyUp(final OnKeyUpCB fn) {
+        if (!keyInit) {
+            keyInit();
+        }
+
         mOnKeyUpfn = fn;
     }
 
