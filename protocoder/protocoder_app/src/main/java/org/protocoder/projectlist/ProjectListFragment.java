@@ -40,6 +40,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -79,6 +80,7 @@ public class ProjectListFragment extends BaseFragment {
 	public String projectFolder;
 	boolean listMode;
     public int color;
+    public int icon;
     public boolean orderByName;
     public int num = 0;
     public static int totalNum = 0;
@@ -94,6 +96,7 @@ public class ProjectListFragment extends BaseFragment {
 
         this.projectFolder = getArguments().getString("folderName");
         this.color = getArguments().getInt("color");
+        this.icon = getArguments().getInt("icon");
         this.orderByName = getArguments().getBoolean("orderByName");
 
         mProjects = ProjectManager.getInstance().list(this.projectFolder, this.orderByName);
@@ -149,11 +152,21 @@ public class ProjectListFragment extends BaseFragment {
 					}
 				});
 				animSpin.start();
-				Project project = mProjects.get(position);
-				ProjectEvent evt = new ProjectEvent(project, "run");
-				EventBus.getDefault().post(evt);
-				getActivity().overridePendingTransition(R.anim.splash_slide_in_anim_set,
-						R.anim.splash_slide_out_anim_set);
+
+                Runnable r = new Runnable() {
+                    @Override
+                    public void run() {
+                        Project project = mProjects.get(position);
+                        ProjectEvent evt = new ProjectEvent(project, "run");
+                        EventBus.getDefault().post(evt);
+                        getActivity().overridePendingTransition(R.anim.splash_slide_in_anim_set,
+                                R.anim.splash_slide_out_anim_set);
+                    }
+                };
+                //Thread t = new Thread(r);
+                Handler handler = new Handler();
+                handler.postDelayed(r, 50);
+                //t.start();
 			}
 		});
 
@@ -166,7 +179,7 @@ public class ProjectListFragment extends BaseFragment {
         //setRetainInstance(true);
 
         //icon = Intent.ShortcutIconResource.fromContext(getActivity(), R.drawable.ic_script_example);
-        projectAdapter = new ProjectItemAdapter(getActivity(), this.projectFolder, this.mProjects, this.listMode);
+        projectAdapter = new ProjectItemAdapter(getActivity(), this.projectFolder, this.mProjects, this.listMode, this.icon);
         gridView.setAdapter(projectAdapter);
 
         notifyAddedProject();

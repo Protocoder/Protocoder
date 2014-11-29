@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.myscript"
-    android:versionCode="12"
-    android:versionName="0.96" >
-    <uses-sdk android:targetSdkVersion="L"  android:minSdkVersion="L" />
+    package="com.myscript">
 
     <application
         android:name="com.myscript.MainApp"

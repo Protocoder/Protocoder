@@ -4,13 +4,12 @@ android {
     compileSdkVersion 21
     buildToolsVersion '21.1.1'
 
-
     defaultConfig {
-        applicationId "org.protocoder"
+        applicationId "org.protocoder.extended"
         minSdkVersion 15
         targetSdkVersion 21
         versionCode 14
-        versionName "0.97"
+        versionName "0.97pre1"
 
         compileOptions {
             sourceCompatibility JavaVersion.VERSION_1_7
@@ -37,23 +36,25 @@ android {
             debuggable true;
             //applicationIdSuffix ".nineteen";
         }
+
     }
 
-    /*
+/*
     productFlavors {
-        l {
-            minSdkVersion 'android-L'
-            targetSdkVersion 'android-L'
-            compileSdkVersion 'android-L'
-        }
-        old {
-            minSdkVersion 10
-            targetSdkVersion 19
-            //TODO comment second line if build is not compiles for "L"
-            compileSdkVersion 19
-        }
+        normal {
+            applicationId "org.protocoder.normal"
+            versionName "0.97-normal"
+            resValue "string", "releaseMode", "normal"
+
+      }
+      extended {
+            applicationId "org.protocoder.all"
+            versionName "0.97-all"
+            resValue "string", "releaseMode", "all_features"
+      }
     }
-    */
+*/
+
 
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES.txt'
@@ -85,7 +86,10 @@ configurations {
 }
 
 dependencies {
+  // normalCompile project(path: ':protocoder_apprunner', configuration:'normalrunnerDebug')
+  // extendedCompile project(path: ':protocoder_apprunner', configuration:'extendedrunnerDebug')
     compile project(':protocoder_apprunner')
+
     compile(name: 'processing_fragmented', ext: 'aar')
     compile 'jp.kshoji:midi-driver:0.0.2-SNAPSHOT:@aar'
 }

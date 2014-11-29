@@ -54,6 +54,7 @@ import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.sensors.WhatIsRunning;
 import org.protocoderrunner.utils.Intents;
+import org.protocoderrunner.utils.MLog;
 
 public class PDevice extends PInterface {
 
@@ -73,15 +74,15 @@ public class PDevice extends PInterface {
 
             @Override
             public void onKeyUp(int keyCode) {
-                if (mOnKeyDownfn != null) {
-                    mOnKeyDownfn.event(keyCode);
+                if (mOnKeyUpfn != null) {
+                    mOnKeyUpfn.event(keyCode);
                 }
             }
 
             @Override
             public void onKeyDown(int keyCode) {
-                if (mOnKeyUpfn != null) {
-                    mOnKeyUpfn.event(keyCode);
+                if (mOnKeyDownfn != null) {
+                    mOnKeyDownfn.event(keyCode);
                 }
             }
         });

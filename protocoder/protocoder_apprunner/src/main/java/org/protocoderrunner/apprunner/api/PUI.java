@@ -159,8 +159,10 @@ public class PUI extends PUIGeneric {
 			return;
 		}
 
-		appRunnerActivity.get().setActionBar(null, null);
-		appRunnerActivity.get().actionBar.setTitle(title);
+        appRunnerActivity.get().getSupportActionBar().setTitle(title);
+
+		//appRunnerActivity.get().setActionBar(null, null);
+		//appRunnerActivity.get().actionBar.setTitle(title);
 	}
 
 	@ProtocoderScript
@@ -170,9 +172,10 @@ public class PUI extends PUIGeneric {
 		if (noActionBarAllowed) {
 			return;
 		}
-
-		appRunnerActivity.get().setActionBar(null, null);
-		appRunnerActivity.get().actionBar.setSubtitle(title);
+        appRunnerActivity.get().getSupportActionBar().setSubtitle(title);
+//
+//		appRunnerActivity.get().setActionBar(null, null);
+//		appRunnerActivity.get().actionBar.setSubtitle(title);
 	}
 
 	@ProtocoderScript
@@ -185,9 +188,9 @@ public class PUI extends PUIGeneric {
 
 		//a.get().setActionBar(null, null);
 		if (b) {
-			appRunnerActivity.get().actionBar.show();
+			appRunnerActivity.get().getSupportActionBar().show();
 		} else {
-			appRunnerActivity.get().actionBar.hide();
+			appRunnerActivity.get().getSupportActionBar().hide();
 		}
 	}
 
@@ -241,13 +244,11 @@ public class PUI extends PUIGeneric {
     @APIParam(params = { "mode={fullscreen, immersive, lightsOut}" })
     public void setScreenMode(String mode) {
         if (mode.equals("fullscreen")) {
-            noActionBarAllowed = true;
             appRunnerActivity.get().setFullScreen();
             isFullscreenMode = true;
         } else if (mode.equals("lightsOut")) {
             appRunnerActivity.get().lightsOutMode();
         } else if (mode.equals("immersive")) {
-            noActionBarAllowed = true;
            // isImmersiveMode = true;
             appRunnerActivity.get().setImmersive();
             updateScreenSizes();

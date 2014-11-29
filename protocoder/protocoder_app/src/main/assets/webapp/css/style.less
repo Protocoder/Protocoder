@@ -749,7 +749,7 @@ body {
     	background: #0099cc;
 
     	color: white;
-    	padding:10px 10px 15px 10px;
+    	padding:10px 10px 14px 10px;
     	margin-top:0px;
     	margin-right:0px;
     	font-size:14px;
@@ -915,6 +915,10 @@ body {
 
 .w2ui-tabs {
 
+	.w2ui-tab-close {
+		margin: 12px;
+	} 
+
 	.w2ui-tab {
 		padding: 12px 26px 15px 26px;
 		margin: 12px 7px -7px 0px;
@@ -943,11 +947,11 @@ body {
 		cursor: pointer;
 		position: absolute;
 		top: 21px;
-		right: 8px;
+		right: 0px;
 		z-index: 2;
 
 		#menu {
-			display: none; 
+			display: block; 
 			padding: 2px;
 			background: white;
 			border-radius: 2px;
@@ -977,16 +981,16 @@ body {
 	}
 	//previously showHideMenu
 	#addTab { 
-		padding: 3px 8px;
+		padding: 6px 7px 3px 8px;
 		background: rgba(255, 255, 255, 0.52);
-		border-radius: 2px;
-		color: rgb(159, 159, 159);
+		border-radius: 1px;
+		color: #CBCBCB;
 		float: right;
 	}
 
 	#addTab:hover { 
 		background: white;
-		color:black;
+		color:#BBBBBB;
 	}
 
 }
@@ -1099,9 +1103,26 @@ body {
 	border-radius: 2px;
 
 	.w2ui-msg-title {
-		font-family: Roboto-Condensed;
+		font-family: Roboto-Condensed-Regular;
 		background-image: none !important;
 		border-bottom: 0px;
+	}
+
+	.w2ui-label {
+	    font-family: Roboto-Condensed-Regular;
+	    font-size: 1.2em;
+	    color: gray;
+	    padding: 3px;
+	}
+
+	.w2ui-field input {
+   		font-family: Roboto-Condensed-Regular;
+   	 	font-size: 1.2em;
+    	padding: 8px 12px;
+    	border-radius: 2px;
+		border-width: 0px 0px 2px;
+		border-style: solid;
+		border-color: #BBB #BBB #D8D8D8;
 	}
 }
 
@@ -1147,7 +1168,7 @@ body {
 		margin: 0px 0px 8px 0px;
 		padding-top: 15px;
 		padding-bottom: 3px;
-		font-family: 'Roboto', sans-serif;
+		font-family: 'Roboto-Regular', sans-serif;
 		color: #777777;
 		font-size: 1.25em;
 		font-style: normal;
@@ -1174,10 +1195,11 @@ body {
 					border-radius: 1px;
 					color: #AEC5CD;
 					background-color: rgba(255, 255, 255, 0.85);
-					font-family: 'Roboto';
+					font-family: 'Roboto-Regular', 'sans-serif';
 					letter-spacing: 0.1em;
 					outline: 0;
 					border-bottom: 2px solid #AEC5CD;
+					box-sizing: border-box;
 				}
 
 				#search_api_btn {
@@ -1201,13 +1223,15 @@ body {
 			margin-top: 0px;
 			box-sizing: border-box;
 			overflow: scroll;
-			height: 100%;
+			/* height: 100%; */
+			height: ~"calc(100% - 90px)";
+
 			/* box-shadow: 0px -2px 0px rgba(0, 0, 0, 0.13); */
 
 			#browser {
 				.obj {
 					font-size: 0.95em;
-					font-family: 'Roboto';
+					font-family: 'Roboto-Regular';
 					color: #FFFFFF;
 					background-color: white;
 					padding: 3px 5px;
@@ -1281,6 +1305,7 @@ body {
 					box-shadow: 0px 2px 5px 1px rgba(0, 0, 0, 0.15);
 					display:none;
 					margin-top: 0px;
+					box-sizing: border-box;
 
 					#title { 
 						#close {
@@ -1308,7 +1333,7 @@ body {
 					}
 
 					h3 { 
-						font-family: 'Roboto';
+						font-family: 'Roboto-Regular';
 						font-size: 0.8em;
 						color: rgba(80, 80, 80, 1);
 						font-weight: 500;
@@ -1411,7 +1436,7 @@ body {
 			margin-top: 8px;
 			padding-top: 0px;
 			padding-bottom: 3px;
-			font-family: 'Roboto', sans-serif;
+			font-family: 'Roboto-Regular', sans-serif;
 			color: #777777;
 			font-size: 1.25em;
 			font-style: normal;

@@ -45,6 +45,7 @@ import org.protocoder.fragments.NewProjectDialogFragment;
 import org.protocoder.projectlist.ProjectItem;
 import org.protocoder.projectlist.ProjectListFragment;
 import org.protocoder.projectlist.ProjectsPagerAdapter;
+import org.protocoder.projectlist.ZoomOutPageTransformer;
 import org.protocoder.views.ProjectSelectorStrip;
 import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.apprunner.api.PUtil;
@@ -82,7 +83,14 @@ public class ProtoScripts {
 
         mViewPager = (ViewPager) mProtocoder.a.findViewById(R.id.pager);
         mViewPager.setAdapter(mProjectPagerAdapter);
-        //mViewPager.setPageTransformer(true, new ZoomOutPageTransformer());
+        mViewPager.setPageTransformer(true, new ZoomOutPageTransformer());
+
+
+        //TODO remove at some point
+        //colors
+        final int c0 = mProtocoder.a.getResources().getColor(R.color.project_user_color);
+        final int c1 = mProtocoder.a.getResources().getColor(R.color.project_example_color);
+
 
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
@@ -92,8 +100,8 @@ public class ProtoScripts {
 
             @Override
             public void onPageScrolled(int arg0, float arg1, int arg2) {
-                //int c = AndroidUtils.calculateColor(arg0 + arg1, c0, c1);
-                //strip.setBackgroundColor(c);
+                int c = AndroidUtils.calculateColor(arg0 + arg1, c0, c1);
+                strip.setBackgroundColor(c);
             }
 
             @Override
@@ -167,7 +175,7 @@ public class ProtoScripts {
 
     public void addScriptList(int icon, String name, int color, boolean orderByName) {
         ProjectListFragment listFragmentBase = ProjectListFragment.newInstance(icon, name, color, orderByName);
-        //listFragmentBase.icon = icon;
+        listFragmentBase.icon = icon;
         listFragmentBase.projectFolder = name;
         listFragmentBase.color = color;
         listFragmentBase.orderByName = orderByName;
@@ -292,6 +300,14 @@ public class ProtoScripts {
     public void addShortcut(String folder, String name) {
         Project p = ProjectManager.getInstance().get(folder, name);
 
+        Intent.ShortcutIconResource icon;
+        //TODO remove this way of selecting icons
+        if (folder.equals("examples")) {
+            icon = Intent.ShortcutIconResource.fromContext(mProtocoder.a, R.drawable.protocoder_script_example);
+        } else {
+            icon = Intent.ShortcutIconResource.fromContext(mProtocoder.a, R.drawable.protocoder_script_project);
+        }
+
         try {
             Intent shortcutIntent = new Intent(mProtocoder.a, AppRunnerActivity.class);
             shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -305,7 +321,7 @@ public class ProtoScripts {
 
             putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
             putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, p.getName());
-            //putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);
+            putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);
             putShortCutIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
             mProtocoder.a.sendBroadcast(putShortCutIntent);
         } catch (Exception e) {

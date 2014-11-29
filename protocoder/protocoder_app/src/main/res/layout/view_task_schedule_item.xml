@@ -15,7 +15,7 @@
             android:layout_height="52dp"
             android:layout_centerVertical="true"
             android:scaleType="centerCrop"
-            android:src="@drawable/banner_help" />
+            android:src="@drawable/protocoder_help" />
 
         <TextView
             android:id="@+id/txt_file_name"

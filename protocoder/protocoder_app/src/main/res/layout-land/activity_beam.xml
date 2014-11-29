@@ -14,7 +14,7 @@
         android:layout_gravity="center"
         android:contentDescription="@string/content_description_image"
         android:gravity="center_horizontal"
-        android:src="@drawable/nfc_banner" />
+        android:src="@drawable/protocoder_icon" />
 
     <TextView
         android:id="@+id/beamingFileTextView"

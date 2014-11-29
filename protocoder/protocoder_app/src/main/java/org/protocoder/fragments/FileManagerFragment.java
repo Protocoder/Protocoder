@@ -311,7 +311,7 @@ public class FileManagerFragment extends BaseFragment {
 			if (convertView == null) { // if it's not recycled, initialize some
 				// attributes
 				customView = new FileItem(mContext.get());
-				customView.setImage(R.drawable.ic_script);
+				customView.setImage(R.drawable.protocoder_script_project);
 
 				customView.setText(files.get(position).getName());
 
@@ -323,7 +323,6 @@ public class FileManagerFragment extends BaseFragment {
 
 			return customView;
 		}
-
 	}
 
 	public class FileItem extends LinearLayout {

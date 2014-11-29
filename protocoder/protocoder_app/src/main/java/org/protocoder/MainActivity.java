@@ -102,7 +102,6 @@ public class MainActivity extends BaseActivity {
 
         if (!isWear()) {
 
-
             Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
             setSupportActionBar(toolbar);
 
@@ -167,8 +166,8 @@ public class MainActivity extends BaseActivity {
         final int c0 = getResources().getColor(R.color.project_user_color);
         final int c1 = getResources().getColor(R.color.project_example_color);
 
-        mProtocoder.protoScripts.addScriptList(R.drawable.ic_script, "projects", c0, false);
-        mProtocoder.protoScripts.addScriptList(R.drawable.ic_script_example, "examples", c1, true);
+        mProtocoder.protoScripts.addScriptList(R.drawable.protocoder_script_project, "projects", c0, false);
+        mProtocoder.protoScripts.addScriptList(R.drawable.protocoder_script_example, "examples", c1, true);
 
         MLog.d(TAG, "fragments added ");
     }

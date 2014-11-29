@@ -21,8 +21,61 @@
                 android:layout_height="55dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"
+                android:src="@drawable/protocoder_script_project"
                 android:gravity="left"
-                android:scaleType="centerCrop" />
+                android:visibility="gone"
+                android:scaleType="fitCenter" />
+
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/symbolText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-condensed"
+                android:gravity="center_horizontal"
+                android:lines="1"
+                android:maxLines="1"
+                android:shadowColor="#88FFFFFF"
+                android:shadowDx="0"
+                android:shadowDy="1"
+                android:shadowRadius="0.1"
+                android:text="@string/symbol"
+                android:textColor="#EEEEEE"
+                android:textSize="45sp"
+                android:typeface="normal" />
+
+            <TextView
+                android:id="@+id/symbolTextC"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-condensed"
+                android:gravity="center_horizontal"
+                android:lines="1"
+                android:maxLines="1"
+                android:shadowColor="#88FFFFFF"
+                android:shadowDx="0"
+                android:shadowDy="1"
+                android:shadowRadius="0.1"
+                android:text="P"
+                android:textColor="#BBBBBB"
+                android:textSize="45sp"
+                android:typeface="normal"
+                android:textStyle="bold"
+                />
+            </FrameLayout>
+
 
             <TextView
                 android:id="@+id/customViewText"

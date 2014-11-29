@@ -51,6 +51,10 @@ public class Protocoder {
         protoScripts = new ProtoScripts(this);
         editor = new Editor(this);
         webEditor = new WebEditor(this);
+
+
+        //check if new version is available
+
     }
 
 
