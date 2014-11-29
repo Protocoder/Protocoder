@@ -52,6 +52,7 @@ import android.os.Bundle;
 import android.os.FileObserver;
 import android.speech.RecognizerIntent;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -159,10 +160,9 @@ public class AppRunnerActivity extends BaseActivity {
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// setTheme(R.style.ProtocoderDark_Theme);
-		// getWindow().setBackgroundDrawable(new
-		// ColorDrawable(android.graphics.Color.TRANSPARENT));
+
 		super.onCreate(savedInstanceState);
+
         context = this;
 
         //instantiate the objects that can be accessed from the interpreter
@@ -178,6 +178,8 @@ public class AppRunnerActivity extends BaseActivity {
         pSensors = new PSensors(this);
         pUi = new PUI(this);
         pUtil  = new PUtil(this);
+
+
 
         // Read in the script given in the intent.
 		Intent intent = getIntent();
@@ -206,7 +208,18 @@ public class AppRunnerActivity extends BaseActivity {
 			String projectFolder = intent.getStringExtra(Project.FOLDER);
 			boolean wakeUpScreen = intent.getBooleanExtra("wakeUpScreen", false);
 
-			MLog.d(TAG, " " + projectName + " in " + projectFolder);
+            //TODO colors
+            int actionBarColor = intent.getIntExtra("color", 0);
+
+            if (projectFolder.equals("examples")) {
+                actionBarColor = getResources().getColor(R.color.project_example_color);
+            } else {
+                actionBarColor = getResources().getColor(R.color.project_user_color);
+            }
+
+
+
+            MLog.d(TAG, "load " + projectName + " in " + projectFolder);
 			currentProject = ProjectManager.getInstance().get(projectFolder, projectName);
 			ProjectManager.getInstance().setCurrentProject(currentProject);
 
@@ -278,12 +291,7 @@ public class AppRunnerActivity extends BaseActivity {
             interp.callJsFunction("setup");
 
 			// TODO fix actionbar color
-			Integer actionBarColor = null;
-			actionBarColor = getResources().getColor(R.color.project_example_color);
-
-
-            //TOFIX in android-l
-			if (actionBarSet == false) {
+            if (actionBarSet == false) {
 				setActionBar(actionBarColor, getResources().getColor(R.color.white));
 			}
 			// Call the onCreate JavaScript function.
@@ -455,14 +463,15 @@ public class AppRunnerActivity extends BaseActivity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (onKeyListener != null) {
-			onKeyListener.onKeyDown(keyCode);
+            onKeyListener.onKeyDown(keyCode);
 		}
 
 		if (checkBackKey(keyCode) || checkVolumeKeys(keyCode)) {
 			return super.onKeyDown(keyCode, event);
 		}
 
-		return true;
+        return true;
+		//return super.onKeyDown(keyCode, event);
 	}
 
 	@Override
@@ -472,13 +481,44 @@ public class AppRunnerActivity extends BaseActivity {
 		}
 
 		if (checkBackKey(keyCode) || checkVolumeKeys(keyCode)) {
-			return super.onKeyDown(keyCode, event);
+			return super.onKeyUp(keyCode, event);
 		}
 
 		return true;
 	}
 
-	public boolean checkBackKey(int keyCode) {
+/*
+    @Override
+    public boolean onKeyMultiple(int keyCode, int repeatCount, KeyEvent event) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN)
+        if (onKeyListener != null) {
+            onKeyListener.onKeyDown(keyCode);
+        }
+
+        if (checkBackKey(keyCode) || checkVolumeKeys(keyCode)) {
+            return super.onKeyDown(keyCode, event);
+        }
+
+        return true;
+
+        //return super.onKeyMultiple(keyCode, repeatCount, event);
+
+    }
+*/
+
+
+//    @Override
+//    public boolean dispatchGenericMotionEvent(MotionEvent ev) {
+//
+//        MLog.d(TAG, "action " + ev.getAction());
+//        if (onKeyListener != null) {
+//            onKeyListener.onKeyDown(ev.getAction());
+//        }
+//
+//        return super.dispatchGenericMotionEvent(ev);
+//    }
+
+    public boolean checkBackKey(int keyCode) {
 		boolean r;
 
 		if (keyBackEnabled && keyCode == KeyEvent.KEYCODE_BACK) {

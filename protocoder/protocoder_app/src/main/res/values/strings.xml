@@ -10,6 +10,8 @@
     <string name="title_activity_launcher">LauncherActivity</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    <string name="symbol">&lt;___&gt;</string>
+
     <string name="view">View</string>
     <string name="run">Run</string>
     <string name="edit">Edit</string>
@@ -51,13 +53,13 @@
     <string name="about_activity_name">About</string>
     <string name="about_how_to_title">How-to</string>
     <string name="about_credits">Credits</string>
-    <string name="about_how_to_contents">Protocoder is easy to get started.\nAt the bottom of the screen, you\'ll see a little pop-up to show you where to navigate to get started. Make sure yout Android device is on the same network as your computer. Then, open a web browser to that address and you\'ll see a fully-featured editor interface.\n\nThis web IDE is connected directly to your application. With it, you can create new projects, edit existing ones, see live console output, view documentation, and more.</string>
+    <string name="about_how_to_contents">Protocoder is easy to get started.\n\nMake sure your Android device is on the same network as your computer. Then with your computer web browser navigate to the IP address indicated at the bottom of the app. In seconds you\'ll see a fully-featured web editor or web IDE.\n\nThe web IDE is connected directly to your device. With it, you can create new projects, edit existing ones, see live console output, view documentation, and more.</string>
     <string name="about_special_thanks">Special thanks to José Juan Sánchez Hernández, Ali Javidan, Gopi Palaniappan, Alan Sien and the MWM Crew :)</string>
 
     <!-- Welcome -->
     <string name="welcome_activity_name">protocoder</string>
     <string name="welcome_title">Good to see you.</string>
-    <string name="welcome_body">protocoder makes is simple to create, edit and run projects from your Android device or computer at the same time. Just start the app and build from your mobile, or navigate to the displayed URL to edit via a web IDE.\n\nAre you in?</string>
+    <string name="welcome_body">Protocoder makes simple to create, edit and run projects from your Android device or computer at the same time. \n\nJust start the app from your mobile, navigate to the displayed URL and start coding with the WebIDE.\n\nAre you in?</string>
     <string name="welcome_accept">Let\'s go.</string>
 
     <!-- Settings screen -->

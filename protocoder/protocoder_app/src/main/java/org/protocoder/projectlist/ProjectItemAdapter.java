@@ -47,16 +47,18 @@ import java.util.ArrayList;
 public class ProjectItemAdapter extends BaseAdapter {
     private static final String TAG = "ProjectItemAdapter";
     private final WeakReference<Context> mContext;
+    private final int icon;
 
-	public ArrayList<Project> projects;
+    public ArrayList<Project> projects;
 	private final String projectFolder;
 	private final boolean listMode;
 
-	public ProjectItemAdapter(Context c, String projectFolder, ArrayList<Project> projects, boolean listMode) {
+	public ProjectItemAdapter(Context c, String projectFolder, ArrayList<Project> projects, boolean listMode, int icon) {
 		mContext = new WeakReference<Context>(c);
 		this.projects = projects;
 		this.projectFolder = projectFolder;
 		this.listMode = listMode;
+        this.icon = icon;
 	}
 
 	@Override
@@ -90,7 +92,7 @@ public class ProjectItemAdapter extends BaseAdapter {
 			customView.setText(p.getName());
 
             //TODO enable again colors
-		    customView.setImage(R.drawable.ic_script);
+		    customView.setImage(icon);
         //if recycled
 		} else {
             //MLog.d(TAG, "getView " + p.getName() + " -> recycled " + p.selected);

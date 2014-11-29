@@ -60,6 +60,8 @@ public class ProjectItem extends LinearLayout {
 	private final WeakReference<Context> c;
 	private String t;
     private boolean highlighted = false;
+    TextView textViewName;
+    TextView textViewIcon;
 
     public ProjectItem(Context context, boolean listMode) {
 		super(context);
@@ -75,7 +77,10 @@ public class ProjectItem extends LinearLayout {
         FrameLayout fl = (FrameLayout) findViewById(R.id.viewProjectItemBackground);
         bg = fl.getBackground();
         setMenu();
-	}
+        textViewName = (TextView) v.get().findViewById(R.id.customViewText);
+        textViewIcon = (TextView) v.get().findViewById(R.id.symbolTextC);
+
+    }
 
 	public void setImage(int resId) {
 		ImageView imageView = (ImageView) v.get().findViewById(R.id.customViewImage);
@@ -86,9 +91,10 @@ public class ProjectItem extends LinearLayout {
 
 	public void setText(String text) {
 		this.t = text;
-		TextView textView = (TextView) v.get().findViewById(R.id.customViewText);
+
 		// TextUtils.changeFont(c.get(), textView, Fonts.MENU_TITLE);
-		textView.setText(text);
+		textViewName.setText(text);
+        textViewIcon.setText(text.substring(0, 1).toUpperCase()); //"< " + text.substring(0, 1).toUpperCase() + " >");
 	}
 
     public void reInit(String text, boolean selected) {
@@ -150,7 +156,7 @@ public class ProjectItem extends LinearLayout {
 
     public void setHighlighted(boolean highlighted) {
         if (highlighted) {
-            getBg().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
+            getBg().setColorFilter(0x22000000, PorterDuff.Mode.MULTIPLY);
         } else {
             getBg().clearColorFilter();
         }

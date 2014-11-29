@@ -5,12 +5,16 @@ android {
     compileSdkVersion 21
     buildToolsVersion "21.1.1"
 
+    //defaultPublishConfig "normalrunnerDebug"
+    //defaultPublishConfig "extendedrunnerDebug"
+    //publishNonDefault true
+
     defaultConfig {
         applicationId "org.protocoderrunner"
         minSdkVersion 15
         targetSdkVersion 21
         versionCode 14
-        versionName "0.97"
+        versionName "0.97pre1"
     }
 
     compileOptions {
@@ -23,6 +27,26 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+   // productFlavors {
+     //   normalrunner {
+//            debuggable true
+       //     applicationId "org.protocoderrunner.normal"
+       // }
+       // extendedrunner {
+       //    applicationId "org.protocoderrunner.extended"
+       // }
+   // }
+
+  //  sourceSets {
+  //      extendedrunner {
+  //          res.srcDirs = [
+  //                  'src/extendedrunner/res']
+            //exentedrunner.java.srcDirs = ['src/main/java']
+            //res.srcDirs = ['extendedrunner', 'src/main/res']
+  //      }
+  //  }
+
 
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES.txt'
@@ -106,7 +130,7 @@ dependencies {
     compile files('libs/ioiolibaccessory.jar')
     compile files('libs/ioiolibandroid.jar')
     compile files('libs/ioiolibbt.jar')
-  //  compile 'com.hoho.android:usb-serial-for-android:0.2.0-SNAPSHOT'
+    // compile 'com.hoho.android:usb-serial-for-android:0.2.0-SNAPSHOT'
     compile files('libs/usb-serial-for-android.jar')
 
     compile 'jp.kshoji:midi-driver:0.0.2-SNAPSHOT:@aar'

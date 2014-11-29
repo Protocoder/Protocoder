@@ -107,17 +107,18 @@ public class BaseActivity extends ActionBarActivity {
     }
 
 	public void setFullScreen() {
-		actionBarAllowed = false;
+		actionBarAllowed = true;
 		// activity in full screen
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		//supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
 		// requestWindowFeature(Window.FEATURE_ACTION_BAR);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 	}
 
 	public void setImmersive() {
-		actionBarAllowed = true;
+		actionBarAllowed = false;
+        getSupportActionBar().hide();
 		// activity in full screen
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		//supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
 		// requestWindowFeature(Window.FEATURE_ACTION_BAR);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -242,7 +243,7 @@ public class BaseActivity extends ActionBarActivity {
 
     public boolean isWear() {
         boolean b = false;
-        b = getResources().getBoolean(R.bool.isWatch);
+        //b = getResources().getBoolean(R.bool.isWatch);
 
         return b;
     }

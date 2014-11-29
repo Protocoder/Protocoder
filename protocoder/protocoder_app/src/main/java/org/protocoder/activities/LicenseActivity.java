@@ -30,19 +30,23 @@
 package org.protocoder.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.ActionBar;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 
+import org.protocoder.MainActivity;
 import org.protocoder.R;
+import org.protocoderrunner.base.BaseActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class LicenseActivity extends Activity {
-
+public class LicenseActivity extends BaseActivity {
 
     String txtAndroidWebSockets;
     String txtSvgAndroid;
@@ -68,6 +72,10 @@ public class LicenseActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_license);
+
+        // Create the action bar programmatically
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
 
         //final ProgressDialog progressDialog = new ProgressDialog(this);
@@ -154,14 +162,35 @@ public class LicenseActivity extends Activity {
 
     }
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	//@Override
+	//public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		// getMenuInflater().inflate(R.menu.license, menu);
-		return true;
-	}
+	//	return true;
+	//
+	// }
 
-	private String readFile(int resource) {
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+            case android.R.id.home:
+                // Up button pressed
+                Intent intentHome = new Intent(this, SetPreferenceActivity.class);
+                intentHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intentHome);
+               // overridePendingTransition(R.anim.splash_slide_in_anim_reverse_set, R.anim.splash_slide_out_anim_reverse_set);
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
+
+
+    private String readFile(int resource) {
 		InputStream inputStream = getResources().openRawResource(resource);
 		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 		int i;

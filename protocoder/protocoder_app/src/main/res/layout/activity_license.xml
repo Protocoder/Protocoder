@@ -14,6 +14,28 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin" >
 
+        <TextView
+            android:id="@+id/symbolText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="20dp"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-condensed"
+            android:gravity="left"
+            android:lines="1"
+            android:maxLines="1"
+            android:shadowColor="#88FFFFFF"
+            android:shadowDx="0"
+            android:shadowDy="1"
+            android:shadowRadius="0.1"
+            android:text=".licenses"
+            android:textColor="#BBBBBB"
+            android:textSize="125sp"
+            android:typeface="normal" />
+
+
         <!-- Websockets -->
         <LinearLayout
             android:layout_width="match_parent"

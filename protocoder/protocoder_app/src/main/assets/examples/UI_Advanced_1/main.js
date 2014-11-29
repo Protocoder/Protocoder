@@ -17,7 +17,7 @@ ui.allowScroll(false);
 //adding a card, basically they group rows of n elements 
 var card = ui.addCard("label", 0, 0, ui.screenWidth, 200); 
 var r = card.addRow(2); // add a row to the card with two slots 
-r.addView(ui.newButton("show", function() { ui.show(pad. true) })); // add firt view
+r.addView(ui.newButton("show", function() { ui.show(pad, true) })); // add firt view
 r.addView(ui.newButton("hide", function() { ui.show(pad, false); })); // add second view
 
 //this is a touchable pad 
@@ -34,7 +34,7 @@ var al = ui.addAbsoluteLayout(10, 620, 520, 220);
 al.backgroundColor("#550000FF");
 
 al.addView(ui.newButton("btn1", function() {
-    ui.popup("title", "yes", "no", function(e) {
+    ui.popupInfo("title", "description", "yes", "no", function(e) {
         console.log("you pressed " + e);
     });
 }), 0, 0, 150, 150);
@@ -42,8 +42,6 @@ al.addView(ui.newButton("btn1", function() {
 al.addView(ui.newButton("btn2", function() { 
     ui.move(al, Math.random() * ui.screenWidth, Math.random() * ui.screenHeight);
 }), 150, 0, 150, 150);
-
-
 
 
 // gesture detector, in this example we move the pad when 

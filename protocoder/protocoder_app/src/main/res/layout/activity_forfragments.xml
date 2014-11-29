@@ -12,6 +12,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:id="@+id/my_awesome_toolbar"
+        android:navigationIcon="@drawable/protocoder_icon"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:minHeight="?attr/actionBarSize"

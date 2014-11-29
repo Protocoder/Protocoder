@@ -3,14 +3,17 @@
 
     <style name="ProtocoderDarkTheme" parent="Theme.AppCompat.Light">
 
+
+            <!--<item name="windowActionBar">false</item>-->
+            <!--<item name="android:windowNoTitle">true</item>-->
         <!-- <item name="android:windowNoTitle">true</item> -->
         <!-- <item name="android:listViewStyle">@style/MyListView</item> -->
         <!--<item name="android:buttonStyle">@style/ProtocoderDark.Button</item>-->
         <!--<item name="android:textViewStyle">@style/ProtocoderDark.TextView</item>-->
         <!--<item name="android:seekBarStyle">@style/ProtocoderDark.SeekBar</item>-->
 
-        <item name="android:windowContentOverlay">@null</item>
-		<!--  
+       	<!--
+    	<item name="android:windowContentOverlay">@null</item>
 		<item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
@@ -22,6 +25,8 @@
         <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
   
    -->
+
+
    
     </style>
 

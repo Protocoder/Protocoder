@@ -27,7 +27,7 @@ Ui.prototype.init = function() {
 	        	that.gridRendered = true;
 		        //add tabs button 
 		        //$("#layout_code_editor_panel_main").append('<div id="tabMenu"><div id="showHideMenu">+</div> <div id="menu"><ul> <li id = "addTab">New tab</li><li id = "renameTab">Rename selected tab</li><li id = "deleteTab"> Delete selected tab</li></ul></div></div>');
-		        $("#layout_code_editor_panel_main").append('<div id="tabMenu"><div id="addTab">+</div></div>');
+		        $("#layout_code_editor_panel_main").append('<div id="tabMenu"><i id="addTab" class="fa fa-plus"></i></div>');
 	
 
 		        jQuery.fn.btnToggle = function(cb1, cb2) {
@@ -118,11 +118,17 @@ Ui.prototype.init = function() {
 	w2ui['code_editor'].content('main', '<pre id="editor"></pre>');
 	w2ui['code_editor'].on('resize', function(target, eventData) { 
 		//var that = this;
-		//console.log(target); 
+		console.log("onresize " + target); 
+
 		//console.log(eventData); 
 		eventData.onComplete = function() { 
 			protocoder.editor.editor.resize();
-			//that.bindUpload();
+			//that.initUpload();
+
+			setTimeout(function() {
+				that.dropboxEnabled = true;
+				that.bindUpload();
+			}, 500);
 
 			setTimeout(function() {
 				$("#toolbar").addClass("show"); 
@@ -466,7 +472,13 @@ Ui.prototype.addTabAndCode = function(name, code) {
 	var q = w2ui['code_editor'];
 	var q2 = q.get("main");
 
-	q2.tabs.add([{id : "tab"+this.tabId, caption : name, closable: true }]);
+	q2.tabs.add([{
+		id : "tab"+this.tabId, 
+		caption : name, closable: true, 
+		onDblClick: function(event) {
+        	console.log(event);
+    	}
+   	}]);
 	
 	q2.tabs.active = "tab" + this.tabId;
 	q2.tabs.refresh();

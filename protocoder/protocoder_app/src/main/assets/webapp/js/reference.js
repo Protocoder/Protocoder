@@ -3,7 +3,7 @@
 */ 
 
 var Reference = function() { 
-
+	this.selectedClass = "none";
 }
 
 //parse the help comming directly from the android and create a structure for it
@@ -24,7 +24,7 @@ Reference.prototype.parseHelp = function (docString) {
 
 	this.countReturns = 0;
 
-	var container = "#sidebar_container"
+	var container = "#sidebar_container";
 
 	$(container).load("reference2.html", function() {
 
@@ -40,9 +40,11 @@ Reference.prototype.parseHelp = function (docString) {
 			//empty previous results and populate 
 			$("#search_result .methods").empty();
 
+			$("#class_" + that.selectedClass).hide();
+
 			$.each(resultId, function(k, v) { 
 				var result = protocoder.reference.searchById(v.ref); 
-				console.log(result);
+				//console.log(result);
 				that.insertMethodInCard(result, "#search_result .methods");
 			});
 		} else {
@@ -78,6 +80,7 @@ Reference.prototype.parseHelp = function (docString) {
     		.appendTo(container + " #ref_container " + where)
     		.click(function(){
     			$("#class_" + className).show();
+    			that.selectedClass = className;
     			//TODO hide objects 
     			$("#browser").hide();
     			//$("#api_class_backdrop").show();
@@ -111,7 +114,7 @@ Reference.prototype.insertMethodInCard = function(method, where) {
 	//className 
     var m = $('<div id ="method_'+ method.name +'" title = "' + method.description + '" class = "APImethod"></div>');
   
-    console.log(where);
+    //console.log(where);
     $(where).append(m);
   
 	//method [return] methodName [parameters]      
