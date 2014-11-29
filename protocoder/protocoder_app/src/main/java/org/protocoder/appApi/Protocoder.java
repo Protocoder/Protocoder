@@ -31,6 +31,14 @@ package org.protocoder.appApi;
 import android.app.Activity;
 
 import org.protocoder.MainActivity;
+import org.protocoderrunner.apprunner.AppRunnerInterpreter;
+import org.protocoderrunner.apprunner.api.PDevice;
+import org.protocoderrunner.apprunner.api.PFileIO;
+import org.protocoderrunner.apprunner.api.PMedia;
+import org.protocoderrunner.apprunner.api.PNetwork;
+import org.protocoderrunner.apprunner.api.PProtocoder;
+import org.protocoderrunner.apprunner.api.PUI;
+import org.protocoderrunner.apprunner.api.PUtil;
 
 public class Protocoder {
 
@@ -41,6 +49,24 @@ public class Protocoder {
     public ProtoScripts protoScripts;
     public WebEditor webEditor;
     public Editor editor;
+
+    PUtil mPUtil = new PUtil(a);
+    PUI mPUi = new PUI(a);
+    PNetwork mPNetwork = new PNetwork(a);
+    PFileIO mPFileIO = new PFileIO(a);
+    PMedia mPMedia = new PMedia(a);
+    PDevice mPDevice = new PDevice(a);
+    PProtocoder mProtocoder = new PProtocoder(a);
+
+    public AppRunnerInterpreter interp;
+
+    private boolean debugApp = false;
+
+
+    String remoteFile = "";
+    String versionName;
+    int versionCode;
+
 
     Protocoder() {
 
@@ -54,6 +80,47 @@ public class Protocoder {
 
 
         //check if new version is available
+
+
+        if (mPNetwork.isNetworkAvailable()) {
+            mPNetwork.httpGet("http://www.protocoder.org/downloads/list_latest.php", new PNetwork.HttpGetCB() {
+                @Override
+                public void event(int eventType, String responseString) {
+                    //console.log(event + " " + data);
+                    String[] splitted = responseString.split(":");
+                    remoteFile = "http://www.protocoder.org/downloads/" + splitted[0];
+                    versionName = splitted[1];
+                    versionCode = Integer.parseInt(splitted[2]);
+
+                    if (versionCode > mProtocoder.getVersionCode()) {
+                        mPUi.popupInfo("New version available", "The new version " + versionName + " is available in the Protocoder.org website. Do you want to get it?", "Yes!", "Later", new PUI.popupCB() {
+                            @Override
+                            public void event(boolean b) {
+                                if (b) {
+                                    mPDevice.openWebApp("http://www.protocoder.org#download");
+                                }
+                            }
+                        });
+                    } else {
+                        //console.log("updated");
+                    }
+                }
+            });
+        }
+
+
+
+        if (debugApp) {
+            interp = new AppRunnerInterpreter(a);
+            interp.createInterpreter(true);
+
+            // interp.interpreter.addObjectToInterface("ui", mPUi);
+            // interp.interpreter.addObjectToInterface("util", mPUtil);
+            // interp.interpreter.addObjectToInterface("protocoder", mProtocoder);
+        }
+
+
+
 
     }
 

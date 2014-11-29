@@ -84,13 +84,8 @@ public class MainActivity extends BaseActivity {
 
 	private ConnectivityChangeReceiver connectivityChangeReceiver;
     private Protocoder mProtocoder;
-    private PUtil mPUtil;
-    private PUI mPUi;
-    public AppRunnerInterpreter interp;
-    private PNetwork mPNetwork;
-    private PFileIO mPFileIO;
-    private PMedia mPMedia;
-    private boolean debugApp = false;
+
+
 
     @Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -111,11 +106,7 @@ public class MainActivity extends BaseActivity {
         }
         mProtocoder = Protocoder.getInstance(this);
         mProtocoder.init();
-        mPUtil = new PUtil(this);
-        mPUi = new PUI(this);
-        mPNetwork = new PNetwork(this);
-        mPFileIO = new PFileIO(this);
-        mPMedia = new PMedia(this);
+
 
 
        /*
@@ -149,14 +140,7 @@ public class MainActivity extends BaseActivity {
 
         connectivityChangeReceiver = new ConnectivityChangeReceiver();
 
-        if (debugApp) {
-            interp = new AppRunnerInterpreter(this);
-            interp.createInterpreter(true);
 
-            interp.interpreter.addObjectToInterface("ui", mPUi);
-            interp.interpreter.addObjectToInterface("util", mPUtil);
-            interp.interpreter.addObjectToInterface("protocoder", mProtocoder);
-        }
     }
 
     private void addFragments() {
@@ -276,9 +260,10 @@ public class MainActivity extends BaseActivity {
         String code = evt.getCode();
         MLog.d(TAG, "event -> " + code);
 
-        if (debugApp) {
-            interp.eval(code);
-        }
+       //TODO apprunner
+       // if (debugApp) {
+       //     interp.eval(code);
+       // }
     }
 
     public void onEventMainThread(Events.SelectedProjectEvent evt) {

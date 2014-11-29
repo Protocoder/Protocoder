@@ -7,7 +7,7 @@ android {
 
     //defaultPublishConfig "normalrunnerDebug"
     //defaultPublishConfig "extendedrunnerDebug"
-    //publishNonDefault true
+    publishNonDefault true
 
     defaultConfig {
         applicationId "org.protocoderrunner"
@@ -28,15 +28,15 @@ android {
         }
     }
 
-   // productFlavors {
-     //   normalrunner {
+    productFlavors {
+        normalrunner {
 //            debuggable true
        //     applicationId "org.protocoderrunner.normal"
-       // }
-       // extendedrunner {
-       //    applicationId "org.protocoderrunner.extended"
-       // }
-   // }
+       }
+        extendedrunner {
+      //    applicationId "org.protocoderrunner.extended"
+        }
+    }
 
   //  sourceSets {
   //      extendedrunner {

@@ -39,7 +39,7 @@ android {
 
     }
 
-/*
+
     productFlavors {
         normal {
             applicationId "org.protocoder.normal"
@@ -48,12 +48,12 @@ android {
 
       }
       extended {
-            applicationId "org.protocoder.all"
-            versionName "0.97-all"
+            applicationId "org.protocoder.extended"
+            versionName "0.97-extended"
             resValue "string", "releaseMode", "all_features"
       }
     }
-*/
+
 
 
     packagingOptions {
@@ -86,9 +86,9 @@ configurations {
 }
 
 dependencies {
-  // normalCompile project(path: ':protocoder_apprunner', configuration:'normalrunnerDebug')
-  // extendedCompile project(path: ':protocoder_apprunner', configuration:'extendedrunnerDebug')
-    compile project(':protocoder_apprunner')
+    normalCompile project(path: ':protocoder_apprunner', configuration:'normalrunnerRelease')
+    extendedCompile project(path: ':protocoder_apprunner', configuration:'extendedrunnerRelease')
+    //compile project(':protocoder_apprunner')
 
     compile(name: 'processing_fragmented', ext: 'aar')
     compile 'jp.kshoji:midi-driver:0.0.2-SNAPSHOT:@aar'
