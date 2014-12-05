@@ -11,10 +11,11 @@ android:
 
 before_install:
   - cd protocoder
-install:
-  - ./gradlew assembleDebug
 
-#script:
+#install:
+
+script:
+  - ./gradlew assembleDebug
   #- ./gradlew connectedAndroidTestMockDebug
 
 #after_success:
