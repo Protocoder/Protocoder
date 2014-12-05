@@ -10,7 +10,6 @@ android {
     publishNonDefault true
 
     defaultConfig {
-        applicationId "org.protocoderrunner"
         minSdkVersion 15
         targetSdkVersion 21
         versionCode 14
@@ -23,18 +22,17 @@ android {
     }
     buildTypes {
         release {
-            runProguard false
+ 			minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
     productFlavors {
         normalrunner {
-            //debuggable true
-            //applicationId "org.protocoderrunner.normal"
+
         }
         extendedrunner {
-            //applicationId "org.protocoderrunner.extended"
+
         }
     }
 
