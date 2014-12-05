@@ -14,7 +14,7 @@ public class MainActivity extends Activity {
     public MainActivity() {
         Intent currentProjectApplicationIntent = new Intent(this, AppRunnerActivity.class);
         currentProjectApplicationIntent.putExtra(Project.NAME, "myproject");
-        currentProjectApplicationIntent.putExtra(Project.TYPE, "project");
+        currentProjectApplicationIntent.putExtra(Project.FOLDER, "project");
         currentProjectApplicationIntent.putExtra(Project.LOAD_FROM, "assets");
         currentProjectApplicationIntent.putExtra(Project.FORMAT, "dir");
         //currentProjectApplicationIntent.putExtra(Project.FORMAT, "protoFile");
