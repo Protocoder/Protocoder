@@ -26,7 +26,7 @@ android {
 
     buildTypes {
         release {
-            runProguard false
+            //runProguard true
             debuggable false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
             signingConfig signingConfigs.releaseConfig;
@@ -43,15 +43,15 @@ android {
     productFlavors {
         normal {
             applicationId "org.protocoder.normal"
-            versionName "0.97-normal"
+            versionName "0.97pre-normal"
             resValue "string", "releaseMode", "normal"
 
-      }
-      extended {
+        }
+        extended {
             applicationId "org.protocoder.extended"
-            versionName "0.97-extended"
+            versionName "0.97pre-extended"
             resValue "string", "releaseMode", "all_features"
-      }
+        }
     }
 
 
