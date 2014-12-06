@@ -1,6 +1,8 @@
 Protocoder
 ==========
 
+[![Build Status](https://travis-ci.org/victordiaz/protocoder.svg?branch=v097)](https://travis-ci.org/victordiaz/protocoder)
+
 Protocoder is a coding environment + framework in Javascript for quick prototyping on Android devices having some emphasis on rapid software and hardware hacking. 
 
 Install the app in your Android device and access the web IDE from your computer. 
