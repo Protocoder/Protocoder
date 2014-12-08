@@ -268,7 +268,7 @@ public class FileManagerFragment extends BaseFragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
+//		getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
 	}
 
 	@Override

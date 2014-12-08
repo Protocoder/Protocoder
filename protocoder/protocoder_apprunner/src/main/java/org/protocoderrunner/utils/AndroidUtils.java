@@ -29,18 +29,25 @@
 
 package org.protocoderrunner.utils;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Outline;
+import android.graphics.Path;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewOutlineProvider;
 
 import org.protocoderrunner.AppSettings;
+import org.protocoderrunner.R;
+import org.protocoderrunner.apprunner.logger.L;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -165,7 +172,7 @@ public class AndroidUtils {
 	}
 
     // TODO enable Protocoder-L
-    /*
+
     public static void setViewGenericShadow(View v, int w, int h) {
         setViewGenericShadow(v, CLIP_RECT, 0, 0, w, h, 10);
     }
@@ -173,30 +180,55 @@ public class AndroidUtils {
     public static int CLIP_RECT = 0;
     public static int CLIP_ROUND = 1;
 
-    public static void setViewGenericShadow(View v, int type, int x, int y, int w, int h, int r) {
-        MLog.d("qq", "no android L " + Build.VERSION.SDK + " " + L);
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public static void setViewGenericShadow(View v, int type, final int x, final int y, final int w, final int h, final int r) {
+       // MLog.d("qq", "no android L " + Build.VERSION.SDK + " " + L);
 
        // if (AndroidUtils.isVersionL()) {
-            Outline outline = new Outline();
-            MLog.d("qq", "is android L");
-            if (type == CLIP_RECT) {
-                outline.setRoundRect(new Rect(x, y, w, h), r);
-            } else if (type == CLIP_ROUND) {
-                outline.setOval(x, y, w, h);
-            } else {
-                Path path = new Path();
-                path.moveTo(10, 10);
-                path.lineTo(100, 100);
-                path.lineTo(100, 200);
-                path.lineTo(10, 10);
-                path.close();
-                outline.setConvexPath(path);
 
-                // return;
-            }
-            v.setClipToOutline(true);
-            v.setOutline(outline);
-            v.invalidate();
+        ViewOutlineProvider viewOutlineProvider = null;
+
+        MLog.d("qq", "is android L");
+        if (type == CLIP_RECT) {
+
+            viewOutlineProvider = new ViewOutlineProvider() {
+                @Override
+                public void getOutline(View view, Outline outline) {
+                    // Or read size directly from the view's width/height
+                    outline.setRoundRect(new Rect(x, y, w, h), r);
+                }
+            };
+
+        } else if (type == CLIP_ROUND) {
+
+            viewOutlineProvider = new ViewOutlineProvider() {
+                @Override
+                public void getOutline(View view, Outline outline) {
+                    // Or read size directly from the view's width/height
+                    outline.setOval(x, y, w, h);
+                }
+            };
+
+
+
+
+        } else {
+            Path path = new Path();
+            path.moveTo(10, 10);
+            path.lineTo(100, 100);
+            path.lineTo(100, 200);
+            path.lineTo(10, 10);
+            path.close();
+            //outline.setConvexPath(path);
+
+            // return;
+        }
+        v.setClipToOutline(true);
+
+        if (viewOutlineProvider != null) {
+            v.setOutlineProvider(viewOutlineProvider);
+        }
+        v.invalidate();
 
        //    RippleDrawable rippleDrawable = (RippleDrawable) v.getBackground();
        //     GradientDrawable rippleBackground = (GradientDrawable) rippleDrawable.getDrawable(0);
@@ -206,7 +238,6 @@ public class AndroidUtils {
 
         // }
     }
-  */
 
     //TODO enable Android-L
     public static boolean isVersionL() {

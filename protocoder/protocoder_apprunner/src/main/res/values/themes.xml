@@ -40,6 +40,9 @@
     <style name="ProtocoderAppTheme.ActionBarStyle" parent="Theme.AppCompat.Light">
         <item name="colorPrimary">@color/white</item>
         <item name="colorAccent">@color/black</item>
+        <item name="android:background">@color/transparent</item>
+
+        <item name="android:windowContentOverlay">@null</item>
 
         <!--<item name="android:titleTextStyle">@style/ProtocoderAppTheme.ActionBar.TitleTextStyle</item>-->
         <item name="android:selectableItemBackground">@drawable/actionbar_highlight</item>
