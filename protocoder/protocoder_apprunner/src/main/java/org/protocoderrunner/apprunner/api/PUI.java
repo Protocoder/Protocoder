@@ -29,6 +29,8 @@
 
 package org.protocoderrunner.apprunner.api;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
@@ -40,7 +42,9 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Outline;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -54,7 +58,9 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup.LayoutParams;
+import android.view.ViewOutlineProvider;
 import android.view.animation.CycleInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -355,9 +361,7 @@ public class PUI extends PUIGeneric {
 		v.animate().xBy(x).setDuration(AppSettings.animGeneralSpeed);
 		v.animate().yBy(y).setDuration(AppSettings.animGeneralSpeed);
 	}
-    
-    //TODO enable Protocoder L
-    /*
+
     //@TargetApi(L)
     @ProtocoderScript
     @APIParam(params = { "View" })
@@ -373,7 +377,8 @@ public class PUI extends PUIGeneric {
     }
 
     //@TargetApi(L)
-	@ProtocoderScript
+	@TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @ProtocoderScript
 	@APIParam(params = { "View" })
 	public void reveal(final View v) {
 		// previously invisible view
@@ -387,8 +392,7 @@ public class PUI extends PUIGeneric {
 
 		// create and start the animator for this view
 		// (the start radius is zero)
-        /
-        ValueAnimator anim = ViewAnimationUtils.createCircularReveal(v, cx, cy, 0, finalRadius);
+        ValueAnimator anim = (ValueAnimator) ViewAnimationUtils.createCircularReveal(v, cx, cy, 0, finalRadius);
 
         anim.setDuration(1000);
         anim.addListener(new AnimatorListenerAdapter() {
@@ -402,7 +406,7 @@ public class PUI extends PUIGeneric {
 	}
 
 
-	//@TargetApi()
+	@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 	@ProtocoderScript
 	@APIParam(params = { "View" })
 	public void unreveal(final View v) {
@@ -415,7 +419,7 @@ public class PUI extends PUIGeneric {
 		int initialRadius = v.getWidth();
 
 		// create the animation (the final radius is zero)
-		ValueAnimator anim = ViewAnimationUtils.createCircularReveal(v, cx, cy, initialRadius, 0);
+		ValueAnimator anim = (ValueAnimator) ViewAnimationUtils.createCircularReveal(v, cx, cy, initialRadius, 0);
         anim.setDuration(1000);
 
 
@@ -434,13 +438,23 @@ public class PUI extends PUIGeneric {
 
     @ProtocoderScript
     @APIParam(params = { "View", "x", "y", "w", "h" })
-    public void clipCircle(View v, int x, int y, int w, int h) {
+    public void clipCircle(View v, final int x, final int y, final int w, final int h) {
         Outline outline = new Outline();
         outline.setOval(x, y, w, h);
         v.setClipToOutline(true);
-        v.setOutline(outline);
+
+
+        ViewOutlineProvider viewOutlineProvider = new ViewOutlineProvider() {
+            @Override
+            public void getOutline(View view, Outline outline) {
+                // Or read size directly from the view's width/height
+                outline.setOval(x, y, w, h);
+            }
+        };
+
+        v.setOutlineProvider(viewOutlineProvider);
     }
-    */
+
 
 	// http://stackoverflow.com/questions/16557076/how-to-smoothly-move-a-image-view-with-users-finger-on-android-emulator
 	public void draggable(View v) {
