@@ -102,7 +102,7 @@ p {
 	font-family: Roboto Condensed;
 	border: 0px;
 	border-radius: 2px;
-
+	margin-bottom: 12px;
 }
 
 .btn-primary:hover { 
