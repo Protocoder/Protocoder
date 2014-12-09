@@ -65,3 +65,6 @@ AndroidApp/protocoder/key_release.keystore
 
 # JS shit
 node_modules
+protocoder/protocoder_app/manifest-merger-extended-release-report.txt
+
+protocoder/protocoder_app/manifest-merger-normal-release-report.txt
