@@ -8,8 +8,8 @@ android {
         applicationId "org.protocoder.extended"
         minSdkVersion 15
         targetSdkVersion 21
-        versionCode 14
-        versionName "0.97pre1"
+        versionCode 15
+        versionName "0.97"
 
         compileOptions {
             sourceCompatibility JavaVersion.VERSION_1_7

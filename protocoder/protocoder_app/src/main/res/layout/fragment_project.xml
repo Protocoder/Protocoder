@@ -32,11 +32,20 @@
         android:orientation="vertical"
         android:visibility="gone" >
 
-        <ImageView
+        <!--<ImageView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:contentDescription="@null"-->
+            <!--android:src="@drawable/protocoder_none" />-->
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@null"
-            android:src="@drawable/protocoder_none" />
+            android:text="No Projects yet :("
+            android:textSize="45sp"
+            android:layout_marginBottom="25dp"
+            android:textColor="#55000000"
+            />
 
         <TextView
             android:layout_width="wrap_content"
