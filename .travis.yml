@@ -4,23 +4,8 @@ android:
     - build-tools-21.1.1
     - extra-android-m2repository
 
-#env:
-#  global:
-    # - secure: l9oaircRM9VBHMbtM3R6D/xmwnTz2692hJlqEn8Rpf2wcPm7oAuvCGkSfh+9mkmwKcUOsm7QO8o/BOPWsIpZbxnjiXuiw6+n+XGQHG5wOEV5kBcofD1zsZao+FFG/GUE3nYtiMlwNzBGG78WmCzJ+svwZJn8AlAXrhDOsVJT79o=
-    # - secure: dg14m8/CNWGdvpqPZddtZxhs5fGN0wJGdYS/sFKnkXE+BEypJ/pwUO5s5YxFqwPpWDrFpSlVRh4VIL8iV0yqlU8n/6f1oEeGGCV3A+aMpmRlwvNuLWObaElUqaEjZSNQBH+plLV2viTZZ/tiIavLP50frcZ5E3MGNS0v6dScS9Q=
-
 before_install:
   - cd protocoder
 
-#install:
-
 script:
   - ./gradlew assembleDebug
-  #- ./gradlew connectedAndroidTestMockDebug
-
-#after_success:
-#  - ci/deploy_all
-
-# notifications:
-  # email:
-    # - mymail@provider.com

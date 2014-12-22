@@ -160,6 +160,7 @@ public class AppRunnerActivity extends BaseActivity {
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
+        //setTheme(R.style.ProtocoderDark_Dialog);
 
 		super.onCreate(savedInstanceState);
 
@@ -207,6 +208,13 @@ public class AppRunnerActivity extends BaseActivity {
 			String projectName = intent.getStringExtra(Project.NAME);
 			String projectFolder = intent.getStringExtra(Project.FOLDER);
 			boolean wakeUpScreen = intent.getBooleanExtra("wakeUpScreen", false);
+
+//            Window window = this.getWindow();
+//            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+//            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//            window.setStatusBarColor(this.getResources().getColor(R.color.white));
+
+            //setDocumentCounterText(projectName);
 
             //TODO colors
             int actionBarColor = intent.getIntExtra("color", 0);
@@ -922,10 +930,11 @@ public class AppRunnerActivity extends BaseActivity {
 		actionBarSet = true;
 		// Set up the actionbar
 		actionBar = getSupportActionBar();
+        actionBar.setElevation(0);
 
 		if (actionBar != null) {
 
-			// home clickable if is running inside org.apprunner.protocoder
+			// home clickable if is running inside protocoderapp
 			if (AppSettings.STANDALONE == false) {
 				actionBar.setDisplayHomeAsUpEnabled(true);
 			}

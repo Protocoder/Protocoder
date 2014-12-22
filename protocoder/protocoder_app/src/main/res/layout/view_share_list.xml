@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/viewProjectItemBackground"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="0dp"
+    android:background="@drawable/project_item_list_bg"
+    android:gravity="center" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/customViewImage"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center|left"
+            android:layout_marginTop="5dp"
+            android:gravity="left"
+            android:src="@drawable/protocoder_icon"
+            android:scaleType="centerCrop" />
+
+
+        <TextView
+            android:id="@+id/customViewText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="12dp"
+            android:layout_toRightOf="@+id/customViewImage"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-condensed"
+            android:gravity="center"
+            android:lines="1"
+            android:maxLines="1"
+            android:shadowColor="#88FFFFFF"
+            android:shadowDx="0"
+            android:shadowDy="1"
+            android:shadowRadius="0.1"
+            android:text="Title"
+            android:textColor="#666666"
+            android:textSize="21sp"
+            android:typeface="normal" />
+
+    </RelativeLayout>
+</FrameLayout>
+

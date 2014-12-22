@@ -45,6 +45,8 @@
                 android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
                 android:resource="@xml/device_filter" />
         </activity>
+
+
         <activity
             android:name="org.protocoder.MainActivity"
             android:label="@string/activity_name"
@@ -74,6 +76,21 @@
             android:label="@string/settings_activity_name"
             android:noHistory="true" >
         </activity>
+
+        <activity
+            android:name=".activities.ProtoScriptShareActivity"
+            android:label="ProtoScriptShare"
+            android:theme="@style/ProtocoderAppTheme.Dialog"
+            android:logo="@drawable/protocoder_icon" >
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+
+        </activity>
+
 
         <activity android:name=".activities.ProtoAppInstallerActivity"
             android:label="@string/activity_name"

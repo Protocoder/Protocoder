@@ -237,6 +237,11 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
         if (frameProcessing == false) {
             frameProcessing = true;
             MLog.d(TAG, "startOnFrameProccesing");
+            Camera.Parameters parameters = mCamera.getParameters();
+            int format = parameters.getPreviewFormat();
+
+            MLog.d(TAG, "format " + format);
+
             mCamera.setPreviewCallback(new PreviewCallback() {
 
                 @Override
@@ -246,6 +251,10 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
                     Camera.Parameters parameters = camera.getParameters();
                     int width = parameters.getPreviewSize().width;
                     int height = parameters.getPreviewSize().height;
+
+                    //get support preview format
+                    //set preview format
+
 
                     YuvImage yuv = new YuvImage(data, parameters.getPreviewFormat(), width, height, null);
 
