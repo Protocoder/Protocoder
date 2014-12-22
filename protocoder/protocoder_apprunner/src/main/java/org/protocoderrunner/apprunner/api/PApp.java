@@ -108,6 +108,13 @@ public class PApp extends PInterface {
 		SchedulerManager.getInstance(a.get()).setAlarm(p, hour, minute, second, wakeUpScreen);
 	}
 
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "type", "data" })
+    public void getSharedData(String type, String data) {
+
+    }
+
 	@ProtocoderScript
 	@APIMethod(description = "close the running script", example = "")
 	public void close() {

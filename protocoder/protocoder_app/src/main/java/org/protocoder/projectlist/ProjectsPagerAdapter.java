@@ -65,7 +65,7 @@ public class ProjectsPagerAdapter extends FragmentPagerAdapter {
 
 	@Override
 	public CharSequence getPageTitle(int position) {
-        String name = fragments.get(position).projectFolder;
+        String name = fragments.get(position).mProjectFolder;
 		return name;
 	}
 
@@ -78,7 +78,7 @@ public class ProjectsPagerAdapter extends FragmentPagerAdapter {
         int num = -1;
 
         for (int i = 0; i < fragments.size(); i++) {
-            String name = fragments.get(i).projectFolder;
+            String name = fragments.get(i).mProjectFolder;
             if (name.equals(fragmentName)) {
                 num = i;
                 break;

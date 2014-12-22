@@ -29,6 +29,7 @@
 package org.protocoder.appApi;
 
 import android.app.Activity;
+import android.content.Context;
 
 import org.protocoder.MainActivity;
 import org.protocoderrunner.apprunner.AppRunnerInterpreter;
@@ -125,7 +126,7 @@ public class Protocoder {
     }
 
 
-    public static Protocoder getInstance(Activity activity) {
+    public static Protocoder getInstance(Context activity) {
         a = (MainActivity) activity;
         if (instance == null) {
             instance = new Protocoder();

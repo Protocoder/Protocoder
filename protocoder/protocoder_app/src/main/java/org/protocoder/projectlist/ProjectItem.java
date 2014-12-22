@@ -29,7 +29,12 @@
 
 package org.protocoder.projectlist;
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
@@ -39,7 +44,10 @@ import android.graphics.PorterDuff;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.support.v7.widget.PopupMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -47,25 +55,34 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.protocoder.R;
+import org.protocoder.appApi.Protocoder;
+import org.protocoderrunner.events.Events;
+import org.protocoderrunner.project.Project;
+import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.MLog;
 
 import java.lang.ref.WeakReference;
+
+import de.greenrobot.event.EventBus;
 
 public class ProjectItem extends LinearLayout {
 
     private static final String TAG = "ProjectItem";
     private final Drawable bg;
+    private final ProjectListFragment mPlf;
     private WeakReference<View> v;
 	// private Context c;
 	private final WeakReference<Context> c;
 	private String t;
     private boolean highlighted = false;
-    TextView textViewName;
-    TextView textViewIcon;
+    private Project mProject;
+    private TextView textViewName;
+    private TextView textViewIcon;
 
-    public ProjectItem(Context context, boolean listMode) {
+    public ProjectItem(Context context, ProjectListFragment plf, boolean listMode) {
 		super(context);
 		this.c = new WeakReference<Context>(context);
+        this.mPlf = plf;
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		if (listMode) {
@@ -76,9 +93,58 @@ public class ProjectItem extends LinearLayout {
 
         FrameLayout fl = (FrameLayout) findViewById(R.id.viewProjectItemBackground);
         bg = fl.getBackground();
-        setMenu();
         textViewName = (TextView) v.get().findViewById(R.id.customViewText);
         textViewIcon = (TextView) v.get().findViewById(R.id.symbolTextC);
+
+        this.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               // MLog.d(TAG, " " + position + " " + getPosition());
+
+
+                AnimatorSet animSpin;
+                animSpin = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(), R.animator.flip_up);
+                animSpin.setTarget(v);
+                animSpin.addListener(new Animator.AnimatorListener() {
+
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+                });
+                animSpin.start();
+
+                Runnable r = new Runnable() {
+                    @Override
+                    public void run() {
+
+                        Events.ProjectEvent evt = new Events.ProjectEvent(mProject, "run");
+                        EventBus.getDefault().post(evt);
+                       // getActivity().overridePendingTransition(R.anim.splash_slide_in_anim_set,
+                        //        R.anim.splash_slide_out_anim_set);
+                    }
+                };
+
+                Handler handler = new Handler();
+                handler.postDelayed(r, 50);
+
+            }
+        });
 
     }
 
@@ -105,7 +171,7 @@ public class ProjectItem extends LinearLayout {
 	public void drawText(ImageView imageView, String t2) {
 
 		// ImageView myImageView =
-		Bitmap myBitmap = Bitmap.createBitmap(100, 100, Config.RGB_565);
+		Bitmap myBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Config.RGB_565);
 		Paint myPaint = new Paint();
 		myPaint.setColor(Color.BLUE);
 		myPaint.setAntiAlias(true);
@@ -133,21 +199,75 @@ public class ProjectItem extends LinearLayout {
 
 	}
 
+
     public void setMenu() {
-        ImageView imageView = (ImageView) findViewById(R.id.card_menu_button);
+        MLog.d("TAG", "setting menu for " + mProject.getName());
+        final ImageView imageView = (ImageView) findViewById(R.id.card_menu_button);
+        //imageView.setOnCreateContextMenuListener();
         imageView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                showContextMenu();
+                MLog.d(TAG, "clicked");
+                PopupMenu myPopup = new PopupMenu(c.get(), imageView);
+                myPopup.inflate(R.menu.project_list);
+                myPopup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(final MenuItem menuItem) {
+
+                        int itemId = menuItem.getItemId();
+
+                        if (itemId == R.id.menu_project_list_run) {
+                            Protocoder.getInstance(c.get()).protoScripts.run(mProject.getFolder(), mProject.getName());
+                            return true;
+                        } else if (itemId == R.id.menu_project_list_edit) {
+                            Protocoder.getInstance(c.get()).app.editor.show(true, mProject.getFolder(), mProject.getName());
+                            return true;
+                        } else if (itemId == R.id.menu_project_list_delete) {
+                            Protocoder.getInstance(c.get()).protoScripts.delete(mProject.getFolder(), mProject.getName());
+
+                            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    switch (which) {
+                                        case DialogInterface.BUTTON_POSITIVE:
+                                            mPlf.removeItem(mProject);
+
+                                            break;
+
+                                        case DialogInterface.BUTTON_NEGATIVE:
+                                            break;
+                                    }
+                                }
+                            };
+                            AlertDialog.Builder builder = new AlertDialog.Builder(c.get());
+                            builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
+                                    .setNegativeButton("No", dialogClickListener).show();
+                            return true;
+                        } else if (itemId == R.id.menu_project_list_add_shortcut) {
+                            Protocoder.getInstance(c.get()).protoScripts.addShortcut(mProject.getFolder(), mProject.getName());
+                            return true;
+                        } else if (itemId == R.id.menu_project_list_share_with) {
+                            Protocoder.getInstance(c.get()).protoScripts.shareMainJsDialog(mProject.getFolder(), mProject.getName());
+                            return true;
+                        } else if (itemId == R.id.menu_project_list_share_proto_file) {
+                            Protocoder.getInstance(c.get()).protoScripts.shareProtoFileDialog(mProject.getFolder(), mProject.getName());
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+                });
+                myPopup.show();
+
             }
         });
-        imageView.setOnLongClickListener(new OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                showContextMenu();
-                return true;
-            }
-        });
+//        this.setOnLongClickListener(new OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//                showContextMenu();
+//                return true;
+//            }
+//        });
     }
 
     public Drawable getBg() {
@@ -165,5 +285,12 @@ public class ProjectItem extends LinearLayout {
 
     public boolean isHighlighted() {
         return highlighted;
+    }
+
+    public void setProject(Project p) {
+        mProject = p;
+        setText(p.getName());
+        setTag(p.getName());
+        setMenu();
     }
 }

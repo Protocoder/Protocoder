@@ -139,7 +139,7 @@ public class ProtoScripts {
         ProjectItem view = (ProjectItem) getViewByName(folder, appName);
         int pos = plf.findAppPosByName(appName);
 
-        plf.projectAdapter.projects.get(pos).selected = true;
+        plf.mProjectAdapter.mProjects.get(pos).selected = true;
         view.setHighlighted(true);
     }
 
@@ -155,7 +155,7 @@ public class ProtoScripts {
 
         int pos = plf.findAppPosByName(appName);
         //->
-        plf.projectAdapter.projects.get(pos).selected = true;
+        plf.mProjectAdapter.mProjects.get(pos).selected = true;
         view.setHighlighted(true);
 
 
@@ -176,7 +176,7 @@ public class ProtoScripts {
     public void addScriptList(int icon, String name, int color, boolean orderByName) {
         ProjectListFragment listFragmentBase = ProjectListFragment.newInstance(icon, name, color, orderByName);
         listFragmentBase.icon = icon;
-        listFragmentBase.projectFolder = name;
+        listFragmentBase.mProjectFolder = name;
         listFragmentBase.color = color;
         listFragmentBase.orderByName = orderByName;
 
@@ -193,6 +193,8 @@ public class ProtoScripts {
 
     }
 
+
+    int c = 0;
     public void run(String folder, String appName) {
         if (currentProjectApplicationIntent != null) {
             mProtocoder.a.finishActivity(mProjectRequestCode);
@@ -211,6 +213,11 @@ public class ProtoScripts {
 
             currentProjectApplicationIntent.putExtra(Project.FOLDER, folder);
             currentProjectApplicationIntent.putExtra(Project.NAME, appName);
+            currentProjectApplicationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+            //currentProjectApplicationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            currentProjectApplicationIntent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+
+            currentProjectApplicationIntent.putExtra("qq", c++);
 
             mProtocoder.a.overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
             mProtocoder.a.startActivityForResult(currentProjectApplicationIntent, mProjectRequestCode);

@@ -52,7 +52,9 @@
         <item name="android:src">@drawable/ic_action_overflow</item>
     </style>
 
+    <style name="ProtocoderAppTheme.Dialog" parent="Theme.AppCompat.Dialog">
 
+    </style>
 
 
     <!-- ProtocoderThemeAppRunner -->

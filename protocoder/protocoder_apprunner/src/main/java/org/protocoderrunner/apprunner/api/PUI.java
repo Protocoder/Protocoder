@@ -392,7 +392,7 @@ public class PUI extends PUIGeneric {
 
 		// create and start the animator for this view
 		// (the start radius is zero)
-        ValueAnimator anim = (ValueAnimator) ViewAnimationUtils.createCircularReveal(v, cx, cy, 0, finalRadius);
+        Animator anim = (Animator) ViewAnimationUtils.createCircularReveal(v, cx, cy, 0, finalRadius);
 
         anim.setDuration(1000);
         anim.addListener(new AnimatorListenerAdapter() {
@@ -419,7 +419,7 @@ public class PUI extends PUIGeneric {
 		int initialRadius = v.getWidth();
 
 		// create the animation (the final radius is zero)
-		ValueAnimator anim = (ValueAnimator) ViewAnimationUtils.createCircularReveal(v, cx, cy, initialRadius, 0);
+		Animator anim = (Animator) ViewAnimationUtils.createCircularReveal(v, cx, cy, initialRadius, 0);
         anim.setDuration(1000);
 
 

@@ -54,13 +54,14 @@
         android:allowBackup="false"
         android:hardwareAccelerated="true">
 
-        <!--android:documentLaunchMode="always"-->
         <!--android:autoRemoveFromRecents="true"-->
+
         <activity
             android:name=".apprunner.AppRunnerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/runner_name"
             android:theme="@style/ProtocoderDarkTheme"
+            android:launchMode="standard"
 
             android:windowSoftInputMode="stateHidden" >
             <intent-filter>

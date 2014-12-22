@@ -30,85 +30,97 @@
 package org.protocoder.projectlist;
 
 import android.content.Context;
+import android.os.Handler;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.protocoder.R;
+import org.protocoder.activities.MyAdapter;
+import org.protocoderrunner.events.Events;
 import org.protocoderrunner.project.Project;
 import org.protocoderrunner.utils.MLog;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-public class ProjectItemAdapter extends BaseAdapter {
+import de.greenrobot.event.EventBus;
+
+public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.ViewHolder>  {
     private static final String TAG = "ProjectItemAdapter";
     private final WeakReference<Context> mContext;
-    private final int icon;
+    private final int mIcon;
+    private final ProjectListFragment mPlf;
 
-    public ArrayList<Project> projects;
-	private final String projectFolder;
-	private final boolean listMode;
+    public ArrayList<Project> mProjects;
+	private final String mProjectFolder;
+	private final boolean mListMode;
 
-	public ProjectItemAdapter(Context c, String projectFolder, ArrayList<Project> projects, boolean listMode, int icon) {
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        private final ProjectItem mView;
+        private final int position;
+
+        public ViewHolder(ProjectItem v) {
+            super(v);
+            mView = v;
+            position = getPosition();
+        }
+    }
+
+	public ProjectItemAdapter(Context c, ProjectListFragment plf) {
 		mContext = new WeakReference<Context>(c);
-		this.projects = projects;
-		this.projectFolder = projectFolder;
-		this.listMode = listMode;
-        this.icon = icon;
+        this.mPlf = plf;
+		this.mProjects = plf.mProjects;
+		this.mProjectFolder = plf.mProjectFolder;
+		this.mListMode = plf.mListMode;
+        this.mIcon = plf.icon;
 	}
 
-	@Override
-	public int getCount() {
-		return projects.size();
-	}
 
-	@Override
-	public Object getItem(int position) {
-		return projects.get(position);
-	}
+    // Create new views (invoked by the layout manager)
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent,
+                                         int viewType) {
 
-	@Override
-	public long getItemId(int position) {
-		return position;
-	}
+        //MLog.d(TAG, "view created");
+        // create a new view
+        //ProjectItem v = (ProjectItem) LayoutInflater.from(parent.getContext())
+        //        .inflate(R.layout.view_project_item, parent, false);
+        // set the view's size, margins, paddings and layout parameters
+        ProjectItem projectItem = new ProjectItem(mContext.get(), mPlf, mListMode);
 
-	// create a new ImageView for each item referenced by the Adapter
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		final ProjectItem customView;
 
-        Project p = projects.get(position);
+        ViewHolder vh = new ProjectItemAdapter.ViewHolder(projectItem);
 
-        //MLog.d(TAG, "getView " + p.getName());
+        return vh;
+    }
 
-        // if it's not recycled, initialize some attributes
-        if (convertView == null) {
-            //MLog.d(TAG, "getView " + p.getName() + " -> new");
-            customView = new ProjectItem(mContext.get(), listMode);
-			customView.setText(p.getName());
+    // Replace the contents of a view (invoked by the layout manager)
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
 
-            //TODO enable again colors
-		    customView.setImage(icon);
-        //if recycled
-		} else {
-            //MLog.d(TAG, "getView " + p.getName() + " -> recycled " + p.selected);
+        Project p = mProjects.get(position);
+        holder.mView.setProject(p);
 
-            customView = (ProjectItem) convertView;
-			customView.reInit(p.getName(), p.selected);
-		}
-		customView.setTag(projects.get(position).getName());
+//
+//        if (getCount() - 1 == position) {
+//            customView.setPadding(0, 0, 0, 100);
+//        } else {
+//            customView.setPadding(0, 0, 0, 0);
+//        }
 
-		if (getCount() - 1 == position) {
-			customView.setPadding(0, 0, 0, 100);
-		} else {
-			customView.setPadding(0, 0, 0, 0);
-		}
+    }
 
-		return customView;
-	}
+
+    @Override
+    public int getItemCount() {
+        return mProjects.size();
+    }
 
 }
