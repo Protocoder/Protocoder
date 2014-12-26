@@ -30,16 +30,21 @@
 package org.protocoderrunner.utils;
 
 import android.annotation.TargetApi;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Outline;
 import android.graphics.Path;
 import android.graphics.Rect;
+import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
+import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
@@ -54,6 +59,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class AndroidUtils {
 
@@ -82,10 +89,8 @@ public class AndroidUtils {
 			fout.close();
 
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -116,10 +121,8 @@ public class AndroidUtils {
 				fout.close();
 
 			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -170,8 +173,6 @@ public class AndroidUtils {
 		sb.append("]");
 		MLog.d(TAG, sb.toString());
 	}
-
-    // TODO enable Protocoder-L
 
     public static void setViewGenericShadow(View v, int w, int h) {
         setViewGenericShadow(v, CLIP_RECT, 0, 0, w, h, 10);
@@ -239,10 +240,9 @@ public class AndroidUtils {
         // }
     }
 
-    //TODO enable Android-L
     public static boolean isVersionL() {
 
-        return false; //Build.VERSION.SDK_INT >= L;
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }
 
 
@@ -293,4 +293,120 @@ public class AndroidUtils {
 
         return colorStr;
     }
+
+    public static void setVolume(Context c, int value) {
+        AudioManager audioManager = (AudioManager) c.getSystemService(Context.AUDIO_SERVICE);
+        int maxValue = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        float val = (float) (value / 100.0 * maxValue);
+
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, Math.round(val),
+                AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
+    }
+
+
+    public static boolean isScreenOn(Context c) {
+        PowerManager pm = (PowerManager) c.getSystemService(Context.POWER_SERVICE);
+        return pm.isScreenOn();
+    }
+
+   // public static void goToSleep(Context c) {
+        //PowerManager pm = (PowerManager) c.getSystemService(Context.POWER_SERVICE);
+        //pm.goToSleep(100);
+   // }
+
+    public static boolean isAirplaneMode(Context c) {
+        return Settings.System.getInt(c.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 0) != 0;
+    }
+
+    public boolean isUSBMassStorageEnabled(Context c) {
+        return Settings.System.getInt(c.getContentResolver(), Settings.Global.USB_MASS_STORAGE_ENABLED, 0) != 0;
+    }
+
+    public boolean isADBEnabled(Context c) {
+        return Settings.System.getInt(c.getContentResolver(), Settings.Global.ADB_ENABLED, 0) != 0;
+    }
+
+    public static void setEnableSoundEffects(Context c, boolean b) {
+        if (b) {
+            Settings.System.putInt(c.getContentResolver(), Settings.System.SOUND_EFFECTS_ENABLED, 1);
+        } else {
+            Settings.System.putInt(c.getContentResolver(), Settings.System.SOUND_EFFECTS_ENABLED, 0);
+
+        }
+    }
+
+    public static boolean isTablet(Context c) {
+        boolean xlarge = ((c.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4);
+        boolean large = ((c.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE);
+        return (xlarge || large);
+    }
+
+    public static boolean isWear(Context c) {
+        boolean b = false;
+        b = c.getResources().getBoolean(R.bool.isWatch);
+
+        return b;
+    }
+
+    static PowerManager.WakeLock wl;
+
+    public static void setWakeLock(Context c, boolean b) {
+
+        PowerManager pm = (PowerManager) c.getSystemService(Context.POWER_SERVICE);
+        if (wl == null) {
+            wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
+            if (b) {
+                wl.acquire();
+            }
+        } else {
+            if (!b) {
+                wl.release();
+            }
+        }
+
+    }
+
+    public static void setGlobalBrightness(Context c, int brightness) {
+
+        // constrain the value of brightness
+        if (brightness < 0) {
+            brightness = 0;
+        } else if (brightness > 255) {
+            brightness = 255;
+        }
+
+        ContentResolver cResolver = c.getApplicationContext().getContentResolver();
+        Settings.System.putInt(cResolver, Settings.System.SCREEN_BRIGHTNESS, brightness);
+
+    }
+
+    public static void setScreenTimeout(Context c, int time) {
+        Settings.System.putInt(c.getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, time);
+    }
+
+
+    public static void setSpeakerOn(boolean b) {
+
+        Class<?> audioSystemClass;
+        try {
+            audioSystemClass = Class.forName("android.media.AudioSystem");
+            Method setForceUse = audioSystemClass.getMethod("setForceUse", int.class, int.class);
+            // First 1 == FOR_MEDIA, second 1 == FORCE_SPEAKER. To go back to
+            // the default
+            // behavior, use FORCE_NONE (0).
+            setForceUse.invoke(null, 1, 1);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 }

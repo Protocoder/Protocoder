@@ -29,18 +29,14 @@
 
 package org.protocoderrunner.apprunner.api;
 
-import android.app.Activity;
-import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.codebutler.android_websockets.SocketIOClient;
 import com.google.gson.Gson;
@@ -72,35 +68,29 @@ import org.java_websocket.server.WebSocketServer;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.mozilla.javascript.NativeArray;
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.apprunner.api.other.PSimpleHttpServer;
 import org.protocoderrunner.apprunner.api.other.PSocketIOClient;
-import org.protocoderrunner.apprunner.api.other.ProtocoderNativeArray;
 import org.protocoderrunner.network.NetworkUtils;
 import org.protocoderrunner.network.NetworkUtils.DownloadTask.DownloadListener;
 import org.protocoderrunner.network.OSC;
-import org.protocoderrunner.network.ServiceDiscovery;
 import org.protocoderrunner.network.bt.SimpleBT;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.sensors.WhatIsRunning;
-import org.protocoderrunner.utils.ExecuteCmd;
 import org.protocoderrunner.utils.MLog;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
@@ -124,7 +114,7 @@ public class PNetwork extends PInterface {
 	private final String TAG = "PNetwork";
     private boolean mBtStarted = false;
 
-    public PNetwork(Activity a) {
+    public PNetwork(Context a) {
         super(a);
 
         WhatIsRunning.getInstance().add(this);
@@ -140,7 +130,7 @@ public class PNetwork extends PInterface {
     @APIParam(params = {"url", "fileName", "function(progress)"})
     public void downloadFile(String url, String fileName, final downloadFileCB callbackfn) {
 
-        NetworkUtils.DownloadTask downloadTask = new NetworkUtils.DownloadTask(a.get(), fileName);
+        NetworkUtils.DownloadTask downloadTask = new NetworkUtils.DownloadTask(mContext, fileName);
         downloadTask.execute(url);
         downloadTask.addListener(new DownloadListener() {
 
@@ -187,7 +177,7 @@ public class PNetwork extends PInterface {
     @APIParam(params = {""})
     public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
-                = (ConnectivityManager) a.get().getSystemService(Context.CONNECTIVITY_SERVICE);
+                = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
@@ -196,14 +186,14 @@ public class PNetwork extends PInterface {
     @APIMethod(description = "Returns the current device Ip address", example = "")
     @APIParam(params = {""})
     public String getIp() {
-        return NetworkUtils.getLocalIpAddress(a.get());
+        return NetworkUtils.getLocalIpAddress(mContext);
     }
 
     @ProtocoderScript
     @APIMethod(description = "Get the wifi ap information", example = "")
     @APIParam(params = {""})
     public WifiInfo getWifiInfo() {
-        return NetworkUtils.getWifiInfo(a.get());
+        return NetworkUtils.getWifiInfo(mContext);
     }
 
     // --------- OSC Server ---------//
@@ -278,7 +268,7 @@ public class PNetwork extends PInterface {
     @APIMethod(description = "Enable multicast networking", example = "")
     @APIParam(params = {"boolean"})
     public void setMulticast(boolean b) {
-        WifiManager wifi = (WifiManager) a.get().getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifi = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
         if (wifi != null) {
             if (b) {
                 wifiLock = wifi.createMulticastLock("mylock");
@@ -293,7 +283,7 @@ public class PNetwork extends PInterface {
         WifiManager.MulticastLock wifiLock;
 
         MulticastEnabler(boolean b) {
-            WifiManager wifi = (WifiManager) a.get().getSystemService(Context.WIFI_SERVICE);
+            WifiManager wifi = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
             if (wifi != null) {
                 if (b) {
                     wifiLock = wifi.createMulticastLock("mylock");
@@ -750,7 +740,7 @@ public class PNetwork extends PInterface {
 	public PSimpleHttpServer startSimpleHttpServer(int port, final PSimpleHttpServer.HttpCB callbackfn) {
         PSimpleHttpServer httpServer = null;
         try {
-			httpServer = new PSimpleHttpServer(a.get(), port, callbackfn);
+			httpServer = new PSimpleHttpServer(mContext, port, callbackfn);
             WhatIsRunning.getInstance().add(httpServer);
 
 		} catch (IOException e) {
@@ -784,336 +774,337 @@ public class PNetwork extends PInterface {
 	interface scanBTNetworksCB {
 		void event(String name, String macAddress, float strength);
 	}
-
-	@ProtocoderScript
-	@APIMethod(description = "Scan bluetooth networks. Gives back the name, mac and signal strength", example = "")
-	@APIParam(params = { "function(name, macAddress, strength)" })
-	public void scanBluetoothNetworks(final scanBTNetworksCB callbackfn) {
-        startBluetooth();
-		onBluetoothfn = callbackfn;
-		simpleBT.scanBluetooth(new onBluetoothListener() {
-
-			@Override
-			public void onDeviceFound(String name, String macAddress, float strength) {
-				onBluetoothfn.event(name, macAddress, strength);
-			}
-
-			@Override
-			public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-			}
-		});
-
-	}
-
+    //TODO reenable this
+//
+//	@ProtocoderScript
+//	@APIMethod(description = "Scan bluetooth networks. Gives back the name, mac and signal strength", example = "")
+//	@APIParam(params = { "function(name, macAddress, strength)" })
+//	public void scanBluetoothNetworks(final scanBTNetworksCB callbackfn) {
+//        startBluetooth();
+//		onBluetoothfn = callbackfn;
+//		simpleBT.scanBluetooth(new onBluetoothListener() {
+//
+//			@Override
+//			public void onDeviceFound(String name, String macAddress, float strength) {
+//				onBluetoothfn.event(name, macAddress, strength);
+//			}
+//
+//			@Override
+//			public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//
+//			}
+//		});
+//
+//	}
 	//@ProtocoderScript
 	//@APIMethod(description = "Start the bluetooth adapter", example = "")
 	//@APIParam(params = { "" })
-	public SimpleBT startBluetooth() {
-        if (mBtStarted) {
-            return simpleBT;
-        }
-		simpleBT = new SimpleBT(appRunnerActivity.get());
-		simpleBT.start();
-		(appRunnerActivity.get()).addBluetoothListener(new onBluetoothListener() {
-
-			@Override
-			public void onDeviceFound(String name, String macAddress, float strength) {
-			}
-
-			@Override
-			public void onActivityResult(int requestCode, int resultCode, Intent data) {
-				simpleBT.onActivityResult(requestCode, resultCode, data);
-
-				switch (requestCode) {
-				case SimpleBT.REQUEST_ENABLE_BT:
-					// When the request to enable Bluetooth returns
-					if (resultCode == Activity.RESULT_OK) {
-						//MLog.d(TAG, "enabling BT");
-						// Bluetooth is now enabled, so set up a Bluetooth session
-                        mBtStarted = true;
-						simpleBT.startBtService();
-
-                    // User did not enable Bluetooth or an error occurred
-                    } else {
-					    //	MLog.d(TAG, "BT not enabled");
-						Toast.makeText(a.get().getApplicationContext(), "BT not enabled :(", Toast.LENGTH_SHORT)
-								.show();
-
-					}
-				}
-			}
-		});
-
-		WhatIsRunning.getInstance().add(simpleBT);
-		return simpleBT;
-	}
-
-    // --------- connectBluetooth ---------//
-    interface connectBluetoothCB {
-        void event(String what, String data);
-    }
-
-    //TODO removed new impl needed
-	@ProtocoderScript
-	@APIMethod(description = "Connects to a bluetooth device using a popup", example = "")
-	@APIParam(params = { "function(name, macAddress, strength)" })
-	public void connectBluetoothSerialByUi(final connectBluetoothCB callbackfn) {
-        startBluetooth();
-        NativeArray nativeArray = getBluetoothBondedDevices();
-        String[] arrayStrings = new String[(int) nativeArray.size()];
-        for (int i = 0; i < nativeArray.size(); i++) {
-            arrayStrings[i] = (String) nativeArray.get(i, null);
-        }
-
-        appRunnerActivity.get().pUi.popupChoice("Connect to device", arrayStrings, new PUI.choiceDialogCB() {
-            @Override
-            public void event(String string) {
-                connectBluetoothSerialByMac(string.split(" ")[1], callbackfn);
-            }
-        });
-		//simpleBT.startDeviceListActivity();
-	}
-
-	@ProtocoderScript
-	@APIMethod(description = "Connect to a bluetooth device using the mac address", example = "")
-	@APIParam(params = { "mac", "function(data)" })
-	public void connectBluetoothSerialByMac(String mac, final connectBluetoothCB callbackfn) {
-        startBluetooth();
-        simpleBT.connectByMac(mac);
-        addBTConnectionListener(callbackfn);
-
-	}
-
-	@ProtocoderScript
-	@APIMethod(description = "Connect to a bluetooth device using a name", example = "")
-	@APIParam(params = { "name, function(data)" })
-	public void connectBluetoothSerialByName(String name, final connectBluetoothCB callbackfn) {
-        startBluetooth();
-		simpleBT.connectByName(name);
-        addBTConnectionListener(callbackfn);
-    }
-
-    private void addBTConnectionListener(final connectBluetoothCB callbackfn) {
-        simpleBT.addListener(new SimpleBT.SimpleBTListener() {
-
-            @Override
-            public void onRawDataReceived(byte[] buffer, int size) {
-                //MLog.network(a.get(), "Bluetooth", "1. got " + buffer.toString());
-            }
-
-            @Override
-            public void onMessageReceived(final String data) {
-                //MLog.network(a.get(), "Bluetooth", "2. got " + data);
-
-                if (data != "") {
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            //MLog.d(TAG, "Got data: " + data);
-                            callbackfn.event("data", data);
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onConnected() {
-                callbackfn.event("connected", null);
-            }
-        });
-    }
-
-
-    @ProtocoderScript
-    @APIMethod(description = "Send a bluetooth serial message", example = "")
-    @APIParam(params = { "string" })
-    public NativeArray getBluetoothBondedDevices() {
-        startBluetooth();
-
-        Set<BluetoothDevice> listDevices = simpleBT.listBondedDevices();
-        MLog.d(TAG, "listDevices " + listDevices);
-        int listSize = listDevices.size();
-        ProtocoderNativeArray array = new ProtocoderNativeArray(listSize);
-        MLog.d(TAG, "array " + array);
-
-
-        int counter = 0;
-        for (BluetoothDevice b : listDevices) {
-            MLog.d(TAG, "b " + b);
-
-            String s = b.getName() + " " + b.getAddress();
-            array.addPE(counter++, s);
-        }
-
-        return array;
-    }
-
-	@ProtocoderScript
-	@APIMethod(description = "Send a bluetooth serial message", example = "")
-	@APIParam(params = { "string" })
-	public void sendBluetoothSerial(String string) {
-		if (simpleBT.isConnected()) {
-            simpleBT.send(string);
-        }
-	}
-
-	@ProtocoderScript
-	@APIMethod(description = "Disconnect the bluetooth", example = "")
-	@APIParam(params = { "" })
-	public void disconnectBluetooth() {
-        if (simpleBT.isConnected()) {
-            simpleBT.disconnect();
-        }
-	}
-
-	@ProtocoderScript
-	@APIMethod(description = "Enable/Disable the bluetooth adapter", example = "")
-	@APIParam(params = { "boolean" })
-	public void enableBluetooth(boolean b) {
-        if (b) {
-            simpleBT.start();
-        } else {
-            simpleBT.disable();
-        }
-	}
-
-    @ProtocoderScript
-    @APIMethod(description = "Enable/Disable the bluetooth adapter", example = "")
-    @APIParam(params = { "boolean" })
-    public boolean isBluetoothConnected() {
-        return simpleBT.isConnected();
-    }
-
-
-    @ProtocoderScript
-	@APIMethod(description = "Enable/Disable the Wifi adapter", example = "")
-	@APIParam(params = { "boolean" })
-	public void enableWifi(boolean enabled) {
-		WifiManager wifiManager = (WifiManager) a.get().getSystemService(Context.WIFI_SERVICE);
-		wifiManager.setWifiEnabled(enabled);
-	}
-
-	@ProtocoderScript
-	@APIMethod(description = "Check if the Wifi adapter is enabled", example = "")
-	@APIParam(params = {})
-	public boolean isWifiEnabled() {
-		WifiManager wifiManager = (WifiManager) a.get().getSystemService(Context.WIFI_SERVICE);
-		return wifiManager.isWifiEnabled();
-	}
-
-	// http://stackoverflow.com/questions/8818290/how-to-connect-to-a-specific-wifi-network-in-android-programmatically
-	@ProtocoderScript
-	@APIMethod(description = "Connect to a given Wifi network with a given 'wpa', 'wep', 'open' type and a password", example = "")
-	@APIParam(params = { "ssidName", "type", "password" })
-	public void connectWifi(String networkSSID, String type, String networkPass) {
-
-		WifiConfiguration conf = new WifiConfiguration();
-		conf.SSID = "\"" + networkSSID + "\""; // Please note the quotes. String
-												// should contain ssid in quotes
-
-		if (type.equals("wep")) {
-			// wep
-			conf.wepKeys[0] = "\"" + networkPass + "\"";
-			conf.wepTxKeyIndex = 0;
-			conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
-			conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
-		} else if (type.equals("wpa")) {
-			// wpa
-			conf.preSharedKey = "\"" + networkPass + "\"";
-		} else if (type.equals("open")) {
-			// open
-			conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
-		}
-
-		WifiManager wifiManager = (WifiManager) a.get().getSystemService(Context.WIFI_SERVICE);
-		wifiManager.addNetwork(conf);
-
-		List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
-		for (WifiConfiguration i : list) {
-			if (i.SSID != null && i.SSID.equals("\"" + networkSSID + "\"")) {
-				wifiManager.disconnect();
-				wifiManager.enableNetwork(i.networkId, true);
-				wifiManager.reconnect();
-
-				break;
-			}
-		}
-
-	}
-
-	private Object mIsWifiAPEnabled = true;
-
-	@ProtocoderScript
-	@APIMethod(description = "Enable/Disable a Wifi access point", example = "")
-	@APIParam(params = { "boolean, apName" })
-	public void wifiAP(boolean enabled, String wifiName) {
-
-        WifiManager wifi = (WifiManager) a.get().getSystemService(a.get().WIFI_SERVICE);
-        Method[] wmMethods = wifi.getClass().getDeclaredMethods();
-        Log.d(TAG, "enableMobileAP methods " + wmMethods.length);
-        for (Method method : wmMethods) {
-            Log.d(TAG, "enableMobileAP method.getName() " + method.getName());
-            if (method.getName().equals("setWifiApEnabled")) {
-                WifiConfiguration netConfig = new WifiConfiguration();
-                netConfig.SSID = wifiName;
-                netConfig.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
-                netConfig.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
-                netConfig.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
-                netConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
-
-                //
-                try {
-                    //MLog.d(TAG, "enableMobileAP try: ");
-                    method.invoke(wifi, netConfig, enabled);
-                    if (netConfig.wepKeys != null && netConfig.wepKeys.length >= 1) {
-                        Log.d(TAG, "enableMobileAP key : " + netConfig.wepKeys[0]);
-                    }
-                    //MLog.d(TAG, "enableMobileAP enabled: ");
-                    mIsWifiAPEnabled = enabled;
-                } catch (Exception e) {
-                    //MLog.e(TAG, "enableMobileAP failed: ", e);
-                }
-            }
-        }
-    }
-
-
-    // --------- RegisterServiceCB ---------//
-    public interface RegisterServiceCB {
-        void event();
-    }
-
-    @ProtocoderScript
-    @APIMethod(description = "Register a discovery service", example = "")
-    @APIParam(params = { "serviceName, serviceType, port, function(name, status)" })
-    public void registerService(String serviceName, String serviceType, int port, ServiceDiscovery.CreateCB callbackfn) {
-        ServiceDiscovery.Create rD = new ServiceDiscovery().create(appRunnerActivity.get(), serviceName, serviceType, port, callbackfn);
-        WhatIsRunning.getInstance().add(rD);
-    }
-
-    @ProtocoderScript
-    @APIMethod(description = "Discover services in the current network", example = "")
-    @APIParam(params = { "serviceType, function(name, jsonData)" })
-    public void discoverServices(final String serviceType, ServiceDiscovery.DiscoverCB callbackfn) {
-        ServiceDiscovery.Discover sD = new ServiceDiscovery().discover(appRunnerActivity.get(), serviceType, callbackfn);
-        WhatIsRunning.getInstance().add(sD);
-
-    }
-
-
-    @ProtocoderScript
-    @APIMethod(description = "Ping a Ip address", example = "")
-    @APIParam(params = { "ip", "function(result)" })
-    public ExecuteCmd ping(final String where, final ExecuteCmd.ExecuteCommandCB callbackfn) {
-//        mHandler.post(new Runnable() {
+//	public SimpleBT startBluetooth() {
+//        if (mBtStarted) {
+//            return simpleBT;
+//        }
+//		simpleBT = new SimpleBT(contextUi.get());
+//		simpleBT.start();
+//		contextUi.addBluetoothListener(new onBluetoothListener() {
+//
+//			@Override
+//			public void onDeviceFound(String name, String macAddress, float strength) {
+//			}
+//
+//			@Override
+//			public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//				simpleBT.onActivityResult(requestCode, resultCode, data);
+//
+//				switch (requestCode) {
+//				case SimpleBT.REQUEST_ENABLE_BT:
+//					// When the request to enable Bluetooth returns
+//					if (resultCode == Activity.RESULT_OK) {
+//						//MLog.d(TAG, "enabling BT");
+//						// Bluetooth is now enabled, so set up mContext Bluetooth session
+//                        mBtStarted = true;
+//						simpleBT.startBtService();
+//
+//                    // User did not enable Bluetooth or an error occurred
+//                    } else {
+//					    //	MLog.d(TAG, "BT not enabled");
+//						Toast.makeText(mContext.getApplicationContext(), "BT not enabled :(", Toast.LENGTH_SHORT)
+//								.show();
+//
+//					}
+//				}
+//			}
+//		});
+//
+//		WhatIsRunning.getInstance().add(simpleBT);
+//		return simpleBT;
+//	}
+//
+//    // --------- connectBluetooth ---------//
+//    interface connectBluetoothCB {
+//        void event(String what, String data);
+//    }
+//
+//    //TODO removed new impl needed
+//	@ProtocoderScript
+//	@APIMethod(description = "Connects to mContext bluetooth device using mContext popup", example = "")
+//	@APIParam(params = { "function(name, macAddress, strength)" })
+//	public void connectBluetoothSerialByUi(final connectBluetoothCB callbackfn) {
+//        startBluetooth();
+//        NativeArray nativeArray = getBluetoothBondedDevices();
+//        String[] arrayStrings = new String[(int) nativeArray.size()];
+//        for (int i = 0; i < nativeArray.size(); i++) {
+//            arrayStrings[i] = (String) nativeArray.get(i, null);
+//        }
+//
+//        contextUi.get().pUi.popupChoice("Connect to device", arrayStrings, new PUI.choiceDialogCB() {
 //            @Override
-//            public void run() {
-               return new ExecuteCmd("/system/bin/ping -c 8 " + where, callbackfn);
-     //       }
-     //   });
-    }
-
+//            public void event(String string) {
+//                connectBluetoothSerialByMac(string.split(" ")[1], callbackfn);
+//            }
+//        });
+//		//simpleBT.startDeviceListActivity();
+//	}
+//
+//	@ProtocoderScript
+//	@APIMethod(description = "Connect to mContext bluetooth device using the mac address", example = "")
+//	@APIParam(params = { "mac", "function(data)" })
+//	public void connectBluetoothSerialByMac(String mac, final connectBluetoothCB callbackfn) {
+//        startBluetooth();
+//        simpleBT.connectByMac(mac);
+//        addBTConnectionListener(callbackfn);
+//
+//	}
+//
+//	@ProtocoderScript
+//	@APIMethod(description = "Connect to mContext bluetooth device using mContext name", example = "")
+//	@APIParam(params = { "name, function(data)" })
+//	public void connectBluetoothSerialByName(String name, final connectBluetoothCB callbackfn) {
+//        startBluetooth();
+//		simpleBT.connectByName(name);
+//        addBTConnectionListener(callbackfn);
+//    }
+//
+//    private void addBTConnectionListener(final connectBluetoothCB callbackfn) {
+//        simpleBT.addListener(new SimpleBT.SimpleBTListener() {
+//
+//            @Override
+//            public void onRawDataReceived(byte[] buffer, int size) {
+//                //MLog.network(mContext, "Bluetooth", "1. got " + buffer.toString());
+//            }
+//
+//            @Override
+//            public void onMessageReceived(final String data) {
+//                //MLog.network(mContext, "Bluetooth", "2. got " + data);
+//
+//                if (data != "") {
+//                    mHandler.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            //MLog.d(TAG, "Got data: " + data);
+//                            callbackfn.event("data", data);
+//                        }
+//                    });
+//                }
+//            }
+//
+//            @Override
+//            public void onConnected() {
+//                callbackfn.event("connected", null);
+//            }
+//        });
+//    }
+//
+//
+//    @ProtocoderScript
+//    @APIMethod(description = "Send mContext bluetooth serial message", example = "")
+//    @APIParam(params = { "string" })
+//    public NativeArray getBluetoothBondedDevices() {
+//        startBluetooth();
+//
+//        Set<BluetoothDevice> listDevices = simpleBT.listBondedDevices();
+//        MLog.d(TAG, "listDevices " + listDevices);
+//        int listSize = listDevices.size();
+//        ProtocoderNativeArray array = new ProtocoderNativeArray(listSize);
+//        MLog.d(TAG, "array " + array);
+//
+//
+//        int counter = 0;
+//        for (BluetoothDevice b : listDevices) {
+//            MLog.d(TAG, "b " + b);
+//
+//            String s = b.getName() + " " + b.getAddress();
+//            array.addPE(counter++, s);
+//        }
+//
+//        return array;
+//    }
+//
+//	@ProtocoderScript
+//	@APIMethod(description = "Send mContext bluetooth serial message", example = "")
+//	@APIParam(params = { "string" })
+//	public void sendBluetoothSerial(String string) {
+//		if (simpleBT.isConnected()) {
+//            simpleBT.send(string);
+//        }
+//	}
+//
+//	@ProtocoderScript
+//	@APIMethod(description = "Disconnect the bluetooth", example = "")
+//	@APIParam(params = { "" })
+//	public void disconnectBluetooth() {
+//        if (simpleBT.isConnected()) {
+//            simpleBT.disconnect();
+//        }
+//	}
+//
+//	@ProtocoderScript
+//	@APIMethod(description = "Enable/Disable the bluetooth adapter", example = "")
+//	@APIParam(params = { "boolean" })
+//	public void enableBluetooth(boolean b) {
+//        if (b) {
+//            simpleBT.start();
+//        } else {
+//            simpleBT.disable();
+//        }
+//	}
+//
+//    @ProtocoderScript
+//    @APIMethod(description = "Enable/Disable the bluetooth adapter", example = "")
+//    @APIParam(params = { "boolean" })
+//    public boolean isBluetoothConnected() {
+//        return simpleBT.isConnected();
+//    }
+//
+//
+//    @ProtocoderScript
+//	@APIMethod(description = "Enable/Disable the Wifi adapter", example = "")
+//	@APIParam(params = { "boolean" })
+//	public void enableWifi(boolean enabled) {
+//		WifiManager wifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
+//		wifiManager.setWifiEnabled(enabled);
+//	}
+//
+//	@ProtocoderScript
+//	@APIMethod(description = "Check if the Wifi adapter is enabled", example = "")
+//	@APIParam(params = {})
+//	public boolean isWifiEnabled() {
+//		WifiManager wifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
+//		return wifiManager.isWifiEnabled();
+//	}
+//
+//	// http://stackoverflow.com/questions/8818290/how-to-connect-to-mContext-specific-wifi-network-in-android-programmatically
+//	@ProtocoderScript
+//	@APIMethod(description = "Connect to mContext given Wifi network with mContext given 'wpa', 'wep', 'open' type and mContext password", example = "")
+//	@APIParam(params = { "ssidName", "type", "password" })
+//	public void connectWifi(String networkSSID, String type, String networkPass) {
+//
+//		WifiConfiguration conf = new WifiConfiguration();
+//		conf.SSID = "\"" + networkSSID + "\""; // Please note the quotes. String
+//												// should contain ssid in quotes
+//
+//		if (type.equals("wep")) {
+//			// wep
+//			conf.wepKeys[0] = "\"" + networkPass + "\"";
+//			conf.wepTxKeyIndex = 0;
+//			conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+//			conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
+//		} else if (type.equals("wpa")) {
+//			// wpa
+//			conf.preSharedKey = "\"" + networkPass + "\"";
+//		} else if (type.equals("open")) {
+//			// open
+//			conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+//		}
+//
+//		WifiManager wifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
+//		wifiManager.addNetwork(conf);
+//
+//		List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
+//		for (WifiConfiguration i : list) {
+//			if (i.SSID != null && i.SSID.equals("\"" + networkSSID + "\"")) {
+//				wifiManager.disconnect();
+//				wifiManager.enableNetwork(i.networkId, true);
+//				wifiManager.reconnect();
+//
+//				break;
+//			}
+//		}
+//
+//	}
+//
+//	private Object mIsWifiAPEnabled = true;
+//
+//	@ProtocoderScript
+//	@APIMethod(description = "Enable/Disable mContext Wifi access point", example = "")
+//	@APIParam(params = { "boolean, apName" })
+//	public void wifiAP(boolean enabled, String wifiName) {
+//
+//        WifiManager wifi = (WifiManager) mContext.getSystemService(mContext.WIFI_SERVICE);
+//        Method[] wmMethods = wifi.getClass().getDeclaredMethods();
+//        Log.d(TAG, "enableMobileAP methods " + wmMethods.length);
+//        for (Method method : wmMethods) {
+//            Log.d(TAG, "enableMobileAP method.getName() " + method.getName());
+//            if (method.getName().equals("setWifiApEnabled")) {
+//                WifiConfiguration netConfig = new WifiConfiguration();
+//                netConfig.SSID = wifiName;
+//                netConfig.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
+//                netConfig.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
+//                netConfig.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
+//                netConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+//
+//                //
+//                try {
+//                    //MLog.d(TAG, "enableMobileAP try: ");
+//                    method.invoke(wifi, netConfig, enabled);
+//                    if (netConfig.wepKeys != null && netConfig.wepKeys.length >= 1) {
+//                        Log.d(TAG, "enableMobileAP key : " + netConfig.wepKeys[0]);
+//                    }
+//                    //MLog.d(TAG, "enableMobileAP enabled: ");
+//                    mIsWifiAPEnabled = enabled;
+//                } catch (Exception e) {
+//                    //MLog.e(TAG, "enableMobileAP failed: ", e);
+//                }
+//            }
+//        }
+//    }
+//
+//
+//    // --------- RegisterServiceCB ---------//
+//    public interface RegisterServiceCB {
+//        void event();
+//    }
+//
+//    @ProtocoderScript
+//    @APIMethod(description = "Register mContext discovery service", example = "")
+//    @APIParam(params = { "serviceName, serviceType, port, function(name, status)" })
+//    public void registerService(String serviceName, String serviceType, int port, ServiceDiscovery.CreateCB callbackfn) {
+//        ServiceDiscovery.Create rD = new ServiceDiscovery().create(contextUi.get(), serviceName, serviceType, port, callbackfn);
+//        WhatIsRunning.getInstance().add(rD);
+//    }
+//
+//    @ProtocoderScript
+//    @APIMethod(description = "Discover services in the current network", example = "")
+//    @APIParam(params = { "serviceType, function(name, jsonData)" })
+//    public void discoverServices(final String serviceType, ServiceDiscovery.DiscoverCB callbackfn) {
+//        ServiceDiscovery.Discover sD = new ServiceDiscovery().discover(contextUi.get(), serviceType, callbackfn);
+//        WhatIsRunning.getInstance().add(sD);
+//
+//    }
+//
+//
+//    @ProtocoderScript
+//    @APIMethod(description = "Ping mContext Ip address", example = "")
+//    @APIParam(params = { "ip", "function(result)" })
+//    public ExecuteCmd ping(final String where, final ExecuteCmd.ExecuteCommandCB callbackfn) {
+////        mHandler.post(new Runnable() {
+////            @Override
+////            public void run() {
+//               return new ExecuteCmd("/system/bin/ping -c 8 " + where, callbackfn);
+//     //       }
+//     //   });
+//    }
+//
+//
 
     public void stop() {
 

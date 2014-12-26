@@ -33,7 +33,7 @@ import android.content.Context;
 
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
-import org.protocoderrunner.apprunner.AppRunnerActivity;
+import org.protocoderrunner.apprunner.AppRunnerFragment;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 
@@ -44,11 +44,12 @@ public class PDeviceEditor extends PInterface {
 
 	}
 
+    //TODO reenable this 
 	@ProtocoderScript
 	@APIMethod(description = "Shows the console in the device app", example = "")
 	@APIParam(params = { "boolean" })
 	public void showConsole(boolean visible) {
-		((AppRunnerActivity) a.get()).showConsole(visible);
+		//((AppRunnerFragment) mContext).showConsole(visible);
 
 	}
 
@@ -56,7 +57,7 @@ public class PDeviceEditor extends PInterface {
 	@APIMethod(description = "Shows the editor in the device app", example = "")
 	@APIParam(params = { "boolean" })
 	public void show(boolean visible) {
-       //((AppRunnerActivity) a.get()).showEditor(visible);
+       //((AppRunnerActivity) mContext).showEditor(visible);
 
 
         //this.addFragment(editorFragment, EDITOR_ID, "editorFragment", true);

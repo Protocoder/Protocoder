@@ -33,6 +33,7 @@ import android.content.Context;
 
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
+import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.apprunner.api.widgets.PViewInterface;
@@ -44,9 +45,9 @@ public class PCamera extends CameraNew implements PViewInterface {
 
 
     private final PCamera cam;
-    protected Context a;
+    protected AppRunnerActivity a;
 
-	public PCamera(Context a, int camera, int color) {
+	public PCamera(AppRunnerActivity a, int camera, int color) {
 		super(a, camera, color);
         this.a = a;
         cam = this;

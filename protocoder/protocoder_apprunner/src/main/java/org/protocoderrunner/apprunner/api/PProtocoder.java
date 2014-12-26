@@ -29,7 +29,6 @@
 
 package org.protocoderrunner.apprunner.api;
 
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -49,18 +48,14 @@ import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.debug.DebugFrame;
 import org.mozilla.javascript.debug.DebuggableScript;
-import org.mozilla.javascript.debug.Debugger;
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apidoc.annotation.APIRequires;
 import org.protocoderrunner.apidoc.annotation.APIVersion;
-import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.apprunner.api.other.ApplicationInfo;
-import org.protocoderrunner.apprunner.api.other.PDeviceEditor;
 import org.protocoderrunner.apprunner.api.other.PWebEditor;
-import org.protocoderrunner.project.Project;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.MLog;
 
@@ -78,7 +73,7 @@ public class PProtocoder extends PInterface {
 
 	public String id;
 
-	public PProtocoder(Activity a) {
+	public PProtocoder(android.content.Context a) {
 		super(a);
 
 		// get org.apprunner settings
@@ -90,7 +85,7 @@ public class PProtocoder extends PInterface {
 //	@ProtocoderScript
 //	@APIMethod(description = "", example = "")
 //	public String getId() {
-//		return PrefsFragment.getId(a.get());
+//		return PrefsFragment.getId(mContext);
 //
 //	}
 
@@ -98,49 +93,49 @@ public class PProtocoder extends PInterface {
 //	@APIMethod(description = "", example = "")
 //	@APIParam(params = { "id" })
 //	public void setId(String id) {
-//		PrefsFragment.setId(a.get(), id);
+//		PrefsFragment.setId(mContext, id);
 //	}
 
-    //TODO this is a place holder
+    //TODO this is mContext place holder
    // @ProtocoderScript
     @APIMethod(description = "Returns an object to manipulate the device app webIDE", example = "")
     @APIParam(params = { })
     public PWebEditor webEditor() {
-        PWebEditor pWebEditor = new PWebEditor(a.get());
+        PWebEditor pWebEditor = new PWebEditor(mContext);
 
         return pWebEditor;
     }
 
-
+//TODO reenable this
   //  @ProtocoderScript
-    @APIMethod(description = "Returns an object to manipulate the device app", example = "")
-    @APIParam(params = { })
-    public PDeviceEditor deviceEditor() {
-        appRunnerActivity.get().initLayout();
+//    @APIMethod(description = "Returns an object to manipulate the device app", example = "")
+//    @APIParam(params = { })
+//    public PDeviceEditor deviceEditor() {
+//        contextUi.get().initLayout();
+//
+//        PDeviceEditor pEditor = new PDeviceEditor(mContext);
+//
+//        return pEditor;
+//    }
 
-        PDeviceEditor pEditor = new PDeviceEditor(a.get());
 
-        return pEditor;
-    }
+//TODO reenable this
+//    @ProtocoderScript
+//	@APIMethod(description = "Launch another script given its name and type", example = "")
+//	@APIParam(params = { "folder", "name" })
+//	@APIVersion(minLevel = "2")
+//	@APIRequires("android.permission.INTERNET")
+//	public void launchScript(String folder, String name) {
+//		Intent intent = new Intent(mContext, AppRunnerFragment.class);
+//		intent.putExtra(Project.FOLDER, name);
+//		intent.putExtra(Project.NAME, name);
+//
+//		// mContext.startActivity(intent);
+//		// String code = StrUtils.generateRandomString();
+//		contextUi.get().startActivityForResult(intent, 22);
+//	}
 
-
-
-    @ProtocoderScript
-	@APIMethod(description = "Launch another script given its name and type", example = "")
-	@APIParam(params = { "folder", "name" })
-	@APIVersion(minLevel = "2")
-	@APIRequires("android.permission.INTERNET")
-	public void launchScript(String folder, String name) {
-		Intent intent = new Intent(a.get(), AppRunnerActivity.class);
-		intent.putExtra(Project.FOLDER, name);
-		intent.putExtra(Project.NAME, name);
-
-		// a.get().startActivity(intent);
-		// String code = StrUtils.generateRandomString();
-		appRunnerActivity.get().startActivityForResult(intent, 22);
-	}
-
-    //TODO this is a place holder
+    //TODO this is mContext place holder
 	//@ProtocoderScript
 	@APIMethod(description = "", example = "")
 	@APIVersion(minLevel = "2")
@@ -148,11 +143,12 @@ public class PProtocoder extends PInterface {
 	public void returnValueToScript(String returnValue) {
 		Intent output = new Intent();
 		output.putExtra("return", returnValue);
-		appRunnerActivity.get().setResult(22, output);
-		appRunnerActivity.get().finish();
+		//contextUi.get().setResult(22, output);
+		//contextUi.get().finish();
 	}
 
 
+    //TODO this doesnt work
     @ProtocoderScript
     @APIMethod(description = "", example = "")
     public void returnResult(String data) {
@@ -161,8 +157,8 @@ public class PProtocoder extends PInterface {
         conData.putString("param_result", data);
         Intent intent = new Intent();
         intent.putExtras(conData);
-        appRunnerActivity.get().setResult(appRunnerActivity.get().RESULT_OK, intent);
-        appRunnerActivity.get().finish();
+       // contextUi.get().setResult(contextUi.get().RESULT_OK, intent);
+       // contextUi.get().finish();
 
     }
 
@@ -171,32 +167,34 @@ public class PProtocoder extends PInterface {
         void data(String debuggableScript);
     }
 
-	@ProtocoderScript
-	@APIMethod(description = "Add a debugger to the execution", example = "")
-	@APIVersion(minLevel = "2")
-	@APIRequires("android.permission.INTERNET")
-	public void addDebugger(final AddDebuggerCB cb) {
-
-        Debugger debugger = new Debugger() {
-            @Override
-            public void handleCompilationDone(Context context, DebuggableScript debuggableScript, String s) {
-                //cb.data("qq");
-                MLog.network(a.get(), TAG, "" + debuggableScript.getFunctionName());
-            }
-
-            @Override
-            public DebugFrame getFrame(Context context, DebuggableScript debuggableScript) {
-                //cb.data("qq");
-                MLog.network(a.get(), TAG, "" + debuggableScript.getFunctionName());
-
-                return new MyDebugFrame(debuggableScript);
-            }
-        };
-
-        appRunnerActivity.get().interp.addDebugger(debugger);
-
-
-    }
+//reenable this
+//
+//	@ProtocoderScript
+//	@APIMethod(description = "Add mContext debugger to the execution", example = "")
+//	@APIVersion(minLevel = "2")
+//	@APIRequires("android.permission.INTERNET")
+//	public void addDebugger(final AddDebuggerCB cb) {
+//
+//        Debugger debugger = new Debugger() {
+//            @Override
+//            public void handleCompilationDone(Context context, DebuggableScript debuggableScript, String s) {
+//                //cb.data("qq");
+//                MLog.network(mContext, TAG, "" + debuggableScript.getFunctionName());
+//            }
+//
+//            @Override
+//            public DebugFrame getFrame(Context context, DebuggableScript debuggableScript) {
+//                //cb.data("qq");
+//                MLog.network(mContext, TAG, "" + debuggableScript.getFunctionName());
+//
+//                return new MyDebugFrame(debuggableScript);
+//            }
+//        };
+//
+//        contextUi.get().interp.addDebugger(debugger);
+//
+//
+//    }
 
     class MyDebugFrame implements DebugFrame {
         private final DebuggableScript debuggableScript;
@@ -207,7 +205,7 @@ public class PProtocoder extends PInterface {
 
         public void onEnter(Context cx, Scriptable activation,
                             Scriptable thisObj, Object[] args) {
-            MLog.network(a.get(), TAG, "" + "Frame entered");
+            MLog.network(mContext, TAG, "" + "Frame entered");
 
         }
 
@@ -216,7 +214,7 @@ public class PProtocoder extends PInterface {
 
         public void onExit(Context cx, boolean byThrow,
                            Object resultOrException) {
-            MLog.network(a.get(), TAG, "" + "Frame exit, result="+resultOrException);
+            MLog.network(mContext, TAG, "" + "Frame exit, result="+resultOrException);
 
         }
 
@@ -227,7 +225,7 @@ public class PProtocoder extends PInterface {
 
         public void onLineChange(Context cx, int lineNumber) {
             if (isBreakpoint(lineNumber)) {
-                MLog.network(a.get(), TAG, "" + "Breakpoint hit: "+debuggableScript.getSourceName()+":"+lineNumber);
+                MLog.network(mContext, TAG, "" + "Breakpoint hit: "+debuggableScript.getSourceName()+":"+lineNumber);
             }
         }
 
@@ -243,7 +241,7 @@ public class PProtocoder extends PInterface {
 	public String getVersionName() {
 		PackageInfo pInfo = null;
 		try {
-			pInfo = a.get().getPackageManager().getPackageInfo(a.get().getPackageName(), 0);
+			pInfo = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0);
 		} catch (NameNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -255,7 +253,7 @@ public class PProtocoder extends PInterface {
 	public int getVersionCode() {
 		PackageInfo pInfo = null;
 		try {
-			pInfo = a.get().getPackageManager().getPackageInfo(a.get().getPackageName(), 0);
+			pInfo = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0);
 		} catch (NameNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -274,7 +272,7 @@ public class PProtocoder extends PInterface {
         intent.putExtra("autoInstall", b);
        // intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        a.get().startActivity(intent);
+        mContext.startActivity(intent);
     }
 
 
@@ -291,7 +289,7 @@ public class PProtocoder extends PInterface {
 			return;
 		}
 
-		PackageManager manager = a.get().getPackageManager();
+		PackageManager manager = mContext.getPackageManager();
 
 		Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
 		mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);

@@ -72,7 +72,7 @@ public class ProjectItem extends LinearLayout {
     private final ProjectListFragment mPlf;
     private WeakReference<View> v;
 	// private Context c;
-	private final WeakReference<Context> c;
+	private final Context c;
 	private String t;
     private boolean highlighted = false;
     private Project mProject;
@@ -81,7 +81,7 @@ public class ProjectItem extends LinearLayout {
 
     public ProjectItem(Context context, ProjectListFragment plf, boolean listMode) {
 		super(context);
-		this.c = new WeakReference<Context>(context);
+		this.c = context;
         this.mPlf = plf;
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -182,14 +182,14 @@ public class ProjectItem extends LinearLayout {
 		int x2 = 20;
 		int y2 = 20;
 
-		// Create a new image bitmap and attach a brand new canvas to it
+		// Create mContext new image bitmap and attach mContext brand new canvas to it
 		Bitmap tempBitmap = Bitmap.createBitmap(myBitmap.getWidth(), myBitmap.getHeight(), Bitmap.Config.RGB_565);
 		Canvas tempCanvas = new Canvas(tempBitmap);
 
 		// Draw the image bitmap into the cavas
 		tempCanvas.drawBitmap(myBitmap, 0, 0, null);
 
-		// Draw everything else you want into the canvas, in this example a
+		// Draw everything else you want into the canvas, in this example mContext
 		// rectangle with rounded edges
 		tempCanvas.drawRoundRect(new RectF(x1, y1, x2, y2), 2, 2, myPaint);
 		tempCanvas.drawText(t2.substring(0, 1).toUpperCase(), x1, y1, myPaint);
@@ -208,7 +208,7 @@ public class ProjectItem extends LinearLayout {
             @Override
             public void onClick(View v) {
                 MLog.d(TAG, "clicked");
-                PopupMenu myPopup = new PopupMenu(c.get(), imageView);
+                PopupMenu myPopup = new PopupMenu(c, imageView);
                 myPopup.inflate(R.menu.project_list);
                 myPopup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
@@ -217,13 +217,13 @@ public class ProjectItem extends LinearLayout {
                         int itemId = menuItem.getItemId();
 
                         if (itemId == R.id.menu_project_list_run) {
-                            Protocoder.getInstance(c.get()).protoScripts.run(mProject.getFolder(), mProject.getName());
+                            Protocoder.getInstance(c).protoScripts.run(mProject.getFolder(), mProject.getName());
                             return true;
                         } else if (itemId == R.id.menu_project_list_edit) {
-                            Protocoder.getInstance(c.get()).app.editor.show(true, mProject.getFolder(), mProject.getName());
+                            Protocoder.getInstance(c).app.editor.show(true, mProject.getFolder(), mProject.getName());
                             return true;
                         } else if (itemId == R.id.menu_project_list_delete) {
-                            Protocoder.getInstance(c.get()).protoScripts.delete(mProject.getFolder(), mProject.getName());
+                            Protocoder.getInstance(c).protoScripts.delete(mProject.getFolder(), mProject.getName());
 
                             DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                                 @Override
@@ -239,18 +239,18 @@ public class ProjectItem extends LinearLayout {
                                     }
                                 }
                             };
-                            AlertDialog.Builder builder = new AlertDialog.Builder(c.get());
+                            AlertDialog.Builder builder = new AlertDialog.Builder(c);
                             builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
                                     .setNegativeButton("No", dialogClickListener).show();
                             return true;
                         } else if (itemId == R.id.menu_project_list_add_shortcut) {
-                            Protocoder.getInstance(c.get()).protoScripts.addShortcut(mProject.getFolder(), mProject.getName());
+                            Protocoder.getInstance(c).protoScripts.addShortcut(mProject.getFolder(), mProject.getName());
                             return true;
                         } else if (itemId == R.id.menu_project_list_share_with) {
-                            Protocoder.getInstance(c.get()).protoScripts.shareMainJsDialog(mProject.getFolder(), mProject.getName());
+                            Protocoder.getInstance(c).protoScripts.shareMainJsDialog(mProject.getFolder(), mProject.getName());
                             return true;
                         } else if (itemId == R.id.menu_project_list_share_proto_file) {
-                            Protocoder.getInstance(c.get()).protoScripts.shareProtoFileDialog(mProject.getFolder(), mProject.getName());
+                            Protocoder.getInstance(c).protoScripts.shareProtoFileDialog(mProject.getFolder(), mProject.getName());
                             return true;
                         } else {
                             return false;

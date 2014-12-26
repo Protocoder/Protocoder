@@ -33,33 +33,37 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
-import java.lang.ref.WeakReference;
-
 public class PInterface {
 
     public Handler mHandler = new Handler(Looper.getMainLooper());
 
 	protected String TAG = getClass().getSimpleName();
 
-	public WeakReference<Context> a;
-	public WeakReference<AppRunnerActivity> appRunnerActivity;
+	public Context mContext;
+	public AppRunnerFragment contextUi;
+    public AppRunnerFragment mFragment;
+    public AppRunnerActivity mActivity;
 
-	public PInterface(Context appActivity) {
+    public PInterface(Context context) {
 		super();
-		this.a = new WeakReference<Context>(appActivity);
+		this.mContext = context.getApplicationContext();
 
-        try {
-            this.appRunnerActivity = new WeakReference<AppRunnerActivity>((AppRunnerActivity) appActivity);
-        }catch (Exception e) {
+      //  try {
+       //     this.contextUi = appActivity;
+       // }catch (Exception e) {
 
-        }
+       // }
     }
 
 	// public <T> void callback(String fn, T... args) {
-	// a.get().interp.callback(fn, args);
+	// mContext.interp.callback(fn, args);
 	// }
 
 	public void destroy() {
 	}
 
+    public void initForParentFragment(AppRunnerFragment fragment) {
+        this.mFragment = fragment;
+        this.mActivity = (AppRunnerActivity)(mFragment.getActivity());
+    }
 }

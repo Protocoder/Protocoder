@@ -68,6 +68,7 @@ import org.protocoderrunner.base.BaseFragment;
 import org.protocoderrunner.events.Events.ProjectEvent;
 import org.protocoderrunner.project.Project;
 import org.protocoderrunner.project.ProjectManager;
+import org.protocoderrunner.utils.AndroidUtils;
 import org.protocoderrunner.utils.MLog;
 
 import java.util.ArrayList;
@@ -261,7 +262,7 @@ public class ProjectListFragment extends BaseFragment {
 	public void onResume() {
 		super.onResume();
 
-        if(!((MainActivity)getActivity()).isWear()) {
+        if(!AndroidUtils.isWear(getActivity())) {
             ((MainActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         }
 	}

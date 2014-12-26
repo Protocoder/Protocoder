@@ -30,9 +30,6 @@
 package org.protocoderrunner.apprunner.api.dashboard;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Base64;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,7 +39,6 @@ import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.network.CustomWebsocketServer;
 import org.protocoderrunner.utils.StrUtils;
 
-import java.io.ByteArrayOutputStream;
 import java.net.UnknownHostException;
 
 public class PDashboardVideoCamera extends PInterface {
@@ -51,7 +47,7 @@ public class PDashboardVideoCamera extends PInterface {
 	String id;
 
 
-    //TODO this is just a scaffold needs to be implemented
+    //TODO this is just mContext scaffold needs to be implemented
 	public PDashboardVideoCamera(Context a) {
 		super(a);
 	}
@@ -74,7 +70,7 @@ public class PDashboardVideoCamera extends PInterface {
                 .put("action", "add")
                 .put("values", values);
 
-		CustomWebsocketServer.getInstance(a.get()).send(msg);
+		CustomWebsocketServer.getInstance(mContext).send(msg);
 
 	}
 
@@ -91,6 +87,6 @@ public class PDashboardVideoCamera extends PInterface {
                 .put("action", "updateCamera")
                 .put("values", values);
 
-		CustomWebsocketServer.getInstance(a.get()).send(msg);
+		CustomWebsocketServer.getInstance(mContext).send(msg);
 	}
 }

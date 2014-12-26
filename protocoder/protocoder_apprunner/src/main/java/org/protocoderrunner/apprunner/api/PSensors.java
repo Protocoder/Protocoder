@@ -29,12 +29,12 @@
 
 package org.protocoderrunner.apprunner.api;
 
+import android.content.Context;
 import android.hardware.SensorManager;
 import android.location.Location;
 
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
-import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.sensors.AccelerometerManager;
@@ -76,17 +76,18 @@ public class PSensors extends PInterface {
 	private StepManager.StepListener stepListener;
 	private int sensorsSpeed;
 
-	public PSensors(AppRunnerActivity mwmActivity) {
-		super(mwmActivity);
+	public PSensors(Context context) {
+		super(context);
 
 		sensorsSpeed = SensorManager.SENSOR_DELAY_FASTEST;
 
-		appRunnerActivity.get().addNFCReadListener(new onNFCListener() {
-			@Override
-			public void onNewTag(String id, String data) {
-				onNFCfn.event(id, data);
-			}
-		});
+        //TODO reenable this
+		//contextUi.get().addNFCReadListener(new onNFCListener() {
+		//	@Override
+		//	public void onNewTag(String id, String data) {
+		//		onNFCfn.event(id, data);
+		//	}
+		//});
 
 	}
 
@@ -114,7 +115,7 @@ public class PSensors extends PInterface {
 	@APIParam(params = { "function(x, y, z)" })
 	public void startAccelerometer(final startAccelerometerCB callbackfn) {
 		if (!accelerometerStarted) {
-			accelerometerManager = new AccelerometerManager(a.get());
+			accelerometerManager = new AccelerometerManager(mContext);
 			accelerometerListener = new AccelerometerManager.AccelerometerListener() {
 
 				@Override
@@ -158,7 +159,7 @@ public class PSensors extends PInterface {
 	@APIParam(params = { "function(x, y, z)" })
 	public void startGyroscope(final startGyroscopeCB callbackfn) {
 		if (!gyroscopeStarted) {
-			gyroscopeManager = new GyroscopeManager(a.get());
+			gyroscopeManager = new GyroscopeManager(mContext);
 			gyroscopeListener = new GyroscopeManager.GyroscopeListener() {
 
 				@Override
@@ -197,7 +198,7 @@ public class PSensors extends PInterface {
 
 		if (!gpsStarted) {
 
-			gpsManager = new GPSManager(a.get());
+			gpsManager = new GPSManager(mContext);
 			gpsListener = new GPSManager.GPSListener() {
 
 				@Override
@@ -269,68 +270,69 @@ public class PSensors extends PInterface {
 		void event(String id, String responseString);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Gives back data when a NFC tag is approached", example = "")
-	@APIParam(params = { "function(id, data)" })
-	public void onNFC(final onNFCCB fn) {
-		appRunnerActivity.get().initializeNFC();
-
-		onNFCfn = fn;
-	}
-
-	// --------- nfc ---------//
-	interface writeNFCCB {
-		void event(boolean b);
-	}
-
-	@ProtocoderScript
-	@APIMethod(description = "Write into a NFC tag the given text", example = "")
-	@APIParam(params = { "function()" })
-	public void writeNFC(String data, final writeNFCCB fn) {
-		NFCUtil.nfcMsg = data;
-		appRunnerActivity.get().initializeNFC();
-
-		appRunnerActivity.get().addNFCWrittenListener(new onNFCWrittenListener() {
-
-			@Override
-			public void onNewTag() {
-				fn.event(true);
-			}
-		});
-
-		// Construct the data to write to the tag
-		// Should be of the form [relay/group]-[rid/gid]-[cmd]
-		// String nfcMessage = data;
-
-		// When an NFC tag comes into range, call the main activity which
-		// handles writing the data to the tag
-		// NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(a.get());
-
-		// Intent nfcIntent = new Intent(a.get(),
-		// AppRunnerActivity.class).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-		// nfcIntent.putExtra("nfcMessage", nfcMessage);
-		// PendingIntent pi = PendingIntent.getActivity(a.get(), 0, nfcIntent,
-		// PendingIntent.FLAG_UPDATE_CURRENT);
-		// IntentFilter tagDetected = new
-		// IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
-
-		// nfcAdapter.enableForegroundDispatch((Activity) a.get(), pi, new
-		// IntentFilter[] {tagDetected}, null);
-	}
-
-	public interface onNFCWrittenListener {
-		public void onNewTag();
-	}
-
-	public interface onNFCListener {
-		public void onNewTag(String id, String nfcMessage);
-	}
-
+//reenable this
+//	@ProtocoderScript
+//	@APIMethod(description = "Gives back data when mContext NFC tag is approached", example = "")
+//	@APIParam(params = { "function(id, data)" })
+//	public void onNFC(final onNFCCB fn) {
+//		contextUi.get().initializeNFC();
+//
+//		onNFCfn = fn;
+//	}
+//
+//	// --------- nfc ---------//
+//	interface writeNFCCB {
+//		void event(boolean b);
+//	}
+//
+//	@ProtocoderScript
+//	@APIMethod(description = "Write into mContext NFC tag the given text", example = "")
+//	@APIParam(params = { "function()" })
+//	public void writeNFC(String data, final writeNFCCB fn) {
+//		NFCUtil.nfcMsg = data;
+//		contextUi.get().initializeNFC();
+//
+//		contextUi.get().addNFCWrittenListener(new onNFCWrittenListener() {
+//
+//			@Override
+//			public void onNewTag() {
+//				fn.event(true);
+//			}
+//		});
+//
+//		// Construct the data to write to the tag
+//		// Should be of the form [relay/group]-[rid/gid]-[cmd]
+//		// String nfcMessage = data;
+//
+//		// When an NFC tag comes into range, call the main activity which
+//		// handles writing the data to the tag
+//		// NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(mContext);
+//
+//		// Intent nfcIntent = new Intent(mContext,
+//		// AppRunnerActivity.class).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//		// nfcIntent.putExtra("nfcMessage", nfcMessage);
+//		// PendingIntent pi = PendingIntent.getActivity(mContext, 0, nfcIntent,
+//		// PendingIntent.FLAG_UPDATE_CURRENT);
+//		// IntentFilter tagDetected = new
+//		// IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
+//
+//		// nfcAdapter.enableForegroundDispatch((Activity) mContext, pi, new
+//		// IntentFilter[] {tagDetected}, null);
+//	}
+//
+//	public interface onNFCWrittenListener {
+//		public void onNewTag();
+//	}
+//
+//	public interface onNFCListener {
+//		public void onNewTag(String id, String nfcMessage);
+//	}
+//
 //	@ProtocoderScript
 //	@APIMethod(description = "", example = "")
 //	@APIParam(params = { "function(msg)" })
 //	public void nfcWrite(final onNFCCB fn) {
-//		a.get().initializeNFC();
+//		mContext.initializeNFC();
 //
 //		onNFCfn = fn;
 //	}
@@ -344,7 +346,7 @@ public class PSensors extends PInterface {
 	@APIMethod(description = "Start the orientation sensor. Returns pitch, roll, yaw", example = "")
 	@APIParam(params = { "function(pitch, roll, yaw)" })
 	public void startOrientation(final startOrientationCB callbackfn) {
-		orientationManager = new OrientationManager(a.get());
+		orientationManager = new OrientationManager(mContext);
 
 		orientationListener = new OrientationManager.OrientationListener() {
 
@@ -356,7 +358,6 @@ public class PSensors extends PInterface {
 		orientationManager.addListener(orientationListener);
 		orientationManager.start(sensorsSpeed);
 		WhatIsRunning.getInstance().add(orientationManager);
-
 	}
 
 	@ProtocoderScript
@@ -376,7 +377,7 @@ public class PSensors extends PInterface {
 	@APIMethod(description = "Start the light sensor. Returns the intensity. The value per device might vary", example = "")
 	@APIParam(params = { "function(intensity)" })
 	public void startLightIntensity(final startLightIntensityCB callbackfn) {
-		lightManager = new LightManager(a.get());
+		lightManager = new LightManager(mContext);
 
 		lightListener = new LightManager.LightListener() {
 
@@ -408,7 +409,7 @@ public class PSensors extends PInterface {
 	@APIMethod(description = "Start the proximity sensor. Returns a proximty value. It might differ per device", example = "")
 	@APIParam(params = { "function(proximity)" })
 	public void startProximity(final startProximityCB callbackfn) {
-		proximityManager = new ProximityManager(a.get());
+		proximityManager = new ProximityManager(mContext);
 
 		proximityListener = new ProximityManager.ProximityListener() {
 
@@ -421,7 +422,6 @@ public class PSensors extends PInterface {
 		proximityManager.addListener(proximityListener);
 		proximityManager.start(sensorsSpeed);
 		WhatIsRunning.getInstance().add(proximityManager);
-
 	}
 
 	@ProtocoderScript
@@ -440,7 +440,7 @@ public class PSensors extends PInterface {
 	@APIMethod(description = "Start the magnetic sensor", example = "")
 	@APIParam(params = { "function(value)" })
 	public void startMagnetic(final startMagneticCB callbackfn) {
-		magneticManager = new MagneticManager(a.get());
+		magneticManager = new MagneticManager(mContext);
 
 		magneticListener = new MagneticManager.MagneticListener() {
 
@@ -453,7 +453,6 @@ public class PSensors extends PInterface {
 		magneticManager.addListener(magneticListener);
 		magneticManager.start(sensorsSpeed);
 		WhatIsRunning.getInstance().add(magneticManager);
-
 	}
 
 	@ProtocoderScript
@@ -472,7 +471,7 @@ public class PSensors extends PInterface {
 	@APIMethod(description = "Start the barometer", example = "")
 	@APIParam(params = { "function(value)" })
 	public void startBarometer(final startBarometerCB callbackfn) {
-		pressureManager = new PressureManager(a.get());
+		pressureManager = new PressureManager(mContext);
 
 		pressureListener = new PressureManager.PressureListener() {
 
@@ -485,7 +484,6 @@ public class PSensors extends PInterface {
 		pressureManager.addListener(pressureListener);
 		pressureManager.start(sensorsSpeed);
 		WhatIsRunning.getInstance().add(pressureManager);
-
 	}
 
 	@ProtocoderScript
@@ -504,7 +502,7 @@ public class PSensors extends PInterface {
 	@APIMethod(description = "Start the step counter. Not superacurate and only few devices", example = "")
 	@APIParam(params = { "function(value)" })
 	public void startStepCounter(final startStepCounterCB callbackfn) {
-		stepManager = new StepManager(a.get());
+		stepManager = new StepManager(mContext);
 
 		stepListener = new StepManager.StepListener() {
 

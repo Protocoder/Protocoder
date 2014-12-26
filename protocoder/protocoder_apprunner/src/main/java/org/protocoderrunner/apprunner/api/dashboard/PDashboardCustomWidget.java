@@ -72,8 +72,8 @@ public class PDashboardCustomWidget extends PInterface {
                 .put("action", "add")
                 .put("values", values);
 
-		CustomWebsocketServer.getInstance(a.get()).send(msg);
-		CustomWebsocketServer.getInstance(a.get()).addListener(id, new WebSocketListener() {
+		CustomWebsocketServer.getInstance(mContext).send(msg);
+		CustomWebsocketServer.getInstance(mContext).addListener(id, new WebSocketListener() {
 
 			@Override
 			public void onUpdated(final JSONObject jsonObject) {
@@ -101,6 +101,6 @@ public class PDashboardCustomWidget extends PInterface {
                 .put("action", "send")
                 .put("values", values);
 
-		CustomWebsocketServer.getInstance(a.get()).send(msg);
+		CustomWebsocketServer.getInstance(mContext).send(msg);
 	}
 }

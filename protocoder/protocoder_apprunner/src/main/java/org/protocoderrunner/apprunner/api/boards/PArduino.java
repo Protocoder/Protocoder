@@ -94,7 +94,7 @@ public class PArduino extends PInterface {
 
     public void start() {
         WhatIsRunning.getInstance().add(this);
-        mPhysicaloid = new Physicaloid(a.get());
+        mPhysicaloid = new Physicaloid(mContext);
         open();
     }
 
@@ -105,7 +105,7 @@ public class PArduino extends PInterface {
             started = true;
             MLog.d("PArduino", "start ");
 
-            mPhysicaloid = new Physicaloid(a.get());
+            mPhysicaloid = new Physicaloid(mContext);
             open();
             mPhysicaloid.setBaudrate(bauds);
 
@@ -113,7 +113,7 @@ public class PArduino extends PInterface {
         }
 	}
 
-    // Opens a device and communicate USB UART by default settings
+    // Opens mContext device and communicate USB UART by default settings
     public void open() {
         if (mPhysicaloid.isOpened()) {
             MLog.d(TAG, "The device is opened");
@@ -128,7 +128,7 @@ public class PArduino extends PInterface {
 
     }
 
-    // Closes a device
+    // Closes mContext device
     public void close() {
         if (mPhysicaloid.close()) {
             //  clear read callback
@@ -200,17 +200,17 @@ public class PArduino extends PInterface {
                     }
 
                     msg = msg + readStr;
-                    //MLog.network(a.get(), TAG, "msg " + msg);
-                    //MLog.network(a.get(), TAG, "readStr " + readStr);
+                    //MLog.network(mContext, TAG, "msg " + msg);
+                    //MLog.network(mContext, TAG, "readStr " + readStr);
 
                     int newLineIndex = msg.indexOf('\n');
-                    //MLog.network(a.get(), TAG, "index " + newLineIndex);
+                    //MLog.network(mContext, TAG, "index " + newLineIndex);
                     String msgReturn = "";
 
                     if (newLineIndex != -1) {
                         msgReturn = msg.substring(0, newLineIndex);
                         msg = msg.substring(newLineIndex + 1, msg.length());
-                        //MLog.network(a.get(), TAG, "msgReturn " + msgReturn);
+                        //MLog.network(mContext, TAG, "msgReturn " + msgReturn);
 
                     }
                     if (msgReturn.trim().equals("") == false) {
@@ -232,9 +232,9 @@ public class PArduino extends PInterface {
         void event(int progress);
     }
 
-    // Uploads a binary file to a device on background process. No need to open().
+    // Uploads mContext binary file to mContext device on background process. No need to open().
     // * @param board board profile e.g. Packages.com.physicaloid.lib.Boards.ARDUINO_UNO
-    // * @param fileName a binary file name e.g. Blink.hex
+    // * @param fileName mContext binary file name e.g. Blink.hex
     // * @param callbackfn callback when the upload has been completed (success, fail or error)
     //
     @ProtocoderScript
@@ -269,7 +269,7 @@ public class PArduino extends PInterface {
 
                     @Override
                     public void onPostUpload(boolean success) {
-                        //MLog.network(a.get(), TAG, "5");
+                        //MLog.network(mContext, TAG, "5");
 
                         if(success) {
                        //     uploadCallbackEvent(100, callbackfn);

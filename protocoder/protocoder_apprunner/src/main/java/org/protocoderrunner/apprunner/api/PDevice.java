@@ -29,7 +29,6 @@
 
 package org.protocoderrunner.apprunner.api;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -49,24 +48,18 @@ import com.google.gson.Gson;
 
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
-import org.protocoderrunner.apprunner.AppRunnerActivity;
+import org.protocoderrunner.apprunner.AppRunnerFragment;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.sensors.WhatIsRunning;
+import org.protocoderrunner.utils.AndroidUtils;
 import org.protocoderrunner.utils.Intents;
-import org.protocoderrunner.utils.MLog;
 
 public class PDevice extends PInterface {
 
-    //key pressed callback
-    private OnKeyDownCB mOnKeyDownfn;
-    private OnKeyUpCB mOnKeyUpfn;
+    private BroadcastReceiver batteryReceiver;
 
-
-	private BroadcastReceiver batteryReceiver;
-    private boolean keyInit = false;
-
-    public PDevice(Activity a) {
+    public PDevice(Context a) {
 		super(a);
 		WhatIsRunning.getInstance().add(this);
 
@@ -76,7 +69,7 @@ public class PDevice extends PInterface {
 	@APIMethod(description = "makes the phone vibrate", example = "android.vibrate(500);")
 	@APIParam(params = { "duration" })
 	public void vibrate(int duration) {
-		Vibrator v = (Vibrator) a.get().getSystemService(Context.VIBRATOR_SERVICE);
+		Vibrator v = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
 		v.vibrate(duration);
 	}
 
@@ -88,7 +81,7 @@ public class PDevice extends PInterface {
 		sm.sendTextMessage(number, null, msg, null, null);
 	}
 
-	// --------- onSmsReceived ---------//
+    // --------- onSmsReceived ---------//
 	interface onSmsReceivedCB {
 		void event(String number, String responseString);
 	}
@@ -97,8 +90,7 @@ public class PDevice extends PInterface {
 	@APIMethod(description = "Gives back the number and sms of the sender", example = "")
 	@APIParam(params = { "function(number, message)" })
 	public void onSmsReceived(final onSmsReceivedCB fn) {
-
-        appRunnerActivity.get().addOnSmsReceivedListener(new onSmsReceivedListener() {
+        mActivity.addOnSmsReceivedListener(new onSmsReceivedListener() {
 
             @Override
             public void onSmsReceived(String number, String msg) {
@@ -111,59 +103,59 @@ public class PDevice extends PInterface {
 	@APIMethod(description = "Set brightness", example = "")
 	@APIParam(params = { "brightness" })
 	public void setBrightness(float val) {
-		appRunnerActivity.get().setBrightness(val);
+		mActivity.setBrightness(val);
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Set the global brightness from 0 to 255", example = "")
     @APIParam(params = { "brightness" })
     public void setGlobalBrightness(int b) {
-		appRunnerActivity.get().setGlobalBrightness(b);
+		AndroidUtils.setGlobalBrightness(mContext, b);
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Get the current brightness", example = "")
 	public float getBrightness() {
-		return appRunnerActivity.get().getCurrentBrightness();
+		return mActivity.getCurrentBrightness();
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Set the screen always on", example = "")
     @APIParam(params = { "boolean" })
     public void setScreenAlwaysOn(boolean b) {
-		appRunnerActivity.get().setScreenAlwaysOn(b);
+		mActivity.setScreenAlwaysOn(b);
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Check if the scrren is on", example = "")
 	public boolean isScreenOn() {
-		return appRunnerActivity.get().isScreenOn();
+		return AndroidUtils.isScreenOn(mContext);
 	}
 
 	// @ProtocoderScript
 	// @APIMethod(description = "", example = "")
-	public void goToSleep() {
-		appRunnerActivity.get().goToSleep();
-	}
+	//public void goToSleep() {
+	//	AndroidUtils.goToSleep(mContext);
+	//}
 
 	@ProtocoderScript
 	@APIMethod(description = "Set the screen timeout", example = "")
     @APIParam(params = { "time" })
     public void setScreenTimeout(int time) {
-		appRunnerActivity.get().setScreenTimeout(time);
+		AndroidUtils.setScreenTimeout(mContext, time);
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Check if is in airplane mode", example = "")
 	public boolean isAirplaneMode() {
-		return appRunnerActivity.get().isAirplaneMode();
+		return AndroidUtils.isAirplaneMode(mContext);
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Check what type of device is", example = "")
     @APIParam(params = { "" })
     public String getType() {
-        if (appRunnerActivity.get().isTablet()) {
+        if (AndroidUtils.isTablet(mContext)) {
             return "tablet";
         } else {
             return "phone";
@@ -174,7 +166,7 @@ public class PDevice extends PInterface {
 	@APIMethod(description = "Prevent the device suspend at any time. Good for long living operations.", example = "")
     @APIParam(params = { "boolean" })
     public void setWakeLock(boolean b) {
-		appRunnerActivity.get().setWakeLock(b);
+		AndroidUtils.setWakeLock(mContext, b);
 	}
 
 	@ProtocoderScript
@@ -182,48 +174,48 @@ public class PDevice extends PInterface {
 	@APIParam(params = { "intent" })
 	public void launchIntent(String intent) {
 		Intent market_intent = new Intent(intent);
-		a.get().startActivity(market_intent);
+		mContext.startActivity(market_intent);
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Open the default e-mail app", example = "")
 	@APIParam(params = { "recipient", "subject", "message" })
 	public void openEmailApp(String recipient, String subject, String msg) {
-		Intents.sendEmail(a.get(), recipient, subject, msg);
+		Intents.sendEmail(mContext, recipient, subject, msg);
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Open the default Map app", example = "")
 	@APIParam(params = { "longitude", "latitude" })
 	public void openMapApp(double longitude, double latitude) {
-		Intents.openMap(a.get(), longitude, latitude);
+		Intents.openMap(mContext, longitude, latitude);
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Open the phone dial", example = "")
 	public void openDial() {
-		Intents.openDial(a.get());
+		Intents.openDial(mContext);
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Call a given phone number", example = "")
 	@APIParam(params = { "number" })
 	public void call(String number) {
-		Intents.call(a.get(), number);
+		Intents.call(mContext, number);
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Open the default web browser with a given Url", example = "")
 	@APIParam(params = { "url" })
 	public void openWebApp(String url) {
-		Intents.openWeb(a.get(), url);
+		Intents.openWeb(mContext, url);
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Open the search app with the given text", example = "")
 	@APIParam(params = { "text" })
 	public void openWebSearch(String text) {
-		Intents.webSearch(a.get(), text);
+		Intents.webSearch(mContext, text);
 	}
 
 	// --------- battery ---------//
@@ -241,7 +233,7 @@ public class PDevice extends PInterface {
     @APIMethod(description = "Copy the content into the clipboard", example = "")
     @APIParam(params = { "label", "text" })
 	public void setClipboard(String label, String text) {
-		ClipboardManager clipboard = (ClipboardManager) a.get().getSystemService(Context.CLIPBOARD_SERVICE);
+		ClipboardManager clipboard = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
 		clipboard.setPrimaryClip(ClipData.newPlainText(label, text));
 	}
 
@@ -249,7 +241,7 @@ public class PDevice extends PInterface {
     @APIMethod(description = "Get the content from the clipboard", example = "")
     @APIParam(params = { "label", "text" })
 	public String getClipboard(String label, String text) {
-		ClipboardManager clipboard = (ClipboardManager) a.get().getSystemService(Context.CLIPBOARD_SERVICE);
+		ClipboardManager clipboard = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
 		return clipboard.getPrimaryClip().getItemAt(clipboard.getPrimaryClip().getItemCount()).getText().toString();
 	}
 
@@ -299,14 +291,14 @@ public class PDevice extends PInterface {
 		};
 
 		IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-		a.get().registerReceiver(batteryReceiver, filter);
+		mContext.registerReceiver(batteryReceiver, filter);
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Get the device battery level", example = "")
 	@APIParam(params = { "" })
 	public float getBatteryLevel() {
-		Intent batteryIntent = a.get().registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+		Intent batteryIntent = mContext.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
 		int level = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
 		int scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
 
@@ -317,78 +309,6 @@ public class PDevice extends PInterface {
 
 		return ((float) level / (float) scale) * 100.0f;
 	}
-
-
-    // --------- onKeyDown ---------//
-    interface OnKeyDownCB {
-        void event(int eventType);
-    }
-
-    public void keyInit() {
-        keyInit = true;
-        (appRunnerActivity.get()).addOnKeyListener(new onKeyListener() {
-
-            @Override
-            public void onKeyUp(int keyCode) {
-                if (mOnKeyUpfn != null) {
-                    mOnKeyUpfn.event(keyCode);
-                }
-            }
-
-            @Override
-            public void onKeyDown(int keyCode) {
-                if (mOnKeyDownfn != null) {
-                    mOnKeyDownfn.event(keyCode);
-                }
-            }
-        });
-    }
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "function(keyNumber)" })
-    public void onKeyDown(final OnKeyDownCB fn) {
-        if (!keyInit) {
-            keyInit();
-        }
-
-        mOnKeyDownfn = fn;
-    }
-
-    // --------- onKeyUp ---------//
-    interface OnKeyUpCB {
-        void event(int eventType);
-    }
-
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "function(keyNumber)" })
-    public void onKeyUp(final OnKeyUpCB fn) {
-        if (!keyInit) {
-            keyInit();
-        }
-
-        mOnKeyUpfn = fn;
-    }
-
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "boolean" })
-    public void enableVolumeKeys(boolean b) {
-        appRunnerActivity.get().keyVolumeEnabled = b;
-    }
-
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "boolean" })
-    public void enableBackKey(boolean b) {
-        appRunnerActivity.get().keyBackEnabled = b;
-    }
-
-    public interface onKeyListener {
-        public void onKeyDown(int keyCode);
-
-        public void onKeyUp(int keyCode);
-    }
 
 	class DeviceInfo {
 		public int screenDpi;
@@ -419,14 +339,16 @@ public class PDevice extends PInterface {
 
 		// density dpi
 		DisplayMetrics metrics = new DisplayMetrics();
-		appRunnerActivity.get().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+		//TODO reenable this
+		//contextUi.get().getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		deviceInfo.screenDpi = metrics.densityDpi;
 
 		// id
-		deviceInfo.androidId = Secure.getString(a.get().getContentResolver(), Secure.ANDROID_ID);
+		deviceInfo.androidId = Secure.getString(mContext.getContentResolver(), Secure.ANDROID_ID);
 
 		// imei
-		deviceInfo.imei = ((TelephonyManager) a.get().getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
+		deviceInfo.imei = ((TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
 
 		deviceInfo.versionRelease = Build.VERSION.RELEASE;
 		deviceInfo.versionRelease = Build.VERSION.INCREMENTAL;
@@ -464,7 +386,7 @@ public class PDevice extends PInterface {
 
 
 	public void stop() {
-		a.get().unregisterReceiver(batteryReceiver);
+		mContext.unregisterReceiver(batteryReceiver);
 	}
 
 	public interface onSmsReceivedListener {

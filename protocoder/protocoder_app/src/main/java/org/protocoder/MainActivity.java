@@ -38,7 +38,6 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.FileObserver;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -50,12 +49,6 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import org.protocoder.appApi.Protocoder;
 import org.protocoder.fragments.SettingsFragment;
-import org.protocoderrunner.apprunner.AppRunnerInterpreter;
-import org.protocoderrunner.apprunner.api.PFileIO;
-import org.protocoderrunner.apprunner.api.PMedia;
-import org.protocoderrunner.apprunner.api.PNetwork;
-import org.protocoderrunner.apprunner.api.PUI;
-import org.protocoderrunner.apprunner.api.PUtil;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.events.Events;
 import org.protocoderrunner.events.Events.ProjectEvent;
@@ -86,27 +79,24 @@ public class MainActivity extends BaseActivity {
     private Protocoder mProtocoder;
 
 
-
     @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_forfragments);
+		setContentView(R.layout.activity_main);
 		c = this;
 
 		// Create the action bar programmatically
 
-        if (!isWear()) {
+        if (!AndroidUtils.isWear(this)) {
 
             Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
             setSupportActionBar(toolbar);
 
-
-            //ActionBar actionBar = getSupportActionBar();
-            //actionBar.setHomeButtonEnabled(true);
+            //ActionBar mActionBar = getSupportActionBar();
+            //mActionBar.setHomeButtonEnabled(true);
         }
         mProtocoder = Protocoder.getInstance(this);
         mProtocoder.init();
-
 
 
        /*
@@ -119,7 +109,7 @@ public class MainActivity extends BaseActivity {
             mProtocoder.protoScripts.reinitScriptList();
         }
 
-        // Check when a file is changed in the protocoder dir
+        // Check when mContext file is changed in the protocoder dir
 		observer = new FileObserver(ProjectManager.FOLDER_USER_PROJECTS, FileObserver.CREATE | FileObserver.DELETE) {
 
 			@Override
@@ -128,7 +118,7 @@ public class MainActivity extends BaseActivity {
 
 					MLog.d(TAG, "File created [" + ProjectManager.FOLDER_USER_PROJECTS + "/" + file + "]");
 
-					// check if its a "create" and not equal to probe because
+					// check if its mContext "create" and not equal to probe because
 					// thats created every time camera is
 					// launched
 				} else if ((FileObserver.DELETE & event) != 0) {
@@ -139,8 +129,6 @@ public class MainActivity extends BaseActivity {
 		};
 
         connectivityChangeReceiver = new ConnectivityChangeReceiver();
-
-
     }
 
     private void addFragments() {
@@ -226,7 +214,7 @@ public class MainActivity extends BaseActivity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		ViewGroup vg = (ViewGroup) findViewById(R.layout.activity_forfragments);
+		ViewGroup vg = (ViewGroup) findViewById(R.layout.activity_main);
 		if (vg != null) {
 			vg.invalidate();
 			vg.removeAllViews();

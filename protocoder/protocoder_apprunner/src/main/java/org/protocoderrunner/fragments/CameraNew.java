@@ -34,7 +34,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
@@ -58,6 +57,7 @@ import android.view.TextureView;
 import android.view.View;
 import android.widget.Toast;
 
+import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.utils.MLog;
 import org.protocoderrunner.utils.TimeUtils;
 
@@ -85,7 +85,7 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
 
 	protected String TAG = "Camera";
 
-    Context c;
+    AppRunnerActivity mContext;
 
 	// camera
 	//TextureView mTextureView;
@@ -113,9 +113,9 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
 	}
 
 
-    public CameraNew(Context context, int camera, int colorMode) {
+    public CameraNew(AppRunnerActivity context, int camera, int colorMode) {
         super(context);
-        this.c = context;
+        this.mContext = context;
         this.modeColor = colorMode;
         this.modeCamera = camera;
         this.setSurfaceTextureListener(this);
@@ -181,7 +181,7 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
             mCamera.release();
         }
 
-        setCameraDisplayOrientation((Activity) c, cameraId, mCamera);
+        setCameraDisplayOrientation(mContext, cameraId, mCamera);
         mCamera.startPreview();
 
     }
@@ -305,7 +305,7 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
 	public String takePic(final String path) {
 		// final CountDownLatch latch = new CountDownLatch(1);
 
-		AudioManager mgr = (AudioManager) c.getSystemService(Context.AUDIO_SERVICE);
+		AudioManager mgr = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
 		mgr.setStreamMute(AudioManager.STREAM_SYSTEM, true);
 
 		SoundPool soundPool = new SoundPool(1, AudioManager.STREAM_NOTIFICATION, 0);
@@ -453,23 +453,23 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
 		// Media.EXTERNAL_CONTENT_URI, new ContentValues());
 
 		try {
-			OutputStream imageFileOS = c.getContentResolver().openOutputStream(outputFileUri);
+			OutputStream imageFileOS = mContext.getContentResolver().openOutputStream(outputFileUri);
 			imageFileOS.write(data);
 			imageFileOS.flush();
 			imageFileOS.close();
 
 		} catch (FileNotFoundException e) {
-			Toast t = Toast.makeText(c, e.getMessage(), Toast.LENGTH_SHORT);
+			Toast t = Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT);
 			t.show();
 		} catch (IOException e) {
-			Toast t = Toast.makeText(c, e.getMessage(), Toast.LENGTH_SHORT);
+			Toast t = Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT);
 			t.show();
 		}
 
 		camera.startPreview();
 		camera.release();
 
-		AudioManager mgr = (AudioManager) c.getSystemService(Context.AUDIO_SERVICE);
+		AudioManager mgr = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
 		mgr.setStreamMute(AudioManager.STREAM_SYSTEM, false);
 
 		// WindowManager.LayoutParams params = getWindow().getAttributes();
@@ -499,7 +499,7 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
 	}
 
     public boolean isFlashAvailable() {
-        boolean b = c.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
+        boolean b = mContext.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
 
         return b;
     }
@@ -521,7 +521,7 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
 	}
 
     public boolean hasAutofocus() {
-        return c.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_AUTOFOCUS);
+        return mContext.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_AUTOFOCUS);
     }
 
     public interface FocusCB  {

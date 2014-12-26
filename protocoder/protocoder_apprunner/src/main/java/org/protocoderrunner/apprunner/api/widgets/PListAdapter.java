@@ -42,12 +42,12 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 public class PListAdapter extends BaseAdapter {
-	private final WeakReference<Context> mContext;
+	private final Context mContext;
 
 	ArrayList<PListItem> items;
 
 	public PListAdapter(Context c, ArrayList<PListItem> items2) {
-		mContext = new WeakReference<Context>(c);
+		mContext = c;
 		this.items = items2;
 	}
 
@@ -66,14 +66,14 @@ public class PListAdapter extends BaseAdapter {
 		return position;
 	}
 
-	// create a new ImageView for each item referenced by the Adapter
+	// create mContext new ImageView for each item referenced by the Adapter
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		final PListItem customView;
 
 		if (convertView == null) { // if it's not recycled, initialize some
 			// attributes
-			customView = new PListItem(mContext.get());
+			customView = new PListItem(mContext);
 
 			customView.setText(items.get(position).getName());
 			customView.setImage(R.drawable.app_icon);

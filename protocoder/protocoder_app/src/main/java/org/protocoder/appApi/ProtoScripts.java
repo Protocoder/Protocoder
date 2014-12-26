@@ -31,8 +31,6 @@ package org.protocoder.appApi;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -48,6 +46,7 @@ import org.protocoder.projectlist.ProjectsPagerAdapter;
 import org.protocoder.projectlist.ZoomOutPageTransformer;
 import org.protocoder.views.ProjectSelectorStrip;
 import org.protocoderrunner.apprunner.AppRunnerActivity;
+import org.protocoderrunner.apprunner.AppRunnerFragment;
 import org.protocoderrunner.apprunner.api.PUtil;
 import org.protocoderrunner.project.Project;
 import org.protocoderrunner.project.ProjectManager;
@@ -316,7 +315,7 @@ public class ProtoScripts {
         }
 
         try {
-            Intent shortcutIntent = new Intent(mProtocoder.a, AppRunnerActivity.class);
+            Intent shortcutIntent = new Intent(mProtocoder.a, AppRunnerFragment.class);
             shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 

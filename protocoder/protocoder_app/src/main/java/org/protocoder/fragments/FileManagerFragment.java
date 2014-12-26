@@ -277,13 +277,13 @@ public class FileManagerFragment extends BaseFragment {
 	}
 
 	public class FileAdapter extends BaseAdapter {
-		private final WeakReference<Context> mContext;
+		private final Context mContext;
 
 		ArrayList<File> files;
 		private final String projectFolder;
 
 		public FileAdapter(Context c, String projectFolder, ArrayList<File> files) {
-			mContext = new WeakReference<Context>(c);
+			mContext = c;
 			this.files = files;
 			this.projectFolder = projectFolder;
 		}
@@ -303,14 +303,14 @@ public class FileManagerFragment extends BaseFragment {
 			return position;
 		}
 
-		// create a new ImageView for each item referenced by the Adapter
+		// create mContext new ImageView for each item referenced by the Adapter
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			final FileItem customView;
 
 			if (convertView == null) { // if it's not recycled, initialize some
 				// attributes
-				customView = new FileItem(mContext.get());
+				customView = new FileItem(mContext);
 				customView.setImage(R.drawable.protocoder_script_project);
 
 				customView.setText(files.get(position).getName());
@@ -329,11 +329,11 @@ public class FileManagerFragment extends BaseFragment {
 
 		private WeakReference<View> v;
 		// private Context c;
-		private WeakReference<Context> c;
+		private Context c;
 
 		public FileItem(Context context) {
 			super(context);
-			this.c = new WeakReference<Context>(context);
+			this.c = context;
 			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			this.v = new WeakReference<View>(inflater.inflate(R.layout.view_file_item, this, true));
 		}

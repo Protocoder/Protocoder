@@ -66,8 +66,8 @@ public class ProtoScriptShareActivity extends BaseActivity {
 
 
         // Create the action bar programmatically
-		//ActionBar actionBar = getSupportActionBar();
-		//actionBar.setDisplayHomeAsUpEnabled(true);
+		//ActionBar mActionBar = getSupportActionBar();
+		//mActionBar.setDisplayHomeAsUpEnabled(true);
 	}
 
 	/**

@@ -54,6 +54,7 @@ public class WhatIsRunning {
 		for (Object o : runners) {
 			Method method = null;
 
+            //MLog.d("name", o.getClass().getCanonicalName());
 			try {
 				method = o.getClass().getMethod("stop");
 			} catch (SecurityException e) {

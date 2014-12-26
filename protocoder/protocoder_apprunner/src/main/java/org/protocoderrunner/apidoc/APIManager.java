@@ -70,7 +70,7 @@ public class APIManager {
 	}
 
 	/**
-	 * add a new class to extract the methods
+	 * add mContext new class to extract the methods
 	 * 
 	 * @param c
 	 */
@@ -174,7 +174,7 @@ public class APIManager {
 				}
 
 			}
-			it.remove(); // avoids a ConcurrentModificationException
+			it.remove(); // avoids mContext ConcurrentModificationException
 		}
 
 	}

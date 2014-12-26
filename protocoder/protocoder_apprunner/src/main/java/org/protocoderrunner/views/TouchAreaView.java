@@ -92,7 +92,7 @@ public class TouchAreaView extends View {
 		mWidth = w - 1;
 		mHeight = h - 1;
 
-		// create a bitmap for caching what was drawn
+		// create mContext bitmap for caching what was drawn
 		if (bitmap != null) {
 			bitmap.recycle();
 		}

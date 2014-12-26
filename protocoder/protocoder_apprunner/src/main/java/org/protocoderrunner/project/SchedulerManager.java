@@ -76,7 +76,7 @@ public class SchedulerManager {
 	private static final String ALARM_INTENT = "protocoder_alarm_message";
 
 	public void setAlarmDelayed(Project p, int delay, boolean alarmRepeat, boolean wakeUpScreen) {
-		// get a Calendar object with current time
+		// get mContext Calendar object with current time
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.SECOND, delay);
 
@@ -103,7 +103,7 @@ public class SchedulerManager {
 	public void setAlarm(Project p, Calendar cal, int delay, boolean repeating, boolean wakeUpScreen) {
 		int id = (int) Math.round((999999999 * Math.random()));
 
-		// add to a global alarm thingie
+		// add to mContext global alarm thingie
 		tasks.add(new Task(id, p, cal, delay, repeating, wakeUpScreen));
 
 		String message = "";

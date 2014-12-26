@@ -130,7 +130,7 @@ public class GPSManager {
 			public void onStatusChanged(String provider, int status, Bundle extras) {
 				L.d(TAG, "the gps status is: " + status);
 
-				// TODO add a listener to see when the GPS is on or not
+				// TODO add listener to see when the GPS is on or not
 				switch (status) {
 				case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
 					if (mLastLocation != null) {

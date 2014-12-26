@@ -148,7 +148,7 @@ public class WebViewFragment extends BaseWebviewFragment {
 			public void onNewPicture(WebView view, Picture picture) {
 				// put code here that needs to run when the page has finished
 				// loading and
-				// a new "picture" is on the webview.
+				// mContext new "picture" is on the webview.
 			}
 		});
 
@@ -263,7 +263,7 @@ public class WebViewFragment extends BaseWebviewFragment {
 	}
 
 	/**
-	 * Provides a hook for calling "alert" from javascript. Useful for debugging
+	 * Provides mContext hook for calling "alert" from javascript. Useful for debugging
 	 * your javascript.
 	 */
 	final class MyWebChromeClient extends WebChromeClient {
@@ -296,7 +296,7 @@ public class WebViewFragment extends BaseWebviewFragment {
 
 					frame.removeView(video);
 					/*
-					 * a.setContentView(video);
+					 * mContext.setContentView(video);
 					 * video.setOnCompletionListener(this);
 					 * video.setOnErrorListener(this); video.start();
 					 */

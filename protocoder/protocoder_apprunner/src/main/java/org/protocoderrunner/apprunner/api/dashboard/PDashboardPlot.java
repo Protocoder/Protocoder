@@ -71,7 +71,7 @@ public class PDashboardPlot extends PInterface {
                 .put("action", "add")
                 .put("values", values);
 
-		CustomWebsocketServer.getInstance(a.get()).send(msg);
+		CustomWebsocketServer.getInstance(mContext).send(msg);
 	}
 
 	@ProtocoderScript
@@ -89,6 +89,6 @@ public class PDashboardPlot extends PInterface {
                 .put("action", "update")
                 .put("values", values);
 
-		CustomWebsocketServer.getInstance(a.get()).send(msg);
+		CustomWebsocketServer.getInstance(mContext).send(msg);
 	}
 }

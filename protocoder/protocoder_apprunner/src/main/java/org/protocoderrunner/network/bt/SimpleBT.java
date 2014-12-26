@@ -93,7 +93,7 @@ public class SimpleBT implements WhatIsRunningInterface {
 					break;
 				}
 				byte[] readBuf = (byte[]) msg.obj;
-				// construct a string from the valid bytes in the buffer
+				// construct mContext string from the valid bytes in the buffer
 				String readMessage = new String(readBuf, 0, msg.arg1);
 
 				// here is where we get the BT data
@@ -167,7 +167,7 @@ public class SimpleBT implements WhatIsRunningInterface {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
 		case REQUEST_CONNECT_DEVICE:
-			// When DeviceListActivity returns with a device to connect
+			// When DeviceListActivity returns with mContext device to connect
 			if (resultCode == Activity.RESULT_OK) {
 				// Get the device MAC address
 				//String address = data.getExtras().getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
@@ -180,14 +180,13 @@ public class SimpleBT implements WhatIsRunningInterface {
 		case REQUEST_ENABLE_BT:
 			// When the request to enable Bluetooth returns
 			if (resultCode == Activity.RESULT_OK) {
-				// Bluetooth is now enabled, so set up a Bluetooth session
+				// Bluetooth is now enabled, so set up mContext Bluetooth session
 				startBtService();
 			} else {
 				// User did not enable Bluetooth or an error occurred
 				//Log.d(TAG, "BT not enabled");
 				Toast.makeText(ac.getApplicationContext(), "BT not enabled :(", Toast.LENGTH_SHORT).show();
 
-				// TODO show error
 				// finish();
 			}
 		}

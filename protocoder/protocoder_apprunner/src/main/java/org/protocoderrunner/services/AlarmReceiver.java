@@ -35,7 +35,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import org.protocoderrunner.apprunner.AppRunnerActivity;
+import org.protocoderrunner.apprunner.AppRunnerFragment;
 import org.protocoderrunner.utils.MLog;
 
 public class AlarmReceiver extends BroadcastReceiver {
@@ -44,7 +44,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
 	private void startComponent(Context c, int message, Intent intent) {
 
-		Intent newIntent = new Intent(c, AppRunnerActivity.class);
+		Intent newIntent = new Intent(c, AppRunnerFragment.class);
 		newIntent.putExtra("alarm_message", message);
 		newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		newIntent.putExtras(intent);

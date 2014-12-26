@@ -37,6 +37,7 @@ public class Project {
 	public final static String URL = "projectUrl";
 	public final static String LOAD_FROM = "projectLoadFrom";
     public static final String FORMAT = "projectFormat";
+    public static final String COLOR = "projectColor";
 
     public String name;
     public String folder;

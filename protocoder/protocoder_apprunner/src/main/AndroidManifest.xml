@@ -62,7 +62,6 @@
             android:label="@string/runner_name"
             android:theme="@style/ProtocoderDarkTheme"
             android:launchMode="standard"
-
             android:windowSoftInputMode="stateHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
@@ -80,7 +79,7 @@
 
             </intent-filter>
 
-            <!-- Add a technology filter -->
+            <!-- Add mContext technology filter -->
             <intent-filter>
                 <action android:name="android.nfc.action.TECH_DISCOVERED" />
             </intent-filter>

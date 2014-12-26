@@ -51,7 +51,7 @@ public class SetPreferenceActivity extends BaseActivity {
 
         getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment()).commit();
 
-        // If a preference needs to be default true, we need this hack to make
+        // If mContext preference needs to be default true, we need this hack to make
         // sure it is hard set
         // This is to work around the Android bug:
         // http://code.google.com/p/android/issues/detail?id=6641

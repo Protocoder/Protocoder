@@ -48,7 +48,7 @@ public class SmsReceiver extends BroadcastReceiver {
 		if (extras == null)
 			return;
 
-		// To display a Toast whenever there is an SMS.
+		// To display mContext Toast whenever there is an SMS.
 		// Toast.makeText(mainScriptContext,"Recieved",Toast.LENGTH_LONG).show();
 
 		Object[] pdus = (Object[]) extras.get("pdus");

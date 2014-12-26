@@ -156,7 +156,7 @@ public class SettingsFragment extends PreferenceFragment {
 						// Do nothing as the server will restart on
 						// resume of MainActivity.
 						// If we don't have the server automatically
-						// restart, then this is a separate issue.
+						// restart, then this is mContext separate issue.
 					} else {
 						// Kill all notifications
 						BaseNotification.killAll(getActivity());

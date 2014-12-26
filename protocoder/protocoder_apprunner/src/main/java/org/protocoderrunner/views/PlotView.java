@@ -137,7 +137,7 @@ public class PlotView extends View {
 		while (it.hasNext()) {
 			Map.Entry m = (Map.Entry) it.next();
 			// System.out.println(pairs.getKey() + " = " + pairs.getValue());
-			// it.remove(); // avoids a ConcurrentModificationException
+			// it.remove(); // avoids mContext ConcurrentModificationException
 			Plot p = (Plot) m.getValue();
 			p.zero();
 		}

@@ -1,28 +1,57 @@
+/*
+ * Protocoder
+ * A prototyping platform for Android devices
+ *
+ * Victor Diaz Barrales victormdb@gmail.com
+ *
+ * Copyright (C) 2014 Victor Diaz
+ * Copyright (C) 2013 Motorola Mobility LLC
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the Software
+ * is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ */
+
 package org.protocoderrunner.network;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
+import android.os.Build;
 import android.util.Log;
 
-import org.protocoderrunner.apprunner.AppRunnerActivity;
+import org.protocoderrunner.apprunner.AppRunnerFragment;
 import org.protocoderrunner.utils.MLog;
 
 import java.net.InetAddress;
 
-/**
- * Created by victormanueldiazbarrales on 18/07/14.
- */
+@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class ServiceDiscovery {
 
     private static final String TAG = "ServiceDiscovery";
 
-    public Create create(AppRunnerActivity a, String serviceName, String serviceType, int port, CreateCB callbackfn) {
+    public Create create(Context a, String serviceName, String serviceType, int port, CreateCB callbackfn) {
         return new Create(a, serviceName, serviceType, port, callbackfn);
     }
 
-    public Discover discover(AppRunnerActivity a, String serviceType, DiscoverCB callbackfn) {
+    public Discover discover(Context a, String serviceType, DiscoverCB callbackfn) {
         return new Discover(a, serviceType, callbackfn);
     }
 
@@ -38,7 +67,7 @@ public class ServiceDiscovery {
         private NsdManager.RegistrationListener mRegistrationListener;
         public String mServiceName;
 
-        Create(Activity a, String name, String serviceType, int port, final CreateCB callbackfn) {
+        Create(Context a, String name, String serviceType, int port, final CreateCB callbackfn) {
             mServiceName = name;
 
             // Create the NsdServiceInfo object, and populate it.
@@ -58,7 +87,7 @@ public class ServiceDiscovery {
                @Override
                 public void onServiceRegistered(NsdServiceInfo NsdServiceInfo) {
                     // Save the service name.  Android may have changed it in order to
-                    // resolve a conflict, so update the name you initially requested
+                    // resolve mContext conflict, so update the name you initially requested
                     // with the name Android actually used.
                     mServiceName = NsdServiceInfo.getServiceName();
                     callbackfn.event(mServiceName, "registered");
@@ -106,11 +135,11 @@ public class ServiceDiscovery {
         final NsdManager mNsdManager;
         NsdManager.DiscoveryListener mDiscoveryListener;
 
-        Discover(Activity a, final String serviceType, final DiscoverCB callbackfn) {
+        Discover(Context a, final String serviceType, final DiscoverCB callbackfn) {
 
             mNsdManager = (NsdManager) a.getSystemService(Context.NSD_SERVICE);
 
-            // Instantiate a new DiscoveryListener
+            // Instantiate mContext new DiscoveryListener
             mDiscoveryListener = new NsdManager.DiscoveryListener() {
 
                 //  Called as soon as service discovery begins.

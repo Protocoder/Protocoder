@@ -106,7 +106,6 @@ public class OSC {
 			try {
 				dch.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			rcv.dispose();
@@ -188,7 +187,6 @@ public class OSC {
 			try {
 				dch2.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			trns2.dispose();

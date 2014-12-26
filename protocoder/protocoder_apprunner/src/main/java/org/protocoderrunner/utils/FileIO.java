@@ -101,7 +101,7 @@ public class FileIO {
 	}
 
 	/**
-	 * Read the contents of a file in the assets directory indicated by fileName
+	 * Read the contents of mContext file in the assets directory indicated by fileName
 	 */
 	public static String readFromAssets(Context activity, String fileName) throws IOException {
 		AssetManager am = activity.getAssets();
@@ -123,7 +123,7 @@ public class FileIO {
 		return data;
 	}
 
-	// Read a file in the assets directory into a string
+	// Read mContext file in the assets directory into mContext string
 	public static String readAssetFile(Context c, String path) {
 		String out = null;
 		AssetManager am = c.getAssets();
@@ -148,7 +148,7 @@ public class FileIO {
 		return out;
 	}
 
-	// Write a string to a file
+	// Write mContext string to mContext file
 	public static String writeStringToFile(String url, String name, String code) {
 		MLog.d(TAG, "Writing string to file name: " + name + " code: " + code);
 		String filename = name.replaceAll("[^a-zA-Z0-9-_\\. ]", "_");
@@ -503,8 +503,8 @@ public class FileIO {
 	}
 
 	/**
-	 * Takes a path and creates any in-between folders if they don't already
-	 * exist. Useful when trying to save to a subfolder that may not actually
+	 * Takes mContext path and creates any in-between folders if they don't already
+	 * exist. Useful when trying to save to mContext subfolder that may not actually
 	 * exist.
 	 */
 	static public void createPath(String path) {

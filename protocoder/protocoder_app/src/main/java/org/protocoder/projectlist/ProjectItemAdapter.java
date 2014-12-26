@@ -54,7 +54,7 @@ import de.greenrobot.event.EventBus;
 
 public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.ViewHolder>  {
     private static final String TAG = "ProjectItemAdapter";
-    private final WeakReference<Context> mContext;
+    private final Context mContext;
     private final int mIcon;
     private final ProjectListFragment mPlf;
 
@@ -74,7 +74,7 @@ public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.
     }
 
 	public ProjectItemAdapter(Context c, ProjectListFragment plf) {
-		mContext = new WeakReference<Context>(c);
+		mContext = c;
         this.mPlf = plf;
 		this.mProjects = plf.mProjects;
 		this.mProjectFolder = plf.mProjectFolder;
@@ -89,11 +89,11 @@ public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.
                                          int viewType) {
 
         //MLog.d(TAG, "view created");
-        // create a new view
+        // create mContext new view
         //ProjectItem v = (ProjectItem) LayoutInflater.from(parent.getContext())
         //        .inflate(R.layout.view_project_item, parent, false);
         // set the view's size, margins, paddings and layout parameters
-        ProjectItem projectItem = new ProjectItem(mContext.get(), mPlf, mListMode);
+        ProjectItem projectItem = new ProjectItem(mContext, mPlf, mListMode);
 
 
         ViewHolder vh = new ProjectItemAdapter.ViewHolder(projectItem);
@@ -101,7 +101,7 @@ public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.
         return vh;
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
+    // Replace the contents of mContext view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
