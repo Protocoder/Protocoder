@@ -105,7 +105,7 @@ public class ViewServer implements Runnable {
 	private static final String COMMAND_SERVER_VERSION = "SERVER";
 	// Lists all of the available windows in the system
 	private static final String COMMAND_WINDOW_MANAGER_LIST = "LIST";
-	// Keeps a connection open and notifies when the list of windows changes
+	// Keeps mContext connection open and notifies when the list of windows changes
 	private static final String COMMAND_WINDOW_MANAGER_AUTOLIST = "AUTOLIST";
 	// Returns the focused window
 	private static final String COMMAND_WINDOW_MANAGER_GET_FOCUS = "GET_FOCUS";
@@ -127,12 +127,12 @@ public class ViewServer implements Runnable {
 	private static ViewServer sServer;
 
 	/**
-	 * Returns a unique instance of the ViewServer. This method should only be
+	 * Returns mContext unique instance of the ViewServer. This method should only be
 	 * called from the main thread of your application. The server will have the
 	 * same lifetime as your process.
 	 * 
 	 * If your application does not have the <code>android:debuggable</code>
-	 * flag set in its manifest, the server returned by this method will be a
+	 * flag set in its manifest, the server returned by this method will be mContext
 	 * dummy object that does not do anything. This allows you to use the same
 	 * code in DEBUG and release versions of your application.
 	 * 
@@ -166,7 +166,7 @@ public class ViewServer implements Runnable {
 	}
 
 	/**
-	 * Creates a new ViewServer associated with the specified window manager on
+	 * Creates mContext new ViewServer associated with the specified window manager on
 	 * the specified local port. The server is not started by default.
 	 * 
 	 * @param port
@@ -266,7 +266,7 @@ public class ViewServer implements Runnable {
 	}
 
 	/**
-	 * Invoke this method to register a new view hierarchy.
+	 * Invoke this method to register mContext new view hierarchy.
 	 * 
 	 * @param activity
 	 *            The activity whose view hierarchy/window to register
@@ -285,7 +285,7 @@ public class ViewServer implements Runnable {
 	}
 
 	/**
-	 * Invoke this method to unregister a view hierarchy.
+	 * Invoke this method to unregister mContext view hierarchy.
 	 * 
 	 * @param activity
 	 *            The activity whose view hierarchy/window to unregister
@@ -298,7 +298,7 @@ public class ViewServer implements Runnable {
 	}
 
 	/**
-	 * Invoke this method to register a new view hierarchy.
+	 * Invoke this method to register mContext new view hierarchy.
 	 * 
 	 * @param view
 	 *            A view that belongs to the view hierarchy/window to register
@@ -317,7 +317,7 @@ public class ViewServer implements Runnable {
 	}
 
 	/**
-	 * Invoke this method to unregister a view hierarchy.
+	 * Invoke this method to unregister mContext view hierarchy.
 	 * 
 	 * @param view
 	 *            A view that belongs to the view hierarchy/window to unregister

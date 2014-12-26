@@ -9,6 +9,7 @@ import android.animation.LayoutTransition;
 import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -30,7 +31,7 @@ public class PLiveCodingFeedback {
 
 	private static final String TAG = "PProtocoderFeedback";
 
-	protected Activity a;
+	protected Context a;
 
 	private LinearLayout liveRLayout;
 	float liveTextY = 0;
@@ -55,7 +56,7 @@ public class PLiveCodingFeedback {
     private int alignment = TextView.TEXT_ALIGNMENT_VIEW_END;
     private long timeToHide = 4000;
 
-    public PLiveCodingFeedback(Activity a) {
+    public PLiveCodingFeedback(Context a) {
 		this.a = a;
 		fontCode = Typeface.createFromAsset(a.getAssets(), "Inconsolata.otf");
 
@@ -206,7 +207,7 @@ public class PLiveCodingFeedback {
 
 			}
 
-			// if there is a textview then remove it
+			// if there is mContext textview then remove it
 			if (liveText != null) {
 				liveRLayout.removeView(liveText);
 			}

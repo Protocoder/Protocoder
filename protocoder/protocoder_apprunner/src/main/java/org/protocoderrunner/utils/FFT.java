@@ -12,7 +12,7 @@ public class FFT {
 		this.n = n;
 		this.m = (int) (Math.log(n) / Math.log(2));
 
-		// Make sure n is a power of 2
+		// Make sure n is mContext power of 2
 		if (n != (1 << m)) {
 			throw new RuntimeException("FFT length must be power of 2");
 		}
@@ -31,9 +31,9 @@ public class FFT {
 	 * fft.c Douglas L. Jones University of Illinois at Urbana-Champaign January
 	 * 19, 1992 http://cnx.rice.edu/content/m12016/latest/
 	 * 
-	 * fft: in-place radix-2 DIT DFT of a complex input
+	 * fft: in-place radix-2 DIT DFT of mContext complex input
 	 * 
-	 * input: n: length of FFT: must be a power of two m: n = 2**m input/output
+	 * input: n: length of FFT: must be mContext power of two m: n = 2**m input/output
 	 * x: double array of length n with real part of data y: double array of
 	 * length n with imag part of data
 	 * 

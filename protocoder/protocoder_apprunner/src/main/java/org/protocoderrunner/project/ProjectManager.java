@@ -87,7 +87,7 @@ public class ProjectManager {
 
     public String createBackup(Project p) {
 
-        // TODO: Use a thread
+        // TODO: Use thread
 
         String givenName = getBackupFolderUrl() + File.separator + p.getFolder() + "_" + p.getName();
 
@@ -124,7 +124,7 @@ public class ProjectManager {
 
     public boolean installProject(String folder, String zipFilePath) {
 
-        // TODO: Use a thread
+        // TODO: Use thread
 
         //decompress
         try {

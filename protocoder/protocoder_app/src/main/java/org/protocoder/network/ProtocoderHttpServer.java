@@ -123,7 +123,7 @@ import java.util.Properties;
 import de.greenrobot.event.EventBus;
 
 /**
- * An example of subclassing NanoHTTPD to make a custom HTTP server.
+ * An example of subclassing NanoHTTPD to make mContext custom HTTP server.
  */
 public class ProtocoderHttpServer extends NanoHTTPD {
 	public static final String TAG = "myHTTPServer";
@@ -527,7 +527,7 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 			uri = "index.html";
 		}
 
-		// We're using assets, so we can't have a leading '/'
+		// We're using assets, so we can't have mContext leading '/'
 		if (uri.charAt(0) == '/') {
 			uri = uri.substring(1, uri.length());
 		}

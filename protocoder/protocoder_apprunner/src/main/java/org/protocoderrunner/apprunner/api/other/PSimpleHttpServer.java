@@ -50,7 +50,7 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * An example of subclassing NanoHTTPD to make a custom HTTP server.
+ * An example of subclassing NanoHTTPD to make mContext custom HTTP server.
  */
 public class PSimpleHttpServer extends NanoHTTPD {
 	public static final String TAG = "ProtocoderHttpServer";
@@ -157,7 +157,7 @@ public class PSimpleHttpServer extends NanoHTTPD {
                 }
 
                 //  res =  new Response(HTTP_OK, MIME_PLAINTEXT,
-                //          "INTERNAL ERRROR: serveFile(): given homeDir is not a directory.");
+                //          "INTERNAL ERRROR: serveFile(): given homeDir is not mContext directory.");
 
             } catch (Exception e) {
                 MLog.d(TAG, "response error " + e.toString());

@@ -35,7 +35,7 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 
 import org.protocoderrunner.R;
-import org.protocoderrunner.apprunner.AppRunnerActivity;
+import org.protocoderrunner.apprunner.AppRunnerFragment;
 import org.protocoderrunner.apprunner.logger.L;
 import org.protocoderrunner.utils.MLog;
 import org.puredata.android.io.AudioParameters;
@@ -108,7 +108,7 @@ public class AudioService {
 
 	public static void start() {
 		if (!pdService.isRunning()) {
-			Intent intent = new Intent(pdService, AppRunnerActivity.class);
+			Intent intent = new Intent(pdService, AppRunnerFragment.class);
 			pdService.startAudio();
 		}
 	}

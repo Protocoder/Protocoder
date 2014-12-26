@@ -29,7 +29,7 @@
 
 package org.protocoderrunner.apprunner.api;
 
-import android.app.Activity;
+import android.content.Context;
 import android.os.FileObserver;
 
 import net.lingala.zip4j.exception.ZipException;
@@ -52,7 +52,7 @@ public class PFileIO extends PInterface {
 	String TAG = "PFileIO";
     private FileObserver fileObserver;
 
-    public PFileIO(Activity a) {
+    public PFileIO(Context a) {
 		super(a);
         WhatIsRunning.getInstance().add(this);
 	}
@@ -136,7 +136,7 @@ public class PFileIO extends PInterface {
 	@APIMethod(description = "Open a sqlite database", example = "")
 	@APIParam(params = { "filename" })
 	public PSqLite openSqlLite(String db) {
-		return new PSqLite(a.get(), db);
+		return new PSqLite(mContext, db);
 	}
 
     public interface addZipUnzipCB {

@@ -162,37 +162,6 @@ public class BaseActivity extends ActionBarActivity {
 		}
 	}
 
-	public boolean isScreenOn() {
-		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-		return pm.isScreenOn();
-
-	}
-
-	public void goToSleep() {
-		//PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-		//pm.goToSleep(100);
-	}
-
-	public boolean isAirplaneMode() {
-		return Settings.System.getInt(getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 0) != 0;
-	}
-
-	public boolean isUSBMassStorageEnabled() {
-		return Settings.System.getInt(getContentResolver(), Settings.Global.USB_MASS_STORAGE_ENABLED, 0) != 0;
-	}
-
-	public boolean isADBEnabled() {
-		return Settings.System.getInt(getContentResolver(), Settings.Global.ADB_ENABLED, 0) != 0;
-	}
-
-	public void setEnableSoundEffects(boolean b) {
-		if (b) {
-			Settings.System.putInt(getContentResolver(), Settings.System.SOUND_EFFECTS_ENABLED, 1);
-		} else {
-			Settings.System.putInt(getContentResolver(), Settings.System.SOUND_EFFECTS_ENABLED, 0);
-
-		}
-	}
 
 	public void changeFragment(int id, Fragment fragment) {
 		FragmentManager fragmentManager = getSupportFragmentManager();
@@ -217,7 +186,7 @@ public class BaseActivity extends ActionBarActivity {
 	public void addFragment(Fragment fragment, int fragmentPosition, boolean addToBackStack) {
 
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		// FIXME: Because we have no tagging system we need to use the int as a
+		// FIXME: Because we have no tagging system we need to use the int as mContext
 		// tag, which may cause collisions
 		ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
 		ft.add(fragmentPosition, fragment, String.valueOf(fragmentPosition));
@@ -235,19 +204,6 @@ public class BaseActivity extends ActionBarActivity {
 		ft.commit();
 	}
 
-	public boolean isTablet() {
-		boolean xlarge = ((this.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4);
-		boolean large = ((this.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE);
-		return (xlarge || large);
-	}
-
-    public boolean isWear() {
-        boolean b = false;
-        //b = getResources().getBoolean(R.bool.isWatch);
-
-        return b;
-    }
-
 	public void setBrightness(float f) {
 		WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -259,51 +215,6 @@ public class BaseActivity extends ActionBarActivity {
 		WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
 
 		return layoutParams.screenBrightness;
-	}
-
-	public void setVolume(int value) {
-		AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-		int maxValue = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-		float val = (float) (value / 100.0 * maxValue);
-
-		audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, Math.round(val),
-				AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
-	}
-
-	PowerManager.WakeLock wl;
-
-	public void setWakeLock(boolean b) {
-
-		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-		if (wl == null) {
-			wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
-			if (b) {
-				wl.acquire();
-			}
-		} else {
-			if (!b) {
-				wl.release();
-			}
-		}
-
-	}
-
-	public void setGlobalBrightness(int brightness) {
-
-		// constrain the value of brightness
-		if (brightness < 0) {
-			brightness = 0;
-		} else if (brightness > 255) {
-			brightness = 255;
-		}
-
-		ContentResolver cResolver = this.getApplicationContext().getContentResolver();
-		Settings.System.putInt(cResolver, Settings.System.SCREEN_BRIGHTNESS, brightness);
-
-	}
-
-	public void setScreenTimeout(int time) {
-		Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, time);
 	}
 
 	// override home buttons

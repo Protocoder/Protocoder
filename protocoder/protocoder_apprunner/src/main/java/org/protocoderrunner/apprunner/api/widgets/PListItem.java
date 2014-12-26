@@ -46,12 +46,12 @@ public class PListItem extends LinearLayout {
 
 	private final WeakReference<View> v;
 	// private Context c;
-	private final WeakReference<Context> c;
+	private final Context c;
 	private String t;
 
 	public PListItem(Context context) {
 		super(context);
-		this.c = new WeakReference<Context>(context);
+		this.c = context;
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		//TODO activate this

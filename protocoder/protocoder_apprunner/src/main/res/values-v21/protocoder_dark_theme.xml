@@ -4,8 +4,8 @@
     <style name="ProtocoderDarkTheme" parent="Theme.AppCompat.Light">
         <item name="android:background">@color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
-        <item name="android:colorPrimaryDark">#22000000</item>
-        <item name="android:navigationBarColor">#22000000</item>
+        <item name="android:colorPrimaryDark">#FF000000</item>
+        <item name="android:navigationBarColor">#FF000000</item>
 
 
         <!--<item name="windowActionBar">false</item>-->

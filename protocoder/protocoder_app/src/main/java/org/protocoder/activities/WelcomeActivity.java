@@ -45,6 +45,7 @@ import org.protocoder.fragments.SettingsFragment;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.project.ProjectManager.InstallListener;
+import org.protocoderrunner.utils.AndroidUtils;
 import org.protocoderrunner.utils.MLog;
 import org.protocoderrunner.utils.StrUtils;
 
@@ -65,7 +66,7 @@ public class WelcomeActivity extends BaseActivity {
 		setContentView(R.layout.activity_welcome);
 
 		// Create the action bar programmatically
-		if (!isWear()) {
+		if (!AndroidUtils.isWear(this)) {
             ActionBar actionBar = getSupportActionBar();
             actionBar.setTitle(R.string.welcome_activity_name);
         }
@@ -120,7 +121,7 @@ public class WelcomeActivity extends BaseActivity {
 			@Override
 			public void onReady() {
 				progress.dismiss();
-				// Write a shared pref to never come back here
+				// Write mContext shared pref to never come back here
 				SharedPreferences userDetails = getSharedPreferences("org.protocoder", MODE_PRIVATE);
 				userDetails.edit().putBoolean(getResources().getString(R.string.pref_is_first_launch), false).commit();
 				// Start the activity
@@ -134,7 +135,7 @@ public class WelcomeActivity extends BaseActivity {
 
     //TODO remove and use fileIO methods
 	/**
-	 * Returns a string from a txt file resource
+	 * Returns mContext string from mContext txt file resource
 	 * 
 	 * @return
 	 */

@@ -83,9 +83,9 @@ import java.util.Vector;
  * <li>File server supports directory listing, index.html and index.htm</li>
  * <li>File server does the 301 redirection trick for directories without '/'</li>
  * <li>File server supports simple skipping for files (continue download)</li>
- * <li>File server uses current directory as a web root</li>
+ * <li>File server uses current directory as mContext web root</li>
  * <li>File server serves also very long files without memory overhead</li>
- * <li>Contains a built-in list of most common mime types</li>
+ * <li>Contains mContext built-in list of most common mime types</li>
  * <li>All header names are converted lowercase so they don't vary between
  * browsers/clients</li>
  * 
@@ -95,7 +95,7 @@ import java.util.Vector;
  * <b>Ways to use: </b>
  * <ul>
  * 
- * <li>Run as a standalone app, serves files from current directory and shows
+ * <li>Run as mContext standalone app, serves files from current directory and shows
  * requests</li>
  * <li>Subclass serve() and embed to your own program</li>
  * <li>Call serveFile() from serve() with your own base directory</li>
@@ -230,7 +230,7 @@ public class NanoHTTPD {
 	// ==================================================
 
 	/**
-	 * Starts a HTTP server to given port.
+	 * Starts mContext HTTP server to given port.
 	 * <p>
 	 * Throws an IOException if the socket is already in use
 	 */
@@ -265,7 +265,7 @@ public class NanoHTTPD {
 	}
 
 	/**
-	 * Starts as a standalone file server and waits for Enter.
+	 * Starts as mContext standalone file server and waits for Enter.
 	 */
 	public static void main(String[] args) {
 		System.out.println("NanoHTTPD 1.21 (C) 2001,2005-2011 Jarno Elonen and (C) 2010 Konstantinos Togias\n"
@@ -333,7 +333,7 @@ public class NanoHTTPD {
 					return;
 				}
 
-				// Create a BufferedReader for parsing the header.
+				// Create mContext BufferedReader for parsing the header.
 				ByteArrayInputStream hbis = new ByteArrayInputStream(buf, 0, rlen);
 				BufferedReader hin = new BufferedReader(new InputStreamReader(hbis));
 				Properties pre = new Properties();
@@ -399,10 +399,10 @@ public class NanoHTTPD {
 					}
 				}
 
-				// Get the raw body as a byte []
+				// Get the raw body as mContext byte []
 				byte[] fbuf = f.toByteArray();
 
-				// Create a BufferedReader for easily reading it as string.
+				// Create mContext BufferedReader for easily reading it as string.
 				ByteArrayInputStream bin = new ByteArrayInputStream(fbuf);
 				BufferedReader in = new BufferedReader(new InputStreamReader(bin));
 
@@ -634,7 +634,7 @@ public class NanoHTTPD {
 		}
 
 		/**
-		 * Retrieves the content of a sent file and saves it to a temporary
+		 * Retrieves the content of mContext sent file and saves it to mContext temporary
 		 * file. The full path to the saved file is returned.
 		 **/
 		private String saveTmpFile(byte[] b, int offset, int len) {
@@ -686,7 +686,7 @@ public class NanoHTTPD {
 		 * "name=Jack%20Daniels&pass=Single%20Malt" ) and adds them to given
 		 * Properties. NOTE: this doesn't support multiple identical keys due to
 		 * the simplicity of Properties -- if you need multiples, you might want
-		 * to replace the Properties with a Hashtable of Vectors or such.
+		 * to replace the Properties with mContext Hashtable of Vectors or such.
 		 */
 		private void decodeParms(String parms, Properties p) throws InterruptedException {
 			if (parms == null) {
@@ -704,7 +704,7 @@ public class NanoHTTPD {
 		}
 
 		/**
-		 * Returns an error message as a HTTP response and throws
+		 * Returns an error message as mContext HTTP response and throws
 		 * InterruptedException to stop further request processing.
 		 */
 		private void sendError(String status, String msg) throws InterruptedException {
@@ -834,7 +834,7 @@ public class NanoHTTPD {
 		// List the directory, if necessary
 		if (f.isDirectory()) {
 			// Browsers get confused without '/' after the
-			// directory, send a redirect.
+			// directory, send mContext redirect.
 			if (!uri.endsWith("/")) {
 				uri += "/";
 				Response r = new Response(HTTP_REDIRECT, MIME_HTML, "<html><body>Redirected: <a href=\"" + uri + "\">"

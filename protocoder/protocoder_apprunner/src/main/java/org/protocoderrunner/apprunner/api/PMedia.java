@@ -46,7 +46,7 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
-import org.protocoderrunner.apprunner.AppRunnerActivity;
+import org.protocoderrunner.apprunner.AppRunnerFragment;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
@@ -55,6 +55,7 @@ import org.protocoderrunner.apprunner.api.other.PPureData;
 import org.protocoderrunner.media.Audio;
 import org.protocoderrunner.media.AudioService;
 import org.protocoderrunner.sensors.WhatIsRunning;
+import org.protocoderrunner.utils.AndroidUtils;
 import org.protocoderrunner.utils.MLog;
 import org.puredata.android.service.PdService;
 import org.puredata.android.utils.PdUiDispatcher;
@@ -97,14 +98,14 @@ public class PMedia extends PInterface {
 	@APIMethod(description = "Set the main volume", example = "media.playSound(fileName);")
 	@APIParam(params = { "volume" })
 	public void setVolume(int volume) {
-		appRunnerActivity.get().setVolume(volume);
+		AndroidUtils.setVolume(mContext, volume);
 	}
 
     @ProtocoderScript
     @APIMethod(description = "Routes the audio through the speakers", example = "media.playSound(fileName);")
     @APIParam(params = { "" })
     public void setAudioOnSpeakers(boolean b) {
-        AudioManager audioManager = (AudioManager) a.get().getSystemService(Context.AUDIO_SERVICE);
+        AudioManager audioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         audioManager.setMode(AudioManager.MODE_IN_CALL);
         audioManager.setSpeakerphoneOn(!b);
     }
@@ -113,7 +114,7 @@ public class PMedia extends PInterface {
     @APIMethod(description = "Enable sounds effects (default false)", example = "")
     @APIParam(params = { "boolean" })
     public void enableSoundEffects(boolean b) {
-        appRunnerActivity.get().setEnableSoundEffects(b);
+        AndroidUtils.setEnableSoundEffects(mContext, b);
     }
 
     // --------- initPDPatch ---------//
@@ -217,7 +218,7 @@ public class PMedia extends PInterface {
 			}
 
 			public void stop() {
-				a.get().unbindService(AudioService.pdConnection);
+				mContext.unbindService(AudioService.pdConnection);
 			}
 		};
 
@@ -237,10 +238,10 @@ public class PMedia extends PInterface {
 		PdBase.subscribe("android");
 		// start pure data sound engine
 		AudioService.file = filePath;
-		Intent intent = new Intent((a.get()), PdService.class);
+		Intent intent = new Intent((mContext), PdService.class);
 		// intent.putExtra("file", "qq.pd");
 
-		(a.get()).bindService(intent, AudioService.pdConnection, Context.BIND_AUTO_CREATE);
+		(mContext).bindService(intent, AudioService.pdConnection, Context.BIND_AUTO_CREATE);
 		initSystemServices();
 		WhatIsRunning.getInstance().add(AudioService.pdConnection);
 
@@ -248,7 +249,7 @@ public class PMedia extends PInterface {
 	}
 
 	private void initSystemServices() {
-		TelephonyManager telephonyManager = (TelephonyManager) a.get().getSystemService(Context.TELEPHONY_SERVICE);
+		TelephonyManager telephonyManager = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
 		telephonyManager.listen(new PhoneStateListener() {
 			@Override
 			public void onCallStateChanged(int state, String incomingNumber) {
@@ -290,7 +291,7 @@ public class PMedia extends PInterface {
 			e.printStackTrace();
 		}
 
-		mProgressDialog = new ProgressDialog(a.get());
+		mProgressDialog = new ProgressDialog(mActivity);
 		mProgressDialog.setTitle("Record!");
 		mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		mProgressDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Stop recording",
@@ -343,14 +344,14 @@ public class PMedia extends PInterface {
 	@APIMethod(description = "Says a text with voice", example = "media.textToSpeech('hello world');")
 	@APIParam(params = { "text" })
 	public void textToSpeech(String text) {
-        Audio.speak(a.get(), text, Locale.getDefault());
+        Audio.speak(mContext, text, Locale.getDefault());
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Says a text with voice using a defined locale", example = "media.textToSpeech('hello world');")
 	@APIParam(params = { "text", "Locale" })
 	public void textToSpeech(String text, Locale locale) {
-        Audio.speak(a.get(), text, locale);
+        Audio.speak(mContext, text, locale);
 	}
 
 
@@ -363,7 +364,9 @@ public class PMedia extends PInterface {
 	@APIMethod(description = "Fires the voice recognition and returns the best match", example = "media.startVoiceRecognition(function(text) { console.log(text) } );")
 	@APIParam(params = { "function(recognizedText)" })
 	public void startVoiceRecognition(final StartVoiceRecognitionCB callbackfn) {
-        ((AppRunnerActivity)a.get()).addVoiceRecognitionListener(new onVoiceRecognitionListener() {
+        if (mActivity == null) return;
+
+        (mActivity).addVoiceRecognitionListener(new onVoiceRecognitionListener() {
 
             @Override
             public void onNewResult(String text) {
@@ -376,7 +379,7 @@ public class PMedia extends PInterface {
 		Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
 		intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
 		intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Tell me something!");
-		appRunnerActivity.get().startActivityForResult(intent, AppRunnerActivity.VOICE_RECOGNITION_REQUEST_CODE);
+		mActivity.startActivityForResult(intent, mActivity.VOICE_RECOGNITION_REQUEST_CODE);
 
 	}
 
@@ -386,7 +389,7 @@ public class PMedia extends PInterface {
 
 	public void stop() {
 		stopRecording();
-        a.get().unregisterReceiver(headsetPluggedReceiver);
+        mContext.unregisterReceiver(headsetPluggedReceiver);
     }
 
 
@@ -394,11 +397,11 @@ public class PMedia extends PInterface {
     @APIMethod(description = "Start a connected midi device", example = "media.startVoiceRecognition(function(text) { console.log(text) } );")
     @APIParam(params = { "function(recognizedText)" })
     public void startMidiDevice(final PMidi.MidiDeviceEventCB callbackfn) {
-        PMidi pMidi = new PMidi(a.get(), callbackfn);
+        PMidi pMidi = new PMidi(mContext, callbackfn);
     }
 
     public boolean isHeadsetPlugged() {
-        AudioManager audioManager = (AudioManager) a.get().getSystemService(Context.AUDIO_SERVICE);
+        AudioManager audioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         return audioManager.isWiredHeadsetOn();
     }
 
@@ -412,7 +415,7 @@ public class PMedia extends PInterface {
 
         IntentFilter filter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
         headsetPluggedReceiver = new HeadSetReceiver();
-        a.get().registerReceiver(headsetPluggedReceiver, filter);
+        mContext.registerReceiver(headsetPluggedReceiver, filter);
     }
 
     private class HeadSetReceiver extends BroadcastReceiver {

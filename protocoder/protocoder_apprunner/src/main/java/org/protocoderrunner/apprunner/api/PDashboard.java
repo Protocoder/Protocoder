@@ -29,7 +29,7 @@
 
 package org.protocoderrunner.apprunner.api;
 
-import android.app.Activity;
+import android.content.Context;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,7 +48,6 @@ import org.protocoderrunner.apprunner.api.dashboard.PDashboardSlider;
 import org.protocoderrunner.apprunner.api.dashboard.PDashboardText;
 import org.protocoderrunner.apprunner.api.dashboard.PDashboardVideoCamera;
 import org.protocoderrunner.network.CustomWebsocketServer;
-import org.protocoderrunner.utils.MLog;
 import org.protocoderrunner.utils.StrUtils;
 
 import java.net.UnknownHostException;
@@ -57,7 +56,7 @@ public class PDashboard extends PInterface {
 
 	String TAG = "PDashboard";
 
-	public PDashboard(Activity a) {
+	public PDashboard(Context a) {
 		super(a);
     }
 
@@ -67,7 +66,7 @@ public class PDashboard extends PInterface {
 	public PDashboardPlot addPlot(String name, int x, int y, int w, int h, float minLimit, float maxLimit)
 			throws UnknownHostException, JSONException {
 
-		PDashboardPlot pWebAppPlot = new PDashboardPlot(a.get());
+		PDashboardPlot pWebAppPlot = new PDashboardPlot(mContext);
 		pWebAppPlot.add(name, x, y, w, h, minLimit, maxLimit);
 
 		return pWebAppPlot;
@@ -78,7 +77,7 @@ public class PDashboard extends PInterface {
 	@APIParam(params = { "htmlFile", "x", "y" })
 	public PDashboardHTML addHtml(String html, int x, int y) throws UnknownHostException, JSONException {
 
-		PDashboardHTML pWebAppHTML = new PDashboardHTML(a.get());
+		PDashboardHTML pWebAppHTML = new PDashboardHTML(mContext);
 		pWebAppHTML.add(html, x, y);
 
 		return pWebAppHTML;
@@ -90,7 +89,7 @@ public class PDashboard extends PInterface {
 	public PDashboardButton addButton(String name, int x, int y, int w, int h,
 			final PDashboardButton.jDashboardAddCB callbackfn) throws UnknownHostException, JSONException {
 
-		PDashboardButton pWebAppButton = new PDashboardButton(a.get());
+		PDashboardButton pWebAppButton = new PDashboardButton(mContext);
 		pWebAppButton.add(name, x, y, w, h, callbackfn);
 
 		return pWebAppButton;
@@ -102,7 +101,7 @@ public class PDashboard extends PInterface {
 	public PDashboardSlider addSlider(String name, int x, int y, int w, int h, int min, int max,
 			final PDashboardSlider.jDashboardSliderAddCB callbackfn) throws UnknownHostException, JSONException {
 
-		PDashboardSlider pWebAppSlider = new PDashboardSlider(a.get());
+		PDashboardSlider pWebAppSlider = new PDashboardSlider(mContext);
 		pWebAppSlider.add(name, x, y, w, h, min, max, callbackfn);
 
 		return pWebAppSlider;
@@ -114,7 +113,7 @@ public class PDashboard extends PInterface {
 	public PDashboardInput addInput(String name, int x, int y, int w, int h, final PDashboardInput.jDashboardInputCB callbackfn)
 			throws UnknownHostException, JSONException {
 
-		PDashboardInput pWebAppInput = new PDashboardInput(a.get());
+		PDashboardInput pWebAppInput = new PDashboardInput(mContext);
 		pWebAppInput.add(name, x, y, w, h, callbackfn);
 
 		return pWebAppInput;
@@ -126,7 +125,7 @@ public class PDashboard extends PInterface {
 	public PDashboardText addText(String name, int x, int y, int width, int height, int size, String color)
 			throws UnknownHostException, JSONException {
 
-		PDashboardText pWebAppText = new PDashboardText(a.get());
+		PDashboardText pWebAppText = new PDashboardText(mContext);
 		pWebAppText.add(name, x, y, width, height, size, color);
 
 		return pWebAppText;
@@ -137,7 +136,7 @@ public class PDashboard extends PInterface {
 	@APIParam(params = { "url", "x", "y", "w", "h" })
 	public PDashboardImage addImage(String url, int x, int y, int w, int h) throws UnknownHostException, JSONException {
 
-		PDashboardImage pWebAppImage = new PDashboardImage(a.get());
+		PDashboardImage pWebAppImage = new PDashboardImage(mContext);
 		pWebAppImage.add(url, x, y, w, h);
 
 		return pWebAppImage;
@@ -148,7 +147,7 @@ public class PDashboard extends PInterface {
 	@APIParam(params = { "url", "x", "y", "w", "h" })
 	public PDashboardVideoCamera addCameraPreview(int x, int y, int w, int h) throws UnknownHostException, JSONException {
 
-		PDashboardVideoCamera pWebAppVideoCamera = new PDashboardVideoCamera(a.get());
+		PDashboardVideoCamera pWebAppVideoCamera = new PDashboardVideoCamera(mContext);
 		pWebAppVideoCamera.add(x, y, w, h);
 
 		return pWebAppVideoCamera;
@@ -159,7 +158,7 @@ public class PDashboard extends PInterface {
 	@APIParam(params = { "url", "x", "y", "w", "h", "function(obj)" })
 	public PDashboardCustomWidget addCustomWidget(String url, int x, int y, int w, int h, PDashboardCustomWidget.jDashboardAddCB callback) throws UnknownHostException, JSONException {
 
-		PDashboardCustomWidget pWebAppCustom = new PDashboardCustomWidget(a.get());
+		PDashboardCustomWidget pWebAppCustom = new PDashboardCustomWidget(mContext);
 		pWebAppCustom.add(url, x, y, w, h, callback);
 
 		return pWebAppCustom;
@@ -169,7 +168,7 @@ public class PDashboard extends PInterface {
 	@APIMethod(description = "change the background color (HEX format) of the dashboard", example = "")
 	@APIParam(params = { "hexColor" })
 	public PDashboardBackground setBackgroundColor(String hex) throws JSONException, UnknownHostException {
-        PDashboardBackground pDashboardBackground = new PDashboardBackground(a.get());
+        PDashboardBackground pDashboardBackground = new PDashboardBackground(mContext);
         pDashboardBackground.updateColor(hex);
 
         return pDashboardBackground;
@@ -189,8 +188,8 @@ public class PDashboard extends PInterface {
                 .put("action", "add")
                 .put("values", values);
 
-        CustomWebsocketServer.getInstance(a.get()).send(msg);
-        CustomWebsocketServer.getInstance(a.get()).addListener(id, new CustomWebsocketServer.WebSocketListener() {
+        CustomWebsocketServer.getInstance(mContext).send(msg);
+        CustomWebsocketServer.getInstance(mContext).addListener(id, new CustomWebsocketServer.WebSocketListener() {
 
             @Override
             public void onUpdated(final JSONObject jsonObject) {
@@ -235,7 +234,7 @@ public class PDashboard extends PInterface {
 		}
 
 		try {
-			CustomWebsocketServer.getInstance(a.get()).send(msg);
+			CustomWebsocketServer.getInstance(mContext).send(msg);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}

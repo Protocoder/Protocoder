@@ -23,7 +23,7 @@ import android.graphics.drawable.Drawable;
 import com.google.gson.annotations.Expose;
 
 /**
- * Represents a launchable application. An application is made of a name (or
+ * Represents mContext launchable application. An application is made of mContext name (or
  * title), an intent and an icon.
  */
 public class ApplicationInfo {

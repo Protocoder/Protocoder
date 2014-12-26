@@ -29,7 +29,7 @@
 
 package org.protocoderrunner.apprunner.api;
 
-import android.app.Activity;
+import android.content.Context;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,7 +51,7 @@ public class PConsole extends PInterface {
 	String TAG = "PConsole";
     private boolean showTime = false;
 
-    public PConsole(Activity a) {
+    public PConsole(Context a) {
 		super(a);
 	}
 
@@ -195,7 +195,7 @@ public class PConsole extends PInterface {
 
     private void send(JSONObject msg) {
         try {
-            CustomWebsocketServer.getInstance(a.get()).send(msg);
+            CustomWebsocketServer.getInstance(mContext).send(msg);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }

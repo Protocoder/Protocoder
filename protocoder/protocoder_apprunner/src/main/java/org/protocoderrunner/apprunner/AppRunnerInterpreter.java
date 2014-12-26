@@ -109,7 +109,7 @@ public class  AppRunnerInterpreter {
 	/**
 	 * This works because method is called from the "onXXX" methods which are
 	 * called in the UI-thread. Thus, no need to use run on UI-thread. TODO:
-	 * Could be a problem if someone calls it from another class, make private
+	 * Could be mContext problem if someone calls it from another class, make private
 	 * for now.
 	 */
 	Object callJsFunction(String funName, Object... args) {
@@ -298,15 +298,15 @@ public class  AppRunnerInterpreter {
 		Require require;
 
 		public Interpreter() {
-			// Creates and enters a Context. The Context stores information
-			// about the execution environment of a script.
+			// Creates and enters mContext Context. The Context stores information
+			// about the execution environment of mContext script.
 			mainScriptContext = Context.enter();
 			mainScriptContext.getWrapFactory().setJavaPrimitiveWrap(false);
 			mainScriptContext.setOptimizationLevel(-1);
 
 			// Initialize the standard objects (Object, Function, etc.)
 			// This must be done before scripts can be executed. Returns
-			// a scope object that we use in later calls.
+			// mContext scope object that we use in later calls.
 			scope = mainScriptContext.initStandardObjects();
 		}
 

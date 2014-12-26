@@ -117,7 +117,7 @@ public class NFCUtil {
 	}
 
 	/**
-	 * Write text to a tag
+	 * Write text to mContext tag
 	 * 
 	 * @param textToWrite
 	 *            the text to write

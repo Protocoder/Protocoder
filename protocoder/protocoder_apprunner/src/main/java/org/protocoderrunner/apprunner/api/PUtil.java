@@ -58,7 +58,6 @@ import org.protocoderrunner.apprunner.api.other.SignalUtils;
 import org.protocoderrunner.sensors.WhatIsRunning;
 import org.protocoderrunner.utils.MLog;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -184,7 +183,7 @@ public class PUtil extends PInterface {
     @APIMethod(description = "Convert given dp to pixels", example = "")
     @APIParam(params = { "" })
 	public float dpToPixels(float dp) {
-		Resources resources = a.get().getResources();
+		Resources resources = mContext.getResources();
 		DisplayMetrics metrics = resources.getDisplayMetrics();
 		float px = dp * (metrics.densityDpi / 160f);
 		return px;
@@ -194,7 +193,7 @@ public class PUtil extends PInterface {
     @APIMethod(description = "Convert given px to dp", example = "")
     @APIParam(params = { "" })
 	public float pixelsToDp(float px) {
-		Resources resources = a.get().getResources();
+		Resources resources = mContext.getResources();
 		DisplayMetrics metrics = resources.getDisplayMetrics();
 		float dp = px / (metrics.densityDpi / 160f);
 		return dp;
@@ -205,7 +204,7 @@ public class PUtil extends PInterface {
     @APIParam(params = { "" })
 	public float mmToPixels(float mm) {
 		float px = TypedValue
-				.applyDimension(TypedValue.COMPLEX_UNIT_MM, mm, a.get().getResources().getDisplayMetrics());
+				.applyDimension(TypedValue.COMPLEX_UNIT_MM, mm, mContext.getResources().getDisplayMetrics());
 		return px;
 	}
 
@@ -213,7 +212,7 @@ public class PUtil extends PInterface {
     @APIMethod(description = "Convert given pixels to mm", example = "")
     @APIParam(params = { "" })
 	public float pixelsToMm(int px) {
-		float onepx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_MM, 1, a.get().getResources()
+		float onepx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_MM, 1, mContext.getResources()
 				.getDisplayMetrics());
 
 		return px * onepx;
@@ -301,7 +300,7 @@ public class PUtil extends PInterface {
     }
 
     public SignalUtils signal(int n) {
-        return new SignalUtils(a.get(), n);
+        return new SignalUtils(mContext, n);
     }
 
 }

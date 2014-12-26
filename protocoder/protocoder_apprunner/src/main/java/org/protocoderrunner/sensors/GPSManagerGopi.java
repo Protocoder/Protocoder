@@ -75,7 +75,7 @@ public class GPSManagerGopi extends Service implements LocationListener {
 	// The minimum time between updates in milliseconds
 	private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
 
-	// Declaring a Location Manager
+	// Declaring mContext Location Manager
 	protected LocationManager locationManager;
 
 	public GPSManagerGopi(Context context) {

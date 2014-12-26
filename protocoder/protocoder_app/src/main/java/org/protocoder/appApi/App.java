@@ -129,7 +129,7 @@ public class App {
         });
 
 
-//        overlay = new Overlay(protocoder.a);
+//        overlay = new Overlay(protocoder.mContext);
 //        overlay.setLayoutParams(new LinearLayout.LayoutParams(
 //                LinearLayout.LayoutParams.MATCH_PARENT,
 //                LinearLayout.LayoutParams.MATCH_PARENT));
@@ -158,7 +158,7 @@ public class App {
             //bundle.putString(Project.FOLDER, project.getFolder());
 
             //helpFragment.setArguments(bundle);
-            //MainActivity ma = (MainActivity) (protocoder.a);
+            //MainActivity ma = (MainActivity) (protocoder.mContext);
             //ma.addFragment(helpFragment, R.id.fragmentEditor, "helpFragment", true);
         } else {
 
@@ -183,7 +183,7 @@ public class App {
         }
     }
 
-    //when there is a some data transfer
+    //when there is mContext some data transfer
     public void showNetworkProgress(boolean show) {
         if (show) {
 
@@ -258,7 +258,7 @@ public class App {
             e.printStackTrace();
         }
 
-        // check if there is a WIFI connection or we can connect via USB
+        // check if there is mContext WIFI connection or we can connect via USB
         if (NetworkUtils.getLocalIpAddress(protocoder.a).equals("-1")) {
             setIp("No WIFI, still you can hack via USB using the companion app");
         } else {
@@ -268,7 +268,7 @@ public class App {
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-        //MLog.d(TAG, "qq" + NetworkUtils.getLocalIpAddress(protocoder.a));
+        //MLog.d(TAG, "qq" + NetworkUtils.getLocalIpAddress(protocoder.mContext));
 
         if (httpServer != null) {// If no instance of HTTPServer, we set the IP
             // address view to gone.

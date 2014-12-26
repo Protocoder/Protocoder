@@ -72,7 +72,7 @@ public class PDashboardBackground extends PInterface {
                 .put("action", "add")
                 .put("values", values);
 
-        CustomWebsocketServer.getInstance(a.get()).send(msg);
+        CustomWebsocketServer.getInstance(mContext).send(msg);
 	}
 
 

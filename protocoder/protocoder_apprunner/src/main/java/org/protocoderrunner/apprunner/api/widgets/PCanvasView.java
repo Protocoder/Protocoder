@@ -384,7 +384,7 @@ public class PCanvasView extends View implements PViewInterface {
 
     public PCanvasView strokeDashed(float[] intervals, float phase) {
 
-        // Stamp a concave arrow along the line
+        // Stamp mContext concave arrow along the line
         PathEffect effect = new DashPathEffect(intervals, phase);
         mPaintStroke.setPathEffect(effect);
 
@@ -605,7 +605,7 @@ public class PCanvasView extends View implements PViewInterface {
     }
 
     public int newLayer() {
-        //create a new bitmap
+        //create mContext new bitmap
         Layer layer = createNewLayer();
         layer.visible = true;
         mLayerFifo.add(++currentLayer, layer);

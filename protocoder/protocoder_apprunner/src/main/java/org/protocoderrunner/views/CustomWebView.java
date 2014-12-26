@@ -34,7 +34,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.webkit.WebView;
 
-import org.protocoderrunner.apprunner.AppRunnerActivity;
+import org.protocoderrunner.apprunner.AppRunnerFragment;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
 
 import java.io.File;
@@ -46,11 +46,11 @@ import java.lang.ref.WeakReference;
 
 public class CustomWebView extends WebView {
 
-	private WeakReference<AppRunnerActivity> a;
+	private Context mContext;
 
 	public CustomWebView(Context context) {
 		super(context);
-		this.a = new WeakReference<AppRunnerActivity>((AppRunnerActivity) context);
+		this.mContext = context;
 	}
 
 	public CustomWebView(Context context, AttributeSet attrs) {

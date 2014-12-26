@@ -177,8 +177,8 @@
 //		SubMenu samplesSubMenu = menu.addSubMenu(0, MENU_SAMPLES, Menu.NONE, R.string.samples).setIcon(
 //				android.R.drawable.ic_menu_gallery);
 //		SampleFactory sampleFactory = SampleFactory.getInstance();
-//		for (int a = 0; a < sampleFactory.count(); a++) {
-//			final BaseSampleFragment f = sampleFactory.getSample(a);
+//		for (int mContext = 0; mContext < sampleFactory.count(); mContext++) {
+//			final BaseSampleFragment f = sampleFactory.getSample(mContext);
 //			samplesSubMenu.add(f.getSampleTitle()).setOnMenuItemClickListener(new OnMenuItemClickListener() {
 //				@Override
 //				public boolean onMenuItemClick(MenuItem item) {

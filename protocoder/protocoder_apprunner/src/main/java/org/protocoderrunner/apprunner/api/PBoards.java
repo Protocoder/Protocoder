@@ -29,7 +29,7 @@
 
 package org.protocoderrunner.apprunner.api;
 
-import android.app.Activity;
+import android.content.Context;
 
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
@@ -43,7 +43,7 @@ public class PBoards extends PInterface {
 
 	private final String TAG = "PBoards";
 
-	public PBoards(Activity a) {
+	public PBoards(Context a) {
 		super(a);
 	}
 
@@ -51,7 +51,7 @@ public class PBoards extends PInterface {
 	@APIMethod(description = "initializes the ioio board", example = "")
 	@APIParam(params = { "function()" })
 	public PIOIO startIOIO(PIOIO.startCB callbackfn) {
-		PIOIO ioio = new PIOIO(a.get());
+		PIOIO ioio = new PIOIO(mContext);
 		ioio.start(callbackfn);
 
 		return ioio;
@@ -61,7 +61,7 @@ public class PBoards extends PInterface {
 	@APIMethod(description = "initializes serial communication", example = "")
 	@APIParam(params = { "bauds", "function()" })
 	public PSerial startSerial(int baud, PSerial.startCB callbackfn) {
-		PSerial serial = new PSerial(a.get());
+		PSerial serial = new PSerial(mContext);
 		serial.start(baud, callbackfn);
 
 		return serial;
@@ -72,7 +72,7 @@ public class PBoards extends PInterface {
     @APIMethod(description = "initializes arduino board without callback", example = "")
     @APIParam(params = { "" })
     public PArduino startArduino() {
-        PArduino arduino = new PArduino(a.get());
+        PArduino arduino = new PArduino(mContext);
         arduino.start();
 
         return arduino;
@@ -82,7 +82,7 @@ public class PBoards extends PInterface {
     @APIMethod(description = "initializes arduino board with callback", example = "")
     @APIParam(params = { "bauds", "function()" })
     public PArduino startArduino(int bauds, PArduino.onReadCB callbackfn) {
-        PArduino arduino = new PArduino(a.get());
+        PArduino arduino = new PArduino(mContext);
         arduino.start(bauds, callbackfn);
 
         return arduino;

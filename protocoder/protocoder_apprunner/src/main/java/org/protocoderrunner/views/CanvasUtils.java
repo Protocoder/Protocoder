@@ -41,8 +41,8 @@ public class CanvasUtils {
 	}
 
 	/**
-	 * Normalize a value to exist between 0 and 1 (inclusive). Mathematically
-	 * the opposite of lerp(), figures out what proportion a particular value is
+	 * Normalize mContext value to exist between 0 and 1 (inclusive). Mathematically
+	 * the opposite of lerp(), figures out what proportion mContext particular value is
 	 * relative to start and stop coordinates.
 	 */
 	static public final float norm(float value, float start, float stop) {
@@ -50,7 +50,7 @@ public class CanvasUtils {
 	}
 
 	/**
-	 * Convenience function to map a variable from one coordinate space to
+	 * Convenience function to map mContext variable from one coordinate space to
 	 * another. Equivalent to unlerp() followed by lerp().
 	 */
 	static public final float map(float value, float istart, float istop, float ostart, float ostop) {

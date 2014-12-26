@@ -44,7 +44,7 @@ public class PWebEditor extends PInterface {
 
 	}
 
-    //TODO this is a place holder
+    //TODO this is mContext place holder
 	@ProtocoderScript
 	@APIMethod(description = "Loads a Html file in the webIde sidebar", example = "")
 	@APIParam(params = { "boolean" })
@@ -52,7 +52,7 @@ public class PWebEditor extends PInterface {
 
 	}
 
-    //TODO this is a place holder
+    //TODO this is mContext place holder
 	@ProtocoderScript
 	@APIMethod(description = "Shows/Hides the webIde sidebar", example = "")
 	@APIParam(params = { "boolean" })
@@ -64,6 +64,6 @@ public class PWebEditor extends PInterface {
     @APIMethod(description = "Execute custom js in the webIde", example = "")
     @APIParam(params = { "jsText" })
     public void sendJs(String js) {
-        IDEcommunication.getInstance(a.get()).sendCustomJs(js);
+        IDEcommunication.getInstance(mContext).sendCustomJs(js);
     }
 }

@@ -35,8 +35,8 @@ import java.util.UUID;
 
 /**
  * This class does all the work for setting up and managing Bluetooth
- * connections with other devices. It has a thread that listens for incoming
- * connections, a thread for connecting with a device, and a thread for
+ * connections with other devices. It has mContext thread that listens for incoming
+ * connections, mContext thread for connecting with mContext device, and mContext thread for
  * performing data transmissions when connected.
  */
 public class BluetoothSerialService {
@@ -59,7 +59,7 @@ public class BluetoothSerialService {
 	public static final int STATE_CONNECTING = 2;
 	public static final int STATE_CONNECTED = 3;
 
-	//it needs a handler to pass messages back and forth
+	//it needs mContext handler to pass messages back and forth
 	public BluetoothSerialService(Handler handler) {
 		mAdapter = BluetoothAdapter.getDefaultAdapter();
 		mState = STATE_NONE;
@@ -82,7 +82,7 @@ public class BluetoothSerialService {
 	public synchronized void connect(BluetoothDevice device) {
 		MLog.d(TAG, "connect to: " + device);
 
-		// Cancel any thread attempting to make a connection
+		// Cancel any thread attempting to make mContext connection
 		if (mState == STATE_CONNECTING) {
 			if (mConnectThread != null) {
 				mConnectThread.cancel();
@@ -90,7 +90,7 @@ public class BluetoothSerialService {
 			}
 		}
 
-		// Cancel any thread currently running a connection
+		// Cancel any thread currently running mContext connection
 		if (mConnectedThread != null) {
 			mConnectedThread.cancel();
 			mConnectedThread = null;
@@ -124,7 +124,7 @@ public class BluetoothSerialService {
 			mConnectThread = null;
 		}
 
-		// Cancel any thread currently running a connection
+		// Cancel any thread currently running mContext connection
 		if (mConnectedThread != null) {
 			mConnectedThread.cancel();
 			mConnectedThread = null;
@@ -158,7 +158,7 @@ public class BluetoothSerialService {
 	//write data
 	public void write(byte[] out) {
 		ConnectedThread r;
-		// Synchronize a copy of the ConnectedThread
+		// Synchronize mContext copy of the ConnectedThread
 		synchronized (this) {
 			if (mState != STATE_CONNECTED) {
 				return;
@@ -180,7 +180,7 @@ public class BluetoothSerialService {
 	}
 
 	/**
-	 * This thread runs while attempting to make an outgoing connection with a
+	 * This thread runs while attempting to make an outgoing connection with mContext
 	 * device. It runs straight through; the connection either succeeds or
 	 * fails.
 	 */
@@ -193,7 +193,7 @@ public class BluetoothSerialService {
 			mmDevice = device;
 			BluetoothSocket tmpSocket = null;
 
-			// Get a BluetoothSocket for a connection with the given BluetoothDevice
+			// Get mContext BluetoothSocket for mContext connection with the given BluetoothDevice
 			try {
 				tmpSocket = device.createRfcommSocketToServiceRecord(UUID_SPP);
                 MLog.d(TAG, "socketTmp " + tmpSocket);
@@ -214,12 +214,12 @@ public class BluetoothSerialService {
 			Log.i(TAG, "BEGIN mConnectThread");
 			setName("ConnectThread");
 
-			// Always cancel discovery because it will slow down a connection
+			// Always cancel discovery because it will slow down mContext connection
 			mAdapter.cancelDiscovery();
 
-			// Make a connection to the BluetoothSocket
+			// Make mContext connection to the BluetoothSocket
 			try {
-				// This is a blocking call and will only return on a successful connection or an exception
+				// This is mContext blocking call and will only return on mContext successful connection or an exception
 				mmSocket.connect();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -252,7 +252,7 @@ public class BluetoothSerialService {
 	}
 
 	/**
-	 * This thread runs during a connection with a remote device. It handles all
+	 * This thread runs during mContext connection with mContext remote device. It handles all
 	 * incoming and outgoing transmissions.
 	 */
 	private class ConnectedThread extends Thread {

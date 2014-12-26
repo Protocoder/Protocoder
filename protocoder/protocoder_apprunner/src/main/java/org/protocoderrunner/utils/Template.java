@@ -40,7 +40,7 @@ import java.util.regex.Pattern;
 public class Template {
 
 	/**
-	 * Merge a file into another file with the ${contents} tag in the template
+	 * Merge mContext file into another file with the ${contents} tag in the template
 	 * file
 	 * 
 	 * @param context
@@ -64,7 +64,7 @@ public class Template {
 	}
 
 	/**
-	 * Substitute variables into a string ${variable}
+	 * Substitute variables into mContext string ${variable}
 	 * 
 	 * @param template
 	 * @param Map
