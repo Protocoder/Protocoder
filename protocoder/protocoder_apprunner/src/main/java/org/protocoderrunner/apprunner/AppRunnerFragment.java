@@ -154,6 +154,18 @@ public class AppRunnerFragment extends Fragment {
 
         mActivity = (AppRunnerActivity) getActivity();
 
+        //setup actionbar
+        int actionBarColor;
+        if (mProjectFolder.equals("examples")) {
+            actionBarColor = getResources().getColor(R.color.project_example_color);
+        } else {
+            actionBarColor = getResources().getColor(R.color.project_user_color);
+        }
+
+        Project currentProject = ProjectManager.getInstance().get(mProjectFolder, mProjectName);
+        mActivity.setToolBar(currentProject, actionBarColor, 0xFFFFFF);
+
+
         //instantiate the objects that can be accessed from the interpreter
         pApp = new PApp(mContext);
         pApp.initForParentFragment(this);
@@ -322,25 +334,6 @@ public class AppRunnerFragment extends Fragment {
         //menu.add("llala");
 
     }
-
-    @Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		interp.callJsFunction("onOptionsItemSelected", item);
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			// Up button pressed
-			Intent intentHome = new Intent(mActivity, AppRunnerActivity.class);
-			intentHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(intentHome);
-
-			mActivity.overridePendingTransition(R.anim.splash_slide_in_anim_reverse_set, R.anim.splash_slide_out_anim_reverse_set);
-			mActivity.finish();
-
-            return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
 
 	public void addOnAppStatusListener(PApp.onAppStatus onAppStatus) {
 		onAppStatus = onAppStatus;
