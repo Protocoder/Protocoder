@@ -70,7 +70,7 @@ public class PDashboardImage extends PInterface {
                 .put("action", "add")
                 .put("values", values);
 
-		CustomWebsocketServer.getInstance(mContext).send(msg);
+		CustomWebsocketServer.getInstance(getContext()).send(msg);
 	}
 
 	@ProtocoderScript
@@ -88,6 +88,6 @@ public class PDashboardImage extends PInterface {
                 .put("action", "changeImage")
                 .put("values", values);
 
-		CustomWebsocketServer.getInstance(mContext).send(msg);
+		CustomWebsocketServer.getInstance(getContext()).send(msg);
 	}
 }

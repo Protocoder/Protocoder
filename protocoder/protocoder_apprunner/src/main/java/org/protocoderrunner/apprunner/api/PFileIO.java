@@ -34,6 +34,7 @@ import android.os.FileObserver;
 
 import net.lingala.zip4j.exception.ZipException;
 
+import org.mozilla.javascript.Scriptable;
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
@@ -52,8 +53,8 @@ public class PFileIO extends PInterface {
 	String TAG = "PFileIO";
     private FileObserver fileObserver;
 
-    public PFileIO(Context a) {
-		super(a);
+    public PFileIO(Context c) {
+		super(c);
         WhatIsRunning.getInstance().add(this);
 	}
 
@@ -114,20 +115,25 @@ public class PFileIO extends PInterface {
 	@ProtocoderScript
 	@APIMethod(description = "List all the files in the directory", example = "")
 	@APIParam(params = { "url" })
-	public ProtocoderNativeArray listFiles(String url) {
+	public Scriptable listFiles(String url) {
 		return listFiles(url, "");
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "List all the files with a given extension", example = "")
 	@APIParam(params = { "fileName" })
-	public ProtocoderNativeArray listFiles(String url, String filter) {
+	public Scriptable listFiles(String url, String filter) {
 
         File files[] = FileIO.listFiles(url, filter);
-        ProtocoderNativeArray filesNativeArray = new ProtocoderNativeArray(files.length);
-        for (int i = 0; i < files.length; i++) {
-            filesNativeArray.addPE(i, files[i].getName());
-        }
+       // ProtocoderNativeArray filesNativeArray = new ProtocoderNativeArray(files.length);
+        Scriptable filesNativeArray = AppRunnerSettings.get().newArray(files);
+
+
+
+        //for (int i = 0; i < files.length; i++) {
+        //    filesNativeArray.put(i, 0, files[i].getName());
+            //filesNativeArray.addPE(i, files[i].getName());
+        //}
 
 		return filesNativeArray;
 	}
@@ -136,7 +142,7 @@ public class PFileIO extends PInterface {
 	@APIMethod(description = "Open a sqlite database", example = "")
 	@APIParam(params = { "filename" })
 	public PSqLite openSqlLite(String db) {
-		return new PSqLite(mContext, db);
+		return new PSqLite(getContext(), db);
 	}
 
     public interface addZipUnzipCB {

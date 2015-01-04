@@ -90,7 +90,7 @@ public class PApp extends PInterface {
 	@APIMethod(description = "", example = "")
 	public void setDelayedAlarm(int delay, boolean alarmRepeat, boolean wakeUpScreen) {
 		Project p = ProjectManager.getInstance().getCurrentProject();
-		SchedulerManager.getInstance(mContext).setAlarmDelayed(p, delay, alarmRepeat, wakeUpScreen);
+		SchedulerManager.getInstance(getContext()).setAlarmDelayed(p, delay, alarmRepeat, wakeUpScreen);
 	}
 
     //TODO
@@ -98,7 +98,7 @@ public class PApp extends PInterface {
 	@APIMethod(description = "", example = "")
 	public void setDelayedAlarm(int hour, int minute, int second, boolean wakeUpScreen) {
 		Project p = ProjectManager.getInstance().getCurrentProject();
-		SchedulerManager.getInstance(mContext).setAlarm(p, hour, minute, second, wakeUpScreen);
+		SchedulerManager.getInstance(getContext()).setAlarm(p, hour, minute, second, wakeUpScreen);
 	}
 
     //TODO
@@ -106,7 +106,7 @@ public class PApp extends PInterface {
 	@APIMethod(description = "", example = "")
 	public void setExactAlarm(int hour, int minute, int second, boolean wakeUpScreen) {
 		Project p = ProjectManager.getInstance().getCurrentProject();
-		SchedulerManager.getInstance(mContext).setAlarm(p, hour, minute, second, wakeUpScreen);
+		SchedulerManager.getInstance(getContext()).setAlarm(p, hour, minute, second, wakeUpScreen);
 	}
 
     @ProtocoderScript
@@ -119,7 +119,7 @@ public class PApp extends PInterface {
     @ProtocoderScript
 	@APIMethod(description = "close the running script", example = "")
 	public void close() {
-        mActivity.finish();
+        getActivity().finish();
 	}
 
 	@android.webkit.JavascriptInterface
@@ -127,7 +127,7 @@ public class PApp extends PInterface {
 	@APIMethod(description = "evaluate mContext script", example = "")
 	@APIParam(params = { "code" })
 	public void eval(String code) {
-        mActivity.mAppRunnerFragment.interp.eval(code);
+        getActivity().mAppRunnerFragment.interp.eval(code);
 	}
 
 	@ProtocoderScript
@@ -135,7 +135,7 @@ public class PApp extends PInterface {
 	@APIParam(params = { "fileName" })
 	public void load(String filename) {
 		String code = FileIO.loadFile(filename);
-        mActivity.mAppRunnerFragment.interp.eval(code);
+        getActivity().mAppRunnerFragment.interp.eval(code);
 	}
 
     @ProtocoderScript
@@ -143,7 +143,7 @@ public class PApp extends PInterface {
 	@APIParam(params = { "libraryName" })
 	public void loadLibrary(String name) {
 		String code = FileIO.loadFile("../../libraries/" + name + "/main.js");
-        mActivity.mAppRunnerFragment.interp.eval(code);
+        getActivity().mAppRunnerFragment.interp.eval(code);
 	}
 
     //TODO way to cancel notification and come back to the script
@@ -152,24 +152,24 @@ public class PApp extends PInterface {
 	@APIMethod(description = "", example = "")
 	@APIParam(params = { "id", "title", "description" })
 	public void setNotification(int id, String title, String description) {
-		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mContext)
+		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getContext())
 				.setSmallIcon(R.drawable.app_icon).setContentTitle(title).setContentText(description);
 		// Creates an explicit intent for an Activity in your app
-		Intent resultIntent = new Intent(mContext, AppRunnerFragment.class);
+		Intent resultIntent = new Intent(getContext(), AppRunnerFragment.class);
 
 		// The stack builder object will contain an artificial back stack for
 		// the started Activity.
 		// This ensures that navigating backward from the Activity leads out of
 		// your application to the Home screen.
-		TaskStackBuilder stackBuilder = TaskStackBuilder.create(mContext);
+		TaskStackBuilder stackBuilder = TaskStackBuilder.create(getContext());
 		// Adds the back stack for the Intent (but not the Intent itself)
 		stackBuilder.addParentStack(AppRunnerFragment.class);
 		// Adds the Intent that starts the Activity to the top of the stack
 		stackBuilder.addNextIntent(resultIntent);
 		PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 		mBuilder.setContentIntent(resultPendingIntent);
-		NotificationManager mNotificationManager = (NotificationManager) mContext.getSystemService(
-				mContext.NOTIFICATION_SERVICE);
+		NotificationManager mNotificationManager = (NotificationManager) getContext().getSystemService(
+                getContext().NOTIFICATION_SERVICE);
 		// mId allows you to update the notification later on.
 		mNotificationManager.notify(id, mBuilder.build());
 
@@ -184,13 +184,13 @@ public class PApp extends PInterface {
 		ContentValues values = new ContentValues();
 		values.put(MediaColumns.MIME_TYPE, "image/png");
 		//values.put(MediaColumns.DATA, AppRunnerSettings.get().project.getStoragePath() + "/" + imagePath);
-		Uri uri = mContext.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+		Uri uri = getContext().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
 
 		Intent shareIntent = new Intent(Intent.ACTION_SEND);
 		shareIntent.setType("image/png");
 
 		shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
-		mContext.startActivity(shareIntent);
+        getContext().startActivity(shareIntent);
 	}
 
 	@ProtocoderScript
@@ -200,7 +200,7 @@ public class PApp extends PInterface {
 		Intent shareIntent = new Intent(Intent.ACTION_SEND);
 		shareIntent.setType("text/*");
 		shareIntent.putExtra(Intent.EXTRA_TEXT, text);
-		mContext.startActivity(shareIntent);
+        getContext().startActivity(shareIntent);
 	}
 
 	@ProtocoderScript
@@ -242,7 +242,7 @@ public class PApp extends PInterface {
     @APIMethod(description = "shows mContext feedback overlay with the live-executed code", example = "")
     @APIParam(params = { })
     public PLiveCodingFeedback liveCodingFeedback() {
-        PLiveCodingFeedback l = mActivity.liveCodingFeedback();
+        PLiveCodingFeedback l = getActivity().liveCodingFeedback();
 
         return l;
     }
@@ -291,7 +291,7 @@ public class PApp extends PInterface {
         intent.setDataAndType(Uri.parse("file://" + projectPath + "/" + src), packageName);
         //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        mContext.startActivity(intent);
+        getContext().startActivity(intent);
     }
 
 }

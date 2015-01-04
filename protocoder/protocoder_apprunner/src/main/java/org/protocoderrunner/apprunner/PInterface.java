@@ -33,31 +33,23 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
+import org.protocoderrunner.utils.MLog;
+
 public class PInterface {
 
     public Handler mHandler = new Handler(Looper.getMainLooper());
 
 	protected String TAG = getClass().getSimpleName();
 
-	public Context mContext;
-	public AppRunnerFragment contextUi;
-    public AppRunnerFragment mFragment;
-    public AppRunnerActivity mActivity;
+	private Context mContext;
+    private AppRunnerFragment mFragment;
+    private AppRunnerActivity mActivity;
 
     public PInterface(Context context) {
 		super();
 		this.mContext = context.getApplicationContext();
 
-      //  try {
-       //     this.contextUi = appActivity;
-       // }catch (Exception e) {
-
-       // }
     }
-
-	// public <T> void callback(String fn, T... args) {
-	// mContext.interp.callback(fn, args);
-	// }
 
 	public void destroy() {
 	}
@@ -65,5 +57,13 @@ public class PInterface {
     public void initForParentFragment(AppRunnerFragment fragment) {
         this.mFragment = fragment;
         this.mActivity = (AppRunnerActivity)(mFragment.getActivity());
+    }
+
+    public Context getContext() { return mContext; }
+    public AppRunnerFragment getFragment() { return mFragment; }
+    public AppRunnerActivity getActivity() { return mActivity; }
+
+    public void setActivity(AppRunnerActivity activity) {
+        this.mActivity = activity;
     }
 }

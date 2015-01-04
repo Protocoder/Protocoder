@@ -74,9 +74,9 @@ public class PDashboardSlider extends PInterface {
                 .put("action", "add")
                 .put("values", values);
 
-		CustomWebsocketServer.getInstance(mContext).send(msg);
+		CustomWebsocketServer.getInstance(getContext()).send(msg);
 
-		CustomWebsocketServer.getInstance(mContext).addListener(id, new WebSocketListener() {
+		CustomWebsocketServer.getInstance(getContext()).addListener(id, new WebSocketListener() {
 			@Override
 			public void onUpdated(JSONObject jsonObject) {
 				try {
@@ -112,7 +112,7 @@ public class PDashboardSlider extends PInterface {
 		values.put("val", position);
 		msg.put("values", values);
 
-		CustomWebsocketServer ws = CustomWebsocketServer.getInstance(mContext);
+		CustomWebsocketServer ws = CustomWebsocketServer.getInstance(getContext());
 		ws.send(msg);
 
 	}

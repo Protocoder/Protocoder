@@ -195,7 +195,7 @@ public class PConsole extends PInterface {
 
     private void send(JSONObject msg) {
         try {
-            CustomWebsocketServer.getInstance(mContext).send(msg);
+            CustomWebsocketServer.getInstance(getContext()).send(msg);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }

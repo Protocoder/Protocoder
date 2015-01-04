@@ -57,7 +57,7 @@ public class AppSettings {
 
 	private static AppSettings instance;
 
-	public static AppSettings get() {
+    public static AppSettings get() {
 		if (instance == null)
 			instance = new AppSettings();
 		return instance;

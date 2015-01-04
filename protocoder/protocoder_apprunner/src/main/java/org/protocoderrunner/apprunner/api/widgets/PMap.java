@@ -301,7 +301,7 @@ public class PMap extends MapView {
     @APIParam(params = { "x", "y" })
     public Point getPixelsFromCoordinates(double lat, double lon) {
         GeoPoint point = new GeoPoint(lat, lon);
-        return mapView.getProjection().toProjectedPixels(point, null);
+        return mapView.getProjection().toPixels(point, null);
     }
 
 

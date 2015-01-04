@@ -130,7 +130,7 @@ public class PNetwork extends PInterface {
     @APIParam(params = {"url", "fileName", "function(progress)"})
     public void downloadFile(String url, String fileName, final downloadFileCB callbackfn) {
 
-        NetworkUtils.DownloadTask downloadTask = new NetworkUtils.DownloadTask(mContext, fileName);
+        NetworkUtils.DownloadTask downloadTask = new NetworkUtils.DownloadTask(getContext(), fileName);
         downloadTask.execute(url);
         downloadTask.addListener(new DownloadListener() {
 
@@ -177,7 +177,7 @@ public class PNetwork extends PInterface {
     @APIParam(params = {""})
     public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
-                = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+                = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
@@ -186,14 +186,14 @@ public class PNetwork extends PInterface {
     @APIMethod(description = "Returns the current device Ip address", example = "")
     @APIParam(params = {""})
     public String getIp() {
-        return NetworkUtils.getLocalIpAddress(mContext);
+        return NetworkUtils.getLocalIpAddress(getContext());
     }
 
     @ProtocoderScript
     @APIMethod(description = "Get the wifi ap information", example = "")
     @APIParam(params = {""})
     public WifiInfo getWifiInfo() {
-        return NetworkUtils.getWifiInfo(mContext);
+        return NetworkUtils.getWifiInfo(getContext());
     }
 
     // --------- OSC Server ---------//
@@ -268,7 +268,7 @@ public class PNetwork extends PInterface {
     @APIMethod(description = "Enable multicast networking", example = "")
     @APIParam(params = {"boolean"})
     public void setMulticast(boolean b) {
-        WifiManager wifi = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifi = (WifiManager) getContext().getSystemService(Context.WIFI_SERVICE);
         if (wifi != null) {
             if (b) {
                 wifiLock = wifi.createMulticastLock("mylock");
@@ -283,7 +283,7 @@ public class PNetwork extends PInterface {
         WifiManager.MulticastLock wifiLock;
 
         MulticastEnabler(boolean b) {
-            WifiManager wifi = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
+            WifiManager wifi = (WifiManager) getContext().getSystemService(Context.WIFI_SERVICE);
             if (wifi != null) {
                 if (b) {
                     wifiLock = wifi.createMulticastLock("mylock");
@@ -740,7 +740,7 @@ public class PNetwork extends PInterface {
 	public PSimpleHttpServer startSimpleHttpServer(int port, final PSimpleHttpServer.HttpCB callbackfn) {
         PSimpleHttpServer httpServer = null;
         try {
-			httpServer = new PSimpleHttpServer(mContext, port, callbackfn);
+			httpServer = new PSimpleHttpServer(getContext(), port, callbackfn);
             WhatIsRunning.getInstance().add(httpServer);
 
 		} catch (IOException e) {
