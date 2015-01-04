@@ -59,7 +59,7 @@ public class Protocoder {
     PDevice mPDevice = new PDevice(a);
     PProtocoder mProtocoder = new PProtocoder(a);
 
-    public AppRunnerInterpreter interp;
+    //public AppRunnerInterpreter interp;
 
     private boolean debugApp = false;
 
@@ -79,10 +79,10 @@ public class Protocoder {
         editor = new Editor(this);
         webEditor = new WebEditor(this);
 
-
+        //TODO reenable
         //check if new version is available
 
-
+/*
         if (mPNetwork.isNetworkAvailable()) {
             mPNetwork.httpGet("http://www.protocoder.org/downloads/list_latest.php", new PNetwork.HttpGetCB() {
                 @Override
@@ -108,8 +108,7 @@ public class Protocoder {
                 }
             });
         }
-
-
+*/
 
        // if (debugApp) {
        //     interp = new AppRunnerInterpreter(a);
@@ -119,9 +118,6 @@ public class Protocoder {
             // interp.interpreter.addObjectToInterface("util", mPUtil);
             // interp.interpreter.addObjectToInterface("protocoder", mProtocoder);
        // }
-
-
-
 
     }
 

@@ -35,6 +35,8 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
+import org.protocoderrunner.apprunner.api.other.WhatIsRunningInterface;
+
 public class StepManager extends CustomSensorManager implements WhatIsRunningInterface {
 
 	public interface StepListener extends CustomSensorListener {

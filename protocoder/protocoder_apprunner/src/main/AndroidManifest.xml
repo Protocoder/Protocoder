@@ -5,7 +5,6 @@
         android:minSdkVersion="15"
         android:targetSdkVersion="21" />
 
-
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="false" />
@@ -58,7 +57,6 @@
 
         <activity
             android:name=".apprunner.AppRunnerActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/runner_name"
             android:theme="@style/ProtocoderDarkTheme"
             android:launchMode="standard"

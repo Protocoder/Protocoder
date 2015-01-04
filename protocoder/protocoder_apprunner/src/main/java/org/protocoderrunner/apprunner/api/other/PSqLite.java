@@ -39,7 +39,6 @@ import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.project.ProjectManager;
-import org.protocoderrunner.sensors.WhatIsRunning;
 
 import java.util.ArrayList;
 

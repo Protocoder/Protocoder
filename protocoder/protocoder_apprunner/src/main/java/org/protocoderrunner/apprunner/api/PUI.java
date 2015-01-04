@@ -99,7 +99,7 @@ import org.protocoderrunner.apprunner.api.widgets.PToolbar;
 import org.protocoderrunner.apprunner.api.widgets.PUIGeneric;
 import org.protocoderrunner.apprunner.api.widgets.PWebView;
 import org.protocoderrunner.apprunner.api.widgets.PWindow;
-import org.protocoderrunner.sensors.WhatIsRunning;
+import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.utils.AndroidUtils;
 import org.protocoderrunner.views.TouchAreaView;
 

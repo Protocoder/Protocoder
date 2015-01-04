@@ -59,6 +59,7 @@ import org.protocoderrunner.apprunner.api.other.PLiveCodingFeedback;
 import org.protocoderrunner.apprunner.api.widgets.PPadView;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.events.Events;
+import org.protocoderrunner.network.IDEcommunication;
 import org.protocoderrunner.project.Project;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.MLog;
@@ -93,6 +94,8 @@ public class AppRunnerActivity extends BaseActivity {
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+        MLog.d(TAG, "onCreate");
         setContentView(R.layout.activity_apprunner_host);
         FrameLayout fl = (FrameLayout) findViewById(R.id.apprunner_fragment);
 
@@ -133,7 +136,6 @@ public class AppRunnerActivity extends BaseActivity {
             Project currentProject = ProjectManager.getInstance().get(projectFolder, projectName);
             setToolBar(currentProject, actionBarColor, 0xFFFFFF);
 
-
             MLog.d(TAG, "load " + projectName + " in " + projectFolder);
 
             // wake up if intent says so
@@ -157,10 +159,12 @@ public class AppRunnerActivity extends BaseActivity {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.add(fl.getId(), mAppRunnerFragment, String.valueOf(fl.getId()));
 
-            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-            ft.addToBackStack(null);
+           // ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+           // ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+           // ft.addToBackStack(null);
             ft.commit();
+
+            IDEcommunication.getInstance(this).ready(true);
         }
 
 	}
@@ -220,6 +224,7 @@ public class AppRunnerActivity extends BaseActivity {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+        IDEcommunication.getInstance(this).ready(false);
 	}
 
 	@Override

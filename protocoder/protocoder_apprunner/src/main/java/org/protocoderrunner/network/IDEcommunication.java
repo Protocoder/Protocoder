@@ -17,11 +17,11 @@ public class IDEcommunication {
 
     private String TAG = "IDECommunication";
 	private static IDEcommunication inst;
-	public WeakReference<Activity> a;
+	public WeakReference<Context> a;
     CustomWebsocketServer ws;
 
 	public IDEcommunication(Context appActivity) {
-		this.a = new WeakReference<Activity>((Activity) appActivity);
+		this.a = new WeakReference<Context>((Context) appActivity);
 
         try {
             ws = CustomWebsocketServer.getInstance(a.get());

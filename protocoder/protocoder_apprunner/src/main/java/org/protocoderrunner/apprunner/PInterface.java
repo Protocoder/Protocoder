@@ -35,19 +35,21 @@ import android.os.Looper;
 
 import org.protocoderrunner.utils.MLog;
 
+import java.lang.ref.WeakReference;
+
 public class PInterface {
 
     public Handler mHandler = new Handler(Looper.getMainLooper());
 
 	protected String TAG = getClass().getSimpleName();
 
-	private Context mContext;
+	private WeakReference<Context> mContext;
     private AppRunnerFragment mFragment;
     private AppRunnerActivity mActivity;
 
     public PInterface(Context context) {
 		super();
-		this.mContext = context.getApplicationContext();
+		this.mContext = new WeakReference <Context> (context.getApplicationContext());
 
     }
 
@@ -59,7 +61,7 @@ public class PInterface {
         this.mActivity = (AppRunnerActivity)(mFragment.getActivity());
     }
 
-    public Context getContext() { return mContext; }
+    public Context getContext() { return mContext.get(); }
     public AppRunnerFragment getFragment() { return mFragment; }
     public AppRunnerActivity getActivity() { return mActivity; }
 

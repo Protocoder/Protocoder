@@ -79,7 +79,7 @@ import org.protocoderrunner.network.NetworkUtils.DownloadTask.DownloadListener;
 import org.protocoderrunner.network.OSC;
 import org.protocoderrunner.network.bt.SimpleBT;
 import org.protocoderrunner.project.ProjectManager;
-import org.protocoderrunner.sensors.WhatIsRunning;
+import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.utils.MLog;
 
 import java.io.ByteArrayOutputStream;
@@ -414,7 +414,6 @@ public class PNetwork extends PInterface {
                     });
 
                     //Log.d(TAG, "onError");
-
                 }
 
                 @Override

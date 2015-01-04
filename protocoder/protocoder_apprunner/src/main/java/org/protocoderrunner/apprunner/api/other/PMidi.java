@@ -7,7 +7,6 @@ import android.os.Handler.Callback;
 import android.os.Message;
 
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.sensors.WhatIsRunning;
 
 import java.util.Arrays;
 

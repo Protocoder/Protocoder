@@ -37,7 +37,7 @@ import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.hardware.HardwareCallback;
 import org.protocoderrunner.hardware.IOIOBoard;
-import org.protocoderrunner.sensors.WhatIsRunning;
+import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.utils.MLog;
 
 import ioio.lib.api.AnalogInput;

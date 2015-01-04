@@ -54,7 +54,7 @@ import org.protocoderrunner.apprunner.api.other.PMidi;
 import org.protocoderrunner.apprunner.api.other.PPureData;
 import org.protocoderrunner.media.Audio;
 import org.protocoderrunner.media.AudioService;
-import org.protocoderrunner.sensors.WhatIsRunning;
+import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.utils.AndroidUtils;
 import org.protocoderrunner.utils.MLog;
 import org.puredata.android.service.PdService;

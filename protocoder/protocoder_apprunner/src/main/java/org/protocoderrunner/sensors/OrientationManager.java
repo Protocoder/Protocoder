@@ -34,6 +34,8 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 
+import org.protocoderrunner.apprunner.api.other.WhatIsRunningInterface;
+
 public class OrientationManager extends CustomSensorManager implements WhatIsRunningInterface {
 
 	public interface OrientationListener extends CustomSensorListener {
