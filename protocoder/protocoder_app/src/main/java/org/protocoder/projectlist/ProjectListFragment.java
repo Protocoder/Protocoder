@@ -29,51 +29,29 @@
 
 package org.protocoder.projectlist;
 
-import android.animation.Animator;
-import android.animation.Animator.AnimatorListener;
-import android.animation.AnimatorInflater;
-import android.animation.AnimatorSet;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.CycleInterpolator;
-import android.widget.AdapterView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.AdapterView.OnItemClickListener;
 
 import org.protocoder.MainActivity;
 import org.protocoder.R;
-import org.protocoder.appApi.Protocoder;
 import org.protocoder.fragments.SettingsFragment;
 import org.protocoderrunner.base.BaseFragment;
 import org.protocoderrunner.events.Events.ProjectEvent;
 import org.protocoderrunner.project.Project;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.AndroidUtils;
-import org.protocoderrunner.utils.MLog;
 
 import java.util.ArrayList;
-
-import de.greenrobot.event.EventBus;
 
 @SuppressLint("NewApi")
 public class ProjectListFragment extends BaseFragment {
@@ -82,7 +60,7 @@ public class ProjectListFragment extends BaseFragment {
 
     public ArrayList<Project> mProjects;
 	public ProjectItemAdapter mProjectAdapter;
-	protected RecyclerView mGrid;
+	protected FitRecyclerView mGrid;
 	public String mProjectFolder;
 	boolean mListMode;
     public int color;
@@ -115,21 +93,22 @@ public class ProjectListFragment extends BaseFragment {
         //this.icon = getArguments().getString("icon");
 
         mContext = (Context) getActivity();
-        View v = inflater.inflate(R.layout.fragment_project, container, false);
+        mListMode = SettingsFragment.getListPreference(getActivity());
 
+        View v;
+        if (mListMode) {
+            v = inflater.inflate(R.layout.fragment_project_single, container, false);
+        } else {
+            v = inflater.inflate(R.layout.fragment_project, container, false);
+        }
         // Get GridView and set adapter
-		mGrid = (RecyclerView) v.findViewById(R.id.gridprojects);
-		mListMode = SettingsFragment.getListPreference(getActivity());
+		mGrid = (FitRecyclerView) v.findViewById(R.id.gridprojects);
+        // mGrid.setHasFixedSize(true);
 
         mGrid.setItemAnimator(new DefaultItemAnimator());
 
-        int numColumns = 3;
-        if (mListMode) {
-            numColumns = 1;
-		}
-
-        mLayoutManager = new GridLayoutManager(mContext, numColumns);
-        mGrid.setLayoutManager(mLayoutManager);
+        //mLayoutManager = new GridLayoutManager(mContext, 1);
+        //mGrid.setLayoutManager(mLayoutManager);
 
         // set the empty state
 		//mGrid.setEmptyView(v.findViewById(R.id.empty_grid_view));
