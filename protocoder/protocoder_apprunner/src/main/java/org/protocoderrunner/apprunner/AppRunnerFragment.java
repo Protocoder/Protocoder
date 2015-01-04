@@ -36,7 +36,6 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.FileObserver;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -68,7 +67,7 @@ import org.protocoderrunner.apprunner.api.other.PLiveCodingFeedback;
 import org.protocoderrunner.network.IDEcommunication;
 import org.protocoderrunner.project.Project;
 import org.protocoderrunner.project.ProjectManager;
-import org.protocoderrunner.sensors.WhatIsRunning;
+import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.utils.MLog;
 
 import java.util.ArrayList;
@@ -76,7 +75,7 @@ import java.util.ArrayList;
 @SuppressLint("NewApi")
 public class AppRunnerFragment extends Fragment {
 
-	private static final String TAG = "AppRunner";
+	private static final String TAG = "AppRunnerFragment";
 
     private AppRunnerActivity mActivity;
     private Context mContext;
@@ -119,6 +118,7 @@ public class AppRunnerFragment extends Fragment {
     private String mProjectFolder;
     private String mScript;
     private int mActionBarColor;
+    private View mMainView;
     //private EditorFragment editorFragment;
 
     @Override
@@ -126,6 +126,7 @@ public class AppRunnerFragment extends Fragment {
         //setTheme(R.style.ProtocoderDark_Dialog);
         super.onCreateView(inflater, container, savedInstanceState);
 
+        MLog.d(TAG, "onCreateView");
         mContext = getActivity();
 
         //get parameters
@@ -142,12 +143,14 @@ public class AppRunnerFragment extends Fragment {
         mScript = ProjectManager.getInstance().getCode(mCurrentProject);
 
         //init the layout and pass it to the activity
-        return initLayout();
+        mMainView = initLayout();
+        return mMainView;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        MLog.d(TAG, "onActivityCreated");
 
         mActivity = (AppRunnerActivity) getActivity();
 
@@ -200,7 +203,7 @@ public class AppRunnerFragment extends Fragment {
                 try {
                     obj.put("type", "error");
                     obj.put("values", message);
-                    MLog.d(TAG, "error " + obj.toString(2));
+                    //MLog.d(TAG, "error " + obj.toString(2));
                     IDEcommunication.getInstance(mContext).send(obj);
                 } catch (JSONException er1) {
                     er1.printStackTrace();
@@ -242,18 +245,20 @@ public class AppRunnerFragment extends Fragment {
         startFileObserver();
 
         // send ready to the webIDE
-        IDEcommunication.getInstance(mContext).ready(true);
 	}
 
 	@Override
 	public void onStart() {
-		super.onStart();
+        MLog.d(TAG, "onStart");
+
+        super.onStart();
 		interp.callJsFunction("onStart");
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
+        MLog.d(TAG, "onResume");
 
 		if (onAppStatusListener != null) {
 			onAppStatusListener.onResume();
@@ -266,9 +271,8 @@ public class AppRunnerFragment extends Fragment {
 	@Override
 	public void onPause() {
 		super.onPause();
-		// if (onAppStatusListener != null) {
-		// onAppStatusListener.onPause();
-		// }
+        MLog.d(TAG, "onPause");
+
 		interp.callJsFunction("onPause");
 
 		IDEcommunication.getInstance(mContext).ready(false);
@@ -278,24 +282,44 @@ public class AppRunnerFragment extends Fragment {
 	@Override
 	public void onStop() {
 		super.onStop();
-		interp.callJsFunction("onStop");
+        MLog.d(TAG, "onStop");
+
+        interp.callJsFunction("onStop");
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		interp.callJsFunction("onDestroy");
+        MLog.d(TAG, "onDestroy");
+
+        interp.callJsFunction("onDestroy");
 
 		interp = null;
-		IDEcommunication.getInstance(mContext).ready(false);
-		WhatIsRunning.getInstance().stopAll();
 	}
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        MLog.d(TAG, "onDestroyView");
+
+       // mMainView = null;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        MLog.d(TAG, "onDetach");
+        WhatIsRunning.getInstance().stopAll();
+
+        //mContext = null;
+        //mActivity = null;
+    }
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
-        menu.add("llala");
+        //menu.add("llala");
 
     }
 
@@ -328,63 +352,56 @@ public class AppRunnerFragment extends Fragment {
 	}
 
 	public RelativeLayout initLayout() {
+        LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 
-	//	if (!isMainLayoutSetup) {
-			LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        // add main layout
+        mainLayout = new RelativeLayout(mContext);
+        mainLayout.setLayoutParams(layoutParams);
+        mainLayout.setGravity(Gravity.BOTTOM);
+        // mainLayout.setBackgroundColor(getResources().getColor(R.color.transparent));
+        mainLayout.setBackgroundColor(getResources().getColor(R.color.light_grey));
 
-			// add main layout
-			mainLayout = new RelativeLayout(mContext);
-			mainLayout.setLayoutParams(layoutParams);
-			mainLayout.setGravity(Gravity.BOTTOM);
-			// mainLayout.setBackgroundColor(getResources().getColor(R.color.transparent));
-			mainLayout.setBackgroundColor(getResources().getColor(R.color.light_grey));
+        // set the parent
+        parentScriptedLayout = new RelativeLayout(mContext);
+        parentScriptedLayout.setLayoutParams(layoutParams);
+        parentScriptedLayout.setGravity(Gravity.BOTTOM);
+        parentScriptedLayout.setBackgroundColor(getResources().getColor(R.color.transparent));
+        mainLayout.addView(parentScriptedLayout);
 
-			// set the parent
-			parentScriptedLayout = new RelativeLayout(mContext);
-			parentScriptedLayout.setLayoutParams(layoutParams);
-			parentScriptedLayout.setGravity(Gravity.BOTTOM);
-			parentScriptedLayout.setBackgroundColor(getResources().getColor(R.color.transparent));
-			mainLayout.addView(parentScriptedLayout);
+        // editor layout
+        editorLayout = new FrameLayout(mContext);
+        FrameLayout.LayoutParams editorParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT,
+                LayoutParams.MATCH_PARENT);
+        editorLayout.setLayoutParams(editorParams);
+        editorLayout.setId(EDITOR_ID);
+        mainLayout.addView(editorLayout);
 
-			// editor layout
-			editorLayout = new FrameLayout(mContext);
-			FrameLayout.LayoutParams editorParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT,
-					LayoutParams.MATCH_PARENT);
-			editorLayout.setLayoutParams(editorParams);
-			editorLayout.setId(EDITOR_ID);
-			mainLayout.addView(editorLayout);
+        // console layout
+        consoleRLayout = new RelativeLayout(mContext);
+        RelativeLayout.LayoutParams consoleLayoutParams = new RelativeLayout.LayoutParams(
+                LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.apprunner_console));
+        consoleLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        consoleLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+        consoleRLayout.setLayoutParams(consoleLayoutParams);
+        consoleRLayout.setGravity(Gravity.BOTTOM);
+        consoleRLayout.setBackgroundColor(getResources().getColor(R.color.blacktransparent));
+        consoleRLayout.setVisibility(View.GONE);
+        mainLayout.addView(consoleRLayout);
 
-			// console layout
-			consoleRLayout = new RelativeLayout(mContext);
-			RelativeLayout.LayoutParams consoleLayoutParams = new RelativeLayout.LayoutParams(
-					LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.apprunner_console));
-			consoleLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-			consoleLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-			consoleRLayout.setLayoutParams(consoleLayoutParams);
-			consoleRLayout.setGravity(Gravity.BOTTOM);
-			consoleRLayout.setBackgroundColor(getResources().getColor(R.color.blacktransparent));
-			consoleRLayout.setVisibility(View.GONE);
-			mainLayout.addView(consoleRLayout);
+        // Create the text view to add to the control
+        consoleText = new TextView(mContext);
+        LayoutParams consoleTextParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        consoleText.setBackgroundColor(getResources().getColor(R.color.transparent));
+        consoleText.setTextColor(getResources().getColor(R.color.white));
+        consoleText.setLayoutParams(consoleTextParams);
+        int textPadding = getResources().getDimensionPixelSize(R.dimen.apprunner_console_text_padding);
+        consoleText.setPadding(textPadding, textPadding, textPadding, textPadding);
+        consoleRLayout.addView(consoleText);
 
-			// Create the text view to add to the control
-			consoleText = new TextView(mContext);
-			LayoutParams consoleTextParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-			consoleText.setBackgroundColor(getResources().getColor(R.color.transparent));
-			consoleText.setTextColor(getResources().getColor(R.color.white));
-			consoleText.setLayoutParams(consoleTextParams);
-			int textPadding = getResources().getDimensionPixelSize(R.dimen.apprunner_console_text_padding);
-			consoleText.setPadding(textPadding, textPadding, textPadding, textPadding);
-			consoleRLayout.addView(consoleText);
+        liveCoding = new PLiveCodingFeedback(mContext);
+        mainLayout.addView(liveCoding.add());
 
-			liveCoding = new PLiveCodingFeedback(mContext);
-			mainLayout.addView(liveCoding.add());
-
-
-			//isMainLayoutSetup = true;
-
-            return mainLayout;
-	//	}
-      //  return null;
+        return mainLayout;
     }
 //
 //	public void showEditor(boolean b) {
@@ -436,7 +453,6 @@ public class AppRunnerFragment extends Fragment {
 //	}
 
 	public void showConsole(boolean visible) {
-		initLayout();
 
 		if (visible) {
 			consoleRLayout.setAlpha(0);
@@ -467,16 +483,14 @@ public class AppRunnerFragment extends Fragment {
 	}
 
 	public void showConsole(final String message) {
-		initLayout();
-        ((AppRunnerActivity) mActivity).runOnUiThread(new Runnable() {
+        mActivity.runOnUiThread(new Runnable() {
 
 			@Override
 			public void run() {
-				MLog.d(TAG, "showing console");
-				showConsole(true);
-				consoleText.setText(message);
-				MLog.d(TAG, "msg text");
-
+		    MLog.d(TAG, "showing console");
+			showConsole(true);
+			consoleText.setText(message);
+			MLog.d(TAG, "msg text");
 			}
 		});
 	}

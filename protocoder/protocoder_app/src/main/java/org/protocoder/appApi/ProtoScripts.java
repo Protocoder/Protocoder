@@ -157,7 +157,6 @@ public class ProtoScripts {
         plf.mProjectAdapter.mProjects.get(pos).selected = true;
         view.setHighlighted(true);
 
-
         return view;
     }
 

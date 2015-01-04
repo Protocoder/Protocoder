@@ -13,7 +13,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import org.protocoderrunner.apprunner.api.PNetwork;
-import org.protocoderrunner.sensors.WhatIsRunningInterface;
+import org.protocoderrunner.apprunner.api.other.WhatIsRunningInterface;
 
 import java.util.Set;
 import java.util.Vector;

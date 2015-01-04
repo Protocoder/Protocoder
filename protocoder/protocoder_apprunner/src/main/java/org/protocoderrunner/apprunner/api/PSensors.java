@@ -42,12 +42,11 @@ import org.protocoderrunner.sensors.GPSManager;
 import org.protocoderrunner.sensors.GyroscopeManager;
 import org.protocoderrunner.sensors.LightManager;
 import org.protocoderrunner.sensors.MagneticManager;
-import org.protocoderrunner.sensors.NFCUtil;
 import org.protocoderrunner.sensors.OrientationManager;
 import org.protocoderrunner.sensors.PressureManager;
 import org.protocoderrunner.sensors.ProximityManager;
 import org.protocoderrunner.sensors.StepManager;
-import org.protocoderrunner.sensors.WhatIsRunning;
+import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.utils.MLog;
 
 public class PSensors extends PInterface {

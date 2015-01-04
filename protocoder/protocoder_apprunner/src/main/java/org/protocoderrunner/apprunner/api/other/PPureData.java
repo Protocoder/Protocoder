@@ -32,7 +32,6 @@ package org.protocoderrunner.apprunner.api.other;
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.ProtocoderScript;
-import org.protocoderrunner.sensors.WhatIsRunning;
 import org.puredata.core.PdBase;
 
 public class PPureData {

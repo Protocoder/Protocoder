@@ -33,7 +33,6 @@ import android.content.Context;
 
 import org.mozilla.javascript.NativeObject;
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.sensors.WhatIsRunning;
 import org.protocoderrunner.utils.StrUtils;
 
 import java.util.ArrayList;
