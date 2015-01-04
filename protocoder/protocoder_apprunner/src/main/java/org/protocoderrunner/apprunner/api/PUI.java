@@ -35,18 +35,14 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Outline;
 import android.graphics.PointF;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -79,7 +75,7 @@ import org.protocoderrunner.apprunner.api.other.PProcessing;
 import org.protocoderrunner.apprunner.api.other.PVideo;
 import org.protocoderrunner.apprunner.api.widgets.PAbsoluteLayout;
 import org.protocoderrunner.apprunner.api.widgets.PButton;
-import org.protocoderrunner.apprunner.api.widgets.PCanvasView;
+import org.protocoderrunner.apprunner.api.widgets.PCanvas;
 import org.protocoderrunner.apprunner.api.widgets.PCard;
 import org.protocoderrunner.apprunner.api.widgets.PCheckBox;
 import org.protocoderrunner.apprunner.api.widgets.PEditText;
@@ -99,6 +95,7 @@ import org.protocoderrunner.apprunner.api.widgets.PSpinner;
 import org.protocoderrunner.apprunner.api.widgets.PSwitch;
 import org.protocoderrunner.apprunner.api.widgets.PTextView;
 import org.protocoderrunner.apprunner.api.widgets.PToggleButton;
+import org.protocoderrunner.apprunner.api.widgets.PToolbar;
 import org.protocoderrunner.apprunner.api.widgets.PUIGeneric;
 import org.protocoderrunner.apprunner.api.widgets.PWebView;
 import org.protocoderrunner.apprunner.api.widgets.PWindow;
@@ -134,7 +131,7 @@ public class PUI extends PUIGeneric {
     @APIMethod(description = "Gets the main layout, usually absolute", example = "")
     @APIParam(params = { "" })
     public View getMainLayout() {
-        return mFragment.mainLayout;
+        return getFragment().mainLayout;
     }
 
 
@@ -142,7 +139,7 @@ public class PUI extends PUIGeneric {
     @APIMethod(description = "Gets the parent layout where the mainLayout resides", example = "")
     @APIParam(params = { "" })
     public View getParentLayout() {
-        View v = (View) (mFragment).mainLayout.getParent();
+        View v = (View) (getFragment()).mainLayout.getParent();
         return v;
     }
 
@@ -151,89 +148,23 @@ public class PUI extends PUIGeneric {
     @APIMethod(description = "Gets the activity layout, including the action bar", example = "")
     @APIParam(params = { "" })
     public View getActivityLayout() {
-        View v = (View) (mFragment).mainLayout.getParent().getParent();
+        View v = (View) (getFragment()).mainLayout.getParent().getParent();
         return v;
     }
 
     @ProtocoderScript
-	@APIMethod(description = "Set mContext title name", example = "")
-	@APIParam(params = { "titleName" })
-	public void setToolbarTitle(String title) {
-		if (noActionBarAllowed) {
-			return;
-		}
-
-        mActivity.getSupportActionBar().setTitle(title);
-	}
-
-	@ProtocoderScript
-	@APIMethod(description = "Sets mContext secondary title", example = "")
-	@APIParam(params = { "subtitleName" })
-	public void setToolbarSubtitle(String title) {
-		if (noActionBarAllowed) {
-			return;
-		}
-        mActivity.getSupportActionBar().setSubtitle(title);
-	}
-
-	@ProtocoderScript
-	@APIMethod(description = "Show/Hide title bar", example = "")
-	@APIParam(params = { "boolean" })
-	public void showToolbar(Boolean b) {
-		if (noActionBarAllowed) {
-			return;
-		}
-
-		if (b) {
-			mActivity.getSupportActionBar().show();
-		} else {
-			mActivity.getSupportActionBar().hide();
-		}
-	}
-
-	@ProtocoderScript
-	@APIMethod(description = "Changes the title bar color", example = "")
-	@APIParam(params = { "r", "g", "b", "mContext" })
-	public void setToolbarBgColor(int r, int g, int b, int alpha) {
-		if (noActionBarAllowed) {
-			return;
-		}
-		int c = Color.argb(alpha, r, g, b);
-		mActivity.setActionBar(null, c, null);
-	}
-
-	@ProtocoderScript
-	@APIMethod(description = "Changes the title text color", example = "")
-	@APIParam(params = { "r", "g", "b", "mContext" })
-	public void setToolbarTextColor(int r, int g, int b, int alpha) {
-		if (noActionBarAllowed) {
-			return;
-		}
-
-		int c = Color.argb(alpha, r, g, b);
-		mActivity.setActionBar(null, null, c);
-	}
-
-	@ProtocoderScript
-	@APIMethod(description = "Sets an image rather than text as mContext title", example = "")
-	@APIParam(params = { "imageName" })
-	public void setToolbarImage(String imagePath) {
-		if (noActionBarAllowed) {
-			return;
-		}
-
-		Bitmap myBitmap = BitmapFactory.decodeFile(AppRunnerSettings.get().project.getStoragePath() + imagePath);
-		Drawable icon = new BitmapDrawable(mContext.getResources(), myBitmap);
-
-		mActivity.mActionBar.setIcon(icon);
-	}
+    @APIMethod(description = "Get the toolbar", example = "")
+    @APIParam(params = { "" })
+    public PToolbar getToolbar() {
+       return mToolbar;
+    }
 
     //TODO doesnt work properly
 	@ProtocoderScript
 	@APIMethod(description = "Shows/Hide the home bar", example = "")
 	@APIParam(params = { "boolean" })
 	public void showHomeBar(boolean b) {
-		mActivity.showHomeBar(b);
+		getActivity().showHomeBar(b);
 	}
 
 	@ProtocoderScript
@@ -241,13 +172,13 @@ public class PUI extends PUIGeneric {
     @APIParam(params = { "mode={fullscreen, immersive, lightsOut}" })
     public void setScreenMode(String mode) {
         if (mode.equals("fullscreen")) {
-            mActivity.setFullScreen();
+            getActivity().setFullScreen();
             isFullscreenMode = true;
         } else if (mode.equals("lightsOut")) {
-            mActivity.lightsOutMode();
+            getActivity().lightsOutMode();
         } else if (mode.equals("immersive")) {
            // isImmersiveMode = true;
-            mActivity.setImmersive();
+            getActivity().setImmersive();
             updateScreenSizes();
         //do nothing
         } else {
@@ -261,11 +192,11 @@ public class PUI extends PUIGeneric {
     @APIParam(params = {"mode={'landscape', 'portrait', 'other'"})
 	public void setScreenOrientation(String mode) {
         if (mode.equals("landscape")) {
-            mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         } else if(mode.equals("portrait")) {
-            mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         } else {
-            mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
         }
 	}
 
@@ -273,14 +204,14 @@ public class PUI extends PUIGeneric {
 	@APIMethod(description = "Shows a little popup with a given text", example = "")
 	@APIParam(params = { "text" })
 	public void toast(String text) {
-		Toast.makeText(mContext, text, Toast.LENGTH_SHORT).show();
+		Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Shows a little popup with a given text during t time", example = "")
 	@APIParam(params = { "text", "duration" })
 	public void toast(String text, int duration) {
-		Toast.makeText(mContext, text, duration).show();
+		Toast.makeText(getContext(), text, duration).show();
 	}
 
 
@@ -619,7 +550,7 @@ public class PUI extends PUIGeneric {
     public void gestureDetector(View v, final addGestureDetectorCB cb) {
 		final GestureDetectorReturn g = new GestureDetectorReturn();
 
-		final GestureDetector gestureDetector = new GestureDetector(mContext, new GestureDetector.OnGestureListener() {
+		final GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector.OnGestureListener() {
 
 			@Override
 			public boolean onSingleTapUp(MotionEvent e) {
@@ -679,7 +610,7 @@ public class PUI extends PUIGeneric {
 
 
 
-        final ScaleGestureDetector scaleGestureDetector = new ScaleGestureDetector(mContext, new OnScaleGestureListener() {
+        final ScaleGestureDetector scaleGestureDetector = new ScaleGestureDetector(getContext(), new OnScaleGestureListener() {
             @Override
             public boolean onScale(ScaleGestureDetector scaleGestureDetector) {
                 g.type = "scale";
@@ -1049,9 +980,9 @@ public class PUI extends PUIGeneric {
     @ProtocoderScript
     @APIMethod(description = "Adds a canvas view", example = "")
     @APIParam(params = { "x", "y", "w", "h" })
-    public PCanvasView addCanvas(int x, int y, int w, int h, boolean autoDraw) {
+    public PCanvas addCanvas(int x, int y, int w, int h, boolean autoDraw) {
 
-        PCanvasView canvasView = newCanvas(w, h);
+        PCanvas canvasView = newCanvas(w, h);
         canvasView.autoDraw(autoDraw);
         addViewAbsolute(canvasView, x, y, w, h);
 
@@ -1062,12 +993,12 @@ public class PUI extends PUIGeneric {
 	@ProtocoderScript
     @APIMethod(description = "Adds a canvas view", example = "")
     @APIParam(params = { "x", "y", "w", "h" })
-	public PCanvasView addCanvas(int x, int y, int w, int h) {
+	public PCanvas addCanvas(int x, int y, int w, int h) {
         return addCanvas(x, y, w, h, false);
     }
 
 	public PList addList(int x, int y, int w, int h) {
-		PList plist = new PList(mContext);
+		PList plist = new PList(getContext());
 		return plist;
 
 	}
@@ -1081,7 +1012,7 @@ public class PUI extends PUIGeneric {
 		initializeLayout();
 
 		// Create the main layout. This is where all the items actually go
-		FrameLayout fl = new FrameLayout(mContext);
+		FrameLayout fl = new FrameLayout(getContext());
 		fl.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
 		fl.setId(200 + (int) (200 * Math.random()));
 		fl.setBackgroundResource(R.color.transparent);
@@ -1095,7 +1026,7 @@ public class PUI extends PUIGeneric {
         bundle.putString("mode", mode);
         p.setArguments(bundle);
 
-		FragmentTransaction ft = mActivity.getSupportFragmentManager().beginTransaction();
+		FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
 		ft.add(fl.getId(), p, String.valueOf(fl.getId()));
 
 		// ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
@@ -1198,7 +1129,7 @@ public class PUI extends PUIGeneric {
     @APIMethod(description = "Shows a popup with a given text", example = "")
 	@APIParam(params = { "title", "message", "okButton", "cancelButton", "function(boolean)" })
 	public void popupInfo(String title, String msg, String ok, String cancel, final popupCB callbackfn) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setTitle(title);
         builder.setMessage(msg);
 
@@ -1226,7 +1157,7 @@ public class PUI extends PUIGeneric {
 			});
 		}
 
-        if(!(mActivity).isFinishing()) {
+        if(!(getActivity()).isFinishing()) {
             builder.show();
         }
 	}
@@ -1241,10 +1172,10 @@ public class PUI extends PUIGeneric {
     @APIMethod(description = "Shows an input dialog", example = "")
 	@APIParam(params = { "title", "function(text)" })
 	public void popupInput(String title, final inputDialogCB callbackfn) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+		AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 		builder.setTitle(title);
 
-		final EditText input = new EditText(mContext);
+		final EditText input = new EditText(getContext());
 
 		input.setInputType(InputType.TYPE_CLASS_TEXT);
 		builder.setView(input);
@@ -1277,7 +1208,7 @@ public class PUI extends PUIGeneric {
     @APIMethod(description = "Shows a choice dialog using a given array of strings", example = "")
 	@APIParam(params = { "title", "arrayStrings", "function(text)" })
 	public void popupChoice(String title, final String[] choices, final choiceDialogCB callbackfn) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+		AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 		builder.setTitle(title);
 
 		// Set up the buttons
@@ -1298,7 +1229,7 @@ public class PUI extends PUIGeneric {
 
         PPopupCustomFragment pPopupCustomFragment = new PPopupCustomFragment();
 
-        android.app.FragmentManager fm = mActivity.getFragmentManager();
+        android.app.FragmentManager fm = getActivity().getFragmentManager();
         pPopupCustomFragment.show(fm, "popUpCustom");
 
         return pPopupCustomFragment;
@@ -1332,15 +1263,15 @@ public class PUI extends PUIGeneric {
 	@APIParam(params = { "boolean" })
 	public void showVirtualKeys(boolean show) {
         initializeLayout();
-		InputMethodManager imm = (InputMethodManager) mContext.getSystemService(mContext.INPUT_METHOD_SERVICE);
+		InputMethodManager imm = (InputMethodManager) getContext().getSystemService(getContext().INPUT_METHOD_SERVICE);
 
 		if (show) {
-			imm.showSoftInput(mActivity.getCurrentFocus(), InputMethodManager.SHOW_FORCED);
+			imm.showSoftInput(getActivity().getCurrentFocus(), InputMethodManager.SHOW_FORCED);
 			uiAbsoluteLayout.setFocusable(true);
 			uiAbsoluteLayout.setFocusableInTouchMode(true);
 
 		} else {
-			imm.hideSoftInputFromWindow(mActivity.getCurrentFocus().getWindowToken(), 0);
+			imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
 		}
 	}
 
@@ -1350,7 +1281,7 @@ public class PUI extends PUIGeneric {
     }
     public void keyInit() {
         keyInit = true;
-        (mActivity).addOnKeyListener(new onKeyListener() {
+        (getActivity()).addOnKeyListener(new onKeyListener() {
 
             @Override
             public void onKeyUp(int keyCode) {
@@ -1399,14 +1330,14 @@ public class PUI extends PUIGeneric {
     @APIMethod(description = "", example = "")
     @APIParam(params = { "boolean" })
     public void enableVolumeKeys(boolean b) {
-        mActivity.keyVolumeEnabled = b;
+        getActivity().keyVolumeEnabled = b;
     }
 
     @ProtocoderScript
     @APIMethod(description = "", example = "")
     @APIParam(params = { "boolean" })
     public void enableBackKey(boolean b) {
-        mActivity.keyBackEnabled = b;
+        getActivity().keyBackEnabled = b;
     }
 
     public interface onKeyListener {

@@ -59,8 +59,8 @@ public class PSqLite extends PInterface {
 	@APIMethod(description = "Open a SQLite ", example = "")
 	@APIParam(params = { "dirName" })
 	public void open(String dbName) {
-		db = mContext.openOrCreateDatabase(
-				ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/" + dbName, mContext.MODE_PRIVATE,
+		db = getContext().openOrCreateDatabase(
+				ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/" + dbName, getContext().MODE_PRIVATE,
 				null);
 
 	}

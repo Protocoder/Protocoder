@@ -69,7 +69,7 @@ public class PDevice extends PInterface {
 	@APIMethod(description = "makes the phone vibrate", example = "android.vibrate(500);")
 	@APIParam(params = { "duration" })
 	public void vibrate(int duration) {
-		Vibrator v = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
+		Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
 		v.vibrate(duration);
 	}
 
@@ -90,7 +90,7 @@ public class PDevice extends PInterface {
 	@APIMethod(description = "Gives back the number and sms of the sender", example = "")
 	@APIParam(params = { "function(number, message)" })
 	public void onSmsReceived(final onSmsReceivedCB fn) {
-        mActivity.addOnSmsReceivedListener(new onSmsReceivedListener() {
+        getActivity().addOnSmsReceivedListener(new onSmsReceivedListener() {
 
             @Override
             public void onSmsReceived(String number, String msg) {
@@ -103,33 +103,33 @@ public class PDevice extends PInterface {
 	@APIMethod(description = "Set brightness", example = "")
 	@APIParam(params = { "brightness" })
 	public void setBrightness(float val) {
-		mActivity.setBrightness(val);
+		getActivity().setBrightness(val);
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Set the global brightness from 0 to 255", example = "")
     @APIParam(params = { "brightness" })
     public void setGlobalBrightness(int b) {
-		AndroidUtils.setGlobalBrightness(mContext, b);
+		AndroidUtils.setGlobalBrightness(getContext(), b);
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Get the current brightness", example = "")
 	public float getBrightness() {
-		return mActivity.getCurrentBrightness();
+		return getActivity().getCurrentBrightness();
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Set the screen always on", example = "")
     @APIParam(params = { "boolean" })
     public void setScreenAlwaysOn(boolean b) {
-		mActivity.setScreenAlwaysOn(b);
+		getActivity().setScreenAlwaysOn(b);
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Check if the scrren is on", example = "")
 	public boolean isScreenOn() {
-		return AndroidUtils.isScreenOn(mContext);
+		return AndroidUtils.isScreenOn(getContext());
 	}
 
 	// @ProtocoderScript
@@ -142,20 +142,20 @@ public class PDevice extends PInterface {
 	@APIMethod(description = "Set the screen timeout", example = "")
     @APIParam(params = { "time" })
     public void setScreenTimeout(int time) {
-		AndroidUtils.setScreenTimeout(mContext, time);
+		AndroidUtils.setScreenTimeout(getContext(), time);
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Check if is in airplane mode", example = "")
 	public boolean isAirplaneMode() {
-		return AndroidUtils.isAirplaneMode(mContext);
+		return AndroidUtils.isAirplaneMode(getContext());
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Check what type of device is", example = "")
     @APIParam(params = { "" })
     public String getType() {
-        if (AndroidUtils.isTablet(mContext)) {
+        if (AndroidUtils.isTablet(getContext())) {
             return "tablet";
         } else {
             return "phone";
@@ -166,7 +166,7 @@ public class PDevice extends PInterface {
 	@APIMethod(description = "Prevent the device suspend at any time. Good for long living operations.", example = "")
     @APIParam(params = { "boolean" })
     public void setWakeLock(boolean b) {
-		AndroidUtils.setWakeLock(mContext, b);
+		AndroidUtils.setWakeLock(getContext(), b);
 	}
 
 	@ProtocoderScript
@@ -174,48 +174,48 @@ public class PDevice extends PInterface {
 	@APIParam(params = { "intent" })
 	public void launchIntent(String intent) {
 		Intent market_intent = new Intent(intent);
-		mContext.startActivity(market_intent);
+		getContext().startActivity(market_intent);
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Open the default e-mail app", example = "")
 	@APIParam(params = { "recipient", "subject", "message" })
 	public void openEmailApp(String recipient, String subject, String msg) {
-		Intents.sendEmail(mContext, recipient, subject, msg);
+		Intents.sendEmail(getContext(), recipient, subject, msg);
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Open the default Map app", example = "")
 	@APIParam(params = { "longitude", "latitude" })
 	public void openMapApp(double longitude, double latitude) {
-		Intents.openMap(mContext, longitude, latitude);
+		Intents.openMap(getContext(), longitude, latitude);
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Open the phone dial", example = "")
 	public void openDial() {
-		Intents.openDial(mContext);
+		Intents.openDial(getContext());
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Call a given phone number", example = "")
 	@APIParam(params = { "number" })
 	public void call(String number) {
-		Intents.call(mContext, number);
+		Intents.call(getContext(), number);
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Open the default web browser with a given Url", example = "")
 	@APIParam(params = { "url" })
 	public void openWebApp(String url) {
-		Intents.openWeb(mContext, url);
+		Intents.openWeb(getContext(), url);
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Open the search app with the given text", example = "")
 	@APIParam(params = { "text" })
 	public void openWebSearch(String text) {
-		Intents.webSearch(mContext, text);
+		Intents.webSearch(getContext(), text);
 	}
 
 	// --------- battery ---------//
@@ -233,7 +233,7 @@ public class PDevice extends PInterface {
     @APIMethod(description = "Copy the content into the clipboard", example = "")
     @APIParam(params = { "label", "text" })
 	public void setClipboard(String label, String text) {
-		ClipboardManager clipboard = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+		ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
 		clipboard.setPrimaryClip(ClipData.newPlainText(label, text));
 	}
 
@@ -241,7 +241,7 @@ public class PDevice extends PInterface {
     @APIMethod(description = "Get the content from the clipboard", example = "")
     @APIParam(params = { "label", "text" })
 	public String getClipboard(String label, String text) {
-		ClipboardManager clipboard = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+		ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
 		return clipboard.getPrimaryClip().getItemAt(clipboard.getPrimaryClip().getItemCount()).getText().toString();
 	}
 
@@ -291,14 +291,14 @@ public class PDevice extends PInterface {
 		};
 
 		IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-		mContext.registerReceiver(batteryReceiver, filter);
+		getContext().registerReceiver(batteryReceiver, filter);
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Get the device battery level", example = "")
 	@APIParam(params = { "" })
 	public float getBatteryLevel() {
-		Intent batteryIntent = mContext.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+		Intent batteryIntent = getContext().registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
 		int level = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
 		int scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
 
@@ -345,10 +345,10 @@ public class PDevice extends PInterface {
 		deviceInfo.screenDpi = metrics.densityDpi;
 
 		// id
-		deviceInfo.androidId = Secure.getString(mContext.getContentResolver(), Secure.ANDROID_ID);
+		deviceInfo.androidId = Secure.getString(getContext().getContentResolver(), Secure.ANDROID_ID);
 
 		// imei
-		deviceInfo.imei = ((TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
+		deviceInfo.imei = ((TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
 
 		deviceInfo.versionRelease = Build.VERSION.RELEASE;
 		deviceInfo.versionRelease = Build.VERSION.INCREMENTAL;
@@ -386,7 +386,7 @@ public class PDevice extends PInterface {
 
 
 	public void stop() {
-		mContext.unregisterReceiver(batteryReceiver);
+		getContext().unregisterReceiver(batteryReceiver);
 	}
 
 	public interface onSmsReceivedListener {

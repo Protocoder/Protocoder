@@ -71,7 +71,7 @@ public class PIOIO extends PInterface implements HardwareCallback {
     @APIParam(params = { "" })
     public void start() {
         if (!mIoioStarted) {
-            this.board = new IOIOBoard(mContext, this);
+            this.board = new IOIOBoard(getContext(), this);
             board.powerOn();
             WhatIsRunning.getInstance().add(board);
         }
@@ -83,7 +83,7 @@ public class PIOIO extends PInterface implements HardwareCallback {
     public void start(startCB callbackfn) {
 		mIoioCallbackfn = callbackfn;
 		if (!mIoioStarted) {
-			this.board = new IOIOBoard(mContext, this);
+			this.board = new IOIOBoard(getContext(), this);
 			board.powerOn();
 			WhatIsRunning.getInstance().add(board);
 

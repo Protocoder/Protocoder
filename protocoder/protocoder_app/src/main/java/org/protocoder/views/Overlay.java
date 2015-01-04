@@ -2,12 +2,12 @@ package org.protocoder.views;
 
 import android.content.Context;
 
-import org.protocoderrunner.apprunner.api.widgets.PCanvasView;
+import org.protocoderrunner.apprunner.api.widgets.PCanvas;
 
 /**
  * Created by victormanueldiazbarrales on 06/10/14.
  */
-public class Overlay extends PCanvasView{
+public class Overlay extends PCanvas {
     public Overlay(Context context) {
         super(context);
     }

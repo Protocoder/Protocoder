@@ -201,7 +201,7 @@ public class ProjectItem extends LinearLayout {
 
 
     public void setMenu() {
-        MLog.d("TAG", "setting menu for " + mProject.getName());
+        // MLog.d("TAG", "setting menu for " + mProject.getName());
         final ImageView imageView = (ImageView) findViewById(R.id.card_menu_button);
         //imageView.setOnCreateContextMenuListener();
         imageView.setOnClickListener(new OnClickListener() {

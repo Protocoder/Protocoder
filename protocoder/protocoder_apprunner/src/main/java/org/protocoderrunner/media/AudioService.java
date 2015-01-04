@@ -55,7 +55,6 @@ public class AudioService {
 
 	public static final ServiceConnection pdConnection = new ServiceConnection() {
 
-
         @Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			pdService = ((PdService.PdBinder) service).getService();
@@ -67,6 +66,7 @@ public class AudioService {
 				// loadPatchFromResources();
 				loadPatchFromDirectory(file);
 			} catch (IOException e) {
+                MLog.d(TAG, "error loading pd file");
 				finish();
 			}
 		}
@@ -77,18 +77,34 @@ public class AudioService {
 		}
 
 		public void stop() {
-			MLog.d("qq", "stoping audio");
+			MLog.d(TAG, "stopping audio");
 			try {
-				if (pdService != null) {
-					pdService.stopAudio();
-					PdBase.release();
-					pdService.unbindService(pdConnection);
+                MLog.d(TAG, "stopping audio 1");
 
-				}
+                if (pdService != null) {
+                    MLog.d(TAG, "stopping audio2");
+
+                    pdService.stopAudio();
+                    MLog.d(TAG, "stopping audio 3");
+
+                    PdBase.release();
+                    MLog.d(TAG, "stopping audio 4");
+
+                    if (pdConnection != null) {
+                        pdService.unbindService(pdConnection);
+                        MLog.d(TAG, "stopping audio 5");
+
+                    }
+                    MLog.d(TAG, "stopping audio 6");
+
+
+                }
 			} catch (IllegalArgumentException e) {
 				// already unbound
 				pdService = null;
-			}
+                MLog.d(TAG, "stopping audio 7");
+                MLog.d(TAG, e.toString());
+            }
 		}
 
 	};
@@ -98,7 +114,7 @@ public class AudioService {
 		// configure audio glue
 		int sampleRate = AudioParameters.suggestSampleRate();
 		int micChannels = AudioParameters.suggestInputChannels();
-		L.d("MIC", "mic channels" + micChannels);
+		MLog.d(TAG, "mic channels" + micChannels);
 		pdService.initAudio(sampleRate, micChannels, 2, 8);
 
 
@@ -125,7 +141,7 @@ public class AudioService {
 
 	protected static void triggerNote(int value) {
 		int m = (int) (Math.random() * 5);
-		MLog.d("qq", "" + m);
+		MLog.d(TAG, "triggerNote " + m);
 		PdBase.sendFloat("midinote", value); // m);
 		PdBase.sendBang("trigger");
 	}
@@ -147,7 +163,7 @@ public class AudioService {
 		File dir = pdService.getFilesDir();
 		IoUtils.extractZipResource(pdService.getResources().openRawResource(R.raw.tuner), dir, true);
 		File patchFile = new File(dir, "tuner/sampleplay.pd");
-		MLog.d("qq", patchFile.getAbsolutePath());
+		MLog.d(TAG, patchFile.getAbsolutePath());
 		PdBase.openPatch(patchFile.getAbsolutePath());
 
 	}

@@ -131,7 +131,7 @@ public class AppRunnerActivity extends BaseActivity {
             }
 
             Project currentProject = ProjectManager.getInstance().get(projectFolder, projectName);
-            setActionBar(currentProject, actionBarColor, 0xFFFFFF);
+            setToolBar(currentProject, actionBarColor, 0xFFFFFF);
 
 
             MLog.d(TAG, "load " + projectName + " in " + projectFolder);
@@ -157,9 +157,8 @@ public class AppRunnerActivity extends BaseActivity {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.add(fl.getId(), mAppRunnerFragment, String.valueOf(fl.getId()));
 
-            // ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            // ft.setCustomAnimations(android.R.anim.fade_in,
-            // android.R.anim.fade_out);
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
             ft.addToBackStack(null);
             ft.commit();
         }
@@ -248,7 +247,7 @@ public class AppRunnerActivity extends BaseActivity {
     }
 
 
-    public void setActionBar(Project p, Integer colorBg, Integer colorText) {
+    public void setToolBar(Project p, Integer colorBg, Integer colorText) {
         //MLog.d(TAG, "" + mActionBarSet + " " + mActionBar);
 
         mActionBarSet = true;

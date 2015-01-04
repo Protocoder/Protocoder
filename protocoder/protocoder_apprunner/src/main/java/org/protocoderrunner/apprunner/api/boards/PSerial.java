@@ -79,7 +79,7 @@ public class PSerial extends PInterface {
 		WhatIsRunning.getInstance().add(this);
 		if (!isStarted) {
             // Find all available drivers from attached devices.
-            UsbManager manager = (UsbManager) mContext.getSystemService(Context.USB_SERVICE);
+            UsbManager manager = (UsbManager) getContext().getSystemService(Context.USB_SERVICE);
             List<UsbSerialDriver> availableDrivers = UsbSerialProber.getDefaultProber().findAllDrivers(manager);
             if (availableDrivers.isEmpty()) {
                 MLog.d(TAG, "no drivers found");

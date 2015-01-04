@@ -111,14 +111,14 @@ public class Protocoder {
 
 
 
-        if (debugApp) {
-            interp = new AppRunnerInterpreter(a);
-            interp.createInterpreter(true);
+       // if (debugApp) {
+       //     interp = new AppRunnerInterpreter(a);
+       //     interp.createInterpreter(true);
 
             // interp.interpreter.addObjectToInterface("ui", mPUi);
             // interp.interpreter.addObjectToInterface("util", mPUtil);
             // interp.interpreter.addObjectToInterface("protocoder", mProtocoder);
-        }
+       // }
 
 
 

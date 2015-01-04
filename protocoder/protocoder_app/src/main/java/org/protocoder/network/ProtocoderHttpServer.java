@@ -75,7 +75,7 @@ import org.protocoderrunner.apprunner.api.other.PVideo;
 import org.protocoderrunner.apprunner.api.other.PWebEditor;
 import org.protocoderrunner.apprunner.api.widgets.PAbsoluteLayout;
 import org.protocoderrunner.apprunner.api.widgets.PButton;
-import org.protocoderrunner.apprunner.api.widgets.PCanvasView;
+import org.protocoderrunner.apprunner.api.widgets.PCanvas;
 import org.protocoderrunner.apprunner.api.widgets.PCard;
 import org.protocoderrunner.apprunner.api.widgets.PCheckBox;
 import org.protocoderrunner.apprunner.api.widgets.PEditText;
@@ -408,7 +408,7 @@ public class ProtocoderHttpServer extends NanoHTTPD {
                     //widgets
                     APIManager.getInstance().addClass(PAbsoluteLayout.class, false);
                     APIManager.getInstance().addClass(PButton.class, false);
-					APIManager.getInstance().addClass(PCanvasView.class, false);
+					APIManager.getInstance().addClass(PCanvas.class, false);
 					APIManager.getInstance().addClass(PCard.class, false);
 					APIManager.getInstance().addClass(PCheckBox.class, false);
 					APIManager.getInstance().addClass(PEditText.class, false);

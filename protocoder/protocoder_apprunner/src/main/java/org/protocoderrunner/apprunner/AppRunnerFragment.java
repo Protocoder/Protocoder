@@ -39,8 +39,8 @@ import android.os.FileObserver;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,7 +65,6 @@ import org.protocoderrunner.apprunner.api.PSensors;
 import org.protocoderrunner.apprunner.api.PUI;
 import org.protocoderrunner.apprunner.api.PUtil;
 import org.protocoderrunner.apprunner.api.other.PLiveCodingFeedback;
-import org.protocoderrunner.events.Events;
 import org.protocoderrunner.network.IDEcommunication;
 import org.protocoderrunner.project.Project;
 import org.protocoderrunner.project.ProjectManager;
@@ -85,7 +84,6 @@ public class AppRunnerFragment extends Fragment {
 
 	public AppRunnerInterpreter interp;
 	private FileObserver fileObserver;
-	//private boolean isMainLayoutSetup = false;
 
 	// listeners in the main activity that will pass the info to the API classes
 	private PApp.onAppStatus onAppStatusListener;
@@ -130,24 +128,28 @@ public class AppRunnerFragment extends Fragment {
 
         mContext = getActivity();
 
+        //get parameters
         Bundle bundle = getArguments();
         mProjectName = bundle.getString(Project.NAME);
         mProjectFolder = bundle.getString(Project.FOLDER);
         mActionBarColor = bundle.getInt(Project.COLOR, 0);
 
+        //load project
         mCurrentProject = ProjectManager.getInstance().get(mProjectFolder, mProjectName);
         ProjectManager.getInstance().setCurrentProject(mCurrentProject);
-
         AppRunnerSettings.get().project = mCurrentProject;
+        AppRunnerSettings.get().hasUi = true;
         mScript = ProjectManager.getInstance().getCode(mCurrentProject);
 
-
+        //init the layout and pass it to the activity
         return initLayout();
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        mActivity = (AppRunnerActivity) getActivity();
 
         //instantiate the objects that can be accessed from the interpreter
         pApp = new PApp(mContext);
@@ -184,8 +186,10 @@ public class AppRunnerFragment extends Fragment {
         interp.interpreter.addObjectToInterface("ui", pUi);
         interp.interpreter.addObjectToInterface("util", pUtil);
 
-        AppRunnerInterpreter.InterpreterInfo appRunnerCb = new AppRunnerInterpreter.InterpreterInfo() {
+        AppRunnerSettings.get().interp = interp;
 
+        //catch errors and send them to the webIDE or the app console
+        AppRunnerInterpreter.InterpreterInfo appRunnerCb = new AppRunnerInterpreter.InterpreterInfo() {
             @Override
             public void onError(String message) {
                 MLog.d(TAG, "error " + message);
@@ -201,28 +205,27 @@ public class AppRunnerFragment extends Fragment {
                 } catch (JSONException er1) {
                     er1.printStackTrace();
                 }
-
             }
         };
-
         interp.addListener(appRunnerCb);
 
-        // loading the libraries
+        // load the libraries
         interp.eval(AppRunnerInterpreter.scriptPrefix);
 
         // run the script
         if (null != mScript) {
             interp.eval(mScript, mProjectName);
         }
+
+        //script postfix
         interp.eval(AppRunnerInterpreter.SCRIPT_POSTFIX);
 
+        //call the javascript method setup
         interp.callJsFunction("setup");
-
-        mActivity = (AppRunnerActivity) getActivity();
 
         // TODO fix actionbar color
         if (mActivity.mActionBarSet == false) {
-        	mActivity.setActionBar(null, mActionBarColor, getResources().getColor(R.color.white));
+        	mActivity.setToolBar(null, mActionBarColor, getResources().getColor(R.color.white));
         }
         // Call the onCreate JavaScript function.
         interp.callJsFunction("onCreate", savedInstanceState);
@@ -230,15 +233,16 @@ public class AppRunnerFragment extends Fragment {
         //audio
         AudioManager audio = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         int currentVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
-
         mActivity.setVolumeControlStream(AudioManager.STREAM_MUSIC);
+
+        //nfc
         mActivity.initializeNFC();
 
+        //file observer will notifify project file changes
         startFileObserver();
 
-        // send ready to the ide
+        // send ready to the webIDE
         IDEcommunication.getInstance(mContext).ready(true);
-
 	}
 
 	@Override
@@ -287,8 +291,15 @@ public class AppRunnerFragment extends Fragment {
 		WhatIsRunning.getInstance().stopAll();
 	}
 
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
 
-	@Override
+        menu.add("llala");
+
+    }
+
+    @Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		interp.callJsFunction("onOptionsItemSelected", item);
 		switch (item.getItemId()) {

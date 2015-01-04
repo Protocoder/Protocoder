@@ -101,7 +101,7 @@ public class PProtocoder extends PInterface {
     @APIMethod(description = "Returns an object to manipulate the device app webIDE", example = "")
     @APIParam(params = { })
     public PWebEditor webEditor() {
-        PWebEditor pWebEditor = new PWebEditor(mContext);
+        PWebEditor pWebEditor = new PWebEditor(getContext());
 
         return pWebEditor;
     }
@@ -205,7 +205,7 @@ public class PProtocoder extends PInterface {
 
         public void onEnter(Context cx, Scriptable activation,
                             Scriptable thisObj, Object[] args) {
-            MLog.network(mContext, TAG, "" + "Frame entered");
+            MLog.network(getContext(), TAG, "" + "Frame entered");
 
         }
 
@@ -214,7 +214,7 @@ public class PProtocoder extends PInterface {
 
         public void onExit(Context cx, boolean byThrow,
                            Object resultOrException) {
-            MLog.network(mContext, TAG, "" + "Frame exit, result="+resultOrException);
+            MLog.network(getContext(), TAG, "" + "Frame exit, result="+resultOrException);
 
         }
 
@@ -225,7 +225,7 @@ public class PProtocoder extends PInterface {
 
         public void onLineChange(Context cx, int lineNumber) {
             if (isBreakpoint(lineNumber)) {
-                MLog.network(mContext, TAG, "" + "Breakpoint hit: "+debuggableScript.getSourceName()+":"+lineNumber);
+                MLog.network(getContext(), TAG, "" + "Breakpoint hit: "+debuggableScript.getSourceName()+":"+lineNumber);
             }
         }
 
@@ -241,7 +241,7 @@ public class PProtocoder extends PInterface {
 	public String getVersionName() {
 		PackageInfo pInfo = null;
 		try {
-			pInfo = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0);
+			pInfo = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0);
 		} catch (NameNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -253,7 +253,7 @@ public class PProtocoder extends PInterface {
 	public int getVersionCode() {
 		PackageInfo pInfo = null;
 		try {
-			pInfo = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0);
+			pInfo = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0);
 		} catch (NameNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -272,7 +272,7 @@ public class PProtocoder extends PInterface {
         intent.putExtra("autoInstall", b);
        // intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        mContext.startActivity(intent);
+        getContext().startActivity(intent);
     }
 
 
@@ -289,7 +289,7 @@ public class PProtocoder extends PInterface {
 			return;
 		}
 
-		PackageManager manager = mContext.getPackageManager();
+		PackageManager manager = getContext().getPackageManager();
 
 		Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
 		mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);

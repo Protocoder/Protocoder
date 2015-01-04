@@ -94,7 +94,7 @@ public class PArduino extends PInterface {
 
     public void start() {
         WhatIsRunning.getInstance().add(this);
-        mPhysicaloid = new Physicaloid(mContext);
+        mPhysicaloid = new Physicaloid(getContext());
         open();
     }
 
@@ -105,7 +105,7 @@ public class PArduino extends PInterface {
             started = true;
             MLog.d("PArduino", "start ");
 
-            mPhysicaloid = new Physicaloid(mContext);
+            mPhysicaloid = new Physicaloid(getContext());
             open();
             mPhysicaloid.setBaudrate(bauds);
 

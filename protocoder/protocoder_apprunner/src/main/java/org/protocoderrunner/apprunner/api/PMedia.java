@@ -29,16 +29,16 @@
 
 package org.protocoderrunner.apprunner.api;
 
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.MediaRecorder;
+import android.os.Bundle;
+import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -46,10 +46,10 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
-import org.protocoderrunner.apprunner.AppRunnerFragment;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.apprunner.api.other.PAudioRecorder;
 import org.protocoderrunner.apprunner.api.other.PMidi;
 import org.protocoderrunner.apprunner.api.other.PPureData;
 import org.protocoderrunner.media.Audio;
@@ -60,10 +60,10 @@ import org.protocoderrunner.utils.MLog;
 import org.puredata.android.service.PdService;
 import org.puredata.android.utils.PdUiDispatcher;
 import org.puredata.core.PdBase;
-import org.puredata.core.PdReceiver;
 import org.puredata.core.utils.PdDispatcher;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
 
@@ -73,9 +73,11 @@ public class PMedia extends PInterface {
 
     private HeadSetReceiver headsetPluggedReceiver;
     private MicPluggedCB headsetCallbackfn;
+    PAudioRecorder rec;
 
-    public PMedia(Context a) {
-		super(a);
+    public PMedia(Context c) {
+		super(c);
+        rec = new PAudioRecorder(getContext());
 
 		WhatIsRunning.getInstance().add(this);
 	}
@@ -98,14 +100,14 @@ public class PMedia extends PInterface {
 	@APIMethod(description = "Set the main volume", example = "media.playSound(fileName);")
 	@APIParam(params = { "volume" })
 	public void setVolume(int volume) {
-		AndroidUtils.setVolume(mContext, volume);
+		AndroidUtils.setVolume(getContext(), volume);
 	}
 
     @ProtocoderScript
     @APIMethod(description = "Routes the audio through the speakers", example = "media.playSound(fileName);")
     @APIParam(params = { "" })
     public void setAudioOnSpeakers(boolean b) {
-        AudioManager audioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+        AudioManager audioManager = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
         audioManager.setMode(AudioManager.MODE_IN_CALL);
         audioManager.setSpeakerphoneOn(!b);
     }
@@ -114,7 +116,7 @@ public class PMedia extends PInterface {
     @APIMethod(description = "Enable sounds effects (default false)", example = "")
     @APIParam(params = { "boolean" })
     public void enableSoundEffects(boolean b) {
-        AndroidUtils.setEnableSoundEffects(mContext, b);
+        AndroidUtils.setEnableSoundEffects(getContext(), b);
     }
 
     // --------- initPDPatch ---------//
@@ -135,7 +137,7 @@ public class PMedia extends PInterface {
 	public PPureData initPDPatch(String fileName, final initPDPatchCB callbackfn) {
 		String filePath = AppRunnerSettings.get().project.getStoragePath() + File.separator + fileName;
 
-		PdReceiver receiver = new PdReceiver() {
+		PdUiDispatcher receiver = new PdUiDispatcher() {
 
 			@Override
 			public void print(String s) {
@@ -217,9 +219,6 @@ public class PMedia extends PInterface {
 				callbackfn.event(o);
 			}
 
-			public void stop() {
-				mContext.unbindService(AudioService.pdConnection);
-			}
 		};
 
 		// create and install the dispatcher
@@ -232,16 +231,16 @@ public class PMedia extends PInterface {
 
 		};
 
-		PdBase.setReceiver(dispatcher);
+		//PdBase.setReceiver(dispatcher);
 
-		// PdBase.setReceiver(receiver);
+		PdBase.setReceiver(receiver);
 		PdBase.subscribe("android");
 		// start pure data sound engine
 		AudioService.file = filePath;
-		Intent intent = new Intent((mContext), PdService.class);
-		// intent.putExtra("file", "qq.pd");
 
-		(mContext).bindService(intent, AudioService.pdConnection, Context.BIND_AUTO_CREATE);
+		Intent intent = new Intent((getContext()), PdService.class);
+
+		(getContext()).bindService(intent, AudioService.pdConnection, Context.BIND_AUTO_CREATE);
 		initSystemServices();
 		WhatIsRunning.getInstance().add(AudioService.pdConnection);
 
@@ -249,7 +248,7 @@ public class PMedia extends PInterface {
 	}
 
 	private void initSystemServices() {
-		TelephonyManager telephonyManager = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
+		TelephonyManager telephonyManager = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
 		telephonyManager.listen(new PhoneStateListener() {
 			@Override
 			public void onCallStateChanged(int state, String incomingNumber) {
@@ -265,78 +264,31 @@ public class PMedia extends PInterface {
 		}, PhoneStateListener.LISTEN_CALL_STATE);
 	}
 
-	MediaRecorder recorder;
-	ProgressDialog mProgressDialog;
-	boolean showProgress = false;
+    boolean recording = false;
 
 	@ProtocoderScript
 	@APIMethod(description = "Record a sound with the microphone", example = "")
 	@APIParam(params = { "fileName", "showProgressBoolean" })
-	public void recordAudio(String fileName, boolean showProgress) {
-		this.showProgress = showProgress;
-		recorder = new MediaRecorder();
-		// ContentValues values = new ContentValues(3);
-		// values.put(MediaStore.MediaColumns.TITLE, fileName);
-		recorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
-		recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-		recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-		// recorder.setAudioEncoder(MediaRecorder.getAudioSourceMax());
-		recorder.setAudioEncodingBitRate(16);
-		recorder.setAudioSamplingRate(44100);
+	public void startAudioRecord(String fileName, boolean showProgress) {
+        if (!recording) {
+            recording = true;
+            if (AppRunnerSettings.get().hasUi) {
+                rec.startRecordingWithUi(getActivity());
+            }
 
-		recorder.setOutputFile(AppRunnerSettings.get().project.getStoragePath() + File.separator + fileName);
-		try {
-			recorder.prepare();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		mProgressDialog = new ProgressDialog(mActivity);
-		mProgressDialog.setTitle("Record!");
-		mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-		mProgressDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Stop recording",
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(final DialogInterface dialog, final int whichButton) {
-						mProgressDialog.dismiss();
-						stopRecording();
-					}
-				});
-
-		mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-			@Override
-			public void onCancel(DialogInterface p1) {
-				stopRecording();
-			}
-		});
-
-		recorder.start();
-
-		if (showProgress == true) {
-			mProgressDialog.show();
-		}
+            rec.startRecording(fileName, showProgress & AppRunnerSettings.get().hasUi);
+        }
 	}
 
-
     @ProtocoderScript
-    @APIMethod(description = "Stops recording", example = "")
-    @APIParam(params = { "" })
-	public void stopRecording() {
-		try {
-			if (recorder != null) {
-				recorder.stop();
-				recorder.reset();
-				recorder.release();
-				recorder = null;
-			}
-		} catch (Exception e) {
+	@APIMethod(description = "Record a sound with the microphone", example = "")
+	@APIParam(params = { "fileName", "showProgressBoolean" })
+	public void stopAudioRecord() {
+        if (recording) {
+            rec.stopRecording();
+            recording = false;
+        }
 
-		}
-
-		if (showProgress) {
-			mProgressDialog.dismiss();
-			showProgress = false;
-		}
 	}
 
 
@@ -344,14 +296,14 @@ public class PMedia extends PInterface {
 	@APIMethod(description = "Says a text with voice", example = "media.textToSpeech('hello world');")
 	@APIParam(params = { "text" })
 	public void textToSpeech(String text) {
-        Audio.speak(mContext, text, Locale.getDefault());
+        Audio.speak(getContext(), text, Locale.getDefault());
 	}
 
 	@ProtocoderScript
 	@APIMethod(description = "Says a text with voice using a defined locale", example = "media.textToSpeech('hello world');")
 	@APIParam(params = { "text", "Locale" })
 	public void textToSpeech(String text, Locale locale) {
-        Audio.speak(mContext, text, locale);
+        Audio.speak(getContext(), text, locale);
 	}
 
 
@@ -364,9 +316,9 @@ public class PMedia extends PInterface {
 	@APIMethod(description = "Fires the voice recognition and returns the best match", example = "media.startVoiceRecognition(function(text) { console.log(text) } );")
 	@APIParam(params = { "function(recognizedText)" })
 	public void startVoiceRecognition(final StartVoiceRecognitionCB callbackfn) {
-        if (mActivity == null) return;
+        if (getActivity() == null) return;
 
-        (mActivity).addVoiceRecognitionListener(new onVoiceRecognitionListener() {
+        (getActivity()).addVoiceRecognitionListener(new onVoiceRecognitionListener() {
 
             @Override
             public void onNewResult(String text) {
@@ -379,17 +331,96 @@ public class PMedia extends PInterface {
 		Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
 		intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
 		intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Tell me something!");
-		mActivity.startActivityForResult(intent, mActivity.VOICE_RECOGNITION_REQUEST_CODE);
+		getActivity().startActivityForResult(intent, getActivity().VOICE_RECOGNITION_REQUEST_CODE);
 
 	}
+
+    // --------- startVoiceRecognition ---------//
+    interface StartVoiceRecognition2CB {
+        void event(String status, String responseString);
+    }
+    public SpeechRecognizer startVoiceRecognition2(final StartVoiceRecognition2CB callbackfn) {
+
+        String langMode = "en-US";
+        langMode = RecognizerIntent.LANGUAGE_MODEL_FREE_FORM;
+        SpeechRecognizer sr = SpeechRecognizer.createSpeechRecognizer(getContext());
+
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, langMode);
+        intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
+        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, this.getClass().getPackage().getName());
+        sr.startListening(intent);
+
+        sr.setRecognitionListener(new RecognitionListener() {
+            @Override
+            public void onReadyForSpeech(Bundle params) {
+
+            }
+
+            @Override
+            public void onBeginningOfSpeech() {
+
+            }
+
+            @Override
+            public void onRmsChanged(float rmsdB) {
+
+            }
+
+            @Override
+            public void onBufferReceived(byte[] buffer) {
+
+            }
+
+            @Override
+            public void onEndOfSpeech() {
+                callbackfn.event("ended", "");
+            }
+
+            @Override
+            public void onError(int error) {
+                callbackfn.event("error", "");
+            }
+
+            @Override
+            public void onResults(Bundle results) {
+
+                ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+
+                for (int i = 0; i < matches.size(); i++) {
+                    MLog.d(TAG, "result " + i + " " + matches.get(i));
+                }
+
+                callbackfn.event("result", matches.get(matches.size()));
+            }
+
+            @Override
+            public void onPartialResults(Bundle partialResults) {
+
+                ArrayList<String> matches = partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+
+                for (int i = 0; i < matches.size(); i++) {
+                    MLog.d(TAG, "partialResult " + i + " " + matches.get(i));
+                }
+            }
+
+            @Override
+            public void onEvent(int eventType, Bundle params) {
+
+            }
+        });
+
+        return sr;
+
+       // sr.stopListening();
+    }
 
 	public interface onVoiceRecognitionListener {
 		public void onNewResult(String text);
 	}
 
 	public void stop() {
-		stopRecording();
-        mContext.unregisterReceiver(headsetPluggedReceiver);
+        getContext().unregisterReceiver(headsetPluggedReceiver);
     }
 
 
@@ -397,11 +428,11 @@ public class PMedia extends PInterface {
     @APIMethod(description = "Start a connected midi device", example = "media.startVoiceRecognition(function(text) { console.log(text) } );")
     @APIParam(params = { "function(recognizedText)" })
     public void startMidiDevice(final PMidi.MidiDeviceEventCB callbackfn) {
-        PMidi pMidi = new PMidi(mContext, callbackfn);
+        PMidi pMidi = new PMidi(getContext(), callbackfn);
     }
 
     public boolean isHeadsetPlugged() {
-        AudioManager audioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+        AudioManager audioManager = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
         return audioManager.isWiredHeadsetOn();
     }
 
@@ -415,7 +446,7 @@ public class PMedia extends PInterface {
 
         IntentFilter filter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
         headsetPluggedReceiver = new HeadSetReceiver();
-        mContext.registerReceiver(headsetPluggedReceiver, filter);
+        getContext().registerReceiver(headsetPluggedReceiver, filter);
     }
 
     private class HeadSetReceiver extends BroadcastReceiver {

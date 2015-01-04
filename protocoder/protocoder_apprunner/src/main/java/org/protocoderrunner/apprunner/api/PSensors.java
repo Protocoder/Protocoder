@@ -115,7 +115,7 @@ public class PSensors extends PInterface {
 	@APIParam(params = { "function(x, y, z)" })
 	public void startAccelerometer(final startAccelerometerCB callbackfn) {
 		if (!accelerometerStarted) {
-			accelerometerManager = new AccelerometerManager(mContext);
+			accelerometerManager = new AccelerometerManager(getContext());
 			accelerometerListener = new AccelerometerManager.AccelerometerListener() {
 
 				@Override
@@ -159,7 +159,7 @@ public class PSensors extends PInterface {
 	@APIParam(params = { "function(x, y, z)" })
 	public void startGyroscope(final startGyroscopeCB callbackfn) {
 		if (!gyroscopeStarted) {
-			gyroscopeManager = new GyroscopeManager(mContext);
+			gyroscopeManager = new GyroscopeManager(getContext());
 			gyroscopeListener = new GyroscopeManager.GyroscopeListener() {
 
 				@Override
@@ -198,7 +198,7 @@ public class PSensors extends PInterface {
 
 		if (!gpsStarted) {
 
-			gpsManager = new GPSManager(mContext);
+			gpsManager = new GPSManager(getContext());
 			gpsListener = new GPSManager.GPSListener() {
 
 				@Override
@@ -346,7 +346,7 @@ public class PSensors extends PInterface {
 	@APIMethod(description = "Start the orientation sensor. Returns pitch, roll, yaw", example = "")
 	@APIParam(params = { "function(pitch, roll, yaw)" })
 	public void startOrientation(final startOrientationCB callbackfn) {
-		orientationManager = new OrientationManager(mContext);
+		orientationManager = new OrientationManager(getContext());
 
 		orientationListener = new OrientationManager.OrientationListener() {
 
@@ -377,7 +377,7 @@ public class PSensors extends PInterface {
 	@APIMethod(description = "Start the light sensor. Returns the intensity. The value per device might vary", example = "")
 	@APIParam(params = { "function(intensity)" })
 	public void startLightIntensity(final startLightIntensityCB callbackfn) {
-		lightManager = new LightManager(mContext);
+		lightManager = new LightManager(getContext());
 
 		lightListener = new LightManager.LightListener() {
 
@@ -409,7 +409,7 @@ public class PSensors extends PInterface {
 	@APIMethod(description = "Start the proximity sensor. Returns a proximty value. It might differ per device", example = "")
 	@APIParam(params = { "function(proximity)" })
 	public void startProximity(final startProximityCB callbackfn) {
-		proximityManager = new ProximityManager(mContext);
+		proximityManager = new ProximityManager(getContext());
 
 		proximityListener = new ProximityManager.ProximityListener() {
 
@@ -440,7 +440,7 @@ public class PSensors extends PInterface {
 	@APIMethod(description = "Start the magnetic sensor", example = "")
 	@APIParam(params = { "function(value)" })
 	public void startMagnetic(final startMagneticCB callbackfn) {
-		magneticManager = new MagneticManager(mContext);
+		magneticManager = new MagneticManager(getContext());
 
 		magneticListener = new MagneticManager.MagneticListener() {
 
@@ -471,7 +471,7 @@ public class PSensors extends PInterface {
 	@APIMethod(description = "Start the barometer", example = "")
 	@APIParam(params = { "function(value)" })
 	public void startBarometer(final startBarometerCB callbackfn) {
-		pressureManager = new PressureManager(mContext);
+		pressureManager = new PressureManager(getContext());
 
 		pressureListener = new PressureManager.PressureListener() {
 
@@ -502,7 +502,7 @@ public class PSensors extends PInterface {
 	@APIMethod(description = "Start the step counter. Not superacurate and only few devices", example = "")
 	@APIParam(params = { "function(value)" })
 	public void startStepCounter(final startStepCounterCB callbackfn) {
-		stepManager = new StepManager(mContext);
+		stepManager = new StepManager(getContext());
 
 		stepListener = new StepManager.StepListener() {
 

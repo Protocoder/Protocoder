@@ -29,19 +29,35 @@
 
 package org.protocoderrunner.apprunner;
 
+import android.content.Context;
+
+import org.mozilla.javascript.Scriptable;
+import org.protocoderrunner.apprunner.api.other.ProtocoderNativeArray;
 import org.protocoderrunner.project.Project;
+
+import java.io.File;
 
 public class AppRunnerSettings {
 
 	private static AppRunnerSettings instance;
+    public AppRunnerInterpreter interp;
+    public Project project;
+    public boolean hasUi = false;
 
-	public static AppRunnerSettings get() {
+
+    public static AppRunnerSettings get() {
 		if (instance == null)
 			instance = new AppRunnerSettings();
 
 		return instance;
 	}
 
-	public Project project;
+    public Scriptable newArray() {
+        return interp.interpreter.mainScriptContext.newArray(interp.interpreter.scope, 0);
+    }
 
+
+    public Scriptable newArray(File[] files) {
+        return interp.interpreter.mainScriptContext.newArray(interp.interpreter.scope, files);
+    }
 }

@@ -315,7 +315,7 @@ public class ProtoScripts {
         }
 
         try {
-            Intent shortcutIntent = new Intent(mProtocoder.a, AppRunnerFragment.class);
+            Intent shortcutIntent = new Intent(mProtocoder.a, AppRunnerActivity.class);
             shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 

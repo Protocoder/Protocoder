@@ -64,6 +64,6 @@ public class PWebEditor extends PInterface {
     @APIMethod(description = "Execute custom js in the webIde", example = "")
     @APIParam(params = { "jsText" })
     public void sendJs(String js) {
-        IDEcommunication.getInstance(mContext).sendCustomJs(js);
+        IDEcommunication.getInstance(getContext()).sendCustomJs(js);
     }
 }

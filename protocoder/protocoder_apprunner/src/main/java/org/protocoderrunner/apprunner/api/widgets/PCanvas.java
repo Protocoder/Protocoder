@@ -51,6 +51,9 @@ import android.graphics.Typeface;
 import android.view.MotionEvent;
 import android.view.View;
 
+import org.protocoderrunner.apidoc.annotation.APIMethod;
+import org.protocoderrunner.apidoc.annotation.APIParam;
+import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.apprunner.api.PUtil;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.sensors.WhatIsRunning;
@@ -63,7 +66,7 @@ import java.util.Vector;
 import static android.graphics.Shader.TileMode;
 
 
-public class PCanvasView extends View implements PViewInterface {
+public class PCanvas extends View implements PViewInterface {
 
     private static final String TAG = "PCanvasView";
 
@@ -164,7 +167,7 @@ public class PCanvasView extends View implements PViewInterface {
     }
 
 
-    public PCanvasView(Context context) {
+    public PCanvas(Context context) {
         super(context);
         MLog.d(TAG, "onCreate");
 
@@ -175,7 +178,7 @@ public class PCanvasView extends View implements PViewInterface {
 
 
 
-    public PCanvasView(Context context, int w, int h) {
+    public PCanvas(Context context, int w, int h) {
         super(context);
         MLog.d(TAG, "onCreate");
         mWidth = w;
@@ -231,6 +234,9 @@ public class PCanvasView extends View implements PViewInterface {
         this.pCanvasInterfaceTouch = pCanvasInterfaceTouch;
     }
 
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
     public void loopDraw(int ms, final PCanvasInterfaceDraw pCanvasInterfaceDraw) {
         if (loop != null) {
             loop.stop();
@@ -249,12 +255,20 @@ public class PCanvasView extends View implements PViewInterface {
         mAutoDraw = true;
     }
 
+
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
     public void refresh() {
         if (mAutoDraw) {
             invalidate();
         }
     }
 
+
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
     public void autoDraw(boolean b) {
         mAutoDraw = b;
     }
@@ -312,7 +326,10 @@ public class PCanvasView extends View implements PViewInterface {
     }
 
     //TODO drawPaint o drawARGB
-    public PCanvasView background(int r, int g, int b, int alpha) {
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
+    public PCanvas background(int r, int g, int b, int alpha) {
         mPaintBackground.setStyle(Paint.Style.FILL);
         mPaintBackground.setARGB(alpha, r, g, b);
         mCanvas.drawRect(0, 0, mWidth, mHeight, mPaintBackground);
@@ -322,7 +339,10 @@ public class PCanvasView extends View implements PViewInterface {
     }
 
     //TODO drawPaint o drawARGB
-    public PCanvasView background(int r, int g, int b) {
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
+    public PCanvas background(int r, int g, int b) {
         background(r, g, b, 255);
 
         refresh();
@@ -330,34 +350,49 @@ public class PCanvasView extends View implements PViewInterface {
         return this;
     }
 
-    public PCanvasView point(float x, float y) {
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
+    public PCanvas point(float x, float y) {
         mCanvas.drawPoint(x, y, mPaintStroke);
         refresh();
         return this;
     }
 
     //TODO
-    public PCanvasView points(float[] points) {
+    //@ProtocoderScript
+    //@APIMethod(description = "", example = "")
+    //@APIParam(params = { "x", "y" })
+    public PCanvas points(float[] points) {
         mCanvas.drawPoints(points, mPaintStroke);
         refresh();
         return this;
     }
 
     //TODO
-    public PCanvasView points(float[] points, int offset, int count) {
+    //@ProtocoderScript
+    //@APIMethod(description = "", example = "")
+    //@APIParam(params = { "x", "y" })
+    public PCanvas points(float[] points, int offset, int count) {
         mCanvas.drawPoints(points, offset, count, mPaintStroke);
         refresh();
         return this;
     }
 
 
-    public PCanvasView line(float x1, float y1, float x2, float y2) {
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
+    public PCanvas line(float x1, float y1, float x2, float y2) {
         mCanvas.drawLine(x1, y1, x2, y2, mPaintStroke);
         refresh();
         return this;
     }
 
     //TODO
+    //@ProtocoderScript
+    //@APIMethod(description = "", example = "")
+    //@APIParam(params = { "x", "y" })
     public Path createPath(float[][] points, boolean close) {
         Path path = new Path();
 
@@ -373,7 +408,11 @@ public class PCanvasView extends View implements PViewInterface {
         return path;
     }
 
-    public PCanvasView path(Path path) {
+
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
+    public PCanvas path(Path path) {
         if (fillOn)   mCanvas.drawPath(path, mPaintFill);
         if (strokeOn) mCanvas.drawPath(path, mPaintStroke);
         refresh();
@@ -381,8 +420,10 @@ public class PCanvasView extends View implements PViewInterface {
         return this;
     }
 
-
-    public PCanvasView strokeDashed(float[] intervals, float phase) {
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
+    public PCanvas strokeDashed(float[] intervals, float phase) {
 
         // Stamp mContext concave arrow along the line
         PathEffect effect = new DashPathEffect(intervals, phase);
@@ -391,8 +432,10 @@ public class PCanvasView extends View implements PViewInterface {
         return this;
     }
 
-
-    public PCanvasView ellipse(float x1, float y1, float width, float height) {
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
+    public PCanvas ellipse(float x1, float y1, float width, float height) {
         if (fillOn)   mCanvas.drawOval(place(x1, y1, width, height), mPaintFill);
         if (strokeOn) mCanvas.drawOval(place(x1, y1, width, height), mPaintStroke);
         refresh();
@@ -400,7 +443,10 @@ public class PCanvasView extends View implements PViewInterface {
         return this;
     }
 
-    public PCanvasView rect(float x1, float y1, float width, float height) {
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
+    public PCanvas rect(float x1, float y1, float width, float height) {
         if (fillOn)   mCanvas.drawRect(place(x1, y1, width, height), mPaintFill);
         if (strokeOn) mCanvas.drawRect(place(x1, y1, width, height), mPaintStroke);
         refresh();
@@ -408,7 +454,10 @@ public class PCanvasView extends View implements PViewInterface {
         return this;
     }
 
-    public PCanvasView rect(float x1, float y1, float width, float height, float rx, float ry) {
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
+    public PCanvas rect(float x1, float y1, float width, float height, float rx, float ry) {
         if (fillOn)   mCanvas.drawRoundRect(place(x1, y1, width, height), rx, ry, mPaintFill);
         if (strokeOn) mCanvas.drawRoundRect(place(x1, y1, width, height), rx, ry, mPaintStroke);
 
@@ -417,7 +466,10 @@ public class PCanvasView extends View implements PViewInterface {
         return this;
     }
 
-    public PCanvasView arc(float x1, float y1, float x2, float y2, float initAngle, float sweepAngle, boolean center) {
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
+    public PCanvas arc(float x1, float y1, float x2, float y2, float initAngle, float sweepAngle, boolean center) {
         if (fillOn)   mCanvas.drawArc(place(x1, y1, x2, y2), initAngle, sweepAngle, center, mPaintFill);
         if (strokeOn) mCanvas.drawArc(place(x1, y1, x2, y2), initAngle, sweepAngle, center, mPaintStroke);
         refresh();
@@ -425,7 +477,10 @@ public class PCanvasView extends View implements PViewInterface {
         return this;
     }
 
-    public PCanvasView text(String text, float x, float y) {
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
+    public PCanvas text(String text, float x, float y) {
         if (fillOn)   mCanvas.drawText(text, x, y, mPaintFill);
         if (strokeOn) mCanvas.drawText(text, x, y, mPaintStroke);
         refresh();
@@ -433,7 +488,10 @@ public class PCanvasView extends View implements PViewInterface {
         return this;
     }
 
-    public PCanvasView text(String text,Path path, float initOffset, float outOffset) {
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
+    public PCanvas text(String text,Path path, float initOffset, float outOffset) {
         if (fillOn)   mCanvas.drawTextOnPath(text, path, initOffset, outOffset, mPaintFill);
         if (strokeOn) mCanvas.drawTextOnPath(text, path, initOffset, outOffset, mPaintStroke);
 
@@ -442,11 +500,17 @@ public class PCanvasView extends View implements PViewInterface {
         return this;
     }
 
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
     public Bitmap loadImage(String imagePath) {
         return Image.loadBitmap(ProjectManager.getInstance().getCurrentProject().getStoragePath() + File.separator + imagePath);
     }
 
-    public PCanvasView image(Bitmap bmp, int x, int y) {
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
+    public PCanvas image(Bitmap bmp, int x, int y) {
         //if (fillOn)
             mCanvas.drawBitmap(bmp, x, y, mPaintBackground);
         //if (strokeOn) mCanvas.drawBitmap(bmp, x, y, mPaintStroke);
@@ -455,8 +519,10 @@ public class PCanvasView extends View implements PViewInterface {
         return this;
     }
 
-
-    public PCanvasView image(Bitmap bmp, int x, int y, int w, int h) {
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
+    public PCanvas image(Bitmap bmp, int x, int y, int w, int h) {
         Rect rectSrc = new Rect(0, 0, bmp.getWidth(), bmp.getHeight());
         RectF rectDst = new RectF(x, y, x + w, y + h);
         //if (fillOn)
@@ -468,12 +534,18 @@ public class PCanvasView extends View implements PViewInterface {
         return this;
     }
 
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
     public void clear() {
         mCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
         refresh();
     }
 
-    public PCanvasView fill(int r, int g, int b, int alpha) {
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
+    public PCanvas fill(int r, int g, int b, int alpha) {
         mPaintFill.setStyle(Paint.Style.FILL);
         mPaintFill.setARGB(alpha, r, g, b);
         fillOn = true;
@@ -481,20 +553,28 @@ public class PCanvasView extends View implements PViewInterface {
         return this;
     }
 
-    public PCanvasView fill(int r, int g, int b) {
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
+    public PCanvas fill(int r, int g, int b) {
         fill(r, g, b, 255);
         fillOn = true;
 
         return this;
     }
 
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
     public void noFill() {
         fillOn = false;
 
     }
 
-
-    public PCanvasView stroke(int r, int g, int b, int alpha) {
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
+    public PCanvas stroke(int r, int g, int b, int alpha) {
         mPaintStroke.setStyle(Paint.Style.STROKE);
         mPaintStroke.setARGB(alpha, r, g, b);
         strokeOn = true;
@@ -502,108 +582,157 @@ public class PCanvasView extends View implements PViewInterface {
         return this;
     }
 
-    public PCanvasView stroke(int r, int g, int b) {
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
+    public PCanvas stroke(int r, int g, int b) {
         stroke(r, g, b, 255);
         strokeOn = true;
 
         return this;
     }
 
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
     public void noStroke() {
         strokeOn = false;
     }
 
-    public PCanvasView strokeWidth(float w) {
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
+    public PCanvas strokeWidth(float w) {
         mPaintStroke.setStrokeWidth(w);
 
         return this;
     }
-
-
-    public PCanvasView strokeCap(Paint.Cap cap) {
+    
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
+    public PCanvas strokeCap(Paint.Cap cap) {
         mPaintStroke.setStrokeCap(cap);
 
         return this;
     }
 
-    public PCanvasView font(Typeface typeface) {
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
+    public PCanvas font(Typeface typeface) {
         mPaintFill.setTypeface(typeface);
         mPaintStroke.setTypeface(typeface);
 
         return this;
     }
 
-    public PCanvasView textSize(int size) {
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
+    public PCanvas textSize(int size) {
         mPaintFill.setTextSize(size);
         mPaintStroke.setTextSize(size);
 
         return this;
     }
 
-    public PCanvasView antiAlias(boolean b) {
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
+    public PCanvas antiAlias(boolean b) {
         mPaintFill.setAntiAlias(b);
         mPaintStroke.setAntiAlias(b);
 
         return this;
     }
 
-    public PCanvasView shadowFill(int x, int y, float radius, String colorHex) {
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
+    public PCanvas shadowFill(int x, int y, float radius, String colorHex) {
         int c = Color.parseColor(colorHex);
         mPaintFill.setShadowLayer(radius, x, y, c);
 
         return this;
     }
 
-    public PCanvasView shadowStroke(int x, int y, float radius, String colorHex) {
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
+    public PCanvas shadowStroke(int x, int y, float radius, String colorHex) {
         int c = Color.parseColor(colorHex);
         mPaintStroke.setShadowLayer(radius, x, y, c);
 
         return this;
     }
 
-
-    public PCanvasView filter(PorterDuff.Mode mode) {
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
+    public PCanvas filter(PorterDuff.Mode mode) {
         mPaintFill.setXfermode(new PorterDuffXfermode(mode));
         mPaintStroke.setXfermode(new PorterDuffXfermode(mode));
 
         return this;
     }
 
-    public PCanvasView save() {
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
+    public PCanvas save() {
         mCanvas.save();
 
         return this;
     }
-    public PCanvasView rotate(float degrees) {
+
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
+    public PCanvas rotate(float degrees) {
         mCanvas.rotate(degrees);
 
         return this;
     }
 
-    public PCanvasView translate(float x, float y) {
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
+    public PCanvas translate(float x, float y) {
         mCanvas.translate(x, y);
 
         return this;
     }
 
-    public PCanvasView skew(float x, float y) {
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
+    public PCanvas skew(float x, float y) {
         mCanvas.skew(x, y);
 
         return this;
     }
 
-    public PCanvasView scale(float x, float y) {
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
+    public PCanvas scale(float x, float y) {
         mCanvas.scale(x, y);
 
         return this;
     }
 
-
-    public PCanvasView restore() {
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
+    public PCanvas restore() {
         mCanvas.restore();
         return this;
     }
 
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
     public int newLayer() {
         //create mContext new bitmap
         Layer layer = createNewLayer();
@@ -615,11 +744,17 @@ public class PCanvasView extends View implements PViewInterface {
         return currentLayer;
     }
 
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
     public void deleteLayer(int pos) {
         mLayerFifo.remove(pos);
     }
 
-    public PCanvasView setLayer(int pos, boolean hideAll) {
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
+    public PCanvas setLayer(int pos, boolean hideAll) {
         //all layers off
        if (hideAll) {
            for (Layer layer : mLayerFifo) {
@@ -639,7 +774,10 @@ public class PCanvasView extends View implements PViewInterface {
         return this;
     }
 
-    public PCanvasView enableLayer(int pos, boolean b) {
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
+    public PCanvas enableLayer(int pos, boolean b) {
         Layer layer = mLayerFifo.get(pos);
         layer.visible = b;
         mCurrentBmp = layer.bmp;
@@ -649,24 +787,36 @@ public class PCanvasView extends View implements PViewInterface {
         return this;
     }
 
-    public PCanvasView mode(boolean mode) {
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
+    public PCanvas mode(boolean mode) {
         mModeCorner = mode;
 
         return this;
     }
 
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
     public Shader createBitmapShader(Bitmap bitmap, TileMode mode) {
         BitmapShader shader = new BitmapShader(bitmap, mode, mode);
 
         return shader;
     }
 
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
     public Shader linearShader(float x1, float y1, float x2, float y2, String c1, String c2, TileMode mode) {
         Shader shader = new LinearGradient(x1, y1, x2, y2, Color.parseColor(c1), Color.parseColor(c2), mode);
         return shader;
     }
 
 
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
     public Shader linearShader(float x1, float y1, float x2, float y2, String[] colorsStr, float[] positions, TileMode mode) {
         int colors[] = new int[colorsStr.length];
         for (int i = 0; i < colors.length; i++) {
@@ -677,18 +827,27 @@ public class PCanvasView extends View implements PViewInterface {
         return shader;
     }
 
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
     public Shader sweepShader(int x, int y, String c1, String c2) {
         Shader shader = new SweepGradient(x, y, Color.parseColor(c1), Color.parseColor(c2));
 
         return shader;
     }
 
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
     public Shader composeShader(Shader s1, Shader s2, PorterDuff.Mode mode) {
         Shader shader = new ComposeShader(s1, s2, mode);
 
         return shader;
     }
 
+    @ProtocoderScript
+    @APIMethod(description = "", example = "")
+    @APIParam(params = { "x", "y" })
     public void setShader(Shader shader, TileMode mode) {
         mPaintFill.setAntiAlias(true);
         mPaintFill.setShader(shader);
