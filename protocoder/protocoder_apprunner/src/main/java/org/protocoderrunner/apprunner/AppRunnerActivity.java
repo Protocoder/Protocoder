@@ -43,6 +43,7 @@ import android.speech.RecognizerIntent;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
@@ -126,15 +127,6 @@ public class AppRunnerActivity extends BaseActivity {
 
             //setDocumentCounterText(projectName);
 
-            int actionBarColor;
-            if (projectFolder.equals("examples")) {
-                actionBarColor = getResources().getColor(R.color.project_example_color);
-            } else {
-                actionBarColor = getResources().getColor(R.color.project_user_color);
-            }
-
-            Project currentProject = ProjectManager.getInstance().get(projectFolder, projectName);
-            setToolBar(currentProject, actionBarColor, 0xFFFFFF);
 
             MLog.d(TAG, "load " + projectName + " in " + projectFolder);
 
@@ -441,6 +433,25 @@ public class AppRunnerActivity extends BaseActivity {
         return true;
     }
 
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        //interp.callJsFunction("onOptionsItemSelected", item);
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // Up button pressed
+                Intent intentHome = new Intent(this, AppRunnerActivity.class);
+                intentHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intentHome);
+
+                overridePendingTransition(R.anim.splash_slide_in_anim_reverse_set, R.anim.splash_slide_out_anim_reverse_set);
+                finish();
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
 
     /**
