@@ -231,16 +231,16 @@ public class PMedia extends PInterface {
 
 		};
 
-		//PdBase.setReceiver(dispatcher);
+		PdBase.setReceiver(dispatcher);
 
-		PdBase.setReceiver(receiver);
+		//PdBase.setReceiver(receiver);
 		PdBase.subscribe("android");
 		// start pure data sound engine
 		AudioService.file = filePath;
 
-		Intent intent = new Intent((getContext()), PdService.class);
+		Intent intent = new Intent(getActivity(), PdService.class);
 
-		(getContext()).bindService(intent, AudioService.pdConnection, Context.BIND_AUTO_CREATE);
+		(getActivity()).bindService(intent, AudioService.pdConnection, Context.BIND_AUTO_CREATE);
 		initSystemServices();
 		WhatIsRunning.getInstance().add(AudioService.pdConnection);
 

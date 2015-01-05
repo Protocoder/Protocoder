@@ -31,6 +31,7 @@ package org.protocoderrunner.apprunner;
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
@@ -64,6 +65,7 @@ import org.protocoderrunner.apprunner.api.PSensors;
 import org.protocoderrunner.apprunner.api.PUI;
 import org.protocoderrunner.apprunner.api.PUtil;
 import org.protocoderrunner.apprunner.api.other.PLiveCodingFeedback;
+import org.protocoderrunner.events.Events;
 import org.protocoderrunner.network.IDEcommunication;
 import org.protocoderrunner.project.Project;
 import org.protocoderrunner.project.ProjectManager;
@@ -72,14 +74,14 @@ import org.protocoderrunner.utils.MLog;
 
 import java.util.ArrayList;
 
+import de.greenrobot.event.EventBus;
+
 @SuppressLint("NewApi")
 public class AppRunnerFragment extends Fragment {
 
 	private static final String TAG = "AppRunnerFragment";
 
     private AppRunnerActivity mActivity;
-    private Context mContext;
-    private static ArrayList<Class> classes = new ArrayList<Class>();
 
 	public AppRunnerInterpreter interp;
 	private FileObserver fileObserver;
@@ -119,21 +121,21 @@ public class AppRunnerFragment extends Fragment {
     private String mScript;
     private int mActionBarColor;
     private View mMainView;
+    private int mActionBarColorInt;
     //private EditorFragment editorFragment;
 
     @Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        //setTheme(R.style.ProtocoderDark_Dialog);
-        super.onCreateView(inflater, container, savedInstanceState);
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
 
-        MLog.d(TAG, "onCreateView");
-        mContext = getActivity();
+        mActivity = (AppRunnerActivity) getActivity();
+
 
         //get parameters
         Bundle bundle = getArguments();
         mProjectName = bundle.getString(Project.NAME);
         mProjectFolder = bundle.getString(Project.FOLDER);
-        mActionBarColor = bundle.getInt(Project.COLOR, 0);
+        mActionBarColorInt = bundle.getInt(Project.COLOR, 0);
 
         //load project
         mCurrentProject = ProjectManager.getInstance().get(mProjectFolder, mProjectName);
@@ -142,51 +144,35 @@ public class AppRunnerFragment extends Fragment {
         AppRunnerSettings.get().hasUi = true;
         mScript = ProjectManager.getInstance().getCode(mCurrentProject);
 
-        //init the layout and pass it to the activity
-        mMainView = initLayout();
-        return mMainView;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        MLog.d(TAG, "onActivityCreated");
-
-        mActivity = (AppRunnerActivity) getActivity();
-
         //setup actionbar
         int actionBarColor;
         if (mProjectFolder.equals("examples")) {
-            actionBarColor = getResources().getColor(R.color.project_example_color);
+            mActionBarColor = getResources().getColor(R.color.project_example_color);
         } else {
-            actionBarColor = getResources().getColor(R.color.project_user_color);
+            mActionBarColor = getResources().getColor(R.color.project_user_color);
         }
 
-        Project currentProject = ProjectManager.getInstance().get(mProjectFolder, mProjectName);
-        mActivity.setToolBar(currentProject, actionBarColor, 0xFFFFFF);
-
-
         //instantiate the objects that can be accessed from the interpreter
-        pApp = new PApp(mContext);
+        pApp = new PApp(mActivity);
         pApp.initForParentFragment(this);
-        pBoards = new PBoards(mContext);
-        pConsole = new PConsole(mContext);
-        pDashboard = new PDashboard(mContext);
-        pDevice = new PDevice(mContext);
+        pBoards = new PBoards(mActivity);
+        pConsole = new PConsole(mActivity);
+        pDashboard = new PDashboard(mActivity);
+        pDevice = new PDevice(mActivity);
         pDevice.initForParentFragment(this);
-        pFileIO = new PFileIO(mContext);
-        pMedia = new PMedia(mContext);
+        pFileIO = new PFileIO(mActivity);
+        pMedia = new PMedia(mActivity);
         pMedia.initForParentFragment(this);
-        pNetwork = new PNetwork(mContext);
-        pProtocoder = new PProtocoder(mContext);
-        pSensors = new PSensors(mContext);
-        pUi = new PUI(mContext);
+        pNetwork = new PNetwork(mActivity);
+        pProtocoder = new PProtocoder(mActivity);
+        pSensors = new PSensors(mActivity);
+        pUi = new PUI(mActivity);
         pUi.initForParentFragment(this);
-        pUtil  = new PUtil(mContext);
+        pUtil  = new PUtil(mActivity);
 
 
         //create mContext new interpreter and add the objects to it
-        interp = new AppRunnerInterpreter(mContext);
+        interp = new AppRunnerInterpreter(mActivity);
         interp.createInterpreter(true);
         interp.interpreter.addObjectToInterface("app", pApp);
         interp.interpreter.addObjectToInterface("boards", pBoards);
@@ -203,6 +189,27 @@ public class AppRunnerFragment extends Fragment {
 
         AppRunnerSettings.get().interp = interp;
 
+    }
+
+    @Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        //setTheme(R.style.ProtocoderDark_Dialog);
+        super.onCreateView(inflater, container, savedInstanceState);
+        MLog.d(TAG, "onCreateView");
+
+        //init the layout and pass it to the activity
+        mMainView = initLayout();
+        return mMainView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        MLog.d(TAG, "onActivityCreated");
+
+        mActivity.setToolBar(mCurrentProject, mActionBarColor, 0xFFFFFF);
+
         //catch errors and send them to the webIDE or the app console
         AppRunnerInterpreter.InterpreterInfo appRunnerCb = new AppRunnerInterpreter.InterpreterInfo() {
             @Override
@@ -216,7 +223,7 @@ public class AppRunnerFragment extends Fragment {
                     obj.put("type", "error");
                     obj.put("values", message);
                     //MLog.d(TAG, "error " + obj.toString(2));
-                    IDEcommunication.getInstance(mContext).send(obj);
+                    IDEcommunication.getInstance(mActivity).send(obj);
                 } catch (JSONException er1) {
                     er1.printStackTrace();
                 }
@@ -240,13 +247,13 @@ public class AppRunnerFragment extends Fragment {
 
         // TODO fix actionbar color
         if (mActivity.mActionBarSet == false) {
-        	mActivity.setToolBar(null, mActionBarColor, getResources().getColor(R.color.white));
+            mActivity.setToolBar(null, mActionBarColor, getResources().getColor(R.color.white));
         }
         // Call the onCreate JavaScript function.
         interp.callJsFunction("onCreate", savedInstanceState);
 
         //audio
-        AudioManager audio = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+        AudioManager audio = (AudioManager) mActivity.getSystemService(Context.AUDIO_SERVICE);
         int currentVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
         mActivity.setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
@@ -258,6 +265,13 @@ public class AppRunnerFragment extends Fragment {
 
         // send ready to the webIDE
 	}
+
+    public static AppRunnerFragment newInstance(Bundle bundle) {
+        AppRunnerFragment myFragment = new AppRunnerFragment();
+        myFragment.setArguments(bundle);
+
+        return myFragment;
+    }
 
 	@Override
 	public void onStart() {
@@ -272,7 +286,9 @@ public class AppRunnerFragment extends Fragment {
 		super.onResume();
         MLog.d(TAG, "onResume");
 
-		if (onAppStatusListener != null) {
+        EventBus.getDefault().register(this);
+
+        if (onAppStatusListener != null) {
 			onAppStatusListener.onResume();
 		}
 
@@ -285,9 +301,11 @@ public class AppRunnerFragment extends Fragment {
 		super.onPause();
         MLog.d(TAG, "onPause");
 
-		interp.callJsFunction("onPause");
+        EventBus.getDefault().unregister(this);
 
-		IDEcommunication.getInstance(mContext).ready(false);
+        interp.callJsFunction("onPause");
+
+		IDEcommunication.getInstance(mActivity).ready(false);
 		fileObserver.stopWatching();
 	}
 
@@ -313,8 +331,6 @@ public class AppRunnerFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         MLog.d(TAG, "onDestroyView");
-
-       // mMainView = null;
     }
 
     @Override
@@ -336,7 +352,6 @@ public class AppRunnerFragment extends Fragment {
     }
 
 	public void addOnAppStatusListener(PApp.onAppStatus onAppStatus) {
-		onAppStatus = onAppStatus;
 
 	}
 
@@ -348,21 +363,21 @@ public class AppRunnerFragment extends Fragment {
         LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 
         // add main layout
-        mainLayout = new RelativeLayout(mContext);
+        mainLayout = new RelativeLayout(mActivity);
         mainLayout.setLayoutParams(layoutParams);
         mainLayout.setGravity(Gravity.BOTTOM);
         // mainLayout.setBackgroundColor(getResources().getColor(R.color.transparent));
         mainLayout.setBackgroundColor(getResources().getColor(R.color.light_grey));
 
         // set the parent
-        parentScriptedLayout = new RelativeLayout(mContext);
+        parentScriptedLayout = new RelativeLayout(mActivity);
         parentScriptedLayout.setLayoutParams(layoutParams);
         parentScriptedLayout.setGravity(Gravity.BOTTOM);
         parentScriptedLayout.setBackgroundColor(getResources().getColor(R.color.transparent));
         mainLayout.addView(parentScriptedLayout);
 
         // editor layout
-        editorLayout = new FrameLayout(mContext);
+        editorLayout = new FrameLayout(mActivity);
         FrameLayout.LayoutParams editorParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT,
                 LayoutParams.MATCH_PARENT);
         editorLayout.setLayoutParams(editorParams);
@@ -370,7 +385,7 @@ public class AppRunnerFragment extends Fragment {
         mainLayout.addView(editorLayout);
 
         // console layout
-        consoleRLayout = new RelativeLayout(mContext);
+        consoleRLayout = new RelativeLayout(mActivity);
         RelativeLayout.LayoutParams consoleLayoutParams = new RelativeLayout.LayoutParams(
                 LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.apprunner_console));
         consoleLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
@@ -382,7 +397,7 @@ public class AppRunnerFragment extends Fragment {
         mainLayout.addView(consoleRLayout);
 
         // Create the text view to add to the control
-        consoleText = new TextView(mContext);
+        consoleText = new TextView(mActivity);
         LayoutParams consoleTextParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         consoleText.setBackgroundColor(getResources().getColor(R.color.transparent));
         consoleText.setTextColor(getResources().getColor(R.color.white));
@@ -391,7 +406,7 @@ public class AppRunnerFragment extends Fragment {
         consoleText.setPadding(textPadding, textPadding, textPadding, textPadding);
         consoleRLayout.addView(consoleText);
 
-        liveCoding = new PLiveCodingFeedback(mContext);
+        liveCoding = new PLiveCodingFeedback(mActivity);
         mainLayout.addView(liveCoding.add());
 
         return mainLayout;
@@ -478,14 +493,14 @@ public class AppRunnerFragment extends Fragment {
 	public void showConsole(final String message) {
         mActivity.runOnUiThread(new Runnable() {
 
-			@Override
-			public void run() {
-		    MLog.d(TAG, "showing console");
-			showConsole(true);
-			consoleText.setText(message);
-			MLog.d(TAG, "msg text");
-			}
-		});
+            @Override
+            public void run() {
+                MLog.d(TAG, "showing console");
+                showConsole(true);
+                consoleText.setText(message);
+                MLog.d(TAG, "msg text");
+            }
+        });
 	}
 
 	public void startFileObserver() {
@@ -510,7 +525,7 @@ public class AppRunnerFragment extends Fragment {
                 try {
                     msg.put("action", action);
                     msg.put("type", "ide");
-                    IDEcommunication.getInstance(mContext).send(msg);
+                    IDEcommunication.getInstance(mActivity).send(msg);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -521,5 +536,19 @@ public class AppRunnerFragment extends Fragment {
 
 	}
 
+    // execute lines
+    public void onEventMainThread(Events.ExecuteCodeEvent evt) {
+        String code = evt.getCode(); // .trim();
+        MLog.d(TAG, "event -> " + code);
+
+        if (liveCoding != null) {
+            liveCoding.write(code);
+        }
+        interp.eval(code);
+    }
+
+    public PLiveCodingFeedback liveCodingFeedback() {
+        return liveCoding;
+    }
 
 }

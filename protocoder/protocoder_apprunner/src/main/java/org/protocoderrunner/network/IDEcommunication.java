@@ -21,7 +21,7 @@ public class IDEcommunication {
     CustomWebsocketServer ws;
 
 	public IDEcommunication(Context appActivity) {
-		this.a = new WeakReference<Context>((Context) appActivity);
+		this.a = new WeakReference<>(appActivity);
 
         try {
             ws = CustomWebsocketServer.getInstance(a.get());

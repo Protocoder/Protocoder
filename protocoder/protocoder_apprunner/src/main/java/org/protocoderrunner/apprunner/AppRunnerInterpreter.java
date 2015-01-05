@@ -55,7 +55,7 @@ public class  AppRunnerInterpreter {
 
 	private static final String TAG = "AppRunnerInterpreter";
 
-	static ScriptContextFactory contextFactory;
+	private ScriptContextFactory contextFactory;
 	public Interpreter interpreter;
 	private final android.content.Context a;
 	private InterpreterInfo mListener;
@@ -125,7 +125,7 @@ public class  AppRunnerInterpreter {
 		// Initialize global mainScriptContext factory with our custom factory.
 		if (null == contextFactory) {
 			contextFactory = new ScriptContextFactory(this);
-			ContextFactory.initGlobal(contextFactory);
+//			ContextFactory.initGlobal(contextFactory);
 			Log.i(TAG, "Creating ContextFactory");
 		}
 
