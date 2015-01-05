@@ -33,6 +33,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
@@ -77,20 +78,24 @@ import org.protocoderrunner.apprunner.api.other.PSocketIOClient;
 import org.protocoderrunner.network.NetworkUtils;
 import org.protocoderrunner.network.NetworkUtils.DownloadTask.DownloadListener;
 import org.protocoderrunner.network.OSC;
+import org.protocoderrunner.network.ServiceDiscovery;
 import org.protocoderrunner.network.bt.SimpleBT;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
+import org.protocoderrunner.utils.ExecuteCmd;
 import org.protocoderrunner.utils.MLog;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
@@ -974,136 +979,136 @@ public class PNetwork extends PInterface {
 //        return simpleBT.isConnected();
 //    }
 //
-//
-//    @ProtocoderScript
-//	@APIMethod(description = "Enable/Disable the Wifi adapter", example = "")
-//	@APIParam(params = { "boolean" })
-//	public void enableWifi(boolean enabled) {
-//		WifiManager wifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
-//		wifiManager.setWifiEnabled(enabled);
-//	}
-//
-//	@ProtocoderScript
-//	@APIMethod(description = "Check if the Wifi adapter is enabled", example = "")
-//	@APIParam(params = {})
-//	public boolean isWifiEnabled() {
-//		WifiManager wifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
-//		return wifiManager.isWifiEnabled();
-//	}
-//
-//	// http://stackoverflow.com/questions/8818290/how-to-connect-to-mContext-specific-wifi-network-in-android-programmatically
-//	@ProtocoderScript
-//	@APIMethod(description = "Connect to mContext given Wifi network with mContext given 'wpa', 'wep', 'open' type and mContext password", example = "")
-//	@APIParam(params = { "ssidName", "type", "password" })
-//	public void connectWifi(String networkSSID, String type, String networkPass) {
-//
-//		WifiConfiguration conf = new WifiConfiguration();
-//		conf.SSID = "\"" + networkSSID + "\""; // Please note the quotes. String
-//												// should contain ssid in quotes
-//
-//		if (type.equals("wep")) {
-//			// wep
-//			conf.wepKeys[0] = "\"" + networkPass + "\"";
-//			conf.wepTxKeyIndex = 0;
-//			conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
-//			conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
-//		} else if (type.equals("wpa")) {
-//			// wpa
-//			conf.preSharedKey = "\"" + networkPass + "\"";
-//		} else if (type.equals("open")) {
-//			// open
-//			conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
-//		}
-//
-//		WifiManager wifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
-//		wifiManager.addNetwork(conf);
-//
-//		List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
-//		for (WifiConfiguration i : list) {
-//			if (i.SSID != null && i.SSID.equals("\"" + networkSSID + "\"")) {
-//				wifiManager.disconnect();
-//				wifiManager.enableNetwork(i.networkId, true);
-//				wifiManager.reconnect();
-//
-//				break;
-//			}
-//		}
-//
-//	}
-//
-//	private Object mIsWifiAPEnabled = true;
-//
-//	@ProtocoderScript
-//	@APIMethod(description = "Enable/Disable mContext Wifi access point", example = "")
-//	@APIParam(params = { "boolean, apName" })
-//	public void wifiAP(boolean enabled, String wifiName) {
-//
-//        WifiManager wifi = (WifiManager) mContext.getSystemService(mContext.WIFI_SERVICE);
-//        Method[] wmMethods = wifi.getClass().getDeclaredMethods();
-//        Log.d(TAG, "enableMobileAP methods " + wmMethods.length);
-//        for (Method method : wmMethods) {
-//            Log.d(TAG, "enableMobileAP method.getName() " + method.getName());
-//            if (method.getName().equals("setWifiApEnabled")) {
-//                WifiConfiguration netConfig = new WifiConfiguration();
-//                netConfig.SSID = wifiName;
-//                netConfig.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
-//                netConfig.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
-//                netConfig.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
-//                netConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
-//
-//                //
-//                try {
-//                    //MLog.d(TAG, "enableMobileAP try: ");
-//                    method.invoke(wifi, netConfig, enabled);
-//                    if (netConfig.wepKeys != null && netConfig.wepKeys.length >= 1) {
-//                        Log.d(TAG, "enableMobileAP key : " + netConfig.wepKeys[0]);
-//                    }
-//                    //MLog.d(TAG, "enableMobileAP enabled: ");
-//                    mIsWifiAPEnabled = enabled;
-//                } catch (Exception e) {
-//                    //MLog.e(TAG, "enableMobileAP failed: ", e);
-//                }
-//            }
-//        }
-//    }
-//
-//
-//    // --------- RegisterServiceCB ---------//
-//    public interface RegisterServiceCB {
-//        void event();
-//    }
-//
-//    @ProtocoderScript
-//    @APIMethod(description = "Register mContext discovery service", example = "")
-//    @APIParam(params = { "serviceName, serviceType, port, function(name, status)" })
-//    public void registerService(String serviceName, String serviceType, int port, ServiceDiscovery.CreateCB callbackfn) {
-//        ServiceDiscovery.Create rD = new ServiceDiscovery().create(contextUi.get(), serviceName, serviceType, port, callbackfn);
-//        WhatIsRunning.getInstance().add(rD);
-//    }
-//
-//    @ProtocoderScript
-//    @APIMethod(description = "Discover services in the current network", example = "")
-//    @APIParam(params = { "serviceType, function(name, jsonData)" })
-//    public void discoverServices(final String serviceType, ServiceDiscovery.DiscoverCB callbackfn) {
-//        ServiceDiscovery.Discover sD = new ServiceDiscovery().discover(contextUi.get(), serviceType, callbackfn);
-//        WhatIsRunning.getInstance().add(sD);
-//
-//    }
-//
-//
-//    @ProtocoderScript
-//    @APIMethod(description = "Ping mContext Ip address", example = "")
-//    @APIParam(params = { "ip", "function(result)" })
-//    public ExecuteCmd ping(final String where, final ExecuteCmd.ExecuteCommandCB callbackfn) {
-////        mHandler.post(new Runnable() {
-////            @Override
-////            public void run() {
-//               return new ExecuteCmd("/system/bin/ping -c 8 " + where, callbackfn);
-//     //       }
-//     //   });
-//    }
-//
-//
+
+    @ProtocoderScript
+	@APIMethod(description = "Enable/Disable the Wifi adapter", example = "")
+	@APIParam(params = { "boolean" })
+	public void enableWifi(boolean enabled) {
+		WifiManager wifiManager = (WifiManager) getContext().getSystemService(Context.WIFI_SERVICE);
+		wifiManager.setWifiEnabled(enabled);
+	}
+
+	@ProtocoderScript
+	@APIMethod(description = "Check if the Wifi adapter is enabled", example = "")
+	@APIParam(params = {})
+	public boolean isWifiEnabled() {
+		WifiManager wifiManager = (WifiManager) getContext().getSystemService(Context.WIFI_SERVICE);
+		return wifiManager.isWifiEnabled();
+	}
+
+	// http://stackoverflow.com/questions/8818290/how-to-connect-to-mContext-specific-wifi-network-in-android-programmatically
+	@ProtocoderScript
+	@APIMethod(description = "Connect to mContext given Wifi network with mContext given 'wpa', 'wep', 'open' type and mContext password", example = "")
+	@APIParam(params = { "ssidName", "type", "password" })
+	public void connectWifi(String networkSSID, String type, String networkPass) {
+
+		WifiConfiguration conf = new WifiConfiguration();
+		conf.SSID = "\"" + networkSSID + "\""; // Please note the quotes. String
+												// should contain ssid in quotes
+
+		if (type.equals("wep")) {
+			// wep
+			conf.wepKeys[0] = "\"" + networkPass + "\"";
+			conf.wepTxKeyIndex = 0;
+			conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+			conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
+		} else if (type.equals("wpa")) {
+			// wpa
+			conf.preSharedKey = "\"" + networkPass + "\"";
+		} else if (type.equals("open")) {
+			// open
+			conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+		}
+
+		WifiManager wifiManager = (WifiManager) getContext().getSystemService(Context.WIFI_SERVICE);
+		wifiManager.addNetwork(conf);
+
+		List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
+		for (WifiConfiguration i : list) {
+			if (i.SSID != null && i.SSID.equals("\"" + networkSSID + "\"")) {
+				wifiManager.disconnect();
+				wifiManager.enableNetwork(i.networkId, true);
+				wifiManager.reconnect();
+
+				break;
+			}
+		}
+
+	}
+
+	private Object mIsWifiAPEnabled = true;
+
+	@ProtocoderScript
+	@APIMethod(description = "Enable/Disable mContext Wifi access point", example = "")
+	@APIParam(params = { "boolean, apName" })
+	public void wifiAP(boolean enabled, String wifiName) {
+
+        WifiManager wifi = (WifiManager) getContext().getSystemService(getContext().WIFI_SERVICE);
+        Method[] wmMethods = wifi.getClass().getDeclaredMethods();
+        Log.d(TAG, "enableMobileAP methods " + wmMethods.length);
+        for (Method method : wmMethods) {
+            Log.d(TAG, "enableMobileAP method.getName() " + method.getName());
+            if (method.getName().equals("setWifiApEnabled")) {
+                WifiConfiguration netConfig = new WifiConfiguration();
+                netConfig.SSID = wifiName;
+                netConfig.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
+                netConfig.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
+                netConfig.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
+                netConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+
+                //
+                try {
+                    //MLog.d(TAG, "enableMobileAP try: ");
+                    method.invoke(wifi, netConfig, enabled);
+                    if (netConfig.wepKeys != null && netConfig.wepKeys.length >= 1) {
+                        Log.d(TAG, "enableMobileAP key : " + netConfig.wepKeys[0]);
+                    }
+                    //MLog.d(TAG, "enableMobileAP enabled: ");
+                    mIsWifiAPEnabled = enabled;
+                } catch (Exception e) {
+                    //MLog.e(TAG, "enableMobileAP failed: ", e);
+                }
+            }
+        }
+    }
+
+
+    // --------- RegisterServiceCB ---------//
+    public interface RegisterServiceCB {
+        void event();
+    }
+
+    @ProtocoderScript
+    @APIMethod(description = "Register mContext discovery service", example = "")
+    @APIParam(params = { "serviceName, serviceType, port, function(name, status)" })
+    public void registerService(String serviceName, String serviceType, int port, ServiceDiscovery.CreateCB callbackfn) {
+        ServiceDiscovery.Create rD = new ServiceDiscovery().create(getContext(), serviceName, serviceType, port, callbackfn);
+        WhatIsRunning.getInstance().add(rD);
+    }
+
+    @ProtocoderScript
+    @APIMethod(description = "Discover services in the current network", example = "")
+    @APIParam(params = { "serviceType, function(name, jsonData)" })
+    public void discoverServices(final String serviceType, ServiceDiscovery.DiscoverCB callbackfn) {
+        ServiceDiscovery.Discover sD = new ServiceDiscovery().discover(getContext(), serviceType, callbackfn);
+        WhatIsRunning.getInstance().add(sD);
+
+    }
+
+
+    @ProtocoderScript
+    @APIMethod(description = "Ping mContext Ip address", example = "")
+    @APIParam(params = { "ip", "function(result)" })
+    public ExecuteCmd ping(final String where, final ExecuteCmd.ExecuteCommandCB callbackfn) {
+//        mHandler.post(new Runnable() {
+//            @Override
+//            public void run() {
+               return new ExecuteCmd("/system/bin/ping -c 8 " + where, callbackfn);
+     //       }
+     //   });
+    }
+
+
 
     public void stop() {
 

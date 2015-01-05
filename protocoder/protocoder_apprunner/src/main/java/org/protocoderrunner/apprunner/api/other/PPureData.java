@@ -103,6 +103,6 @@ public class PPureData {
 	}
 
 	public void stop() {
-		//PdBase.release();
+		PdBase.release();
 	}
 }

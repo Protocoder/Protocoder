@@ -242,7 +242,8 @@ public class PApp extends PInterface {
     @APIMethod(description = "shows mContext feedback overlay with the live-executed code", example = "")
     @APIParam(params = { })
     public PLiveCodingFeedback liveCodingFeedback() {
-        PLiveCodingFeedback l = getActivity().liveCodingFeedback();
+        PLiveCodingFeedback l = getFragment().liveCodingFeedback();
+        l.enable = true;
 
         return l;
     }

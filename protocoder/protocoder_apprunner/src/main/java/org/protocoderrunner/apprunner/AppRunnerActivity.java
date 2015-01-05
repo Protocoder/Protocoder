@@ -140,13 +140,12 @@ public class AppRunnerActivity extends BaseActivity {
             }
 
 
-            mAppRunnerFragment = new AppRunnerFragment();
-
             Bundle bundle = new Bundle();
             bundle.putString(Project.NAME, projectName);
             bundle.putString(Project.FOLDER, projectFolder);
             bundle.putInt(Project.COLOR, intent.getIntExtra("color", 0));
-            mAppRunnerFragment.setArguments(bundle);
+
+            mAppRunnerFragment = AppRunnerFragment.newInstance(bundle);
 
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.add(fl.getId(), mAppRunnerFragment, String.valueOf(fl.getId()));
@@ -188,7 +187,6 @@ public class AppRunnerActivity extends BaseActivity {
                     onSmsReceivedListener.onSmsReceived(pNumber, body);
                 }
                 // Add it to the list or do whatever you wish to
-
             }
         };
 
@@ -230,17 +228,6 @@ public class AppRunnerActivity extends BaseActivity {
         if (evt.getAction() == "run") {
             finish();
         }
-    }
-
-    // execute lines
-    public void onEventMainThread(Events.ExecuteCodeEvent evt) {
-        String code = evt.getCode(); // .trim();
-        MLog.d(TAG, "event -> " + code);
-
-        if (mAppRunnerFragment.liveCoding != null) {
-            mAppRunnerFragment.liveCoding.write(code);
-        }
-        mAppRunnerFragment.interp.eval(code);
     }
 
 
@@ -611,8 +598,4 @@ public class AppRunnerActivity extends BaseActivity {
 
     }
 
-    public PLiveCodingFeedback liveCodingFeedback() {
-       // mAppRunnerFragment.pUi.li
-        return mAppRunnerFragment.liveCoding;
-    }
 }
