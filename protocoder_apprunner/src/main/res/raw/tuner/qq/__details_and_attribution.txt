@@ -1,0 +1,104 @@
+
+=================== FREESOUND ATTRIBUTION FORM =======================
+
+This form below lists all the samples in this pack with their descriptions and tags.
+You can use this form to attribute samples to users when you use them.
+
+=========================== CUT HERE =================================
+
+File:
+	Name: "Tone 1.wav"
+	Url: http://www.freesound.org/samplesViewSingle.php?id=3515
+	Date of upload: 2005-07-07 07:58:32
+	
+Designer / Creator / Uploader:
+	Name: "patchen"
+	Url: http://www.freesound.org/usersViewSingle.php?id=6997
+	
+Description:
+	By "patchen" : T1 MULTISAMPLE Recording of a wooden tone drum in a music store with a Sony DAT walkman and a mono sony mic. Sampled and trimmed with a k2000
+
+Tags:
+	acoustic ethnic multisample noisy percussion tone 
+======================================================================
+
+File:
+	Name: "Tone 2.wav"
+	Url: http://www.freesound.org/samplesViewSingle.php?id=3516
+	Date of upload: 2005-07-07 07:58:42
+	
+Designer / Creator / Uploader:
+	Name: "patchen"
+	Url: http://www.freesound.org/usersViewSingle.php?id=6997
+	
+Description:
+	By "patchen" : T2 MULTISAMPLE Recording of a wooden tone drum in a music store with a sony DAT walkman and a mono sony mic. Sampled and trimmed with a k2000
+
+Tags:
+	acoustic ethnic multisample noisy percussion tone 
+======================================================================
+
+File:
+	Name: "Tone 3.wav"
+	Url: http://www.freesound.org/samplesViewSingle.php?id=3517
+	Date of upload: 2005-07-07 07:58:45
+	
+Designer / Creator / Uploader:
+	Name: "patchen"
+	Url: http://www.freesound.org/usersViewSingle.php?id=6997
+	
+Description:
+	By "patchen" : T3 MULTISAMPLE Recording of a wooden tone drum in a music store with a sony DAT walkman and a mono sony mic. Sampled and trimmed with a k2000
+
+Tags:
+	acoustic ethnic multisample noisy percussion tone 
+======================================================================
+
+File:
+	Name: "Tone 4.wav"
+	Url: http://www.freesound.org/samplesViewSingle.php?id=3518
+	Date of upload: 2005-07-07 07:58:49
+	
+Designer / Creator / Uploader:
+	Name: "patchen"
+	Url: http://www.freesound.org/usersViewSingle.php?id=6997
+	
+Description:
+	By "patchen" : T4 MULTISAMPLE Recording of a wooden tone drum in a music store with a sony DAT walkman and a mono sony mic. Sampled and trimmed with a k2000
+
+Tags:
+	acoustic ethnic multisample noisy percussion tone 
+======================================================================
+
+File:
+	Name: "Tone 5.wav"
+	Url: http://www.freesound.org/samplesViewSingle.php?id=3519
+	Date of upload: 2005-07-07 07:58:51
+	
+Designer / Creator / Uploader:
+	Name: "patchen"
+	Url: http://www.freesound.org/usersViewSingle.php?id=6997
+	
+Description:
+	By "patchen" : T5 MULTISAMPLE Recording of a wooden tone drum in a music store with a sony DAT walkman and a mono sony mic. Sampled and trimmed with a k2000
+
+Tags:
+	acoustic ethnic multisample noisy percussion tone 
+======================================================================
+
+File:
+	Name: "Tone hit.wav"
+	Url: http://www.freesound.org/samplesViewSingle.php?id=3520
+	Date of upload: 2005-07-07 07:58:54
+	
+Designer / Creator / Uploader:
+	Name: "patchen"
+	Url: http://www.freesound.org/usersViewSingle.php?id=6997
+	
+Description:
+	By "patchen" : TH MULTISAMPLE Recording of a wooden tone drum in a music store with a sony DAT walkman and a mono sony mic. Sampled and trimmed with a k2000
+
+Tags:
+	acoustic ethnic multisample noisy percussion tone 
+======================================================================
+

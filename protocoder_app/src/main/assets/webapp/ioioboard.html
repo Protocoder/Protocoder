@@ -1,0 +1,56 @@
+<html>
+<head>
+    <script type="text/javascript" src="./libs/jquery-1.10.2.min.js"></script> 
+    <script type="text/javascript" src="./libs/jquery.maphilight.min.js"></script> 
+
+    <script type="text/javascript">
+        $(function () {
+            $('.map').maphilight();
+
+            //for each div I get the code to highlight 
+            $.each($(".tut"), function(i, v) { 
+  				var i = $(v).data( "options" ).i;
+          		var o =  $(v).data( "options" ).o;
+          		$(v).hover(function() { 
+          			$(v).css("background-color","yellow");
+          		}, function() { 
+          			$(v).css("background-color","blue");
+          		});
+            	console.log(i, o);
+			});
+
+
+        });
+    </script>
+</head>
+
+<body>
+
+<div id="ioio"> 
+
+<div id = "opop" class = "tut" data-options='{"i":"0", "o":"10"}'>
+	<p>
+	Start the ioio board
+	</p>
+</div>
+
+<div id = "opop" class = "tut" data-options='{"i":"0", "o":"10"}'>
+	<p>
+	Get the values
+	</p>
+</div>
+
+
+<img src = "ioio.jpg" usemap="#ioiomap" class="map" /> 
+
+<map name="ioiomap">
+  <area shape="rect" coords="0,0,50,50" alt="Sun" href="sun.htm">
+  <area shape="rect" coords="150,150,50,50" alt="Sun" href="sun.htm">
+</map>
+
+
+</div>
+
+</body>
+</html>
+
