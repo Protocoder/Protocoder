@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/contentHolder"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:focusableInTouchMode="true"
+        android:gravity="bottom"
+        android:background="@color/white"
+    >
+
+    <android.support.v7.widget.Toolbar
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:id="@+id/my_awesome_toolbar"
+        android:navigationIcon="@drawable/protocoder_icon"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:minHeight="?attr/actionBarSize"
+        android:background="#00FF8800"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"/>
+
+    <android.support.v4.view.ViewPager
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/pager"
+        android:layout_below="@id/my_awesome_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="0dp" >
+
+        <!--
+This title strip will display the currently visible page title, as well as the page
+titles for adjacent pages.
+        -->
+
+        <org.protocoder.views.ProjectSelectorStrip
+            android:id="@+id/pager_title_strip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:background="#FFFF8800"
+            android:padding="8dp"
+            android:textAppearance="@style/PagerTitleStripText"
+            android:textColor="#fff"
+            android:textStyle="bold" />
+    </android.support.v4.view.ViewPager>
+
+    <LinearLayout
+        android:id="@+id/ip_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:orientation="vertical" >
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ip_bg_gradient" >
+
+            <TextView
+                android:id="@+id/ip"
+                style="@android:style/TextAppearance.Medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="15dp"
+                android:textColor="#ffffff"
+                android:textSize="14sp"
+                android:textStyle="italic"
+                android:visibility="visible" />
+        </FrameLayout>
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/fragmentEditor"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/my_awesome_toolbar"/>
+
+    <FrameLayout
+        android:id="@+id/fragmentLogOverlay"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true" >
+    </FrameLayout>
+
+</RelativeLayout>

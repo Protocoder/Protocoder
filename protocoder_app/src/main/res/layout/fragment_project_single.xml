@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent" >
+
+    <org.protocoder.projectlist.FitRecyclerView
+        android:id="@+id/gridprojects"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_marginBottom="0dp"
+        android:layout_marginTop="0dp"
+        android:animateLayoutChanges="false"
+        android:background="@android:color/transparent"
+        android:gravity="center"
+        android:columnWidth = "0dp"
+        android:horizontalSpacing="5dp"
+        android:layoutAnimation="@anim/fav_grid_anim"
+        android:listSelector="@android:color/transparent"
+        android:padding="5dp"
+        android:paddingBottom="20dp"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="5dp" />
+
+    <LinearLayout
+        android:id="@+id/empty_grid_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <!--<ImageView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:contentDescription="@null"-->
+            <!--android:src="@drawable/protocoder_none" />-->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No Projects yet :("
+            android:textSize="45sp"
+            android:layout_marginBottom="25dp"
+            android:textColor="#55000000"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10dp"
+            android:shadowColor="#ffffff"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="2"
+            android:text="@string/projects_zero"
+            android:textColor="@color/mwmgray"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+</FrameLayout>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:interpolator="@android:anim/accelerate_decelerate_interpolator">
+    <objectAnimator
+        android:valueFrom="-20"
+        android:valueTo="0"
+        android:valueType="floatType"
+        android:propertyName="translationX"
+        android:repeatMode="reverse"
+        android:repeatCount="0"
+        android:duration="350"/>
+    <objectAnimator
+        android:valueFrom="0"
+        android:valueTo="1"
+        android:valueType="floatType"
+        android:propertyName="alpha"
+        android:repeatMode="reverse"
+        android:repeatCount="0"
+        android:duration="350"/>
+</set>

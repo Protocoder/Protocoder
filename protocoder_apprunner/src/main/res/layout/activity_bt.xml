@@ -1,0 +1,77 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="2dp"
+    tools:context=".ActivityMAKr" >
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/f1"
+        android:layout_below="@+id/text"
+        android:layout_marginTop="2dp"
+        android:background="#22000000"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/ledon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="0dp"
+            android:layout_weight="1"
+            android:checked="false"
+            android:text="LED ON" />
+
+        <RadioButton
+            android:id="@+id/ledoff"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:layout_weight="1"
+            android:checked="false"
+            android:text="LED OFF" />
+    </RadioGroup>
+
+    <FrameLayout
+        android:id="@+id/f1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/plotView1"
+        android:visibility="visible" >
+
+    </FrameLayout>
+
+    <!--
+       <fragment
+           android:id="@+id/fragment1"
+           android:name="com.motorola.gopi.ledcontrol.CameraFragment"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:layout_alignParentLeft="true"
+           android:layout_alignParentTop="true" />
+    -->
+
+    <com.makewithmoto.views.PlotView
+        android:id="@+id/plotView1"
+        android:layout_width="wrap_content"
+        android:layout_height="102dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/radioGroup" />
+
+    
+    
+    <FrameLayout
+        android:id="@+id/f2"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentRight="true"
+		android:layout_alignParentTop="true"
+        android:visibility="visible" >
+
+    </FrameLayout>
+</RelativeLayout>

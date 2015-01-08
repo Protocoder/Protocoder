@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/nn"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/blacktransparent"
+    android:orientation="vertical" >
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:background="#BB000000"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <EditText
+            android:id="@+id/editText1"
+            style="@style/editor"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="top|left"
+            android:hint="type here your code"
+            android:imeOptions="actionSend|flagNoExtractUi"
+            android:inputType="textMultiLine|textFilter|textNoSuggestions"
+            android:selectAllOnFocus="false"
+            android:singleLine="false"
+            android:cursorVisible="true"
+            android:textCursorDrawable="@null"
+            android:textColor="#FFFFFFFF"
+            android:textColorHighlight="#220000FF"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+    </ScrollView>
+
+    <Button
+        android:id="@+id/decreaseSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:padding="15dp"
+        android:visibility="invisible"
+        android:text="-" />
+
+    <Button
+        android:id="@+id/increaseSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="2dp"
+        android:layout_toLeftOf="@+id/decreaseSize"
+        android:visibility="invisible"
+        android:padding="15dp"
+        android:text="+" />
+
+    <FrameLayout
+        android:id="@+id/fragmentFileManager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" >
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/fragmentWebview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" >
+
+    </FrameLayout>
+
+</RelativeLayout>
