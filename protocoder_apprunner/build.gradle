@@ -51,6 +51,9 @@ android {
     }
 
 
+    dexOptions {
+        jumboMode true
+    }
 }
 
 
@@ -80,7 +83,6 @@ dependencies {
     compile 'com.android.support:cardview-v7:21.0+'
     compile 'com.android.support:palette-v7:21.0+'
 
-
     //some of the apache libs collide with the ones in Android, better to include them as jars
     compile files('libs/commons-lang3-3.1.jar')
     compile files('libs/commons-logging-1.1.3.jar')
@@ -90,6 +92,9 @@ dependencies {
     compile files('libs/httpcore-4.3.2.jar')
     compile files('libs/httpmime-4.3.4.jar')
     compile 'de.greenrobot:eventbus:2.2.1'
+    //compile 'org.apache.ftpserver:ftpserver-core:1.0.6'
+    compile files('libs/ftpserver-core-1.0.6.jar')
+    compile files('libs/mina-core-2.0.4.jar')
 
     //compile files('libs/js.jar') //mozilla rhino
     compile 'io.apigee:rhino:1.7R5pre2'
