@@ -82,7 +82,6 @@ public class Protocoder {
         //TODO reenable
         //check if new version is available
 
-/*
         if (mPNetwork.isNetworkAvailable()) {
             mPNetwork.httpGet("http://www.protocoder.org/downloads/list_latest.php", new PNetwork.HttpGetCB() {
                 @Override
@@ -108,7 +107,6 @@ public class Protocoder {
                 }
             });
         }
-*/
 
        // if (debugApp) {
        //     interp = new AppRunnerInterpreter(a);
