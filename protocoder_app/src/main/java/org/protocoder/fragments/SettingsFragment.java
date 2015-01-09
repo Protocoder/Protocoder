@@ -40,6 +40,7 @@ import android.content.SharedPreferences.Editor;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceFragment;
@@ -51,9 +52,16 @@ import android.view.ViewGroup;
 
 import org.protocoder.R;
 import org.protocoder.activities.LicenseActivity;
+import org.protocoder.appApi.EditorManager;
 import org.protocoderrunner.base.BaseNotification;
+import org.protocoderrunner.project.Project;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.project.ProjectManager.InstallListener;
+import org.protocoderrunner.utils.MLog;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class SettingsFragment extends PreferenceFragment {
@@ -226,6 +234,22 @@ public class SettingsFragment extends PreferenceFragment {
             });
         }
 
+        //load webIDE
+        final ListPreference loadEditorPreference = (ListPreference) findPreference("pref_change_editor");
+        String[] editors = EditorManager.getInstance().listEditors();
+        loadEditorPreference.setEntries(editors);
+        loadEditorPreference.setEntryValues(editors);
+        loadEditorPreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                MLog.d(TAG, "" + newValue);
+                prefs.edit().putString("pref_change_editor", (String) newValue).commit();
+                return true;
+            }
+        });
+
+
         // Notify and download
         final TwoStatePreference notifyNewVersionPreference = (TwoStatePreference) findPreference("pref_notify_new_version");
         if (notifyNewVersionPreference != null) {
@@ -244,8 +268,6 @@ public class SettingsFragment extends PreferenceFragment {
 
         return view;
 	}
-
-
 
 
     //---------------- save / load methods
@@ -312,8 +334,5 @@ public class SettingsFragment extends PreferenceFragment {
 
 		return pref;
 	}
-
-
-
 
 }
