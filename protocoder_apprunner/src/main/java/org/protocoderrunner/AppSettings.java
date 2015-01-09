@@ -44,11 +44,12 @@ public class AppSettings {
 	public final static boolean SCREEN_ALWAYS_ON = false;
 	public final static boolean CLOSE_WITH_BACK = true;
 	public final static boolean STANDALONE = false;
-
-	public static int MIN_SUPPORTED_VERSION = Build.VERSION_CODES.ICE_CREAM_SANDWICH;
+    public static int MIN_SUPPORTED_VERSION = Build.VERSION_CODES.ICE_CREAM_SANDWICH;
 
 	public final static String APP_FOLDER = "protocoder";
-	public final static int WEBSOCKET_PORT = 8587;
+    public static final String CUSTOM_WEBEDITOR = "webeditors";
+
+    public final static int WEBSOCKET_PORT = 8587;
 	public final static int HTTP_PORT = 8585;
 
     public static String serverAddress = "";

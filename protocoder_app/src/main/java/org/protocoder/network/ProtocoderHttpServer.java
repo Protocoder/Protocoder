@@ -35,6 +35,7 @@ import android.content.res.AssetManager;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.protocoder.appApi.EditorManager;
 import org.protocoderrunner.apidoc.APIManager;
 import org.protocoderrunner.apprunner.api.PApp;
 import org.protocoderrunner.apprunner.api.PBoards;
@@ -112,6 +113,8 @@ import org.protocoderrunner.utils.FileIO;
 import org.protocoderrunner.utils.MLog;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
@@ -278,7 +281,12 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 
 					folder = obj.getString("filter");
 
-					ArrayList<Project> projects = ProjectManager.getInstance().list(folder, false);
+                    ArrayList<Project> projects = null;
+                    if (folder.equals(ProjectManager.FOLDER_EXAMPLES)) {
+                       projects = ProjectManager.getInstance().list(folder, true);
+                    } else {
+                       projects = ProjectManager.getInstance().list(folder, false);
+                    }
 					JSONArray projectsArray = new JSONArray();
 					for (Project project : projects) {
 						projectsArray.put(ProjectManager.getInstance().toJson(project));
@@ -527,33 +535,45 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 			uri = "index.html";
 		}
 
-		// We're using assets, so we can't have mContext leading '/'
+		// We're using assets, so we can't have  leading '/'
 		if (uri.charAt(0) == '/') {
 			uri = uri.substring(1, uri.length());
 		}
 
-		// have the object build the directory structure, if needed.
-		AssetManager am = ctx.get().getAssets();
-		try {
-			MLog.d(TAG, WEBAPP_DIR + uri);
-			InputStream fi = am.open(WEBAPP_DIR + uri);
+        // Get MIME type from file name extension, if possible
+        String mime = null;
+        int dot = uri.lastIndexOf('.');
+        if (dot >= 0) {
+            mime = MIME_TYPES.get(uri.substring(dot + 1).toLowerCase());
+        }
+        if (mime == null) {
+            mime = NanoHTTPD.MIME_DEFAULT_BINARY;
+        }
 
-			// Get MIME type from file name extension, if possible
-			String mime = null;
-			int dot = uri.lastIndexOf('.');
-			if (dot >= 0) {
-				mime = MIME_TYPES.get(uri.substring(dot + 1).toLowerCase());
-			}
-			if (mime == null) {
-				mime = NanoHTTPD.MIME_DEFAULT_BINARY;
-			}
+        String currentEditor = EditorManager.getInstance().getCurrentEditor(ctx.get());
+        if (currentEditor.equals(EditorManager.DEFAULT)) {
 
-			res = new Response(HTTP_OK, mime, fi);
-		} catch (IOException e) {
-			e.printStackTrace();
-			MLog.d(TAG, e.getStackTrace().toString());
-			res = new Response(HTTP_INTERNALERROR, "text/html", "ERROR: " + e.getMessage());
-		}
+            // have the object build the directory structure, if needed.
+            AssetManager am = ctx.get().getAssets();
+            try {
+                MLog.d(TAG, WEBAPP_DIR + uri);
+                InputStream fi = am.open(WEBAPP_DIR + uri);
+
+                res = new Response(HTTP_OK, mime, fi);
+            } catch (IOException e) {
+                e.printStackTrace();
+                MLog.d(TAG, e.getStackTrace().toString());
+                res = new Response(HTTP_INTERNALERROR, "text/html", "ERROR: " + e.getMessage());
+            }
+        } else {
+            String path = EditorManager.getInstance().getUrlEditor(ctx.get()) + uri;
+            try {
+                FileInputStream fi = new FileInputStream(path);
+                res = new Response(HTTP_OK, mime, fi);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
 
 		return res;
 
