@@ -73,6 +73,8 @@ import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.apprunner.api.other.PFtpClient;
+import org.protocoderrunner.apprunner.api.other.PFtpServer;
 import org.protocoderrunner.apprunner.api.other.PSimpleHttpServer;
 import org.protocoderrunner.apprunner.api.other.PSocketIOClient;
 import org.protocoderrunner.network.NetworkUtils;
@@ -1106,6 +1108,27 @@ public class PNetwork extends PInterface {
                return new ExecuteCmd("/system/bin/ping -c 8 " + where, callbackfn);
      //       }
      //   });
+    }
+
+
+    @ProtocoderScript
+    @APIMethod(description = "Start a ftp server in the given port", example = "")
+    @APIParam(params = { "ip", "function(result)" })
+    public PFtpServer startFtpServer(final int port, final String userName, final String password) {
+        PFtpServer ftpServer = new PFtpServer(getContext(), port, userName, password);
+
+        return ftpServer;
+    }
+
+
+
+    @ProtocoderScript
+    @APIMethod(description = "Start a ftp server in the given port", example = "")
+    @APIParam(params = { "ip", "function(result)" })
+    public PFtpClient connectFtp(String ftpUrl) {
+        PFtpClient ftpClient = new PFtpClient();
+
+        return ftpClient;
     }
 
 
