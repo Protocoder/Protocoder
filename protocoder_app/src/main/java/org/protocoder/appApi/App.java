@@ -45,6 +45,7 @@ import org.java_websocket.drafts.Draft_17;
 import org.protocoder.R;
 import org.protocoder.activities.AboutActivity;
 import org.protocoder.activities.SetPreferenceActivity;
+import org.protocoder.network.ProtocoderFtpServer;
 import org.protocoder.network.ProtocoderHttpServer;
 import org.protocoder.views.Overlay;
 import org.protocoderrunner.AppSettings;
@@ -59,11 +60,13 @@ import java.net.UnknownHostException;
 
 public class App {
 
+    final String TAG = "App";
     private final Protocoder protocoder;
 
     //Servers
     private ProtocoderHttpServer httpServer;
     private CustomWebsocketServer ws;
+    private ProtocoderFtpServer mFtpServer;
 
     //Views
     private RelativeLayout mainAppView;
@@ -76,7 +79,6 @@ public class App {
 
     int usbEnabled = 0;
 
-
     App(Protocoder protocoder) {
         editor = new Editor(protocoder);
         this.protocoder = protocoder;
@@ -87,12 +89,12 @@ public class App {
 
     public void init() {
 
-        mainAppView = (RelativeLayout) protocoder.a.findViewById(R.id.contentHolder);
+        mainAppView = (RelativeLayout) protocoder.mActivityContext.findViewById(R.id.contentHolder);
         // Create the IP text view
-        textIP = (TextView) protocoder.a.findViewById(R.id.ip);
+        textIP = (TextView) protocoder.mActivityContext.findViewById(R.id.ip);
         textIP.setOnClickListener(null);// Remove the old listener explicitly
         textIP.setBackgroundResource(0);
-        mIpContainer = (LinearLayout) protocoder.a.findViewById(R.id.ip_container);
+        mIpContainer = (LinearLayout) protocoder.mActivityContext.findViewById(R.id.ip_container);
 
         // Add animations
         ViewTreeObserver vto = mIpContainer.getViewTreeObserver();
@@ -147,9 +149,9 @@ public class App {
     public void showHelp(boolean show) {
 
         if (show) {
-            Intent aboutActivityIntent = new Intent(protocoder.a, AboutActivity.class);
-           protocoder.a.startActivity(aboutActivityIntent);
-           protocoder.a.overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
+            Intent aboutActivityIntent = new Intent(protocoder.mActivityContext, AboutActivity.class);
+           protocoder.mActivityContext.startActivity(aboutActivityIntent);
+           protocoder.mActivityContext.overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
 
             //HelpFragment helpFragment = new HelpFragment();
             //Bundle bundle = new Bundle();
@@ -222,16 +224,16 @@ public class App {
 
     }
     public void close() {
-        protocoder.a.superMegaForceKill();
+        protocoder.mActivityContext.superMegaForceKill();
     }
     public void restart() {
 
     }
 
     public void showSettings(boolean b) {
-        Intent preferencesIntent = new Intent(protocoder.a, SetPreferenceActivity.class);
-        protocoder.a.startActivity(preferencesIntent);
-        protocoder.a.overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
+        Intent preferencesIntent = new Intent(protocoder.mActivityContext, SetPreferenceActivity.class);
+        protocoder.mActivityContext.startActivity(preferencesIntent);
+        protocoder.mActivityContext.overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
     }
 
     public void setIp(String s) {
@@ -242,27 +244,27 @@ public class App {
     /**
      * Starts the remote service connection
      */
-    public int startServers() {
+    public boolean startServers() {
 
         // check if usb is enabled
-        usbEnabled = Settings.Secure.getInt(protocoder.a.getContentResolver(), Settings.Secure.ADB_ENABLED, 0);
+        usbEnabled = Settings.Secure.getInt(protocoder.mActivityContext.getContentResolver(), Settings.Secure.ADB_ENABLED, 0);
 
         // start webserver
-        httpServer = ProtocoderHttpServer.getInstance(protocoder.a.getApplicationContext(), AppSettings.HTTP_PORT);
+        httpServer = ProtocoderHttpServer.getInstance(protocoder.mActivityContext.getApplicationContext(), AppSettings.HTTP_PORT);
 
         // websocket
         try {
-            ws = CustomWebsocketServer.getInstance(protocoder.a, AppSettings.WEBSOCKET_PORT, new Draft_17());
-            IDEcommunication.getInstance(protocoder.a).ready(false);
+            ws = CustomWebsocketServer.getInstance(protocoder.mActivityContext, AppSettings.WEBSOCKET_PORT, new Draft_17());
+            IDEcommunication.getInstance(protocoder.mActivityContext).ready(false);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
 
         // check if there is mContext WIFI connection or we can connect via USB
-        if (NetworkUtils.getLocalIpAddress(protocoder.a).equals("-1")) {
+        if (NetworkUtils.getLocalIpAddress(protocoder.mActivityContext).equals("-1")) {
             setIp("No WIFI, still you can hack via USB using the companion app");
         } else {
-            setIp("Hack via your browser @ http://" + NetworkUtils.getLocalIpAddress(protocoder.a) + ":"
+            setIp("Hack via your browser @ http://" + NetworkUtils.getLocalIpAddress(protocoder.mActivityContext) + ":"
                     + AppSettings.HTTP_PORT);
         }
 
@@ -277,11 +279,19 @@ public class App {
             showNetworkBottomInfo(false);
         }
 
-        return 1;
+        if (protocoder.settings.getFtpChecked()) {
+            mFtpServer = ProtocoderFtpServer.getInstance(protocoder.mActivityContext, AppSettings.FTP_PORT);
+            if (!mFtpServer.isStarted()) {
+                mFtpServer.startServer();
+            }
+        }
+
+        return true;
+
     }
 
     /**
-     * Unbinds service and stops the http server
+     * Unbinds service and stops the servers
      */
     // TODO add stop websocket
     public void killConnections() {
@@ -289,20 +299,12 @@ public class App {
             httpServer.close();
             httpServer = null;
         }
-        setIp(protocoder.a.getResources().getString(R.string.start_the_server));
-    }
+        setIp(protocoder.mActivityContext.getResources().getString(R.string.start_the_server));
 
-    /**
-     * Explicitly kills connections, with UI impact
-     */
-    public void hardKillConnections() {
-        if (httpServer != null) {
-            httpServer.stop();
-            httpServer = null;
+        if (mFtpServer != null) {
+            mFtpServer.stopServer();
         }
-        setIp(protocoder.a.getResources().getString(R.string.start_the_server));
     }
-
 
     //showPopUp={true, false}
     public void checkNewVersion() {

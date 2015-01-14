@@ -35,6 +35,7 @@ import android.os.Bundle;
 
 import org.protocoder.MainActivity;
 import org.protocoder.R;
+import org.protocoder.appApi.Protocoder;
 import org.protocoder.fragments.SettingsFragment;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.utils.StrUtils;
@@ -57,8 +58,8 @@ public class LauncherActivity extends BaseActivity {
 
 		if (firstLaunch) {
 			intent = new Intent(this, WelcomeActivity.class);
-            SettingsFragment.setId(this, StrUtils.generateRandomString());
-            SettingsFragment.setConnectionAlert(this, true);
+            Protocoder.getInstance(this).settings.setId(StrUtils.generateRandomString());
+            Protocoder.getInstance(this).settings.setConnectionAlert(true);
 		} else {
 			intent = new Intent(this, MainActivity.class);
 		}

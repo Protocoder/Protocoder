@@ -42,8 +42,8 @@
             android:summary="@string/setting_connection_alert_description"
             android:title="@string/setting_connection_alert_title" />
         <CheckBoxPreference
-            android:checked="false"
-            android:key="pref_notify_new_version"
+            android:checked="true"
+            android:key="pref_new_version_check"
             android:summary="@string/setting_new_version_description"
             android:title="@string/setting_new_version_title" />
         <Preference
@@ -59,7 +59,15 @@
             android:key="pref_change_editor"
             android:summary="Load a custom-made web-editor from the SD card"
             android:title="Change Editor" />
+        <Preference
+            android:key="pref_ftp"
+            android:checked="false"
+            android:summary="Protocoder starts with a ftp server that can be used to transfer files to it"
+            android:title="Enable ftp" />
     </PreferenceCategory>
+
+
+
     <PreferenceCategory android:title="@string/setting_about" >
         <Preference
             android:key="licenses_detail"

@@ -57,9 +57,9 @@ public class Editor {
 
                 editorFragment.setArguments(bundle);
             }
-            protocoder.a.addFragment(editorFragment, R.id.fragmentEditor, "editorFragment", true);
+            protocoder.mActivityContext.addFragment(editorFragment, R.id.fragmentEditor, "editorFragment", true);
         } else {
-            protocoder.a.removeFragment(editorFragment);
+            protocoder.mActivityContext.removeFragment(editorFragment);
             editorFragment = null;
         }
     }

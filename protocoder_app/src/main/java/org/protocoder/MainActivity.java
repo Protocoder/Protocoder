@@ -48,7 +48,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import org.protocoder.appApi.Protocoder;
-import org.protocoder.fragments.SettingsFragment;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.events.Events;
 import org.protocoderrunner.events.Events.ProjectEvent;
@@ -70,12 +69,14 @@ public class MainActivity extends BaseActivity {
 	MainActivity c;
 	Menu mMenu;
 
-	private FileObserver observer;
+    // file observer
+    private FileObserver fileObserver;
+    // connection change listener
+    private ConnectivityChangeReceiver connectivityChangeReceiver;
 
-	// connection
 	BroadcastReceiver mStopServerReceiver;
 
-	private ConnectivityChangeReceiver connectivityChangeReceiver;
+    //singleton that controls protocoder
     private Protocoder mProtocoder;
 
 
@@ -110,7 +111,7 @@ public class MainActivity extends BaseActivity {
         }
 
         // Check when mContext file is changed in the protocoder dir
-		observer = new FileObserver(ProjectManager.FOLDER_USER_PROJECTS, FileObserver.CREATE | FileObserver.DELETE) {
+		fileObserver = new FileObserver(ProjectManager.FOLDER_USER_PROJECTS, FileObserver.CREATE | FileObserver.DELETE) {
 
 			@Override
 			public void onEvent(int event, String file) {
@@ -158,7 +159,7 @@ public class MainActivity extends BaseActivity {
 		super.onResume();
 
         //set settings
-        setScreenAlwaysOn(SettingsFragment.getScreenOn(this));
+        setScreenAlwaysOn(mProtocoder.settings.getScreenOn());
 
         MLog.d(TAG, "Registering as an EventBus listener in MainActivity");
 		EventBus.getDefault().register(this);
@@ -167,7 +168,7 @@ public class MainActivity extends BaseActivity {
 
 			@Override
 			public void onReceive(Context context, Intent intent) {
-                mProtocoder.app.hardKillConnections();
+                mProtocoder.app.killConnections();
 			}
 		};
 
@@ -177,7 +178,7 @@ public class MainActivity extends BaseActivity {
 		IntentFilter filterSend = new IntentFilter();
 		filterSend.addAction("org.protocoder.intent.action.STOP_SERVER");
 		registerReceiver(mStopServerReceiver, filterSend);
-		observer.startWatching();
+		fileObserver.startWatching();
 
 		try {
 			ViewConfiguration config = ViewConfiguration.get(this);
@@ -203,7 +204,7 @@ public class MainActivity extends BaseActivity {
 
 		EventBus.getDefault().unregister(this);
 		unregisterReceiver(mStopServerReceiver);
-		observer.stopWatching();
+		fileObserver.stopWatching();
 		unregisterReceiver(connectivityChangeReceiver);
 
 	}

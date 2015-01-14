@@ -46,7 +46,6 @@ import org.protocoder.projectlist.ProjectsPagerAdapter;
 import org.protocoder.projectlist.ZoomOutPageTransformer;
 import org.protocoder.views.ProjectSelectorStrip;
 import org.protocoderrunner.apprunner.AppRunnerActivity;
-import org.protocoderrunner.apprunner.AppRunnerFragment;
 import org.protocoderrunner.apprunner.api.PUtil;
 import org.protocoderrunner.project.Project;
 import org.protocoderrunner.project.ProjectManager;
@@ -76,19 +75,19 @@ public class ProtoScripts {
 
     public void init() {
         //init views
-        mProjectPagerAdapter = new ProjectsPagerAdapter(mProtocoder.a.getSupportFragmentManager());
+        mProjectPagerAdapter = new ProjectsPagerAdapter(mProtocoder.mActivityContext.getSupportFragmentManager());
 
-        final ProjectSelectorStrip strip = (ProjectSelectorStrip) mProtocoder.a.findViewById(R.id.pager_title_strip);
+        final ProjectSelectorStrip strip = (ProjectSelectorStrip) mProtocoder.mActivityContext.findViewById(R.id.pager_title_strip);
 
-        mViewPager = (ViewPager) mProtocoder.a.findViewById(R.id.pager);
+        mViewPager = (ViewPager) mProtocoder.mActivityContext.findViewById(R.id.pager);
         mViewPager.setAdapter(mProjectPagerAdapter);
         mViewPager.setPageTransformer(true, new ZoomOutPageTransformer());
 
 
         //TODO remove at some point
         //colors
-        final int c0 = mProtocoder.a.getResources().getColor(R.color.project_user_color);
-        final int c1 = mProtocoder.a.getResources().getColor(R.color.project_example_color);
+        final int c0 = mProtocoder.mActivityContext.getResources().getColor(R.color.project_user_color);
+        final int c1 = mProtocoder.mActivityContext.getResources().getColor(R.color.project_example_color);
 
 
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -123,7 +122,7 @@ public class ProtoScripts {
         final ProjectListFragment plf = mProjectPagerAdapter.getFragmentByName(folder);
         final int id = plf.findAppPosByName(appName);
 
-        PUtil util = new PUtil(mProtocoder.a);
+        PUtil util = new PUtil(mProtocoder.mActivityContext);
 
         util.delay(200, new PUtil.delayCB() {
             @Override
@@ -195,12 +194,12 @@ public class ProtoScripts {
     int c = 0;
     public void run(String folder, String appName) {
         if (currentProjectApplicationIntent != null) {
-            mProtocoder.a.finishActivity(mProjectRequestCode);
+            mProtocoder.mActivityContext.finishActivity(mProjectRequestCode);
             currentProjectApplicationIntent = null;
         }
 
         try {
-            currentProjectApplicationIntent = new Intent(mProtocoder.a, AppRunnerActivity.class);
+            currentProjectApplicationIntent = new Intent(mProtocoder.mActivityContext, AppRunnerActivity.class);
 
             if (AndroidUtils.isVersionL()) {
                 //TODO enable version Android-L
@@ -217,8 +216,8 @@ public class ProtoScripts {
 
             currentProjectApplicationIntent.putExtra("qq", c++);
 
-            mProtocoder.a.overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
-            mProtocoder.a.startActivityForResult(currentProjectApplicationIntent, mProjectRequestCode);
+            mProtocoder.mActivityContext.overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
+            mProtocoder.mActivityContext.startActivityForResult(currentProjectApplicationIntent, mProjectRequestCode);
         } catch (Exception e) {
             MLog.d(TAG, "Error launching script");
         }
@@ -227,7 +226,7 @@ public class ProtoScripts {
     //TODO
     public void createProject(String folder, String appName) {
         //create file
-        Project newProject = ProjectManager.getInstance().addNewProject(mProtocoder.a, appName, folder, appName);
+        Project newProject = ProjectManager.getInstance().addNewProject(mProtocoder.mActivityContext, appName, folder, appName);
 
         //notify ui
         final ProjectListFragment plf = mProjectPagerAdapter.getFragmentByName(folder);
@@ -253,14 +252,14 @@ public class ProtoScripts {
     }
 
     public void createProjectDialog() {
-        FragmentManager fm = mProtocoder.a.getSupportFragmentManager();
+        FragmentManager fm = mProtocoder.mActivityContext.getSupportFragmentManager();
         NewProjectDialogFragment newProjectDialog = new NewProjectDialogFragment();
         newProjectDialog.show(fm, "fragment_edit_name");
         // implements NewProjectDialogFragment.NewProjectDialogListener
         newProjectDialog.setListener(new NewProjectDialogFragment.NewProjectDialogListener() {
             @Override
             public void onFinishEditDialog(String inputText) {
-                Toast.makeText(mProtocoder.a, "Creating " + inputText, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mProtocoder.mActivityContext, "Creating " + inputText, Toast.LENGTH_SHORT).show();
                 createProject(ProjectManager.FOLDER_USER_PROJECTS, inputText);
             }
         });
@@ -274,7 +273,7 @@ public class ProtoScripts {
     }
 
     public void shareProtoFileDialog(String folder, String name) {
-        final ProgressDialog progress = new ProgressDialog(mProtocoder.a);
+        final ProgressDialog progress = new ProgressDialog(mProtocoder.mActivityContext);
         progress.setTitle("Exporting .proto");
         progress.setMessage("Your project will be ready soon!");
         progress.setCancelable(true);
@@ -290,7 +289,7 @@ public class ProtoScripts {
 
         progress.dismiss();
 
-        mProtocoder.a.startActivity(Intent.createChooser(shareIntent, mProtocoder.a.getResources().getText(R.string.share_proto_file)));
+        mProtocoder.mActivityContext.startActivity(Intent.createChooser(shareIntent, mProtocoder.mActivityContext.getResources().getText(R.string.share_proto_file)));
     }
 
     public void shareMainJsDialog(String folder, String name) {
@@ -299,7 +298,7 @@ public class ProtoScripts {
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, ProjectManager.getInstance().getCode(p));
         sendIntent.setType("text/plain");
-        mProtocoder.a.startActivity(Intent.createChooser(sendIntent, mProtocoder.a.getResources().getText(R.string.send_to)));
+        mProtocoder.mActivityContext.startActivity(Intent.createChooser(sendIntent, mProtocoder.mActivityContext.getResources().getText(R.string.send_to)));
     }
 
     public void addShortcut(String folder, String name) {
@@ -308,13 +307,13 @@ public class ProtoScripts {
         Intent.ShortcutIconResource icon;
         //TODO remove this way of selecting icons
         if (folder.equals("examples")) {
-            icon = Intent.ShortcutIconResource.fromContext(mProtocoder.a, R.drawable.protocoder_script_example);
+            icon = Intent.ShortcutIconResource.fromContext(mProtocoder.mActivityContext, R.drawable.protocoder_script_example);
         } else {
-            icon = Intent.ShortcutIconResource.fromContext(mProtocoder.a, R.drawable.protocoder_script_project);
+            icon = Intent.ShortcutIconResource.fromContext(mProtocoder.mActivityContext, R.drawable.protocoder_script_project);
         }
 
         try {
-            Intent shortcutIntent = new Intent(mProtocoder.a, AppRunnerActivity.class);
+            Intent shortcutIntent = new Intent(mProtocoder.mActivityContext, AppRunnerActivity.class);
             shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
@@ -328,12 +327,12 @@ public class ProtoScripts {
             putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, p.getName());
             putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);
             putShortCutIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
-            mProtocoder.a.sendBroadcast(putShortCutIntent);
+            mProtocoder.mActivityContext.sendBroadcast(putShortCutIntent);
         } catch (Exception e) {
             // TODO
         }
         // Show toast
-        Toast.makeText(mProtocoder.a, "Adding shortcut for " + p.getName(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(mProtocoder.mActivityContext, "Adding shortcut for " + p.getName(), Toast.LENGTH_SHORT).show();
     }
 
     public void reinitScriptList() {
@@ -345,7 +344,7 @@ public class ProtoScripts {
 
 
     private Fragment getFragment(int position){
-        return mProtocoder.a.getSupportFragmentManager().findFragmentByTag(getFragmentTag(position));
+        return mProtocoder.mActivityContext.getSupportFragmentManager().findFragmentByTag(getFragmentTag(position));
     }
 
     private String getFragmentTag(int position) {
