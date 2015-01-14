@@ -1,8 +1,13 @@
 package org.protocoderrunner.apprunner.api.other;
 
-import android.util.Log;
+import android.content.Context;
 
 import org.apache.commons.net.ftp.*;
+import org.protocoderrunner.apidoc.annotation.APIMethod;
+import org.protocoderrunner.apidoc.annotation.APIParam;
+import org.protocoderrunner.apprunner.PInterface;
+import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.utils.MLog;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -10,7 +15,7 @@ import java.util.ArrayList;
 
 //current source :http://androiddev.orkitra.com/?p=28
 
-public class PFtpClient {
+public class PFtpClient extends PInterface {
 
     public static String workDir;
 
@@ -18,150 +23,220 @@ public class PFtpClient {
     String TAG = "PFtpClient";
     Boolean isConnected = false;
 
-    public PFtpClient() {
+    public PFtpClient(Context c) {
+        super(c);
 
+        WhatIsRunning.getInstance().add(this);
     }
 
-    public boolean ftpConnect(String host, String username, String password, int port)
-    {
-        try {
-            mFTPClient = new FTPClient();
-            mFTPClient.connect(host, port);
+    @ProtocoderScript
+    @APIMethod(description = "Connect to a ftp server", example = "")
+    @APIParam(params = { "host", "port", "username", "password" })
+    public void connect(final String host, final int port, final String username, final String password) {
+        mFTPClient = new FTPClient();
 
-            // check connection
-            if (FTPReply.isPositiveCompletion(mFTPClient.getReplyCode())) {
-                // login username & password
-                boolean status = mFTPClient.login(username, password);
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    mFTPClient.connect(host, port);
 
-                mFTPClient.setFileType(FTP.BINARY_FILE_TYPE);
-                mFTPClient.enterLocalPassiveMode();
-                isConnected = true;
-                return status;
-            }
-        } catch(Exception e) {
-            Log.d(TAG, "connection failed error:" + e);
-        }
-        return false;
-    }
+                    MLog.d(TAG, "1");
 
-    public void upload()
-    {
+                    if (FTPReply.isPositiveCompletion(mFTPClient.getReplyCode())) {
+                        boolean logged = mFTPClient.login(username, password);
+                        mFTPClient.setFileType(FTP.BINARY_FILE_TYPE);
+                        mFTPClient.enterLocalPassiveMode();
+                        isConnected = logged;
+                    }
+                    MLog.d(TAG, "" + isConnected);
 
-    }
-
-    public String ftpGetCurrentWorkingDirectory()
-    {
-        try {
-            String workingDir = mFTPClient.printWorkingDirectory();
-            return workingDir;
-        } catch(Exception e) {
-            Log.d(TAG, "Error: could not get current working directory.");
-        }
-
-        return null;
-    }
-
-    public boolean ftpChangeDirectory(String directory_path)
-    {
-        try {
-            return mFTPClient.changeWorkingDirectory(directory_path);
-        } catch(Exception e) {
-            Log.d(TAG, "Error:" + e);
-        }
-        return false;
-    }
-
-    public ArrayList<String> getFileList(String dir_path)
-    {
-        ArrayList<String> list = new ArrayList<String>();
-        try {
-            FTPFile[] ftpFiles = mFTPClient.listFiles(dir_path);
-            int length = ftpFiles.length;
-
-            for (int i = 0; i < length; i++) {
-                String name = ftpFiles[i].getName();
-                boolean isFile = ftpFiles[i].isFile();
-
-                if (isFile) {
-                    Log.i(TAG, "File : " + name);
-                    list.add("File: " + name);
-                }
-                else {
-                    Log.i(TAG, "Directory : " + name);
-                    list.add("Dir : " + name);
+                } catch(Exception e) {
+                    MLog.d(TAG, "connection failed error:" + e);
                 }
             }
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-        return list;
+        });
+        t.start();
     }
 
-    public boolean download(String srcFilePath, String desFilePath)
-    {
-        boolean status = false;
-        try {
-            FileOutputStream desFileStream = new FileOutputStream(desFilePath);;
-            status = mFTPClient.retrieveFile(srcFilePath, desFileStream);
-            desFileStream.close();
-
-            return status;
-        } catch (Exception e) {
-            Log.d(TAG, "download failed error:"+ e);
-        }
-
-        return status;
+    public interface GetCurrentDirCb {
+        public void event(String msg);
     }
 
-    public boolean ftpUpload(String srcFilePath, String desFileName, String desDirectory)
-    {
-        boolean status = false;
+    @ProtocoderScript
+    @APIMethod(description = "Get the current directory", example = "")
+    @APIParam(params = { "" })
+    public void getCurrentDir(final GetCurrentDirCb callback) {
 
-        while (!isConnected)
-        {
-            try {
-                Log.d(TAG,"waiting for connection");
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    MLog.d(TAG, "" + mFTPClient);
+                    String workingDir = mFTPClient.printWorkingDirectory();
+                    callback.event(workingDir);
+                } catch(Exception e) {
+                    MLog.d(TAG, "Error: could not get current working directory. " + e);
+                }
+
             }
-        }
+        });
+        t.start();
 
-        try {
-            Log.d(TAG,"Uploading File:"+ srcFilePath);
-            Log.d(TAG,"upload to path:"+ ftpGetCurrentWorkingDirectory());
-            FileInputStream srcFileStream = new FileInputStream(srcFilePath);
-            status = mFTPClient.storeFile(desFileName, srcFileStream);
-            srcFileStream.close();
-            return status;
-        } catch (Exception e) {
-            Log.d(TAG, "upload failed" + e);
-        }
-
-        return status;
     }
 
-    public void deleteFile(String file)
-    {
-        try {
-            boolean status = mFTPClient.deleteFile(file);
-            Log.e(TAG,file);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.e(TAG,e+"");
-            Log.e(TAG,file);
-        }
+    public interface ChangeDirectoryCb {
+        public void event(boolean msg);
     }
 
-    public void disconnect()
-    {
-        try {
-            mFTPClient.logout();
-            mFTPClient.disconnect();
-        }catch (Exception e)
-        {
+    @ProtocoderScript
+    @APIMethod(description = "Change the directory", example = "")
+    @APIParam(params = { "dirname"})
+    public void changeDir(final String directory_path, final ChangeDirectoryCb callback) {
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    callback.event(mFTPClient.changeWorkingDirectory(directory_path));
+                } catch (Exception e) {
+                    MLog.d(TAG, "Error:" + e);
+                }
+            }
+        });
+        t.start();
+    }
 
-        }
-        isConnected = false;
+    //not yet
+    @ProtocoderScript
+    @APIMethod(description = "Get list of files in the given dir", example = "")
+    @APIParam(params = { "dirname"})
+    public void getFileList(final String dir_path) {
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ArrayList<String> list = new ArrayList<String>();
+                try {
+                    FTPFile[] ftpFiles = mFTPClient.listFiles(dir_path);
+                    int length = ftpFiles.length;
+
+                    for (int i = 0; i < length; i++) {
+                        String name = ftpFiles[i].getName();
+                        boolean isFile = ftpFiles[i].isFile();
+
+                        if (isFile) {
+                            MLog.d(TAG, "File : " + name);
+                            list.add("File: " + name);
+                        } else {
+                            MLog.d(TAG, "Directory : " + name);
+                            list.add("Dir : " + name);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        t.start();
+    }
+
+    //not yet
+    @ProtocoderScript
+    @APIMethod(description = "Download the file", example = "")
+    @APIParam(params = { "sourceFilePath", "destinyFilePath"})
+    public void download(final String srcFilePath, final String desFilePath) {
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean status = false;
+                try {
+                    FileOutputStream desFileStream = new FileOutputStream(desFilePath);
+
+                    status = mFTPClient.retrieveFile(srcFilePath, desFileStream);
+                    desFileStream.close();
+                } catch (Exception e) {
+                    MLog.d(TAG, "download failed error:" + e);
+                }
+            }
+        });
+        t.start();
+    }
+
+    //not yet
+    @ProtocoderScript
+    @APIMethod(description = "Upload a file", example = "")
+    @APIParam(params = { "sourceFilePath", "fileName", "destinyPath"})
+    public void upload(final String srcFilePath, final String desFileName, String desDirectory) {
+        boolean status = false;
+
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (!isConnected) {
+                    try {
+                        MLog.d(TAG, "waiting for connection");
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                try {
+                    FileInputStream srcFileStream = new FileInputStream(srcFilePath);
+                    boolean status = mFTPClient.storeFile(desFileName, srcFileStream);
+                    srcFileStream.close();
+                } catch (Exception e) {
+                    MLog.d(TAG, "upload failed" + e);
+                }
+            }
+        });
+        t.start();
+
+    }
+
+
+    //not yet
+    @ProtocoderScript
+    @APIMethod(description = "Delete a file", example = "")
+    @APIParam(params = { "file"})
+    public void deleteFile(final String file) {
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    boolean status = mFTPClient.deleteFile(file);
+                    MLog.d(TAG, file);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    MLog.d(TAG, e + "");
+                    MLog.d(TAG, file);
+                }
+            }
+        });
+        t.start();
+    }
+
+    //not yet
+    @ProtocoderScript
+    @APIMethod(description = "Disconnect from server", example = "")
+    @APIParam(params = { ""})
+    public void disconnect() {
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (isConnected) {
+                    try {
+                        mFTPClient.logout();
+                        mFTPClient.disconnect();
+                    } catch (Exception e) {
+
+                    }
+                    isConnected = false;
+                }
+            }
+        });
+    }
+
+    public void stop() {
+        disconnect();
     }
 }

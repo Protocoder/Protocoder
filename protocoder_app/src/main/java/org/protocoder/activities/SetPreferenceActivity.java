@@ -51,15 +51,6 @@ public class SetPreferenceActivity extends BaseActivity {
 
         getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment()).commit();
 
-        // If mContext preference needs to be default true, we need this hack to make
-        // sure it is hard set
-        // This is to work around the Android bug:
-        // http://code.google.com/p/android/issues/detail?id=6641
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        prefs.edit()
-                .putBoolean(getResources().getString(R.string.pref_curtain_notifications),
-                        prefs.getBoolean(getResources().getString(R.string.pref_curtain_notifications), true)).commit();
-
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
     }

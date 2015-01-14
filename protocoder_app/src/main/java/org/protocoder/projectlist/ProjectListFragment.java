@@ -44,7 +44,9 @@ import android.view.animation.CycleInterpolator;
 
 import org.protocoder.MainActivity;
 import org.protocoder.R;
+import org.protocoder.appApi.Protocoder;
 import org.protocoder.fragments.SettingsFragment;
+import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.base.BaseFragment;
 import org.protocoderrunner.events.Events.ProjectEvent;
 import org.protocoderrunner.project.Project;
@@ -93,7 +95,7 @@ public class ProjectListFragment extends BaseFragment {
         //this.icon = getArguments().getString("icon");
 
         mContext = (Context) getActivity();
-        mListMode = SettingsFragment.getListPreference(getActivity());
+        mListMode = Protocoder.getInstance((BaseActivity) getActivity()).settings.getListPreference();
 
         View v;
         if (mListMode) {

@@ -51,6 +51,8 @@ public class AppSettings {
 
     public final static int WEBSOCKET_PORT = 8587;
 	public final static int HTTP_PORT = 8585;
+    public static int FTP_PORT = 8589;
+
 
     public static String serverAddress = "";
     public static int animGeneralSpeed = 500;

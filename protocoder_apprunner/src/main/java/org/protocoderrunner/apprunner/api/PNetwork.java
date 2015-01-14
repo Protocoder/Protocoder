@@ -1114,19 +1114,17 @@ public class PNetwork extends PInterface {
     @ProtocoderScript
     @APIMethod(description = "Start a ftp server in the given port", example = "")
     @APIParam(params = { "ip", "function(result)" })
-    public PFtpServer startFtpServer(final int port, final String userName, final String password) {
-        PFtpServer ftpServer = new PFtpServer(getContext(), port, userName, password);
+    public PFtpServer createFtpServer(final int port) {
+        PFtpServer ftpServer = new PFtpServer(getContext(), port);
 
         return ftpServer;
     }
 
-
-
     @ProtocoderScript
     @APIMethod(description = "Start a ftp server in the given port", example = "")
     @APIParam(params = { "ip", "function(result)" })
-    public PFtpClient connectFtp(String ftpUrl) {
-        PFtpClient ftpClient = new PFtpClient();
+    public PFtpClient createFtpConnection(String ftpUrl) {
+        PFtpClient ftpClient = new PFtpClient(getContext());
 
         return ftpClient;
     }

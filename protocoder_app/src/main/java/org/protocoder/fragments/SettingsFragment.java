@@ -49,26 +49,34 @@ import android.preference.TwoStatePreference;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.EditText;
 
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.protocoder.R;
 import org.protocoder.activities.LicenseActivity;
 import org.protocoder.appApi.EditorManager;
+import org.protocoder.appApi.Protocoder;
+import org.protocoder.appApi.Settings;
 import org.protocoderrunner.base.BaseNotification;
-import org.protocoderrunner.project.Project;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.project.ProjectManager.InstallListener;
+import org.protocoderrunner.utils.AndroidUtils;
 import org.protocoderrunner.utils.MLog;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class SettingsFragment extends PreferenceFragment {
 
 	protected static final String TAG = "PrefsFragment";
+    private Context mContext;
+    private SharedPreferences mPrefs;
+    private Settings mSettings;
 
-	@Override
+    @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
@@ -80,6 +88,9 @@ public class SettingsFragment extends PreferenceFragment {
     @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = super.onCreateView(inflater, container, savedInstanceState);
+        mContext = getActivity();
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        mSettings = Protocoder.getInstance(mContext).settings;
 
         TwoStatePreference qq = new TwoStatePreference(getActivity()) {
             @Override
@@ -98,7 +109,7 @@ public class SettingsFragment extends PreferenceFragment {
 			}
 		});
 
-		prefId.setText(getId(getActivity()));
+		prefId.setText(mSettings.getId());
 
 		Preference btnShowLicenses = findPreference("licenses_detail");
 		btnShowLicenses.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -155,8 +166,7 @@ public class SettingsFragment extends PreferenceFragment {
 				@Override
 				public boolean onPreferenceChange(Preference preference, Object o) {
 					boolean isChecked = (Boolean) o;
-					SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-					prefs.edit()
+					mPrefs.edit()
 							.putBoolean(getActivity().getResources().getString(R.string.pref_curtain_notifications),
 									isChecked).commit();
 					// if start
@@ -184,8 +194,7 @@ public class SettingsFragment extends PreferenceFragment {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object o) {
                     boolean isChecked = (Boolean) o;
-                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                    prefs.edit().putBoolean("pref_screen_on", isChecked).commit();
+                    mPrefs.edit().putBoolean("pref_screen_on", isChecked).commit();
 
                     return true;
                 }
@@ -199,8 +208,7 @@ public class SettingsFragment extends PreferenceFragment {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object o) {
                     boolean isChecked = (Boolean) o;
-                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                    prefs.edit().putBoolean("pref_list_mode", isChecked).commit();
+                    mPrefs.edit().putBoolean("pref_list_mode", isChecked).commit();
 
                     return true;
                 }
@@ -214,8 +222,7 @@ public class SettingsFragment extends PreferenceFragment {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object o) {
                     boolean isChecked = (Boolean) o;
-                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                    prefs.edit().putBoolean("pref_background_mode", isChecked).commit();
+                    mPrefs.edit().putBoolean("pref_background_mode", isChecked).commit();
                     return true;
                 }
             });
@@ -228,7 +235,7 @@ public class SettingsFragment extends PreferenceFragment {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object o) {
                     boolean isChecked = (Boolean) o;
-                    setConnectionAlert(getActivity(), isChecked);
+                    mSettings.setConnectionAlert(isChecked);
                     return true;
                 }
             });
@@ -242,9 +249,8 @@ public class SettingsFragment extends PreferenceFragment {
         loadEditorPreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 MLog.d(TAG, "" + newValue);
-                prefs.edit().putString("pref_change_editor", (String) newValue).commit();
+                mPrefs.edit().putString("pref_change_editor", (String) newValue).commit();
                 return true;
             }
         });
@@ -257,82 +263,70 @@ public class SettingsFragment extends PreferenceFragment {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object o) {
                     boolean isChecked = (Boolean) o;
-                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                    prefs.edit().putBoolean("pref_notify_new_version", isChecked).commit();
+                    mPrefs.edit().putBoolean("pref_notify_new_version", isChecked).commit();
                     return true;
                 }
             });
         }
 
+        Preference btnFtp = findPreference("pref_ftp");
+        btnFtp.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference arg0) {
 
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+                alertDialog.setTitle("FTP settings");
+                final View view = getActivity().getLayoutInflater().inflate(R.layout.view_ftp_settings_dialog, null);
+                //alertDialog.setView(R.layout.view_ftp_settings_dialog);
+
+
+                final EditText userName = (EditText) view.findViewById(R.id.ftp_username);
+                final EditText userPassword = (EditText) view.findViewById(R.id.ftp_userpassword);
+                final CheckBox check = (CheckBox) view.findViewById(R.id.ftp_enable);
+
+                final boolean[] checked = {mSettings.getFtpChecked()};
+                final String[] userNameText = {mSettings.getFtpUserName()};
+                final String[] userPasswordText = {mSettings.getFtpUserPassword()};
+
+                userName.setText(userNameText[0]);
+                userPassword.setText(userPasswordText[0]);
+
+                check.setChecked(checked[0]);
+
+                alertDialog.setView(view);
+
+                alertDialog.setCancelable(true);
+                alertDialog.setPositiveButton("Save",  new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int id) {
+                        checked[0] = check.isChecked();
+                        userNameText[0] = userName.getText().toString();
+                        userPasswordText[0] = userPassword.getText().toString();
+
+                        //sha-1 the userPassword to store it
+                       // String saltedPassword = null;
+                       // try {
+                         //   saltedPassword = AndroidUtils.sha1(userPasswordText[0]);
+                        //    MLog.d(TAG, " qq " + saltedPassword);
+
+                            mSettings.setFtp(checked[0], userNameText[0], userPasswordText[0]);
+                       // } catch (NoSuchAlgorithmException e) {
+                       //     e.printStackTrace();
+                       // } catch (UnsupportedEncodingException e) {
+                       //     e.printStackTrace();
+                       // }
+
+                    }
+                });
+
+                alertDialog.show();
+
+                return true;
+            }
+        });
 
         return view;
-	}
 
-
-    //---------------- save / load methods
-
-    public static void setId(Context c, String id) {
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(c);
-        Editor editor = sharedPrefs.edit();
-        editor.putString("pref_id", id);
-        editor.commit();
-    }
-
-	public static String getId(Context c) {
-		// get org.apprunner settings
-		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(c);
-		String id = sharedPrefs.getString("pref_id", "-1");
-
-		return id;
-	}
-
-	public static void setListPreference(Context c, boolean id) {
-		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(c);
-		Editor editor = sharedPrefs.edit();
-		editor.putBoolean("pref_list_mode", id);
-		editor.commit();
-	}
-
-	public static boolean getListPreference(Context c) {
-		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(c);
-		boolean pref = sharedPrefs.getBoolean("pref_list_mode", false);
-
-		return pref;
-	}
-
-
-    public static boolean getScreenOn(Context c) {
-		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(c);
-		boolean pref = sharedPrefs.getBoolean("pref_screen_on", false);
-
-		return pref;
-	}
-
-    public static boolean getBackgroundMode(Context c) {
-		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(c);
-		boolean pref = sharedPrefs.getBoolean("pref_background_mode", false);
-
-		return pref;
-	}
-
-    public static boolean getNotifyNewVersion(Context c) {
-		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(c);
-		boolean pref = sharedPrefs.getBoolean("pref_notify_new_version", false);
-
-		return pref;
-	}
-
-    public static void setConnectionAlert(Context c, boolean b) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c);
-        prefs.edit().putBoolean("pref_connection_alert", b).commit();
-	}
-
-    public static boolean getConnectionAlert(Context c) {
-		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(c);
-		boolean pref = sharedPrefs.getBoolean("pref_connection_alert", false);
-
-		return pref;
 	}
 
 }

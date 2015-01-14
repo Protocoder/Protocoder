@@ -41,6 +41,7 @@ import android.widget.TextView;
 
 import org.protocoder.MainActivity;
 import org.protocoder.R;
+import org.protocoder.appApi.Protocoder;
 import org.protocoder.fragments.SettingsFragment;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.project.ProjectManager;
@@ -76,7 +77,7 @@ public class WelcomeActivity extends BaseActivity {
 		copyright.setText(readFile(R.raw.copyright_notice));
 
 		// first time id
-		SettingsFragment.setId(this, StrUtils.generateRandomString());
+		Protocoder.getInstance(this).settings.setId(StrUtils.generateRandomString());
 	}
 
 	/**

@@ -31,8 +31,6 @@ package org.protocoder.appApi;
 import android.app.Activity;
 import android.content.Context;
 
-import org.protocoder.MainActivity;
-import org.protocoderrunner.apprunner.AppRunnerInterpreter;
 import org.protocoderrunner.apprunner.api.PDevice;
 import org.protocoderrunner.apprunner.api.PFileIO;
 import org.protocoderrunner.apprunner.api.PMedia;
@@ -40,24 +38,26 @@ import org.protocoderrunner.apprunner.api.PNetwork;
 import org.protocoderrunner.apprunner.api.PProtocoder;
 import org.protocoderrunner.apprunner.api.PUI;
 import org.protocoderrunner.apprunner.api.PUtil;
+import org.protocoderrunner.base.BaseActivity;
 
 public class Protocoder {
 
-    public static MainActivity a;
+    public static BaseActivity mActivityContext;
     private static Protocoder instance;
 
     public App app;
     public ProtoScripts protoScripts;
     public WebEditor webEditor;
     public Editor editor;
+    public Settings settings;
 
-    PUtil mPUtil = new PUtil(a);
-    PUI mPUi = new PUI(a);
-    PNetwork mPNetwork = new PNetwork(a);
-    PFileIO mPFileIO = new PFileIO(a);
-    PMedia mPMedia = new PMedia(a);
-    PDevice mPDevice = new PDevice(a);
-    PProtocoder mProtocoder = new PProtocoder(a);
+    PUtil mPUtil = new PUtil(mActivityContext);
+    PUI mPUi = new PUI(mActivityContext);
+    PNetwork mPNetwork = new PNetwork(mActivityContext);
+    PFileIO mPFileIO = new PFileIO(mActivityContext);
+    PMedia mPMedia = new PMedia(mActivityContext);
+    PDevice mPDevice = new PDevice(mActivityContext);
+    PProtocoder mProtocoder = new PProtocoder(mActivityContext);
 
     //public AppRunnerInterpreter interp;
 
@@ -77,12 +77,13 @@ public class Protocoder {
         app = new App(this);
         protoScripts = new ProtoScripts(this);
         editor = new Editor(this);
+        settings = new Settings(this);
         webEditor = new WebEditor(this);
 
         //TODO reenable
         //check if new version is available
 
-        if (mPNetwork.isNetworkAvailable()) {
+        if (mPNetwork.isNetworkAvailable() && settings.getNewVersionCheckEnabled()) {
             mPNetwork.httpGet("http://www.protocoder.org/downloads/list_latest.php", new PNetwork.HttpGetCB() {
                 @Override
                 public void event(int eventType, String responseString) {
@@ -109,7 +110,7 @@ public class Protocoder {
         }
 
        // if (debugApp) {
-       //     interp = new AppRunnerInterpreter(a);
+       //     interp = new AppRunnerInterpreter(mActivityContext);
        //     interp.createInterpreter(true);
 
             // interp.interpreter.addObjectToInterface("ui", mPUi);
@@ -121,7 +122,7 @@ public class Protocoder {
 
 
     public static Protocoder getInstance(Context activity) {
-        a = (MainActivity) activity;
+        mActivityContext = (BaseActivity) activity;
         if (instance == null) {
             instance = new Protocoder();
         }
