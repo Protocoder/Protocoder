@@ -5,27 +5,77 @@
 *
 */
 
-var Communication = function(useWebsockets) { 
-  this.remoteIP = window.location.hostname;  
-  //this.remoteIP = 'localhost';
-  //this.remoteIP = "192.168.10.14"
-  this.remoteWSPORT = '8587';
-  this.self = this; 
-  this.countLogs = 0; 
-
-  if (useWebsockets) { 
-    this.initWebsockets();
-  }
+var Communication = function(p, useWebsockets) { 
+	this.protoEvent = p.event;
+	this.remoteIP = window.location.hostname;  
+	//this.remoteIP = 'localhost';
+	//this.remoteIP = "192.168.10.14"
+	this.remoteWSPORT = '8587';
+	this.self = this; 
+	this.countLogs = 0; 
+	
+	if (useWebsockets) { 
+		this.initWebsockets();
+	}
+	
+	this.init();
 }
+
+Communication.prototype.initEvents = function() {
+	var that = this;
+	
+	this.protoEvent.listen("runApp", function(e) {
+		that.runApp(e.detail)
+	});	
+		
+	this.protoEvent.listen("saveProject", function(e) {
+		that.pushCode(e.detail.currentProject, e.detail.fileName);
+	});	
+
+	this.protoEvent.listen("liveExecute", function(e) {
+		that.executeCode(e.detail);
+	});	
+	
+	this.protoEvent.listen("createNewProject", function(e) {
+		that.createNewProject(e.detail);
+	});
+	
+	this.protoEvent.listen("listFilesInProject", function(e) {
+		that.listFilesInProject(e.detail);
+	});
+	
+	this.protoEvent.listen("renameProject", function(e) {
+		that.renameApp(e.detail);
+	});
+		
+	this.protoEvent.listen("removeApp", function(e) {
+		that.removeApp(e.detail);
+	});
+		
+	this.protoEvent.listen("deviceProjectHighlight", function(e) {
+		that.highlight(e.filter, e.detail.name);
+	}); 
+	
+	this.protoEvent.listen("fetchCode", function(e) {
+		that.fetchCode(e.detail.name, e.detail.type);
+	});
+}
+
+Communication.prototype.init = function() {
+	this.initEvents();
+}
+
+
 
 //listing apps in the future we might filter the listing
 Communication.prototype.listApps = function (filter) { 
+	var that = this;
 	var obj = {};
 	obj.cmd = "list_apps";
 	obj.filter = filter;
 
-	$.get(this.remoteIP + "cmd="+JSON.stringify(obj), function(data) {
-		setProjectList(filter, JSON.parse(data));
+	$.get(this.remoteIP + "cmd="+JSON.stringify(obj), function(data) { 
+		that.protoEvent.send("projects_received", {"filter":filter, "data":JSON.parse(data) });
 	});
 }
 
@@ -45,7 +95,7 @@ Communication.prototype.pushCode = function (project, fileName) {
 	} else { 
 		o.fileName = fileName;
 	}
-
+	
 	$.ajax({
 		url:this.remoteIP + "cmd="+JSON.stringify(obj),
 		type: 'post',
@@ -81,11 +131,11 @@ Communication.prototype.executeCode = function (code) {
 
 //fetch the code
 Communication.prototype.fetchCode = function(pName, pType) { 
+	var that = this;
 	var obj = {};
 	obj.cmd = "fetch_code";
 	obj.name = pName;
 	obj.type = pType;
- 	var self = this;
 	try {
 	  	$.get(this.remoteIP + "cmd="+JSON.stringify(obj), function(data) {
 	  		var code = JSON.parse(data);
@@ -95,33 +145,35 @@ Communication.prototype.fetchCode = function(pName, pType) {
 	  		document.title = " protocoder | " + pName;
 
 	  		var code = unescape(code.code);
-	  		protocoder.ui.setMainTab(pName, code); 
+	  		
+	  		that.protoEvent.send("ui_setMainTab", {"pName":pName, "code":code});
 
-	  		self.listFilesInProject(pName, pType);
+	  		that.listFilesInProject(currentProject);
 	  	});
 	} catch (e) {} 
 }
 
 //list files in project 
-Communication.prototype.listFilesInProject = function (pName, pType) { 
+Communication.prototype.listFilesInProject = function (currentProject) { 
+	var that = this;
 	var obj = {};
 	obj.cmd = "list_files_in_project";
-	obj.name = pName;
-	obj.type = pType;
+	obj.name = currentProject.name;
+	obj.type = currentProject.type;
 
-  try {
-  	$.get(this.remoteIP + "cmd="+JSON.stringify(obj), function(data) {
-  		protocoder.ui.clearFileElements();
-  		//console.log(data);
-
-  		$.each(JSON.parse(data).files, function(k, v) {
-  			//console.log(v); 
-  			v.recid = k;
-  			protocoder.ui.addFileElement(v);
+	try {
+  		$.get(this.remoteIP + "cmd="+JSON.stringify(obj), function(data) {	
+	  		that.protoEvent.send("ui_clearFileElements")
+	  		
+	  		//console.log(data);
+	
+	  		$.each(JSON.parse(data).files, function(k, v) {
+	  			//console.log(v); 
+	  			v.recid = k;
+	  			that.protoEvent.send("ui_addFileElement", v)
+	  		});
   		});
-
-  	});
-  } catch (e) {};
+  	} catch (e) {};
 } 
 
 Communication.prototype.runApp = function (project) {
@@ -163,6 +215,7 @@ Communication.prototype.createNewProject = function (new_name) {
 }
 
 Communication.prototype.removeApp = function (project) {
+	var that = this;
 	var obj = {};
 	obj.cmd = "remove_app";
 	obj.name = project.name;
@@ -171,7 +224,7 @@ Communication.prototype.removeApp = function (project) {
 	try {
 
 	$.get(this.remoteIP + "cmd="+JSON.stringify(obj), function(data) {
- 	    protocoder.communication.listApps("projects");
+ 	    that.listApps("projects");
  		alert('app removed ' + data);
 	});
 
@@ -197,12 +250,13 @@ Communication.prototype.renameApp = function (project) {
 
 
 Communication.prototype.getReference = function (id) {
+	var that = this;
 	var obj = {};
 	obj.cmd = "get_documentation";
 
 	$.get(this.remoteIP + "cmd="+JSON.stringify(obj), function(data) { 
 		var doc = JSON.parse(data);
-		protocoder.reference.parseHelp(doc.api);
+		that.protoEvent.send("reference_parseHelp", {"docApi":doc.api});
 	});
 }
 
@@ -212,9 +266,9 @@ Communication.prototype.getReference = function (id) {
 */
 
 var ws; 
-var widgetsFn = new Object();
 
 Communication.prototype.initWebsockets = function () {
+  var that = this;
   // Write your code in the same way as for native WebSocket:
   ws = new WebSocket('ws://'+ this.remoteIP +':' + this.remoteWSPORT);
   var self = this;
@@ -248,7 +302,7 @@ Communication.prototype.initWebsockets = function () {
     //get_code 
     if (result.code != null) { 
       //console.log(result.code);
-      protocoder.editor.setCode(result.code);
+      this.protoEvent.send("editor_setCode", {"code":result.code});
     }
 
     //get_new_code or save_file 
@@ -271,9 +325,13 @@ Communication.prototype.initWebsockets = function () {
 
     if (result.type == "console") { 
       if (result.action == "log") { 
-	  	protocoder.ui.consoleLog('<p>' + result.values.val + '</p>');
+	  	
+	  	var val = '<p>' + result.values.val + '</p>';
+	  	that.protoEvent.send("consoleLog", {"log":val});
+	
 	   } else if (result.action == "logC") {
-         protocoder.ui.consoleLog('<p style ="color:'+ result.values.color + '">' + result.values.val + '</p>'); 
+		 var val = '<p style ="color:'+ result.values.color + '">' + result.values.val + '</p>';
+	  	 that.protoEvent.send("consoleLog", {"log":val});
        } else if (result.action == "clear") { 
        	 $("#console_wrapper #console").empty();
        	 self.countLogs = 0;
@@ -295,9 +353,9 @@ Communication.prototype.initWebsockets = function () {
     if (result.type == 'ide') { 
       if (result.action == "ready") {
         if (result.values.ready) { 
-          protocoder.ui.appRunning(true);
+          that.protoEvent.send("ui_appRunning", true);
         } else {
-          protocoder.ui.appRunning(false);
+          that.protoEvent.send("ui_appRunning", false);
         }
       } else if (result.action == "new_files_in_project") { 
         self.listFilesInProject(currentProject.name, currentProject.type);
@@ -310,29 +368,7 @@ Communication.prototype.initWebsockets = function () {
 
     //console.log(result);
     if (result.type == "widget") { 
-      
-      if (result.action == "showDashboard") { 
-        if (result.values.val == true) { 
-          protocoder.dashboard.show();
-          console.log("show dashboard");
-        } else {
-          protocoder.dashboard.hide();
-        }
-      } else if (result.action == "add") { 
-        console.log("adding widget");
-        widgetsFn[result.values.id] = protocoder.dashboard.addWidget(result.values);
-      } else if (result.action == "update") {
-        console.log("updating widget");
-        console.log(result.values.val);
-        widgetsFn[result.values.id](result.values.val, "");
-      } else if (result.action == "setLabelText") {
-        protocoder.dashboard.setLabelText(result.values.id, result.values.val);
-      } else if (result.action == "changeImage") { 
-        protocoder.dashboard.changeImage(result.values.id, result.values.url);
-      } else if (result.action == "updateCamera") {
-      	protocoder.dashboard.updateCamera(result.values.id, result.values.src);
-      }
-
+		that.protoEvent.send("dashboard", result);
     }
 
   }
@@ -346,20 +382,20 @@ var reconnectionInterval;
 
 Communication.prototype.connected = function () { 
   //console.log('connected');
-  clearInterval(reconnectionInterval); //removes the reconnection 
-  protocoder.ui.appConnected(true);
+  clearInterval(reconnectionInterval); //_s the reconnection 
+  this.protoEvent.send("ui_appConnected", true);
 }
 
 Communication.prototype.disconnected = function () { 
-  var self = this;
-  protocoder.ui.appConnected(false);
+  var that = this;
+  this.protoEvent.send("ui_appConnected", false);
 
   //console.log('disconnected');
 
   //try to reconnect 
   reconnectionInterval = setTimeout(function() {
     //console.log("trying to reconnect");
-    self.initWebsockets();
+    that.initWebsockets();
   }, 1000);
 }
 

@@ -3,18 +3,52 @@
 *
 */
 
-var Editor = function() { 
-	this.init();
-
+var Editor = function(p) { 
+	this.protoEvent = p.event;
+	
+	//events
 	this.liveExecRec = {
 		liveExecHistory : [],
 		firstTime : null 
 	};
-
+	
+	this.init();
 }
 
+Editor.prototype.initEvents = function() {
+	var that = this;
+	
+	that.protoEvent.listen("editor_resize", function(e) {
+		that.editor.resize();
+	});	
+	
+	that.protoEvent.listen("editor_setTypeAndCode", function(e) {
+		//console.log(e);
+		that.setTypeAndCode(e.detail.type, e.detail.code)
+	});	
+		
+	that.protoEvent.listen("editor_saveCode", function(e) {
+		that.saveCode();
+	});	
+		
+	that.protoEvent.listen("editor_setCode", function(e) {
+		that.setCode(e.detail.code);
+	});	
+	
+	that.protoEvent.listen("editor_insert", function(e) {
+		that.editor.insert(e.detail);
+	});		
+	
+	that.protoEvent.listen("editor_runApp", function(e) {
+		currentProject.code = that.session.getValue();
+        that.protoEvent.send("communication_pushCode", {"currentProject":currentProject, "fileName":""});
+        that.protoEvent.send("dashboard_removeWidgets");
+        that.protoEvent.send("runApp", currentProject);    
+	});
+}
 
 Editor.prototype.init = function() { 
+	//init
 	var that = this;
 	var editor = ace.edit("editor");
 	this.editor = editor;
@@ -65,7 +99,7 @@ Editor.prototype.init = function() {
 		//var cursorPosition = editor.getCursorPosition();
 		
 		if (that.isSaved != false ) {
-			protocoder.ui.setTabFeedback(true);	
+			that.protoEvent.send("ui_setTabFeedback", true);
 			that.isSaved = true;
 		}
 	});
@@ -84,7 +118,6 @@ Editor.prototype.init = function() {
 	    },
 	    exec: function(env, args, request) {
 	    	that.saveCode();
-	    	protocoder.ui.toolbarFeedback("save");
 	    }
 	});
 
@@ -98,11 +131,9 @@ Editor.prototype.init = function() {
 	    },
 	    exec: function(env, args, request) {
 	    	currentProject.code = session.getValue();
-	    	protocoder.communication.pushCode(currentProject);
-	    	protocoder.dashboard.removeWidgets();
-	    	protocoder.communication.runApp(currentProject);
-	    	protocoder.ui.toolbarFeedback("run");
-
+	    	
+	    	//that.protoEvent.send("saveProject", currentProject);
+	    	that.protoEvent.send("runApp", currentProject);
 	    }
 	});
 
@@ -115,8 +146,7 @@ Editor.prototype.init = function() {
 	        sender: 'editor'
 	    },
 	    exec: function(env, args, request) {
-	    	console.log("dashboard");
-	    	protocoder.dashboard.toggle();
+	    	that.protoEvent.send("dashboard_toggle");
 	    }
 	});
 
@@ -245,6 +275,7 @@ Editor.prototype.init = function() {
 	});
 
 	
+	this.initEvents();
 }
 
 
@@ -253,8 +284,8 @@ Editor.prototype.runLiveExec = function(liveExec) {
 
    	//get the code selected or the whole row 
 	if (liveExec.selectedText.length > 0) { 
-		protocoder.communication.executeCode(liveExec.selectedText);
-		protocoder.editor.highlight(liveExec.range);
+		this.protoEvent.send("liveExecute", liveExec.selectedText);
+		this.highlight(liveExec.range);
 	} else { 
 		var currentLine = this.session.getDocument().$lines[liveExec.numLine]; 
 		//console.log(liveExec.numLine + " " + currentLine + " " + currentLine.length);
@@ -262,8 +293,8 @@ Editor.prototype.runLiveExec = function(liveExec) {
 
 
 		if (currentLine.length > 0) { 
-			protocoder.communication.executeCode(currentLine);
-			protocoder.editor.highlight(range_line);
+			this.protoEvent.send("liveExecute", currentLine);
+			this.highlight(range_line);
 		}
 
 	}
@@ -276,8 +307,8 @@ Editor.prototype.clearLiveExecRec = function() {
 
 Editor.prototype.playLiveExec = function(b) { 
 	//console.log(this);
-	var history = protocoder.editor.liveExecRec.liveExecHistory;
-	var firstTime = protocoder.editor.liveExecRec.firstTime;
+	var history = this.liveExecRec.liveExecHistory;
+	var firstTime = this.liveExecRec.firstTime;
 
 	for (var i = 0; i < history.length; i++) {
 	
@@ -285,7 +316,7 @@ Editor.prototype.playLiveExec = function(b) {
 			var delay = Math.abs(firstTime - history[i].time);
 			console.log(delay);
 			setTimeout(function() {
-				protocoder.editor.runLiveExec(history[i]);
+				that.protoEvent.send("liveExecute", history[i]);
 			}, delay);
 		})(i);
 
@@ -330,7 +361,7 @@ Editor.prototype.saveCode = function () {
 	if (!tab) {
 
 	} else {
-		protocoder.communication.pushCode(currentProject, tab.name);
+		this.protoEvent.send("saveProject", {"currentProject":currentProject, "tabName":tab.name});
 		this.isSaved = true;
 	}
 }

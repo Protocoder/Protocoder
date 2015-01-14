@@ -3,39 +3,92 @@
 *
 */
 
-var Dashboard = function() { 
-  this.widgets = new Array();
-  this.status = false;
-  this.keyId = null;
-  this.keybinded = false;
+var Dashboard = function(p) {
+	this.protoEvent = p.event; 
+	this.widgets = new Array();
+	this.status = false;
+	this.keyId = null;
+	this.keybinded = false;
+	this.widgetsFn = new Object();
 
-  //bind keys
-  that = this;
-  $("#overlay #container").keydown(function(event){
-    if (that.keybinded) {
-      ws.send('{type:key, id:'+ that.keyId +', val:'+event.keyCode+'}');
-    }
-  });
+	//bind keys
+	that = this;
+	$("#overlay #container").keydown(function(event){
+		if (that.keybinded) {
+			ws.send('{type:key, id:'+ that.keyId +', val:'+event.keyCode+'}');
+		}
+	});
+	
+	this.init();
+}
 
+Dashboard.prototype.initEvents = function() {
+	var that = this;
+	
+	this.protoEvent.listen("runProject", function(e) {
+		that.removeWidgets();
+	});	
+	
+	this.protoEvent.listen("dashboard", function(e) {
+		var result = e.detail;
+		//console.log(result);
+      if (result.action == "showDashboard") { 
+        if (result.values.val == true) { 
+			that.visible(true);
+        } else {
+          that.visible(false);
+        }
+      } else if (result.action == "add") { 
+        //console.log("adding widget");
+        that.widgetsFn[result.values.id] = that.addWidget(result.values);
+      } else if (result.action == "update") {
+        //console.log("updating widget");
+        //console.log(result.values.val);
+        that.widgetsFn[result.values.id](result.values.val, "");
+      } else if (result.action == "setLabelText") {
+        that.setLabelText(result.values.id, result.values.val);
+      } else if (result.action == "changeImage") { 
+        that.changeImage(result.values.id, result.values.url);
+      } else if (result.action == "updateCamera") {
+      	that.updateCamera(result.values.id, result.values.src);
+      }
+		
+	});
+	this.protoEvent.listen("dashboard_removeWidgets", function(e) {
+		that.removeWidgets();
+	});	
+		
+	this.protoEvent.listen("dashboard_visible", function(e) {
+		that.visible(e.detail);
+	});	
+	
+	this.protoEvent.listen("dashboard_toggle", function(e) {
+		that.toggle();
+	});	
+		
+}
 
-
+Dashboard.prototype.init = function() {
+	
+	this.initEvents();
 }
 
 
-Dashboard.prototype.hide = function () { 
-  $("#overlay > #container").removeClass("on");
-  this.status = false;
-  $("#overlay #toggle").removeClass("on");
-  $("body > #container").removeClass("off");
-  $("body > #toolbar").removeClass("off");
-} 
 
-Dashboard.prototype.show = function () { 
-  $("#overlay > #container").addClass("on");
-  $("body > #container").addClass("off");
-  $("body > #toolbar").addClass("off");
-  $("#overlay #toggle").addClass("on");
-  this.status = true;
+Dashboard.prototype.visible = function (visible) { 
+	if (!visible) {
+		$("#overlay > #container").removeClass("on");
+		this.status = false;
+		$("#overlay #toggle").removeClass("on");
+		$("body > #container").removeClass("off");
+		$("body > #toolbar").removeClass("off");
+	} else {
+		$("#overlay > #container").addClass("on");
+		$("body > #container").addClass("off");
+		$("body > #toolbar").addClass("off");
+		$("#overlay #toggle").addClass("on");
+		this.status = true;
+	}
 }
 
 Dashboard.prototype.toggle = function() {
@@ -49,7 +102,7 @@ Dashboard.prototype.toggle = function() {
 
 Dashboard.prototype.addWidget = function(widget) { 
   this.widgets.push(widget.id);
-  console.log(widget);
+  //console.log(widget);
 
   if (widget.type == "plot") { 
     return this.addPlot(widget.id, widget.name, widget.x, widget.y, widget.w, widget.h, widget.minLimit, widget.maxLimit);
@@ -82,9 +135,10 @@ Dashboard.prototype.addWidget = function(widget) {
 
 
 Dashboard.prototype.removeWidgets = function() { 
+  var that = this;
   $.each(this.widgets, function(k,v) {
     $("#overlay #container " + "#"+v).remove();
-    protocoder.dashboard.widgets.pop(v); 
+    that.widgets.pop(v); 
   });
 
   //remove everything
@@ -165,7 +219,7 @@ Dashboard.prototype.addInput = function(element, name, posx, posy, w, h) {
   });
   function sendAndClear() {
     var value = $("#container #text_input_"+element + " input").val();
-    console.log(value);
+    //console.log(value);
     var obj = {type:"text_input", id:element, val:value}
     ws.send(JSON.stringify(obj));
     $("#container #text_input_"+element + " input").val("");
