@@ -2,7 +2,8 @@
 * 	UI 
 */
 
-var Ui = function() { 
+var Ui = function(p) { 
+	this.protoEvent = p.event;
 	this.dropboxEnabled = true; 
 	this.gridRendered = false;
 	this.tabs = {}; //[name] -> id , code 
@@ -11,6 +12,56 @@ var Ui = function() {
 	this.init();
 }
 
+Ui.prototype.initEvents = function() {
+	var that = this;
+	
+	this.protoEvent.listen("ui_setMainTab", function(e) {
+		that.setMainTab(e.detail.pName, e.detail.code);
+	});	
+	
+	this.protoEvent.listen("ui_setTabFeedback", function(e) {
+		that.setTabFeedback(e.detail);
+	})
+	
+	this.protoEvent.listen("ui_clearFileElements", function(e) {
+		that.clearFileElements();
+	});	
+		
+	this.protoEvent.listen("ui_addFileElement", function(e) {
+		that.addFileElement(e.detail);
+	});	
+		
+	this.protoEvent.listen("consoleLog", function(e) {
+		that.consoleLog(e.detail.log);
+	}); 
+	
+	this.protoEvent.listen("ui_appConnected", function(e) {
+		that.appConnected(e.detail);
+	});
+	
+	this.protoEvent.listen("ui_appRunning", function(e) {
+		that.appRunning(e.detail);
+	});	
+
+	this.protoEvent.listen("saveProject", function(e) {
+		that.toolbarFeedback("save");
+	});	
+
+	this.protoEvent.listen("runProject", function(e) {
+		that.toolbarFeedback("run");
+	}); 
+	
+	this.protoEvent.listen("projects_received", function(e) {
+		that.setProjectList(e.detail.filter, e.detail.data);
+	});
+
+	//this.protoEvent.listen("ui_appRunning", function(e) {
+	//	ui.appRunning(e.detail);
+	//});	
+
+	
+		
+}
 
 Ui.prototype.init = function() { 
 	var that = this;
@@ -122,7 +173,7 @@ Ui.prototype.init = function() {
 
 		//console.log(eventData); 
 		eventData.onComplete = function() { 
-			protocoder.editor.editor.resize();
+			that.protoEvent.send("editor_resize")
 			//that.initUpload();
 
 			setTimeout(function() {
@@ -169,7 +220,7 @@ Ui.prototype.init = function() {
 	        },
 	        actions: {
 	            "save": function () { 
-	                protocoder.communication.createNewProject( $("input#project_name").val() );
+	                that.protoEvent.send("createNewProject",  $("input#project_name").val() );
 	                $().w2popup('close'); 
 	            },
 	            "cancel": function () { 
@@ -264,8 +315,8 @@ Ui.prototype.init = function() {
 
 	//save file
 	$("#toolbar #saveBtn").click(function() { 
-		if (currentProject.length != 'undefined') { 
-			protocoder.editor.saveCode();
+		if (!$.isEmptyObject(currentProject)) { 
+			that.protoEvent.send("editor_saveCode");
 		} else { 
 			openPopup();
 		}
@@ -273,11 +324,8 @@ Ui.prototype.init = function() {
 
 	//run app
 	$("#toolbar #runBtn").click(function() { 
-       if (currentProject.name != 'undefined') { 
-            currentProject.code = protocoder.editor.session.getValue();
-            protocoder.communication.pushCode(currentProject);
-            protocoder.dashboard.removeWidgets();
-            protocoder.communication.runApp(currentProject);
+        if (!$.isEmptyObject(currentProject)) { 
+            that.protoEvent.send("runApp", currentProject);    
         } else { 
             openPopup();
         } 
@@ -291,21 +339,24 @@ Ui.prototype.init = function() {
 	
 	$("#overlay #toggle").click(function() { 
 		if (overlayShow) {
-			protocoder.dashboard.hide();
+			that.protoEvent.send("dashboard_visible", false);
 		} else {
-			protocoder.dashboard.show();
+			that.protoEvent.send("dashboard_visible", true);
 		}
 
 		overlayShow ^= true;
 	});
 
 	$("#toolbar #projectsBtn").click(function() { 
-		protocoder.ui.showProjects();
+		that.showProjects();
 	});
 
 	//shortcut dashboard 
 	if (location.hash.indexOf("#dashboard") != -1) {
-		protocoder.dashboard.show();
+		console.log("lala");
+		setTimeout(function() {
+			that.protoEvent.send("dashboard_visible", true);
+		}, 1000);
 	}
 
 	//shorcut project 
@@ -320,21 +371,22 @@ Ui.prototype.init = function() {
 			console.log("enter");
 			var cmd = $("#console_wrapper input").val();
 			consoleInputHistory.push(cmd);
-			protocoder.communication.executeCode(cmd);
+			that.protoEvent.send("liveExecute", cmd);
 			$("#console_wrapper input").val("");
 			currentHistoryEntry = consoleInputHistory.length;
 			e.preventDefault();
 		}
 
+		//console-like history
+		//up
 	    if (code==38) {
-	    	console.log("up");
 	    	if (currentHistoryEntry > 0) {
 	    		currentHistoryEntry--;
 	    	} 
 	    	$("#console_wrapper input").val(consoleInputHistory[currentHistoryEntry]);
 	    } 
+	    //down
 	    if (code == 40) {
-	    	console.log("down");
 	    	if (currentHistoryEntry < consoleInputHistory.length) {
 	    		currentHistoryEntry++;
 	    	}
@@ -360,7 +412,9 @@ Ui.prototype.init = function() {
 	        event.preventDefault();
 	    }
 	});
-
+	
+	//init events
+	this.initEvents();
 }
 
 //upload 
@@ -451,6 +505,54 @@ Ui.prototype.appConnected = function(b) {
 	this.appConnectedStatus = b;
 } 
 
+
+//set projects in project list 
+Ui.prototype.setProjectList = function(filter, data) { 
+	var that = this;
+	var div = filter;
+	if (filter == "examples") { 
+   		listExamples = data.projects;
+	} else if (filter == "projects") {
+    	listProjects = data.projects;
+	} 
+	
+	$("#list_projects #"+div+" ul").empty(); 
+
+	var obj = new Object();
+	obj.items = new Array();
+	
+	$(data.projects).each(function(k, project) {
+	
+	$('<li id ="'+project.name+'"><span>' + project.name + '</span><div id ="actions"> <div id ="cont"> <i id = "rename" class="fa fa-pencil"></i> <i id = "delete" class="fa fa-trash-o"> </i>   </div> </div> </li>')
+	  .click(function () {
+	    currentProject = project;
+	    currentProject.type = filter;
+	    that.protoEvent.send("fetchCode", {"name":project.name, "type":project.type});
+	    that.showProjects(false);
+	
+	    $("#list_projects #" + project.name + " #rename").click(function(e) { 
+	      that.protoEvent.send("renameProject", project);
+	      e.stopPropagation();
+	    });
+	
+	    $("#list_projects #" + project.name + " #delete").click(function(e) { 
+	      that.protoEvent.send("removeApp", project);
+	      e.stopPropagation();
+	    });
+	  })
+	  .hover(function() {
+	    //console.log("hover " + filter + " " + project.name)
+	    that.protoEvent.send("deviceProjectHighlight", {"filter":filter, "projectName":project.name});
+	  }).appendTo('#list_projects #'+div+" ul");
+	
+	  obj.items.push(project.name);
+	});
+
+  currentObject = obj;
+
+};
+
+
 Ui.prototype.loadHTMLRightBar = function(filePath) { 
 	//w2ui['layout'].load('right', filePath);
 	//w2ui['layout'].load('right', filePath, 'slide-left');
@@ -483,7 +585,7 @@ Ui.prototype.addTabAndCode = function(name, code) {
 	q2.tabs.active = "tab" + this.tabId;
 	q2.tabs.refresh();
 	
-	protocoder.editor.setTypeAndCode(name, code);
+	protocoder.event.send("editor_setTypeAndCode", {"type":name, "code":code});
 
 	this.tabs[name] = {};
 	this.tabs[name].id = "tab"+this.tabId;
@@ -492,8 +594,8 @@ Ui.prototype.addTabAndCode = function(name, code) {
 }
 
 Ui.prototype.getTabNameById = function(id) {
-	for (i in protocoder.ui.tabs) { 
-	  if (protocoder.ui.tabs[i].id == id) { 
+	for (i in this.tabs) { 
+	  if (this.tabs[i].id == id) { 
 	    return i; 
 	  } 
 	}; 
@@ -514,8 +616,8 @@ Ui.prototype.removeAllTabs = function() {
 	var q = w2ui['code_editor'];
 	var q2 = q.get("main");
 
-	for (i in protocoder.ui.tabs) { 
-		var id = protocoder.ui.tabs[i].id;
+	for (i in this.tabs) { 
+		var id = this.tabs[i].id;
 
 		if (id != 'tab0') { 
 			q2.tabs.remove(id); 
@@ -537,7 +639,7 @@ Ui.prototype.setMainTab = function(name, code) {
 	this.tabId = 0;
 	this.tabs[name] = {};
 
-	protocoder.editor.setTypeAndCode("main.js", code);
+	protocoder.event.send("editor_setTypeAndCode", {"type":"main.js", "code":code});
 	this.tabs[name].id = "tab"+this.tabId;
 	this.tabId++;
 	this.tabs[name].code = code;
@@ -571,8 +673,7 @@ Ui.prototype.setActiveTab = function(id) {
 	}
 
 
-	protocoder.editor.setTypeAndCode(name, code);
-
+	this.protoEvent.send("editor_setTypeAndCode", {"name":name, "code":code});
 }; 
 
 Ui.prototype.getActiveTab = function() {
@@ -641,7 +742,7 @@ Ui.prototype.initUpload = function() {
 			
 			uploadFinished:function(i,file,response){
 				$.data(file).addClass('done');
-				protocoder.communication.listFilesInProject(currentProject.name, currentProject.type);
+				that.protoEvent.send("listFilesInProject", currentProject);
 				// response is the JSON object that post_file.php returns
 				//$('#dropbox').css("background-color", "rgba(0, 0, 0, 0.1);");
 				$("#grid_grid_records #dropbox").remove();

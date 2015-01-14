@@ -2,9 +2,36 @@
 *	Reference
 */ 
 
-var Reference = function() { 
+var Reference = function(p) {
+	this.protoEvent = p.event; 
 	this.selectedClass = "none";
+	
+	this.init();
 }
+
+Reference.prototype.initEvents = function() {
+	var that = this;
+	
+	that.protoEvent.listen("reference_parseHelp", function(e) {
+		that.parseHelp(e.detail.docApi);
+	});	
+	
+	that.protoEvent.listen("reference_", function(e) {
+
+
+	});	
+		
+	that.protoEvent.listen("reference_", function(e) {
+
+	});	
+		
+}
+
+Reference.prototype.init = function() {
+	
+	this.initEvents();
+}
+
 
 //parse the help comming directly from the android and create a structure for it
 Reference.prototype.parseHelp = function (docString) {
@@ -32,7 +59,7 @@ Reference.prototype.parseHelp = function (docString) {
 		var w = $(this).val(); 
 
 		if (w != "") {
-			var resultId = protocoder.reference.index.search(w);
+			var resultId = that.index.search(w);
 
 			$("#search_result").show();
 			$("#browser").hide();
@@ -43,7 +70,7 @@ Reference.prototype.parseHelp = function (docString) {
 			$("#class_" + that.selectedClass).hide();
 
 			$.each(resultId, function(k, v) { 
-				var result = protocoder.reference.searchById(v.ref); 
+				var result = that.searchById(v.ref); 
 				//console.log(result);
 				that.insertMethodInCard(result, "#search_result .methods");
 			});
@@ -158,7 +185,7 @@ Reference.prototype.insertMethodInCard = function(method, where) {
     	// add curly braces when insert a callback
         var p = parameters.replace(")", "){ " + '\n' + '\n' + "}");
 
-    	protocoder.editor.editor.insert(returnType + "" + method.parent + "." + method.name + "(" + p + ");"+'\n\n')
+    	that.protoEvent.send("editor_insert", returnType + "" + method.parent + "." + method.name + "(" + p + ");"+'\n\n');
     });
    // console.log(method.name, method.description, method.example);
 }
