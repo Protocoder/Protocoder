@@ -7,10 +7,12 @@ import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.MLog;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 //current source :http://androiddev.orkitra.com/?p=28
@@ -29,10 +31,14 @@ public class PFtpClient extends PInterface {
         WhatIsRunning.getInstance().add(this);
     }
 
+    public interface  FtpConnectedCb {
+        public void event(boolean connected);
+    }
+
     @ProtocoderScript
     @APIMethod(description = "Connect to a ftp server", example = "")
-    @APIParam(params = { "host", "port", "username", "password" })
-    public void connect(final String host, final int port, final String username, final String password) {
+    @APIParam(params = { "host", "port", "username", "password", "function(connected)" })
+    public void connect(final String host, final int port, final String username, final String password, final FtpConnectedCb callback) {
         mFTPClient = new FTPClient();
 
         Thread t = new Thread(new Runnable() {
@@ -48,6 +54,8 @@ public class PFtpClient extends PInterface {
                         mFTPClient.setFileType(FTP.BINARY_FILE_TYPE);
                         mFTPClient.enterLocalPassiveMode();
                         isConnected = logged;
+
+                        callback.event(logged);
                     }
                     MLog.d(TAG, "" + isConnected);
 
@@ -106,15 +114,24 @@ public class PFtpClient extends PInterface {
         t.start();
     }
 
-    //not yet
+
+    public interface GetFileListCb {
+        public void event(ArrayList<ListDir> msg);
+    }
+
+    class ListDir {
+        public String type;
+        public String name;
+    }
+
     @ProtocoderScript
     @APIMethod(description = "Get list of files in the given dir", example = "")
     @APIParam(params = { "dirname"})
-    public void getFileList(final String dir_path) {
+    public void getFileList(final String dir_path, final GetFileListCb callback) {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
-                ArrayList<String> list = new ArrayList<String>();
+                ArrayList<ListDir> list = new ArrayList<ListDir>();
                 try {
                     FTPFile[] ftpFiles = mFTPClient.listFiles(dir_path);
                     int length = ftpFiles.length;
@@ -123,14 +140,17 @@ public class PFtpClient extends PInterface {
                         String name = ftpFiles[i].getName();
                         boolean isFile = ftpFiles[i].isFile();
 
+                        ListDir listDir = new ListDir();
                         if (isFile) {
-                            MLog.d(TAG, "File : " + name);
-                            list.add("File: " + name);
+                            listDir.type = "file";
                         } else {
-                            MLog.d(TAG, "Directory : " + name);
-                            list.add("Dir : " + name);
+                            listDir.type = "dir";
                         }
+                        listDir.name = name;
+                        list.add(listDir);
                     }
+                    callback.event(list);
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -139,19 +159,26 @@ public class PFtpClient extends PInterface {
         t.start();
     }
 
-    //not yet
+    public interface DownloadFiletCb {
+        public void event(boolean msg);
+    }
+
     @ProtocoderScript
     @APIMethod(description = "Download the file", example = "")
     @APIParam(params = { "sourceFilePath", "destinyFilePath"})
-    public void download(final String srcFilePath, final String desFilePath) {
+    public void download(final String srcFilePath, final String destiny, final DownloadFiletCb callback) {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
                 boolean status = false;
+                String desFilePath = ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/" + destiny;
+
                 try {
                     FileOutputStream desFileStream = new FileOutputStream(desFilePath);
 
                     status = mFTPClient.retrieveFile(srcFilePath, desFileStream);
+                    callback.event(status);
+
                     desFileStream.close();
                 } catch (Exception e) {
                     MLog.d(TAG, "download failed error:" + e);
@@ -161,12 +188,17 @@ public class PFtpClient extends PInterface {
         t.start();
     }
 
-    //not yet
+    public interface UploadCb {
+        public void event(boolean msg);
+    }
+
     @ProtocoderScript
     @APIMethod(description = "Upload a file", example = "")
     @APIParam(params = { "sourceFilePath", "fileName", "destinyPath"})
-    public void upload(final String srcFilePath, final String desFileName, String desDirectory) {
+    public void upload(final String source, final String desFileName, String desDirectory, final UploadCb callback) {
         boolean status = false;
+
+        final String srcFilePath = ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/" + source;
 
         Thread t = new Thread(new Runnable() {
             @Override
@@ -184,6 +216,7 @@ public class PFtpClient extends PInterface {
                     FileInputStream srcFileStream = new FileInputStream(srcFilePath);
                     boolean status = mFTPClient.storeFile(desFileName, srcFileStream);
                     srcFileStream.close();
+                    callback.event(status);
                 } catch (Exception e) {
                     MLog.d(TAG, "upload failed" + e);
                 }
@@ -193,36 +226,44 @@ public class PFtpClient extends PInterface {
 
     }
 
+    public interface DeleteFileCb {
+        public void event(boolean msg);
+    }
 
-    //not yet
     @ProtocoderScript
     @APIMethod(description = "Delete a file", example = "")
-    @APIParam(params = { "file"})
-    public void deleteFile(final String file) {
+    @APIParam(params = { "filename", "function(boolean)" })
+    public void deleteFile(final String filename, final DeleteFileCb callback) {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    boolean status = mFTPClient.deleteFile(file);
-                    MLog.d(TAG, file);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    MLog.d(TAG, e + "");
-                    MLog.d(TAG, file);
+                if (isConnected) {
+                    try {
+                        boolean deleted = mFTPClient.deleteFile(filename);
+                        callback.event(deleted);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        callback.event(false);
+                    }
                 }
             }
         });
         t.start();
     }
 
-    //not yet
+    public interface DisconnectCb {
+        public void event(Boolean msg);
+    }
+
+
     @ProtocoderScript
     @APIMethod(description = "Disconnect from server", example = "")
     @APIParam(params = { ""})
-    public void disconnect() {
+    public void disconnect(final DisconnectCb callback) {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
+                MLog.d(TAG, "" + isConnected);
                 if (isConnected) {
                     try {
                         mFTPClient.logout();
@@ -231,12 +272,16 @@ public class PFtpClient extends PInterface {
 
                     }
                     isConnected = false;
+
+                    if (callback != null)
+                        callback.event(isConnected);
                 }
             }
         });
+        t.start();
     }
 
     public void stop() {
-        disconnect();
+        disconnect(null);
     }
 }

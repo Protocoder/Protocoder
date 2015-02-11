@@ -30,7 +30,6 @@
 package org.protocoderrunner.apprunner.api;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiConfiguration;
@@ -73,6 +72,7 @@ import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.apprunner.api.other.PBluetooth;
 import org.protocoderrunner.apprunner.api.other.PFtpClient;
 import org.protocoderrunner.apprunner.api.other.PFtpServer;
 import org.protocoderrunner.apprunner.api.other.PSimpleHttpServer;
@@ -81,7 +81,6 @@ import org.protocoderrunner.network.NetworkUtils;
 import org.protocoderrunner.network.NetworkUtils.DownloadTask.DownloadListener;
 import org.protocoderrunner.network.OSC;
 import org.protocoderrunner.network.ServiceDiscovery;
-import org.protocoderrunner.network.bt.SimpleBT;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.utils.ExecuteCmd;
@@ -119,7 +118,6 @@ import de.sciss.net.OSCMessage;
 public class PNetwork extends PInterface {
 
 	private final String TAG = "PNetwork";
-    private boolean mBtStarted = false;
 
     public PNetwork(Context a) {
         super(a);
@@ -757,230 +755,17 @@ public class PNetwork extends PInterface {
 	}
 
 
+    @ProtocoderScript
+    @APIMethod(description = "Start the bluetooth interface", example = "")
+    @APIParam(params = { })
+    public PBluetooth createBluetooth() {
+        PBluetooth pBluetooth = new PBluetooth(getActivity());
+        pBluetooth.initForParentFragment(getFragment());
 
-	//--------- Bluetooth ---------//
-    //methods
-    //scanBluetoothNetworks
-    //connectBluetoothSerialByUi
-    //connectBluetoothSerialByMac
-    //connectBluetoothSerialByName
-    //sendBluetoothSerial
-    //disconnectBluetooth
-    //enableBluetooth
-    //isBluetoothConnected
+        pBluetooth.start();
 
-	private scanBTNetworksCB onBluetoothfn;
-	private SimpleBT simpleBT;
-
-	public interface onBluetoothListener {
-		public void onDeviceFound(String name, String macAddress, float strength);
-		public void onActivityResult(int requestCode, int resultCode, Intent data);
-	}
-
-	interface scanBTNetworksCB {
-		void event(String name, String macAddress, float strength);
-	}
-    //TODO reenable this
-//
-//	@ProtocoderScript
-//	@APIMethod(description = "Scan bluetooth networks. Gives back the name, mac and signal strength", example = "")
-//	@APIParam(params = { "function(name, macAddress, strength)" })
-//	public void scanBluetoothNetworks(final scanBTNetworksCB callbackfn) {
-//        startBluetooth();
-//		onBluetoothfn = callbackfn;
-//		simpleBT.scanBluetooth(new onBluetoothListener() {
-//
-//			@Override
-//			public void onDeviceFound(String name, String macAddress, float strength) {
-//				onBluetoothfn.event(name, macAddress, strength);
-//			}
-//
-//			@Override
-//			public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//
-//			}
-//		});
-//
-//	}
-	//@ProtocoderScript
-	//@APIMethod(description = "Start the bluetooth adapter", example = "")
-	//@APIParam(params = { "" })
-//	public SimpleBT startBluetooth() {
-//        if (mBtStarted) {
-//            return simpleBT;
-//        }
-//		simpleBT = new SimpleBT(contextUi.get());
-//		simpleBT.start();
-//		contextUi.addBluetoothListener(new onBluetoothListener() {
-//
-//			@Override
-//			public void onDeviceFound(String name, String macAddress, float strength) {
-//			}
-//
-//			@Override
-//			public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//				simpleBT.onActivityResult(requestCode, resultCode, data);
-//
-//				switch (requestCode) {
-//				case SimpleBT.REQUEST_ENABLE_BT:
-//					// When the request to enable Bluetooth returns
-//					if (resultCode == Activity.RESULT_OK) {
-//						//MLog.d(TAG, "enabling BT");
-//						// Bluetooth is now enabled, so set up mContext Bluetooth session
-//                        mBtStarted = true;
-//						simpleBT.startBtService();
-//
-//                    // User did not enable Bluetooth or an error occurred
-//                    } else {
-//					    //	MLog.d(TAG, "BT not enabled");
-//						Toast.makeText(mContext.getApplicationContext(), "BT not enabled :(", Toast.LENGTH_SHORT)
-//								.show();
-//
-//					}
-//				}
-//			}
-//		});
-//
-//		WhatIsRunning.getInstance().add(simpleBT);
-//		return simpleBT;
-//	}
-//
-//    // --------- connectBluetooth ---------//
-//    interface connectBluetoothCB {
-//        void event(String what, String data);
-//    }
-//
-//    //TODO removed new impl needed
-//	@ProtocoderScript
-//	@APIMethod(description = "Connects to mContext bluetooth device using mContext popup", example = "")
-//	@APIParam(params = { "function(name, macAddress, strength)" })
-//	public void connectBluetoothSerialByUi(final connectBluetoothCB callbackfn) {
-//        startBluetooth();
-//        NativeArray nativeArray = getBluetoothBondedDevices();
-//        String[] arrayStrings = new String[(int) nativeArray.size()];
-//        for (int i = 0; i < nativeArray.size(); i++) {
-//            arrayStrings[i] = (String) nativeArray.get(i, null);
-//        }
-//
-//        contextUi.get().pUi.popupChoice("Connect to device", arrayStrings, new PUI.choiceDialogCB() {
-//            @Override
-//            public void event(String string) {
-//                connectBluetoothSerialByMac(string.split(" ")[1], callbackfn);
-//            }
-//        });
-//		//simpleBT.startDeviceListActivity();
-//	}
-//
-//	@ProtocoderScript
-//	@APIMethod(description = "Connect to mContext bluetooth device using the mac address", example = "")
-//	@APIParam(params = { "mac", "function(data)" })
-//	public void connectBluetoothSerialByMac(String mac, final connectBluetoothCB callbackfn) {
-//        startBluetooth();
-//        simpleBT.connectByMac(mac);
-//        addBTConnectionListener(callbackfn);
-//
-//	}
-//
-//	@ProtocoderScript
-//	@APIMethod(description = "Connect to mContext bluetooth device using mContext name", example = "")
-//	@APIParam(params = { "name, function(data)" })
-//	public void connectBluetoothSerialByName(String name, final connectBluetoothCB callbackfn) {
-//        startBluetooth();
-//		simpleBT.connectByName(name);
-//        addBTConnectionListener(callbackfn);
-//    }
-//
-//    private void addBTConnectionListener(final connectBluetoothCB callbackfn) {
-//        simpleBT.addListener(new SimpleBT.SimpleBTListener() {
-//
-//            @Override
-//            public void onRawDataReceived(byte[] buffer, int size) {
-//                //MLog.network(mContext, "Bluetooth", "1. got " + buffer.toString());
-//            }
-//
-//            @Override
-//            public void onMessageReceived(final String data) {
-//                //MLog.network(mContext, "Bluetooth", "2. got " + data);
-//
-//                if (data != "") {
-//                    mHandler.post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            //MLog.d(TAG, "Got data: " + data);
-//                            callbackfn.event("data", data);
-//                        }
-//                    });
-//                }
-//            }
-//
-//            @Override
-//            public void onConnected() {
-//                callbackfn.event("connected", null);
-//            }
-//        });
-//    }
-//
-//
-//    @ProtocoderScript
-//    @APIMethod(description = "Send mContext bluetooth serial message", example = "")
-//    @APIParam(params = { "string" })
-//    public NativeArray getBluetoothBondedDevices() {
-//        startBluetooth();
-//
-//        Set<BluetoothDevice> listDevices = simpleBT.listBondedDevices();
-//        MLog.d(TAG, "listDevices " + listDevices);
-//        int listSize = listDevices.size();
-//        ProtocoderNativeArray array = new ProtocoderNativeArray(listSize);
-//        MLog.d(TAG, "array " + array);
-//
-//
-//        int counter = 0;
-//        for (BluetoothDevice b : listDevices) {
-//            MLog.d(TAG, "b " + b);
-//
-//            String s = b.getName() + " " + b.getAddress();
-//            array.addPE(counter++, s);
-//        }
-//
-//        return array;
-//    }
-//
-//	@ProtocoderScript
-//	@APIMethod(description = "Send mContext bluetooth serial message", example = "")
-//	@APIParam(params = { "string" })
-//	public void sendBluetoothSerial(String string) {
-//		if (simpleBT.isConnected()) {
-//            simpleBT.send(string);
-//        }
-//	}
-//
-//	@ProtocoderScript
-//	@APIMethod(description = "Disconnect the bluetooth", example = "")
-//	@APIParam(params = { "" })
-//	public void disconnectBluetooth() {
-//        if (simpleBT.isConnected()) {
-//            simpleBT.disconnect();
-//        }
-//	}
-//
-//	@ProtocoderScript
-//	@APIMethod(description = "Enable/Disable the bluetooth adapter", example = "")
-//	@APIParam(params = { "boolean" })
-//	public void enableBluetooth(boolean b) {
-//        if (b) {
-//            simpleBT.start();
-//        } else {
-//            simpleBT.disable();
-//        }
-//	}
-//
-//    @ProtocoderScript
-//    @APIMethod(description = "Enable/Disable the bluetooth adapter", example = "")
-//    @APIParam(params = { "boolean" })
-//    public boolean isBluetoothConnected() {
-//        return simpleBT.isConnected();
-//    }
-//
+        return pBluetooth;
+    }
 
     @ProtocoderScript
 	@APIMethod(description = "Enable/Disable the Wifi adapter", example = "")
@@ -1113,17 +898,17 @@ public class PNetwork extends PInterface {
 
     @ProtocoderScript
     @APIMethod(description = "Start a ftp server in the given port", example = "")
-    @APIParam(params = { "ip", "function(result)" })
-    public PFtpServer createFtpServer(final int port) {
-        PFtpServer ftpServer = new PFtpServer(getContext(), port);
+    @APIParam(params = { "port", "function(activity)" })
+    public PFtpServer createFtpServer(final int port, PFtpServer.FtpServerCb callback) {
+        PFtpServer ftpServer = new PFtpServer(port, callback);
 
         return ftpServer;
     }
 
     @ProtocoderScript
-    @APIMethod(description = "Start a ftp server in the given port", example = "")
-    @APIParam(params = { "ip", "function(result)" })
-    public PFtpClient createFtpConnection(String ftpUrl) {
+    @APIMethod(description = "Connect to ftp", example = "")
+    @APIParam(params = { })
+    public PFtpClient createFtpConnection() {
         PFtpClient ftpClient = new PFtpClient(getContext());
 
         return ftpClient;

@@ -30,106 +30,16 @@
 package org.protocoder.network;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.protocoder.appApi.EditorManager;
 import org.protocoder.appApi.Protocoder;
 import org.protocoder.appApi.Settings;
-import org.protocoderrunner.apidoc.APIManager;
-import org.protocoderrunner.apprunner.api.PApp;
-import org.protocoderrunner.apprunner.api.PBoards;
-import org.protocoderrunner.apprunner.api.PConsole;
-import org.protocoderrunner.apprunner.api.PDashboard;
-import org.protocoderrunner.apprunner.api.PDevice;
-import org.protocoderrunner.apprunner.api.PFileIO;
-import org.protocoderrunner.apprunner.api.PMedia;
-import org.protocoderrunner.apprunner.api.PNetwork;
-import org.protocoderrunner.apprunner.api.PProtocoder;
-import org.protocoderrunner.apprunner.api.PSensors;
-import org.protocoderrunner.apprunner.api.PUI;
-import org.protocoderrunner.apprunner.api.PUtil;
-import org.protocoderrunner.apprunner.api.boards.PArduino;
-import org.protocoderrunner.apprunner.api.boards.PIOIO;
-import org.protocoderrunner.apprunner.api.boards.PSerial;
-import org.protocoderrunner.apprunner.api.dashboard.PDashboardBackground;
-import org.protocoderrunner.apprunner.api.dashboard.PDashboardButton;
-import org.protocoderrunner.apprunner.api.dashboard.PDashboardCustomWidget;
-import org.protocoderrunner.apprunner.api.dashboard.PDashboardHTML;
-import org.protocoderrunner.apprunner.api.dashboard.PDashboardImage;
-import org.protocoderrunner.apprunner.api.dashboard.PDashboardInput;
-import org.protocoderrunner.apprunner.api.dashboard.PDashboardPlot;
-import org.protocoderrunner.apprunner.api.dashboard.PDashboardSlider;
-import org.protocoderrunner.apprunner.api.dashboard.PDashboardText;
-import org.protocoderrunner.apprunner.api.dashboard.PDashboardVideoCamera;
-import org.protocoderrunner.apprunner.api.other.PCamera;
-import org.protocoderrunner.apprunner.api.other.PDeviceEditor;
-import org.protocoderrunner.apprunner.api.other.PEvents;
 import org.protocoderrunner.apprunner.api.other.PFtpServer;
-import org.protocoderrunner.apprunner.api.other.PLiveCodingFeedback;
-import org.protocoderrunner.apprunner.api.other.PMidi;
-import org.protocoderrunner.apprunner.api.other.PProcessing;
-import org.protocoderrunner.apprunner.api.other.PPureData;
-import org.protocoderrunner.apprunner.api.other.PSimpleHttpServer;
-import org.protocoderrunner.apprunner.api.other.PSocketIOClient;
-import org.protocoderrunner.apprunner.api.other.PSqLite;
-import org.protocoderrunner.apprunner.api.other.PVideo;
-import org.protocoderrunner.apprunner.api.other.PWebEditor;
-import org.protocoderrunner.apprunner.api.widgets.PAbsoluteLayout;
-import org.protocoderrunner.apprunner.api.widgets.PButton;
-import org.protocoderrunner.apprunner.api.widgets.PCanvas;
-import org.protocoderrunner.apprunner.api.widgets.PCard;
-import org.protocoderrunner.apprunner.api.widgets.PCheckBox;
-import org.protocoderrunner.apprunner.api.widgets.PEditText;
-import org.protocoderrunner.apprunner.api.widgets.PGrid;
-import org.protocoderrunner.apprunner.api.widgets.PGridRow;
-import org.protocoderrunner.apprunner.api.widgets.PImageButton;
-import org.protocoderrunner.apprunner.api.widgets.PImageView;
-import org.protocoderrunner.apprunner.api.widgets.PList;
-import org.protocoderrunner.apprunner.api.widgets.PListItem;
-import org.protocoderrunner.apprunner.api.widgets.PMap;
-import org.protocoderrunner.apprunner.api.widgets.PNumberPicker;
-import org.protocoderrunner.apprunner.api.widgets.PPadView;
-import org.protocoderrunner.apprunner.api.widgets.PPlotView;
-import org.protocoderrunner.apprunner.api.widgets.PPopupCustomFragment;
-import org.protocoderrunner.apprunner.api.widgets.PProgressBar;
-import org.protocoderrunner.apprunner.api.widgets.PRadioButton;
-import org.protocoderrunner.apprunner.api.widgets.PRow;
-import org.protocoderrunner.apprunner.api.widgets.PScrollView;
-import org.protocoderrunner.apprunner.api.widgets.PSlider;
-import org.protocoderrunner.apprunner.api.widgets.PSpinner;
-import org.protocoderrunner.apprunner.api.widgets.PSwitch;
-import org.protocoderrunner.apprunner.api.widgets.PTextView;
-import org.protocoderrunner.apprunner.api.widgets.PToggleButton;
-import org.protocoderrunner.apprunner.api.widgets.PVerticalSeekbar;
-import org.protocoderrunner.apprunner.api.widgets.PWebView;
-import org.protocoderrunner.apprunner.api.widgets.PWindow;
-import org.protocoderrunner.events.Events;
-import org.protocoderrunner.events.Events.ProjectEvent;
-import org.protocoderrunner.network.FtpServer;
-import org.protocoderrunner.network.NanoHTTPD;
-import org.protocoderrunner.network.NetworkUtils;
-import org.protocoderrunner.project.Project;
 import org.protocoderrunner.project.ProjectManager;
-import org.protocoderrunner.utils.FileIO;
 import org.protocoderrunner.utils.MLog;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
 
-import de.greenrobot.event.EventBus;
-
-public class ProtocoderFtpServer extends FtpServer {
+public class ProtocoderFtpServer extends PFtpServer {
 	public static final String TAG = "ProtocoderFtpServer";
 	private final WeakReference<Context> ctx;
 
@@ -147,7 +57,7 @@ public class ProtocoderFtpServer extends FtpServer {
     }
 
     public ProtocoderFtpServer(Context c, int port) {
-        super(port);
+        super(port, null);
         MLog.d(TAG, "" + port);
 
         ctx = new WeakReference<Context>(c);
