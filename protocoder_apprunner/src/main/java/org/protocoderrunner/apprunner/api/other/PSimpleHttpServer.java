@@ -31,6 +31,7 @@ package org.protocoderrunner.apprunner.api.other;
 
 import android.content.Context;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.protocoderrunner.apidoc.annotation.APIMethod;
 import org.protocoderrunner.apidoc.annotation.APIParam;
@@ -89,7 +90,7 @@ public class PSimpleHttpServer extends NanoHTTPD {
 
 
     public interface HttpCB {
-        Response event(String uri, String method);
+        Response event(String uri, String method, Properties header, Properties parms, Properties files);
     }
 
     public PSimpleHttpServer(Context aCtx, int port, HttpCB callbackfn) throws IOException {
@@ -108,68 +109,93 @@ public class PSimpleHttpServer extends NanoHTTPD {
 
     @ProtocoderScript
     @APIMethod(description = "Responds to the request with a given text", example = "")
-    @APIParam(params = { "boolean" })    public Response respond(String data) {
+    @APIParam(params = { "boolean" })
+    public Response respond(String data) {
         return new Response("200", MIME_TYPES.get("txt"), data);
     }
 
     @ProtocoderScript
-    @APIMethod(description = "Creates a http server in the current project directory", example = "")
-    @APIParam(params = { "boolean" })
-	public Response serve(String uri, String method, Properties header, Properties parms, Properties files) {
+    @APIMethod(description = "Serves a file", example = "")
+    @APIParam(params = { "uri", "header" })
+    public Response serveFile(String uri, Properties header) {
+        super.serveFile(uri.substring(uri.lastIndexOf('/') + 1, uri.length()), header,
+                new File(p.getStoragePath()), false);
 
-		Response res = null;
+        // MLog.network(ctx.get(), TAG, "lalalalal " + res.toString());
 
+
+        Response res = null;
         try {
-            res = callbackfn.event(uri, method);
+            //MLog.d(TAG, "received String" + uri + " " + method + " " + header + " " + " " + parms + " " + files);
+
+            String projectFolder = p.getStoragePath();
+
+            File file = new File(p.getStoragePath());
+
+            if (file.exists()) {
+                res = super.serveFile(uri.substring(uri.lastIndexOf('/') + 1, uri.length()), header, file, false);
+            } else {
+                res = new Response(HTTP_NOTFOUND, MIME_HTML, "resource not found");
+            }
         } catch (Exception e) {
-
+            MLog.d(TAG, "response error " + e.toString());
         }
-       // MLog.network(ctx.get(), TAG, "lalalalal " + res.toString());
 
-        if (res == null) {
+
+        return res;
+    }
+
+    public Response acceptUpload(Properties parms, Properties files) {
+
+        Response res = null;
+        // file upload
+        if (!files.isEmpty()) {
+            File src = new File(files.getProperty("pic").toString());
+            File dst = new File(p.getStoragePath() + "/" + parms.getProperty("pic").toString());
 
             try {
-
-                // file upload
-                if (!files.isEmpty()) {
-
-                    File src = new File(files.getProperty("pic").toString());
-                    File dst = new File(p.getStoragePath() + "/" + parms.getProperty("pic").toString());
-
-                    FileIO.copyFile(src, dst);
-
-                    JSONObject data = new JSONObject();
-                    data.put("result", "OK");
-
-                    return new Response("200", MIME_TYPES.get("txt"), data.toString());
-
-                    // normal file serving
-                } else {
-                    MLog.d(TAG, "received String" + uri + " " + method + " " + header + " " + " " + parms + " " + files);
-
-                    String projectFolder = p.getStoragePath();
-
-
-                    res = serveFile(uri.substring(uri.lastIndexOf('/') + 1, uri.length()), header,
-                            new File(p.getStoragePath()), false);
-
-                    // new Response(HTTP_NOTFOUND, MIME_HTML, "resource not found");
-                }
-
-                //  res =  new Response(HTTP_OK, MIME_PLAINTEXT,
-                //          "INTERNAL ERRROR: serveFile(): given homeDir is not mContext directory.");
-
-            } catch (Exception e) {
-                MLog.d(TAG, "response error " + e.toString());
+                FileIO.copyFile(src, dst);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+
+            JSONObject data = new JSONObject();
+            try {
+                data.put("result", "OK");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            res = new Response("200", MIME_TYPES.get("txt"), data.toString());
+        } else {
 
         }
 
         return res;
     }
 
-	public void stop() {
-		super.stop();
-	}
+    @ProtocoderScript
+    @APIMethod(description = "Stops the http server", example = "")
+    @APIParam(params = { "" })
+    public void stop() {
+        super.stop();
+    }
+
+
+	public Response serve(String uri, String method, Properties header, Properties parms, Properties files) {
+		Response res = null;
+        MLog.d(TAG, uri + " " + method + " " + header + " " + parms + " " + files);
+
+        try {
+            res = callbackfn.event(uri, method, header, parms, files);
+        } catch (Exception e) {
+            MLog.d(TAG, e.toString());
+        }
+
+        return res;
+    }
+
+
+
 
 }

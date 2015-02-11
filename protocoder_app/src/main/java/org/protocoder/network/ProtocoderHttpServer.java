@@ -211,7 +211,7 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 				if (uri.replace(projectURLPrefix, "").contains(projectFolder)) {
 					// MLog.d("qq", "inside project");
 					return serveFile(uri.substring(uri.lastIndexOf('/') + 1, uri.length()), header,
-							new File(p.getStoragePath()), false);
+                            new File(p.getStoragePath()), false);
 				} else {
 					// MLog.d("qq", "outside project");
 					new Response(HTTP_NOTFOUND, MIME_HTML, "resource not found");
