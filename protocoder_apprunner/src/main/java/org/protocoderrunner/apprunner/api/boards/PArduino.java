@@ -29,7 +29,11 @@
 
 package org.protocoderrunner.apprunner.api.boards;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.hardware.usb.UsbDevice;
+import android.hardware.usb.UsbManager;
 
 import com.physicaloid.lib.Boards;
 import com.physicaloid.lib.Physicaloid;
@@ -38,16 +42,17 @@ import com.physicaloid.lib.programmer.avr.UploadErrors;
 import com.physicaloid.lib.usb.driver.uart.ReadLisener;
 import com.physicaloid.lib.usb.driver.uart.UartConfig;
 
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.utils.MLog;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Iterator;
 
 public class PArduino extends PInterface {
 
@@ -55,6 +60,8 @@ public class PArduino extends PInterface {
     private Physicaloid mPhysicaloid;
     private boolean started = false;
     private String msg = "";
+    private String mEndLine = "";
+
 
     public static final Boards ARDUINO_UNO = Boards.ARDUINO_UNO;
     public static final Boards ARDUINO_DUEMILANOVE_328 = Boards.ARDUINO_DUEMILANOVE_328;
@@ -88,6 +95,23 @@ public class PArduino extends PInterface {
     public static final Boards NONE = Boards.NONE;
 
 
+    BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+
+            if (UsbManager.ACTION_USB_DEVICE_ATTACHED.equals(action)) {
+                MLog.d(TAG, "Device attached");
+
+            } else if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
+                MLog.d(TAG, "Device detached");
+
+          //  } else if (ACTION_USB_PERMISSION.equals(action)) {
+          //      MLog.d(TAG, "Request permission");
+          //
+           }
+        }
+    };
+
     public PArduino(Context a) {
 		super(a);
     }
@@ -99,15 +123,41 @@ public class PArduino extends PInterface {
     }
 
         // Initializes arduino board
-	public void start(int bauds, onReadCB callbackfn) {
+	public void start(int bauds, String endline, onReadCB callbackfn) {
         WhatIsRunning.getInstance().add(this);
+
+        mEndLine = endline;
+
         if (!started) {
             started = true;
             MLog.d("PArduino", "start ");
 
+            UsbManager manager = (UsbManager) getContext().getSystemService(Context.USB_SERVICE);
+            HashMap<String, UsbDevice> deviceList = manager.getDeviceList();
+            Iterator<UsbDevice> deviceIterator = deviceList.values().iterator();
+            while(deviceIterator.hasNext()){
+                UsbDevice device = deviceIterator.next();
+                MLog.network(getContext(), TAG, "USB " + device.getDeviceName());
+                //your code
+            }
+
             mPhysicaloid = new Physicaloid(getContext());
             open();
             mPhysicaloid.setBaudrate(bauds);
+
+//            int mFlowControl = UartConfig.FLOW_CONTROL_OFF;
+//            int mDataBits = UartConfig.DATA_BITS8;
+//            int mStopBits = UartConfig.STOP_BITS1;
+//            int mParity = UartConfig.PARITY_NONE;
+//
+//            boolean dtrOn=false;
+//            boolean rtsOn=false;
+//            if(mFlowControl == UartConfig.FLOW_CONTROL_ON) {
+//                dtrOn = true;
+//                rtsOn = true;
+//            }
+        //    mPhysicaloid.setConfig(new UartConfig(bauds, mDataBits, mStopBits, mParity, dtrOn, rtsOn));
+
 
             onRead(callbackfn);
         }
@@ -139,8 +189,8 @@ public class PArduino extends PInterface {
         }
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "sends commands to arduino board", example = "arduino.write(\"LEDON\");")
+
+    @ProtoMethod(description = "sends commands to arduino board", example = "arduino.write(\"LEDON\");")
     public void write(String cmd) {
         if (mPhysicaloid.isOpened()) {
             byte[] buf = cmd.getBytes();
@@ -156,8 +206,7 @@ public class PArduino extends PInterface {
         void event(String responseString);
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "reads from the arduino board", example = "arduino.read()")
+    @ProtoMethod(description = "reads from the arduino board", example = "arduino.read()")
     public String read() {
         String str = "";
         if (mPhysicaloid.isOpened()) {
@@ -179,9 +228,8 @@ public class PArduino extends PInterface {
 
 
 
-    @ProtocoderScript
-    @APIMethod(description = "adds a read callback that is called when one or more bytes are read", example = "")
-    @APIParam(params = { "function(data)" })
+    @ProtoMethod(description = "adds a read callback that is called when one or more bytes are read", example = "")
+    @ProtoMethodParam(params = { "function(data)" })
     public void onRead(final onReadCB callbackfn) {
         if (mPhysicaloid.isOpened()) {
             mPhysicaloid.addReadListener(new ReadLisener() {
@@ -194,31 +242,44 @@ public class PArduino extends PInterface {
                     mPhysicaloid.read(buf, size);
                     try {
                         readStr = new String(buf, "UTF-8");
+                       // MLog.d(TAG, " " + readStr);
+
                     } catch (UnsupportedEncodingException e) {
-                        MLog.d(TAG, e.toString());
+                       // MLog.d(TAG, e.toString());
                         return;
                     }
 
-                    msg = msg + readStr;
+                  
                     //MLog.network(mContext, TAG, "msg " + msg);
                     //MLog.network(mContext, TAG, "readStr " + readStr);
 
-                    int newLineIndex = msg.indexOf('\n');
-                    //MLog.network(mContext, TAG, "index " + newLineIndex);
-                    String msgReturn = "";
+                    if (!mEndLine.isEmpty()) {
+                        msg = msg + readStr;
 
-                    if (newLineIndex != -1) {
-                        msgReturn = msg.substring(0, newLineIndex);
-                        msg = msg.substring(newLineIndex + 1, msg.length());
-                        //MLog.network(mContext, TAG, "msgReturn " + msgReturn);
+                        int newLineIndex = msg.indexOf('\n');
+                        //MLog.network(mContext, TAG, "index " + newLineIndex);
+                        String msgReturn = "";
 
-                    }
-                    if (msgReturn.trim().equals("") == false) {
-                        final String finalMsgReturn = msgReturn;
+                        if (newLineIndex != -1) {
+                            msgReturn = msg.substring(0, newLineIndex);
+                            msg = msg.substring(newLineIndex + 1, msg.length());
+                            //MLog.network(mContext, TAG, "msgReturn " + msgReturn);
+
+                        }
+                        if (msgReturn.trim().equals("") == false) {
+                            final String finalMsgReturn = msgReturn;
+                            mHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    callbackfn.event(finalMsgReturn);
+                                }
+                            });
+                        }
+                    } else {
                         mHandler.post(new Runnable() {
                             @Override
                             public void run() {
-                                callbackfn.event(finalMsgReturn);
+                                callbackfn.event(readStr);
                             }
                         });
                     }
@@ -237,9 +298,9 @@ public class PArduino extends PInterface {
     // * @param fileName mContext binary file name e.g. Blink.hex
     // * @param callbackfn callback when the upload has been completed (success, fail or error)
     //
-    @ProtocoderScript
-    @APIMethod(description = "uploads a binary file to a device on background process", example = "")
-    @APIParam(params = { "board", "fileName", "function(error)" })
+
+    @ProtoMethod(description = "uploads a binary file to a device on background process", example = "")
+    @ProtoMethodParam(params = { "board", "fileName", "function(error)" })
     public void upload(Boards board, String fileName, final uploadCB callbackfn) {
         if (mPhysicaloid.isOpened()) {
             // Build the absolute path
@@ -309,9 +370,9 @@ public class PArduino extends PInterface {
         });
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "uploads a binary file to a device on background process", example = "")
-    @APIParam(params = { "board", "fileName" })
+
+    @ProtoMethod(description = "uploads a binary file to a device on background process", example = "")
+    @ProtoMethodParam(params = { "board", "fileName" })
     public void upload(Boards board, String fileName) {
 
         upload(board, fileName, new uploadCB() {
@@ -322,9 +383,9 @@ public class PArduino extends PInterface {
         });
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "sets baud rate", example = "arduino.setBaudrate(9600)")
-    @APIParam(params = { "baudrate" })
+
+    @ProtoMethod(description = "sets baud rate", example = "arduino.setBaudrate(9600)")
+    @ProtoMethodParam(params = { "baudrate" })
     public boolean setBaudrate(int baudrate) {
         try {
             return mPhysicaloid.setBaudrate(baudrate);
@@ -333,8 +394,8 @@ public class PArduino extends PInterface {
         }
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "returns a list of the supported devices that you can use with the \"upload\" function", example = "arduino.getSupportedDevices()")
+
+    @ProtoMethod(description = "returns a list of the supported devices that you can use with the \"upload\" function", example = "arduino.getSupportedDevices()")
     public Boards[] getSupportedDevices() {
         MLog.d(TAG, Boards.ARDUINO_BT_328.toString());
 
@@ -371,9 +432,9 @@ public class PArduino extends PInterface {
         */
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "sets serial configuration", example = "")
-    @APIParam(params = { "settings" })
+
+    @ProtoMethod(description = "sets serial configuration", example = "")
+    @ProtoMethodParam(params = { "settings" })
     public void setConfig(UartConfig settings) {
         try {
             mPhysicaloid.setConfig(settings);
@@ -382,9 +443,9 @@ public class PArduino extends PInterface {
         }
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "sets data bits", example = "")
-    @APIParam(params = { "dataBits" })
+
+    @ProtoMethod(description = "sets data bits", example = "")
+    @ProtoMethodParam(params = { "dataBits" })
     public boolean setDataBits(int dataBits) {
         try {
             return mPhysicaloid.setDataBits(dataBits);
@@ -394,9 +455,9 @@ public class PArduino extends PInterface {
         }
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "sets parity bits", example = "")
-    @APIParam(params = { "parity" })
+
+    @ProtoMethod(description = "sets parity bits", example = "")
+    @ProtoMethodParam(params = { "parity" })
     public boolean setParity(int parity) {
         try {
             return mPhysicaloid.setParity(parity);
@@ -406,9 +467,9 @@ public class PArduino extends PInterface {
         }
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "sets stop bits", example = "")
-    @APIParam(params = { "stopBits" })
+
+    @ProtoMethod(description = "sets stop bits", example = "")
+    @ProtoMethodParam(params = { "stopBits" })
     public boolean setStopBits(int stopBits) {
         try {
             return mPhysicaloid.setStopBits(stopBits);
@@ -418,9 +479,9 @@ public class PArduino extends PInterface {
         }
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "sets flow control DTR/RTS", example = "")
-    @APIParam(params = { "stopBits" })
+
+    @ProtoMethod(description = "sets flow control DTR/RTS", example = "")
+    @ProtoMethodParam(params = { "stopBits" })
     public boolean setDtrRts(boolean dtrOn, boolean rtsOn) {
         try {
             return mPhysicaloid.setDtrRts(dtrOn, rtsOn);

@@ -36,9 +36,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
-import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 
 import java.lang.ref.WeakReference;
 
@@ -59,9 +58,9 @@ public class PListItem extends LinearLayout {
 	}
 
     //TODO place holder
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "" })
+
+    @ProtoMethod(description = "", example = "")
+    @ProtoMethodParam(params = { "" })
 	public void setImage(int resId) {
         //TODO activate this
 		ImageView imageView = null; //(ImageView) v.get().findViewById(R.id.customViewImage);
@@ -71,9 +70,9 @@ public class PListItem extends LinearLayout {
 	}
 
     //TODO place holder
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "" })
+
+    @ProtoMethod(description = "", example = "")
+    @ProtoMethodParam(params = { "" })
 	public void setText(String text) {
 		this.t = text;
         //TODO activate this
@@ -83,9 +82,9 @@ public class PListItem extends LinearLayout {
 	}
 
     //TODO place holder
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "" })
+
+    @ProtoMethod(description = "", example = "")
+    @ProtoMethodParam(params = { "" })
 	public String getName() {
 		return t;
 	}

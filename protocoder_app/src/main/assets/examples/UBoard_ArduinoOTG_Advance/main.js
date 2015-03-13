@@ -23,9 +23,12 @@ ui.addChoiceBox(20, 100, 200, 200, l, function(selected) {
 });
 var progressBar = ui.addProgressBar(20, 300, 450, 1, 100);
 
-ui.addButton("Upload", 250, 100, 200, 200, update);
+ui.addButton("Upload", 250, 100, 200, 200).onClick(update);
+
 function update() {
-    var arduino = boards.startArduino();
+    var arduino = boards.startArduino(function(status) {
+        console.log("connected " + status)
+    });
 
     arduino.upload(arduino.ARDUINO_BT_328, hexFileSelected, function(p) {
         console.log(p);

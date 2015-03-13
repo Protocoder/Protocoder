@@ -51,9 +51,8 @@ import android.graphics.Typeface;
 import android.view.MotionEvent;
 import android.view.View;
 
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
-import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.api.PUtil;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
@@ -234,9 +233,9 @@ public class PCanvas extends View implements PViewInterface {
         this.pCanvasInterfaceTouch = pCanvasInterfaceTouch;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Redraws the canvas in a given interval", example = "")
+    @ProtoMethodParam(params = { "speed", "function()" })
     public void loopDraw(int ms, final PCanvasInterfaceDraw pCanvasInterfaceDraw) {
         if (loop != null) {
             loop.stop();
@@ -256,9 +255,9 @@ public class PCanvas extends View implements PViewInterface {
     }
 
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Manually refresh the canvas", example = "")
+    @ProtoMethodParam(params = { })
     public void refresh() {
         if (mAutoDraw) {
             invalidate();
@@ -266,9 +265,9 @@ public class PCanvas extends View implements PViewInterface {
     }
 
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "For each change in the canvas it will redraw it self. Have in mind that mainly to try out things as is not very fast.", example = "")
+    @ProtoMethodParam(params = { "boolean" })
     public void autoDraw(boolean b) {
         mAutoDraw = b;
     }
@@ -326,9 +325,9 @@ public class PCanvas extends View implements PViewInterface {
     }
 
     //TODO drawPaint o drawARGB
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Change the background color with alpha value", example = "")
+    @ProtoMethodParam(params = { "r", "g", "b", "alpha"})
     public PCanvas background(int r, int g, int b, int alpha) {
         mPaintBackground.setStyle(Paint.Style.FILL);
         mPaintBackground.setARGB(alpha, r, g, b);
@@ -339,9 +338,9 @@ public class PCanvas extends View implements PViewInterface {
     }
 
     //TODO drawPaint o drawARGB
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Change the background color", example = "")
+    @ProtoMethodParam(params = { "r", "g", "b" })
     public PCanvas background(int r, int g, int b) {
         background(r, g, b, 255);
 
@@ -350,9 +349,9 @@ public class PCanvas extends View implements PViewInterface {
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Draw a point", example = "")
+    @ProtoMethodParam(params = { "x", "y" })
     public PCanvas point(float x, float y) {
         mCanvas.drawPoint(x, y, mPaintStroke);
         refresh();
@@ -360,7 +359,7 @@ public class PCanvas extends View implements PViewInterface {
     }
 
     //TODO
-    //@ProtocoderScript
+    //
     //@APIMethod(description = "", example = "")
     //@APIParam(params = { "x", "y" })
     public PCanvas points(float[] points) {
@@ -370,7 +369,7 @@ public class PCanvas extends View implements PViewInterface {
     }
 
     //TODO
-    //@ProtocoderScript
+    //
     //@APIMethod(description = "", example = "")
     //@APIParam(params = { "x", "y" })
     public PCanvas points(float[] points, int offset, int count) {
@@ -380,9 +379,9 @@ public class PCanvas extends View implements PViewInterface {
     }
 
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Draw a line", example = "")
+    @ProtoMethodParam(params = { "x1", "y1", "x2", "y2" })
     public PCanvas line(float x1, float y1, float x2, float y2) {
         mCanvas.drawLine(x1, y1, x2, y2, mPaintStroke);
         refresh();
@@ -390,7 +389,7 @@ public class PCanvas extends View implements PViewInterface {
     }
 
     //TODO
-    //@ProtocoderScript
+    //
     //@APIMethod(description = "", example = "")
     //@APIParam(params = { "x", "y" })
     public Path createPath(float[][] points, boolean close) {
@@ -409,9 +408,9 @@ public class PCanvas extends View implements PViewInterface {
     }
 
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Draw a path", example = "")
+    @ProtoMethodParam(params = { "path" })
     public PCanvas path(Path path) {
         if (fillOn)   mCanvas.drawPath(path, mPaintFill);
         if (strokeOn) mCanvas.drawPath(path, mPaintStroke);
@@ -420,9 +419,9 @@ public class PCanvas extends View implements PViewInterface {
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Set a dashed stroke", example = "")
+    @ProtoMethodParam(params = { "float[]", "phase" })
     public PCanvas strokeDashed(float[] intervals, float phase) {
 
         // Stamp mContext concave arrow along the line
@@ -432,43 +431,43 @@ public class PCanvas extends View implements PViewInterface {
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
-    public PCanvas ellipse(float x1, float y1, float width, float height) {
-        if (fillOn)   mCanvas.drawOval(place(x1, y1, width, height), mPaintFill);
-        if (strokeOn) mCanvas.drawOval(place(x1, y1, width, height), mPaintStroke);
+
+    @ProtoMethod(description = "Draws and ellipse", example = "")
+    @ProtoMethodParam(params = { "x1", "y1", "width", "height" })
+    public PCanvas ellipse(float x, float y, float width, float height) {
+        if (fillOn)   mCanvas.drawOval(place(x, y, width, height), mPaintFill);
+        if (strokeOn) mCanvas.drawOval(place(x, y, width, height), mPaintStroke);
         refresh();
 
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
-    public PCanvas rect(float x1, float y1, float width, float height) {
-        if (fillOn)   mCanvas.drawRect(place(x1, y1, width, height), mPaintFill);
-        if (strokeOn) mCanvas.drawRect(place(x1, y1, width, height), mPaintStroke);
+
+    @ProtoMethod(description = "Draws a rectangle", example = "")
+    @ProtoMethodParam(params = { "x", "y", "width", "height" })
+    public PCanvas rect(float x, float y, float width, float height) {
+        if (fillOn)   mCanvas.drawRect(place(x, y, width, height), mPaintFill);
+        if (strokeOn) mCanvas.drawRect(place(x, y, width, height), mPaintStroke);
         refresh();
 
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
-    public PCanvas rect(float x1, float y1, float width, float height, float rx, float ry) {
-        if (fillOn)   mCanvas.drawRoundRect(place(x1, y1, width, height), rx, ry, mPaintFill);
-        if (strokeOn) mCanvas.drawRoundRect(place(x1, y1, width, height), rx, ry, mPaintStroke);
+
+    @ProtoMethod(description = "Draws a rectangle with a given roundness value", example = "")
+    @ProtoMethodParam(params = { "x", "y", "width", "height", "rx", "ry" })
+    public PCanvas rect(float x, float y, float width, float height, float rx, float ry) {
+        if (fillOn)   mCanvas.drawRoundRect(place(x, y, width, height), rx, ry, mPaintFill);
+        if (strokeOn) mCanvas.drawRoundRect(place(x, y, width, height), rx, ry, mPaintStroke);
 
         refresh();
 
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Draws an arc", example = "")
+    @ProtoMethodParam(params = { "x1", "y1", "x2", "y2", "initAngle", "sweepAngle", "center" })
     public PCanvas arc(float x1, float y1, float x2, float y2, float initAngle, float sweepAngle, boolean center) {
         if (fillOn)   mCanvas.drawArc(place(x1, y1, x2, y2), initAngle, sweepAngle, center, mPaintFill);
         if (strokeOn) mCanvas.drawArc(place(x1, y1, x2, y2), initAngle, sweepAngle, center, mPaintStroke);
@@ -477,9 +476,9 @@ public class PCanvas extends View implements PViewInterface {
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Writes text", example = "")
+    @ProtoMethodParam(params = { "text", "x", "y" })
     public PCanvas text(String text, float x, float y) {
         if (fillOn)   mCanvas.drawText(text, x, y, mPaintFill);
         if (strokeOn) mCanvas.drawText(text, x, y, mPaintStroke);
@@ -488,10 +487,10 @@ public class PCanvas extends View implements PViewInterface {
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
-    public PCanvas text(String text,Path path, float initOffset, float outOffset) {
+
+    @ProtoMethod(description = "Draws a text in a path", example = "")
+    @ProtoMethodParam(params = { "text", "path", "initOffset", "outOffsett" })
+    public PCanvas text(String text, Path path, float initOffset, float outOffset) {
         if (fillOn)   mCanvas.drawTextOnPath(text, path, initOffset, outOffset, mPaintFill);
         if (strokeOn) mCanvas.drawTextOnPath(text, path, initOffset, outOffset, mPaintStroke);
 
@@ -500,16 +499,16 @@ public class PCanvas extends View implements PViewInterface {
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Load an image", example = "")
+    @ProtoMethodParam(params = { "imagePath" })
     public Bitmap loadImage(String imagePath) {
         return Image.loadBitmap(ProjectManager.getInstance().getCurrentProject().getStoragePath() + File.separator + imagePath);
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Draws an image", example = "")
+    @ProtoMethodParam(params = { "bitmap", "x", "y" })
     public PCanvas image(Bitmap bmp, int x, int y) {
         //if (fillOn)
             mCanvas.drawBitmap(bmp, x, y, mPaintBackground);
@@ -519,9 +518,9 @@ public class PCanvas extends View implements PViewInterface {
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Draws an image", example = "")
+    @ProtoMethodParam(params = { "bitmap", "x", "y", "w", "h"})
     public PCanvas image(Bitmap bmp, int x, int y, int w, int h) {
         Rect rectSrc = new Rect(0, 0, bmp.getWidth(), bmp.getHeight());
         RectF rectDst = new RectF(x, y, x + w, y + h);
@@ -534,17 +533,17 @@ public class PCanvas extends View implements PViewInterface {
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Clear the canvas", example = "")
+    @ProtoMethodParam(params = { })
     public void clear() {
         mCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
         refresh();
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Sets the filling color", example = "")
+    @ProtoMethodParam(params = { "r", "g", "b", "alpha" })
     public PCanvas fill(int r, int g, int b, int alpha) {
         mPaintFill.setStyle(Paint.Style.FILL);
         mPaintFill.setARGB(alpha, r, g, b);
@@ -553,9 +552,9 @@ public class PCanvas extends View implements PViewInterface {
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Sets the filling color", example = "")
+    @ProtoMethodParam(params = { "r", "g", "b" })
     public PCanvas fill(int r, int g, int b) {
         fill(r, g, b, 255);
         fillOn = true;
@@ -563,17 +562,17 @@ public class PCanvas extends View implements PViewInterface {
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Removes the filling color", example = "")
+    @ProtoMethodParam(params = { })
     public void noFill() {
         fillOn = false;
 
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Sets the stroke color", example = "")
+    @ProtoMethodParam(params = { "r", "g", "b", "alpha" })
     public PCanvas stroke(int r, int g, int b, int alpha) {
         mPaintStroke.setStyle(Paint.Style.STROKE);
         mPaintStroke.setARGB(alpha, r, g, b);
@@ -582,9 +581,9 @@ public class PCanvas extends View implements PViewInterface {
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Sets the stroke color", example = "")
+    @ProtoMethodParam(params = { "r", "g", "b" })
     public PCanvas stroke(int r, int g, int b) {
         stroke(r, g, b, 255);
         strokeOn = true;
@@ -592,34 +591,34 @@ public class PCanvas extends View implements PViewInterface {
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Removes the stroke color", example = "")
+    @ProtoMethodParam(params = { })
     public void noStroke() {
         strokeOn = false;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Sets a stroke width", example = "")
+    @ProtoMethodParam(params = { "width" })
     public PCanvas strokeWidth(float w) {
         mPaintStroke.setStrokeWidth(w);
 
         return this;
     }
     
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Sets a stroke cap", example = "")
+    @ProtoMethodParam(params = { "cap" })
     public PCanvas strokeCap(Paint.Cap cap) {
         mPaintStroke.setStrokeCap(cap);
 
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Sets a given font", example = "")
+    @ProtoMethodParam(params = { "typeface" })
     public PCanvas font(Typeface typeface) {
         mPaintFill.setTypeface(typeface);
         mPaintStroke.setTypeface(typeface);
@@ -627,9 +626,9 @@ public class PCanvas extends View implements PViewInterface {
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Sets the size of the text", example = "")
+    @ProtoMethodParam(params = { "size" })
     public PCanvas textSize(int size) {
         mPaintFill.setTextSize(size);
         mPaintStroke.setTextSize(size);
@@ -637,9 +636,9 @@ public class PCanvas extends View implements PViewInterface {
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Enable/Disable antialiasing", example = "")
+    @ProtoMethodParam(params = { "boolean" })
     public PCanvas antiAlias(boolean b) {
         mPaintFill.setAntiAlias(b);
         mPaintStroke.setAntiAlias(b);
@@ -647,9 +646,9 @@ public class PCanvas extends View implements PViewInterface {
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Sets the shadow fill", example = "")
+    @ProtoMethodParam(params = { "x", "y", "radius", "colorHext" })
     public PCanvas shadowFill(int x, int y, float radius, String colorHex) {
         int c = Color.parseColor(colorHex);
         mPaintFill.setShadowLayer(radius, x, y, c);
@@ -657,9 +656,9 @@ public class PCanvas extends View implements PViewInterface {
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Set the shadow stroke", example = "")
+    @ProtoMethodParam(params = { "x", "y", "radius", "colorHex"})
     public PCanvas shadowStroke(int x, int y, float radius, String colorHex) {
         int c = Color.parseColor(colorHex);
         mPaintStroke.setShadowLayer(radius, x, y, c);
@@ -667,9 +666,9 @@ public class PCanvas extends View implements PViewInterface {
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "", example = "")
+    @ProtoMethodParam(params = { "filter" })
     public PCanvas filter(PorterDuff.Mode mode) {
         mPaintFill.setXfermode(new PorterDuffXfermode(mode));
         mPaintStroke.setXfermode(new PorterDuffXfermode(mode));
@@ -677,62 +676,62 @@ public class PCanvas extends View implements PViewInterface {
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "save", example = "")
+    @ProtoMethodParam(params = { })
     public PCanvas save() {
         mCanvas.save();
 
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Rotate given degrees", example = "")
+    @ProtoMethodParam(params = { "degrees" })
     public PCanvas rotate(float degrees) {
         mCanvas.rotate(degrees);
 
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Translate", example = "")
+    @ProtoMethodParam(params = { "x", "y" })
     public PCanvas translate(float x, float y) {
         mCanvas.translate(x, y);
 
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Skew", example = "")
+    @ProtoMethodParam(params = { "x", "y" })
     public PCanvas skew(float x, float y) {
         mCanvas.skew(x, y);
 
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Scale", example = "")
+    @ProtoMethodParam(params = { "x", "y" })
     public PCanvas scale(float x, float y) {
         mCanvas.scale(x, y);
 
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Restore", example = "")
+    @ProtoMethodParam(params = { "x", "y" })
     public PCanvas restore() {
         mCanvas.restore();
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Creates a new layer returning its position", example = "")
+    @ProtoMethodParam(params = { })
     public int newLayer() {
         //create mContext new bitmap
         Layer layer = createNewLayer();
@@ -744,16 +743,16 @@ public class PCanvas extends View implements PViewInterface {
         return currentLayer;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "", example = "")
+    @ProtoMethodParam(params = { "Deletes a layer in a position" })
     public void deleteLayer(int pos) {
         mLayerFifo.remove(pos);
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Sets a given layer specifying if the rest have to be hidden", example = "")
+    @ProtoMethodParam(params = { "position", "hideAllLayers" })
     public PCanvas setLayer(int pos, boolean hideAll) {
         //all layers off
        if (hideAll) {
@@ -774,9 +773,9 @@ public class PCanvas extends View implements PViewInterface {
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Enable/Disables a layer", example = "")
+    @ProtoMethodParam(params = { "position", "enable" })
     public PCanvas enableLayer(int pos, boolean b) {
         Layer layer = mLayerFifo.get(pos);
         layer.visible = b;
@@ -787,36 +786,36 @@ public class PCanvas extends View implements PViewInterface {
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Drawing will be done from a corner if true, otherwise from the center", example = "")
+    @ProtoMethodParam(params = { "x", "y" })
     public PCanvas mode(boolean mode) {
         mModeCorner = mode;
 
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Create a bitmap shader", example = "")
+    @ProtoMethodParam(params = { "bitmap", "tileMode" })
     public Shader createBitmapShader(Bitmap bitmap, TileMode mode) {
         BitmapShader shader = new BitmapShader(bitmap, mode, mode);
 
         return shader;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Create a linear shader", example = "")
+    @ProtoMethodParam(params = { "x1", "y1", "x2", "y2", "colorHex1", "colorHex2", "tileMode" })
     public Shader linearShader(float x1, float y1, float x2, float y2, String c1, String c2, TileMode mode) {
         Shader shader = new LinearGradient(x1, y1, x2, y2, Color.parseColor(c1), Color.parseColor(c2), mode);
         return shader;
     }
 
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Create a linear shader", example = "")
+    @ProtoMethodParam(params = { "x1", "y1", "x2", "y2", "ArrayColorHex", "ArrayPositions", "tileMode" })
     public Shader linearShader(float x1, float y1, float x2, float y2, String[] colorsStr, float[] positions, TileMode mode) {
         int colors[] = new int[colorsStr.length];
         for (int i = 0; i < colors.length; i++) {
@@ -827,27 +826,27 @@ public class PCanvas extends View implements PViewInterface {
         return shader;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Creates a sweep shader", example = "")
+    @ProtoMethodParam(params = { "x", "y", "colorHex", "colorHex" })
     public Shader sweepShader(int x, int y, String c1, String c2) {
         Shader shader = new SweepGradient(x, y, Color.parseColor(c1), Color.parseColor(c2));
 
         return shader;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Compose two shaders", example = "")
+    @ProtoMethodParam(params = { "shader1", "shader2", "mode" })
     public Shader composeShader(Shader s1, Shader s2, PorterDuff.Mode mode) {
         Shader shader = new ComposeShader(s1, s2, mode);
 
         return shader;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Sets a shader", example = "")
+    @ProtoMethodParam(params = { "shader", "mode" })
     public void setShader(Shader shader, TileMode mode) {
         mPaintFill.setAntiAlias(true);
         mPaintFill.setShader(shader);

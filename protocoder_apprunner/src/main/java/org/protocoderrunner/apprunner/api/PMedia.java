@@ -34,7 +34,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
@@ -44,11 +43,11 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import org.json.JSONArray;
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.apprunner.api.other.PAudioPlayer;
 import org.protocoderrunner.apprunner.api.other.PAudioRecorder;
 import org.protocoderrunner.apprunner.api.other.PMidi;
 import org.protocoderrunner.apprunner.api.other.PPureData;
@@ -82,39 +81,40 @@ public class PMedia extends PInterface {
 		WhatIsRunning.getInstance().add(this);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Play a sound file", example = "media.playSound(fileName);")
-	@APIParam(params = { "fileName" })
-	public MediaPlayer playSound(String url) {
 
-		if (url.startsWith("http://") == false) {
-			url = AppRunnerSettings.get().project.getStoragePath() + File.separator + url;
-		}
-		MediaPlayer player = Audio.playSound(url, 100);
-		WhatIsRunning.getInstance().add(player);
-		return player;
-	}
+	//public PAudioPlayer loadSound(String url, PAudioPlayer.LoadSoundCB callbackfn) {
+	//	return loadPlayer(url, callbackfn);
+	//}
+
+    PAudioPlayer player;
 
 
-	@ProtocoderScript
-	@APIMethod(description = "Set the main volume", example = "media.playSound(fileName);")
-	@APIParam(params = { "volume" })
-	public void setVolume(int volume) {
+    @ProtoMethod(description = "Play a sound file giving its filename", example = "media.playSound(fileName);")
+    @ProtoMethodParam(params = { "fileName" })
+    public PAudioPlayer playSound(String url) {
+        PAudioPlayer pAudioPlayer = new PAudioPlayer(url);
+
+        return pAudioPlayer;
+    }
+
+	@ProtoMethod(description = "Set the main volume", example = "")
+	@ProtoMethodParam(params = { "volume" })
+	public void volume(int volume) {
 		AndroidUtils.setVolume(getContext(), volume);
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Routes the audio through the speakers", example = "media.playSound(fileName);")
-    @APIParam(params = { "" })
-    public void setAudioOnSpeakers(boolean b) {
+
+    @ProtoMethod(description = "Routes the audio through the speakers", example = "media.playSound(fileName);")
+    @ProtoMethodParam(params = { "" })
+    public void audioOnSpeakers(boolean b) {
         AudioManager audioManager = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
         audioManager.setMode(AudioManager.MODE_IN_CALL);
         audioManager.setSpeakerphoneOn(!b);
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Enable sounds effects (default false)", example = "")
-    @APIParam(params = { "boolean" })
+
+    @ProtoMethod(description = "Enable sounds effects (default false)", example = "")
+    @ProtoMethodParam(params = { "boolean" })
     public void enableSoundEffects(boolean b) {
         AndroidUtils.setEnableSoundEffects(getContext(), b);
     }
@@ -131,10 +131,10 @@ public class PMedia extends PInterface {
 
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Loads and initializes a PureData patch http://www.puredata.info", example = "")
-	@APIParam(params = { "fileName", "function(objectType, value)" })
-	public PPureData initPDPatch(String fileName, final initPDPatchCB callbackfn) {
+
+	@ProtoMethod(description = "Loads and initializes a PureData patch http://www.puredata.info", example = "")
+	@ProtoMethodParam(params = { "fileName", "function(objectType, value)" })
+	public PPureData loadPdPatch(String fileName, final initPDPatchCB callbackfn) {
 		String filePath = AppRunnerSettings.get().project.getStoragePath() + File.separator + fileName;
 
 		PdUiDispatcher receiver = new PdUiDispatcher() {
@@ -266,10 +266,10 @@ public class PMedia extends PInterface {
 
     boolean recording = false;
 
-	@ProtocoderScript
-	@APIMethod(description = "Record a sound with the microphone", example = "")
-	@APIParam(params = { "fileName", "showProgressBoolean" })
-	public void startAudioRecord(String fileName, boolean showProgress) {
+
+	@ProtoMethod(description = "Record a sound with the microphone", example = "")
+	@ProtoMethodParam(params = { "fileName", "showProgressBoolean" })
+	public void audioRecord(String fileName, boolean showProgress) {
         if (!recording) {
             recording = true;
             if (AppRunnerSettings.get().hasUi) {
@@ -280,9 +280,9 @@ public class PMedia extends PInterface {
         }
 	}
 
-    @ProtocoderScript
-	@APIMethod(description = "Record a sound with the microphone", example = "")
-	@APIParam(params = { "fileName", "showProgressBoolean" })
+
+	@ProtoMethod(description = "Record a sound with the microphone", example = "")
+	@ProtoMethodParam(params = { "fileName", "showProgressBoolean" })
 	public void stopAudioRecord() {
         if (recording) {
             rec.stopRecording();
@@ -292,16 +292,16 @@ public class PMedia extends PInterface {
 	}
 
 
-	@ProtocoderScript
-	@APIMethod(description = "Says a text with voice", example = "media.textToSpeech('hello world');")
-	@APIParam(params = { "text" })
+
+	@ProtoMethod(description = "Says a text with voice", example = "media.textToSpeech('hello world');")
+	@ProtoMethodParam(params = { "text" })
 	public void textToSpeech(String text) {
         Audio.speak(getContext(), text, Locale.getDefault());
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Says a text with voice using a defined locale", example = "media.textToSpeech('hello world');")
-	@APIParam(params = { "text", "Locale" })
+
+	@ProtoMethod(description = "Says a text with voice using a defined locale", example = "media.textToSpeech('hello world');")
+	@ProtoMethodParam(params = { "text", "Locale" })
 	public void textToSpeech(String text, Locale locale) {
         Audio.speak(getContext(), text, locale);
 	}
@@ -312,10 +312,10 @@ public class PMedia extends PInterface {
 		void event(String responseString);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Fires the voice recognition and returns the best match", example = "media.startVoiceRecognition(function(text) { console.log(text) } );")
-	@APIParam(params = { "function(recognizedText)" })
-	public void startVoiceRecognition(final StartVoiceRecognitionCB callbackfn) {
+
+	@ProtoMethod(description = "Fires the voice recognition and returns the best match", example = "media.startVoiceRecognition(function(text) { console.log(text) } );")
+	@ProtoMethodParam(params = { "function(recognizedText)" })
+	public void voiceRecognition(final StartVoiceRecognitionCB callbackfn) {
         if (getActivity() == null) return;
 
         (getActivity()).addVoiceRecognitionListener(new onVoiceRecognitionListener() {
@@ -332,7 +332,6 @@ public class PMedia extends PInterface {
 		intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
 		intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Tell me something!");
 		getActivity().startActivityForResult(intent, getActivity().VOICE_RECOGNITION_REQUEST_CODE);
-
 	}
 
     // --------- startVoiceRecognition ---------//
@@ -424,10 +423,10 @@ public class PMedia extends PInterface {
     }
 
 
-    @ProtocoderScript
-    @APIMethod(description = "Start a connected midi device", example = "media.startVoiceRecognition(function(text) { console.log(text) } );")
-    @APIParam(params = { "function(recognizedText)" })
-    public void startMidiDevice(final PMidi.MidiDeviceEventCB callbackfn) {
+
+    @ProtoMethod(description = "Start a connected midi device", example = "media.startVoiceRecognition(function(text) { console.log(text) } );")
+    @ProtoMethodParam(params = { "function(recognizedText)" })
+    public void midiDevice(final PMidi.MidiDeviceEventCB callbackfn) {
         PMidi pMidi = new PMidi(getContext(), callbackfn);
     }
 
@@ -440,7 +439,7 @@ public class PMedia extends PInterface {
         void event(boolean b);
     }
 
-    public void startHeadsetListener(MicPluggedCB callbackfn) {
+    public void headsetListener(MicPluggedCB callbackfn) {
         WhatIsRunning.getInstance().add(this);
         headsetCallbackfn = callbackfn;
 

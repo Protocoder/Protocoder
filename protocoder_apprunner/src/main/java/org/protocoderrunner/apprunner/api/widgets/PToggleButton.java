@@ -30,6 +30,7 @@
 package org.protocoderrunner.apprunner.api.widgets;
 
 import android.content.Context;
+import android.widget.CompoundButton;
 import android.widget.ToggleButton;
 
 public class PToggleButton extends ToggleButton implements PViewInterface {
@@ -38,4 +39,21 @@ public class PToggleButton extends ToggleButton implements PViewInterface {
 		super(context);
 	}
 
+    // --------- Toggle ---------//
+    public interface addGenericToggleCB {
+        void event(boolean isChecked);
+    }
+
+
+    public PToggleButton onChange(final addGenericToggleCB callbackfn) {
+        // Add change listener
+        this.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                callbackfn.event(new Boolean(isChecked));
+            }
+        });
+
+        return this;
+    }
 }

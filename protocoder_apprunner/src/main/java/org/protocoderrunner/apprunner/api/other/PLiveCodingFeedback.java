@@ -8,7 +8,6 @@ import android.animation.AnimatorSet;
 import android.animation.LayoutTransition;
 import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -22,9 +21,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.protocoderrunner.R;
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
-import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.utils.MLog;
 
 public class PLiveCodingFeedback {
@@ -90,9 +88,9 @@ public class PLiveCodingFeedback {
 
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Show/hide the live coding feedback", example = "")
-    @APIParam(params = { "boolean" })
+
+    @ProtoMethod(description = "Show/hide the live coding feedback", example = "")
+    @ProtoMethodParam(params = { "boolean" })
 	public PLiveCodingFeedback show(boolean b) {
 		this.show = b;
 
@@ -105,25 +103,25 @@ public class PLiveCodingFeedback {
 		return this;
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Auto hide the text after shown", example = "")
-    @APIParam(params = { "boolean" })
+
+    @ProtoMethod(description = "Auto hide the text after shown", example = "")
+    @ProtoMethodParam(params = { "boolean" })
 	public PLiveCodingFeedback autoHide(boolean b) {
 		this.autoHide = b;
 		return this;
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Elapsed time until text is hidden", example = "")
-    @APIParam(params = { "milliseconds" })
+
+    @ProtoMethod(description = "Elapsed time until text is hidden", example = "")
+    @ProtoMethodParam(params = { "milliseconds" })
 	public PLiveCodingFeedback timeToHide(int t) {
 		this.timeToHide = t;
 		return this;
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Background color", example = "")
-    @APIParam(params = { "colorHex" })
+
+    @ProtoMethod(description = "Background color", example = "")
+    @ProtoMethodParam(params = { "colorHex" })
 	public PLiveCodingFeedback backgroundColor(String c) {
 		new Color();
 		this.bgColor = Color.parseColor(c);
@@ -132,9 +130,9 @@ public class PLiveCodingFeedback {
 		return this;
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Text color", example = "")
-    @APIParam(params = { "colorHex" })
+
+    @ProtoMethod(description = "Text color", example = "")
+    @ProtoMethodParam(params = { "colorHex" })
 	public PLiveCodingFeedback textColor(String color) {
 		new Color();
 		this.textColor = color;
@@ -143,9 +141,9 @@ public class PLiveCodingFeedback {
 		return this;
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Sets up the text size", example = "")
-    @APIParam(params = { "size" })
+
+    @ProtoMethod(description = "Sets up the text size", example = "")
+    @ProtoMethodParam(params = { "size" })
 	public PLiveCodingFeedback textSize(int textSize) {
 		this.textSize = textSize;
 		MLog.d(TAG, "textsize " + textSize);
@@ -153,9 +151,9 @@ public class PLiveCodingFeedback {
 		return this;
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Adds a text padding", example = "")
-    @APIParam(params = { "left", "bottom" })
+
+    @ProtoMethod(description = "Adds a text padding", example = "")
+    @ProtoMethodParam(params = { "left", "bottom" })
 	public PLiveCodingFeedback padding(int left, int bottom) {
 		paddingLeft = left;
         paddingBottom = bottom;
@@ -164,9 +162,9 @@ public class PLiveCodingFeedback {
 	}
 
 
-    @ProtocoderScript
-    @APIMethod(description = "Aligns the text", example = "")
-    @APIParam(params = { "align={left,center,right}" })
+
+    @ProtoMethod(description = "Aligns the text", example = "")
+    @ProtoMethodParam(params = { "align={left,center,right}" })
     public PLiveCodingFeedback align(String alignment) {
         if (alignment.equals("right")) {
             this.alignment = TextView.TEXT_ALIGNMENT_VIEW_START;
@@ -180,18 +178,18 @@ public class PLiveCodingFeedback {
     }
 
 
-    @ProtocoderScript
-    @APIMethod(description = "Writes simple text in the feedback", example = "")
-    @APIParam(params = { "text" })
+
+    @ProtoMethod(description = "Writes simple text in the feedback", example = "")
+    @ProtoMethodParam(params = { "text" })
 	public PLiveCodingFeedback write(String text) {
         write(text, this.textColor, this.textSize);
 
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Writes text specifing the color and the size", example = "")
-    @APIParam(params = { "text", "colorHex", "size" })
+
+    @ProtoMethod(description = "Writes text specifing the color and the size", example = "")
+    @ProtoMethodParam(params = { "text", "colorHex", "size" })
 	public PLiveCodingFeedback write(String text, String color, int size) {
 		// this.text = text;
 

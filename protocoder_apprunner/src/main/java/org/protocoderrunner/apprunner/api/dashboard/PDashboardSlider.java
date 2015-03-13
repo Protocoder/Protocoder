@@ -54,11 +54,11 @@ public class PDashboardSlider extends PInterface {
 		void event(double val);
 	}
 
-	public void add(String name, int x, int y, int w, int h, int min, int max, final jDashboardSliderAddCB callbackfn)
+	public void add(String name, int x, int y, int w, int h, int min, int max)
 			throws UnknownHostException, JSONException {
-		this.id = StrUtils.generateRandomString();
+        this.id = StrUtils.generateRandomString();
 
-		JSONObject values = new JSONObject()
+        JSONObject values = new JSONObject()
                 .put("id", id)
                 .put("name", name)
                 .put("type", "slider")
@@ -74,33 +74,35 @@ public class PDashboardSlider extends PInterface {
                 .put("action", "add")
                 .put("values", values);
 
-		CustomWebsocketServer.getInstance(getContext()).send(msg);
+        CustomWebsocketServer.getInstance(getContext()).send(msg);
+    }
 
-		CustomWebsocketServer.getInstance(getContext()).addListener(id, new WebSocketListener() {
-			@Override
-			public void onUpdated(JSONObject jsonObject) {
-				try {
-					final double val = jsonObject.getDouble("val");
-					mHandler.post(new Runnable() {
+    public void onClick(final jDashboardSliderAddCB callbackfn) throws UnknownHostException {
+        CustomWebsocketServer.getInstance(getContext()).addListener(id, new WebSocketListener() {
+            @Override
+            public void onUpdated(JSONObject jsonObject) {
+                try {
+                    final double val = jsonObject.getDouble("val");
+                    mHandler.post(new Runnable() {
 
-						@Override
-						public void run() {
-							callbackfn.event(val);
-						}
-					});
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-			}
-		});
+                        @Override
+                        public void run() {
+                            callbackfn.event(val);
+                        }
+                    });
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
-	}
+    }
 
     //TODO this method doesnt work yet
-	//@ProtocoderScript
+	//
 	//@APIMethod(description = "change the slider value", example = "")
     //@APIParam(params = { "value" })
-    public void setPosition(float position) throws UnknownHostException, JSONException {
+    public void position(float position) throws UnknownHostException, JSONException {
 		JSONObject msg = new JSONObject();
 
 		msg.put("type", "widget");

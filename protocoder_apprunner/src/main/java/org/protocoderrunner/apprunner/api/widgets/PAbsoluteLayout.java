@@ -4,9 +4,8 @@ import android.content.Context;
 import android.graphics.Color;
 import android.view.View;
 
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
-import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 
 public class PAbsoluteLayout extends FixedLayout {
 
@@ -14,16 +13,16 @@ public class PAbsoluteLayout extends FixedLayout {
 		super(context);
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Sets the background color", example = "")
-    @APIParam(params = { "colorHex" })
+
+    @ProtoMethod(description = "Sets the background color", example = "")
+    @ProtoMethodParam(params = { "colorHex" })
 	public void backgroundColor(String c) {
 		this.setBackgroundColor(Color.parseColor(c));
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Adds a view", example = "")
-    @APIParam(params = { "view", "x", "y", "w", "h" })
+
+    @ProtoMethod(description = "Adds a view", example = "")
+    @ProtoMethodParam(params = { "view", "x", "y", "w", "h" })
 	public void addView(View v, int x, int y, int w, int h) {
 		//positionView(v, x, y, w, h);
 

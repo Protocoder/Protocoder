@@ -41,11 +41,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.CycleInterpolator;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import org.protocoder.MainActivity;
 import org.protocoder.R;
 import org.protocoder.appApi.Protocoder;
-import org.protocoder.fragments.SettingsFragment;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.base.BaseFragment;
 import org.protocoderrunner.events.Events.ProjectEvent;
@@ -72,6 +73,7 @@ public class ProjectListFragment extends BaseFragment {
     public static int totalNum = 0;
     private GridLayoutManager mLayoutManager;
     private Context mContext;
+    private LinearLayout mEmptyGrid;
     //public Intent.ShortcutIconResource icon;
 
     public ProjectListFragment() {
@@ -113,7 +115,8 @@ public class ProjectListFragment extends BaseFragment {
         //mGrid.setLayoutManager(mLayoutManager);
 
         // set the empty state
-		//mGrid.setEmptyView(v.findViewById(R.id.empty_grid_view));
+		mEmptyGrid = (LinearLayout) v.findViewById(R.id.empty_grid_view);
+        checkEmptyState();
 
 		registerForContextMenu(mGrid);
 
@@ -196,6 +199,15 @@ public class ProjectListFragment extends BaseFragment {
         mProjects.remove(id);
         notifyAddedProject();
 
+        checkEmptyState();
+    }
+
+    private void checkEmptyState() {
+        if (mProjects.isEmpty()) {
+            mEmptyGrid.setVisibility(View.VISIBLE);
+        } else {
+            mEmptyGrid.setVisibility(View.GONE);
+        }
     }
 
    // public View getViewByName(String appName) {

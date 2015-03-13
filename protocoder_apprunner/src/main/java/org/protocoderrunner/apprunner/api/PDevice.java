@@ -35,6 +35,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Vibrator;
@@ -46,10 +47,9 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.utils.AndroidUtils;
 import org.protocoderrunner.utils.Intents;
@@ -64,17 +64,17 @@ public class PDevice extends PInterface {
 
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "makes the phone vibrate", example = "android.vibrate(500);")
-	@APIParam(params = { "duration" })
+
+	@ProtoMethod(description = "makes the phone vibrate", example = "android.vibrate(500);")
+	@ProtoMethodParam(params = { "duration" })
 	public void vibrate(int duration) {
 		Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
 		v.vibrate(duration);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "send an sms to the given number", example = "")
-	@APIParam(params = { "number", "message" })
+
+	@ProtoMethod(description = "send an sms to the given number", example = "")
+	@ProtoMethodParam(params = { "number", "message" })
 	public void smsSend(String number, String msg) {
 		SmsManager sm = SmsManager.getDefault();
 		sm.sendTextMessage(number, null, msg, null, null);
@@ -85,9 +85,9 @@ public class PDevice extends PInterface {
 		void event(String number, String responseString);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Gives back the number and sms of the sender", example = "")
-	@APIParam(params = { "function(number, message)" })
+
+	@ProtoMethod(description = "Gives back the number and sms of the sender", example = "")
+	@ProtoMethodParam(params = { "function(number, message)" })
 	public void onSmsReceived(final onSmsReceivedCB fn) {
         getActivity().addOnSmsReceivedListener(new onSmsReceivedListener() {
 
@@ -98,62 +98,62 @@ public class PDevice extends PInterface {
         });
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Set brightness", example = "")
-	@APIParam(params = { "brightness" })
-	public void setBrightness(float val) {
+
+	@ProtoMethod(description = "Set brightness", example = "")
+	@ProtoMethodParam(params = { "brightness" })
+	public void brightness(float val) {
 		getActivity().setBrightness(val);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Set the global brightness from 0 to 255", example = "")
-    @APIParam(params = { "brightness" })
-    public void setGlobalBrightness(int b) {
+
+	@ProtoMethod(description = "Set the global brightness from 0 to 255", example = "")
+    @ProtoMethodParam(params = { "brightness" })
+    public void globalBrightness(int b) {
 		AndroidUtils.setGlobalBrightness(getContext(), b);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Get the current brightness", example = "")
-	public float getBrightness() {
+
+	@ProtoMethod(description = "Get the current brightness", example = "")
+	public float brightness() {
 		return getActivity().getCurrentBrightness();
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Set the screen always on", example = "")
-    @APIParam(params = { "boolean" })
-    public void setScreenAlwaysOn(boolean b) {
+
+	@ProtoMethod(description = "Set the screen always on", example = "")
+    @ProtoMethodParam(params = { "boolean" })
+    public void screenAlwaysOn(boolean b) {
 		getActivity().setScreenAlwaysOn(b);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Check if the scrren is on", example = "")
+
+	@ProtoMethod(description = "Check if the scrren is on", example = "")
 	public boolean isScreenOn() {
 		return AndroidUtils.isScreenOn(getContext());
 	}
 
-	// @ProtocoderScript
+	//
 	// @APIMethod(description = "", example = "")
 	//public void goToSleep() {
 	//	AndroidUtils.goToSleep(mContext);
 	//}
 
-	@ProtocoderScript
-	@APIMethod(description = "Set the screen timeout", example = "")
-    @APIParam(params = { "time" })
-    public void setScreenTimeout(int time) {
+
+	@ProtoMethod(description = "Set the screen timeout", example = "")
+    @ProtoMethodParam(params = { "time" })
+    public void screenTimeout(int time) {
 		AndroidUtils.setScreenTimeout(getContext(), time);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Check if is in airplane mode", example = "")
+
+	@ProtoMethod(description = "Check if is in airplane mode", example = "")
 	public boolean isAirplaneMode() {
 		return AndroidUtils.isAirplaneMode(getContext());
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Check what type of device is", example = "")
-    @APIParam(params = { "" })
-    public String getType() {
+
+	@ProtoMethod(description = "Check what type of device is", example = "")
+    @ProtoMethodParam(params = { "" })
+    public String type() {
         if (AndroidUtils.isTablet(getContext())) {
             return "tablet";
         } else {
@@ -161,58 +161,58 @@ public class PDevice extends PInterface {
         }
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Prevent the device suspend at any time. Good for long living operations.", example = "")
-    @APIParam(params = { "boolean" })
-    public void setWakeLock(boolean b) {
+
+	@ProtoMethod(description = "Prevent the device suspend at any time. Good for long living operations.", example = "")
+    @ProtoMethodParam(params = { "boolean" })
+    public void wakeLock(boolean b) {
 		AndroidUtils.setWakeLock(getContext(), b);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Launch an intent", example = "")
-	@APIParam(params = { "intent" })
+
+	@ProtoMethod(description = "Launch an intent", example = "")
+	@ProtoMethodParam(params = { "intent" })
 	public void launchIntent(String intent) {
 		Intent market_intent = new Intent(intent);
 		getContext().startActivity(market_intent);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Open the default e-mail app", example = "")
-	@APIParam(params = { "recipient", "subject", "message" })
+
+	@ProtoMethod(description = "Open the default e-mail app", example = "")
+	@ProtoMethodParam(params = { "recipient", "subject", "message" })
 	public void openEmailApp(String recipient, String subject, String msg) {
 		Intents.sendEmail(getContext(), recipient, subject, msg);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Open the default Map app", example = "")
-	@APIParam(params = { "longitude", "latitude" })
+
+	@ProtoMethod(description = "Open the default Map app", example = "")
+	@ProtoMethodParam(params = { "longitude", "latitude" })
 	public void openMapApp(double longitude, double latitude) {
 		Intents.openMap(getContext(), longitude, latitude);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Open the phone dial", example = "")
+
+	@ProtoMethod(description = "Open the phone dial", example = "")
 	public void openDial() {
 		Intents.openDial(getContext());
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Call a given phone number", example = "")
-	@APIParam(params = { "number" })
+
+	@ProtoMethod(description = "Call a given phone number", example = "")
+	@ProtoMethodParam(params = { "number" })
 	public void call(String number) {
 		Intents.call(getContext(), number);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Open the default web browser with a given Url", example = "")
-	@APIParam(params = { "url" })
+
+	@ProtoMethod(description = "Open the default web browser with a given Url", example = "")
+	@ProtoMethodParam(params = { "url" })
 	public void openWebApp(String url) {
 		Intents.openWeb(getContext(), url);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Open the search app with the given text", example = "")
-	@APIParam(params = { "text" })
+
+	@ProtoMethod(description = "Open the search app with the given text", example = "")
+	@ProtoMethodParam(params = { "text" })
 	public void openWebSearch(String text) {
 		Intents.webSearch(getContext(), text);
 	}
@@ -228,26 +228,26 @@ public class PDevice extends PInterface {
 		public boolean connected;
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Copy the content into the clipboard", example = "")
-    @APIParam(params = { "label", "text" })
-	public void setClipboard(String label, String text) {
+
+    @ProtoMethod(description = "Copy the content into the clipboard", example = "")
+    @ProtoMethodParam(params = { "label", "text" })
+	public void copyToClipboard(String label, String text) {
 		ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
 		clipboard.setPrimaryClip(ClipData.newPlainText(label, text));
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Get the content from the clipboard", example = "")
-    @APIParam(params = { "label", "text" })
-	public String getClipboard(String label, String text) {
+
+    @ProtoMethod(description = "Get the content from the clipboard", example = "")
+    @ProtoMethodParam(params = { "label", "text" })
+	public String getFromClipboard(String label, String text) {
 		ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
 		return clipboard.getPrimaryClip().getItemAt(clipboard.getPrimaryClip().getItemCount()).getText().toString();
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "" })
-	public void startBatteryListener(final StartBateryListenerCB cb) {
+
+	@ProtoMethod(description = "", example = "")
+	@ProtoMethodParam(params = { "" })
+	public void battery(final StartBateryListenerCB cb) {
 		WhatIsRunning.getInstance().add(this);
 		batteryReceiver = new BroadcastReceiver() {
 			int scale = -1;
@@ -293,10 +293,10 @@ public class PDevice extends PInterface {
 		getContext().registerReceiver(batteryReceiver, filter);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Get the device battery level", example = "")
-	@APIParam(params = { "" })
-	public float getBatteryLevel() {
+
+	@ProtoMethod(description = "Get the current device battery level", example = "")
+	@ProtoMethodParam(params = { "" })
+	public float battery() {
 		Intent batteryIntent = getContext().registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
 		int level = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
 		int scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
@@ -330,10 +330,10 @@ public class PDevice extends PInterface {
 
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Get some device information", example = "")
-	@APIParam(params = { "" })
-	public DeviceInfo getInfo() {
+
+	@ProtoMethod(description = "Get some device information", example = "")
+	@ProtoMethodParam(params = { "" })
+	public DeviceInfo info() {
 		DeviceInfo deviceInfo = new DeviceInfo();
 
 		// density dpi
@@ -370,10 +370,10 @@ public class PDevice extends PInterface {
 		public long max;
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Get memory usage", example = "")
-	@APIParam(params = { "" })
-	public Memory getMemory() {
+
+	@ProtoMethod(description = "Get memory usage", example = "")
+	@ProtoMethodParam(params = { "" })
+	public Memory memory() {
 		Memory mem = new Memory();
 
 		mem.total = Runtime.getRuntime().totalMemory();
@@ -384,7 +384,126 @@ public class PDevice extends PInterface {
 	}
 
 
-	public void stop() {
+
+
+    @ProtoMethod(description = "Check if the device has camera", example = "")
+    public boolean hasCamera() {
+        PackageManager pm = getContext().getPackageManager();
+        return pm.hasSystemFeature(PackageManager.FEATURE_CAMERA);
+    }
+
+
+    @ProtoMethod(description = "Check if the device has front", example = "")
+    public boolean hasFrontCamera() {
+        PackageManager pm = getContext().getPackageManager();
+        return pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT);
+    }
+
+
+    @ProtoMethod(description = "Check if the device has camera flash", example = "")
+    public boolean hasCameraFlash() {
+        PackageManager pm = getContext().getPackageManager();
+        return pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
+    }
+
+
+    @ProtoMethod(description = "Check if the device has bluetooth", example = "")
+    public boolean hasBluetooth() {
+        PackageManager pm = getContext().getPackageManager();
+        return pm.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH);
+    }
+
+
+    @ProtoMethod(description = "Check if the device has Bluetooth Low Energy", example = "")
+    public boolean isBluetoothLEAvailable() {
+        PackageManager pm = getContext().getPackageManager();
+        return pm.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE);
+    }
+
+
+    @ProtoMethod(description = "Check if the device has microphone", example = "")
+    public boolean hasMic() {
+        PackageManager pm = getContext().getPackageManager();
+        return pm.hasSystemFeature(PackageManager.FEATURE_MICROPHONE);
+    }
+
+
+    @ProtoMethod(description = "Check if the device has wifi", example = "")
+    public boolean hasWifi() {
+        PackageManager pm = getContext().getPackageManager();
+        return pm.hasSystemFeature(PackageManager.FEATURE_WIFI);
+    }
+
+
+    @ProtoMethod(description = "Check if the device has mobile communication", example = "")
+    public boolean hasMobileCommunication() {
+        PackageManager pm = getContext().getPackageManager();
+        return pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
+    }
+
+
+
+    @ProtoMethod(description = "Check if the device has accelerometer", example = "")
+    public boolean hasAccelerometer() {
+        PackageManager pm = getContext().getPackageManager();
+        return pm.hasSystemFeature(PackageManager.FEATURE_SENSOR_ACCELEROMETER);
+    }
+
+
+    @ProtoMethod(description = "Check if the device has compass", example = "")
+    public boolean isCompassAvailable() {
+        PackageManager pm = getContext().getPackageManager();
+        return pm.hasSystemFeature(PackageManager.FEATURE_SENSOR_COMPASS);
+    }
+
+
+    @ProtoMethod(description = "Check if the device has gyroscope", example = "")
+    public boolean hasGyroscope() {
+        PackageManager pm = getContext().getPackageManager();
+        return pm.hasSystemFeature(PackageManager.FEATURE_SENSOR_GYROSCOPE);
+    }
+
+
+    @ProtoMethod(description = "Check if the device has GPS", example = "")
+    public boolean hasGPS() {
+        PackageManager pm = getContext().getPackageManager();
+        return pm.hasSystemFeature(PackageManager.FEATURE_LOCATION_GPS);
+    }
+
+
+    @ProtoMethod(description = "Check if the device has light sensor", example = "")
+    public boolean hasLightSensor() {
+        PackageManager pm = getContext().getPackageManager();
+        return pm.hasSystemFeature(PackageManager.FEATURE_SENSOR_LIGHT);
+    }
+
+
+
+    @ProtoMethod(description = "Check if the device has proximity sensor", example = "")
+    public boolean hasProximitySensor() {
+        PackageManager pm = getContext().getPackageManager();
+        return pm.hasSystemFeature(PackageManager.FEATURE_SENSOR_PROXIMITY);
+    }
+
+
+
+    @ProtoMethod(description = "Check if the device has step detector", example = "")
+    public boolean hasStepDetector() {
+        PackageManager pm = getContext().getPackageManager();
+        return pm.hasSystemFeature(PackageManager.FEATURE_SENSOR_STEP_DETECTOR);
+    }
+
+
+
+    @ProtoMethod(description = "Check if the device has barometer", example = "")
+    public boolean hasBarometer() {
+        PackageManager pm = getContext().getPackageManager();
+        return pm.hasSystemFeature(PackageManager.FEATURE_SENSOR_BAROMETER);
+    }
+
+
+
+    public void stop() {
 		getContext().unregisterReceiver(batteryReceiver);
 	}
 

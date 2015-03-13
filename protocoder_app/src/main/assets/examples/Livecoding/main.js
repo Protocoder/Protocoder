@@ -6,9 +6,9 @@
 * With this feedback you will what is been executed in the device 
 */
 
-var l = app.liveCodingFeedback();
-l.autoHide(true);
-l.textSize(25);
-l.write("qqw");
-l.backgroundColor("#55000055");
-l.show(true);
+var l = app.liveCodingFeedback()
+			.autoHide(true)
+			.textSize(25)
+			.write("qqw")
+			.backgroundColor("#55000055")
+			.show(true);

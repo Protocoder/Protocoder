@@ -10,7 +10,7 @@ Code in javascript using the protocoder framework. No needs to write dozends of 
 
 ```
 //how to get sensor data
-sensors.startAccelerometer(function(x, y, z)) { 
+sensors.accelerometer.onChange(function(x, y, z)) { 
 	console.log(x + " " + " " + y + " " + z); 
 }
 
@@ -46,9 +46,9 @@ Run the adb_tunnel_local.sh to forward the connection trough USB. Atm only scrip
 
 How to compile 
 --------------
-Clone the project, import it in eclipse, make sure the API version you are using to compile is 18 or greater. Eclipse tends to change it when importing projects. 
-Press compile et voila.
+Clone the project, import it in Android Studio, make sure the API version you are using to compile is 21 or greater.
 
 
+Credits
+-------
 It all started during the http://www.makewithmoto.com tour. A 5 month cross country roadtrip across the US with a fearless crew from Motorola ATAP on a velcro-covered van and a VW bus full of 3d printers, hackable phones, arduinos, ioios, electronics components. 
-During the roadtrip we hacked together with university students and hackerspaces fellows and we realized we needed a better tool for prototyping, which we decided to start coding during the trip. Protocoder has been developed inside cars, hotel lobbys, cafes, restaurants, parks, here and there.

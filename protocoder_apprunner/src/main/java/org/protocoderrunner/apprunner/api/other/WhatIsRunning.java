@@ -66,12 +66,14 @@ public class WhatIsRunning {
 			} catch (IllegalArgumentException e) {
 			} catch (IllegalAccessException e) {
 			} catch (InvocationTargetException e) {
-
 			}
+
 		}
 	}
 
 	public void add(Object object) {
 		runners.add(object);
 	}
+
+    public void remove(Object object) {runners.remove(object); }
 }

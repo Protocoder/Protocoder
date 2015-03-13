@@ -63,8 +63,9 @@ public class CustomVideoTextureView extends TextureView implements TextureView.S
 	private boolean playingVideo = false;
 	private float currentVolume;
 	private Runnable fadeRunnable;
+    private boolean isUpdating = false;
 
-	public interface VideoListener {
+    public interface VideoListener {
 
 		public void onReady(boolean ready);
 
@@ -116,7 +117,7 @@ public class CustomVideoTextureView extends TextureView implements TextureView.S
 			mMediaPlayer.setOnPreparedListener(this);
 			mMediaPlayer.setOnVideoSizeChangedListener(this);
 			mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-			mMediaPlayer.start();
+			//mMediaPlayer.start();
 			currentVolume = 1.0f;
 			// mPreview.animate().rotation(200).alpha((float) 0.5).scaleX(0.5f)
 			// .scaleY(0.5f).setDuration(5000);
@@ -192,7 +193,7 @@ public class CustomVideoTextureView extends TextureView implements TextureView.S
 	@Override
 	public void onPrepared(MediaPlayer mp) {
 		mMediaPlayer = mp;
-		mMediaPlayer.setLooping(true);
+		mMediaPlayer.setLooping(false);
 
 		r = new Runnable() {
 
@@ -201,11 +202,9 @@ public class CustomVideoTextureView extends TextureView implements TextureView.S
 				for (VideoListener l : listeners) {
 					l.onTimeUpdate(mMediaPlayer.getCurrentPosition(), mMediaPlayer.getDuration());
 				}
-				handler.postDelayed(this, 1000);
+				handler.postDelayed(this, 100);
 			}
 		};
-
-		handler.post(r);
 	}
 
 	@Override
@@ -256,14 +255,17 @@ public class CustomVideoTextureView extends TextureView implements TextureView.S
 	}
 
 	public void play() {
-		mMediaPlayer.start();
+        handler.post(r);
+        mMediaPlayer.start();
 	}
 
 	public void pause() {
+        handler.removeCallbacks(r);
 		mMediaPlayer.pause();
 	}
 
 	public void stop() {
+        handler.removeCallbacks(r);
 		mMediaPlayer.stop();
 	}
 
@@ -272,7 +274,7 @@ public class CustomVideoTextureView extends TextureView implements TextureView.S
 	}
 
 	public void addListener(VideoListener videoListener) {
-		listeners.add(videoListener);
+        listeners.add(videoListener);
 	}
 
 	public void removeListener(VideoListener videoListener) {

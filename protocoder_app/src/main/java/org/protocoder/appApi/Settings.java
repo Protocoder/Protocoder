@@ -39,12 +39,9 @@ import org.protocoderrunner.base.BaseActivity;
 public class Settings {
 
     private final SharedPreferences mSharedPrefs;
-    private final BaseActivity mContext;
 
-    public Settings(Protocoder protocoder) {
-        mContext = protocoder.mActivityContext;
-        mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-
+    public Settings(Context context) {
+        mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
 
@@ -71,6 +68,9 @@ public class Settings {
         return pref;
     }
 
+    public void setScreenOn(boolean isChecked) {
+        mSharedPrefs.edit().putBoolean("pref_screen_on", isChecked).commit();
+    }
 
     public boolean getScreenOn() {
         boolean pref = mSharedPrefs.getBoolean("pref_screen_on", false);
@@ -129,4 +129,6 @@ public class Settings {
     public boolean getNewVersionCheckEnabled() {
         return mSharedPrefs.getBoolean("pref_new_version_check", true);
     }
+
+
 }

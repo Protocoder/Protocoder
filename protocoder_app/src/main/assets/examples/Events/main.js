@@ -7,7 +7,7 @@
 */
 
 
-sensors.startAccelerometer(function(x, y, z) {
+sensors.accelerometer.onChange(function(x, y, z) {
     var o = {};
     o.x = x;
     o.y = y;

@@ -34,9 +34,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
-import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 
 import java.util.ArrayList;
 
@@ -55,9 +54,9 @@ public class PList extends LinearLayout implements PViewInterface {
 	}
 
     //TODO place holder
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "" })
+
+    @ProtoMethod(description = "", example = "")
+    @ProtoMethodParam(params = { "" })
 	public void setItems(ArrayList<PListItem> items) {
 		plistAdapter = new PListAdapter(c, items);
 		lv.setAdapter(plistAdapter);
@@ -65,26 +64,26 @@ public class PList extends LinearLayout implements PViewInterface {
 
 	@Override
     //TODO place holder
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "" })
+
+    @ProtoMethod(description = "", example = "")
+    @ProtoMethodParam(params = { "" })
 	public void addView(View v) {
 		lv.addView(v);
 	}
 
     //TODO place holder
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "" })
+
+    @ProtoMethod(description = "", example = "")
+    @ProtoMethodParam(params = { "" })
 	public void clear() {
 		lv.removeAllViews();
 		plistAdapter.notifyDataSetChanged();
 	}
 
     //TODO place holder
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "" })
+
+    @ProtoMethod(description = "", example = "")
+    @ProtoMethodParam(params = { "" })
 	public void notifyAddedProject() {
 		plistAdapter.notifyDataSetChanged();
 		lv.invalidateViews();

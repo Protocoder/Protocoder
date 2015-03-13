@@ -58,9 +58,7 @@ android {
 
 
 repositories {
-    flatDir {
-        dirs 'libs'
-    }
+
     maven {
         url 'https://github.com/kshoji/USB-MIDI-Driver/raw/master/MIDIDriver/snapshots'
     }
@@ -69,6 +67,10 @@ repositories {
     }
 
     mavenCentral()
+
+    flatDir {
+        dirs 'libs'
+    }
 }
 
 
@@ -88,6 +90,7 @@ dependencies {
     compile files('libs/commons-logging-1.1.3.jar')
     compile files('libs/commons-net-3.0.1.jar')
     compile files('libs/commons-codec-1.10.jar')
+    compile files('libs/commons-io-2.4.jar')
     compile files('libs/httpclient-4.3.4.jar')
     compile files('libs/httpclient-cache-4.3.4.jar')
     compile files('libs/httpcore-4.3.2.jar')
@@ -96,7 +99,6 @@ dependencies {
     //compile 'org.apache.ftpserver:ftpserver-core:1.0.6'
     compile files('libs/ftpserver-core-1.0.6.jar')
     compile files('libs/mina-core-2.0.4.jar')
-
 
     //compile files('libs/js.jar') //mozilla rhino
     compile 'io.apigee:rhino:1.7R5pre2'
@@ -127,12 +129,15 @@ dependencies {
     compile files('libs/usb-serial-for-android.jar')
 
     compile 'jp.kshoji:midi-driver:0.0.2-SNAPSHOT:@aar'
-    compile files('libs/physicaloidlibrary.jar')
+    //compile files('libs/physicaloidlibrary.jar')
+    compile files('libs/physicaloidhoney.jar')
 
     //other libs
     compile 'net.lingala.zip4j:zip4j:1.3.2'
     compile 'com.google.code.gson:gson:2.2.4'
     compile files('libs/slf4j-android-1.7.6.jar')
     compile files('libs/slf4j-api-1.7.6.jar')
+
+
 }
 

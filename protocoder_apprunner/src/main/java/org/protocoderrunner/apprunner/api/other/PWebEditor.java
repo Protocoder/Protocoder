@@ -31,10 +31,9 @@ package org.protocoderrunner.apprunner.api.other;
 
 import android.content.Context;
 
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.network.IDEcommunication;
 
 public class PWebEditor extends PInterface {
@@ -45,24 +44,24 @@ public class PWebEditor extends PInterface {
 	}
 
     //TODO this is mContext place holder
-	@ProtocoderScript
-	@APIMethod(description = "Loads a Html file in the webIde sidebar", example = "")
-	@APIParam(params = { "boolean" })
+
+	@ProtoMethod(description = "Loads a Html file in the webIde sidebar", example = "")
+	@ProtoMethodParam(params = { "boolean" })
 	public void loadHTMLonSideBar(boolean visible) {
 
 	}
 
     //TODO this is mContext place holder
-	@ProtocoderScript
-	@APIMethod(description = "Shows/Hides the webIde sidebar", example = "")
-	@APIParam(params = { "boolean" })
+
+	@ProtoMethod(description = "Shows/Hides the webIde sidebar", example = "")
+	@ProtoMethodParam(params = { "boolean" })
 	public void showSideBar(boolean visible) {
 
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Execute custom js in the webIde", example = "")
-    @APIParam(params = { "jsText" })
+
+    @ProtoMethod(description = "Execute custom js in the webIde", example = "")
+    @ProtoMethodParam(params = { "jsText" })
     public void sendJs(String js) {
         IDEcommunication.getInstance(getContext()).sendCustomJs(js);
     }

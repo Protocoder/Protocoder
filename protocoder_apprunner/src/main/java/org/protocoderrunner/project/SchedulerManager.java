@@ -112,7 +112,7 @@ public class SchedulerManager {
 		intent.putExtra(ALARM_INTENT, message);
 
 		if (wakeUpScreen) {
-			intent.putExtra("wakeUpScreen", true);
+			intent.putExtra(Project.SETTINGS_SCREEN_WAKEUP, true);
 		}
 
 		// Project p = ProjectManager.getInstance().getCurrentProject();

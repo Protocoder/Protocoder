@@ -57,13 +57,16 @@ public class PFtpServer {
         WhatIsRunning.getInstance().add(this);
     }
 
+
+
+    //we have to pass the protocoder project folder
     public void addUser(String name, String pass, String directory, boolean canWrite) {
         BaseUser user = new BaseUser();
         user.setName(name);
         user.setPassword(pass);
 
-        String root = ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/" + directory;
-        user.setHomeDirectory(root);
+        //String root = ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/" + directory;
+        user.setHomeDirectory(directory);
 
         //check if user can write
         if(canWrite)

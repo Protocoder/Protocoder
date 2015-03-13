@@ -3,9 +3,8 @@ package org.protocoderrunner.apprunner.api.other;
 import android.os.Bundle;
 import android.os.Looper;
 
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
-import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 
 import processing.core.PApplet;
 import processing.core.PGraphics;
@@ -55,9 +54,9 @@ public class PProcessing extends PApplet {
 		void setup(PApplet p);
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Sets up the processing setup", example = "")
-    @APIParam(params = { "function(p)" })
+
+    @ProtoMethod(description = "Sets up the processing setup", example = "")
+    @ProtoMethodParam(params = { "function(p)" })
 	public void setup(PInterfaceSetup pIface) {
 		pfnSetup = pIface;
 	}
@@ -67,9 +66,9 @@ public class PProcessing extends PApplet {
 		void draw(PApplet p);
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Sets up the processing drawing loop", example = "")
-    @APIParam(params = { "function(p)" })
+
+    @ProtoMethod(description = "Sets up the processing drawing loop", example = "")
+    @ProtoMethodParam(params = { "function(p)" })
 	public void draw(PInterfaceDraw pIface) {
 		pfnDraw = pIface;
 	}

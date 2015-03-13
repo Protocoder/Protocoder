@@ -33,7 +33,6 @@ import android.animation.Animator.AnimatorListener;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.FileObserver;
@@ -41,10 +40,10 @@ import android.support.v4.app.Fragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -71,8 +70,6 @@ import org.protocoderrunner.project.Project;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.utils.MLog;
-
-import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
 
@@ -122,6 +119,7 @@ public class AppRunnerFragment extends Fragment {
     private int mActionBarColor;
     private View mMainView;
     private int mActionBarColorInt;
+    private String mPreloadedScript = "";
     //private EditorFragment editorFragment;
 
     @Override
@@ -130,12 +128,12 @@ public class AppRunnerFragment extends Fragment {
 
         mActivity = (AppRunnerActivity) getActivity();
 
-
         //get parameters
         Bundle bundle = getArguments();
         mProjectName = bundle.getString(Project.NAME);
         mProjectFolder = bundle.getString(Project.FOLDER);
         mActionBarColorInt = bundle.getInt(Project.COLOR, 0);
+        mPreloadedScript = bundle.getString(Project.PREFIX, "");
 
         //load project
         mCurrentProject = ProjectManager.getInstance().get(mProjectFolder, mProjectName);
@@ -153,6 +151,10 @@ public class AppRunnerFragment extends Fragment {
         }
 
         //instantiate the objects that can be accessed from the interpreter
+
+        //the reason to call initForParentFragment is because the class depends on the fragment ui.
+        //its not very clean and at some point it will be change to a more elegant solution that will allow to
+        //have services
         pApp = new PApp(mActivity);
         pApp.initForParentFragment(this);
         pBoards = new PBoards(mActivity);
@@ -164,8 +166,10 @@ public class AppRunnerFragment extends Fragment {
         pMedia = new PMedia(mActivity);
         pMedia.initForParentFragment(this);
         pNetwork = new PNetwork(mActivity);
+        pNetwork.initForParentFragment(this);
         pProtocoder = new PProtocoder(mActivity);
         pSensors = new PSensors(mActivity);
+        pSensors.initForParentFragment(this);
         pUi = new PUI(mActivity);
         pUi.initForParentFragment(this);
         pUtil  = new PUtil(mActivity);
@@ -188,7 +192,6 @@ public class AppRunnerFragment extends Fragment {
         interp.interpreter.addObjectToInterface("util", pUtil);
 
         AppRunnerSettings.get().interp = interp;
-
     }
 
     @Override
@@ -232,8 +235,10 @@ public class AppRunnerFragment extends Fragment {
         interp.addListener(appRunnerCb);
 
         // load the libraries
-        interp.eval(AppRunnerInterpreter.scriptPrefix);
-
+        MLog.d(TAG, "loaded preloaded script" + mPreloadedScript);
+        interp.eval(mPreloadedScript);
+        interp.eval(AppRunnerInterpreter.SCRIPT_PREFIX);
+        
         // run the script
         if (null != mScript) {
             interp.eval(mScript, mProjectName);
@@ -264,6 +269,7 @@ public class AppRunnerFragment extends Fragment {
         startFileObserver();
 
         // send ready to the webIDE
+        //TODO this is gone ?!
 	}
 
     public static AppRunnerFragment newInstance(Bundle bundle) {
@@ -396,7 +402,7 @@ public class AppRunnerFragment extends Fragment {
         consoleRLayout.setVisibility(View.GONE);
         mainLayout.addView(consoleRLayout);
 
-        // Create the text view to add to the control
+        // Create the text view to add to the console layout
         consoleText = new TextView(mActivity);
         LayoutParams consoleTextParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         consoleText.setBackgroundColor(getResources().getColor(R.color.transparent));
@@ -405,6 +411,23 @@ public class AppRunnerFragment extends Fragment {
         int textPadding = getResources().getDimensionPixelSize(R.dimen.apprunner_console_text_padding);
         consoleText.setPadding(textPadding, textPadding, textPadding, textPadding);
         consoleRLayout.addView(consoleText);
+
+        //add a close button
+        Button closeBtn = new Button(mActivity);
+        closeBtn.setText("x");
+        closeBtn.setPadding(5, 5, 5, 5);
+        closeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showConsole(false);
+            }
+        });
+        RelativeLayout.LayoutParams closeBtnLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        closeBtnLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+        closeBtnLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        closeBtn.setLayoutParams(closeBtnLayoutParams);
+        consoleRLayout.addView(closeBtn);
+
 
         liveCoding = new PLiveCodingFeedback(mActivity);
         mainLayout.addView(liveCoding.add());

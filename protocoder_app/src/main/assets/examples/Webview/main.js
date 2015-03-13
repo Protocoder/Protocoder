@@ -54,5 +54,8 @@ var content =
 var webview = ui.addWebView(0, 0, ui.screenWidth, 200);
 webview.loadData(content);
 
-var webview = ui.addWebView(0, 200, ui.screenWidth, 500);
-webview.loadHTMLFile("hello.html");
+var webview2 = ui.addWebView(0, 200, ui.screenWidth, 500);
+webview2.loadHTMLFile("hello.html");
+
+var webview3 = ui.addWebView(0, 500, ui.screenWidth, 500);
+webview3.loadUrl("http://www.protocoder.org");

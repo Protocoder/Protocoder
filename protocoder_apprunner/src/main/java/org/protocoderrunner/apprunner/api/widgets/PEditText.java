@@ -30,12 +30,62 @@
 package org.protocoderrunner.apprunner.api.widgets;
 
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.View;
 import android.widget.EditText;
 
 public class PEditText extends EditText implements PViewInterface {
 
-	public PEditText(Context context) {
+    private EditText mInput;
+
+    public PEditText(Context context) {
 		super(context);
 
+        mInput = this;
 	}
+
+    // --------- getRequest ---------//
+    public interface addGenericInputCB {
+        void event(String txt);
+    }
+
+    public interface LooseFocusCB {
+        void event(boolean b);
+    }
+
+    public void onChange(final addGenericInputCB callbackfn) {
+
+        if (callbackfn != null) {
+            // On focus lost, we need to call the callback function
+            mInput.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    callbackfn.event(mInput.getText().toString());
+                }
+            });
+
+        }
+    }
+
+    public void onFocusLost(final LooseFocusCB callbackfn) {
+        mInput.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    callbackfn.event(false);
+                }
+            }
+        });
+    }
 }

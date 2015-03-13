@@ -10,26 +10,32 @@ var dataLabel = ui.addText("data : ",10, 20, 500, 100);
 var arduino; 
 
 //start connexion with arduino
-ui.addButton("START", 50, 150, 500,100, function() { 
+ui.addButton("START", 50, 150, 500,100).onClick(function() { 
+	
 	//show arduino incoming data
-    arduino = boards.startSerial(9600, function(data) {
+    arduino = boards.startSerial(9600, function(connected) {
+    	console.log("connected " + connected);
+	});
+
+	arduino.onNewData(function() {
 		dataLabel.setText("Data : "+ data);
 		console.log(data);
 		media.textToSpeech("tick"); 
 	});
+
 });
 
 
 //write to the serial led on
-ui.addButton("LEDON", 50, 250, 500,100, function(){ 
-	arduino.writeSerial("ledon"); 
+ui.addButton("LEDON", 50, 250, 500,100).onClick(function(){ 
+	arduino.write("ledon"); 
 });
 
-ui.addButton("LEDOFF", 50, 350, 500,100, function(){
-	arduino.writeSerial("ledoff");
+ui.addButton("LEDOFF", 50, 350, 500,100).onClick(function(){
+	arduino.write("ledoff");
 });
 
 
-ui.addButton("STOP", 50, 450, 500,100, function(){
+ui.addButton("STOP", 50, 450, 500,100).onClick(function(){
 	arduino.stop(); 
 });

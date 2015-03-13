@@ -33,10 +33,9 @@ import android.content.Context;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.network.CustomWebsocketServer;
 import org.protocoderrunner.utils.StrUtils;
 
@@ -51,8 +50,8 @@ public class PDashboardImage extends PInterface {
 		super(a);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+
+	@ProtoMethod(description = "", example = "")
 	public void add(String url, int x, int y, int w, int h) throws UnknownHostException, JSONException {
 		this.id = StrUtils.generateRandomString();
 
@@ -73,9 +72,9 @@ public class PDashboardImage extends PInterface {
 		CustomWebsocketServer.getInstance(getContext()).send(msg);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "change image with a provided url", example = "")
-    @APIParam(params = { "url"})
+
+	@ProtoMethod(description = "change image with a provided url", example = "")
+    @ProtoMethodParam(params = { "url"})
     public void changeImage(String url) throws JSONException, UnknownHostException {
 
 		JSONObject values = new JSONObject()

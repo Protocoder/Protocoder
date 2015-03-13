@@ -194,7 +194,7 @@ public class SettingsFragment extends PreferenceFragment {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object o) {
                     boolean isChecked = (Boolean) o;
-                    mPrefs.edit().putBoolean("pref_screen_on", isChecked).commit();
+                    mSettings.setScreenOn(isChecked);
 
                     return true;
                 }

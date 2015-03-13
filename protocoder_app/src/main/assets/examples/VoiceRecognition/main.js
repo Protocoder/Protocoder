@@ -5,7 +5,7 @@
 *
 */ 
 
-media.startVoiceRecognition(function(text) { 
+media.voiceRecognition(function(text) { 
     console.log(text);
     media.textToSpeech(text);
 });

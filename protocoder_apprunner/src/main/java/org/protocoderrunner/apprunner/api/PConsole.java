@@ -33,10 +33,9 @@ import android.content.Context;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.network.CustomWebsocketServer;
 import org.protocoderrunner.utils.AndroidUtils;
 
@@ -55,9 +54,9 @@ public class PConsole extends PInterface {
 		super(a);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "shows any HTML text in the webIde console", example = "")
-	@APIParam(params = { "text","text","..." })
+
+	@ProtoMethod(description = "shows any HTML text in the webIde console", example = "")
+	@ProtoMethodParam(params = { "text","text","..." })
 	public void log(String... outputs) {
 
 		StringBuilder builder = new StringBuilder();
@@ -80,9 +79,9 @@ public class PConsole extends PInterface {
         send(msg);
 	}
 
-    @ProtocoderScript
-	@APIMethod(description = "clear the webIde console", example = "")
-	@APIParam(params = { "" })
+
+	@ProtoMethod(description = "clear the webIde console", example = "")
+	@ProtoMethodParam(params = { "" })
 	public void clear() {
         JSONObject msg = null;
         try {
@@ -93,9 +92,9 @@ public class PConsole extends PInterface {
         send(msg);
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "show/hide the console", example = "")
-    @APIParam(params = { "boolean" })
+
+    @ProtoMethod(description = "show/hide the console", example = "")
+    @ProtoMethodParam(params = { "boolean" })
     public void show(boolean b) {
         JSONObject values = null;
         JSONObject msg = null;
@@ -108,9 +107,9 @@ public class PConsole extends PInterface {
         send(msg);
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Change the background color", example = "")
-    @APIParam(params = { "colorHex" })
+
+    @ProtoMethod(description = "Change the background color", example = "")
+    @ProtoMethodParam(params = { "colorHex" })
     public void backgroundColor(String colorHex) {
         String color = AndroidUtils.colorHexToHtmlRgba(colorHex);
 
@@ -126,9 +125,9 @@ public class PConsole extends PInterface {
         send(msg);
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Log using a defined colorHex", example = "")
-    @APIParam(params = { "colorHex" })
+
+    @ProtoMethod(description = "Log using a defined colorHex", example = "")
+    @ProtoMethodParam(params = { "colorHex" })
     public void logC(String text, String colorHex) {
         String color = AndroidUtils.colorHexToHtmlRgba(colorHex);
 
@@ -146,9 +145,9 @@ public class PConsole extends PInterface {
     }
 
 
-    @ProtocoderScript
-    @APIMethod(description = "Changes the console text size", example = "")
-    @APIParam(params = { "size" })
+
+    @ProtoMethod(description = "Changes the console text size", example = "")
+    @ProtoMethodParam(params = { "size" })
     public void textSize(int textSize) {
 
         JSONObject values = null;
@@ -165,9 +164,9 @@ public class PConsole extends PInterface {
 
 
 
-    @ProtocoderScript
-    @APIMethod(description = "Changes the console text color", example = "")
-    @APIParam(params = { "colorHex" })
+
+    @ProtoMethod(description = "Changes the console text color", example = "")
+    @ProtoMethodParam(params = { "colorHex" })
     public void textColor(String colorHex) {
         String color = AndroidUtils.colorHexToHtmlRgba(colorHex);
 
@@ -184,9 +183,9 @@ public class PConsole extends PInterface {
 
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Enable/Disable time in the log", example = "")
-    @APIParam(params = { "boolean" })
+
+    @ProtoMethod(description = "Enable/Disable time in the log", example = "")
+    @ProtoMethodParam(params = { "boolean" })
     public void showTime(boolean b) {
         showTime = b;
 

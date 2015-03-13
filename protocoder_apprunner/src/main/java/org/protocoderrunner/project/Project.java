@@ -38,6 +38,9 @@ public class Project {
 	public final static String LOAD_FROM = "projectLoadFrom";
     public static final String FORMAT = "projectFormat";
     public static final String COLOR = "projectColor";
+    public static final String PREFIX = "prefix";
+    public static final String SETTINGS_SCREEN_ALWAYS_ON = "settings_screenOn";
+    public static final String SETTINGS_SCREEN_WAKEUP = "settings_wakeUpScreen";
 
     public String name;
     public String folder;

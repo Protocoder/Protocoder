@@ -29,13 +29,11 @@
 
 package org.protocoderrunner.apprunner.api.other;
 
-import android.app.Activity;
 import android.content.Context;
 
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.utils.FFT;
 
 public class SignalUtils extends PInterface {
@@ -57,9 +55,9 @@ public class SignalUtils extends PInterface {
 		return null;
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-	@APIParam(params = { "function()" })
+
+	@ProtoMethod(description = "", example = "")
+	@ProtoMethodParam(params = { "function()" })
 	public double[] fft(double[] re) {
 		fft.fft(re, im.clone());
 

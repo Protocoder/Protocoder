@@ -32,10 +32,8 @@ package org.protocoderrunner.utils;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 
 import java.io.BufferedReader;
@@ -75,7 +73,6 @@ public class ExecuteCmd {
                     mHandler = new Handler() {
                         @Override
                         public void handleMessage(Message msg) {
-                            Log.d("New Thread", "Proccess Complete. " + msg.getData().toString());
                             process.destroy();
 
                             mThread.interrupt();
@@ -84,7 +81,7 @@ public class ExecuteCmd {
                             try {
                                 process.waitFor();
                             } catch (InterruptedException e) {
-                                Log.d("qq", "kk 1");
+
                                 e.printStackTrace();
                             }
                         }
@@ -94,10 +91,10 @@ public class ExecuteCmd {
                     int i;
                     final char[] buffer = new char[4096];
                     StringBuffer output = new StringBuffer();
-                 //   Log.d("qq", "qq ");
+
                     while ((i = reader.read(buffer)) > 0) {
                         output.append(buffer, 0, i);
-                       // Log.d("qq", "qq " + String.valueOf(buffer));
+
                         Handler h = new Handler(Looper.getMainLooper());
                         final int finalI = i;
                         h.post(new Runnable() {
@@ -126,8 +123,7 @@ public class ExecuteCmd {
         WhatIsRunning.getInstance().add(this);
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "stop the running command", example = "")
+    @ProtoMethod(description = "stop the running command", example = "")
     public void stop() {
         Message msg = mHandler.obtainMessage();
         msg.arg1 = 0;

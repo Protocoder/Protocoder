@@ -33,9 +33,8 @@ import android.content.Context;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.protocoderrunner.apidoc.annotation.APIMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.network.CustomWebsocketServer;
 import org.protocoderrunner.utils.StrUtils;
 
@@ -52,8 +51,8 @@ public class PDashboardVideoCamera extends PInterface {
 		super(a);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+
+	@ProtoMethod(description = "", example = "")
 	public void add(int x, int y, int w, int h) throws UnknownHostException, JSONException {
 		this.id = StrUtils.generateRandomString();
 
@@ -74,8 +73,8 @@ public class PDashboardVideoCamera extends PInterface {
 
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
+
+	@ProtoMethod(description = "", example = "")
 	public void update(String encodedImage) throws JSONException, UnknownHostException {
         JSONObject values = new JSONObject()
                 .put("id", id)

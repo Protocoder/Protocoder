@@ -47,9 +47,8 @@ import android.graphics.RectF;
 import android.view.MotionEvent;
 import android.view.View;
 
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
-import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -266,9 +265,9 @@ public class PPadView extends View {
 		}
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Change the pad color", example = "")
-    @APIParam(params = { "colorHex" })
+
+    @ProtoMethod(description = "Change the pad color", example = "")
+    @ProtoMethodParam(params = { "colorHex" })
     public PPadView padsColor(String c) {
         mPadsColorStroke = Color.parseColor(c);
         int r = Color.red(mPadsColorStroke);
@@ -279,17 +278,17 @@ public class PPadView extends View {
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Change the strokeColor", example = "")
-    @APIParam(params = { "colorHex" })
+
+    @ProtoMethod(description = "Change the strokeColor", example = "")
+    @ProtoMethodParam(params = { "colorHex" })
     public PPadView strokeColor(String c) {
         mBackgroundColor = Color.parseColor(c);
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Change the background color", example = "")
-    @APIParam(params = { "colorHex" })
+
+    @ProtoMethod(description = "Change the background color", example = "")
+    @ProtoMethodParam(params = { "colorHex" })
     public PPadView backgroundColor(String c) {
         mBackgroundColor = Color.parseColor(c);
         return this;

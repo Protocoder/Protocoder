@@ -29,9 +29,8 @@
 
 package org.protocoderrunner.apprunner.api.other;
 
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
-import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.puredata.core.PdBase;
 
 public class PPureData {
@@ -40,9 +39,9 @@ public class PPureData {
 		WhatIsRunning.getInstance().add(this);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Sends a message to PdLib", example = "")
-	@APIParam(params = { "message", "value" })
+
+	@ProtoMethod(description = "Sends a message to PdLib", example = "")
+	@ProtoMethodParam(params = { "message", "value" })
 	public void sendMessage(String message, String value) {
 		if (value.isEmpty()) {
 			PdBase.sendBang(message);
@@ -53,37 +52,37 @@ public class PPureData {
 		}
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Sends a bang to PdLib", example = "")
-	@APIParam(params = { "name" })
+
+	@ProtoMethod(description = "Sends a bang to PdLib", example = "")
+	@ProtoMethodParam(params = { "name" })
 	public void sendBang(String name) {
 		PdBase.sendBang(name);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Sends a float number to PdLib", example = "")
-	@APIParam(params = { "name", "value" })
+
+	@ProtoMethod(description = "Sends a float number to PdLib", example = "")
+	@ProtoMethodParam(params = { "name", "value" })
 	public void sendFloat(String name, int value) {
 		PdBase.sendFloat(name, value);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Sends a note to PdLib", example = "")
-	@APIParam(params = { "channel", "pitch, velocity" })
+
+	@ProtoMethod(description = "Sends a note to PdLib", example = "")
+	@ProtoMethodParam(params = { "channel", "pitch, velocity" })
 	public void sendNoteOn(int channel, int pitch, int velocity) {
 		PdBase.sendNoteOn(channel, pitch, velocity);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Sends a midibyte to PdLib", example = "")
-	@APIParam(params = { "port", "value" })
+
+	@ProtoMethod(description = "Sends a midibyte to PdLib", example = "")
+	@ProtoMethodParam(params = { "port", "value" })
 	public void sendMidiByte(int port, int value) {
 		PdBase.sendMidiByte(port, value);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Gets an array from PdLib", example = "")
-	@APIParam(params = { "name", "size" })
+
+	@ProtoMethod(description = "Gets an array from PdLib", example = "")
+	@ProtoMethodParam(params = { "name", "size" })
 	public float[] getArray(String source, int n) {
 		// public void getArray(float[] destination, int destOffset, String
 		// source, int srcOffset, int n) {
@@ -95,9 +94,9 @@ public class PPureData {
 		return destination;
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Sends and array of floats to PdLib", example = "")
-	@APIParam(params = { "name", "array", "size" })
+
+	@ProtoMethod(description = "Sends and array of floats to PdLib", example = "")
+	@ProtoMethodParam(params = { "name", "array", "size" })
 	public void sendArray(String destination, float[] source, int n) {
 		PdBase.writeArray(destination, 0, source, 0, n);
 	}

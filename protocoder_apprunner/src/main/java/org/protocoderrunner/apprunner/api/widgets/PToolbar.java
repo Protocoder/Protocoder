@@ -39,13 +39,13 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v7.app.ActionBar;
+import android.view.View;
 import android.widget.TextView;
 
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
-import org.protocoderrunner.apprunner.ProtocoderScript;
 
 public class PToolbar implements PViewInterface {
 
@@ -59,27 +59,27 @@ public class PToolbar implements PViewInterface {
         mToolbar = mContext.getSupportActionBar();
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Set toolbar title name", example = "")
-    @APIParam(params = { "titleName" })
+
+    @ProtoMethod(description = "Set toolbar title name", example = "")
+    @ProtoMethodParam(params = { "titleName" })
     public PToolbar title(String title) {
         mToolbar.setTitle(title);
         return this;
     }
 
 
-    @ProtocoderScript
-    @APIMethod(description = "Sets toolbar secondary title", example = "")
-    @APIParam(params = { "subtitleName" })
+
+    @ProtoMethod(description = "Sets toolbar secondary title", example = "")
+    @ProtoMethodParam(params = { "subtitleName" })
     public PToolbar subtitle(String subtitle) {
         mToolbar.setSubtitle(subtitle);
         return this;
     }
 
 
-    @ProtocoderScript
-    @APIMethod(description = "Show/Hide title bar", example = "")
-    @APIParam(params = { "boolean" })
+
+    @ProtoMethod(description = "Show/Hide title bar", example = "")
+    @ProtoMethodParam(params = { "boolean" })
     public PToolbar show(Boolean b) {
         if (b) {
             mToolbar.show();
@@ -89,9 +89,9 @@ public class PToolbar implements PViewInterface {
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Changes the title bar color", example = "")
-    @APIParam(params = { "r", "g", "b", "alpha" })
+
+    @ProtoMethod(description = "Changes the title bar color", example = "")
+    @ProtoMethodParam(params = { "r", "g", "b", "alpha" })
     public PToolbar bgColor(int r, int g, int b, int alpha) {
         int c = Color.argb(alpha, r, g, b);
 
@@ -102,9 +102,9 @@ public class PToolbar implements PViewInterface {
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Changes the title text color", example = "")
-    @APIParam(params = { "r", "g", "b", "mContext" })
+
+    @ProtoMethod(description = "Changes the title text color", example = "")
+    @ProtoMethodParam(params = { "r", "g", "b", "mContext" })
     public PToolbar textColor(int r, int g, int b, int alpha) {
         int c = Color.argb(alpha, r, g, b);
 
@@ -120,9 +120,9 @@ public class PToolbar implements PViewInterface {
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Sets an image rather than text as toolbar title", example = "")
-    @APIParam(params = { "imageName" })
+
+    @ProtoMethod(description = "Sets an image rather than text as toolbar title", example = "")
+    @ProtoMethodParam(params = { "imageName" })
     public PToolbar imageIcon(String imagePath) {
         Bitmap myBitmap = BitmapFactory.decodeFile(AppRunnerSettings.get().project.getStoragePath() + imagePath);
         Drawable icon = new BitmapDrawable(mContext.getResources(), myBitmap);

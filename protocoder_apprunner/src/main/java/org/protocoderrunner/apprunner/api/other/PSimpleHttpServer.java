@@ -30,12 +30,13 @@
 package org.protocoderrunner.apprunner.api.other;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
-import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.network.NanoHTTPD;
 import org.protocoderrunner.network.NetworkUtils;
 import org.protocoderrunner.project.Project;
@@ -55,7 +56,9 @@ import java.util.Properties;
  */
 public class PSimpleHttpServer extends NanoHTTPD {
 	public static final String TAG = "ProtocoderHttpServer";
-	private final WeakReference<Context> ctx;
+    public Handler mHandler = new Handler(Looper.getMainLooper());
+
+    private final WeakReference<Context> ctx;
 
 	private static final Map<String, String> MIME_TYPES = new HashMap<String, String>() {
 		{
@@ -107,16 +110,16 @@ public class PSimpleHttpServer extends NanoHTTPD {
 		}
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Responds to the request with a given text", example = "")
-    @APIParam(params = { "boolean" })
-    public Response respond(String data) {
-        return new Response("200", MIME_TYPES.get("txt"), data);
+
+    @ProtoMethod(description = "Responds to the request with a given text", example = "")
+    @ProtoMethodParam(params = { "boolean" })
+    public Response respond(String data, String fileExtension) {
+        return new Response("200", MIME_TYPES.get(fileExtension), data);
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Serves a file", example = "")
-    @APIParam(params = { "uri", "header" })
+
+    @ProtoMethod(description = "Serves a file", example = "")
+    @ProtoMethodParam(params = { "uri", "header" })
     public Response serveFile(String uri, Properties header) {
         super.serveFile(uri.substring(uri.lastIndexOf('/') + 1, uri.length()), header,
                 new File(p.getStoragePath()), false);
@@ -174,25 +177,31 @@ public class PSimpleHttpServer extends NanoHTTPD {
         return res;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Stops the http server", example = "")
-    @APIParam(params = { "" })
+
+    @ProtoMethod(description = "Stops the http server", example = "")
+    @ProtoMethodParam(params = { "" })
     public void stop() {
         super.stop();
     }
 
 
-	public Response serve(String uri, String method, Properties header, Properties parms, Properties files) {
-		Response res = null;
+	public Response serve(final String uri, final String method, final Properties header, final Properties parms, final Properties files) {
+        final Response[] res = {null};
         MLog.d(TAG, uri + " " + method + " " + header + " " + parms + " " + files);
 
         try {
-            res = callbackfn.event(uri, method, header, parms, files);
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    res[0] = callbackfn.event(uri, method, header, parms, files);
+                }
+            });
+
         } catch (Exception e) {
             MLog.d(TAG, e.toString());
         }
 
-        return res;
+        return res[0];
     }
 
 

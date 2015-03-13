@@ -51,6 +51,8 @@ public class Protocoder {
     public Editor editor;
     public Settings settings;
 
+
+    //instances of some Protocoder AppRunner objects
     PUtil mPUtil = new PUtil(mActivityContext);
     PUI mPUi = new PUI(mActivityContext);
     PNetwork mPNetwork = new PNetwork(mActivityContext);
@@ -70,6 +72,7 @@ public class Protocoder {
 
 
     Protocoder() {
+        settings = new Settings(mActivityContext);
 
     }
 
@@ -77,7 +80,6 @@ public class Protocoder {
         app = new App(this);
         protoScripts = new ProtoScripts(this);
         editor = new Editor(this);
-        settings = new Settings(this);
         webEditor = new WebEditor(this);
 
         //TODO reenable
@@ -93,7 +95,7 @@ public class Protocoder {
                     versionName = splitted[1];
                     versionCode = Integer.parseInt(splitted[2]);
 
-                    if (versionCode > mProtocoder.getVersionCode()) {
+                    if (versionCode > mProtocoder.versionCode()) {
                         mPUi.popupInfo("New version available", "The new version " + versionName + " is available in the Protocoder.org website. Do you want to get it?", "Yes!", "Later", new PUI.popupCB() {
                             @Override
                             public void event(boolean b) {

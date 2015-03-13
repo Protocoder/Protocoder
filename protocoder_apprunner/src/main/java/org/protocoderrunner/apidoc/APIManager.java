@@ -31,8 +31,8 @@ package org.protocoderrunner.apidoc;
 
 import com.google.gson.Gson;
 
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.utils.MLog;
 
 import java.lang.annotation.Annotation;
@@ -113,15 +113,15 @@ public class APIManager {
 					for (Annotation annotation2 : annotations) {
 
 						// description and example
-						if (annotation2.annotationType().getSimpleName().equals(APIMethod.class.getSimpleName())) {
-							apiMethod.description = ((APIMethod) annotation2).description();
-							apiMethod.example = ((APIMethod) annotation2).example();
+						if (annotation2.annotationType().getSimpleName().equals(ProtoMethod.class.getSimpleName())) {
+							apiMethod.description = ((ProtoMethod) annotation2).description();
+							apiMethod.example = ((ProtoMethod) annotation2).example();
 
 						}
 
 						// get parameters names
-						if (annotation2.annotationType().getSimpleName().equals(APIParam.class.getSimpleName())) {
-							apiMethod.parametersName = ((APIParam) annotation2).params();
+						if (annotation2.annotationType().getSimpleName().equals(ProtoMethodParam.class.getSimpleName())) {
+							apiMethod.parametersName = ((ProtoMethodParam) annotation2).params();
 							MLog.d(TAG, "getting names " + apiMethod.parametersName);
 						}
 
@@ -164,11 +164,11 @@ public class APIManager {
 				for (Annotation annotation2 : annotations) {
 
 					MLog.d(TAG, annotation2.toString() + " " + annotation2.annotationType().getSimpleName() + " "
-							+ APIMethod.class.getSimpleName());
+							+ ProtoMethod.class.getSimpleName());
 
-					if (annotation2.annotationType().getSimpleName().equals(APIMethod.class.getSimpleName())) {
-						String desc = ((APIMethod) annotation2).description();
-						String example = ((APIMethod) annotation2).example();
+					if (annotation2.annotationType().getSimpleName().equals(ProtoMethod.class.getSimpleName())) {
+						String desc = ((ProtoMethod) annotation2).description();
+						String example = ((ProtoMethod) annotation2).example();
 						MLog.d(TAG, desc);
 					}
 				}

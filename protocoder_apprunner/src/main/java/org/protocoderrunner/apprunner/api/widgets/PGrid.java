@@ -4,9 +4,8 @@ import android.content.Context;
 import android.widget.LinearLayout;
 
 import org.mozilla.javascript.NativeArray;
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
-import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 
 /**
  * Created by victormanueldiazbarrales on 28/07/14.
@@ -23,9 +22,9 @@ public class PGrid extends LinearLayout {
 
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Adds a new row with n columns", example = "")
-    @APIParam(params = { "numColumns" })
+
+    @ProtoMethod(description = "Adds a new row with n columns", example = "")
+    @ProtoMethodParam(params = { "numColumns" })
     public PGridRow addRow(int cols) {
         PGridRow ll2 = new PGridRow(context, cols);
         this.addView(ll2);
@@ -33,9 +32,9 @@ public class PGrid extends LinearLayout {
         return ll2;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Specify the number of columns", example = "")
-    @APIParam(params = { "colums" })
+
+    @ProtoMethod(description = "Specify the number of columns", example = "")
+    @ProtoMethodParam(params = { "colums" })
     public PGrid columns(int cols) {
         this.columns = cols;
         
@@ -43,27 +42,27 @@ public class PGrid extends LinearLayout {
     }
 
     //TODO Placeholder
-    //@ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "" })
+    //
+    @ProtoMethod(description = "", example = "")
+    @ProtoMethodParam(params = { "" })
     public PGrid inPlace(int x, int y, int w, int h) {
 
         return this;
     }
 
     //TODO Placeholder
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "" })
+
+    @ProtoMethod(description = "", example = "")
+    @ProtoMethodParam(params = { "" })
     public PGrid using(NativeArray array) {
 
         return this;
     }
 
     //TODO placeholder
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "" })
+
+    @ProtoMethod(description = "", example = "")
+    @ProtoMethodParam(params = { "" })
     public PGrid build() {
 
         return this;

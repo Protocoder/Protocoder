@@ -72,7 +72,7 @@ import org.protocoderrunner.apprunner.api.other.PPureData;
 import org.protocoderrunner.apprunner.api.other.PSimpleHttpServer;
 import org.protocoderrunner.apprunner.api.other.PSocketIOClient;
 import org.protocoderrunner.apprunner.api.other.PSqLite;
-import org.protocoderrunner.apprunner.api.other.PVideo;
+import org.protocoderrunner.apprunner.api.widgets.PVideo;
 import org.protocoderrunner.apprunner.api.other.PWebEditor;
 import org.protocoderrunner.apprunner.api.widgets.PAbsoluteLayout;
 import org.protocoderrunner.apprunner.api.widgets.PButton;
@@ -131,7 +131,7 @@ import de.greenrobot.event.EventBus;
 public class ProtocoderHttpServer extends NanoHTTPD {
 	public static final String TAG = "myHTTPServer";
 	private final WeakReference<Context> ctx;
-	private final String WEBAPP_DIR = "webapp/";
+	private final String WEBAPP_DIR = "webide/";
 	String projectURLPrefix = "/apps";
 
 	private static final Map<String, String> MIME_TYPES = new HashMap<String, String>() {

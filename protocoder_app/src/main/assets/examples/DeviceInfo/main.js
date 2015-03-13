@@ -6,18 +6,18 @@
 var batteryTxt = ui.addText("battery", 10, 10, 200, 50);
 
 //this gets battery when we want 
-batteryTxt.setText("battery: " + device.getBatteryLevel());
+batteryTxt.setText("battery: " + device.battery());
 
 //this is a callback that triggers everytime the battery changes
-device.startBatteryListener(function (e) {
+device.battery(function (e) {
     batteryTxt.setText("battery " + e.level);
 });
 
-var tabletLabel = ui.addText("tablet " + device.getType(), 10, 60, 200, 50);
-var brightnessLabel = ui.addText("brightness " + device.getBrightness(), 10, 110, 200, 50);
+var tabletLabel = ui.addText("tablet " + device.type(), 10, 60, 200, 50);
+var brightnessLabel = ui.addText("brightness " + device.brightness(), 10, 110, 200, 50);
 
-var info = device.getInfo();
+var info = device.info();
 var infoText = "screenDpi " + info.screenDpi + " versionRelease" + info.versionRelease;
 var infoLabel = ui.addText(infoText, 10, 160, 500, 50);
-var wifiTxt = network.getIp() + " " + network.getWifiInfo().getSSID();
+var wifiTxt = network.getIp() + " " + network.wifiInfo().getSSID();
 var ipTxt = ui.addText(wifiTxt, 10, 210, 500, 50);

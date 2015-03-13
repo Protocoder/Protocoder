@@ -29,13 +29,10 @@
 
 package org.protocoderrunner.apprunner.api.other;
 
-import android.content.Context;
-
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
-import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.apprunner.api.widgets.PViewInterface;
 import org.protocoderrunner.fragments.CameraNew;
 
@@ -59,9 +56,9 @@ public class PCamera extends CameraNew implements PViewInterface {
     }
 
 
-    @ProtocoderScript
-    @APIParam(params = { "fileName", "function()" })
-    @APIMethod(description = "Takes a picture and saves it to fileName", example = "camera.takePicture();")
+
+    @ProtoMethodParam(params = { "fileName", "function()" })
+    @ProtoMethod(description = "Takes a picture and saves it to fileName", example = "camera.takePicture();")
 	// @APIRequires()
 	public void takePicture(String file, final TakePictureCB callbackfn) {
 
@@ -81,80 +78,80 @@ public class PCamera extends CameraNew implements PViewInterface {
         });
 	}
 
-    @ProtocoderScript
-    @APIParam(params = { "function(bitmap)" })
-    @APIMethod(description = "Gets bitmap frames ready to use", example = "camera.takePicture();")
+
+    @ProtoMethodParam(params = { "function(bitmap)" })
+    @ProtoMethod(description = "Gets bitmap frames ready to use", example = "camera.takePicture();")
 	// @APIRequires()
 	public void onNewBitmap(final CameraNew.CallbackBmp callbackfn) {
         cam.addCallbackBmp(callbackfn);
 	}
 
-    @ProtocoderScript
-    @APIParam(params = { "function(base64Image)" })
-    @APIMethod(description = "Get the frames ready to stream", example = "camera.takePicture();")
+
+    @ProtoMethodParam(params = { "function(base64Image)" })
+    @ProtoMethod(description = "Get the frames ready to stream", example = "camera.takePicture();")
     public void onNewStreamFrame(CameraNew.CallbackStream callbackfn) {
         cam.addCallbackStream(callbackfn);
     }
 
-    @ProtocoderScript
-    @APIParam(params = { "width", "height" })
-    @APIMethod(description = "Set the camera preview resolution", example = "camera.takePicture();")
+
+    @ProtoMethodParam(params = { "width", "height" })
+    @ProtoMethod(description = "Set the camera preview resolution", example = "camera.takePicture();")
     public void setPreviewSize(int w, int h) {
         super.setPreviewSize(w, h);
     }
 
-    @ProtocoderScript
-    @APIParam(params = { "width", "height" })
-    @APIMethod(description = "Set the camera picture resolution", example = "camera.takePicture();")
+
+    @ProtoMethodParam(params = { "width", "height" })
+    @ProtoMethod(description = "Set the camera picture resolution", example = "camera.takePicture();")
     public void setPictureResolution(int w, int h) {
         super.setPictureSize(w, h);
     }
 
-    @ProtocoderScript
-    @APIParam(params = { "{'none', 'mono', 'sepia', 'negative', 'solarize', 'posterize', 'whiteboard', 'blackboard'}" })
-    @APIMethod(description = "Set the camera picture effect if supported", example = "camera.takePicture();")
+
+    @ProtoMethodParam(params = { "{'none', 'mono', 'sepia', 'negative', 'solarize', 'posterize', 'whiteboard', 'blackboard'}" })
+    @ProtoMethod(description = "Set the camera picture effect if supported", example = "camera.takePicture();")
     public void setColorEffect(String effect) {
         super.setColorEffect(effect);
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Records a video in fileName", example = "")
-    @APIParam(params = { "fileName" })
+
+    @ProtoMethod(description = "Records a video in fileName", example = "")
+    @ProtoMethodParam(params = { "fileName" })
 	public void recordVideo(String file) {
 		recordVideo(AppRunnerSettings.get().project.getStoragePath() + File.separator + file);
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Stops recording the video", example = "")
-    @APIParam(params = { "" })
+
+    @ProtoMethod(description = "Stops recording the video", example = "")
+    @ProtoMethodParam(params = { "" })
 	public void stopRecordingVideo() {
 		stopRecordingVideo();
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Checks if flash is available", example = "")
-    @APIParam(params = { "" })
+
+    @ProtoMethod(description = "Checks if flash is available", example = "")
+    @ProtoMethodParam(params = { "" })
     public boolean isFlashAvailable() {
         return super.isFlashAvailable();
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Turns on/off the flash", example = "")
-    @APIParam(params = { "" })
+
+    @ProtoMethod(description = "Turns on/off the flash", example = "")
+    @ProtoMethodParam(params = { "" })
     public void turnOnFlash(boolean b) {
         super.turnOnFlash(b);
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Turn the autofocus on/off", example = "")
-    @APIParam(params = { "" })
+
+    @ProtoMethod(description = "Turn the autofocus on/off", example = "")
+    @ProtoMethodParam(params = { "" })
     public void focus() {
         super.focus(null);
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Turn the autofocus on/off", example = "")
-    @APIParam(params = { "" })
+
+    @ProtoMethod(description = "Turn the autofocus on/off", example = "")
+    @ProtoMethodParam(params = { "" })
     public void focus(FocusCB callback) {
         super.focus(callback);
     }
