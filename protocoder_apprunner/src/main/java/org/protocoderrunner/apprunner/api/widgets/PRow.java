@@ -5,9 +5,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
-import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 
 public class PRow {
 	int n;
@@ -28,9 +27,9 @@ public class PRow {
 		lParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, tt);
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Add a new view to the row", example = "")
-    @APIParam(params = { "view" })
+
+    @ProtoMethod(description = "Add a new view to the row", example = "")
+    @ProtoMethodParam(params = { "view" })
 	public void addView(View v) {
 		v.setLayoutParams(lParams);
 		ll.addView(v);

@@ -38,9 +38,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.protocoderrunner.R;
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
-import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 
 public class PCard extends LinearLayout implements PViewInterface {
 
@@ -67,9 +66,9 @@ public class PCard extends LinearLayout implements PViewInterface {
 	}
 
     @Override
-    @ProtocoderScript
-    @APIMethod(description = "Adds a new view", example = "")
-    @APIParam(params = { "view" })
+
+    @ProtoMethod(description = "Adds a new view", example = "")
+    @ProtoMethodParam(params = { "view" })
 	public void addView(View v) {
 		v.setAlpha(0);
 		v.animate().alpha(1).setDuration(500).setStartDelay(100 * (1 + viewCount));
@@ -78,18 +77,18 @@ public class PCard extends LinearLayout implements PViewInterface {
 		cardLl.addView(v);
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Add a row of n columns", example = "")
-    @APIParam(params = { "columnNumber" })
+
+    @ProtoMethod(description = "Add a row of n columns", example = "")
+    @ProtoMethodParam(params = { "columnNumber" })
 	public PRow addRow(int n) {
 		PRow row = new PRow(c, cardLl, n);
 
 		return row;
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Set the title of the card", example = "")
-    @APIParam(params = { "text" })
+
+    @ProtoMethod(description = "Set the title of the card", example = "")
+    @ProtoMethodParam(params = { "text" })
 	public void setTitle(String text) {
 		if (text.isEmpty() == false) {
 			title.setVisibility(View.VISIBLE);
@@ -97,24 +96,24 @@ public class PCard extends LinearLayout implements PViewInterface {
 		}
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Changes the title color", example = "")
-    @APIParam(params = { "colorHex" })
+
+    @ProtoMethod(description = "Changes the title color", example = "")
+    @ProtoMethodParam(params = { "colorHex" })
 	public void setTitleColor(String color) {
 		title.setBackgroundColor(Color.parseColor(color));
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Card with horizontal views", example = "")
-    @APIParam(params = { "" })
+
+    @ProtoMethod(description = "Card with horizontal views", example = "")
+    @ProtoMethodParam(params = { "" })
 	public void setHorizontal() {
 		LinearLayout ll = (LinearLayout) findViewById(R.id.cardWidgets);
 		ll.setOrientation(LinearLayout.HORIZONTAL);
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Card with vertical views", example = "")
-    @APIParam(params = { "" })
+
+    @ProtoMethod(description = "Card with vertical views", example = "")
+    @ProtoMethodParam(params = { "" })
 	public void setVertical() {
 		LinearLayout ll = (LinearLayout) findViewById(R.id.cardWidgets);
 		ll.setOrientation(LinearLayout.VERTICAL);

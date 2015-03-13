@@ -39,9 +39,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
-import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.utils.MLog;
 import org.protocoderrunner.views.CanvasUtils;
 
@@ -221,9 +220,9 @@ public class PPlotView extends View implements PViewInterface {
         }
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Init a plot name", example = "")
-    @APIParam(params = { "" })
+
+    @ProtoMethod(description = "Init a plot name", example = "")
+    @ProtoMethodParam(params = { "" })
     public PPlotView init(String plotName) {
 
         if (plots.containsKey(plotName) == false) {
@@ -235,9 +234,9 @@ public class PPlotView extends View implements PViewInterface {
     }
 
 
-    @ProtocoderScript
-    @APIMethod(description = "Updates the value of the plotName plot", example = "")
-    @APIParam(params = { "plotName", "value" })
+
+    @ProtoMethod(description = "Updates the value of the plotName plot", example = "")
+    @ProtoMethodParam(params = { "plotName", "value" })
     public PPlotView update(String plotName, float v1) {
 
         if (mReady) {
@@ -262,18 +261,18 @@ public class PPlotView extends View implements PViewInterface {
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Updates the value of the default plot", example = "")
-    @APIParam(params = { "value" })
+
+    @ProtoMethod(description = "Updates the value of the default plot", example = "")
+    @ProtoMethodParam(params = { "value" })
     public PPlotView update(float v) {
         update("default", v);
 
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Changes the plot limits", example = "")
-    @APIParam(params = { "min", "max" })
+
+    @ProtoMethod(description = "Changes the plot limits", example = "")
+    @ProtoMethodParam(params = { "min", "max" })
     public PPlotView setLimits(float min, float max) {
         mMinBoundary = min;
         mMaxBoundary = max;
@@ -281,9 +280,9 @@ public class PPlotView extends View implements PViewInterface {
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Changes the plot definition", example = "")
-    @APIParam(params = { "definition" })
+
+    @ProtoMethod(description = "Changes the plot definition", example = "")
+    @ProtoMethodParam(params = { "definition" })
     public PPlotView setDefinition(int definition) {
         mDefinition = definition;
         return this;
@@ -317,18 +316,18 @@ public class PPlotView extends View implements PViewInterface {
 
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Sets the line thickness", example = "")
-    @APIParam(params = { "thickness" })
+
+    @ProtoMethod(description = "Sets the line thickness", example = "")
+    @ProtoMethodParam(params = { "thickness" })
     public PPlotView setThickness(float r) {
         thickness = r; // when dot
         mPaint.setStrokeWidth(thickness); // when line
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Changes the plot color", example = "")
-    @APIParam(params = { "plotName", "colorHex" })
+
+    @ProtoMethod(description = "Changes the plot color", example = "")
+    @ProtoMethodParam(params = { "plotName", "colorHex" })
     public PPlotView setColor(String plotName, String rgb) {
         new Color();
         int c = Color.parseColor(rgb);
@@ -341,17 +340,17 @@ public class PPlotView extends View implements PViewInterface {
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Get the plot array size", example = "")
-    @APIParam(params = { "" })
+
+    @ProtoMethod(description = "Get the plot array size", example = "")
+    @ProtoMethodParam(params = { "" })
     public int getSize() {
         return mNumPoints;
     }
 
 
-    @ProtocoderScript
-    @APIMethod(description = "Get the current values of the plot as an array", example = "")
-    @APIParam(params = { "plotName" })
+
+    @ProtoMethod(description = "Get the current values of the plot as an array", example = "")
+    @ProtoMethodParam(params = { "plotName" })
     public Float[] getArray(String plotName) {
         Plot p = plots.get(plotName);
         //MLog.d(TAG, "plot " + p);
@@ -360,9 +359,9 @@ public class PPlotView extends View implements PViewInterface {
     }
 
 
-    @ProtocoderScript
-    @APIMethod(description = "Set an array of values in the plot", example = "")
-    @APIParam(params = { "plotName", "value" })
+
+    @ProtoMethod(description = "Set an array of values in the plot", example = "")
+    @ProtoMethodParam(params = { "plotName", "value" })
     public PPlotView setArray(String plotName, float[] values) {
         Plot p = plots.get(plotName);
 
@@ -379,9 +378,9 @@ public class PPlotView extends View implements PViewInterface {
     }
 
 
-    @ProtocoderScript
-    @APIMethod(description = "Sets the background color", example = "")
-    @APIParam(params = { "colorHex" })
+
+    @ProtoMethod(description = "Sets the background color", example = "")
+    @ProtoMethodParam(params = { "colorHex" })
     public PPlotView setBackground(String c) {
         super.setBackgroundColor(Color.parseColor(c));
 

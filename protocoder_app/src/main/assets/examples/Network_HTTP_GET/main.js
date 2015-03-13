@@ -1,5 +1,5 @@
 /*
-*	New project by ....... 
+*	HTTP GET petition
 *
 */
 

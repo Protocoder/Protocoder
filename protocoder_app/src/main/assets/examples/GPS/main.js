@@ -17,9 +17,11 @@ var altTxt = ui.addText("City : ",10,300,500,100);
 var map	= ui.addImage("https://maps.googleapis.com/maps/api/staticmap?center=0,0&zoom=20&size=700x500&sensor=false", 0, 400, 700, 500);
 
 //for each GPS update the image and values are changed 
-sensors.startGPS(function (lat, lon, alt, speed, bearing) { 
+sensors.gps.onChange(function (lat, lon, alt, speed, bearing) { 
     latTxt.setText("Latitude : " + lat);
     lonTxt.setText("Longitude : " + lon);
     altTxt.setText("Altitude : " + alt);
-    map.setImage("https://maps.googleapis.com/maps/api/staticmap?center="+lat+","+lon+"&zoom=20&size=700x500&sensor=false")
+    
+    var url = "https://maps.googleapis.com/maps/api/staticmap?center="+lat+","+lon+"&zoom=20&size=700x500&sensor=false";
+    map.setImage(url)
 });

@@ -33,10 +33,9 @@ import android.content.Context;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.network.CustomWebsocketServer;
 import org.protocoderrunner.utils.StrUtils;
 
@@ -74,9 +73,9 @@ public class PDashboardPlot extends PInterface {
 		CustomWebsocketServer.getInstance(getContext()).send(msg);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "update the plot with a given value", example = "")
-    @APIParam(params = { "value" })
+
+	@ProtoMethod(description = "update the plot with a given value", example = "")
+    @ProtoMethodParam(params = { "value" })
     public void update(float val) throws UnknownHostException, JSONException {
 
 		JSONObject values = new JSONObject()

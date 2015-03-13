@@ -14,7 +14,7 @@
         android:animateLayoutChanges="false"
         android:background="@android:color/transparent"
         android:gravity="center"
-        android:columnWidth = "100dp"
+        android:columnWidth = "140dp"
         android:horizontalSpacing="5dp"
         android:layoutAnimation="@anim/fav_grid_anim"
         android:listSelector="@android:color/transparent"
@@ -42,8 +42,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="No Projects yet :("
-            android:textSize="45sp"
-            android:layout_marginBottom="25dp"
+            android:textSize="35sp"
+            android:layout_marginBottom="20dp"
             android:textColor="#55000000"
             />
 

@@ -45,8 +45,9 @@ public class PDashboardButton extends PInterface {
 	private static final String TAG = "PDashboardButton";
 	String id;
 	String name;
+    private jDashboardAddCB mCallback;
 
-	public PDashboardButton(Context a) {
+    public PDashboardButton(Context a) {
 		super(a);
 	}
 
@@ -55,7 +56,7 @@ public class PDashboardButton extends PInterface {
 		void event();
 	}
 
-	public void add(String name, int x, int y, int w, int h, final jDashboardAddCB callbackfn) throws JSONException,
+	public void add(String name, int x, int y, int w, int h) throws JSONException,
 			UnknownHostException {
 		this.id = StrUtils.generateRandomString();
 		this.name = name;
@@ -75,21 +76,28 @@ public class PDashboardButton extends PInterface {
                 .put("values", values);
 
 		CustomWebsocketServer.getInstance(getContext()).send(msg);
-		CustomWebsocketServer.getInstance(getContext()).addListener(id, new WebSocketListener() {
-
-			@Override
-			public void onUpdated(JSONObject jsonObject) {
-				mHandler.post(new Runnable() {
-
-					@Override
-					public void run() {
-						callbackfn.event();
-					}
-				});
-			}
-		});
 
 	}
+
+    public void onClick(final jDashboardAddCB callbackfn) throws UnknownHostException {
+        if (mCallback == null) {
+            mCallback = callbackfn;
+        } else {
+            CustomWebsocketServer.getInstance(getContext()).addListener(id, new WebSocketListener() {
+
+                @Override
+                public void onUpdated(JSONObject jsonObject) {
+                    mHandler.post(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            mCallback.event();
+                        }
+                    });
+                }
+            });
+        }
+    }
 
 	public void update(boolean pressed) throws JSONException, UnknownHostException {
 

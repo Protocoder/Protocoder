@@ -191,13 +191,14 @@ public class ProtoScripts {
     }
 
 
-    int c = 0;
     public void run(String folder, String appName) {
+        //close app if open
         if (currentProjectApplicationIntent != null) {
             mProtocoder.mActivityContext.finishActivity(mProjectRequestCode);
             currentProjectApplicationIntent = null;
         }
 
+        //open new activity
         try {
             currentProjectApplicationIntent = new Intent(mProtocoder.mActivityContext, AppRunnerActivity.class);
 
@@ -208,13 +209,19 @@ public class ProtoScripts {
                 currentProjectApplicationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             }
 
+            //settings
+            currentProjectApplicationIntent.putExtra(Project.SETTINGS_SCREEN_ALWAYS_ON, mProtocoder.settings.getScreenOn());
+
+            //set the folder and app name to be loaded
             currentProjectApplicationIntent.putExtra(Project.FOLDER, folder);
             currentProjectApplicationIntent.putExtra(Project.NAME, appName);
+
             currentProjectApplicationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
             //currentProjectApplicationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             currentProjectApplicationIntent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
 
-            currentProjectApplicationIntent.putExtra("qq", c++);
+            //load the custom js interpreter if exists with the webide
+            currentProjectApplicationIntent.putExtra(Project.PREFIX, EditorManager.getInstance().getCustomJSInterpreterIfExist(mProtocoder.mActivityContext));
 
             mProtocoder.mActivityContext.overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
             mProtocoder.mActivityContext.startActivityForResult(currentProjectApplicationIntent, mProjectRequestCode);

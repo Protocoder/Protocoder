@@ -49,11 +49,10 @@ import android.view.animation.BounceInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.apprunner.api.other.SignalUtils;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.utils.MLog;
@@ -79,50 +78,78 @@ public class PUtil extends PInterface {
 	}
 
 	public class Looper {
-		Runnable task;
-		public int delay;
+        private LooperCB mCallbackfn;
+        Runnable task;
+
+		public int speed;
 		boolean paused = false;
 
 		Looper(final int duration, final LooperCB callbackkfn) {
-			delay = duration;
+            mCallbackfn = callbackkfn;
+			speed = duration;
 
 			task = new Runnable() {
 
 				@Override
 				public void run() {
-					callbackkfn.event();
-					if (!paused) {
-						handler.postDelayed(this, delay);
-					}
+                if (mCallbackfn != null) {
+                    mCallbackfn.event();
+                }
+
+                if (!paused) {
+                    handler.postDelayed(this, speed);
+                }
 				}
 			};
-			handler.post(task);
 
 			rl.add(task);
 		}
 
-		@ProtocoderScript
-		@APIMethod(description = "Change the current delay to a new one", example = "")
-		@APIParam(params = { "duration" })
-		public void setDelay(int duration) {
-			this.delay = duration;
+        public Looper onLoop(LooperCB callbackfn) {
+            mCallbackfn = callbackfn;
+
+            return this;
+        }
+
+		@ProtoMethod(description = "Change the current time speed to a new one", example = "")
+		@ProtoMethodParam(params = { "duration" })
+		public Looper speed(int duration) {
+			this.speed = duration;
+            if (duration < this.speed) {
+                stop();
+                start();
+            }
+            return this;
 		}
 
-		@ProtocoderScript
-		@APIMethod(description = "Pause the looper", example = "")
-		@APIParam(params = { "boolean" })
-		public void pause(boolean b) {
+
+		@ProtoMethod(description = "Pause the looper", example = "")
+		@ProtoMethodParam(params = { "boolean" })
+		public Looper pause(boolean b) {
 			this.paused = b;
 			if (b == false) {
-				handler.postDelayed(task, delay);
+				handler.postDelayed(task, speed);
 			}
-		}
 
-		@ProtocoderScript
-		@APIMethod(description = "Stop the looper", example = "")
-		public void stop() {
+            return this;
+        }
+
+
+		@ProtoMethod(description = "Stop the looper", example = "")
+		public Looper stop() {
 			handler.removeCallbacks(task);
-		}
+
+            return this;
+
+        }
+
+        @ProtoMethod(description = "Start the looper", example = "")
+        public Looper start() {
+            handler.post(task);
+
+            return this;
+        }
+
 	}
 
 	// --------- Looper ---------//
@@ -130,12 +157,17 @@ public class PUtil extends PInterface {
 		void event();
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Creates a looper that loops a given function every 'n' milliseconds", example = "")
-	@APIParam(params = { "milliseconds", "function()" })
-	public Looper loop(final int duration, final LooperCB callbackkfn) {
 
+	@ProtoMethod(description = "Creates a looper that loops a given function every 'n' milliseconds", example = "")
+	@ProtoMethodParam(params = { "milliseconds", "function()" })
+	public Looper loop(final int duration, final LooperCB callbackkfn) {
 		return new Looper(duration, callbackkfn);
+	}
+
+	@ProtoMethod(description = "Creates a looper that loops a given function every 'n' milliseconds", example = "")
+	@ProtoMethodParam(params = { "milliseconds" })
+	public Looper loop(final int duration) {
+		return new Looper(duration, null);
 	}
 
 	// --------- delay ---------//
@@ -143,9 +175,9 @@ public class PUtil extends PInterface {
 		void event();
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Delay a given function 'n' milliseconds", example = "")
-	@APIParam(params = { "milliseconds", "function()" })
+
+	@ProtoMethod(description = "Delay a given function 'n' milliseconds", example = "")
+	@ProtoMethodParam(params = { "milliseconds", "function()" })
 	public void delay(final int duration, final delayCB fn) {
 
 		Runnable task = new Runnable() {
@@ -163,9 +195,9 @@ public class PUtil extends PInterface {
 	}
 
 
-    @ProtocoderScript
-    @APIMethod(description = "Stop all timers", example = "")
-    @APIParam(params = { "" })
+
+    @ProtoMethod(description = "Stop all timers", example = "")
+    @ProtoMethodParam(params = { "" })
 	public void stopAllTimers() {
 		Iterator<Runnable> ir = rl.iterator();
 		while (ir.hasNext()) {
@@ -179,9 +211,9 @@ public class PUtil extends PInterface {
 	}
 
 	// http://stackoverflow.com/questions/4605527/converting-pixels-to-dp
-    @ProtocoderScript
-    @APIMethod(description = "Convert given dp to pixels", example = "")
-    @APIParam(params = { "" })
+
+    @ProtoMethod(description = "Convert given dp to pixels", example = "")
+    @ProtoMethodParam(params = { "" })
 	public float dpToPixels(float dp) {
 		Resources resources = getContext().getResources();
 		DisplayMetrics metrics = resources.getDisplayMetrics();
@@ -189,9 +221,9 @@ public class PUtil extends PInterface {
 		return px;
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Convert given px to dp", example = "")
-    @APIParam(params = { "" })
+
+    @ProtoMethod(description = "Convert given px to dp", example = "")
+    @ProtoMethodParam(params = { "" })
 	public float pixelsToDp(float px) {
 		Resources resources = getContext().getResources();
 		DisplayMetrics metrics = resources.getDisplayMetrics();
@@ -199,18 +231,18 @@ public class PUtil extends PInterface {
 		return dp;
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Convert given mm to pixels", example = "")
-    @APIParam(params = { "" })
+
+    @ProtoMethod(description = "Convert given mm to pixels", example = "")
+    @ProtoMethodParam(params = { "" })
 	public float mmToPixels(float mm) {
 		float px = TypedValue
 				.applyDimension(TypedValue.COMPLEX_UNIT_MM, mm, getContext().getResources().getDisplayMetrics());
 		return px;
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Convert given pixels to mm", example = "")
-    @APIParam(params = { "" })
+
+    @ProtoMethod(description = "Convert given pixels to mm", example = "")
+    @ProtoMethodParam(params = { "" })
 	public float pixelsToMm(int px) {
 		float onepx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_MM, 1, getContext().getResources()
 				.getDisplayMetrics());
@@ -222,9 +254,9 @@ public class PUtil extends PInterface {
         void event(float data);
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Animate a variable from min to max in a specified time using 'bounce', 'linear', 'decelerate', 'anticipate', 'aovershoot', 'accelerate' type  ", example = "")
-    @APIParam(params = { "" })
+
+    @ProtoMethod(description = "Animate a variable from min to max in a specified time using 'bounce', 'linear', 'decelerate', 'anticipate', 'aovershoot', 'accelerate' type  ", example = "")
+    @ProtoMethodParam(params = { "type", "min", "max", "time", "function(val)" })
     public ValueAnimator anim(String type, float min, float max, int time, final AnimCB callback) {
         TimeInterpolator interpolator = null;
         if (type.equals("bounce")) {
@@ -256,23 +288,23 @@ public class PUtil extends PInterface {
         return va;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Parse a color and return and int representing it", example = "")
-    @APIParam(params = { "colorString" })
+
+    @ProtoMethod(description = "Parse a color and return and int representing it", example = "")
+    @ProtoMethodParam(params = { "colorString" })
     public int parseColor(String c) {
         return Color.parseColor(c);
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Loads a font", example = "")
-    @APIParam(params = { "fontFile" })
+
+    @ProtoMethod(description = "Loads a font", example = "")
+    @ProtoMethodParam(params = { "fontFile" })
     public Typeface loadFont(String fontName) {
         return Typeface.createFromFile(AppRunnerSettings.get().project.getStoragePath() + File.separator + fontName);
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Detect faces in a bitmap", example = "")
-    @APIParam(params = { "Bitmap", "numFaces" })
+
+    @ProtoMethod(description = "Detect faces in a bitmap", example = "")
+    @ProtoMethodParam(params = { "Bitmap", "numFaces" })
     public int detectFaces(Bitmap bmp, int num_faces) {
         FaceDetector face_detector = new FaceDetector(bmp.getWidth(), bmp.getHeight(), num_faces);
         FaceDetector.Face[] faces = new FaceDetector.Face[num_faces];
@@ -282,9 +314,9 @@ public class PUtil extends PInterface {
     }
 
 
-    @ProtocoderScript
-    @APIMethod(description = "Converts byte array to bmp", example = "")
-    @APIParam(params = { "encodedImage" })
+
+    @ProtoMethod(description = "Converts byte array to bmp", example = "")
+    @ProtoMethodParam(params = { "encodedImage" })
     public Bitmap decodeBase64ToBitmap(String encodedImage) {
         byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
 

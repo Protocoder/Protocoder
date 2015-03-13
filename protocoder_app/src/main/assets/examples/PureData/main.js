@@ -8,14 +8,16 @@
 * 	with the sendFloat, sendBang methods 
 */
 
-var pd = media.initPDPatch("sinwave.pd", function(data) { 
+var pd = media.initPdPatch("sinwave.pd");
+
+pd.onNewData(function(data) { 
     console.log(data);
 });
 
 //add plot setting the limits from -12 to 12 
 var plot = ui.addPlot(0, 200, ui.screenWidth, 250, -12, 12); 
 
-sensors.startAccelerometer(function(x, y, z) {
+sensors.accelerometer.onChange(function(x, y, z) {
    //console.log("accelerometer " + x + ", " + y + ", " + z);
     pd.sendFloat("value", 82 + Math.round(x));
     plot.update(x);

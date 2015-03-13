@@ -43,6 +43,7 @@ public class AppRunnerSettings {
     public AppRunnerInterpreter interp;
     public Project project;
     public boolean hasUi = false;
+    public boolean hasCustomJSInterpreter = true;
 
 
     public static AppRunnerSettings get() {
@@ -60,4 +61,5 @@ public class AppRunnerSettings {
     public Scriptable newArray(File[] files) {
         return interp.interpreter.mainScriptContext.newArray(interp.interpreter.scope, files);
     }
+
 }

@@ -8,7 +8,11 @@
 */
 
 
-media.startMidiDevice(function(cable, ch, f, val) {
+var midi = media.connectMidiDevice(function(status) {
+	console.log("connected " + status);
+});
+
+midi.onNewInput(function(cable, ch, f, val) {
     console.log(cable, ch, f, val);
 });
 

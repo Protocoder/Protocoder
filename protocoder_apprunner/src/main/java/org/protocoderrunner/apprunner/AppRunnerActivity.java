@@ -36,7 +36,11 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
+import android.nfc.Tag;
+import android.nfc.tech.Ndef;
 import android.nfc.tech.NfcF;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
@@ -54,16 +58,17 @@ import org.protocoderrunner.AppSettings;
 import org.protocoderrunner.R;
 import org.protocoderrunner.apprunner.api.PDevice;
 import org.protocoderrunner.apprunner.api.PMedia;
-import org.protocoderrunner.apprunner.api.PNetwork;
+import org.protocoderrunner.apprunner.api.PSensors;
 import org.protocoderrunner.apprunner.api.PUI;
-import org.protocoderrunner.apprunner.api.other.PLiveCodingFeedback;
+import org.protocoderrunner.apprunner.api.other.PBluetooth;
+import org.protocoderrunner.apprunner.api.sensors.PNFC;
 import org.protocoderrunner.apprunner.api.widgets.PPadView;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.events.Events;
 import org.protocoderrunner.network.IDEcommunication;
 import org.protocoderrunner.project.Project;
-import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.MLog;
+import org.protocoderrunner.utils.StrUtils;
 
 import java.util.ArrayList;
 
@@ -76,9 +81,9 @@ public class AppRunnerActivity extends BaseActivity {
     private BroadcastReceiver mIntentReceiver;
 
     private PDevice.onSmsReceivedListener onSmsReceivedListener;
-    //private PSensors.onNFCListener onNFCListener;
-    //private PSensors.onNFCWrittenListener onNFCWrittenListener;
-    private PNetwork.onBluetoothListener onBluetoothListener;
+    private PNFC.onNFCListener onNFCListener;
+    private PNFC.onNFCWrittenListener onNFCWrittenListener;
+    private PBluetooth.onBluetoothListener onBluetoothListener;
     private PMedia.onVoiceRecognitionListener onVoiceRecognitionListener;
 
     public AppRunnerFragment mAppRunnerFragment;
@@ -91,6 +96,7 @@ public class AppRunnerActivity extends BaseActivity {
     private PUI.onKeyListener onKeyListener;
     public boolean keyVolumeEnabled = true;
     public boolean keyBackEnabled = true;
+    private String mPreloadedScript;
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -114,11 +120,15 @@ public class AppRunnerActivity extends BaseActivity {
                 finish();
             }
 
-
             // get projects intent
+            //settings
+            boolean settingScreenAlwaysOn = intent.getBooleanExtra(Project.SETTINGS_SCREEN_ALWAYS_ON, false);
+            boolean settingWakeUpScreen = intent.getBooleanExtra(Project.SETTINGS_SCREEN_WAKEUP, false);
+
+            //project info
             String projectName = intent.getStringExtra(Project.NAME);
             String projectFolder = intent.getStringExtra(Project.FOLDER);
-            boolean wakeUpScreen = intent.getBooleanExtra("wakeUpScreen", false);
+            mPreloadedScript = intent.getStringExtra(Project.PREFIX);
 
             //            Window window = this.getWindow();
             //            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -131,7 +141,7 @@ public class AppRunnerActivity extends BaseActivity {
             MLog.d(TAG, "load " + projectName + " in " + projectFolder);
 
             // wake up if intent says so
-            if (wakeUpScreen) {
+            if (settingWakeUpScreen) {
                 final Window win = getWindow();
                 win.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
                         | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
@@ -139,11 +149,15 @@ public class AppRunnerActivity extends BaseActivity {
                         | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
             }
 
+            //set screen always on if so
+            setScreenAlwaysOn(settingScreenAlwaysOn);
+
 
             Bundle bundle = new Bundle();
             bundle.putString(Project.NAME, projectName);
             bundle.putString(Project.FOLDER, projectFolder);
             bundle.putInt(Project.COLOR, intent.getIntExtra("color", 0));
+            bundle.putString(Project.PREFIX, mPreloadedScript);
 
             mAppRunnerFragment = AppRunnerFragment.newInstance(bundle);
 
@@ -330,69 +344,68 @@ public class AppRunnerActivity extends BaseActivity {
     }
 
 
-//TODO reenable this
-//
-//    @Override
-//    public void onNewIntent(Intent intent) {
-//        MLog.d(TAG, "New intent " + intent);
-//
-//        if (intent.getAction() != null) {
-//            MLog.d(TAG, "Discovered tag with intent: " + intent);
-//            // mText.setText("Discovered tag " + ++mCount + " with intent: " +
-//            // intent);
-//
-//            Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-//
-//            String nfcID = StrUtils.bytetostring(tag.getId());
-//
-//            // if there is mContext message waiting to be written
-//            if (NFCUtil.nfcMsg != null) {
-//                MLog.d(TAG, "->" + NFCUtil.nfcMsg);
-//                NFCUtil.writeTag(this, tag, NFCUtil.nfcMsg);
-//                onNFCWrittenListener.onNewTag();
-//                onNFCWrittenListener = null;
-//                NFCUtil.nfcMsg = null;
-//
-//                // read the nfc tag info
-//            } else {
-//
-//                // get NDEF tag details
-//                Ndef ndefTag = Ndef.get(tag);
-//                if (ndefTag == null) {
-//                    return;
-//                }
-//
-//                int size = ndefTag.getMaxSize(); // tag size
-//                boolean writable = ndefTag.isWritable(); // is tag writable?
-//                String type = ndefTag.getType(); // tag type
-//
-//                String nfcMessage = "";
-//
-//                // get NDEF message details
-//                NdefMessage ndefMesg = ndefTag.getCachedNdefMessage();
-//                if (ndefMesg != null) {
-//                    NdefRecord[] ndefRecords = ndefMesg.getRecords();
-//                    int len = ndefRecords.length;
-//                    String[] recTypes = new String[len]; // will contain the
-//                    // NDEF record types
-//                    String[] recPayloads = new String[len]; // will contain the
-//                    // NDEF record types
-//                    for (int i = 0; i < len; i++) {
-//                        recTypes[i] = new String(ndefRecords[i].getType());
-//                        recPayloads[i] = new String(ndefRecords[i].getPayload());
-//                        MLog.d(TAG, "qq " + i + " " + recTypes[i] + " " + recPayloads[i]);
-//
-//                    }
-//                    nfcMessage = recPayloads[0];
-//
-//                }
-//
-//                onNFCListener.onNewTag(nfcID, nfcMessage);
-//            }
-//
-//        }
-//
-//    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        MLog.d(TAG, "New intent " + intent);
+
+        if (intent.getAction() != null) {
+            MLog.d(TAG, "Discovered tag with intent: " + intent);
+            // mText.setText("Discovered tag " + ++mCount + " with intent: " +
+            // intent);
+
+            Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+
+            String nfcID = StrUtils.bytetostring(tag.getId());
+
+            // if there is mContext message waiting to be written
+            if (PNFC.nfcMsg != null) {
+                MLog.d(TAG, "->" + PNFC.nfcMsg);
+                PNFC.writeTag(this, tag, PNFC.nfcMsg);
+                onNFCWrittenListener.onNewTag();
+                onNFCWrittenListener = null;
+                PNFC.nfcMsg = null;
+
+                // read the nfc tag info
+            } else {
+
+                // get NDEF tag details
+                Ndef ndefTag = Ndef.get(tag);
+                if (ndefTag == null) {
+                    return;
+                }
+
+                int size = ndefTag.getMaxSize(); // tag size
+                boolean writable = ndefTag.isWritable(); // is tag writable?
+                String type = ndefTag.getType(); // tag type
+
+                String nfcMessage = "";
+
+                // get NDEF message details
+                NdefMessage ndefMesg = ndefTag.getCachedNdefMessage();
+                if (ndefMesg != null) {
+                    NdefRecord[] ndefRecords = ndefMesg.getRecords();
+                    int len = ndefRecords.length;
+                    String[] recTypes = new String[len]; // will contain the
+                    // NDEF record types
+                    String[] recPayloads = new String[len]; // will contain the
+                    // NDEF record types
+                    for (int i = 0; i < len; i++) {
+                        recTypes[i] = new String(ndefRecords[i].getType());
+                        recPayloads[i] = new String(ndefRecords[i].getPayload());
+                        MLog.d(TAG, "qq " + i + " " + recTypes[i] + " " + recPayloads[i]);
+
+                    }
+                    nfcMessage = recPayloads[0];
+
+                }
+
+                onNFCListener.onNewTag(nfcID, nfcMessage);
+            }
+
+        }
+
+    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -427,9 +440,9 @@ public class AppRunnerActivity extends BaseActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 // Up button pressed
-                Intent intentHome = new Intent(this, AppRunnerActivity.class);
-                intentHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intentHome);
+                //Intent intentHome = new Intent(this, AppRunnerActivity.class);
+                //intentHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                //startActivity(intentHome);
 
                 overridePendingTransition(R.anim.splash_slide_in_anim_reverse_set, R.anim.splash_slide_out_anim_reverse_set);
                 finish();
@@ -465,8 +478,13 @@ public class AppRunnerActivity extends BaseActivity {
         if (onBluetoothListener != null) {
             onBluetoothListener.onActivityResult(requestCode, resultCode, data);
         }
+
+
+
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+
 
     public void onResult(String result) {
 
@@ -522,24 +540,21 @@ public class AppRunnerActivity extends BaseActivity {
         onSmsReceivedListener = onSmsReceivedListener2;
     }
 
+    public void addNFCReadListener(PNFC.onNFCListener onNFCListener2) {
+        onNFCListener = onNFCListener2;
+    }
 
-//    //TODO reenable this
-//    public void addNFCReadListener(PSensors.onNFCListener onNFCListener2) {
-//        onNFCListener = onNFCListener2;
-//    }
-//
-//    public void addNFCWrittenListener(PSensors.onNFCWrittenListener onNFCWrittenListener2) {
-//        onNFCWrittenListener = onNFCWrittenListener2;
-//    }
+    public void addNFCWrittenListener(PNFC.onNFCWrittenListener onNFCWrittenListener2) {
+        onNFCWrittenListener = onNFCWrittenListener2;
+    }
 
-    public void addBluetoothListener(PNetwork.onBluetoothListener onBluetoothListener2) {
+    public void addBluetoothListener(PBluetooth.onBluetoothListener onBluetoothListener2) {
         onBluetoothListener = onBluetoothListener2;
     }
 
     public void addVoiceRecognitionListener(PMedia.onVoiceRecognitionListener onVoiceRecognitionListener2) {
         onVoiceRecognitionListener = onVoiceRecognitionListener2;
     }
-
 
 
 /*

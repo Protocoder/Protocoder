@@ -33,10 +33,9 @@ import android.content.Context;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.apprunner.api.dashboard.PDashboardBackground;
 import org.protocoderrunner.apprunner.api.dashboard.PDashboardButton;
 import org.protocoderrunner.apprunner.api.dashboard.PDashboardCustomWidget;
@@ -60,9 +59,9 @@ public class PDashboard extends PInterface {
 		super(a);
     }
 
-	@ProtocoderScript
-	@APIMethod(description = "add a plot in the dashboad", example = "")
-	@APIParam(params = { "name", "x", "y", "w", "h", "minLimit", "maxLimit" })
+
+	@ProtoMethod(description = "add a plot in the dashboad", example = "")
+	@ProtoMethodParam(params = { "name", "x", "y", "w", "h", "minLimit", "maxLimit" })
 	public PDashboardPlot addPlot(String name, int x, int y, int w, int h, float minLimit, float maxLimit)
 			throws UnknownHostException, JSONException {
 
@@ -72,9 +71,9 @@ public class PDashboard extends PInterface {
 		return pWebAppPlot;
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "add a HTML content in the dashboard", example = "")
-	@APIParam(params = { "htmlFile", "x", "y" })
+
+	@ProtoMethod(description = "add a HTML content in the dashboard", example = "")
+	@ProtoMethodParam(params = { "htmlFile", "x", "y" })
 	public PDashboardHTML addHtml(String html, int x, int y) throws UnknownHostException, JSONException {
 
 		PDashboardHTML pWebAppHTML = new PDashboardHTML(getContext());
@@ -83,33 +82,31 @@ public class PDashboard extends PInterface {
 		return pWebAppHTML;
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "add a button in the dashboard", example = "")
-	@APIParam(params = { "name", "x", "y", "w", "h", "function()" })
-	public PDashboardButton addButton(String name, int x, int y, int w, int h,
-			final PDashboardButton.jDashboardAddCB callbackfn) throws UnknownHostException, JSONException {
+
+	@ProtoMethod(description = "add a button in the dashboard", example = "")
+	@ProtoMethodParam(params = { "name", "x", "y", "w", "h", "function()" })
+	public PDashboardButton addButton(String name, int x, int y, int w, int h) throws UnknownHostException, JSONException {
 
 		PDashboardButton pWebAppButton = new PDashboardButton(getContext());
-		pWebAppButton.add(name, x, y, w, h, callbackfn);
+		pWebAppButton.add(name, x, y, w, h);
 
 		return pWebAppButton;
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "add a slider in the dashboard", example = "")
-	@APIParam(params = { "name", "x", "y", "w", "h", "min", "max", "function(num)" })
-	public PDashboardSlider addSlider(String name, int x, int y, int w, int h, int min, int max,
-			final PDashboardSlider.jDashboardSliderAddCB callbackfn) throws UnknownHostException, JSONException {
+
+	@ProtoMethod(description = "add a slider in the dashboard", example = "")
+	@ProtoMethodParam(params = { "name", "x", "y", "w", "h", "min", "max", "function(num)" })
+	public PDashboardSlider addSlider(String name, int x, int y, int w, int h, int min, int max) throws UnknownHostException, JSONException {
 
 		PDashboardSlider pWebAppSlider = new PDashboardSlider(getContext());
-		pWebAppSlider.add(name, x, y, w, h, min, max, callbackfn);
+		pWebAppSlider.add(name, x, y, w, h, min, max);
 
 		return pWebAppSlider;
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "add a input box in the dashboard", example = "")
-	@APIParam(params = { "name", "x", "y", "w", "h", "function(text)" })
+
+	@ProtoMethod(description = "add a input box in the dashboard", example = "")
+	@ProtoMethodParam(params = { "name", "x", "y", "w", "h", "function(text)" })
 	public PDashboardInput addInput(String name, int x, int y, int w, int h, final PDashboardInput.jDashboardInputCB callbackfn)
 			throws UnknownHostException, JSONException {
 
@@ -119,9 +116,9 @@ public class PDashboard extends PInterface {
 		return pWebAppInput;
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "add a text in the dashboard", example = "")
-	@APIParam(params = { "name", "x", "y", "size", "hexColor" })
+
+	@ProtoMethod(description = "add a text in the dashboard", example = "")
+	@ProtoMethodParam(params = { "name", "x", "y", "size", "hexColor" })
 	public PDashboardText addText(String name, int x, int y, int width, int height, int size, String color)
 			throws UnknownHostException, JSONException {
 
@@ -131,9 +128,9 @@ public class PDashboard extends PInterface {
 		return pWebAppText;
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "add an image in the dashboard", example = "")
-	@APIParam(params = { "url", "x", "y", "w", "h" })
+
+	@ProtoMethod(description = "add an image in the dashboard", example = "")
+	@ProtoMethodParam(params = { "url", "x", "y", "w", "h" })
 	public PDashboardImage addImage(String url, int x, int y, int w, int h) throws UnknownHostException, JSONException {
 
 		PDashboardImage pWebAppImage = new PDashboardImage(getContext());
@@ -142,9 +139,9 @@ public class PDashboard extends PInterface {
 		return pWebAppImage;
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "add a camera preview in the dashboard", example = "")
-	@APIParam(params = { "url", "x", "y", "w", "h" })
+
+	@ProtoMethod(description = "add a camera preview in the dashboard", example = "")
+	@ProtoMethodParam(params = { "url", "x", "y", "w", "h" })
 	public PDashboardVideoCamera addCameraPreview(int x, int y, int w, int h) throws UnknownHostException, JSONException {
 
 		PDashboardVideoCamera pWebAppVideoCamera = new PDashboardVideoCamera(getContext());
@@ -153,9 +150,9 @@ public class PDashboard extends PInterface {
 		return pWebAppVideoCamera;
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "add a custom widget in the dashboard", example = "")
-	@APIParam(params = { "url", "x", "y", "w", "h", "function(obj)" })
+
+	@ProtoMethod(description = "add a custom widget in the dashboard", example = "")
+	@ProtoMethodParam(params = { "url", "x", "y", "w", "h", "function(obj)" })
 	public PDashboardCustomWidget addCustomWidget(String url, int x, int y, int w, int h, PDashboardCustomWidget.jDashboardAddCB callback) throws UnknownHostException, JSONException {
 
 		PDashboardCustomWidget pWebAppCustom = new PDashboardCustomWidget(getContext());
@@ -164,10 +161,10 @@ public class PDashboard extends PInterface {
 		return pWebAppCustom;
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "change the background color (HEX format) of the dashboard", example = "")
-	@APIParam(params = { "hexColor" })
-	public PDashboardBackground setBackgroundColor(String hex) throws JSONException, UnknownHostException {
+
+	@ProtoMethod(description = "change the background color (HEX format) of the dashboard", example = "")
+	@ProtoMethodParam(params = { "hexColor" })
+	public PDashboardBackground backgroundColor(String hex) throws JSONException, UnknownHostException {
         PDashboardBackground pDashboardBackground = new PDashboardBackground(getContext());
         pDashboardBackground.updateColor(hex);
 
@@ -214,16 +211,16 @@ public class PDashboard extends PInterface {
         void event(int val);
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "show/hide the dashboard", example = "")
-    @APIParam(params = { "boolean" })
+
+    @ProtoMethod(description = "show/hide the dashboard", example = "")
+    @ProtoMethodParam(params = { "boolean" })
     public void onKeyPressed(jDashboardKeyPressed callback) throws UnknownHostException, JSONException {
         initKeyEvents(callback);
     }
 
-	@ProtocoderScript
-	@APIMethod(description = "show/hide the dashboard", example = "")
-	@APIParam(params = { "boolean" })
+
+	@ProtoMethod(description = "show/hide the dashboard", example = "")
+	@ProtoMethodParam(params = { "boolean" })
 	public void show(boolean b) {
 		JSONObject msg = new JSONObject();
 		try {

@@ -33,10 +33,12 @@ import android.content.Context;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.drafts.Draft;
+import org.java_websocket.drafts.Draft_17;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.protocoderrunner.AppSettings;
 import org.protocoderrunner.utils.MLog;
 
 import java.net.InetSocketAddress;
@@ -72,6 +74,8 @@ public class CustomWebsocketServer extends WebSocketServer {
 	// Singleton (one app view, different URLs)
 	public static CustomWebsocketServer getInstance(Context aCtx) throws UnknownHostException {
 		if (inst == null) {
+            inst = new CustomWebsocketServer(aCtx, AppSettings.WEBSOCKET_PORT, new Draft_17());
+            inst.start();
 		}
 		return inst;
 	}

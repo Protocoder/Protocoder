@@ -35,10 +35,9 @@ import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.widget.ImageView;
 
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
-import org.protocoderrunner.apprunner.ProtocoderScript;
 
 import java.io.File;
 
@@ -49,9 +48,9 @@ public class PImageView extends ImageView implements PViewInterface {
 	}
 
 
-    @ProtocoderScript
-    @APIMethod(description = "Sets an image", example = "")
-    @APIParam(params = { "imageName" })
+
+    @ProtoMethod(description = "Sets an image", example = "")
+    @ProtoMethodParam(params = { "imageName" })
 	public PImageView setImage(String imagePath) {
 
 		if (imagePath.startsWith("http")) {
@@ -71,9 +70,9 @@ public class PImageView extends ImageView implements PViewInterface {
         this.setImageBitmap(bmp);
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Sets a tiled image", example = "")
-    @APIParam(params = { "imageName" })
+
+    @ProtoMethod(description = "Sets a tiled image", example = "")
+    @ProtoMethodParam(params = { "imageName" })
 	public PImageView setTiledImage(String imagePath) {
 
 		if (imagePath.startsWith("http")) {

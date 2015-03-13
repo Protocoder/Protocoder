@@ -3,10 +3,9 @@ package org.protocoderrunner.apprunner.api.other;
 import android.content.Context;
 
 import org.apache.commons.net.ftp.*;
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.MLog;
 
@@ -35,9 +34,9 @@ public class PFtpClient extends PInterface {
         public void event(boolean connected);
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Connect to a ftp server", example = "")
-    @APIParam(params = { "host", "port", "username", "password", "function(connected)" })
+
+    @ProtoMethod(description = "Connect to a ftp server", example = "")
+    @ProtoMethodParam(params = { "host", "port", "username", "password", "function(connected)" })
     public void connect(final String host, final int port, final String username, final String password, final FtpConnectedCb callback) {
         mFTPClient = new FTPClient();
 
@@ -71,9 +70,9 @@ public class PFtpClient extends PInterface {
         public void event(String msg);
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Get the current directory", example = "")
-    @APIParam(params = { "" })
+
+    @ProtoMethod(description = "Get the current directory", example = "")
+    @ProtoMethodParam(params = { "" })
     public void getCurrentDir(final GetCurrentDirCb callback) {
 
         Thread t = new Thread(new Runnable() {
@@ -97,9 +96,9 @@ public class PFtpClient extends PInterface {
         public void event(boolean msg);
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Change the directory", example = "")
-    @APIParam(params = { "dirname"})
+
+    @ProtoMethod(description = "Change the directory", example = "")
+    @ProtoMethodParam(params = { "dirname"})
     public void changeDir(final String directory_path, final ChangeDirectoryCb callback) {
         Thread t = new Thread(new Runnable() {
             @Override
@@ -124,9 +123,9 @@ public class PFtpClient extends PInterface {
         public String name;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Get list of files in the given dir", example = "")
-    @APIParam(params = { "dirname"})
+
+    @ProtoMethod(description = "Get list of files in the given dir", example = "")
+    @ProtoMethodParam(params = { "dirname"})
     public void getFileList(final String dir_path, final GetFileListCb callback) {
         Thread t = new Thread(new Runnable() {
             @Override
@@ -163,9 +162,9 @@ public class PFtpClient extends PInterface {
         public void event(boolean msg);
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Download the file", example = "")
-    @APIParam(params = { "sourceFilePath", "destinyFilePath"})
+
+    @ProtoMethod(description = "Download the file", example = "")
+    @ProtoMethodParam(params = { "sourceFilePath", "destinyFilePath"})
     public void download(final String srcFilePath, final String destiny, final DownloadFiletCb callback) {
         Thread t = new Thread(new Runnable() {
             @Override
@@ -192,9 +191,9 @@ public class PFtpClient extends PInterface {
         public void event(boolean msg);
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Upload a file", example = "")
-    @APIParam(params = { "sourceFilePath", "fileName", "destinyPath"})
+
+    @ProtoMethod(description = "Upload a file", example = "")
+    @ProtoMethodParam(params = { "sourceFilePath", "fileName", "destinyPath"})
     public void upload(final String source, final String desFileName, String desDirectory, final UploadCb callback) {
         boolean status = false;
 
@@ -230,9 +229,9 @@ public class PFtpClient extends PInterface {
         public void event(boolean msg);
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Delete a file", example = "")
-    @APIParam(params = { "filename", "function(boolean)" })
+
+    @ProtoMethod(description = "Delete a file", example = "")
+    @ProtoMethodParam(params = { "filename", "function(boolean)" })
     public void deleteFile(final String filename, final DeleteFileCb callback) {
         Thread t = new Thread(new Runnable() {
             @Override
@@ -256,9 +255,8 @@ public class PFtpClient extends PInterface {
     }
 
 
-    @ProtocoderScript
-    @APIMethod(description = "Disconnect from server", example = "")
-    @APIParam(params = { ""})
+    @ProtoMethod(description = "Disconnect from server", example = "")
+    @ProtoMethodParam(params = { ""})
     public void disconnect(final DisconnectCb callback) {
         Thread t = new Thread(new Runnable() {
             @Override

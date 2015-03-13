@@ -7,6 +7,7 @@
 */ 
 
 var txt = ui.addText("", 10, 10);
-ui.onKeyDown(function(key) {
+
+device.onKeyDown(function(key) {
     txt.setText("pressed key " +  key);
 });

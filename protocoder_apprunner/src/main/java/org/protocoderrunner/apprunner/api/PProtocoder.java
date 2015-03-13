@@ -48,12 +48,11 @@ import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.debug.DebugFrame;
 import org.mozilla.javascript.debug.DebuggableScript;
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apidoc.annotation.APIRequires;
 import org.protocoderrunner.apidoc.annotation.APIVersion;
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.apprunner.api.other.ApplicationInfo;
 import org.protocoderrunner.apprunner.api.other.PWebEditor;
 import org.protocoderrunner.project.ProjectManager;
@@ -82,14 +81,14 @@ public class PProtocoder extends PInterface {
 	}
 
     //TODO enable this after refactor
-//	@ProtocoderScript
+//
 //	@APIMethod(description = "", example = "")
 //	public String getId() {
 //		return PrefsFragment.getId(mContext);
 //
 //	}
 
-//	@ProtocoderScript
+//
 //	@APIMethod(description = "", example = "")
 //	@APIParam(params = { "id" })
 //	public void setId(String id) {
@@ -97,9 +96,9 @@ public class PProtocoder extends PInterface {
 //	}
 
     //TODO this is mContext place holder
-   // @ProtocoderScript
-    @APIMethod(description = "Returns an object to manipulate the device app webIDE", example = "")
-    @APIParam(params = { })
+   //
+    @ProtoMethod(description = "Returns an object to manipulate the device app webIDE", example = "")
+    @ProtoMethodParam(params = { })
     public PWebEditor webEditor() {
         PWebEditor pWebEditor = new PWebEditor(getContext());
 
@@ -107,7 +106,7 @@ public class PProtocoder extends PInterface {
     }
 
 //TODO reenable this
-  //  @ProtocoderScript
+  //
 //    @APIMethod(description = "Returns an object to manipulate the device app", example = "")
 //    @APIParam(params = { })
 //    public PDeviceEditor deviceEditor() {
@@ -120,7 +119,7 @@ public class PProtocoder extends PInterface {
 
 
 //TODO reenable this
-//    @ProtocoderScript
+//
 //	@APIMethod(description = "Launch another script given its name and type", example = "")
 //	@APIParam(params = { "folder", "name" })
 //	@APIVersion(minLevel = "2")
@@ -136,8 +135,8 @@ public class PProtocoder extends PInterface {
 //	}
 
     //TODO this is mContext place holder
-	//@ProtocoderScript
-	@APIMethod(description = "", example = "")
+	//
+	@ProtoMethod(description = "", example = "")
 	@APIVersion(minLevel = "2")
 	@APIRequires("android.permission.INTERNET")
 	public void returnValueToScript(String returnValue) {
@@ -149,8 +148,8 @@ public class PProtocoder extends PInterface {
 
 
     //TODO this doesnt work
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
+
+    @ProtoMethod(description = "", example = "")
     public void returnResult(String data) {
 
         Bundle conData = new Bundle();
@@ -169,7 +168,7 @@ public class PProtocoder extends PInterface {
 
 //reenable this
 //
-//	@ProtocoderScript
+//
 //	@APIMethod(description = "Add mContext debugger to the execution", example = "")
 //	@APIVersion(minLevel = "2")
 //	@APIRequires("android.permission.INTERNET")
@@ -236,9 +235,9 @@ public class PProtocoder extends PInterface {
 
 
 
-    @ProtocoderScript
-    @APIMethod(description = "Get the current Protocoder version name", example = "")
-	public String getVersionName() {
+
+    @ProtoMethod(description = "Get the current Protocoder version name", example = "")
+	public String versionName() {
 		PackageInfo pInfo = null;
 		try {
 			pInfo = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0);
@@ -248,9 +247,9 @@ public class PProtocoder extends PInterface {
 		return pInfo.versionName;
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Get the current Protocoder version code", example = "")
-	public int getVersionCode() {
+
+    @ProtoMethod(description = "Get the current Protocoder version code", example = "")
+	public int versionCode() {
 		PackageInfo pInfo = null;
 		try {
 			pInfo = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0);
@@ -261,8 +260,8 @@ public class PProtocoder extends PInterface {
 	}
 
 
-    @ProtocoderScript
-    @APIMethod(description = "Install a Proto app programatically", example = "")
+
+    @ProtoMethod(description = "Install a Proto app programatically", example = "")
     public void installProtoApp(String src, boolean b) {
         final String projectPath = ProjectManager.getInstance().getCurrentProject().getStoragePath();
 

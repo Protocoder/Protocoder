@@ -13,6 +13,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import org.protocoderrunner.apprunner.api.PNetwork;
+import org.protocoderrunner.apprunner.api.other.PBluetooth;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunningInterface;
 
 import java.util.Set;
@@ -130,9 +131,9 @@ public class SimpleBT implements WhatIsRunningInterface {
 		}
 	}
 
-	private PNetwork.onBluetoothListener onBluetoothListener;
+	private PBluetooth.onBluetoothListener onBluetoothListener;
 
-	public void scanBluetooth(PNetwork.onBluetoothListener onBluetoothListener2) {
+	public void scanBluetooth(PBluetooth.onBluetoothListener onBluetoothListener2) {
         onBluetoothListener = onBluetoothListener2;
 
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();

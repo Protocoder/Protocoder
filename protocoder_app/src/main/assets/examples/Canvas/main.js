@@ -1,7 +1,5 @@
 /*
 *   draw on a canvas!
-*   This example imports native Android classes (Paint and Color) 
-*   and uses them 
 */
 var canvas = ui.addCanvas(0, 0, ui.screenWidth, 500);
 
@@ -15,7 +13,7 @@ canvas.loopDraw(35, function() {
 });
 
 var x1 = 0, y1 = 0; 
-sensors.startAccelerometer(function(x, y, z) {
+sensors.accelerometer.onChange(function(x, y, z) {
    x1 = x;
    y1 = y;
 });

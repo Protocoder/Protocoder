@@ -55,6 +55,7 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewAnimationUtils;
 import android.view.ViewOutlineProvider;
+import android.view.ViewPropertyAnimator;
 import android.view.animation.CycleInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -66,13 +67,14 @@ import org.json.JSONObject;
 import org.mozilla.javascript.NativeArray;
 import org.protocoderrunner.AppSettings;
 import org.protocoderrunner.R;
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
-import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.apprunner.api.other.PAnimation;
 import org.protocoderrunner.apprunner.api.other.PCamera;
 import org.protocoderrunner.apprunner.api.other.PProcessing;
-import org.protocoderrunner.apprunner.api.other.PVideo;
+import org.protocoderrunner.apprunner.api.other.PosVector;
+import org.protocoderrunner.apprunner.api.widgets.PVideo;
 import org.protocoderrunner.apprunner.api.widgets.PAbsoluteLayout;
 import org.protocoderrunner.apprunner.api.widgets.PButton;
 import org.protocoderrunner.apprunner.api.widgets.PCanvas;
@@ -95,7 +97,6 @@ import org.protocoderrunner.apprunner.api.widgets.PSpinner;
 import org.protocoderrunner.apprunner.api.widgets.PSwitch;
 import org.protocoderrunner.apprunner.api.widgets.PTextView;
 import org.protocoderrunner.apprunner.api.widgets.PToggleButton;
-import org.protocoderrunner.apprunner.api.widgets.PToolbar;
 import org.protocoderrunner.apprunner.api.widgets.PUIGeneric;
 import org.protocoderrunner.apprunner.api.widgets.PWebView;
 import org.protocoderrunner.apprunner.api.widgets.PWindow;
@@ -127,50 +128,38 @@ public class PUI extends PUIGeneric {
 		WhatIsRunning.getInstance().add(this);
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Gets the main layout, usually absolute", example = "")
-    @APIParam(params = { "" })
-    public View getMainLayout() {
+    @ProtoMethod(description = "Gets the main layout, usually absolute", example = "")
+    @ProtoMethodParam(params = { "" })
+    public View mainLayout() {
         return getFragment().mainLayout;
     }
 
-
-    @ProtocoderScript
-    @APIMethod(description = "Gets the parent layout where the mainLayout resides", example = "")
-    @APIParam(params = { "" })
-    public View getParentLayout() {
+    @ProtoMethod(description = "Gets the parent layout where the mainLayout resides", example = "")
+    @ProtoMethodParam(params = { "" })
+    public View parentLayout() {
         View v = (View) (getFragment()).mainLayout.getParent();
         return v;
     }
-
-
-    @ProtocoderScript
-    @APIMethod(description = "Gets the activity layout, including the action bar", example = "")
-    @APIParam(params = { "" })
-    public View getActivityLayout() {
-        View v = (View) (getFragment()).mainLayout.getParent().getParent();
+    
+    @ProtoMethod(description = "Gets the activity layout, including the action bar", example = "")
+    @ProtoMethodParam(params = { "" })
+    public View appLayout() {
+        View v = (View) (getFragment()).mainLayout.getParent().getParent().getParent().getParent().getParent();
         return v;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Get the toolbar", example = "")
-    @APIParam(params = { "" })
-    public PToolbar getToolbar() {
-       return mToolbar;
-    }
-
     //TODO doesnt work properly
-	@ProtocoderScript
-	@APIMethod(description = "Shows/Hide the home bar", example = "")
-	@APIParam(params = { "boolean" })
+	
+	@ProtoMethod(description = "Shows/Hide the home bar", example = "")
+	@ProtoMethodParam(params = { "boolean" })
 	public void showHomeBar(boolean b) {
 		getActivity().showHomeBar(b);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Sets the fullscreen / immersive / dimBars mode", example = "")
-    @APIParam(params = { "mode={fullscreen, immersive, lightsOut}" })
-    public void setScreenMode(String mode) {
+	
+	@ProtoMethod(description = "Sets the fullscreen / immersive / dimBars mode", example = "")
+    @ProtoMethodParam(params = { "mode={fullscreen, immersive, lightsOut}" })
+    public void screenMode(String mode) {
         if (mode.equals("fullscreen")) {
             getActivity().setFullScreen();
             isFullscreenMode = true;
@@ -187,10 +176,10 @@ public class PUI extends PUIGeneric {
 
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Forces landscape mode in the app", example = "")
-    @APIParam(params = {"mode={'landscape', 'portrait', 'other'"})
-	public void setScreenOrientation(String mode) {
+	
+	@ProtoMethod(description = "Forces landscape mode in the app", example = "")
+    @ProtoMethodParam(params = {"mode={'landscape', 'portrait', 'other'"})
+	public void screenOrientation(String mode) {
         if (mode.equals("landscape")) {
             getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         } else if(mode.equals("portrait")) {
@@ -200,32 +189,32 @@ public class PUI extends PUIGeneric {
         }
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Shows a little popup with a given text", example = "")
-	@APIParam(params = { "text" })
+	
+	@ProtoMethod(description = "Shows a little popup with a given text", example = "")
+	@ProtoMethodParam(params = { "text" })
 	public void toast(String text) {
 		Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Shows a little popup with a given text during t time", example = "")
-	@APIParam(params = { "text", "duration" })
+	
+	@ProtoMethod(description = "Shows a little popup with a given text during t time", example = "")
+	@ProtoMethodParam(params = { "text", "duration" })
 	public void toast(String text, int duration) {
 		Toast.makeText(getContext(), text, duration).show();
 	}
 
+//
+//	
+//    @APIMethod(description = "Sets the main layout padding", example = "")
+//    @APIParam(params = { "left", "top", "right", "bottom" })
+//	public void padding(int left, int top, int right, int bottom) {
+//		initializeLayout();
+//		uiAbsoluteLayout.setPadding(left, top, right, bottom);
+//	}
 
-	@ProtocoderScript
-    @APIMethod(description = "Sets the main layout padding", example = "")
-    @APIParam(params = { "left", "top", "right", "bottom" })
-	public void setPadding(int left, int top, int right, int bottom) {
-		initializeLayout();
-		uiAbsoluteLayout.setPadding(left, top, right, bottom);
-	}
-
-	@ProtocoderScript
-    @APIMethod(description = "Resize a view to a given width and height. If a parameter is -1 then that dimension is not changed", example = "")
-    @APIParam(params = { "View", "width", "height" })
+	
+    @ProtoMethod(description = "Resize a view to a given width and height. If a parameter is -1 then that dimension is not changed", example = "")
+    @ProtoMethodParam(params = { "View", "width", "height" })
 	public void resize(final View v, int h, int w) {
 		boolean animated = false;
 
@@ -257,9 +246,9 @@ public class PUI extends PUIGeneric {
 		}
 	}
 
-	@ProtocoderScript
-    @APIMethod(description = "Show/Hide a view", example = "")
-    @APIParam(params = { "View", "boolean" })
+	
+    @ProtoMethod(description = "Show/Hide a view", example = "")
+    @ProtoMethodParam(params = { "View", "boolean" })
     public void show(View v, boolean b) {
         if (b) {
             v.setVisibility(View.VISIBLE);
@@ -268,40 +257,47 @@ public class PUI extends PUIGeneric {
         }
 	}
 
-	@ProtocoderScript
-    @APIMethod(description = "Moves a view to a position using a normal transition", example = "")
-    @APIParam(params = { "View", "x", "y" })
+	
+    @ProtoMethod(description = "Moves a view to a position using a normal transition", example = "")
+    @ProtoMethodParam(params = { "View", "x", "y" })
 	public void move(View v, float x, float y) {
 		v.animate().x(x).setDuration(AppSettings.animGeneralSpeed);
 		v.animate().y(y).setDuration(AppSettings.animGeneralSpeed);
 	}
 
-	@ProtocoderScript
-    @APIMethod(description = "Moves a view by given units from the current position using a normal transition", example = "")
-    @APIParam(params = { "View", "x", "y" })
+	
+    @ProtoMethod(description = "Moves a view by given units from the current position using a normal transition", example = "")
+    @ProtoMethodParam(params = { "View", "x", "y" })
 	public void moveBy(View v, float x, float y) {
 		v.animate().xBy(x).setDuration(AppSettings.animGeneralSpeed);
 		v.animate().yBy(y).setDuration(AppSettings.animGeneralSpeed);
 	}
 
+	
+    @ProtoMethod(description = "Animate a view", example = "")
+    @ProtoMethodParam(params = { "View", "x", "y" })
+	public PAnimation anim(View v) {
+        return new PAnimation(v);
+	}
+
     //@TargetApi(L)
-    @ProtocoderScript
-    @APIParam(params = { "View" })
+    
+    @ProtoMethodParam(params = { "View" })
     public void clipAndShadow(View v, int type, int r) {
         AndroidUtils.setViewGenericShadow(v, type, 0, 0, v.getWidth(), v.getHeight(), r);
     }
 
     //@TargetApi(L)
-    @ProtocoderScript
-    @APIParam(params = { "View" })
+    
+    @ProtoMethodParam(params = { "View" })
     public void clipAndShadow(View v, int type, int x, int y, int w, int h, int r) {
         AndroidUtils.setViewGenericShadow(v, type, x, y, w, h, r);
     }
 
     //@TargetApi(L)
 	@TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    @ProtocoderScript
-	@APIParam(params = { "View" })
+    
+	@ProtoMethodParam(params = { "View" })
 	public void reveal(final View v) {
 		// previously invisible view
 
@@ -329,8 +325,8 @@ public class PUI extends PUIGeneric {
 
 
 	@TargetApi(Build.VERSION_CODES.LOLLIPOP)
-	@ProtocoderScript
-	@APIParam(params = { "View" })
+	
+	@ProtoMethodParam(params = { "View" })
 	public void unreveal(final View v) {
 
 		// get the center for the clipping circle
@@ -358,8 +354,8 @@ public class PUI extends PUIGeneric {
 		anim.start();
 	}
 
-    @ProtocoderScript
-    @APIParam(params = { "View", "x", "y", "w", "h" })
+    
+    @ProtoMethodParam(params = { "View", "x", "y", "w", "h" })
     public void clipCircle(View v, final int x, final int y, final int w, final int h) {
         Outline outline = new Outline();
         outline.setOval(x, y, w, h);
@@ -412,9 +408,9 @@ public class PUI extends PUIGeneric {
 
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Makes the current view draggable or cancel the drag depending on the boolean state", example = "")
-    @APIParam(params = { "View", "boolean" })
+    
+    @ProtoMethod(description = "Makes the current view draggable or cancel the drag depending on the boolean state", example = "")
+    @ProtoMethodParam(params = { "View", "boolean" })
 	public void draggable(View v, boolean b) {
 		if (b) {
 			this.draggable(v);
@@ -423,16 +419,16 @@ public class PUI extends PUIGeneric {
 		}
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Change the animation speed for the default animations", example = "")
-    @APIParam(params = { "View" })
+    
+    @ProtoMethod(description = "Change the animation speed for the default animations", example = "")
+    @ProtoMethodParam(params = { "View" })
     public void animSpeed(int speed) {
         AppSettings.animGeneralSpeed = speed;
     }
 
-	@ProtocoderScript
-    @APIMethod(description = "Makes the view jump", example = "")
-    @APIParam(params = { "View" })
+	
+    @ProtoMethod(description = "Makes the view jump", example = "")
+    @ProtoMethodParam(params = { "View" })
 	public void jump(View v) {
 
 		ValueAnimator w = ObjectAnimator.ofFloat(v, "scaleX", 1f, 0.9f, 1.2f, 1f);
@@ -446,9 +442,9 @@ public class PUI extends PUIGeneric {
 		animatorSet.start();
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Makes the view blink", example = "")
-    @APIParam(params = { "View", "num" })
+    
+    @ProtoMethod(description = "Makes the view blink", example = "")
+    @ProtoMethodParam(params = { "View", "num" })
     public void blink(View v, int num) {
         ObjectAnimator anim = ObjectAnimator.ofFloat(v, "alpha", 1f, 0f, 1f);
         anim.setDuration(AppSettings.animGeneralSpeed);
@@ -457,9 +453,9 @@ public class PUI extends PUIGeneric {
         anim.start();
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Makes the view blink", example = "")
-    @APIParam(params = { "View", "speed", "num" })
+    
+    @ProtoMethod(description = "Makes the view blink", example = "")
+    @ProtoMethodParam(params = { "View", "speed", "num" })
     public void blink(View v, int speed, int num) {
         ObjectAnimator anim = ObjectAnimator.ofFloat(v, "alpha", 1f, 0f, 1f);
         anim.setDuration(speed);
@@ -468,16 +464,39 @@ public class PUI extends PUIGeneric {
         anim.start();
     }
 
-	@ProtocoderScript
-    @APIMethod(description = "Rotates the view in the x axis", example = "")
-    @APIParam(params = { "View", "x" })
-	public void rotate(View v, float x) {
-		v.animate().rotation(x).setDuration(AppSettings.animGeneralSpeed);
+    interface AnimFinishCB {
+        public void event();
+    }
+	
+    @ProtoMethod(description = "Rotates the view in the x axis", example = "")
+    @ProtoMethodParam(params = { "View", "x" })
+	public ViewPropertyAnimator rotate(View v, float x, final AnimFinishCB cb) {
+		return v.animate().rotation(x).setDuration(AppSettings.animGeneralSpeed).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                cb.event();
+            }
+        });
 	}
 
-	@ProtocoderScript
-    @APIMethod(description = "Rotates the view in the x, y, z axis", example = "")
-    @APIParam(params = { "View", "x", "y", "z" })
+    
+    @ProtoMethod(description = "Rotates the view in the x axis by given degrees", example = "")
+    @ProtoMethodParam(params = { "View", "x" })
+	public void rotateBy(View v, float x) {
+		v.animate().rotationBy(x).setDuration(AppSettings.animGeneralSpeed);
+	}
+
+    
+    @ProtoMethod(description = "Rotates the view in the x axis in a given time", example = "")
+    @ProtoMethodParam(params = { "View", "time", "x" })
+	public void rotate(View v, int time, float x) {
+		v.animate().rotation(x).setDuration(time);
+	}
+
+    
+    @ProtoMethod(description = "Rotates the view in the x, y, z axis", example = "")
+    @ProtoMethodParam(params = { "View", "x", "y", "z" })
 	public void rotate(View v, float x, float y, float z) {
 		v.animate().rotation(x).setDuration(AppSettings.animGeneralSpeed);
 		// looks weird but it works more consistent
@@ -485,33 +504,43 @@ public class PUI extends PUIGeneric {
 		v.animate().rotationY(z).setDuration(AppSettings.animGeneralSpeed);
 	}
 
-	@ProtocoderScript
-    @APIMethod(description = "Changes the alpha of a view", example = "")
-    @APIParam(params = { "View", "float={0,1}" })
+    
+    @ProtoMethod(description = "Rotates the view in the x, y, z axis by given degrees", example = "")
+    @ProtoMethodParam(params = { "View", "x", "y", "z" })
+	public void rotateBy(View v, float x, float y, float z) {
+		v.animate().rotationBy(x).setDuration(AppSettings.animGeneralSpeed);
+		// looks weird but it works more consistent
+		v.animate().rotationXBy(y).setDuration(AppSettings.animGeneralSpeed);
+		v.animate().rotationYBy(z).setDuration(AppSettings.animGeneralSpeed);
+	}
+
+	
+    @ProtoMethod(description = "Changes the alpha of a view", example = "")
+    @ProtoMethodParam(params = { "View", "float={0,1}" })
 	public void alpha(View v, float alpha) {
 		v.animate().alpha(alpha).setDuration(AppSettings.animGeneralSpeed);
 	}
 
-	@ProtocoderScript
-    @APIMethod(description = "Scales a view with animation to a given size", example = "")
-    @APIParam(params = { "View", "x", "y" })
+	
+    @ProtoMethod(description = "Scales a view with animation to a given size", example = "")
+    @ProtoMethodParam(params = { "View", "x", "y" })
 	public void scale(View v, float x, float y) {
 		v.animate().scaleX(x).setDuration(AppSettings.animGeneralSpeed);
 		v.animate().scaleY(y).setDuration(AppSettings.animGeneralSpeed);
 	}
 
-	@ProtocoderScript
-    @APIMethod(description = "Scales a view with animation by a given size", example = "")
-    @APIParam(params = { "View", "x", "y" })
+	
+    @ProtoMethod(description = "Scales a view with animation by a given size", example = "")
+    @ProtoMethodParam(params = { "View", "x", "y" })
 	public void scaleBy(View v, float x, float y) {
 		v.animate().scaleXBy(x).setDuration(AppSettings.animGeneralSpeed);
 		v.animate().scaleYBy(y).setDuration(AppSettings.animGeneralSpeed);
 	}
 
     //TODO doesnt work always
-    @ProtocoderScript
-    @APIMethod(description = "Scales and moves a view to a given position and size", example = "")
-    @APIParam(params = { "View", "x", "y", "w", "h" })
+    
+    @ProtoMethod(description = "Scales and moves a view to a given position and size", example = "")
+    @ProtoMethodParam(params = { "View", "x", "y", "w", "h" })
     public void amplify(View v, float x, float y, float w, float h) {
         this.move(v, x, y);
         float pX = v.getPivotX();
@@ -524,6 +553,22 @@ public class PUI extends PUIGeneric {
         v.setPivotX(pX);
         v.setPivotY(pY);
     }
+
+    public void position(View v, float x, float y) {
+        v.setX(x);
+        v.setY(y);
+    }
+
+    public void position(View v, PosVector vector) {
+        v.setX(vector.x);
+        v.setY(vector.y);
+    }
+
+    public PosVector position(View v) {
+        return new PosVector(v.getX(), v.getY());
+    }
+
+
 
     public Palette getPalette(Bitmap bmp) {
         Palette palette = Palette.generate(bmp);
@@ -543,9 +588,9 @@ public class PUI extends PUIGeneric {
 	}
 
 
-    @ProtocoderScript
-    @APIMethod(description = "Starts a gesture detector over a view", example = "")
-    @APIParam(params = { "View", "function(data)" })
+    
+    @ProtoMethod(description = "Starts a gesture detector over a view", example = "")
+    @ProtoMethodParam(params = { "View", "function(data)" })
     //http://stackoverflow.com/questions/6599329/can-one-ongesturelistener-object-deal-with-two-gesturedetector-objects
     public void gestureDetector(View v, final addGestureDetectorCB cb) {
 		final GestureDetectorReturn g = new GestureDetectorReturn();
@@ -606,6 +651,8 @@ public class PUI extends PUIGeneric {
 				cb.event(g);
 				return true;
 			}
+
+
 		});
 
 
@@ -648,26 +695,26 @@ public class PUI extends PUIGeneric {
 	}
 
 
-    @ProtocoderScript
-    @APIMethod(description = "Changes the background color using RGB", example = "")
-	@APIParam(params = { "r", "g", "b" })
-	public void setBackgroundColor(int red, int green, int blue) {
+    
+    @ProtoMethod(description = "Changes the background color using RGB", example = "")
+	@ProtoMethodParam(params = { "r", "g", "b" })
+	public void backgroundColor(int red, int green, int blue) {
 		initializeLayout();
 		holderLayout.setBackgroundColor(Color.rgb(red, green, blue));
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Changes the background color using Hex", example = "")
-    @APIParam(params = { "hex" })
-    public void setBackgroundColor(String c) {
+    
+    @ProtoMethod(description = "Changes the background color using Hex", example = "")
+    @ProtoMethodParam(params = { "hex" })
+    public void backgroundColor(String c) {
         initializeLayout();
         holderLayout.setBackgroundColor(Color.parseColor(c));
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Sets an image as background", example = "")
-	@APIParam(params = { "imageName" })
-	public void setBackgroundImage(String imagePath) {
+    
+    @ProtoMethod(description = "Sets an image as background", example = "")
+	@ProtoMethodParam(params = { "imageName" })
+	public void backgroundImage(String imagePath) {
 		initializeLayout();
 		// Add the bg image asynchronously
 		new SetBgImageTask(bgImageView, false).execute(AppRunnerSettings.get().project.getStoragePath() + File.separator
@@ -675,19 +722,19 @@ public class PUI extends PUIGeneric {
 
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Sets an image as tiled background", example = "")
-	@APIParam(params = { "imageName" })
-	public void setBackgroundImageTile(String imagePath) {
+    
+    @ProtoMethod(description = "Sets an image as tiled background", example = "")
+	@ProtoMethodParam(params = { "imageName" })
+	public void backgroundImageTile(String imagePath) {
 		initializeLayout();
 		// Add the bg image asynchronously
 		new SetBgImageTask(bgImageView, true).execute(AppRunnerSettings.get().project.getStoragePath() + File.separator
 				+ imagePath);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Creates an absolute layout ", example = "")
-	@APIParam(params = { "x", "y", "w", "h" })
+	
+	@ProtoMethod(description = "Creates an absolute layout ", example = "")
+	@ProtoMethodParam(params = { "x", "y", "w", "h" })
 	public PAbsoluteLayout addAbsoluteLayout(int x, int y, int w, int h) {
 		PAbsoluteLayout al = newAbsoluteLayout();
 		addViewAbsolute(al, x, y, w, h);
@@ -695,9 +742,9 @@ public class PUI extends PUIGeneric {
 		return al;
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Creates a card ", example = "")
-	@APIParam(params = { "label" })
+	
+	@ProtoMethod(description = "Creates a card ", example = "")
+	@ProtoMethodParam(params = { "label" })
 	public PCard addCard() {
 		PCard c = newCard();
 		addViewLinear(c);
@@ -705,9 +752,9 @@ public class PUI extends PUIGeneric {
 		return c;
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Adds a card that can hold views", example = "")
-	@APIParam(params = { "label", "x", "y", "w", "h" })
+	
+	@ProtoMethod(description = "Adds a card that can hold views", example = "")
+	@ProtoMethodParam(params = { "label", "x", "y", "w", "h" })
 	public PCard addCard(String label, int x, int y, int w, int h) {
 		PCard c = newCard();
 		c.setTitle(label);
@@ -716,9 +763,9 @@ public class PUI extends PUIGeneric {
 		return c;
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Creates a window that can hold views ", example = "")
-    @APIParam(params = { "label", "x", "y", "w", "h" })
+    
+    @ProtoMethod(description = "Creates a window that can hold views ", example = "")
+    @ProtoMethodParam(params = { "label", "x", "y", "w", "h" })
     public PWindow addWindow(String label, int x, int y, int w, int h) {
         PWindow wn = newWindow();
         wn.setTitle(label);
@@ -727,28 +774,28 @@ public class PUI extends PUIGeneric {
         return wn;
     }
 
-	@ProtocoderScript
-	@APIMethod(description = "Adds a button", example = "")
-	@APIParam(params = { "label", "x", "y", "w", "h", "function()" })
-	public PButton addButton(String label, int x, int y, int w, int h, final addGenericButtonCB callbackfn) {
-		PButton b = newButton(label, callbackfn);
+	
+	@ProtoMethod(description = "Adds a button", example = "")
+	@ProtoMethodParam(params = { "label", "x", "y", "w", "h", "function()" })
+	public PButton addButton(String label, int x, int y, int w, int h) {
+		PButton b = newButton(label);
 		addViewAbsolute(b, x, y, w, h);
 		return b;
 	}
 
 
-    @ProtocoderScript
-    @APIMethod(description = "Adds a button", example = "")
-    @APIParam(params = { "label", "x", "y", "function()" })
-    public PButton addButton(String label, int x, int y, final addGenericButtonCB callbackfn) {
-        PButton b = newButton(label, callbackfn);
+    
+    @ProtoMethod(description = "Adds a button", example = "")
+    @ProtoMethodParam(params = { "label", "x", "y", "function()" })
+    public PButton addButton(String label, int x, int y) {
+        PButton b = newButton(label);
         addViewAbsolute(b, x, y, -1, -1);
         return b;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Adds an invisible touch area", example = "")
-    @APIParam(params = { "x", "y", "w", "h", "bShowArea", "function(touching, x, y)" })
+    
+    @ProtoMethod(description = "Adds an invisible touch area", example = "")
+    @ProtoMethodParam(params = { "x", "y", "w", "h", "bShowArea", "function(touching, x, y)" })
 	public TouchAreaView addTouchArea(int x, int y, int w, int h, boolean showArea,
 			final addGenericTouchAreaCB callbackfn) {
 		TouchAreaView taV = newTouchArea(showArea, callbackfn);
@@ -757,9 +804,9 @@ public class PUI extends PUIGeneric {
 		return taV;
 	}
 
-	@ProtocoderScript
-    @APIMethod(description = "Adds a touch area that allows multitouch", example = "")
-    @APIParam(params = { "x", "y", "w", "h", "function(touching, x, y)" })
+	
+    @ProtoMethod(description = "Adds a touch area that allows multitouch", example = "")
+    @ProtoMethodParam(params = { "x", "y", "w", "h", "function(touching, x, y)" })
 	public PPadView addXYPad(int x, int y, int w, int h, final addPadCB callbackfn) {
 		PPadView taV = newTouchPad(callbackfn);
 		addViewAbsolute(taV, x, y, w, h);
@@ -769,7 +816,7 @@ public class PUI extends PUIGeneric {
 
 
     //TODO removed old one this is mContext place holder
-	//@ProtocoderScript
+	//
     //@APIMethod(description = "Knob", example = "")
     //@APIParam(params = { "function(progress)" })
 	public View addKnob(final addGenericKnobCB callbackfn) {
@@ -779,19 +826,18 @@ public class PUI extends PUIGeneric {
 		return null;
 	}
 
-	@ProtocoderScript
-    @APIMethod(description = "Adds a slider", example = "")
-    @APIParam(params = { "x", "y", "w", "h", "max", "progress", "function(progress)" })
-	public PSlider addSlider(int x, int y, int w, int h, int min, int max, final addGenericSliderCB callbackfn) {
-		PSlider sb = newSlider(min, max, callbackfn);
+	
+    @ProtoMethod(description = "Adds a slider", example = "")
+    @ProtoMethodParam(params = { "x", "y", "w", "h", "max", "progress", "function(progress)" })
+	public PSlider addSlider(int x, int y, int w, int h, int min, int max) {
+		PSlider sb = newSlider(min, max);
 		addViewAbsolute(sb, x, y, w, -1);
 		return sb;
-
 	}
 
-	@ProtocoderScript
-    @APIMethod(description = "Adds a list of items passed as array", example = "")
-    @APIParam(params = { "x", "y", "w", "h", "arrayStrings", "function(data)" })
+	
+    @ProtoMethod(description = "Adds a list of items passed as array", example = "")
+    @ProtoMethodParam(params = { "x", "y", "w", "h", "arrayStrings", "function(data)" })
 	public PSpinner addChoiceBox(int x, int y, int w, int h, final String[] array, final addGenericSpinnerCB callbackfn) {
 		PSpinner spinner = newChoiceBox(array, callbackfn);
         addViewAbsolute(spinner, x, y, w, h);
@@ -799,18 +845,29 @@ public class PUI extends PUIGeneric {
         return spinner;
 	}
 
-	@ProtocoderScript
-    @APIMethod(description = "Add a progress bar", example = "")
-    @APIParam(params = { "x", "y", "w", "h", "max" })
+	
+    @ProtoMethod(description = "Add a progress bar", example = "")
+    @ProtoMethodParam(params = { "x", "y", "w", "h", "max" })
 	public PProgressBar addProgressBar(int x, int y, int w, int h, int max) {
 		PProgressBar pb = newProgress(max);
 		addViewAbsolute(pb, x, y, w, -1);
 		return pb;
 	}
 
-	@ProtocoderScript
-    @APIMethod(description = "Add a text box defined by its position and size", example = "")
-    @APIParam(params = { "label", "x", "y", "w", "h" })
+
+    
+    @ProtoMethod(description = "Add a text box defined by its position and size", example = "")
+    @ProtoMethodParam(params = { "label", "x", "y", "w", "h" })
+    public PTextView addText(int x, int y, int w, int h) {
+        PTextView tv = newText("");
+        addViewAbsolute(tv, x, y, w, h);
+
+        return tv;
+    }
+
+	
+    @ProtoMethod(description = "Add a text box defined by its position and size", example = "")
+    @ProtoMethodParam(params = { "label", "x", "y", "w", "h" })
 	public PTextView addText(String label, int x, int y, int w, int h) {
 		PTextView tv = newText(label);
 		addViewAbsolute(tv, x, y, w, h);
@@ -818,32 +875,42 @@ public class PUI extends PUIGeneric {
 		return tv;
 	}
 
-	@ProtocoderScript
-    @APIMethod(description = "Adds a text box defined only by its position", example = "")
-    @APIParam(params = { "label", "x", "y" })
-	public PTextView addText(String label, int x, int y) {
-		PTextView tv = newText(label);
-		addViewAbsolute(tv, x, y, -1, -1);
+    
+    @ProtoMethod(description = "Adds a text box defined only by its position", example = "")
+    @ProtoMethodParam(params = { "label", "x", "y" })
+    public PTextView addText(String label, int x, int y) {
+        PTextView tv = newText(label);
+        addViewAbsolute(tv, x, y, -1, -1);
 
-		return tv;
-	}
+        return tv;
+    }
+
+    
+    @ProtoMethod(description = "Adds a text box defined only by its position", example = "")
+    @ProtoMethodParam(params = { "label", "x", "y" })
+    public PTextView addText(int x, int y) {
+        PTextView tv = newText("");
+        addViewAbsolute(tv, x, y, -1, -1);
+
+        return tv;
+    }
 
 
-    @ProtocoderScript
-    @APIMethod(description = "Adds an input box", example = "")
-	@APIParam(params = { "label", "x", "y", "w", "h", "function()" })
-	public PEditText addInput(String label, int x, int y, int w, int h, final addGenericInputCB callbackfn) {
-		PEditText et = newInput(label, callbackfn);
+    
+    @ProtoMethod(description = "Adds an input box", example = "")
+	@ProtoMethodParam(params = { "label", "x", "y", "w", "h", "function()" })
+	public PEditText addInput(String label, int x, int y, int w, int h) {
+		PEditText et = newInput(label);
 		addViewAbsolute(et, x, y, w, h);
 
 		return et;
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Adds an input box", example = "")
-	@APIParam(params = { "label", "x", "y", "w", "h" })
-	public PEditText addInput(String label, int x, int y, int w, int h) {
-		PEditText et = newInput(label, null);
+    
+    @ProtoMethod(description = "Adds an input box", example = "")
+	@ProtoMethodParam(params = { "label", "x", "y", "w", "h" })
+	public PEditText addInput(int x, int y, int w, int h) {
+		PEditText et = newInput("");
 		addViewAbsolute(et, x, y, w, h);
 
 		return et;
@@ -851,44 +918,42 @@ public class PUI extends PUIGeneric {
 
 
     //number picker
-    @ProtocoderScript
-    @APIMethod(description = "Adds a number picker", example = "")
-    @APIParam(params = { "from", "to", "x", "y", "w", "h" })
+    
+    @ProtoMethod(description = "Adds a number picker", example = "")
+    @ProtoMethodParam(params = { "from", "to", "x", "y", "w", "h" })
     public void addNumberPicker(int from, int to, int x, int y, int w, int h, NewGenericNumberPickerCB callback) {
         PNumberPicker np = newNumberPicker(from, to, callback);
         addViewAbsolute(np, x, y, w, h);
     }
 
-	@ProtocoderScript
-    @APIMethod(description = "Adds a toggle", example = "")
-    @APIParam(params = { "text", "x", "y", "w", "h", "checked", "function(checked)" })
-	public PToggleButton addToggle(final String label, int x, int y, int w, int h, boolean initstate,
-			final addGenericToggleCB callbackfn) {
+	
+    @ProtoMethod(description = "Adds a toggle", example = "")
+    @ProtoMethodParam(params = { "text", "x", "y", "w", "h", "checked", "function(checked)" })
+	public PToggleButton addToggle(final String label, int x, int y, int w, int h, boolean initstate) {
 
-		PToggleButton tb = newToggle(label, initstate, callbackfn);
+		PToggleButton tb = newToggle(label, initstate);
 		addViewAbsolute(tb, x, y, w, h);
 
 		return tb;
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Adds a checkbox", example = "")
-    @APIParam(params = { "label", "x", "y", "w", "h", "checked", "function(checked)" })
-	public PCheckBox addCheckbox(String label, int x, int y, int w, int h, boolean initstate,
-			final addGenericCheckboxCB callbackfn) {
-		PCheckBox cb = newCheckbox(label, initstate, callbackfn);
+    
+    @ProtoMethod(description = "Adds a checkbox", example = "")
+    @ProtoMethodParam(params = { "label", "x", "y", "w", "h", "checked", "function(checked)" })
+	public PCheckBox addCheckbox(String label, int x, int y, int w, int h, boolean initstate) {
+		PCheckBox cb = newCheckbox(label, initstate);
 		addViewAbsolute(cb, x, y, w, h);
 
 		return cb;
 	}
 
 
-    @ProtocoderScript
-    @APIMethod(description = "Adds a checkbox", example = "")
-	@APIParam(params = { "x", "y", "w", "h", "checked", "function(checked)" })
-	public PSwitch addSwitch(int x, int y, int w, int h, boolean initstate, final addGenericSwitchCB callbackfn) {
+    
+    @ProtoMethod(description = "Adds a checkbox", example = "")
+	@ProtoMethodParam(params = { "x", "y", "w", "h", "checked", "function(checked)" })
+	public PSwitch addSwitch(int x, int y, int w, int h, boolean initstate) {
 
-		PSwitch s = newSwitch(initstate, callbackfn);
+		PSwitch s = newSwitch(initstate);
 		addViewAbsolute(s, x, y, w, h);
 
 		return s;
@@ -896,9 +961,9 @@ public class PUI extends PUIGeneric {
 
 
 
-    @ProtocoderScript
-    @APIMethod(description = "Adds a radio button", example = "")
-	@APIParam(params = { "label", "x", "y", "w", "h", "checked", "function(checked)" })
+    
+    @ProtoMethod(description = "Adds a radio button", example = "")
+	@ProtoMethodParam(params = { "label", "x", "y", "w", "h", "checked", "function(checked)" })
 	public PRadioButton addRadioButton(String label, int x, int y, int w, int h, boolean initstate,
 			final addGenericRadioButtonCB callbackfn) {
 
@@ -909,9 +974,9 @@ public class PUI extends PUIGeneric {
 	}
 
 
-    @ProtocoderScript
-    @APIMethod(description = "Adds an image", example = "")
-	@APIParam(params = { "x", "y", "w", "h", "imagePath" })
+    
+    @ProtoMethod(description = "Adds an image", example = "")
+	@ProtoMethodParam(params = { "x", "y", "w", "h", "imagePath" })
 	public PImageView addImage(String imagePath, int x, int y, int w, int h) {
 
 		final PImageView iv = newImage(imagePath);
@@ -921,9 +986,9 @@ public class PUI extends PUIGeneric {
 	}
 
 
-    @ProtocoderScript
-    @APIMethod(description = "Adds an image", example = "")
-    @APIParam(params = { "x", "y", "w", "h", "imagePath" })
+    
+    @ProtoMethod(description = "Adds an image", example = "")
+    @ProtoMethodParam(params = { "x", "y", "w", "h", "imagePath" })
     public PImageView addImage(int x, int y, int w, int h) {
 
         final PImageView iv = newImage(null);
@@ -932,9 +997,9 @@ public class PUI extends PUIGeneric {
         return iv;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Adds an image", example = "")
-	@APIParam(params = { "x", "y", "imagePath" })
+    
+    @ProtoMethod(description = "Adds an image", example = "")
+	@ProtoMethodParam(params = { "x", "y", "imagePath" })
 	public PImageView addImage(String imagePath, int x, int y) {
 
 		final PImageView iv = newImage(imagePath);
@@ -943,33 +1008,32 @@ public class PUI extends PUIGeneric {
 		return iv;
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Adds a plot with a range", example = "")
-	@APIParam(params = { "x", "y", "w", "h", "min", "max" })
+    
+    @ProtoMethod(description = "Adds a plot with a range", example = "")
+	@ProtoMethodParam(params = { "x", "y", "w", "h", "min", "max" })
 	public PPlotView addPlot(int x, int y, int w, int h, int min, int max) {
-		PPlotView jPlotView = newPlot(min, max);
-		addViewAbsolute(jPlotView, x, y, w, h);
+		PPlotView pPlotView = newPlot(min, max);
+		addViewAbsolute(pPlotView, x, y, w, h);
 
-		return jPlotView;
+		return pPlotView;
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Adds a checkbox", example = "")
-    @APIParam(params = { "x", "y", "w", "h", "imageName", "function()" })
-	public PImageButton addImageButton(int x, int y, int w, int h, String imagePath, final addImageButtonCB callbackfn) {
-		return newImageButton(x, y, w, h, imagePath, "", false, callbackfn);
+    
+    @ProtoMethod(description = "Adds a checkbox", example = "")
+    @ProtoMethodParam(params = { "x", "y", "w", "h", "imageName", "function()" })
+	public PImageButton addImageButton(int x, int y, int w, int h, String imagePath) {
+		return newImageButton(x, y, w, h, imagePath, "", false);
 	}
 
-	@APIParam(params = { "x", "y", "w", "h", "imageNameNotPressed", "imageNamePressed", "function()" })
-	public PImageButton addImageButton(int x, int y, int w, int h, String imgNotPressed, String imgPressed,
-			final addImageButtonCB callbackfn) {
-		return newImageButton(x, y, w, h, imgNotPressed, imgPressed, false, callbackfn);
+	@ProtoMethodParam(params = { "x", "y", "w", "h", "imageNameNotPressed", "imageNamePressed", "function()" })
+	public PImageButton addImageButton(int x, int y, int w, int h, String imgNotPressed, String imgPressed) {
+		return newImageButton(x, y, w, h, imgNotPressed, imgPressed, false);
 	}
 
 
-    @ProtocoderScript
-    @APIMethod(description = "Adds a grid of elements given an array of strings", example = "")
-    @APIParam(params = { "type", "arrayStrings", "x", "y", "w", "h", "function(data)" })
+    
+    @ProtoMethod(description = "Adds a grid of elements given an array of strings", example = "")
+    @ProtoMethodParam(params = { "type", "arrayStrings", "x", "y", "w", "h", "function(data)" })
     public PGrid addGridOf(String type, NativeArray array, int cols, int x, int y, int w, int h, final addGridOfCB callbackfn) {
         PGrid grid = newGridOf(type, array, cols, callbackfn);
         addViewAbsolute(grid, x, y, w, h);
@@ -977,9 +1041,9 @@ public class PUI extends PUIGeneric {
         return grid;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Adds a canvas view", example = "")
-    @APIParam(params = { "x", "y", "w", "h" })
+    
+    @ProtoMethod(description = "Adds a canvas view", example = "")
+    @ProtoMethodParam(params = { "x", "y", "w", "h" })
     public PCanvas addCanvas(int x, int y, int w, int h, boolean autoDraw) {
 
         PCanvas canvasView = newCanvas(w, h);
@@ -990,9 +1054,9 @@ public class PUI extends PUIGeneric {
     }
 
 
-	@ProtocoderScript
-    @APIMethod(description = "Adds a canvas view", example = "")
-    @APIParam(params = { "x", "y", "w", "h" })
+	
+    @ProtoMethod(description = "Adds a canvas view", example = "")
+    @ProtoMethodParam(params = { "x", "y", "w", "h" })
 	public PCanvas addCanvas(int x, int y, int w, int h) {
         return addCanvas(x, y, w, h, false);
     }
@@ -1004,9 +1068,9 @@ public class PUI extends PUIGeneric {
 	}
 
     //reenable again
-    @ProtocoderScript
-    @APIMethod(description = "Adds mContext processing view", example = "")
-    @APIParam(params = { "x", "y", "w", "h", "mode={'p2d', 'p3d'" })
+    
+    @ProtoMethod(description = "Adds mContext processing view", example = "")
+    @ProtoMethodParam(params = { "x", "y", "w", "h", "mode={'p2d', 'p3d'" })
 	public PApplet addProcessing(int x, int y, int w, int h, String mode) {
 
 		initializeLayout();
@@ -1066,9 +1130,9 @@ public class PUI extends PUIGeneric {
 //		return ef;
 //	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Adds a webview", example = "")
-	@APIParam(params = { "x", "y", "w", "h" })
+    
+    @ProtoMethod(description = "Adds a webview", example = "")
+	@ProtoMethodParam(params = { "x", "y", "w", "h" })
 	public PWebView addWebView(int x, int y, int w, int h) {
 		PWebView webView = newWebview();
 		addViewAbsolute(webView, x, y, w, h);
@@ -1077,39 +1141,28 @@ public class PUI extends PUIGeneric {
 
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Add camera view", example = "")
-	@APIParam(params = { "type", "x", "y", "w", "h" })
-	public PCamera addCameraView(String type, int x, int y, int w, int h) {
+    @ProtoMethod(description = "Add camera view", example = "")
+	@ProtoMethodParam(params = { "type", "x", "y", "w", "h" })
+	public PCamera addCamera(String type, int x, int y, int w, int h) {
 
 		PCamera pCamera = newCamera(type);
         addViewAbsolute(pCamera, x, y, w, h);
 
 		return pCamera;
 	}
-
-    @ProtocoderScript
-    @APIMethod(description = "Adds a video view and starts playing the fileName", example = "")
-	@APIParam(params = { "fileName" })
-	public PVideo newVideoView(final String videoFile) {
-		PVideo video = newVideo(videoFile);
-
-		return video;
-	}
-
-    @ProtocoderScript
-    @APIMethod(description = "Adds a video view and starts playing the fileName", example = "")
-	@APIParam(params = { "fileName", "x", "y", "w", "h" })
-	public PVideo addVideoView(final String videoFile, int x, int y, int w, int h) {
+    
+    @ProtoMethod(description = "Adds a video view and starts playing the fileName", example = "")
+	@ProtoMethodParam(params = { "fileName", "x", "y", "w", "h" })
+	public PVideo addVideo(final String videoFile, int x, int y, int w, int h) {
 		PVideo video = newVideo(videoFile);
 		addViewAbsolute(video, x, y, w, h);
 
 		return video;
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Add a openstreetmap", example = "")
-	@APIParam(params = { "x", "y", "w", "h" })
+    
+    @ProtoMethod(description = "Add a openstreetmap", example = "")
+	@ProtoMethodParam(params = { "x", "y", "w", "h" })
 	public PMap addMap(int x, int y, int w, int h) {
 		PMap mapView = newMap();
 
@@ -1119,15 +1172,14 @@ public class PUI extends PUIGeneric {
 
 
 
-
 	// --------- yesno dialog ---------//
     public interface popupCB {
 		void event(boolean b);
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Shows a popup with a given text", example = "")
-	@APIParam(params = { "title", "message", "okButton", "cancelButton", "function(boolean)" })
+    
+    @ProtoMethod(description = "Shows a popup with a given text", example = "")
+	@ProtoMethodParam(params = { "title", "message", "okButton", "cancelButton", "function(boolean)" })
 	public void popupInfo(String title, String msg, String ok, String cancel, final popupCB callbackfn) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setTitle(title);
@@ -1168,9 +1220,9 @@ public class PUI extends PUIGeneric {
 		void event(String text);
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Shows an input dialog", example = "")
-	@APIParam(params = { "title", "function(text)" })
+    
+    @ProtoMethod(description = "Shows an input dialog", example = "")
+	@ProtoMethodParam(params = { "title", "function(text)" })
 	public void popupInput(String title, final inputDialogCB callbackfn) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 		builder.setTitle(title);
@@ -1200,15 +1252,15 @@ public class PUI extends PUIGeneric {
 
 
 	// --------- choiceDialog ---------//
-	interface choiceDialogCB {
+    public interface choiceDialogCB {
 		void event(String string);
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Shows a choice dialog using a given array of strings", example = "")
-	@APIParam(params = { "title", "arrayStrings", "function(text)" })
+    
+    @ProtoMethod(description = "Shows a choice dialog using a given array of strings", example = "")
+	@ProtoMethodParam(params = { "title", "arrayStrings", "function(text)" })
 	public void popupChoice(String title, final String[] choices, final choiceDialogCB callbackfn) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setTitle(title);
 
 		// Set up the buttons
@@ -1235,32 +1287,28 @@ public class PUI extends PUIGeneric {
         return pPopupCustomFragment;
     }
 
-	@ProtocoderScript
-	@APIMethod(description = "Takes a screenshot of the whole app and stores it to a given file name", example = "")
-	@APIParam(params = { "imageName" })
+	@ProtoMethod(description = "Takes a screenshot of the whole app and stores it to a given file name", example = "")
+	@ProtoMethodParam(params = { "imageName" })
 	public void takeScreenshot(String imagePath) {
 		AndroidUtils.takeScreenshot(AppRunnerSettings.get().project.getStoragePath(), imagePath, uiAbsoluteLayout);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Takes a screenshot of a view and save it to an image", example = "")
-	@APIParam(params = { "view", "imageName" })
+	@ProtoMethod(description = "Takes a screenshot of a view and save it to an image", example = "")
+	@ProtoMethodParam(params = { "view", "imageName" })
 	public void takeViewScreenshot(View v, String imagePath) {
 		AndroidUtils.takeScreenshotView(AppRunnerSettings.get().project.getStoragePath(), imagePath, v);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "Takes a screenshot of a view", example = "")
-	@APIParam(params = { "view" })
+	@ProtoMethod(description = "Takes a screenshot of a view", example = "")
+	@ProtoMethodParam(params = { "view" })
 	public Bitmap takeViewScreenshot(View v) {
 		return AndroidUtils.takeScreenshotView("", "", v);
 	}
 
 	// it only works with absolute layout and only when
 	// mContext layout is been used
-	@ProtocoderScript
-	@APIMethod(description = "Show the virtual keyboard", example = "")
-	@APIParam(params = { "boolean" })
+	@ProtoMethod(description = "Show the virtual keyboard", example = "")
+	@ProtoMethodParam(params = { "boolean" })
 	public void showVirtualKeys(boolean show) {
         initializeLayout();
 		InputMethodManager imm = (InputMethodManager) getContext().getSystemService(getContext().INPUT_METHOD_SERVICE);
@@ -1299,9 +1347,8 @@ public class PUI extends PUIGeneric {
         });
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "function(keyNumber)" })
+    @ProtoMethod(description = "", example = "")
+    @ProtoMethodParam(params = { "function(keyNumber)" })
     public void onKeyDown(final OnKeyDownCB fn) {
         if (!keyInit) {
             keyInit();
@@ -1315,9 +1362,8 @@ public class PUI extends PUIGeneric {
         void event(int eventType);
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "function(keyNumber)" })
+    @ProtoMethod(description = "", example = "")
+    @ProtoMethodParam(params = { "function(keyNumber)" })
     public void onKeyUp(final OnKeyUpCB fn) {
         if (!keyInit) {
             keyInit();
@@ -1326,16 +1372,14 @@ public class PUI extends PUIGeneric {
         mOnKeyUpfn = fn;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "boolean" })
+    @ProtoMethod(description = "", example = "")
+    @ProtoMethodParam(params = { "boolean" })
     public void enableVolumeKeys(boolean b) {
         getActivity().keyVolumeEnabled = b;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "", example = "")
-    @APIParam(params = { "boolean" })
+    @ProtoMethod(description = "", example = "")
+    @ProtoMethodParam(params = { "boolean" })
     public void enableBackKey(boolean b) {
         getActivity().keyBackEnabled = b;
     }

@@ -31,10 +31,9 @@ package org.protocoderrunner.apprunner.api.boards;
 
 import android.content.Context;
 
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.hardware.HardwareCallback;
 import org.protocoderrunner.hardware.IOIOBoard;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
@@ -66,9 +65,9 @@ public class PIOIO extends PInterface implements HardwareCallback {
 	}
 
 
-    @ProtocoderScript
-    @APIMethod(description = "initializes ioio board", example = "ioio.start();")
-    @APIParam(params = { "" })
+
+    @ProtoMethod(description = "initializes ioio board", example = "ioio.start();")
+    @ProtoMethodParam(params = { "" })
     public void start() {
         if (!mIoioStarted) {
             this.board = new IOIOBoard(getContext(), this);
@@ -77,9 +76,9 @@ public class PIOIO extends PInterface implements HardwareCallback {
         }
     }
 
-	@ProtocoderScript
-	@APIMethod(description = "initializes ioio board", example = "ioio.start();")
-    @APIParam(params = { "function()" })
+
+	@ProtoMethod(description = "initializes ioio board", example = "ioio.start();")
+    @ProtoMethodParam(params = { "function()" })
     public void start(startCB callbackfn) {
 		mIoioCallbackfn = callbackfn;
 		if (!mIoioStarted) {
@@ -94,41 +93,41 @@ public class PIOIO extends PInterface implements HardwareCallback {
 		return mIoio;
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "stops the ioio board", example = "ioio.stop();")
+
+	@ProtoMethod(description = "stops the ioio board", example = "ioio.stop();")
 	public void stop() {
 		mIoioStarted = false;
 		board.powerOff();
 		board = null;
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-    @APIParam(params = { "pinNumber" })
+
+	@ProtoMethod(description = "", example = "")
+    @ProtoMethodParam(params = { "pinNumber" })
     public DigitalOutput openDigitalOutput(int pinNum) throws ConnectionLostException {
 		return mIoio.openDigitalOutput(pinNum, false); // start with the on board
 
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-    @APIParam(params = { "pinNumber" })
+
+	@ProtoMethod(description = "", example = "")
+    @ProtoMethodParam(params = { "pinNumber" })
     public DigitalInput openDigitalInput(int pinNum) throws ConnectionLostException {
 		return mIoio.openDigitalInput(pinNum, DigitalInput.Spec.Mode.PULL_UP);
 
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-    @APIParam(params = { "pinNumber" })
+
+	@ProtoMethod(description = "", example = "")
+    @ProtoMethodParam(params = { "pinNumber" })
     public AnalogInput openAnalogInput(int pinNum) throws ConnectionLostException {
 		return mIoio.openAnalogInput(pinNum);
 
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "", example = "")
-    @APIParam(params = { "pinNumber", "frequency" })
+
+	@ProtoMethod(description = "", example = "")
+    @ProtoMethodParam(params = { "pinNumber", "frequency" })
     public PwmOutput openPWMOutput(int pinNum, int freq) throws ConnectionLostException {
         return mIoio.openPwmOutput(pinNum, freq);
 	}
@@ -141,8 +140,8 @@ public class PIOIO extends PInterface implements HardwareCallback {
 	}
 
 
-    @ProtocoderScript
-    @APIMethod(description = "returns true is the ioio board is connected", example = "")
+
+    @ProtoMethod(description = "returns true is the ioio board is connected", example = "")
     public boolean isStarted() {
         return mIoioStarted;
     }

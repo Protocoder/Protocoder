@@ -34,12 +34,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.media.MediaRecorder;
 
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.apprunner.ProtocoderScript;
 
 import java.io.File;
 
@@ -55,9 +54,9 @@ public class PAudioRecorder extends PInterface {
         WhatIsRunning.getInstance().add(this);
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Starts recording", example = "")
-    @APIParam(params = { "showProgressBoolean" })
+
+    @ProtoMethod(description = "Starts recording", example = "")
+    @ProtoMethodParam(params = { "showProgressBoolean" })
     public PAudioRecorder startRecording(String fileName, boolean showProgress) {
         this.showProgress = showProgress;
 
@@ -108,9 +107,9 @@ public class PAudioRecorder extends PInterface {
 
 
 
-    @ProtocoderScript
-    @APIMethod(description = "Stops recording", example = "")
-    @APIParam(params = { "" })
+
+    @ProtoMethod(description = "Stops recording", example = "")
+    @ProtoMethodParam(params = { "" })
     public void stopRecording() {
         try {
             if (recorder != null) {

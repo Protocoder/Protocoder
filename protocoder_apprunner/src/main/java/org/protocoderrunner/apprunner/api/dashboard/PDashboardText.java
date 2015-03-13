@@ -33,10 +33,9 @@ import android.content.Context;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.network.CustomWebsocketServer;
 import org.protocoderrunner.utils.StrUtils;
 
@@ -74,9 +73,9 @@ public class PDashboardText extends PInterface {
 		CustomWebsocketServer.getInstance(getContext()).send(msg);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "change the text", example = "")
-    @APIParam(params = { "text" })
+
+	@ProtoMethod(description = "change the text", example = "")
+    @ProtoMethodParam(params = { "text" })
     public void setText(String text) throws UnknownHostException, JSONException {
 
 		JSONObject values = new JSONObject()

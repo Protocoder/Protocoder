@@ -30,15 +30,23 @@
 package org.protocoderrunner.apprunner.api.widgets;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
+import android.view.MotionEvent;
+import android.view.View;
+
+import org.protocoderrunner.utils.MLog;
 
 public class PImageButton extends PImageView implements PViewInterface {
+
+    private String TAG = "PImageButton";
 
     private final PImageButton img;
     Context c;
     int mColor;
     int mColorReset;
+    public boolean hideBackground = false;
 
-	public PImageButton(Context context) {
+    public PImageButton(Context context) {
 		super(context);
         this.img = this;
 
@@ -63,5 +71,46 @@ public class PImageButton extends PImageView implements PViewInterface {
         });
         */
 	}
+
+    /**
+     * Adds an image with the option to hide the default background
+     *
+     */
+
+    public// --------- getRequest ---------//
+    interface addImageButtonCB {
+        void event();
+    }
+
+    public PImageButton onClick(final addImageButtonCB callbackfn) {
+        // Set on click behavior
+        img.setOnTouchListener(new OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                MLog.d(TAG, "" + event.getAction());
+                int action = event.getAction();
+                if (action == MotionEvent.ACTION_DOWN) {
+                    MLog.d(TAG, "down");
+                    if (hideBackground) {
+                        img.getDrawable().setColorFilter(0xDD00CCFC, PorterDuff.Mode.MULTIPLY);
+
+                    }
+                    callbackfn.event();
+
+                } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
+                    MLog.d(TAG, "up");
+                    if (hideBackground) {
+                        img.getDrawable().setColorFilter(0xFFFFFFFF, PorterDuff.Mode.MULTIPLY);
+
+                    }
+                }
+
+                return true;
+            }
+        });
+
+        return img;
+    }
 
 }

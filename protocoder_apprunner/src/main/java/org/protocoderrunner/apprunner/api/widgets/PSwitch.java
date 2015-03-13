@@ -31,6 +31,7 @@ package org.protocoderrunner.apprunner.api.widgets;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.widget.CompoundButton;
 import android.widget.Switch;
 
 @SuppressLint("NewApi")
@@ -39,5 +40,23 @@ public class PSwitch extends Switch implements PViewInterface {
 	public PSwitch(Context context) {
 		super(context);
 	}
+
+
+    public interface addGenericSwitchCB {
+        void event(boolean isChecked);
+    }
+
+    public PSwitch onChange(final addGenericSwitchCB callbackfn) {
+        // Add the click callback
+        this.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                callbackfn.event(isChecked);
+            }
+        });
+
+        return this;
+    }
+
 
 }

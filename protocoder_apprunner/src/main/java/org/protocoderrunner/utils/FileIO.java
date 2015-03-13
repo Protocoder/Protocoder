@@ -39,6 +39,7 @@ import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.ZipParameters;
 import net.lingala.zip4j.util.Zip4jConstants;
 
+import org.apache.commons.io.FileUtils;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
 import org.protocoderrunner.project.ProjectManager;
 
@@ -294,13 +295,18 @@ public class FileIO {
 		File dir = new File(fullPath);
 
 		if (dir.isDirectory()) {
-			MLog.d(TAG, "deleting directory " + dir.getAbsolutePath());
-			String[] children = dir.list();
-			for (String element : children) {
-				File f = new File(dir, element);
-				f.delete();
-				MLog.d(TAG, "deleting directory done" + f.getAbsolutePath());
-			}
+            try {
+                FileUtils.deleteDirectory(dir);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+//            MLog.d(TAG, "deleting directory " + dir.getAbsolutePath());
+//			String[] children = dir.list();
+//			for (String element : children) {
+//				File f = new File(dir, element);
+//				f.delete();
+//				MLog.d(TAG, "deleting directory done" + f.getAbsolutePath());
+//			}
 		} else {
 			dir.delete();
 		}
@@ -381,7 +387,7 @@ public class FileIO {
 	 * Method borrowed from Processing PApplet.java
 	 */
 	public static String[] loadStrings(String filename) {
-		InputStream is = createInput(AppRunnerSettings.get().project.getStoragePath() + File.separator + filename);
+		InputStream is = createInput(filename);
 		if (is != null) {
 			return loadStrings(is);
 		}
@@ -650,4 +656,5 @@ public class FileIO {
 			e.printStackTrace();
 		}
 	}
+
 }

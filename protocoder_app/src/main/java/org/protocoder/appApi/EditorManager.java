@@ -108,4 +108,22 @@ public class EditorManager {
         return baseDir;
     }
 
+
+    public String getCustomJSInterpreterIfExist(Context c) {
+        File file = new File(getUrlEditor(c) + "protocoder_js" + File.separator + "custom.js");
+
+        MLog.d("TAG", "trying to load custom js interpreter from " + file.getAbsolutePath());
+        String code = "";
+
+        if (file.exists()) {
+            code = FileIO.loadFile(file.getAbsolutePath());
+            MLog.d("TAG", "loaded custom js interpreter in " + file.getAbsolutePath() + " " + code);
+        } else {
+            MLog.d("TAG", "cannot load custom js interpreter ");
+        }
+
+        return code;
+    }
+
+
 }

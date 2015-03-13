@@ -25,3 +25,13 @@ for(var i = 0; i < readData.length; i++) {
   console.log(readData[i]);  
   txt.append(readData[i] + "\n");
 } 
+
+//other methods 
+//fileio.delete("fileName");
+//fileio.moveFileToDir("fileName", "dir");
+//fileio.moveDirToDir("dir", "dir");
+//fileio.copyFileToDir("fileName", "dir");
+//fileio.copyDirToDir("dir", "dir")
+//fileio.rename("fileName", "newFileName");
+//console.log(fileio.type("fileName"));
+//fileio.createEmptyFile("file.txt");

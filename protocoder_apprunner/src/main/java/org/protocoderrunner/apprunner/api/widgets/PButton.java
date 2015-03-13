@@ -33,8 +33,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.ShapeDrawable;
@@ -44,9 +42,8 @@ import android.text.Html;
 import android.view.View;
 import android.widget.Button;
 
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
-import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 
 public class PButton extends Button implements PViewInterface, PViewMethodsInterface {
 
@@ -60,55 +57,66 @@ public class PButton extends Button implements PViewInterface, PViewMethodsInter
         //init();
 	}
 
-
-    @ProtocoderScript
-    @APIMethod(description = "Changes the font type to the button", example = "")
-    @APIParam(params = { "Typeface" })
-    public void setFont(Typeface f) {
-        this.setTypeface(f);
+    // --------- newButton ---------//
+    public interface addGenericButtonCB {
+        void event();
     }
 
-    @Override
-    @ProtocoderScript
-    @APIMethod(description = "Changes the font type to the button", example = "")
-    @APIParam(params = { "" })
-    public PButton font(Typeface font) {
-        this.setFont(font);
+
+    @ProtoMethod(description = "Changes the font type to the button", example = "")
+    @ProtoMethodParam(params = { "Typeface" })
+    public PButton onClick(final addGenericButtonCB callbackfn) {
+        // Set on click behavior
+        this.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (callbackfn != null) {
+                    callbackfn.event();
+                }
+            }
+        });
+
         return this;
     }
 
-    @Override
-    @ProtocoderScript
-    @APIMethod(description = "Changes the font text color", example = "")
-    @APIParam(params = { "colorHex" })
+
+
+    @ProtoMethod(description = "Changes the font type to the button", example = "")
+    @ProtoMethodParam(params = { "Typeface" })
+    public PButton font(Typeface f) {
+        this.setTypeface(f);
+
+        return this;
+    }
+
+
+    @ProtoMethod(description = "Changes the font text color", example = "")
+    @ProtoMethodParam(params = { "colorHex" })
     public PButton color(String c) {
         this.setTextColor(Color.parseColor(c));
         return this;
     }
 
-    @Override
-    @ProtocoderScript
-    @APIMethod(description = "Changes the background color", example = "")
-    @APIParam(params = { "" })
+
+    @ProtoMethod(description = "Changes the background color", example = "")
+    @ProtoMethodParam(params = { "colorHex" })
     public PButton background(String c) {
         this.setBackgroundColor(Color.parseColor(c));
         return this;
     }
 
-    @Override
-    @ProtocoderScript
-    @APIMethod(description = "Sets html text", example = "")
-    @APIParam(params = { "htmlText" })
+
+    @ProtoMethod(description = "Sets html text", example = "")
+    @ProtoMethodParam(params = { "htmlText" })
     public PButton html(String htmlText) {
         this.setText(Html.fromHtml(htmlText));
 
         return this;
     }
 
-    @Override
-    @ProtocoderScript
-    @APIMethod(description = "Changes the button size", example = "")
-    @APIParam(params = { "w", "h" })
+
+    @ProtoMethod(description = "Changes the button size", example = "")
+    @ProtoMethodParam(params = { "w", "h" })
     public PButton boxsize(int w, int h) {
         this.setWidth(w);
         this.setHeight(h);
@@ -116,19 +124,17 @@ public class PButton extends Button implements PViewInterface, PViewMethodsInter
         return this;
     }
 
-    @Override
-    @ProtocoderScript
-    @APIMethod(description = "Changes the text size", example = "")
-    @APIParam(params = { "size" })
+
+    @ProtoMethod(description = "Changes the text size", example = "")
+    @ProtoMethodParam(params = { "size" })
     public View textSize(int size) {
         this.setTextSize(size);
         return this;
     }
 
-    @Override
-    @ProtocoderScript
-    @APIMethod(description = "Button position", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Button position", example = "")
+    @ProtoMethodParam(params = { "x", "y" })
     public PButton pos(int x, int y) {
         this.setX(x);
         this.setY(y);

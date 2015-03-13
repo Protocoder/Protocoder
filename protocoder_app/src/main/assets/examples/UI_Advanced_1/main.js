@@ -33,13 +33,13 @@ var pad = ui.addXYPad(10, 210, ui.screenWidth - 20, 400, function(e) {
 var al = ui.addAbsoluteLayout(10, 620, 520, 220);
 al.backgroundColor("#550000FF");
 
-al.addView(ui.newButton("btn1", function() {
+al.addView(ui.newButton("btn1".onClick(function() {
     ui.popupInfo("title", "description", "yes", "no", function(e) {
         console.log("you pressed " + e);
     });
 }), 0, 0, 150, 150);
 
-al.addView(ui.newButton("btn2", function() { 
+al.addView(ui.newButton("btn2".onClick(function() { 
     ui.move(al, Math.random() * ui.screenWidth, Math.random() * ui.screenHeight);
 }), 150, 0, 150, 150);
 

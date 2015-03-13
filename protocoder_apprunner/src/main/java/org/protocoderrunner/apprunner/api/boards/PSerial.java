@@ -33,14 +33,15 @@ import android.content.Context;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
 
+import com.hoho.android.usbserial.driver.CdcAcmSerialDriver;
+import com.hoho.android.usbserial.driver.ProbeTable;
 import com.hoho.android.usbserial.driver.UsbSerialDriver;
 import com.hoho.android.usbserial.driver.UsbSerialPort;
 import com.hoho.android.usbserial.driver.UsbSerialProber;
 import com.hoho.android.usbserial.util.SerialInputOutputManager;
 
-import org.protocoderrunner.apidoc.annotation.APIMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.apprunner.ProtocoderScript;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.utils.MLog;
 
@@ -73,20 +74,33 @@ public class PSerial extends PInterface {
 		void event(String responseString);
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "starts serial", example = "")
+
+	@ProtoMethod(description = "starts serial", example = "")
 	public void start(int bauds, final startCB callbackfn) {
 		WhatIsRunning.getInstance().add(this);
 		if (!isStarted) {
+
+            UsbSerialProber devices = UsbSerialProber.getDefaultProber();
+
             // Find all available drivers from attached devices.
             UsbManager manager = (UsbManager) getContext().getSystemService(Context.USB_SERVICE);
-            List<UsbSerialDriver> availableDrivers = UsbSerialProber.getDefaultProber().findAllDrivers(manager);
+
+            ProbeTable customTable = new ProbeTable();
+
+            customTable.addProduct(0x2012, 0x1f00, CdcAcmSerialDriver.class);
+            customTable.addProduct(0x2012, 0x1f00, UsbSerialDriver.class);
+            //customTable.addProduct(0x1234, 0x0002, CdcAcmSerialDriver.class);
+
+            UsbSerialProber prober = new UsbSerialProber(customTable);
+            List<UsbSerialDriver> availableDrivers = prober.findAllDrivers(manager);
+
+            //List<UsbSerialDriver> availableDrivers = UsbSerialProber.getDefaultProber().findAllDrivers(manager);
             if (availableDrivers.isEmpty()) {
                 MLog.d(TAG, "no drivers found");
                 return;
             }
 
-            // Open mContext connection to the first available driver.
+            // Open a connection with the first available driver.
             UsbSerialDriver driver = availableDrivers.get(0);
 
             UsbDeviceConnection connection = manager.openDevice(driver.getDevice());
@@ -116,7 +130,18 @@ public class PSerial extends PInterface {
 
                     @Override
                     public void onNewData(final byte[] data) {
-                        String readMsg = new String(data, 0, data.length);
+                        final String readMsg = new String(data, 0, data.length);
+
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                //antes pasaba finalMsgReturn
+                                callbackfn.event(readMsg);
+                            }
+                        });
+                        MLog.d("qq", "" + readMsg);
+
+                        /*
                         msg = msg + readMsg;
 
                         int newLineIndex = msg.indexOf('\n');
@@ -135,10 +160,12 @@ public class PSerial extends PInterface {
                             mHandler.post(new Runnable() {
                                 @Override
                                 public void run() {
+                                    //antes pasaba finalMsgReturn
                                         callbackfn.event(finalMsgReturn);
                                 }
                             });
                         }
+                        */
 
                     }
                 };
@@ -186,8 +213,8 @@ public class PSerial extends PInterface {
 		startIoManager();
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "stop serial", example = "")
+
+	@ProtoMethod(description = "stop serial", example = "")
 	public void stop() {
 		if (isStarted) {
 			isStarted = false;
@@ -206,9 +233,9 @@ public class PSerial extends PInterface {
 		}
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "sends commands to the serial")
-	public void writeSerial(String cmd) {
+
+	@ProtoMethod(description = "sends commands to the serial")
+	public void write(String cmd) {
 		if (isStarted) {
 			try {
 				sPort.write(cmd.getBytes(), 1000);
@@ -218,14 +245,14 @@ public class PSerial extends PInterface {
 		}
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "resumes serial")
+
+	@ProtoMethod(description = "resumes serial")
 	public void resume() {
 
 	}
 
-	@ProtocoderScript
-	@APIMethod(description = "pause serial")
+
+	@ProtoMethod(description = "pause serial")
 	public void pause() {
 
 	}

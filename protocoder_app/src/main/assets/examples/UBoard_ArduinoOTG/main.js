@@ -7,11 +7,15 @@
 
 var text = ui.addText("", 0, 0);
 
-var arduino = boards.startArduino(9600, function(data) {
+var arduino = boards.startArduino(9600, function(status) {
+	console.log("connected " + status)
+}); 
+
+arduino.onNewData(function(data) {
     text.setText(data);
 });
 
-ui.addButton("ledon", 0, 100, 200, 100, function() {
+ui.addButton("ledon", 0, 100, 200, 100).onClick(function() {
     arduino.write("ledon\n");
 });
 

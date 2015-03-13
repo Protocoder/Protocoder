@@ -40,9 +40,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.protocoderrunner.R;
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
-import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.utils.MLog;
 
 public class PWindow extends RelativeLayout implements PViewInterface {
@@ -77,9 +76,9 @@ public class PWindow extends RelativeLayout implements PViewInterface {
 
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Adds a new view", example = "")
-    @APIParam(params = { "view" })
+
+    @ProtoMethod(description = "Adds a new view", example = "")
+    @ProtoMethodParam(params = { "view" })
 	public PWindow addWidget(View v) {
 		v.setAlpha(0);
 		v.animate().alpha(1).setDuration(500).setStartDelay(100 * (1 + viewCount));
@@ -89,9 +88,9 @@ public class PWindow extends RelativeLayout implements PViewInterface {
         return mWindow;
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Show/hides the window bar", example = "")
-    @APIParam(params = { "boolean" })
+
+    @ProtoMethod(description = "Show/hides the window bar", example = "")
+    @ProtoMethodParam(params = { "boolean" })
     public PWindow showBar(boolean b) {
         if (b) {
             mBar.setVisibility(View.VISIBLE);
@@ -103,9 +102,9 @@ public class PWindow extends RelativeLayout implements PViewInterface {
 
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Sets the window title", example = "")
-    @APIParam(params = { "text" })
+
+    @ProtoMethod(description = "Sets the window title", example = "")
+    @ProtoMethodParam(params = { "text" })
 	public PWindow setTitle(String text) {
 		mTitle.setText(text);
 
@@ -113,27 +112,27 @@ public class PWindow extends RelativeLayout implements PViewInterface {
 
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Sets the title color", example = "")
-    @APIParam(params = { "colorHext" })
+
+    @ProtoMethod(description = "Sets the title color", example = "")
+    @ProtoMethodParam(params = { "colorHext" })
 	public PWindow setTitleColor(String color) {
 		mTitle.setTextColor(Color.parseColor(color));
 
         return mWindow;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Sets the bar background color", example = "")
-    @APIParam(params = { "colorHex" })
+
+    @ProtoMethod(description = "Sets the bar background color", example = "")
+    @ProtoMethodParam(params = { "colorHex" })
 	public PWindow setBarBackgroundColor(String color) {
 		mBar.setBackgroundColor(Color.parseColor(color));
 
         return mWindow;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Sets the background color", example = "")
-    @APIParam(params = { "colorHex" })
+
+    @ProtoMethod(description = "Sets the background color", example = "")
+    @ProtoMethodParam(params = { "colorHex" })
     public PWindow setWindowBackgroundColor(String color) {
 		mWindow.setBackgroundColor(Color.parseColor(color));
 

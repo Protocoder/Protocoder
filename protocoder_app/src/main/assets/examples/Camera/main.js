@@ -9,13 +9,13 @@
 var camera = ui.addCameraView("back", 0, 0, 500, 500);
 
 //take a picture and save it 
-ui.addButton("Take pic", 0, 500, 500, 100, function() { 
-    camera.takePicture("picture.png", function() {
+ui.addButton("Take pic", 0, 500, 500, 100).onClick(function() { 
+    camera.takePicture("picture.png").onSaved(function() {
         console.log('<img src="' + app.getProjectUrl() + 'picture.png"/>');
     });
 });
 
 //toggle flash on and off
-ui.addToggle("Flash", 0, 700, 500, 100, false, function(state) { 
+ui.addToggle("Flash", 0, 700, 500, 100, false).onChange(function(state) { 
     camera.turnOnFlash(state);
 });

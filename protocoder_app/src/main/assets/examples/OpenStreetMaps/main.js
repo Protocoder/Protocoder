@@ -14,8 +14,8 @@
 
 var map = ui.addMap(0, 0, ui.screenWidth, 500);
 map.moveTo(100 * Math.random(), 100 * Math.random());
-map.setCenter(1, 12);
-map.setZoom(3);
+map.center(1, 12);
+map.zoom(3);
 map.showControls(true);
 
 var p = map.addPath("#0000FF"); 

@@ -60,7 +60,7 @@ public class  AppRunnerInterpreter {
 	private final android.content.Context a;
 	private InterpreterInfo mListener;
 
-	static String scriptPrefix = "//Prepend text for all scripts \n" + "var window = this; \n";
+	static String SCRIPT_PREFIX = "//Prepend text for all scripts \n" + "var window = this; \n";
 	static final String SCRIPT_POSTFIX = "//Appends text for all scripts \n" + "function onAndroidPause(){ }  \n"
 			+ "// End of Append Section" + "\n";
 
@@ -176,7 +176,10 @@ public class  AppRunnerInterpreter {
 
 			this.mListener.onError(message);
 
-		} else {
+		} else if (e instanceof IllegalArgumentException) {
+            IllegalArgumentException err = (IllegalArgumentException) e;
+            Log.i(TAG, "IllegalArgumentException " + err.getMessage());
+        } else {
 			message = e.toString();
 		}
 
@@ -287,7 +290,7 @@ public class  AppRunnerInterpreter {
 
 		String prefix = c1 + c2;
 
-		scriptPrefix += prefix;
+		SCRIPT_PREFIX += prefix;
 
 		return prefix;
 	}

@@ -53,9 +53,8 @@ import org.osmdroid.views.overlay.OverlayItem.HotspotPlace;
 import org.osmdroid.views.overlay.PathOverlay;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import org.protocoderrunner.R;
-import org.protocoderrunner.apidoc.annotation.APIMethod;
-import org.protocoderrunner.apidoc.annotation.APIParam;
-import org.protocoderrunner.apprunner.ProtocoderScript;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.utils.MLog;
 
 import java.util.ArrayList;
@@ -135,9 +134,9 @@ public class PMap extends MapView {
 
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Creates a path in which it can be added new points", example = "")
-    @APIParam(params = { "colorHex" })
+
+    @ProtoMethod(description = "Creates a path in which it can be added new points", example = "")
+    @ProtoMethodParam(params = { "colorHex" })
 	public PathOverlay addPath(String color) {
 		int color1 = Color.parseColor(color);
 		PathOverlay line = new PathOverlay(color1, c);
@@ -146,9 +145,9 @@ public class PMap extends MapView {
 		return line;
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Add a point to the path", example = "")
-    @APIParam(params = { "path", "latitude", "longitude" })
+
+    @ProtoMethod(description = "Add a point to the path", example = "")
+    @ProtoMethodParam(params = { "path", "latitude", "longitude" })
 	public MapView addPointToPath(PathOverlay p, double lat, double lon) {
 		p.addPoint(new GeoPoint(lat, lon));
 		mapView.invalidate();
@@ -156,19 +155,19 @@ public class PMap extends MapView {
         return this;
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Clear the path", example = "")
-    @APIParam(params = { "path" })
+
+    @ProtoMethod(description = "Clear the path", example = "")
+    @ProtoMethodParam(params = { "path" })
 	public MapView clearPath(PathOverlay p) {
 		p.clearPath();
 
         return this;
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Set a new tile source such as mapbox and others", example = "")
-    @APIParam(params = { "url" })
-	public MapView setTileSource(String url) {
+
+    @ProtoMethod(description = "Set a new tile source such as mapbox and others", example = "")
+    @ProtoMethodParam(params = { "url" })
+	public MapView tileSource(String url) {
 
 		String[] tileSourcesUrl = new String[1];
 		tileSourcesUrl[0] = url;
@@ -181,9 +180,9 @@ public class PMap extends MapView {
         return this;
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Add a new marker", example = "")
-    @APIParam(params = { "title", "text", "latitude", "longitude" })
+
+    @ProtoMethod(description = "Add a new marker", example = "")
+    @ProtoMethodParam(params = { "title", "text", "latitude", "longitude" })
 	public OverlayItem addMarker(String title, String text, double lat, double lon) {
 
 		OverlayItem olItem = new OverlayItem(title, text, new GeoPoint(lat, lon));
@@ -197,44 +196,44 @@ public class PMap extends MapView {
 		return olItem;
 
 	}
-    @ProtocoderScript
-    @APIMethod(description = "Clear the map cache", example = "")
-    @APIParam(params = { "" })
+
+    @ProtoMethod(description = "Clear the map cache", example = "")
+    @ProtoMethodParam(params = { "" })
 	public MapView clearCache() {
 		mapView.getTileProvider().clearTileCache();
 
         return this;
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Zoom in/out depending on the integer given", example = "")
-    @APIParam(params = { "zoomValue" })
-	public MapView setZoom(int z) {
+
+    @ProtoMethod(description = "Zoom in/out depending on the integer given", example = "")
+    @ProtoMethodParam(params = { "zoomValue" })
+	public MapView zoom(int z) {
 		mapController.setZoom(z);
 
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Show/hide the map controls", example = "")
-    @APIParam(params = { "boolean" })
+
+    @ProtoMethod(description = "Show/hide the map controls", example = "")
+    @ProtoMethodParam(params = { "boolean" })
 	public MapView showControls(boolean b) {
         mapView.setBuiltInZoomControls(b);
 
         return this;
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Enable/Disables the multitouch events in the map", example = "")
-    @APIParam(params = { "boolean" })
-	public MapView setMultitouch(boolean b) {
+
+    @ProtoMethod(description = "Enable/Disables the multitouch events in the map", example = "")
+    @ProtoMethodParam(params = { "boolean" })
+	public MapView multitouch(boolean b) {
 		mapView.setMultiTouchControls(b);
         return this;
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Enable/Disables the map following using the GPS", example = "")
-    @APIParam(params = { "boolean" })
+
+    @ProtoMethod(description = "Enable/Disables the map following using the GPS", example = "")
+    @ProtoMethodParam(params = { "boolean" })
 	public MapView follow(boolean b) {
 		if (b) {
 			myLocationOverlay.enableFollowLocation();
@@ -245,9 +244,9 @@ public class PMap extends MapView {
         return this;
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Move to a specified location", example = "")
-    @APIParam(params = { "latitude", "longitude" })
+
+    @ProtoMethod(description = "Move to a specified location", example = "")
+    @ProtoMethodParam(params = { "latitude", "longitude" })
 	public MapView moveTo(double lat, double lon) {
 		GeoPoint point2 = new GeoPoint(lat, lon);
 		mapController.animateTo(point2);
@@ -255,50 +254,50 @@ public class PMap extends MapView {
         return this;
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Set the center of the map with the specified location", example = "")
-    @APIParam(params = { "latitude", "longitude" })
-	public MapView setCenter(double lat, double lon) {
+
+    @ProtoMethod(description = "Set the center of the map with the specified location", example = "")
+    @ProtoMethodParam(params = { "latitude", "longitude" })
+	public MapView center(double lat, double lon) {
 		GeoPoint point2 = new GeoPoint(lat, lon);
 		mapController.setCenter(point2);
 
         return this;
 	}
 
-    @ProtocoderScript
-    @APIMethod(description = "Gets the current center of the map", example = "")
-    @APIParam(params = { "" })
-    public GeoPoint getCenter() {
+
+    @ProtoMethod(description = "Gets the current center of the map", example = "")
+    @ProtoMethodParam(params = { "" })
+    public GeoPoint center() {
         return mapView.getBoundingBox().getCenter();
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Gets the current zoom of the map", example = "")
-    @APIParam(params = { "" })
-    public float getZoom() {
+
+    @ProtoMethod(description = "Gets the current zoom of the map", example = "")
+    @ProtoMethodParam(params = { "" })
+    public float zoom() {
         return mapView.getZoomLevel();
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Set the zoom limits", example = "")
-    @APIParam(params = { "min", "max" })
-    public MapView setZoomLimits(int min, int max) {
+
+    @ProtoMethod(description = "Set the zoom limits", example = "")
+    @ProtoMethodParam(params = { "min", "max" })
+    public MapView zoomLimits(int min, int max) {
         mapView.setMinZoomLevel(min);
         mapView.setMaxZoomLevel(max);
 
         return this;
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Get coordinates from the pixel position of the map", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Get coordinates from the pixel position of the map", example = "")
+    @ProtoMethodParam(params = { "x", "y" })
     public org.osmdroid.api.IGeoPoint getCoordinatesFromPixels(int x, int y) {
         return mapView.getProjection().fromPixels(x, y);
     }
 
-    @ProtocoderScript
-    @APIMethod(description = "Get coordinates from the pixel position of the map", example = "")
-    @APIParam(params = { "x", "y" })
+
+    @ProtoMethod(description = "Get coordinates from the pixel position of the map", example = "")
+    @ProtoMethodParam(params = { "x", "y" })
     public Point getPixelsFromCoordinates(double lat, double lon) {
         GeoPoint point = new GeoPoint(lat, lon);
         return mapView.getProjection().toPixels(point, null);
