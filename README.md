@@ -1,7 +1,7 @@
 Protocoder
 ==========
 
-[![Build Status](https://travis-ci.org/victordiaz/protocoder.svg?branch=develop)](https://travis-ci.org/victordiaz/protocoder)
+[![Build Status](https://travis-ci.org/Protocoder/Protocoder.svg?branch=develop)](https://travis-ci.org/Protocoder/Protocoder)
 
 Protocoder is a coding environment + framework in Javascript for quick prototyping on Android devices having some emphasis on rapid software and hardware hacking. 
 
