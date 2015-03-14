@@ -96,7 +96,6 @@ public class AppRunnerActivity extends BaseActivity {
     private PUI.onKeyListener onKeyListener;
     public boolean keyVolumeEnabled = true;
     public boolean keyBackEnabled = true;
-    private String mPreloadedScript;
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -128,17 +127,20 @@ public class AppRunnerActivity extends BaseActivity {
             //project info
             String projectName = intent.getStringExtra(Project.NAME);
             String projectFolder = intent.getStringExtra(Project.FOLDER);
-            mPreloadedScript = intent.getStringExtra(Project.PREFIX);
+            String prefixScript = intent.getStringExtra(Project.PREFIX);
+            String code = intent.getStringExtra(Project.CODE);
+            String postfixScript = intent.getStringExtra(Project.POSTFIX);
 
-            //            Window window = this.getWindow();
-            //            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            //            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            //            window.setStatusBarColor(this.getResources().getColor(R.color.white));
+            Bundle bundle = new Bundle();
+            bundle.putString(Project.NAME, projectName);
+            bundle.putString(Project.FOLDER, projectFolder);
+            bundle.putInt(Project.COLOR, intent.getIntExtra("color", 0));
+            bundle.putString(Project.PREFIX, prefixScript);
+            bundle.putString(Project.CODE, code);
+            bundle.putString(Project.POSTFIX, postfixScript);
 
-            //setDocumentCounterText(projectName);
 
-
-            MLog.d(TAG, "load " + projectName + " in " + projectFolder);
+            //MLog.d(TAG, "load " + projectName + " in " + projectFolder);
 
             // wake up if intent says so
             if (settingWakeUpScreen) {
@@ -152,12 +154,6 @@ public class AppRunnerActivity extends BaseActivity {
             //set screen always on if so
             setScreenAlwaysOn(settingScreenAlwaysOn);
 
-
-            Bundle bundle = new Bundle();
-            bundle.putString(Project.NAME, projectName);
-            bundle.putString(Project.FOLDER, projectFolder);
-            bundle.putInt(Project.COLOR, intent.getIntExtra("color", 0));
-            bundle.putString(Project.PREFIX, mPreloadedScript);
 
             mAppRunnerFragment = AppRunnerFragment.newInstance(bundle);
 

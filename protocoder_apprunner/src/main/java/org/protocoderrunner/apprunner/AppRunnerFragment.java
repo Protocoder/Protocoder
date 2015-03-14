@@ -119,7 +119,10 @@ public class AppRunnerFragment extends Fragment {
     private int mActionBarColor;
     private View mMainView;
     private int mActionBarColorInt;
-    private String mPreloadedScript = "";
+    private String mIntentPrefixScript = "";
+    private String mIntentCode = "";
+    private String mIntentPostfixScript = "";
+    private boolean mIsProjectLoaded = false;
     //private EditorFragment editorFragment;
 
     @Override
@@ -130,25 +133,32 @@ public class AppRunnerFragment extends Fragment {
 
         //get parameters
         Bundle bundle = getArguments();
-        mProjectName = bundle.getString(Project.NAME);
-        mProjectFolder = bundle.getString(Project.FOLDER);
+        mProjectName = bundle.getString(Project.NAME, "");
+        mProjectFolder = bundle.getString(Project.FOLDER, "");
         mActionBarColorInt = bundle.getInt(Project.COLOR, 0);
-        mPreloadedScript = bundle.getString(Project.PREFIX, "");
+        mIntentPrefixScript = bundle.getString(Project.PREFIX, "");
+        mIntentCode = bundle.getString(Project.CODE, "");
+        mIntentPostfixScript = bundle.getString(Project.POSTFIX, "");
 
-        //load project
-        mCurrentProject = ProjectManager.getInstance().get(mProjectFolder, mProjectName);
-        ProjectManager.getInstance().setCurrentProject(mCurrentProject);
-        AppRunnerSettings.get().project = mCurrentProject;
-        AppRunnerSettings.get().hasUi = true;
-        mScript = ProjectManager.getInstance().getCode(mCurrentProject);
+        //load project checking if we got the folder and name in the intent
+        mIsProjectLoaded = !mProjectName.isEmpty() && !mProjectFolder.isEmpty();
+        if (mIsProjectLoaded) {
+            mCurrentProject = ProjectManager.getInstance().get(mProjectFolder, mProjectName);
+            ProjectManager.getInstance().setCurrentProject(mCurrentProject);
+            AppRunnerSettings.get().project = mCurrentProject;
+            AppRunnerSettings.get().hasUi = true;
+            mScript = ProjectManager.getInstance().getCode(mCurrentProject);
 
-        //setup actionbar
-        int actionBarColor;
-        if (mProjectFolder.equals("examples")) {
-            mActionBarColor = getResources().getColor(R.color.project_example_color);
-        } else {
-            mActionBarColor = getResources().getColor(R.color.project_user_color);
+            //setup actionbar
+            int actionBarColor;
+            if (mProjectFolder.equals("examples")) {
+                mActionBarColor = getResources().getColor(R.color.project_example_color);
+            } else {
+                mActionBarColor = getResources().getColor(R.color.project_user_color);
+            }
         }
+
+
 
         //instantiate the objects that can be accessed from the interpreter
 
@@ -235,16 +245,21 @@ public class AppRunnerFragment extends Fragment {
         interp.addListener(appRunnerCb);
 
         // load the libraries
-        MLog.d(TAG, "loaded preloaded script" + mPreloadedScript);
-        interp.eval(mPreloadedScript);
+        MLog.d(TAG, "loaded preloaded script" + mIntentPrefixScript);
         interp.eval(AppRunnerInterpreter.SCRIPT_PREFIX);
-        
+        if (!mIntentPostfixScript.isEmpty()) interp.eval(mIntentPostfixScript);
+
         // run the script
         if (null != mScript) {
             interp.eval(mScript, mProjectName);
         }
+        //can accept intent code if no project is loaded
+        if (!mIsProjectLoaded) {
+            interp.eval(mIntentCode);
+        }
 
         //script postfix
+        if (!mIntentPostfixScript.isEmpty()) interp.eval(mIntentPostfixScript);
         interp.eval(AppRunnerInterpreter.SCRIPT_POSTFIX);
 
         //call the javascript method setup
@@ -298,7 +313,9 @@ public class AppRunnerFragment extends Fragment {
 			onAppStatusListener.onResume();
 		}
 
-		fileObserver.startWatching();
+        if (fileObserver != null) {
+            fileObserver.startWatching();
+        }
 		interp.callJsFunction("onResume");
 	}
 
@@ -312,7 +329,9 @@ public class AppRunnerFragment extends Fragment {
         interp.callJsFunction("onPause");
 
 		IDEcommunication.getInstance(mActivity).ready(false);
-		fileObserver.stopWatching();
+        if (fileObserver != null) {
+            fileObserver.stopWatching();
+        }
 	}
 
 	@Override
@@ -528,34 +547,37 @@ public class AppRunnerFragment extends Fragment {
 
 	public void startFileObserver() {
 
-        // set up mContext file observer to watch this directory on sd card
-        fileObserver = new FileObserver(mCurrentProject.getStoragePath(), FileObserver.CREATE | FileObserver.DELETE) {
+        if (mIsProjectLoaded) {
 
-			@Override
-			public void onEvent(int event, String file) {
-                JSONObject msg = new JSONObject();
-                String action = null;
+            // set up mContext file observer to watch this directory on sd card
+            fileObserver = new FileObserver(mCurrentProject.getStoragePath(), FileObserver.CREATE | FileObserver.DELETE) {
 
-                if ((FileObserver.CREATE & event) != 0) {
-					MLog.d(TAG, "created " + file);
-                    action = "new_files_in_project";
+                @Override
+                public void onEvent(int event, String file) {
+                    JSONObject msg = new JSONObject();
+                    String action = null;
 
-                } else if ((FileObserver.DELETE & event) != 0) {
-					MLog.d(TAG, "deleted file " + file);
-                    action = "deleted_files_in_project";
-				}
+                    if ((FileObserver.CREATE & event) != 0) {
+                        MLog.d(TAG, "created " + file);
+                        action = "new_files_in_project";
 
-                try {
-                    msg.put("action", action);
-                    msg.put("type", "ide");
-                    IDEcommunication.getInstance(mActivity).send(msg);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    } else if ((FileObserver.DELETE & event) != 0) {
+                        MLog.d(TAG, "deleted file " + file);
+                        action = "deleted_files_in_project";
+                    }
+
+                    try {
+                        msg.put("action", action);
+                        msg.put("type", "ide");
+                        IDEcommunication.getInstance(mActivity).send(msg);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+
                 }
-
-
-			}
-		};
+            };
+        }
 
 	}
 
