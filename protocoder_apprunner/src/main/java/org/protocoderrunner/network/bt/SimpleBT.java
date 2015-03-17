@@ -12,8 +12,7 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
-import org.protocoderrunner.apprunner.api.PNetwork;
-import org.protocoderrunner.apprunner.api.other.PBluetooth;
+import org.protocoderrunner.apprunner.api.network.PBluetooth;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunningInterface;
 
 import java.util.Set;

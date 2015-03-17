@@ -33,7 +33,7 @@ import android.content.Context;
 
 import org.protocoder.appApi.Protocoder;
 import org.protocoder.appApi.Settings;
-import org.protocoderrunner.apprunner.api.other.PFtpServer;
+import org.protocoderrunner.apprunner.api.network.PFtpServer;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.MLog;
 

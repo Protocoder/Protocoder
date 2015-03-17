@@ -1,4 +1,4 @@
-package org.protocoderrunner.apprunner.api.other;
+package org.protocoderrunner.apprunner.api.media;
 
 import android.content.Context;
 import android.hardware.usb.UsbDevice;

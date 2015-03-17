@@ -29,6 +29,11 @@
 
 package org.protocoderrunner.network;
 
+import android.os.Handler;
+import android.os.Looper;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.protocoderrunner.utils.MLog;
 
 import java.io.IOException;
@@ -54,7 +59,14 @@ public class OSC {
 
 	}
 
-	public class Server {
+    // --------- OSC Server ---------//
+    interface startOSCServerCB {
+        void event(String string, JSONArray jsonArray);
+    }
+
+
+    public class Server {
+        public Handler mHandler = new Handler(Looper.getMainLooper());
 
 		// OSC server
 		OSCReceiver rcv;
@@ -63,8 +75,7 @@ public class OSC {
 		int n = 0;
 
 		SocketAddress inPort = null;
-
-		Vector<OSCServerListener> listeners = new Vector<OSCServerListener>();
+        Vector<OSCServerListener> listeners = new Vector<OSCServerListener>();
 
 		public void start(String port) {
 
@@ -97,6 +108,38 @@ public class OSC {
 				MLog.d(TAG, e2.getLocalizedMessage());
 			}
 		}
+
+        public void onNewData(final startOSCServerCB callbackfn) {
+            this.addListener(new OSC.OSCServerListener() {
+
+                @Override
+                public void onMessage(final OSCMessage msg) {
+                    MLog.d(TAG, "message received " + msg);
+
+                    final JSONArray jsonArray = new JSONArray();
+                    for (int i = 0; i < msg.getArgCount(); i++) {
+                        jsonArray.put(msg.getArg(i));
+                    }
+
+                    try {
+                        MLog.d(TAG, msg.getName() + " " + jsonArray.toString(2));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    // callback(callbackfn, "\"" + msg.getName() + "\"", str);
+                    // Log.d(TAG, msg.g)
+                    mHandler.post(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            // MLog.d(TAG, "receiver");
+                            callbackfn.event(msg.getName(), jsonArray);
+                        }
+                    });
+                }
+
+            });
+        }
 
 		public void stop() {
 			stopOSCServer();

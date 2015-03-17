@@ -27,7 +27,7 @@
  * 
  */
 
-package org.protocoderrunner.apprunner.api.other;
+package org.protocoderrunner.apprunner.api.network;
 
 import android.content.Context;
 import android.os.Handler;

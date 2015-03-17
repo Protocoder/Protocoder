@@ -1,12 +1,14 @@
-package org.protocoderrunner.apprunner.api.other;
+package org.protocoderrunner.apprunner.api.media;
 
 import android.content.Context;
 import android.hardware.usb.UsbDevice;
 import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
+import android.widget.Toast;
 
 import org.protocoderrunner.apprunner.PInterface;
+import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 
 import java.util.Arrays;
 
@@ -40,7 +42,7 @@ public class PMidi extends PInterface {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                midiEvent.event(cable, channel, function, value);
+                if (mMidiEvent != null) mMidiEvent.event(cable, channel, function, value);
             }
         });
 
@@ -48,26 +50,30 @@ public class PMidi extends PInterface {
 
     private UsbMidiDriver usbMidiDriver;
 
+    // --------- startVoiceRecognition ---------//
+    public interface MidiConnectedCB {
+        void event(boolean connected);
+    }
+
 
     // --------- startVoiceRecognition ---------//
     public interface MidiDeviceEventCB {
         void event(int cable, int channel, int function, int value);
     }
 
-    MidiDeviceEventCB midiEvent;
+    MidiDeviceEventCB mMidiEvent;
 
-    public PMidi(Context appActivity, MidiDeviceEventCB callbackfn) {
+    public PMidi(Context appActivity) {
         super(appActivity);
 
-        this.midiEvent = callbackfn;
         WhatIsRunning.getInstance().add(this);
 
 
         usbMidiDriver = new UsbMidiDriver(appActivity) {
             @Override
             public void onDeviceAttached(UsbDevice usbDevice) {
-
-               // Toast.makeText(UsbMidiDriverSampleActivity.this, "USB MIDI Device " + usbDevice.getDeviceName() + " has been attached.", Toast.LENGTH_LONG).show();
+               Toast.makeText(getContext(), "USB MIDI Device " + usbDevice.getDeviceName() + " has been attached.", Toast.LENGTH_LONG).show();
+                //mConnectedCallback.event(true);
             }
 
             @Override
@@ -160,6 +166,12 @@ public class PMidi extends PInterface {
 
         usbMidiDriver.open();
 
+    }
+
+    public PMidi onChange(final PMidi.MidiDeviceEventCB callbackfn) {
+        mMidiEvent = callbackfn;
+
+        return this;
     }
 
     public void stop() {

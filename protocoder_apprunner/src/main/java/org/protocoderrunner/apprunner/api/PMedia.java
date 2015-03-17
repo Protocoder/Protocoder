@@ -38,32 +38,23 @@ import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
-import android.telephony.PhoneStateListener;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import org.json.JSONArray;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.apprunner.api.other.PAudioPlayer;
-import org.protocoderrunner.apprunner.api.other.PAudioRecorder;
-import org.protocoderrunner.apprunner.api.other.PMidi;
-import org.protocoderrunner.apprunner.api.other.PPureData;
+import org.protocoderrunner.apprunner.api.media.PAudioPlayer;
+import org.protocoderrunner.apprunner.api.media.PAudioRecorder;
+import org.protocoderrunner.apprunner.api.media.PMidi;
+import org.protocoderrunner.apprunner.api.media.PPureData;
 import org.protocoderrunner.media.Audio;
 import org.protocoderrunner.media.AudioService;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.utils.AndroidUtils;
 import org.protocoderrunner.utils.MLog;
-import org.puredata.android.service.PdService;
-import org.puredata.android.utils.PdUiDispatcher;
-import org.puredata.core.PdBase;
-import org.puredata.core.utils.PdDispatcher;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Locale;
 
 public class PMedia extends PInterface {
@@ -119,149 +110,25 @@ public class PMedia extends PInterface {
         AndroidUtils.setEnableSoundEffects(getContext(), b);
     }
 
-    // --------- initPDPatch ---------//
-	interface initPDPatchCB {
-		void event(PDReturn o);
-	}
 
-	class PDReturn {
-		String type;
-		protected String source;
-		protected Object data;
+    @ProtoMethod(description = "Loads and initializes a PureData patch http://www.puredata.info using libpd", example = "")
+    @ProtoMethodParam(params = { "fileName", "micChannels", "outputChannels", "sampleRate", "buffer"})
+    public PPureData loadPdPatch(String fileName, int micChannels, int outputChannels, int sampleRate, int buffer) {
+        AudioService.settingsSampleRate = sampleRate;
+        AudioService.settingsMicChannels = micChannels;
+        AudioService.settingsOutputChannels = outputChannels;
+        AudioService.settingsBuffer = buffer;
 
-	}
+        return this.loadPdPatch(fileName);
+    }
 
+	@ProtoMethod(description = "Loads and initializes a PureData patch http://www.puredata.info using libpd", example = "")
+	@ProtoMethodParam(params = { "fileName" })
+	public PPureData loadPdPatch(String fileName) {
+		PPureData pPureData = new PPureData(getContext());
+        pPureData.initPatch(fileName);
 
-	@ProtoMethod(description = "Loads and initializes a PureData patch http://www.puredata.info", example = "")
-	@ProtoMethodParam(params = { "fileName", "function(objectType, value)" })
-	public PPureData loadPdPatch(String fileName, final initPDPatchCB callbackfn) {
-		String filePath = AppRunnerSettings.get().project.getStoragePath() + File.separator + fileName;
-
-		PdUiDispatcher receiver = new PdUiDispatcher() {
-
-			@Override
-			public void print(String s) {
-				MLog.d(TAG, "pd >>" + s);
-
-				PDReturn o = new PDReturn();
-				o.type = "print";
-				o.data = s;
-
-				callbackfn.event(o);
-			}
-
-			@Override
-			public void receiveBang(String source) {
-				MLog.d(TAG, "bang");
-
-				PDReturn o = new PDReturn();
-				o.type = "bang";
-				o.source = source;
-
-				callbackfn.event(o);
-			}
-
-			@Override
-			public void receiveFloat(String source, float x) {
-				MLog.d(TAG, "float: " + x);
-
-				PDReturn o = new PDReturn();
-				o.type = "float";
-				o.source = source;
-				o.data = x;
-
-				callbackfn.event(o);
-			}
-
-			@Override
-			public void receiveList(String source, Object... args) {
-				MLog.d(TAG, "list: " + Arrays.toString(args));
-
-				JSONArray jsonArray = new JSONArray();
-				for (Object arg : args) {
-					jsonArray.put(arg);
-				}
-
-				PDReturn o = new PDReturn();
-				o.type = "list";
-				o.source = source;
-				o.data = jsonArray;
-
-				callbackfn.event(o);
-			}
-
-			@Override
-			public void receiveMessage(String source, String symbol, Object... args) {
-				MLog.d(TAG, "message: " + Arrays.toString(args));
-
-				JSONArray jsonArray = new JSONArray();
-				for (Object arg : args) {
-					jsonArray.put(arg);
-				}
-
-				PDReturn o = new PDReturn();
-				o.type = "message";
-				o.source = source;
-				o.data = jsonArray;
-
-				callbackfn.event(o);
-			}
-
-			@Override
-			public void receiveSymbol(String source, String symbol) {
-				MLog.d(TAG, "symbol: " + symbol);
-
-				PDReturn o = new PDReturn();
-				o.type = "symbol";
-				o.source = source;
-				o.data = symbol;
-
-				callbackfn.event(o);
-			}
-
-		};
-
-		// create and install the dispatcher
-		PdDispatcher dispatcher = new PdUiDispatcher() {
-
-			@Override
-			public void print(String s) {
-				Log.i("Pd print", s);
-			}
-
-		};
-
-		PdBase.setReceiver(dispatcher);
-
-		//PdBase.setReceiver(receiver);
-		PdBase.subscribe("android");
-		// start pure data sound engine
-		AudioService.file = filePath;
-
-		Intent intent = new Intent(getActivity(), PdService.class);
-
-		(getActivity()).bindService(intent, AudioService.pdConnection, Context.BIND_AUTO_CREATE);
-		initSystemServices();
-		WhatIsRunning.getInstance().add(AudioService.pdConnection);
-
-		return new PPureData();
-	}
-
-	private void initSystemServices() {
-		TelephonyManager telephonyManager = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
-		telephonyManager.listen(new PhoneStateListener() {
-			@Override
-			public void onCallStateChanged(int state, String incomingNumber) {
-				if (AudioService.pdService == null) {
-					return;
-				}
-				if (state == TelephonyManager.CALL_STATE_IDLE) {
-					AudioService.start();
-				} else {
-					AudioService.pdService.stopAudio();
-				}
-			}
-		}, PhoneStateListener.LISTEN_CALL_STATE);
+		return pPureData;
 	}
 
     boolean recording = false;
@@ -423,11 +290,12 @@ public class PMedia extends PInterface {
     }
 
 
-
     @ProtoMethod(description = "Start a connected midi device", example = "media.startVoiceRecognition(function(text) { console.log(text) } );")
     @ProtoMethodParam(params = { "function(recognizedText)" })
-    public void midiDevice(final PMidi.MidiDeviceEventCB callbackfn) {
-        PMidi pMidi = new PMidi(getContext(), callbackfn);
+    public PMidi connectMidiDevice() {
+        PMidi pMidi = new PMidi(getContext());
+
+        return pMidi;
     }
 
     public boolean isHeadsetPlugged() {

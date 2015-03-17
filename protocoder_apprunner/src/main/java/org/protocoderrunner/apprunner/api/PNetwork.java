@@ -38,7 +38,6 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.codebutler.android_websockets.SocketIOClient;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -58,24 +57,16 @@ import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
-import org.java_websocket.WebSocket;
-import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.drafts.Draft;
-import org.java_websocket.drafts.Draft_17;
-import org.java_websocket.handshake.ClientHandshake;
-import org.java_websocket.handshake.ServerHandshake;
-import org.java_websocket.server.WebSocketServer;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.apprunner.api.other.PBluetooth;
-import org.protocoderrunner.apprunner.api.other.PFtpClient;
-import org.protocoderrunner.apprunner.api.other.PFtpServer;
-import org.protocoderrunner.apprunner.api.other.PSimpleHttpServer;
-import org.protocoderrunner.apprunner.api.other.PSocketIOClient;
+import org.protocoderrunner.apprunner.api.network.PBluetooth;
+import org.protocoderrunner.apprunner.api.network.PFtpClient;
+import org.protocoderrunner.apprunner.api.network.PFtpServer;
+import org.protocoderrunner.apprunner.api.network.PSimpleHttpServer;
+import org.protocoderrunner.apprunner.api.network.PSocketIOClient;
+import org.protocoderrunner.apprunner.api.network.PWebSocketClient;
+import org.protocoderrunner.apprunner.api.network.PWebSocketServer;
 import org.protocoderrunner.network.NetworkUtils;
 import org.protocoderrunner.network.NetworkUtils.DownloadTask.DownloadListener;
 import org.protocoderrunner.network.OSC;
@@ -90,11 +81,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
-import java.net.InetSocketAddress;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -112,11 +99,10 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 
-import de.sciss.net.OSCMessage;
-
 public class PNetwork extends PInterface {
 
 	private final String TAG = "PNetwork";
+    private PWebSocketServer PWebsockerServer;
 
     public PNetwork(Context a) {
         super(a);
@@ -200,49 +186,13 @@ public class PNetwork extends PInterface {
         return NetworkUtils.getWifiInfo(getContext());
     }
 
-    // --------- OSC Server ---------//
-    interface startOSCServerCB {
-        void event(String string, JSONArray jsonArray);
-    }
 
 
     @ProtoMethod(description = "Starts an OSC server", example = "")
     @ProtoMethodParam(params = {"port", "function(jsonData)"})
-    public OSC.Server createOSCServer(String port, final startOSCServerCB callbackfn) {
+    public OSC.Server createOSCServer(String port) {
         OSC osc = new OSC();
         OSC.Server server = osc.new Server();
-
-        server.addListener(new OSC.OSCServerListener() {
-
-            @Override
-            public void onMessage(final OSCMessage msg) {
-                MLog.d(TAG, "message received " + msg);
-
-                final JSONArray jsonArray = new JSONArray();
-                for (int i = 0; i < msg.getArgCount(); i++) {
-                    jsonArray.put(msg.getArg(i));
-                }
-
-                try {
-                    MLog.d(TAG, msg.getName() + " " + jsonArray.toString(2));
-                } catch (JSONException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-                // callback(callbackfn, "\"" + msg.getName() + "\"", str);
-                // Log.d(TAG, msg.g)
-
-                mHandler.post(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        // MLog.d(TAG, "receiver");
-                        callbackfn.event(msg.getName(), jsonArray);
-                    }
-                });
-            }
-
-        });
 
         server.start(port);
         WhatIsRunning.getInstance().add(server);
@@ -261,10 +211,7 @@ public class PNetwork extends PInterface {
         return client;
     }
 
-    // --------- webSocket Server ---------//
-    interface startWebSocketServerCB {
-        void event(String string, WebSocket socket, String arg1);
-    }
+
 
     WifiManager.MulticastLock wifiLock;
 
@@ -310,195 +257,28 @@ public class PNetwork extends PInterface {
 
     @ProtoMethod(description = "Start a websocket server", example = "")
     @ProtoMethodParam(params = {"port", "function(status, socket, data)"})
-    public WebSocketServer createWebsocketServer(int port, final startWebSocketServerCB callbackfn) {
+    public PWebSocketServer createWebsocketServer(int port) {
+        PWebSocketServer pWebSocketServer = new PWebSocketServer(port);
 
-        InetSocketAddress inetSocket = new InetSocketAddress(port);
-        Draft d = new Draft_17();
-        WebSocketServer websocketServer = new WebSocketServer(inetSocket, Collections.singletonList(d)) {
-
-            @Override
-            public void onClose(final WebSocket arg0, int arg1, String arg2, boolean arg3) {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        callbackfn.event("onClose", arg0, "");
-                    }
-                });
-                //MLog.d(TAG, "onClose");
-            }
-
-            @Override
-            public void onError(final WebSocket arg0, Exception arg1) {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        callbackfn.event("onError", arg0, "");
-                    }
-                });
-                //MLog.d(TAG, "onError");
-            }
-
-            @Override
-            public void onMessage(final WebSocket arg0, final String arg1) {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        callbackfn.event("onMessage", arg0, arg1);
-                    }
-                });
-                //MLog.d(TAG, "onMessage server");
-
-            }
-
-            @Override
-            public void onOpen(final WebSocket arg0, ClientHandshake arg1) {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        callbackfn.event("onOpen", arg0, "");
-                    }
-                });
-                //MLog.d(TAG, "onOpen");
-            }
-        };
-        websocketServer.start();
-        WhatIsRunning.getInstance().add(websocketServer);
-        return websocketServer;
-
+        return pWebSocketServer;
     }
 
-    // --------- connect websocket ---------//
-    interface connectWebsocketCB {
-        void event(String string, String string2);
-    }
+
 
 
     @ProtoMethod(description = "Connect to a websocket server", example = "")
     @ProtoMethodParam(params = {"uri", "function(status, data)"})
-    public WebSocketClient connectWebsocket(String uri, final connectWebsocketCB callbackfn) {
+    public PWebSocketClient connectWebsocket(String uri) {
+        PWebSocketClient pWebSocketClient = new PWebSocketClient(uri);
 
-        Draft d = new Draft_17();
-
-        WebSocketClient webSocketClient = null;
-        try {
-            webSocketClient = new WebSocketClient(new URI(uri), d) {
-
-                @Override
-                public void onOpen(ServerHandshake arg0) {
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            callbackfn.event("onOpen", "");
-                        }
-                    });
-                    //Log.d(TAG, "onOpen");
-                }
-
-                @Override
-                public void onMessage(final String arg0) {
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            callbackfn.event("onMessage", arg0);
-                        }
-                    });
-
-                    //Log.d(TAG, "onMessage client");
-
-                }
-
-                @Override
-                public void onError(Exception arg0) {
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            callbackfn.event("onError", "");
-
-                        }
-                    });
-
-                    //Log.d(TAG, "onError");
-                }
-
-                @Override
-                public void onClose(int arg0, String arg1, boolean arg2) {
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            callbackfn.event("onClose", "");
-                        }
-                    });
-
-                    //Log.d(TAG, "onClose");
-
-                }
-            };
-            webSocketClient.connect();
-
-        } catch (URISyntaxException e) {
-            Log.d(TAG, "error");
-
-            callbackfn.event("error ", e.toString());
-            e.printStackTrace();
-        }
-
-        return webSocketClient;
-    }
-
-    // --------- connectSocketIO ---------//
-    interface connectSocketIOCB {
-        // void event(String string, String reason, String string2);
-        void event(String string, String event, JSONArray arguments);
+        return pWebSocketClient;
     }
 
 
     @ProtoMethod(description = "Connect to a SocketIO server", example = "")
     @ProtoMethodParam(params = {"uri", "function(status, message, data)"})
-    public PSocketIOClient connectSocketIO(String uri, final connectSocketIOCB callbackfn) {
-
-        PSocketIOClient socketIOClient = new PSocketIOClient(URI.create(uri), new SocketIOClient.Handler() {
-
-            @Override
-            public void onMessage(String message) {
-                callbackfn.event("onMessage", null, null);
-                //MLog.d("qq", "onMessage");
-            }
-
-            @Override
-            public void onJSON(JSONObject json) {
-
-            }
-
-            @Override
-            public void onError(Exception error) {
-                callbackfn.event("error", null, null);
-            }
-
-            @Override
-            public void onDisconnect(int code, String reason) {
-                callbackfn.event("disconnect", reason, null);
-                // MLog.d("qq", "disconnected");
-            }
-
-            @Override
-            public void onConnect() {
-                callbackfn.event("connected", null, null);
-                // MLog.d("qq", "connected");
-            }
-
-            @Override
-            public void onConnectToEndpoint(String s) {
-
-            }
-
-            @Override
-            public void on(String event, JSONArray arguments) {
-                callbackfn.event("on", event, arguments);
-                // MLog.d("qq", "onmessage");
-
-            }
-        });
-        socketIOClient.connect();
+    public PSocketIOClient connectSocketIO(String uri) {
+        PSocketIOClient socketIOClient = new PSocketIOClient(uri);
 
         return socketIOClient;
     }

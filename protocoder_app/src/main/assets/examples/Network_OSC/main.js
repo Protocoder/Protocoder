@@ -3,8 +3,7 @@
 *	devices / softwares together 
 */ 
 
-var oscServer = network.startOSCServer(9000);
-oscServer.onNewData(function(name, data) { 
+var oscServer = network.createOSCServer(9000).onNewData(function(name, data) { 
     console.log(name + " " + data);
 }); 
 
