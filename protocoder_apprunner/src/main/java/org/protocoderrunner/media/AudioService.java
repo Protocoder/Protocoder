@@ -36,7 +36,6 @@ import android.os.IBinder;
 
 import org.protocoderrunner.R;
 import org.protocoderrunner.apprunner.AppRunnerFragment;
-import org.protocoderrunner.apprunner.logger.L;
 import org.protocoderrunner.utils.MLog;
 import org.puredata.android.io.AudioParameters;
 import org.puredata.android.service.PdService;
@@ -53,7 +52,12 @@ public class AudioService {
     public static PdService pdService = null;
 	public static String file;
 
-	public static final ServiceConnection pdConnection = new ServiceConnection() {
+    public static int settingsSampleRate = -1;
+    public static int settingsMicChannels = -1;
+    public static int settingsOutputChannels = -1;
+    public static int settingsBuffer = -1;
+
+    public static final ServiceConnection pdConnection = new ServiceConnection() {
 
         @Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
@@ -109,13 +113,17 @@ public class AudioService {
 
 	};
 
-	private static void initPd() throws IOException {
+    private static void initPd() throws IOException {
 
 		// configure audio glue
-		int sampleRate = AudioParameters.suggestSampleRate();
-		int micChannels = AudioParameters.suggestInputChannels();
-		MLog.d(TAG, "mic channels" + micChannels);
-		pdService.initAudio(sampleRate, micChannels, 2, 8);
+
+		if (settingsSampleRate == -1); settingsSampleRate = AudioParameters.suggestSampleRate();
+		if (settingsMicChannels == -1) settingsMicChannels = AudioParameters.suggestInputChannels();
+        if (settingsOutputChannels == -1) settingsOutputChannels = 2;
+        if (settingsBuffer == -1) settingsBuffer = 8;
+
+		MLog.d(TAG, "mic channels" + settingsMicChannels);
+		pdService.initAudio(settingsSampleRate, settingsMicChannels, settingsOutputChannels, settingsBuffer);
 
 
 		start();

@@ -27,7 +27,7 @@
  *
  */
 
-package org.protocoderrunner.apprunner.api.other;
+package org.protocoderrunner.apprunner.api.media;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -39,6 +39,7 @@ import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
 import org.protocoderrunner.apprunner.PInterface;
+import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 
 import java.io.File;
 

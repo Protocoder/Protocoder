@@ -27,7 +27,7 @@
  * 
  */
 
-package org.protocoderrunner.apprunner.api.other;
+package org.protocoderrunner.apprunner.api.media;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;

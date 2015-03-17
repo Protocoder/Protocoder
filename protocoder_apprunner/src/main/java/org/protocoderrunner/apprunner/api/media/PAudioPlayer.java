@@ -27,7 +27,7 @@
  *
  */
 
-package org.protocoderrunner.apprunner.api.other;
+package org.protocoderrunner.apprunner.api.media;
 
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -35,6 +35,7 @@ import android.media.MediaPlayer;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
+import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 
 import java.io.File;
 import java.io.IOException;
