@@ -51,6 +51,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import org.protocoder.appApi.Protocoder;
+import org.protocoderrunner.apprunner.api.PUtil;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.events.Events;
 import org.protocoderrunner.events.Events.ProjectEvent;
@@ -81,6 +82,7 @@ public class MainActivity extends BaseActivity {
 
     //singleton that controls protocoder
     private Protocoder mProtocoder;
+    private Toolbar mToolbar;
 
 
     @Override
@@ -100,14 +102,27 @@ public class MainActivity extends BaseActivity {
 
         if (!AndroidUtils.isWear(this)) {
 
-            Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
-            setSupportActionBar(toolbar);
+            mToolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
+            setSupportActionBar(mToolbar);
 
             //ActionBar mActionBar = getSupportActionBar();
             //mActionBar.setHomeButtonEnabled(true);
         }
         mProtocoder = Protocoder.getInstance(this);
         mProtocoder.init();
+
+
+        final int[] counter = {0};
+        mProtocoder.mPUtil.loop(1000, new PUtil.LooperCB() {
+            @Override
+            public void event() {
+                if (counter[0]++ % 2 == 0) {
+                    mToolbar.setTitle("> PROTOCODER_");
+                } else {
+                    mToolbar.setTitle("> PROTOCODER");
+                }
+            }
+        }).start();
 
 
        /*

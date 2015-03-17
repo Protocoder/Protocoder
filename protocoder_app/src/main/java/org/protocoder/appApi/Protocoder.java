@@ -53,7 +53,7 @@ public class Protocoder {
 
 
     //instances of some Protocoder AppRunner objects
-    PUtil mPUtil = new PUtil(mActivityContext);
+    public PUtil mPUtil = new PUtil(mActivityContext);
     PUI mPUi = new PUI(mActivityContext);
     PNetwork mPNetwork = new PNetwork(mActivityContext);
     PFileIO mPFileIO = new PFileIO(mActivityContext);
