@@ -46,6 +46,7 @@ import org.mozilla.javascript.NativeObject;
 import org.protocoderrunner.R;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.apprunner.AppRunnerFragment;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.other.PEvents;
@@ -151,7 +152,7 @@ public class PApp extends PInterface {
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getContext())
 				.setSmallIcon(R.drawable.app_icon).setContentTitle(title).setContentText(description);
 		// Creates an explicit intent for an Activity in your app
-		Intent resultIntent = new Intent(getContext(), AppRunnerFragment.class);
+		Intent resultIntent = new Intent(getContext(), AppRunnerActivity.class);
 
 		// The stack builder object will contain an artificial back stack for
 		// the started Activity.
@@ -159,7 +160,7 @@ public class PApp extends PInterface {
 		// your application to the Home screen.
 		TaskStackBuilder stackBuilder = TaskStackBuilder.create(getContext());
 		// Adds the back stack for the Intent (but not the Intent itself)
-		stackBuilder.addParentStack(AppRunnerFragment.class);
+		stackBuilder.addParentStack(AppRunnerActivity.class);
 		// Adds the Intent that starts the Activity to the top of the stack
 		stackBuilder.addNextIntent(resultIntent);
 		PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);

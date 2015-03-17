@@ -18,10 +18,6 @@
         tools:replace="android:allowBackup">
 
         <activity
-            android:name="com.spotify.sdk.android.authentication.LoginActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
-
-        <activity
             android:name=".activities.LauncherActivity"
             android:icon="@drawable/protocoder_icon"
             android:label="@string/activity_name"

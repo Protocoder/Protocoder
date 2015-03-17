@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Protocoder</string>
-    <string name="activity_name">Protocoder</string>
+    <string name="activity_name">> Protocoder_</string>
     <string name="runner_name">Protocoder AppRunner</string>
     <string name="connect_message">Click to connect</string>
     <string name="menu_settings">Settings</string>

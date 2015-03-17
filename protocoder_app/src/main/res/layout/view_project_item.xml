@@ -50,7 +50,8 @@
             android:text="@string/symbol"
             android:textColor="#EEEEEE"
             android:textSize="45sp"
-            android:typeface="normal" />
+            android:typeface="normal"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/symbolTextC"

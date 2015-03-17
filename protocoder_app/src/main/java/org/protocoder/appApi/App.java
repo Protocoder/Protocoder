@@ -262,7 +262,7 @@ public class App {
 
         // check if there is mContext WIFI connection or we can connect via USB
         if (NetworkUtils.getLocalIpAddress(protocoder.mActivityContext).equals("-1")) {
-            setIp("No WIFI, still you can hack via USB using the companion app");
+            setIp("No WIFI, still you can hack via USB using the adb command");
         } else {
             setIp("Hack via your browser @ http://" + NetworkUtils.getLocalIpAddress(protocoder.mActivityContext) + ":"
                     + AppSettings.HTTP_PORT);

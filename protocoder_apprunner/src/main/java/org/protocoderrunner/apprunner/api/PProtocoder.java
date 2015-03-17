@@ -54,7 +54,7 @@ import org.protocoderrunner.apidoc.annotation.APIRequires;
 import org.protocoderrunner.apidoc.annotation.APIVersion;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.other.ApplicationInfo;
-import org.protocoderrunner.apprunner.api.other.PWebEditor;
+import org.protocoderrunner.apprunner.api.widgets.PWebEditor;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.MLog;
 

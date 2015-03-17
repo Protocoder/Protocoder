@@ -31,11 +31,13 @@ package org.protocoder.appApi;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import org.protocoder.R;
@@ -43,10 +45,12 @@ import org.protocoder.fragments.NewProjectDialogFragment;
 import org.protocoder.projectlist.ProjectItem;
 import org.protocoder.projectlist.ProjectListFragment;
 import org.protocoder.projectlist.ProjectsPagerAdapter;
+import org.protocoder.projectlist.SlidingTabLayout;
 import org.protocoder.projectlist.ZoomOutPageTransformer;
 import org.protocoder.views.ProjectSelectorStrip;
 import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.apprunner.api.PUtil;
+import org.protocoderrunner.apprunner.logger.L;
 import org.protocoderrunner.project.Project;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.AndroidUtils;
@@ -75,19 +79,25 @@ public class ProtoScripts {
 
     public void init() {
         //init views
-        mProjectPagerAdapter = new ProjectsPagerAdapter(mProtocoder.mActivityContext.getSupportFragmentManager());
+        mProjectPagerAdapter = new ProjectsPagerAdapter(mProtocoder.mActivityContext, mProtocoder.mActivityContext.getSupportFragmentManager());
 
-        final ProjectSelectorStrip strip = (ProjectSelectorStrip) mProtocoder.mActivityContext.findViewById(R.id.pager_title_strip);
+       // final ProjectSelectorStrip strip = (ProjectSelectorStrip) mProtocoder.mActivityContext.findViewById(R.id.pager_title_strip);
 
         mViewPager = (ViewPager) mProtocoder.mActivityContext.findViewById(R.id.pager);
         mViewPager.setAdapter(mProjectPagerAdapter);
         mViewPager.setPageTransformer(true, new ZoomOutPageTransformer());
 
+        //final SlidingTabLayout mSlidingTabLayout = (SlidingTabLayout) mProtocoder.mActivityContext.findViewById(R.id.sliding_tabs);
+        //mSlidingTabLayout.setDistributeEvenly(true);
+        //mSlidingTabLayout.setViewPager(mViewPager);
+
+        final LinearLayout groupedToolbar = (LinearLayout) mProtocoder.mActivityContext.findViewById(R.id.grouped_toolbar);
+
 
         //TODO remove at some point
         //colors
-        final int c0 = mProtocoder.mActivityContext.getResources().getColor(R.color.project_user_color);
-        final int c1 = mProtocoder.mActivityContext.getResources().getColor(R.color.project_example_color);
+       //final int c0 = mProtocoder.mActivityContext.getResources().getColor(R.color.project_user_color);
+       // final int c1 = mProtocoder.mActivityContext.getResources().getColor(R.color.project_example_color);
 
 
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -98,8 +108,8 @@ public class ProtoScripts {
 
             @Override
             public void onPageScrolled(int arg0, float arg1, int arg2) {
-                int c = AndroidUtils.calculateColor(arg0 + arg1, c0, c1);
-                strip.setBackgroundColor(c);
+            //   int c = AndroidUtils.calculateColor(arg0 + arg1, c0, c1);
+            //   groupedToolbar.setBackgroundColor(c);
             }
 
             @Override

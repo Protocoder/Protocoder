@@ -27,7 +27,7 @@
  * 
  */
 
-package org.protocoderrunner.apprunner.api.other;
+package org.protocoderrunner.apprunner.api.widgets;
 
 import android.content.Context;
 

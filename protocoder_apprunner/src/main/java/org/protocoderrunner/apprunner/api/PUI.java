@@ -71,7 +71,7 @@ import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
 import org.protocoderrunner.apprunner.api.other.PAnimation;
-import org.protocoderrunner.apprunner.api.other.PCamera;
+import org.protocoderrunner.apprunner.api.media.PCamera;
 import org.protocoderrunner.apprunner.api.other.PProcessing;
 import org.protocoderrunner.apprunner.api.other.PosVector;
 import org.protocoderrunner.apprunner.api.widgets.PVideo;

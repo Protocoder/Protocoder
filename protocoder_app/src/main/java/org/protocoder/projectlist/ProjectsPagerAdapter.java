@@ -29,22 +29,31 @@
 
 package org.protocoder.projectlist;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import org.protocoder.R;
 
 import java.util.Vector;
 
 public class ProjectsPagerAdapter extends FragmentPagerAdapter {
 
-	public Vector<ProjectListFragment> fragments;
+    private final Context mContext;
+    public Vector<ProjectListFragment> fragments;
     public Vector<String> fragmentNames;
 
     private String TAG = "ProjectsPagerAdapter";
 
-    public ProjectsPagerAdapter(FragmentManager fm) {
+    public ProjectsPagerAdapter(Context c, FragmentManager fm) {
 		super(fm);
+
+        mContext = c;
 
         fragments = new Vector<>();
         fragmentNames = new Vector<>();
@@ -87,7 +96,6 @@ public class ProjectsPagerAdapter extends FragmentPagerAdapter {
 
         return num;
     }
-
 
     public ProjectListFragment getFragmentByName(String folder) {
         int loc = getFragmentNumByName(folder);

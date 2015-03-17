@@ -67,7 +67,7 @@ import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunnerFragment;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.apprunner.api.other.PCamera;
+import org.protocoderrunner.apprunner.api.media.PCamera;
 import org.protocoderrunner.apprunner.api.other.ProtocoderNativeObject;
 import org.protocoderrunner.apprunner.api.widgets.PPadView.TouchEvent;
 import org.protocoderrunner.fragments.CameraNew;

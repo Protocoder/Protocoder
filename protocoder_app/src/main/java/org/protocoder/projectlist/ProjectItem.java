@@ -70,7 +70,7 @@ public class ProjectItem extends LinearLayout {
     private static final String TAG = "ProjectItem";
     private final Drawable bg;
     private final ProjectListFragment mPlf;
-    private WeakReference<View> v;
+    private View mItemView;
 	// private Context c;
 	private final Context c;
 	private String t;
@@ -78,6 +78,7 @@ public class ProjectItem extends LinearLayout {
     private Project mProject;
     private TextView textViewName;
     private TextView textViewIcon;
+    private ImageView mMenuButton;
 
     public ProjectItem(Context context, ProjectListFragment plf, boolean listMode) {
 		super(context);
@@ -86,15 +87,15 @@ public class ProjectItem extends LinearLayout {
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		if (listMode) {
-			this.v = new WeakReference<View>(inflater.inflate(R.layout.view_project_item_list, this, true));
+			this.mItemView = inflater.inflate(R.layout.view_project_item_list, this, true);
 		} else {
-			this.v = new WeakReference<View>(inflater.inflate(R.layout.view_project_item, this, true));
+			this.mItemView = inflater.inflate(R.layout.view_project_item, this, true);
 		}
 
         FrameLayout fl = (FrameLayout) findViewById(R.id.viewProjectItemBackground);
         bg = fl.getBackground();
-        textViewName = (TextView) v.get().findViewById(R.id.customViewText);
-        textViewIcon = (TextView) v.get().findViewById(R.id.symbolTextC);
+        textViewName = (TextView) mItemView.findViewById(R.id.customViewText);
+        textViewIcon = (TextView) mItemView.findViewById(R.id.symbolTextC);
 
         this.setOnClickListener(new OnClickListener() {
             @Override
@@ -149,7 +150,7 @@ public class ProjectItem extends LinearLayout {
     }
 
 	public void setImage(int resId) {
-		ImageView imageView = (ImageView) v.get().findViewById(R.id.customViewImage);
+		ImageView imageView = (ImageView) mItemView.findViewById(R.id.customViewImage);
 		imageView.setImageResource(resId);
 
 		// drawText(imageView, t);
@@ -202,63 +203,23 @@ public class ProjectItem extends LinearLayout {
 
     public void setMenu() {
         // MLog.d("TAG", "setting menu for " + mProject.getName());
-        final ImageView imageView = (ImageView) findViewById(R.id.card_menu_button);
+        mMenuButton = (ImageView) findViewById(R.id.card_menu_button);
+
+        mItemView.setOnLongClickListener(new OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                showMenu(mMenuButton);
+
+                return true;
+            }
+        });
+
+
         //imageView.setOnCreateContextMenuListener();
-        imageView.setOnClickListener(new OnClickListener() {
+        mMenuButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                MLog.d(TAG, "clicked");
-                PopupMenu myPopup = new PopupMenu(c, imageView);
-                myPopup.inflate(R.menu.project_list);
-                myPopup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(final MenuItem menuItem) {
-
-                        int itemId = menuItem.getItemId();
-
-                        if (itemId == R.id.menu_project_list_run) {
-                            Protocoder.getInstance(c).protoScripts.run(mProject.getFolder(), mProject.getName());
-                            return true;
-                        } else if (itemId == R.id.menu_project_list_edit) {
-                            Protocoder.getInstance(c).app.editor.show(true, mProject.getFolder(), mProject.getName());
-                            return true;
-                        } else if (itemId == R.id.menu_project_list_delete) {
-                            Protocoder.getInstance(c).protoScripts.delete(mProject.getFolder(), mProject.getName());
-
-                            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    switch (which) {
-                                        case DialogInterface.BUTTON_POSITIVE:
-                                            mPlf.removeItem(mProject);
-
-                                            break;
-
-                                        case DialogInterface.BUTTON_NEGATIVE:
-                                            break;
-                                    }
-                                }
-                            };
-                            AlertDialog.Builder builder = new AlertDialog.Builder(c);
-                            builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
-                                    .setNegativeButton("No", dialogClickListener).show();
-                            return true;
-                        } else if (itemId == R.id.menu_project_list_add_shortcut) {
-                            Protocoder.getInstance(c).protoScripts.addShortcut(mProject.getFolder(), mProject.getName());
-                            return true;
-                        } else if (itemId == R.id.menu_project_list_share_with) {
-                            Protocoder.getInstance(c).protoScripts.shareMainJsDialog(mProject.getFolder(), mProject.getName());
-                            return true;
-                        } else if (itemId == R.id.menu_project_list_share_proto_file) {
-                            Protocoder.getInstance(c).protoScripts.shareProtoFileDialog(mProject.getFolder(), mProject.getName());
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    }
-                });
-                myPopup.show();
-
+               showMenu(mMenuButton);
             }
         });
 //        this.setOnLongClickListener(new OnLongClickListener() {
@@ -268,6 +229,61 @@ public class ProjectItem extends LinearLayout {
 //                return true;
 //            }
 //        });
+    }
+
+    private void showMenu(View fromView) {
+        MLog.d(TAG, "clicked");
+        PopupMenu myPopup = new PopupMenu(c, fromView);
+        myPopup.inflate(R.menu.project_list);
+        myPopup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(final MenuItem menuItem) {
+
+                int itemId = menuItem.getItemId();
+
+                if (itemId == R.id.menu_project_list_run) {
+                    Protocoder.getInstance(c).protoScripts.run(mProject.getFolder(), mProject.getName());
+                    return true;
+                } else if (itemId == R.id.menu_project_list_edit) {
+                    Protocoder.getInstance(c).app.editor.show(true, mProject.getFolder(), mProject.getName());
+                    return true;
+                } else if (itemId == R.id.menu_project_list_delete) {
+                    Protocoder.getInstance(c).protoScripts.delete(mProject.getFolder(), mProject.getName());
+
+                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which) {
+                                case DialogInterface.BUTTON_POSITIVE:
+                                    mPlf.removeItem(mProject);
+
+                                    break;
+
+                                case DialogInterface.BUTTON_NEGATIVE:
+                                    break;
+                            }
+                        }
+                    };
+                    AlertDialog.Builder builder = new AlertDialog.Builder(c);
+                    builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
+                            .setNegativeButton("No", dialogClickListener).show();
+                    return true;
+                } else if (itemId == R.id.menu_project_list_add_shortcut) {
+                    Protocoder.getInstance(c).protoScripts.addShortcut(mProject.getFolder(), mProject.getName());
+                    return true;
+                } else if (itemId == R.id.menu_project_list_share_with) {
+                    Protocoder.getInstance(c).protoScripts.shareMainJsDialog(mProject.getFolder(), mProject.getName());
+                    return true;
+                } else if (itemId == R.id.menu_project_list_share_proto_file) {
+                    Protocoder.getInstance(c).protoScripts.shareProtoFileDialog(mProject.getFolder(), mProject.getName());
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
+        myPopup.show();
+
     }
 
     public Drawable getBg() {

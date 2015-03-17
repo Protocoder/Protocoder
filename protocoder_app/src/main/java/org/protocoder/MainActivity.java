@@ -35,6 +35,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.FileObserver;
 import android.support.v4.app.Fragment;
@@ -45,6 +46,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import org.protocoder.appApi.Protocoder;
@@ -83,7 +86,14 @@ public class MainActivity extends BaseActivity {
     @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+
+        //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        //    Window w = getWindow(); // in Activity's onCreate() for instance
+        //    w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        //    w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        //}
+
+        setContentView(R.layout.activity_main);
 		c = this;
 
 		// Create the action bar programmatically
