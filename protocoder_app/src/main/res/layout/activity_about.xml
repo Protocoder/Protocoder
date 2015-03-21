@@ -2,11 +2,12 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white" >
+    android:background="@color/transparent" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="15dp"
         android:orientation="vertical" >
 
         <!--<ImageView-->
@@ -18,27 +19,6 @@
             <!--android:layout_marginTop="25dp"-->
             <!--android:gravity="center"-->
             <!--android:src="@drawable/protocoder_help" />-->
-
-        <TextView
-            android:id="@+id/symbolText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="20dp"
-            android:ellipsize="end"
-            android:fontFamily="sans-serif-condensed"
-            android:gravity="left"
-            android:lines="1"
-            android:maxLines="1"
-            android:shadowColor="#88FFFFFF"
-            android:shadowDx="0"
-            android:shadowDy="1"
-            android:shadowRadius="0.1"
-            android:text=".about"
-            android:textColor="#BBBBBB"
-            android:textSize="125sp"
-            android:typeface="normal" />
 
 
         <TextView
