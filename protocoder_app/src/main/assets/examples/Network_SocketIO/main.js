@@ -13,7 +13,7 @@ client.onNewData(function(status, socket, data) {
 });
 
 ui.addButton("Ping", 10, 10, 200, 200).onClick(function() {
-    client.emit("ping", null);
+    client.emit("ping");
 });
 
 //other useful methods 

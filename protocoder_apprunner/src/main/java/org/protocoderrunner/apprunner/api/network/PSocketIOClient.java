@@ -38,6 +38,7 @@ import org.mozilla.javascript.NativeArray;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
+import org.protocoderrunner.utils.MLog;
 
 import java.io.IOException;
 import java.net.URI;
@@ -45,6 +46,7 @@ import java.net.URISyntaxException;
 
 public class PSocketIOClient {
 
+    private String TAG = "PSocketIOClient";
     private SocketIOClient mSocketIOClient;
     private connectSocketIOCB mCallbackfn;
 
@@ -102,6 +104,7 @@ public class PSocketIOClient {
 
         try {
             mSocketIOClient = new SocketIOClient(new URI(uri), handler);
+            mSocketIOClient.connect();
             WhatIsRunning.getInstance().add(this);
 
         } catch (URISyntaxException e) {
@@ -115,24 +118,48 @@ public class PSocketIOClient {
 
     @ProtoMethod(description = "Sends a JSONObject to the destination", example = "")
     @ProtoMethodParam(params = { "jsonObject" })
-    public void emit(JSONObject jsonMessage) throws JSONException {
+    public PSocketIOClient emit(JSONObject jsonMessage) throws JSONException {
         mSocketIOClient.emit(jsonMessage);
+
+        return this;
     }
 
 
     @ProtoMethod(description = "Sends an array to the destination", example = "")
     @ProtoMethodParam(params = { "message", "array" })
-    public void emit(String message, NativeArray array) {
+    public PSocketIOClient emit(String message, NativeArray array) {
         try {
-            JSONArray jsonArray = new JSONArray(array);
-            mSocketIOClient.emit(message, new JSONArray().put(jsonArray));
+            JSONArray jsonArray = new JSONArray();
+            MLog.d(TAG, "mSocketIOClient " + mSocketIOClient);
+            try {
+                jsonArray.put(array);
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+            mSocketIOClient.emit(message, jsonArray);
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        return this;
     }
 
-    public void onNewData ( final connectSocketIOCB callbackfn) {
+
+    @ProtoMethod(description = "Sends an array to the destination", example = "")
+    @ProtoMethodParam(params = { "message" })
+    public PSocketIOClient emit(String message) {
+        mSocketIOClient.emit(message);
+
+        return this;
+    }
+
+
+    @ProtoMethod(description = "Receiving callback", example = "")
+    @ProtoMethodParam(params = { "function(data)" })
+    public PSocketIOClient onNewData ( final connectSocketIOCB callbackfn) {
         mCallbackfn = callbackfn;
+
+        return this;
     }
 
     public void stop() {
