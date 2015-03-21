@@ -38,6 +38,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RemoteViews;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.protocoder.R;
@@ -71,11 +73,24 @@ public class ProtoScripts {
 
     // fragments that hold the projects
     private ViewPager mViewPager;
+    private TextView tProjects;
+    private TextView tExamples;
 
     ProtoScripts(Protocoder protocoder) {
         this.mProtocoder = protocoder;
         init();
     }
+
+    private void selectProjects() {
+        tProjects.setTextColor(Color.parseColor("#88000000"));
+        tExamples.setTextColor(Color.parseColor("#55000000"));
+    }
+
+    private void selectExamples() {
+        tProjects.setTextColor(Color.parseColor("#55000000"));
+        tExamples.setTextColor(Color.parseColor("#88000000"));
+    }
+
 
     public void init() {
         //init views
@@ -84,6 +99,7 @@ public class ProtoScripts {
        // final ProjectSelectorStrip strip = (ProjectSelectorStrip) mProtocoder.mActivityContext.findViewById(R.id.pager_title_strip);
 
         mViewPager = (ViewPager) mProtocoder.mActivityContext.findViewById(R.id.pager);
+
         mViewPager.setAdapter(mProjectPagerAdapter);
         mViewPager.setPageTransformer(true, new ZoomOutPageTransformer());
 
@@ -91,8 +107,24 @@ public class ProtoScripts {
         //mSlidingTabLayout.setDistributeEvenly(true);
         //mSlidingTabLayout.setViewPager(mViewPager);
 
-        final LinearLayout groupedToolbar = (LinearLayout) mProtocoder.mActivityContext.findViewById(R.id.grouped_toolbar);
+        tProjects = (TextView) mProtocoder.mActivityContext.findViewById(R.id.textProjects);
+        tExamples = (TextView) mProtocoder.mActivityContext.findViewById(R.id.textExamples);
 
+        tProjects.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectProjects();
+                goTo("projects");
+            }
+        });
+
+        tExamples.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectExamples();
+                goTo("examples");
+            }
+        });
 
         //TODO remove at some point
         //colors
@@ -103,7 +135,15 @@ public class ProtoScripts {
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
-            public void onPageSelected(int arg0) {
+            public void onPageSelected(int page) {
+                switch (page) {
+                    case 0:
+                        selectProjects();
+                        break;
+                    case 1:
+                        selectExamples();
+                        break;
+                }
             }
 
             @Override
