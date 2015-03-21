@@ -61,7 +61,7 @@ public class PBoards extends PInterface {
 
 	@ProtoMethod(description = "initializes serial communication", example = "")
 	@ProtoMethodParam(params = { "bauds", "function()" })
-	public PSerial startSerial(int baud, PSerial.startCB callbackfn) {
+	public PSerial connectSerial(int baud, PSerial.OnStartCallback callbackfn) {
 		PSerial serial = new PSerial(getContext());
 		serial.start(baud, callbackfn);
 
@@ -72,7 +72,7 @@ public class PBoards extends PInterface {
 
     @ProtoMethod(description = "initializes arduino board without callback", example = "")
     @ProtoMethodParam(params = { "" })
-    public PArduino startArduino() {
+    public PArduino connectArduino() {
         PArduino arduino = new PArduino(getContext());
         arduino.start();
 
@@ -82,7 +82,7 @@ public class PBoards extends PInterface {
 
     @ProtoMethod(description = "initializes arduino board with callback", example = "")
     @ProtoMethodParam(params = { "bauds", "function()" })
-    public PArduino startArduino(int bauds, String endline, PArduino.onReadCB callbackfn) {
+    public PArduino connectArduino(int bauds, String endline, PArduino.onReadCB callbackfn) {
         PArduino arduino = new PArduino(getContext());
         arduino.start(bauds, endline, callbackfn);
 

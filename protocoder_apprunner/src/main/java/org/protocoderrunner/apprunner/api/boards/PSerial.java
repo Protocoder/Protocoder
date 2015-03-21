@@ -41,6 +41,7 @@ import com.hoho.android.usbserial.driver.UsbSerialProber;
 import com.hoho.android.usbserial.util.SerialInputOutputManager;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.utils.MLog;
@@ -63,38 +64,44 @@ public class PSerial extends PInterface {
 	private SerialInputOutputManager mSerialIoManager;
     private final ExecutorService mExecutor = Executors.newSingleThreadExecutor();
 	String msg = "";
+    private OnNewDataCallback mCallbackData;
 
-	public PSerial(Context a) {
+    public PSerial(Context a) {
 		super(a);
 
 	}
 
 	// --------- getRequest ---------//
-	public interface startCB {
+	public interface OnStartCallback {
+		void event(boolean status);
+	}
+
+	// --------- getRequest ---------//
+	public interface OnNewDataCallback {
 		void event(String responseString);
 	}
 
 
 	@ProtoMethod(description = "starts serial", example = "")
-	public void start(int bauds, final startCB callbackfn) {
+	public void start(int bauds, final OnStartCallback callbackConnected) {
 		WhatIsRunning.getInstance().add(this);
 		if (!isStarted) {
 
-            UsbSerialProber devices = UsbSerialProber.getDefaultProber();
+            //UsbSerialProber devices = UsbSerialProber.getDefaultProber();
 
             // Find all available drivers from attached devices.
             UsbManager manager = (UsbManager) getContext().getSystemService(Context.USB_SERVICE);
 
-            ProbeTable customTable = new ProbeTable();
+            //ProbeTable customTable = new ProbeTable();
 
-            customTable.addProduct(0x2012, 0x1f00, CdcAcmSerialDriver.class);
-            customTable.addProduct(0x2012, 0x1f00, UsbSerialDriver.class);
+            //customTable.addProduct(0x2012, 0x1f00, CdcAcmSerialDriver.class);
+            //customTable.addProduct(0x2012, 0x1f00, UsbSerialDriver.class);
             //customTable.addProduct(0x1234, 0x0002, CdcAcmSerialDriver.class);
 
-            UsbSerialProber prober = new UsbSerialProber(customTable);
-            List<UsbSerialDriver> availableDrivers = prober.findAllDrivers(manager);
+            //UsbSerialProber prober = new UsbSerialProber(customTable);
+            //List<UsbSerialDriver> availableDrivers = prober.findAllDrivers(manager);
 
-            //List<UsbSerialDriver> availableDrivers = UsbSerialProber.getDefaultProber().findAllDrivers(manager);
+            List<UsbSerialDriver> availableDrivers = UsbSerialProber.getDefaultProber().findAllDrivers(manager);
             if (availableDrivers.isEmpty()) {
                 MLog.d(TAG, "no drivers found");
                 return;
@@ -120,6 +127,7 @@ public class PSerial extends PInterface {
 
                 sPort.open(connection);
                 sPort.setParameters(bauds, 8, UsbSerialPort.STOPBITS_1, UsbSerialPort.PARITY_NONE);
+                if (callbackConnected != null) callbackConnected.event(true);
 
                 mListener = new SerialInputOutputManager.Listener() {
 
@@ -132,18 +140,17 @@ public class PSerial extends PInterface {
                     public void onNewData(final byte[] data) {
                         final String readMsg = new String(data, 0, data.length);
 
-                        mHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
+                        //mHandler.post(new Runnable() {
+                        //    @Override
+                        //    public void run() {
                                 //antes pasaba finalMsgReturn
-                                callbackfn.event(readMsg);
-                            }
-                        });
-                        MLog.d("qq", "" + readMsg);
+                        //        callbackfn.event(readMsg);
+                        //    }
+                        //});
+                        //MLog.d("qq", "" + readMsg);
 
-                        /*
+
                         msg = msg + readMsg;
-
                         int newLineIndex = msg.indexOf('\n');
                         MLog.d(TAG, "index " + newLineIndex);
                         String msgReturn = "";
@@ -161,11 +168,11 @@ public class PSerial extends PInterface {
                                 @Override
                                 public void run() {
                                     //antes pasaba finalMsgReturn
-                                        callbackfn.event(finalMsgReturn);
+                                        if (mCallbackData != null) mCallbackData.event(finalMsgReturn);
                                 }
                             });
                         }
-                        */
+
 
                     }
                 };
@@ -176,6 +183,7 @@ public class PSerial extends PInterface {
 
             } catch (IOException e) {
                 MLog.e(TAG, "Error setting up device: " + e.getMessage() + e);
+                if (callbackConnected != null) callbackConnected.event(false);
                 //mTitleTextView.setText("Error opening device: " + e.getMessage());
                 try {
                     sPort.close();
@@ -190,6 +198,12 @@ public class PSerial extends PInterface {
         }
 
 	}
+
+    public PSerial onNewData(OnNewDataCallback cb) {
+        mCallbackData = cb;
+
+        return this;
+    }
 
 	private void stopIoManager() {
         if (mSerialIoManager != null) {
@@ -215,7 +229,8 @@ public class PSerial extends PInterface {
 
 
 	@ProtoMethod(description = "stop serial", example = "")
-	public void stop() {
+    @ProtoMethodParam(params = {  })
+    public void stop() {
 		if (isStarted) {
 			isStarted = false;
 
@@ -235,10 +250,11 @@ public class PSerial extends PInterface {
 
 
 	@ProtoMethod(description = "sends commands to the serial")
-	public void write(String cmd) {
+    @ProtoMethodParam(params = { "data" })
+    public void write(String data) {
 		if (isStarted) {
 			try {
-				sPort.write(cmd.getBytes(), 1000);
+				sPort.write(data.getBytes(), 1000);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -246,13 +262,13 @@ public class PSerial extends PInterface {
 	}
 
 
-	@ProtoMethod(description = "resumes serial")
+	//@ProtoMethod(description = "resumes serial")
 	public void resume() {
 
 	}
 
 
-	@ProtoMethod(description = "pause serial")
+	//@ProtoMethod(description = "pause serial")
 	public void pause() {
 
 	}
