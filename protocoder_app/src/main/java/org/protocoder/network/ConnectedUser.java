@@ -38,7 +38,7 @@ public class ConnectedUser {
     private static ConnectedUser instance;
     ArrayList<String> users;
 
-    public static ConnectedUser getInstance(Context aCtx, int port) {
+    public static ConnectedUser getInstance() {
 
         if (instance == null) {
             instance = new ConnectedUser();
@@ -52,24 +52,19 @@ public class ConnectedUser {
         users = new ArrayList<>();
     }
 
-    public boolean addUser(String ip) {
-        if (userIsRegistered(ip)) {
-            return false;
-        } else {
-            users.add(ip);
-        }
-
-        return true;
+    public void addUserIp(String ip) {
+        users.add(ip);
     }
 
-    public boolean userIsRegistered(String ip) {
-        for (String user : users) {
-            if (user.equals(ip));
-        }
+    public boolean isIpRegistered(String ip) {
+//        for (String user : users) {
+//            if (user.equals(ip)) {
+//                return true;
+//            }
+//        }
+        return users.contains(ip);
 
-        return false;
+        //return false;
     }
-
-
 
 }

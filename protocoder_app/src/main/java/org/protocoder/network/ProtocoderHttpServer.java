@@ -31,6 +31,8 @@ package org.protocoder.network;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.os.Looper;
+import android.widget.Toast;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONArray;
@@ -122,6 +124,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Handler;
 
 import de.greenrobot.event.EventBus;
 
@@ -130,11 +133,14 @@ import de.greenrobot.event.EventBus;
  */
 public class ProtocoderHttpServer extends NanoHTTPD {
 	public static final String TAG = "myHTTPServer";
-	private final WeakReference<Context> ctx;
+    private static ConnectedUser mConnectedUsers;
+    private final WeakReference<Context> ctx;
 	private final String WEBAPP_DIR = "webide/";
 	String projectURLPrefix = "/apps";
+    public android.os.Handler mHandler = new android.os.Handler(Looper.getMainLooper());
 
-	private static final Map<String, String> MIME_TYPES = new HashMap<String, String>() {
+
+    private static final Map<String, String> MIME_TYPES = new HashMap<String, String>() {
 		{
 			put("css", "text/css");
 			put("htm", "text/html");
@@ -171,6 +177,7 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 			try {
 				MLog.d(TAG, "ok...");
 				instance = new ProtocoderHttpServer(aCtx, port);
+                mConnectedUsers = ConnectedUser.getInstance();
 			} catch (IOException e) {
 				MLog.d(TAG, "nop :(...");
 				e.printStackTrace();
@@ -191,6 +198,7 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 		}
 	}
 
+
 	@Override
 	public Response serve(String uri, String method, Properties header, Properties parms, Properties files) {
 
@@ -199,6 +207,19 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 		try {
 
 			MLog.d(TAG, "received String" + uri + " " + method + " " + header + " " + " " + parms + " " + files);
+
+            //display toast when new ip is connected
+            final String ip = header.getProperty("ip");
+            if (!mConnectedUsers.isIpRegistered(ip)) {
+                mConnectedUsers.addUserIp(ip);
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(ctx.get(), "Connection from " + ip, Toast.LENGTH_LONG).show();
+                    }
+                });
+
+            }
 
 			if (uri.startsWith(projectURLPrefix)) {
 

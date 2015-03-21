@@ -348,6 +348,8 @@ public class NanoHTTPD {
 
 				long size = 0x7FFFFFFFFFFFFFFFl;
 				String contentLength = header.getProperty("content-length");
+                header.setProperty("ip", mySocket.getRemoteSocketAddress().toString().substring(1).split(":")[0]);
+
 				if (contentLength != null) {
 					try {
 						size = Integer.parseInt(contentLength);
