@@ -8,71 +8,63 @@
         android:background="@color/white"
     >
 
+    <!-- 25dp margin top -->
+    <android.support.v7.widget.Toolbar
+        android:layout_marginTop="0dp"
+        style="@style/ToolBarStyle.Event"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:id="@+id/my_awesome_toolbar"
+        android:navigationIcon="@drawable/protocoder_icon"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:minHeight="?attr/actionBarSize"
+        android:background="#00000000">
+    </android.support.v7.widget.Toolbar>
+
     <LinearLayout
-        android:orientation="vertical"
-        android:id="@+id/grouped_toolbar"
-        android:background="@drawable/toolbar_bg_gradient"
-        android:layout_width="fill_parent"
-        android:paddingBottom="10dp"
-        android:layout_height="wrap_content">
+        android:id="@+id/tabs"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/my_awesome_toolbar">
 
-        <!-- 25dp margin top -->
-        <android.support.v7.widget.Toolbar
-            android:layout_marginTop="0dp"
-            style="@style/ToolBarStyle.Event"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:id="@+id/my_awesome_toolbar"
-            android:navigationIcon="@drawable/protocoder_icon"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:minHeight="?attr/actionBarSize"
-            android:background="#00000000">
-        </android.support.v7.widget.Toolbar>
-
-        <LinearLayout
-            android:id="@+id/tabs"
-            android:orientation="horizontal"
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/my_awesome_toolbar">
+            android:text="projects"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:textAllCaps="false"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#88000000"
+            android:id="@+id/textProjects"
+            android:gravity="center_horizontal"/>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="projects"
-                android:layout_weight="1"
-                android:layout_gravity="center"
-                android:textAllCaps="false"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="#88000000"
-                android:id="@+id/textProjects"
-                android:gravity="center_horizontal"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="examples"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:textAllCaps="false"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#55000000"
+            android:id="@+id/textExamples"
+            android:gravity="center_horizontal"/>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="examples"
-                android:layout_weight="1"
-                android:layout_gravity="center"
-                android:textAllCaps="false"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="#55000000"
-                android:id="@+id/textExamples"
-                android:gravity="center_horizontal"/>
-
-        </LinearLayout>
     </LinearLayout>
 
     <android.support.v4.view.ViewPager
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/pager"
-        android:layout_below="@id/grouped_toolbar"
+        android:layout_below="@id/tabs"
         android:layout_alignParentRight="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="15dp"
         android:layout_marginBottom="0dp" >
     </android.support.v4.view.ViewPager>
 
@@ -111,7 +103,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_alignParentRight="true"
-        android:layout_below="@id/grouped_toolbar"/>
+        android:layout_below="@id/my_awesome_toolbar"/>
 
     <FrameLayout
         android:id="@+id/fragmentLogOverlay"
