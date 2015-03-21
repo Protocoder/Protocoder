@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Protocoder</string>
-    <string name="activity_name">> Protocoder_</string>
+    <string name="activity_name">Protocoder</string>
     <string name="runner_name">Protocoder AppRunner</string>
     <string name="connect_message">Click to connect</string>
     <string name="menu_settings">Settings</string>
@@ -37,8 +37,8 @@
     <string name="about_activity_name">About</string>
     <string name="about_how_to_title">How-to</string>
     <string name="about_credits">Credits</string>
-    <string name="about_how_to_contents">Protocoder is easy to get started.\n\nMake sure your Android device is on the same network as your computer. Then with your computer web browser navigate to the IP address indicated at the bottom of the app. In seconds you\'ll see a fully-featured web editor or web IDE.\n\nThe web IDE is connected directly to your device. With it, you can create new projects, edit existing ones, see live console output, view documentation, and more.</string>
-    <string name="about_special_thanks">Special thanks to José Juan Sánchez Hernández, Ali Javidan, Gopi Palaniappan, Alan Sien and the MWM Crew :)</string>
+    <string name="about_how_to_contents">Connect your Android device and your laptop to the same Wifi network. Your Android device acts as server that you can access simply access with your web browser. \nYou just need to type the URL shown at the bottom of the device screen in your computer\'s web browser and you will be ready to code.\n All the code that you execute is executed in your device. Now you got a pocketable IDE!  </string>
+    <string name="about_special_thanks">Special thanks to José Juan Sánchez Hernández, Maciej Górski, bq.com, Ali Javidan, Gopi Palaniappan, Alan Sien and the MWM Crew :)</string>
 
     <!-- Welcome -->
     <string name="welcome_activity_name">protocoder</string>
