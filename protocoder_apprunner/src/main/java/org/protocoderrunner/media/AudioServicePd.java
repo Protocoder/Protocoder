@@ -45,7 +45,7 @@ import org.puredata.core.utils.IoUtils;
 import java.io.File;
 import java.io.IOException;
 
-public class AudioService {
+public class AudioServicePd {
 
     public static final String TAG = "PdAudioService";
 

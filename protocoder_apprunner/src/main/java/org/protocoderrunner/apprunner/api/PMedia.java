@@ -49,7 +49,7 @@ import org.protocoderrunner.apprunner.api.media.PAudioRecorder;
 import org.protocoderrunner.apprunner.api.media.PMidi;
 import org.protocoderrunner.apprunner.api.media.PPureData;
 import org.protocoderrunner.media.Audio;
-import org.protocoderrunner.media.AudioService;
+import org.protocoderrunner.media.AudioServicePd;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.utils.AndroidUtils;
 import org.protocoderrunner.utils.MLog;
@@ -114,10 +114,10 @@ public class PMedia extends PInterface {
     @ProtoMethod(description = "Loads and initializes a PureData patch http://www.puredata.info using libpd", example = "")
     @ProtoMethodParam(params = { "fileName", "micChannels", "outputChannels", "sampleRate", "buffer"})
     public PPureData loadPdPatch(String fileName, int micChannels, int outputChannels, int sampleRate, int buffer) {
-        AudioService.settingsSampleRate = sampleRate;
-        AudioService.settingsMicChannels = micChannels;
-        AudioService.settingsOutputChannels = outputChannels;
-        AudioService.settingsBuffer = buffer;
+        AudioServicePd.settingsSampleRate = sampleRate;
+        AudioServicePd.settingsMicChannels = micChannels;
+        AudioServicePd.settingsOutputChannels = outputChannels;
+        AudioServicePd.settingsBuffer = buffer;
 
         return this.loadPdPatch(fileName);
     }
@@ -125,7 +125,7 @@ public class PMedia extends PInterface {
 	@ProtoMethod(description = "Loads and initializes a PureData patch http://www.puredata.info using libpd", example = "")
 	@ProtoMethodParam(params = { "fileName" })
 	public PPureData loadPdPatch(String fileName) {
-		PPureData pPureData = new PPureData(getContext());
+		PPureData pPureData = new PPureData(getActivity());
         pPureData.initPatch(fileName);
 
 		return pPureData;

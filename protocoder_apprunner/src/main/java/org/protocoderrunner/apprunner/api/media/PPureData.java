@@ -38,10 +38,11 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
-import org.protocoderrunner.media.AudioService;
+import org.protocoderrunner.media.AudioServicePd;
 import org.protocoderrunner.utils.MLog;
 import org.puredata.android.service.PdService;
 import org.puredata.android.utils.PdUiDispatcher;
@@ -55,9 +56,9 @@ public class PPureData extends PInterface {
 
     private String TAG = "PPureData";
 
-    public PPureData(Context c) {
+    public PPureData(AppRunnerActivity c) {
         super(c);
-		WhatIsRunning.getInstance().add(this);
+        setActivity(c);
 	}
 
 
@@ -74,8 +75,6 @@ public class PPureData extends PInterface {
     }
 
     public void initPatch(String fileName) {
-        PdBase.subscribe("android");
-
         // create and install the dispatcher
         PdDispatcher dispatcher = new PdUiDispatcher() {
 
@@ -86,17 +85,19 @@ public class PPureData extends PInterface {
 
         };
 
-        //PdBase.setReceiver(dispatcher);
-
+        PdBase.setReceiver(dispatcher);
+        PdBase.subscribe("android");
 
         String filePath = AppRunnerSettings.get().project.getStoragePath() + File.separator + fileName;
-        AudioService.file = filePath;
+        AudioServicePd.file = filePath;
 
         Intent intent = new Intent(getContext(), PdService.class);
-        (getContext()).bindService(intent, AudioService.pdConnection, Context.BIND_AUTO_CREATE);
+        (getActivity()).bindService(intent, AudioServicePd.pdConnection, Context.BIND_AUTO_CREATE);
 
         initSystemServices();
-        WhatIsRunning.getInstance().add(AudioService.pdConnection);
+
+        WhatIsRunning.getInstance().add(this);
+        WhatIsRunning.getInstance().add(AudioServicePd.pdConnection);
     }
 
     public PPureData onNewData(final initPDPatchCB callbackfn) {
@@ -186,7 +187,7 @@ public class PPureData extends PInterface {
         };
 
 
-        PdBase.setReceiver(receiver);
+        //PdBase.setReceiver(receiver);
         // start pure data sound engine
 
 
@@ -256,7 +257,7 @@ public class PPureData extends PInterface {
 	}
 
 	public void stop() {
-		PdBase.release();
+        PdBase.release();
 	}
 
 
@@ -265,13 +266,13 @@ public class PPureData extends PInterface {
         telephonyManager.listen(new PhoneStateListener() {
             @Override
             public void onCallStateChanged(int state, String incomingNumber) {
-                if (AudioService.pdService == null) {
+                if (AudioServicePd.pdService == null) {
                     return;
                 }
                 if (state == TelephonyManager.CALL_STATE_IDLE) {
-                    AudioService.start();
+                    AudioServicePd.start();
                 } else {
-                    AudioService.pdService.stopAudio();
+                    AudioServicePd.pdService.stopAudio();
                 }
             }
         }, PhoneStateListener.LISTEN_CALL_STATE);
