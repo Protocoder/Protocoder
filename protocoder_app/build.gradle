@@ -38,10 +38,8 @@ android {
 
     }
 
-
     productFlavors {
         normal {
-            applicationId "org.protocoder.normal"
             applicationId "org.protocoder.normal"
             versionName "0.97pre-normal"
             resValue "string", "releaseMode", "normal"
