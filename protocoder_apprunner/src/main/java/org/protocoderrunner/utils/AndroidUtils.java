@@ -52,7 +52,6 @@ import android.view.ViewOutlineProvider;
 
 import org.protocoderrunner.AppSettings;
 import org.protocoderrunner.R;
-import org.protocoderrunner.apprunner.logger.L;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -178,7 +177,9 @@ public class AndroidUtils {
 	}
 
     public static void setViewGenericShadow(View v, int w, int h) {
-        setViewGenericShadow(v, CLIP_RECT, 0, 0, w, h, 10);
+        if (isVersionLollipop()) {
+            setViewGenericShadow(v, CLIP_RECT, 0, 0, w, h, 10);
+        }
     }
 
     public static int CLIP_RECT = 0;
@@ -188,62 +189,62 @@ public class AndroidUtils {
     public static void setViewGenericShadow(View v, int type, final int x, final int y, final int w, final int h, final int r) {
        // MLog.d("qq", "no android L " + Build.VERSION.SDK + " " + L);
 
-       // if (AndroidUtils.isVersionL()) {
+        if (isVersionLollipop()) {
 
-        ViewOutlineProvider viewOutlineProvider = null;
+            ViewOutlineProvider viewOutlineProvider = null;
 
-        MLog.d("qq", "is android L");
-        if (type == CLIP_RECT) {
+            MLog.d("qq", "is android L");
+            if (type == CLIP_RECT) {
 
-            viewOutlineProvider = new ViewOutlineProvider() {
-                @Override
-                public void getOutline(View view, Outline outline) {
-                    // Or read size directly from the view's width/height
-                    outline.setRoundRect(new Rect(x, y, w, h), r);
-                }
-            };
+                viewOutlineProvider = new ViewOutlineProvider() {
+                    @Override
+                    public void getOutline(View view, Outline outline) {
+                        // Or read size directly from the view's width/height
+                        outline.setRoundRect(new Rect(x, y, w, h), r);
+                    }
+                };
 
-        } else if (type == CLIP_ROUND) {
+            } else if (type == CLIP_ROUND) {
 
-            viewOutlineProvider = new ViewOutlineProvider() {
-                @Override
-                public void getOutline(View view, Outline outline) {
-                    // Or read size directly from the view's width/height
-                    outline.setOval(x, y, w, h);
-                }
-            };
-
-
+                viewOutlineProvider = new ViewOutlineProvider() {
+                    @Override
+                    public void getOutline(View view, Outline outline) {
+                        // Or read size directly from the view's width/height
+                        outline.setOval(x, y, w, h);
+                    }
+                };
 
 
-        } else {
-            Path path = new Path();
-            path.moveTo(10, 10);
-            path.lineTo(100, 100);
-            path.lineTo(100, 200);
-            path.lineTo(10, 10);
-            path.close();
-            //outline.setConvexPath(path);
 
-            // return;
+
+            } else {
+                Path path = new Path();
+                path.moveTo(10, 10);
+                path.lineTo(100, 100);
+                path.lineTo(100, 200);
+                path.lineTo(10, 10);
+                path.close();
+                //outline.setConvexPath(path);
+
+                // return;
+            }
+            v.setClipToOutline(true);
+
+            if (viewOutlineProvider != null) {
+                v.setOutlineProvider(viewOutlineProvider);
+            }
+            v.invalidate();
+
+           //    RippleDrawable rippleDrawable = (RippleDrawable) v.getBackground();
+           //     GradientDrawable rippleBackground = (GradientDrawable) rippleDrawable.getDrawable(0);
+           //    rippleBackground.setColor(Color.parseColor("#FF0000"));
+           //     rippleDrawable.setColor(ColorStateList.valueOf(Color.WHITE));
+               // rippleDrawable.setHotspot(0, 0);
+
         }
-        v.setClipToOutline(true);
-
-        if (viewOutlineProvider != null) {
-            v.setOutlineProvider(viewOutlineProvider);
-        }
-        v.invalidate();
-
-       //    RippleDrawable rippleDrawable = (RippleDrawable) v.getBackground();
-       //     GradientDrawable rippleBackground = (GradientDrawable) rippleDrawable.getDrawable(0);
-       //    rippleBackground.setColor(Color.parseColor("#FF0000"));
-       //     rippleDrawable.setColor(ColorStateList.valueOf(Color.WHITE));
-           // rippleDrawable.setHotspot(0, 0);
-
-        // }
     }
 
-    public static boolean isVersionL() {
+    public static boolean isVersionLollipop() {
 
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }
