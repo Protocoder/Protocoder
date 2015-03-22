@@ -54,6 +54,7 @@ import android.view.View;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.api.PUtil;
+import org.protocoderrunner.apprunner.api.other.PLooper;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.utils.Image;
@@ -104,7 +105,7 @@ public class PCanvas extends View implements PViewInterface {
     public Paint.Cap CAP_SQUARE = Paint.Cap.SQUARE;
 
     private final Context context;
-    private PUtil.Looper loop;
+    private PLooper loop;
     private Paint mPaintFill;
     private Paint mPaintStroke;
     private Paint mPaintBackground;
@@ -243,7 +244,7 @@ public class PCanvas extends View implements PViewInterface {
         }
 
         PUtil util = new PUtil((Activity) context);
-        loop = util.loop(ms, new PUtil.LooperCB() {
+        loop = util.loop(ms, new PLooper.LooperCB() {
             @Override
             public void event() {
                 pCanvasInterfaceDraw.onDraw(mCanvas);

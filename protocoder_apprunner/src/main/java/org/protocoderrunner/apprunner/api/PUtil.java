@@ -39,6 +39,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.media.FaceDetector;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -53,6 +54,7 @@ import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
 import org.protocoderrunner.apprunner.PInterface;
+import org.protocoderrunner.apprunner.api.other.PLooper;
 import org.protocoderrunner.apprunner.api.other.SignalUtils;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.utils.MLog;
@@ -77,97 +79,17 @@ public class PUtil extends PInterface {
 		void event(int eventType, String responseString);
 	}
 
-	public class Looper {
-        private LooperCB mCallbackfn;
-        Runnable task;
-
-		public int speed;
-		boolean paused = false;
-
-		Looper(final int duration, final LooperCB callbackkfn) {
-            mCallbackfn = callbackkfn;
-			speed = duration;
-
-			task = new Runnable() {
-
-				@Override
-				public void run() {
-                if (mCallbackfn != null) {
-                    mCallbackfn.event();
-                }
-
-                if (!paused) {
-                    handler.postDelayed(this, speed);
-                }
-				}
-			};
-
-			rl.add(task);
-		}
-
-        public Looper onLoop(LooperCB callbackfn) {
-            mCallbackfn = callbackfn;
-
-            return this;
-        }
-
-		@ProtoMethod(description = "Change the current time speed to a new one", example = "")
-		@ProtoMethodParam(params = { "duration" })
-		public Looper speed(int duration) {
-			this.speed = duration;
-            if (duration < this.speed) {
-                stop();
-                start();
-            }
-            return this;
-		}
-
-
-		@ProtoMethod(description = "Pause the looper", example = "")
-		@ProtoMethodParam(params = { "boolean" })
-		public Looper pause(boolean b) {
-			this.paused = b;
-			if (b == false) {
-				handler.postDelayed(task, speed);
-			}
-
-            return this;
-        }
-
-
-		@ProtoMethod(description = "Stop the looper", example = "")
-		public Looper stop() {
-			handler.removeCallbacks(task);
-
-            return this;
-
-        }
-
-        @ProtoMethod(description = "Start the looper", example = "")
-        public Looper start() {
-            handler.post(task);
-
-            return this;
-        }
-
-	}
-
-	// --------- Looper ---------//
-    public interface LooperCB {
-		void event();
-	}
-
 
 	@ProtoMethod(description = "Creates a looper that loops a given function every 'n' milliseconds", example = "")
 	@ProtoMethodParam(params = { "milliseconds", "function()" })
-	public Looper loop(final int duration, final LooperCB callbackkfn) {
-		return new Looper(duration, callbackkfn);
+	public PLooper loop(final int duration, final PLooper.LooperCB callbackkfn) {
+		return new PLooper(duration, callbackkfn);
 	}
 
 	@ProtoMethod(description = "Creates a looper that loops a given function every 'n' milliseconds", example = "")
 	@ProtoMethodParam(params = { "milliseconds" })
-	public Looper loop(final int duration) {
-		return new Looper(duration, null);
+	public PLooper loop(final int duration) {
+		return new PLooper(duration, null);
 	}
 
 	// --------- delay ---------//
