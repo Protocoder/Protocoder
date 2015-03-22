@@ -32,6 +32,7 @@ package org.protocoder.activities;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -40,68 +41,89 @@ import android.view.View;
 
 import org.protocoder.MainActivity;
 import org.protocoder.R;
+import org.protocoderrunner.apprunner.api.PUtil;
+import org.protocoderrunner.apprunner.api.other.PLooper;
 import org.protocoderrunner.base.BaseActivity;
+import org.protocoderrunner.utils.AndroidUtils;
 import org.protocoderrunner.utils.MLog;
 
 @SuppressLint("NewApi")
-public class AboutActivity extends AppBaseActivity {
+public class AppBaseActivity extends BaseActivity {
 
-	private static final String TAG = "AboutHolder";
+    public Toolbar mToolbar;
+    private String mTitleUpperCase;
+    private PLooper mLoop;
+    private boolean mIsToolbarBack = false;
+    private String prepend = "";
 
-	/** Called when the activity is first created. */
-	@Override
+    @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_about);
-        setToolbar();
-        setToolbarBack();
+    }
 
-		//mToolbar.setDisplayHomeAsUpEnabled(true);
-	}
+    public void setToolbar() {
+        // Create the action bar programmatically
+        if (!AndroidUtils.isWear(this)) {
+            mToolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(mToolbar);
+        }
 
-	/**
-	 * onResume
-	 */
+
+        final int[] counter = {0};
+        mTitleUpperCase = mToolbar.getTitle().toString().toUpperCase();
+        mLoop = new PLooper(1000, new PLooper.LooperCB() {
+            @Override
+            public void event() {
+                if (mIsToolbarBack) {
+                    prepend = "";
+                } else {
+                    prepend = "> ";
+                }
+                if (counter[0]++ % 2 == 0) {
+                    mToolbar.setTitle(prepend + mTitleUpperCase + "_");
+                } else {
+                    mToolbar.setTitle(prepend + mTitleUpperCase + "");
+                }
+            }
+        });
+
+    }
+
+    public void setToolbarBack() {
+
+        if (null != mToolbar) {
+            mIsToolbarBack = true;
+            mToolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+
+//            mToolbar.setTitle(R.string.title_activity_settings);
+            mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    NavUtils.navigateUpFromSameTask(AppBaseActivity.this);
+                }
+            });
+        }
+
+    }
+
 	@Override
 	protected void onResume() {
 		super.onResume();
-		MLog.d(TAG, "onResume");
+        mLoop.start();
 	}
 
-	/**
-	 * onPause
-	 */
 	@Override
 	protected void onPause() {
 		super.onPause();
-		//overridePendingTransition(R.anim.splash_slide_in_anim_reverse_set, R.anim.splash_slide_out_anim_reverse_set);
+        mLoop.stop();
 	}
 
-	/**
-	 * onDestroy
-	 */
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+
 	}
 
-//	@Override
-//	public boolean onOptionsItemSelected(MenuItem item) {
-//		switch (item.getItemId()) {
-//
-//		case android.R.id.home:
-//			// Up button pressed
-//			Intent intentHome = new Intent(this, MainActivity.class);
-//			intentHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//			startActivity(intentHome);
-//			overridePendingTransition(R.anim.splash_slide_in_anim_reverse_set, R.anim.splash_slide_out_anim_reverse_set);
-//			finish();
-//			return true;
-//		default:
-//			return super.onOptionsItemSelected(item);
-//		}
-//
-//	}
 
 }

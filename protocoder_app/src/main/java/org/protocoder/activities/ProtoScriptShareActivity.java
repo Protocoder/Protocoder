@@ -39,7 +39,7 @@ import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.utils.MLog;
 
 @SuppressLint("NewApi")
-public class ProtoScriptShareActivity extends BaseActivity {
+public class ProtoScriptShareActivity extends AppBaseActivity {
 
 	private static final String TAG = "ProtoScriptShareActivity";
     private RecyclerView mRecyclerView;

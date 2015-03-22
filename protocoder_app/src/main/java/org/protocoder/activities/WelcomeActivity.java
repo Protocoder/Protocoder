@@ -55,7 +55,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 @SuppressLint("NewApi")
-public class WelcomeActivity extends BaseActivity {
+public class WelcomeActivity extends AppBaseActivity {
 
 	private static final String TAG = "WelcomeActivity";
 
@@ -65,12 +65,8 @@ public class WelcomeActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_welcome);
-
-		// Create the action bar programmatically
-		if (!AndroidUtils.isWear(this)) {
-            ActionBar actionBar = getSupportActionBar();
-            actionBar.setTitle(R.string.welcome_activity_name);
-        }
+        setToolbar();
+        //setToolbarBack();
 
 		// Set copyright
 		TextView copyright = (TextView) findViewById(R.id.copyright);

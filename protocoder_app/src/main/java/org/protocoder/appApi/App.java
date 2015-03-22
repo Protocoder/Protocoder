@@ -151,7 +151,7 @@ public class App {
         if (show) {
             Intent aboutActivityIntent = new Intent(protocoder.mActivityContext, AboutActivity.class);
            protocoder.mActivityContext.startActivity(aboutActivityIntent);
-           protocoder.mActivityContext.overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
+           //protocoder.mActivityContext.overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
 
             //HelpFragment helpFragment = new HelpFragment();
             //Bundle bundle = new Bundle();
@@ -165,6 +165,12 @@ public class App {
         } else {
 
         }
+    }
+
+    public void showSettings(boolean b) {
+        Intent preferencesIntent = new Intent(protocoder.mActivityContext, SetPreferenceActivity.class);
+        protocoder.mActivityContext.startActivity(preferencesIntent);
+        //protocoder.mActivityContext.overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
     }
 
     public void showNumberConections() {
@@ -228,12 +234,6 @@ public class App {
     }
     public void restart() {
 
-    }
-
-    public void showSettings(boolean b) {
-        Intent preferencesIntent = new Intent(protocoder.mActivityContext, SetPreferenceActivity.class);
-        protocoder.mActivityContext.startActivity(preferencesIntent);
-        protocoder.mActivityContext.overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
     }
 
     public void setIp(String s) {

@@ -46,7 +46,7 @@ import org.protocoderrunner.utils.MLog;
 
 import java.io.File;
 
-public class ProtoAppInstallerActivity extends BaseActivity {
+public class ProtoAppInstallerActivity extends AppBaseActivity {
 
     private static final String TAG = "ProtoAppInstallerActivity";
     Intent intent = null;
@@ -57,10 +57,13 @@ public class ProtoAppInstallerActivity extends BaseActivity {
     private String projectName;
 
     @Override
-	protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_proto_installer);
+        setToolbar();
+        setToolbarBack();
+
         TextView txtProto = (TextView) findViewById(R.id.text_proto_install_info);
         TextView txtOrigin = (TextView) findViewById(R.id.text_proto_install_origin);
         TextView txtDestiny = (TextView) findViewById(R.id.text_proto_install_destiny);

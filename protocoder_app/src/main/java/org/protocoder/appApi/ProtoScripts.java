@@ -37,8 +37,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,12 +45,9 @@ import org.protocoder.fragments.NewProjectDialogFragment;
 import org.protocoder.projectlist.ProjectItem;
 import org.protocoder.projectlist.ProjectListFragment;
 import org.protocoder.projectlist.ProjectsPagerAdapter;
-import org.protocoder.projectlist.SlidingTabLayout;
 import org.protocoder.projectlist.ZoomOutPageTransformer;
-import org.protocoder.views.ProjectSelectorStrip;
 import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.apprunner.api.PUtil;
-import org.protocoderrunner.apprunner.logger.L;
 import org.protocoderrunner.project.Project;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.AndroidUtils;
@@ -252,7 +247,7 @@ public class ProtoScripts {
         try {
             currentProjectApplicationIntent = new Intent(mProtocoder.mActivityContext, AppRunnerActivity.class);
 
-            if (AndroidUtils.isVersionL()) {
+            if (AndroidUtils.isVersionLollipop()) {
                 //TODO enable version Android-L
                 //currentProjectApplicationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
             } else {

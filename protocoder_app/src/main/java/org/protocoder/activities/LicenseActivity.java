@@ -46,120 +46,59 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class LicenseActivity extends BaseActivity {
-
-    String txtAndroidWebSockets;
-    String txtSvgAndroid;
-    String txtCommonsLang;
-    String txtCommonsNet;
-    String txtNetUtil;
-    String txtEventBus;
-    String txtHttpClient;
-    String txtIoio;
-    String txtMail;
-    String txtOsmDroid;
-    String txtLibPd;
-    String txtPhysicaloid;
-    String txtProcessing;
-    String txtGson;
-    String txtUsbSerial;
-    String txtRhino;
-    String txtNanoHttpd;
-    String txtZip4j;
-
+public class LicenseActivity extends AppBaseActivity {
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_license);
 
-        // Create the action bar programmatically
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-
+        setToolbar();
+        setToolbarBack();
 
         //final ProgressDialog progressDialog = new ProgressDialog(this);
         //progressDialog.setTitle("");
         //progressDialog.show();
 
-        final TextView websocketsLicense = (TextView) findViewById(R.id.websockets);
-        final TextView svgAndroidLicense = (TextView) findViewById(R.id.svg_android);
-        final TextView commonslangLicense = (TextView) findViewById(R.id.commonslang);
-        final TextView commonsnetLicense = (TextView) findViewById(R.id.commonsnet);
-        final TextView netutilLicense = (TextView) findViewById(R.id.netutil);
-        final TextView eventbusLicense = (TextView) findViewById(R.id.eventbus);
-        final TextView httpClientLicense = (TextView) findViewById(R.id.httpclient);
-        final TextView ioioLicense = (TextView) findViewById(R.id.ioio);
-        final TextView mailLicense = (TextView) findViewById(R.id.mail);
-        final TextView osmdroidLicense = (TextView) findViewById(R.id.osmdroid);
-        final TextView libpdLicense = (TextView) findViewById(R.id.libpd);
-        final TextView physicaloidLicense = (TextView) findViewById(R.id.physicaloid);
-        final TextView processingLicense = (TextView) findViewById(R.id.processing);
-        final TextView gsonLicense = (TextView) findViewById(R.id.gson);
-        final TextView usbSerialLicense = (TextView) findViewById(R.id.usb_serial);
-        final TextView rhinoLicense = (TextView) findViewById(R.id.rhino);
-        final TextView nanoLicense = (TextView) findViewById(R.id.nano);
-        final TextView zip4jLicense = (TextView) findViewById(R.id.zip4j);
+        setLicense(R.id.websockets, R.raw.license_android_websockets);
+        setLicense(R.id.svg_android, R.raw.license_svg_android);
+        setLicense(R.id.commonslang, R.raw.license_commons_lang);
+        setLicense(R.id.commonsnet, R.raw.license_commons_net);
+        setLicense(R.id.netutil, R.raw.license_netutil);
+        setLicense(R.id.eventbus, R.raw.license_eventbus);
+        setLicense(R.id.httpclient, R.raw.license_httpclient);
+        setLicense(R.id.ioio, R.raw.license_ioiolib);
+        setLicense(R.id.mail, R.raw.license_mail);
+        setLicense(R.id.osmdroid, R.raw.license_osmdroid);
+        setLicense(R.id.libpd, R.raw.license_libpd);
+        setLicense(R.id.physicaloid, R.raw.license_physicaloid);
+        setLicense(R.id.processing, R.raw.license_processing);
+        setLicense(R.id.gson, R.raw.license_gson);
+        setLicense(R.id.usb_serial, R.raw.license_usbserial);
+        setLicense(R.id.rhino, R.raw.license_mozilla_rhino);
+        setLicense(R.id.nano, R.raw.license_nano_httpd);
+        setLicense(R.id.zip4j, R.raw.license_zip4j);
+    }
 
+    private void setLicense(int res, final int text) {
+        final TextView v = (TextView) findViewById(res);
 
         final Handler handler = new Handler();
 
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
-                txtAndroidWebSockets = readFile(R.raw.license_android_websockets);
-                txtSvgAndroid = readFile(R.raw.license_svg_android);
-                txtCommonsLang = readFile(R.raw.license_commons_lang);
-                txtCommonsNet = readFile(R.raw.license_commons_net);
-                txtNetUtil = readFile(R.raw.license_netutil);
-                txtEventBus = readFile(R.raw.license_eventbus);
-                txtHttpClient = readFile(R.raw.license_httpclient);
-                txtIoio = readFile(R.raw.license_ioiolib);
-                txtMail = readFile(R.raw.license_mail);
-                txtOsmDroid = readFile(R.raw.license_osmdroid);
-                txtLibPd = readFile(R.raw.license_libpd);
-                txtPhysicaloid = readFile(R.raw.license_physicaloid);
-                txtProcessing = readFile(R.raw.license_processing);
-                txtGson = readFile(R.raw.license_gson);
-                txtUsbSerial = readFile(R.raw.license_usbserial);
-                txtRhino = readFile(R.raw.license_mozilla_rhino);
-                txtNanoHttpd = readFile(R.raw.license_nano_httpd);
-                txtZip4j = readFile(R.raw.license_zip4j);
-
+                final String txt = readFile(text);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        websocketsLicense.setText(txtAndroidWebSockets);
-                        svgAndroidLicense.setText(txtSvgAndroid);
-                        commonslangLicense.setText(txtCommonsLang);
-
-
-                        commonsnetLicense.setText(txtCommonsNet);
-                        netutilLicense.setText(txtNetUtil);
-                        eventbusLicense.setText(txtEventBus);
-                        httpClientLicense.setText(txtHttpClient);
-                        ioioLicense.setText(txtIoio);
-                        mailLicense.setText(txtMail);
-                        osmdroidLicense.setText(txtOsmDroid);
-                        libpdLicense.setText(txtLibPd);
-                        physicaloidLicense.setText(txtPhysicaloid);
-
-                        processingLicense.setText(txtProcessing);
-
-                        gsonLicense.setText(txtGson);
-                        usbSerialLicense.setText(txtUsbSerial);
-                        rhinoLicense.setText(txtRhino);
-                        nanoLicense.setText(txtNanoHttpd);
-                        zip4jLicense.setText(txtZip4j);
-
-                    //    progressDialog.dismiss();
+                        v.setText(txt);
                     }
                 });
+
             }
         });
         t.start();
-
-
     }
 
 	//@Override

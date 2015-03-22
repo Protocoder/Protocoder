@@ -5,15 +5,15 @@
     <!-- ProtocoderThemeApp -->
     <style name="ProtocoderAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:actionBarStyle">@style/ProtocoderAppTheme.ActionBarStyle</item>
-        <item name="android:background">@color/transparent</item>
+        <item name="android:windowBackground">@color/white</item>
 
         <!-- Here we setting appcompat’s actionBarStyle -->
         <!--<item name="actionBarStyle">@style/MyActionBarStyle</item>-->
 
         <!-- ...and here we setting appcompat’s color theming attrs -->
-        <!--<item name="colorPrimary">@color/my_awesome_red</item>-->
-        <!--<item name="colorPrimaryDark">@color/my_awesome_darker_red</item>-->
-        <!--<item name="colorAccent">@color/accent</item>-->
+        <!--<item name="colorPrimary">@color/mwmblue</item>-->
+        <!--<item name="colorPrimaryDark">@color/mwmmagenta</item>-->
+        <!--<item name="colorAccent">@color/mwmyellow</item>-->
     </style>
 
     <!-- ProtocoderThemeApp -->

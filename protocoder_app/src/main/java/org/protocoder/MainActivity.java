@@ -35,24 +35,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.FileObserver;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
+import org.protocoder.activities.AppBaseActivity;
 import org.protocoder.appApi.Protocoder;
-import org.protocoderrunner.apprunner.api.PUtil;
-import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.events.Events;
 import org.protocoderrunner.events.Events.ProjectEvent;
 import org.protocoderrunner.network.IDEcommunication;
@@ -66,11 +61,11 @@ import java.lang.reflect.Field;
 import de.greenrobot.event.EventBus;
 
 @SuppressLint("NewApi")
-public class MainActivity extends BaseActivity {
+public class MainActivity extends AppBaseActivity {
 
 	private static final String TAG = "MainActivity";
 
-	MainActivity c;
+	MainActivity mContext;
 	Menu mMenu;
 
     // file observer
@@ -82,12 +77,13 @@ public class MainActivity extends BaseActivity {
 
     //singleton that controls protocoder
     private Protocoder mProtocoder;
-    private Toolbar mToolbar;
 
 
     @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        mContext = this;
+
 
         //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
         //    Window w = getWindow(); // in Activity's onCreate() for instance
@@ -96,33 +92,10 @@ public class MainActivity extends BaseActivity {
         //}
 
         setContentView(R.layout.activity_main);
-		c = this;
+        setToolbar();
 
-		// Create the action bar programmatically
-
-        if (!AndroidUtils.isWear(this)) {
-
-            mToolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
-            setSupportActionBar(mToolbar);
-
-            //ActionBar mActionBar = getSupportActionBar();
-            //mActionBar.setHomeButtonEnabled(true);
-        }
         mProtocoder = Protocoder.getInstance(this);
         mProtocoder.init();
-
-
-        final int[] counter = {0};
-        mProtocoder.mPUtil.loop(1000, new PUtil.LooperCB() {
-            @Override
-            public void event() {
-                if (counter[0]++ % 2 == 0) {
-                    mToolbar.setTitle("> PROTOCODER_");
-                } else {
-                    mToolbar.setTitle("> PROTOCODER");
-                }
-            }
-        }).start();
 
 
        /*

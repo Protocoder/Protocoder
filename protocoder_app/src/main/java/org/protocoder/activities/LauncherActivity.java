@@ -45,7 +45,7 @@ public class LauncherActivity extends BaseActivity {
 	Intent intent = null;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		// Prepare intent to exit the activity and move to the main one
