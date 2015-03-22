@@ -114,9 +114,8 @@ public class PAudioPlayer {
     }
 
 
-
     @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = { "" })
+    @ProtoMethodParam(params = {""})
     public PAudioPlayer onFinish(PAudioPlayer.OnFinishCB callbackfn) {
         mOnFinishCallbackfn = callbackfn;
 
@@ -125,7 +124,7 @@ public class PAudioPlayer {
 
 
     @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = { "" })
+    @ProtoMethodParam(params = {""})
     public PAudioPlayer loop(boolean b) {
         mMediaPlayer.setLooping(b);
 
@@ -134,7 +133,7 @@ public class PAudioPlayer {
 
 
     @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = { "" })
+    @ProtoMethodParam(params = {""})
     public PAudioPlayer seekTo(int ms) {
         mMediaPlayer.seekTo(ms);
 
@@ -143,21 +142,21 @@ public class PAudioPlayer {
 
 
     @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = { "" })
+    @ProtoMethodParam(params = {""})
     public boolean isLooping() {
         return mMediaPlayer.isLooping();
     }
 
 
     @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = { "" })
+    @ProtoMethodParam(params = {""})
     public boolean isPlaying() {
         return mMediaPlayer.isPlaying();
     }
 
 
     @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = { "" })
+    @ProtoMethodParam(params = {""})
     public PAudioPlayer pause() {
         mMediaPlayer.pause();
 
@@ -166,7 +165,7 @@ public class PAudioPlayer {
 
 
     @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = { "" })
+    @ProtoMethodParam(params = {""})
     public PAudioPlayer resume() {
         mMediaPlayer.start();
 
@@ -175,22 +174,21 @@ public class PAudioPlayer {
 
 
     @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = { "" })
+    @ProtoMethodParam(params = {""})
     public int position() {
         return mMediaPlayer.getCurrentPosition();
     }
 
 
-
     @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = { "" })
+    @ProtoMethodParam(params = {""})
     public int duration() {
         return mMediaPlayer.getDuration();
     }
 
 
     @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = { "" })
+    @ProtoMethodParam(params = {""})
     public PAudioPlayer volume(float vol) {
         mMediaPlayer.setVolume(vol, vol);
 
@@ -199,7 +197,7 @@ public class PAudioPlayer {
 
 
     @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = { "" })
+    @ProtoMethodParam(params = {""})
     public PAudioPlayer stop() {
         mMediaPlayer.stop();
         mMediaPlayer.release();

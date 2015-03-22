@@ -13,40 +13,40 @@ import org.protocoderrunner.utils.MLog;
 
 public class AppRunnerService extends Service {
 
-	private AppRunnerInterpreter interp;
-	private final String TAG = "AppRunnerService";
-	private Project currentProject;
+    private AppRunnerInterpreter interp;
+    private final String TAG = "AppRunnerService";
+    private Project currentProject;
 
-	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
-		// Can be called twice
-		interp = new AppRunnerInterpreter(this);
-		interp.createInterpreter(false);
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        // Can be called twice
+        interp = new AppRunnerInterpreter(this);
+        interp.createInterpreter(false);
 
-		String projectName = intent.getStringExtra(Project.NAME);
-		String projectFolder = intent.getStringExtra(Project.FOLDER);
+        String projectName = intent.getStringExtra(Project.NAME);
+        String projectFolder = intent.getStringExtra(Project.FOLDER);
 
-		currentProject = ProjectManager.getInstance().get(projectFolder, projectName);
-		ProjectManager.getInstance().setCurrentProject(currentProject);
-		MLog.d(TAG, "launching " + projectName + " in " + projectFolder);
+        currentProject = ProjectManager.getInstance().get(projectFolder, projectName);
+        ProjectManager.getInstance().setCurrentProject(currentProject);
+        MLog.d(TAG, "launching " + projectName + " in " + projectFolder);
 
-		AppRunnerSettings.get().project = currentProject;
-		String script = ProjectManager.getInstance().getCode(currentProject);
+        AppRunnerSettings.get().project = currentProject;
+        String script = ProjectManager.getInstance().getCode(currentProject);
 
-		interp.evalFromService(script);
+        interp.evalFromService(script);
 
-		return Service.START_NOT_STICKY;
-	}
+        return Service.START_NOT_STICKY;
+    }
 
-	@Override
-	public IBinder onBind(Intent intent) {
-		// TODO for communication return IBinder implementation
-		return null;
-	}
+    @Override
+    public IBinder onBind(Intent intent) {
+        // TODO for communication return IBinder implementation
+        return null;
+    }
 
-	@Override
-	public void onCreate() {
-		super.onCreate();
-		// its called only once
-	}
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        // its called only once
+    }
 }

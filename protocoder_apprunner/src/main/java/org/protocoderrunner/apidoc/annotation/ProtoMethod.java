@@ -42,8 +42,8 @@ import java.lang.annotation.Target;
 @Inherited
 public @interface ProtoMethod {
 
-	public String description() default "";
+    public String description() default "";
 
-	public String example() default "";
+    public String example() default "";
 
 }

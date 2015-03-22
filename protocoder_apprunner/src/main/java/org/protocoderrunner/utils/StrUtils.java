@@ -33,27 +33,27 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 public class StrUtils {
 
-	public static String generateRandomString() {
-		String id = RandomStringUtils.randomAlphabetic(8);
+    public static String generateRandomString() {
+        String id = RandomStringUtils.randomAlphabetic(8);
 
-		return id;
-	}
+        return id;
+    }
 
-	public static String bytetostring(byte[] b) {
-		int j = 0, in = 0;
-		String[] hex = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F" };
-		String out = "";
+    public static String bytetostring(byte[] b) {
+        int j = 0, in = 0;
+        String[] hex = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"};
+        String out = "";
 
-		for (byte element : b) {
-			in = element & 0x0f;
-			j = (in >> 4) & 0x0f;
-			out += hex[j];
-			j = in & 0xf;
-			out += hex[j];
+        for (byte element : b) {
+            in = element & 0x0f;
+            j = (in >> 4) & 0x0f;
+            out += hex[j];
+            j = in & 0xf;
+            out += hex[j];
 
-		}
+        }
 
-		return out;
-	}
+        return out;
+    }
 
 }

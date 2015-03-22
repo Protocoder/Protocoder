@@ -64,11 +64,11 @@ import org.protocoderrunner.apprunner.api.PSensors;
 import org.protocoderrunner.apprunner.api.PUI;
 import org.protocoderrunner.apprunner.api.PUtil;
 import org.protocoderrunner.apprunner.api.other.PLiveCodingFeedback;
+import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.events.Events;
 import org.protocoderrunner.network.IDEcommunication;
 import org.protocoderrunner.project.Project;
 import org.protocoderrunner.project.ProjectManager;
-import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.utils.MLog;
 
 import de.greenrobot.event.EventBus;
@@ -76,27 +76,27 @@ import de.greenrobot.event.EventBus;
 @SuppressLint("NewApi")
 public class AppRunnerFragment extends Fragment {
 
-	private static final String TAG = "AppRunnerFragment";
+    private static final String TAG = "AppRunnerFragment";
 
     private AppRunnerActivity mActivity;
 
-	public AppRunnerInterpreter interp;
-	private FileObserver fileObserver;
+    public AppRunnerInterpreter interp;
+    private FileObserver fileObserver;
 
-	// listeners in the main activity that will pass the info to the API classes
-	private PApp.onAppStatus onAppStatusListener;
+    // listeners in the main activity that will pass the info to the API classes
+    private PApp.onAppStatus onAppStatusListener;
 
-	// Layout
-	private final int EDITOR_ID = 1231212345;
+    // Layout
+    private final int EDITOR_ID = 1231212345;
 
-	public RelativeLayout mainLayout;
+    public RelativeLayout mainLayout;
 
-	private RelativeLayout parentScriptedLayout;
-	private RelativeLayout consoleRLayout;
+    private RelativeLayout parentScriptedLayout;
+    private RelativeLayout consoleRLayout;
     public FrameLayout editorLayout;
-	private TextView consoleText;
+    private TextView consoleText;
 
-	public PLiveCodingFeedback liveCoding;
+    public PLiveCodingFeedback liveCoding;
 
     //API Objects for the interpreter
     public PApp pApp;
@@ -159,7 +159,6 @@ public class AppRunnerFragment extends Fragment {
         }
 
 
-
         //instantiate the objects that can be accessed from the interpreter
 
         //the reason to call initForParentFragment is because the class depends on the fragment ui.
@@ -182,7 +181,7 @@ public class AppRunnerFragment extends Fragment {
         pSensors.initForParentFragment(this);
         pUi = new PUI(mActivity);
         pUi.initForParentFragment(this);
-        pUtil  = new PUtil(mActivity);
+        pUtil = new PUtil(mActivity);
 
 
         //create mContext new interpreter and add the objects to it
@@ -205,7 +204,7 @@ public class AppRunnerFragment extends Fragment {
     }
 
     @Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //setTheme(R.style.ProtocoderDark_Dialog);
         super.onCreateView(inflater, container, savedInstanceState);
         MLog.d(TAG, "onCreateView");
@@ -285,7 +284,7 @@ public class AppRunnerFragment extends Fragment {
 
         // send ready to the webIDE
         //TODO this is gone ?!
-	}
+    }
 
     public static AppRunnerFragment newInstance(Bundle bundle) {
         AppRunnerFragment myFragment = new AppRunnerFragment();
@@ -294,63 +293,63 @@ public class AppRunnerFragment extends Fragment {
         return myFragment;
     }
 
-	@Override
-	public void onStart() {
+    @Override
+    public void onStart() {
         MLog.d(TAG, "onStart");
 
         super.onStart();
-		interp.callJsFunction("onStart");
-	}
+        interp.callJsFunction("onStart");
+    }
 
-	@Override
-	public void onResume() {
-		super.onResume();
+    @Override
+    public void onResume() {
+        super.onResume();
         MLog.d(TAG, "onResume");
 
         EventBus.getDefault().register(this);
 
         if (onAppStatusListener != null) {
-			onAppStatusListener.onResume();
-		}
+            onAppStatusListener.onResume();
+        }
 
         if (fileObserver != null) {
             fileObserver.startWatching();
         }
-		interp.callJsFunction("onResume");
-	}
+        interp.callJsFunction("onResume");
+    }
 
-	@Override
-	public void onPause() {
-		super.onPause();
+    @Override
+    public void onPause() {
+        super.onPause();
         MLog.d(TAG, "onPause");
 
         EventBus.getDefault().unregister(this);
 
         interp.callJsFunction("onPause");
 
-		IDEcommunication.getInstance(mActivity).ready(false);
+        IDEcommunication.getInstance(mActivity).ready(false);
         if (fileObserver != null) {
             fileObserver.stopWatching();
         }
-	}
+    }
 
-	@Override
-	public void onStop() {
-		super.onStop();
+    @Override
+    public void onStop() {
+        super.onStop();
         MLog.d(TAG, "onStop");
 
         interp.callJsFunction("onStop");
-	}
+    }
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
         MLog.d(TAG, "onDestroy");
 
         interp.callJsFunction("onDestroy");
 
-		interp = null;
-	}
+        interp = null;
+    }
 
     @Override
     public void onDestroyView() {
@@ -376,15 +375,15 @@ public class AppRunnerFragment extends Fragment {
 
     }
 
-	public void addOnAppStatusListener(PApp.onAppStatus onAppStatus) {
+    public void addOnAppStatusListener(PApp.onAppStatus onAppStatus) {
 
-	}
+    }
 
-	public void addScriptedLayout(RelativeLayout scriptedUILayout) {
-		parentScriptedLayout.addView(scriptedUILayout);
-	}
+    public void addScriptedLayout(RelativeLayout scriptedUILayout) {
+        parentScriptedLayout.addView(scriptedUILayout);
+    }
 
-	public RelativeLayout initLayout() {
+    public RelativeLayout initLayout() {
         LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 
         // add main layout
@@ -502,37 +501,37 @@ public class AppRunnerFragment extends Fragment {
 //		}
 //	}
 
-	public void showConsole(boolean visible) {
+    public void showConsole(boolean visible) {
 
-		if (visible) {
-			consoleRLayout.setAlpha(0);
-			consoleRLayout.setTranslationY(50);
-			consoleRLayout.setVisibility(View.VISIBLE);
-			consoleRLayout.animate().alpha(1).translationYBy(-50).setDuration(500);
-		} else {
-			consoleRLayout.animate().alpha(0).translationYBy(50).setDuration(500).setListener(new AnimatorListener() {
+        if (visible) {
+            consoleRLayout.setAlpha(0);
+            consoleRLayout.setTranslationY(50);
+            consoleRLayout.setVisibility(View.VISIBLE);
+            consoleRLayout.animate().alpha(1).translationYBy(-50).setDuration(500);
+        } else {
+            consoleRLayout.animate().alpha(0).translationYBy(50).setDuration(500).setListener(new AnimatorListener() {
 
-				@Override
-				public void onAnimationStart(Animator animation) {
-				}
+                @Override
+                public void onAnimationStart(Animator animation) {
+                }
 
-				@Override
-				public void onAnimationRepeat(Animator animation) {
-				}
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+                }
 
-				@Override
-				public void onAnimationEnd(Animator animation) {
-					consoleRLayout.setVisibility(View.VISIBLE);
-				}
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    consoleRLayout.setVisibility(View.VISIBLE);
+                }
 
-				@Override
-				public void onAnimationCancel(Animator animation) {
-				}
-			});
-		}
-	}
+                @Override
+                public void onAnimationCancel(Animator animation) {
+                }
+            });
+        }
+    }
 
-	public void showConsole(final String message) {
+    public void showConsole(final String message) {
         mActivity.runOnUiThread(new Runnable() {
 
             @Override
@@ -543,9 +542,9 @@ public class AppRunnerFragment extends Fragment {
                 MLog.d(TAG, "msg text");
             }
         });
-	}
+    }
 
-	public void startFileObserver() {
+    public void startFileObserver() {
 
         if (mIsProjectLoaded) {
 
@@ -579,7 +578,7 @@ public class AppRunnerFragment extends Fragment {
             };
         }
 
-	}
+    }
 
     // execute lines
     public void onEventMainThread(Events.ExecuteCodeEvent evt) {

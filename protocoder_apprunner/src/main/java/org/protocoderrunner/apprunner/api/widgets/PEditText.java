@@ -40,10 +40,10 @@ public class PEditText extends EditText implements PViewInterface {
     private EditText mInput;
 
     public PEditText(Context context) {
-		super(context);
+        super(context);
 
         mInput = this;
-	}
+    }
 
     // --------- getRequest ---------//
     public interface addGenericInputCB {

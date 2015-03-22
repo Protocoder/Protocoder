@@ -55,39 +55,39 @@ import java.util.Properties;
  * An example of subclassing NanoHTTPD to make mContext custom HTTP server.
  */
 public class PSimpleHttpServer extends NanoHTTPD {
-	public static final String TAG = "ProtocoderHttpServer";
+    public static final String TAG = "ProtocoderHttpServer";
     public Handler mHandler = new Handler(Looper.getMainLooper());
 
     private final WeakReference<Context> ctx;
 
-	private static final Map<String, String> MIME_TYPES = new HashMap<String, String>() {
-		{
-			put("css", "text/css");
-			put("htm", "text/html");
-			put("html", "text/html");
-			put("xml", "text/xml");
-			put("txt", "text/plain");
-			put("asc", "text/plain");
-			put("gif", "image/gif");
-			put("jpg", "image/jpeg");
-			put("jpeg", "image/jpeg");
-			put("png", "image/png");
-			put("mp3", "audio/mpeg");
-			put("m3u", "audio/mpeg-url");
-			put("mp4", "video/mp4");
-			put("ogv", "video/ogg");
-			put("flv", "video/x-flv");
-			put("mov", "video/quicktime");
-			put("swf", "application/x-shockwave-flash");
-			put("js", "application/javascript");
-			put("pdf", "application/pdf");
-			put("doc", "application/msword");
-			put("ogg", "application/x-ogg");
-			put("zip", "application/octet-stream");
-			put("exe", "application/octet-stream");
-			put("class", "application/octet-stream");
-		}
-	};
+    private static final Map<String, String> MIME_TYPES = new HashMap<String, String>() {
+        {
+            put("css", "text/css");
+            put("htm", "text/html");
+            put("html", "text/html");
+            put("xml", "text/xml");
+            put("txt", "text/plain");
+            put("asc", "text/plain");
+            put("gif", "image/gif");
+            put("jpg", "image/jpeg");
+            put("jpeg", "image/jpeg");
+            put("png", "image/png");
+            put("mp3", "audio/mpeg");
+            put("m3u", "audio/mpeg-url");
+            put("mp4", "video/mp4");
+            put("ogv", "video/ogg");
+            put("flv", "video/x-flv");
+            put("mov", "video/quicktime");
+            put("swf", "application/x-shockwave-flash");
+            put("js", "application/javascript");
+            put("pdf", "application/pdf");
+            put("doc", "application/msword");
+            put("ogg", "application/x-ogg");
+            put("zip", "application/octet-stream");
+            put("exe", "application/octet-stream");
+            put("class", "application/octet-stream");
+        }
+    };
     private final HttpCB callbackfn;
     private final Project p;
 
@@ -101,25 +101,25 @@ public class PSimpleHttpServer extends NanoHTTPD {
         p = ProjectManager.getInstance().getCurrentProject();
 
         this.callbackfn = callbackfn;
-		ctx = new WeakReference<Context>(aCtx);
-		String ip = NetworkUtils.getLocalIpAddress(aCtx);
-		if (ip == null) {
-			MLog.d(TAG, "No IP found. Please connect to a newwork and try again");
-		} else {
-			MLog.d(TAG, "Launched server at http://" + ip.toString() + ":" + port);
-		}
-	}
+        ctx = new WeakReference<Context>(aCtx);
+        String ip = NetworkUtils.getLocalIpAddress(aCtx);
+        if (ip == null) {
+            MLog.d(TAG, "No IP found. Please connect to a newwork and try again");
+        } else {
+            MLog.d(TAG, "Launched server at http://" + ip.toString() + ":" + port);
+        }
+    }
 
 
     @ProtoMethod(description = "Responds to the request with a given text", example = "")
-    @ProtoMethodParam(params = { "boolean" })
+    @ProtoMethodParam(params = {"boolean"})
     public Response respond(String data, String fileExtension) {
         return new Response("200", MIME_TYPES.get(fileExtension), data);
     }
 
 
     @ProtoMethod(description = "Serves a file", example = "")
-    @ProtoMethodParam(params = { "uri", "header" })
+    @ProtoMethodParam(params = {"uri", "header"})
     public Response serveFile(String uri, Properties header) {
         super.serveFile(uri.substring(uri.lastIndexOf('/') + 1, uri.length()), header,
                 new File(p.getStoragePath()), false);
@@ -179,13 +179,13 @@ public class PSimpleHttpServer extends NanoHTTPD {
 
 
     @ProtoMethod(description = "Stops the http server", example = "")
-    @ProtoMethodParam(params = { "" })
+    @ProtoMethodParam(params = {""})
     public void stop() {
         super.stop();
     }
 
 
-	public Response serve(final String uri, final String method, final Properties header, final Properties parms, final Properties files) {
+    public Response serve(final String uri, final String method, final Properties header, final Properties parms, final Properties files) {
         final Response[] res = {null};
         MLog.d(TAG, uri + " " + method + " " + header + " " + parms + " " + files);
 
@@ -203,8 +203,6 @@ public class PSimpleHttpServer extends NanoHTTPD {
 
         return res[0];
     }
-
-
 
 
 }

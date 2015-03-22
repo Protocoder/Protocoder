@@ -37,25 +37,25 @@ import org.protocoderrunner.apprunner.PInterface;
 
 public class PDeviceEditor extends PInterface {
 
-	public PDeviceEditor(Context a) {
-		super(a);
+    public PDeviceEditor(Context a) {
+        super(a);
 
-	}
+    }
 
     //TODO reenable this 
 
-	@ProtoMethod(description = "Shows the console in the device app", example = "")
-	@ProtoMethodParam(params = { "boolean" })
-	public void showConsole(boolean visible) {
-		//((AppRunnerFragment) mContext).showConsole(visible);
+    @ProtoMethod(description = "Shows the console in the device app", example = "")
+    @ProtoMethodParam(params = {"boolean"})
+    public void showConsole(boolean visible) {
+        //((AppRunnerFragment) mContext).showConsole(visible);
 
-	}
+    }
 
 
-	@ProtoMethod(description = "Shows the editor in the device app", example = "")
-	@ProtoMethodParam(params = { "boolean" })
-	public void show(boolean visible) {
-       //((AppRunnerActivity) mContext).showEditor(visible);
+    @ProtoMethod(description = "Shows the editor in the device app", example = "")
+    @ProtoMethodParam(params = {"boolean"})
+    public void show(boolean visible) {
+        //((AppRunnerActivity) mContext).showEditor(visible);
 
 
         //this.addFragment(editorFragment, EDITOR_ID, "editorFragment", true);

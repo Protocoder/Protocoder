@@ -30,14 +30,12 @@
 package org.protocoderrunner.network;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
 import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
 import android.os.Build;
 import android.util.Log;
 
-import org.protocoderrunner.apprunner.AppRunnerFragment;
 import org.protocoderrunner.utils.MLog;
 
 import java.net.InetAddress;
@@ -71,7 +69,7 @@ public class ServiceDiscovery {
             mServiceName = name;
 
             // Create the NsdServiceInfo object, and populate it.
-            NsdServiceInfo serviceInfo  = new NsdServiceInfo();
+            NsdServiceInfo serviceInfo = new NsdServiceInfo();
 
             // The name is subject to change based on conflicts
             // with other services advertised on the same network.
@@ -84,7 +82,7 @@ public class ServiceDiscovery {
             mRegistrationListener = new NsdManager.RegistrationListener() {
 
 
-               @Override
+                @Override
                 public void onServiceRegistered(NsdServiceInfo NsdServiceInfo) {
                     // Save the service name.  Android may have changed it in order to
                     // resolve mContext conflict, so update the name you initially requested

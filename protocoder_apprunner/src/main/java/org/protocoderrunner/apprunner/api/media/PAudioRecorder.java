@@ -57,7 +57,7 @@ public class PAudioRecorder extends PInterface {
 
 
     @ProtoMethod(description = "Starts recording", example = "")
-    @ProtoMethodParam(params = { "showProgressBoolean" })
+    @ProtoMethodParam(params = {"showProgressBoolean"})
     public PAudioRecorder startRecording(String fileName, boolean showProgress) {
         this.showProgress = showProgress;
 
@@ -107,10 +107,8 @@ public class PAudioRecorder extends PInterface {
     }
 
 
-
-
     @ProtoMethod(description = "Stops recording", example = "")
-    @ProtoMethodParam(params = { "" })
+    @ProtoMethodParam(params = {""})
     public void stopRecording() {
         try {
             if (recorder != null) {

@@ -30,47 +30,18 @@
 package org.protocoder;
 
 import android.annotation.SuppressLint;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.os.FileObserver;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.Toolbar;
-import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.ViewConfiguration;
-import android.view.ViewGroup;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 
-import org.protocoder.appApi.Protocoder;
-import org.protocoder.fragments.SettingsFragment;
 import org.protocoderrunner.apprunner.AppRunnerActivity;
-import org.protocoderrunner.base.BaseActivity;
-import org.protocoderrunner.events.Events;
-import org.protocoderrunner.events.Events.ProjectEvent;
-import org.protocoderrunner.network.IDEcommunication;
-import org.protocoderrunner.project.Project;
-import org.protocoderrunner.project.ProjectManager;
-import org.protocoderrunner.utils.AndroidUtils;
-import org.protocoderrunner.utils.MLog;
-
-import java.lang.reflect.Field;
-
-import de.greenrobot.event.EventBus;
 
 @SuppressLint("NewApi")
 public class MainActivityTablet extends AppRunnerActivity {
 
-	private static final String TAG = "MainActivityTablet";
+    private static final String TAG = "MainActivityTablet";
 
 
     @Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-	}
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 }

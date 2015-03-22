@@ -75,7 +75,7 @@ import de.greenrobot.event.EventBus;
 
 public class AppRunnerActivity extends BaseActivity {
 
-	private static final String TAG = "AppRunnerActivity";
+    private static final String TAG = "AppRunnerActivity";
 
     private BroadcastReceiver mIntentReceiver;
 
@@ -97,8 +97,8 @@ public class AppRunnerActivity extends BaseActivity {
     public boolean keyBackEnabled = true;
 
     @Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         MLog.d(TAG, "onCreate");
         setContentView(R.layout.activity_apprunner_host);
@@ -159,15 +159,15 @@ public class AppRunnerActivity extends BaseActivity {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.add(fl.getId(), mAppRunnerFragment, String.valueOf(fl.getId()));
 
-           // ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-           // ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-           // ft.addToBackStack(null);
+            // ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            // ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+            // ft.addToBackStack(null);
             ft.commit();
 
             IDEcommunication.getInstance(this).ready(true);
         }
 
-	}
+    }
 
     @Override
     protected void onResume() {
@@ -216,20 +216,20 @@ public class AppRunnerActivity extends BaseActivity {
     }
 
     @Override
-	public void onStop() {
-		super.onStop();
-	}
+    public void onStop() {
+        super.onStop();
+    }
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
         IDEcommunication.getInstance(this).ready(false);
-	}
+    }
 
-	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-		super.onRestoreInstanceState(savedInstanceState);
-	}
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }
 
     public void onEventMainThread(Events.ProjectEvent evt) {
         MLog.d(TAG, "event -> " + evt.getAction());
@@ -282,7 +282,7 @@ public class AppRunnerActivity extends BaseActivity {
     }
 
     /*
-	 * NFC
+     * NFC
 	 */
 
     private NfcAdapter mAdapter;
@@ -330,14 +330,13 @@ public class AppRunnerActivity extends BaseActivity {
             } catch (IntentFilter.MalformedMimeTypeException e) {
                 throw new RuntimeException("fail", e);
             }
-            mFilters = new IntentFilter[] { ndef, };
+            mFilters = new IntentFilter[]{ndef,};
 
             // Setup mContext tech list for all NfcF tags
-            mTechLists = new String[][] { new String[] { NfcF.class.getName() } };
+            mTechLists = new String[][]{new String[]{NfcF.class.getName()}};
             nfcInit = true;
         }
     }
-
 
 
     @Override
@@ -415,6 +414,7 @@ public class AppRunnerActivity extends BaseActivity {
         return true;
         //return super.onKeyDown(keyCode, event);
     }
+
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         if (onKeyListener != null) {
@@ -475,16 +475,13 @@ public class AppRunnerActivity extends BaseActivity {
         }
 
 
-
         super.onActivityResult(requestCode, resultCode, data);
     }
-
 
 
     public void onResult(String result) {
 
     }
-
 
 
     public void showCodeExecuted() {

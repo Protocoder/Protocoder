@@ -42,26 +42,26 @@ import java.net.UnknownHostException;
 
 public class PDashboardButton extends PInterface {
 
-	private static final String TAG = "PDashboardButton";
-	String id;
-	String name;
+    private static final String TAG = "PDashboardButton";
+    String id;
+    String name;
     private jDashboardAddCB mCallback;
 
     public PDashboardButton(Context a) {
-		super(a);
-	}
+        super(a);
+    }
 
-	// --------- JDashboard add ---------//
-	public interface jDashboardAddCB {
-		void event();
-	}
+    // --------- JDashboard add ---------//
+    public interface jDashboardAddCB {
+        void event();
+    }
 
-	public void add(String name, int x, int y, int w, int h) throws JSONException,
-			UnknownHostException {
-		this.id = StrUtils.generateRandomString();
-		this.name = name;
+    public void add(String name, int x, int y, int w, int h) throws JSONException,
+            UnknownHostException {
+        this.id = StrUtils.generateRandomString();
+        this.name = name;
 
-		JSONObject values = new JSONObject()
+        JSONObject values = new JSONObject()
                 .put("id", id)
                 .put("name", name)
                 .put("type", "button")
@@ -75,9 +75,9 @@ public class PDashboardButton extends PInterface {
                 .put("action", "add")
                 .put("values", values);
 
-		CustomWebsocketServer.getInstance(getContext()).send(msg);
+        CustomWebsocketServer.getInstance(getContext()).send(msg);
 
-	}
+    }
 
     public void onClick(final jDashboardAddCB callbackfn) throws UnknownHostException {
         if (mCallback == null) {
@@ -99,9 +99,9 @@ public class PDashboardButton extends PInterface {
         }
     }
 
-	public void update(boolean pressed) throws JSONException, UnknownHostException {
+    public void update(boolean pressed) throws JSONException, UnknownHostException {
 
-		JSONObject values = new JSONObject()
+        JSONObject values = new JSONObject()
                 .put("name", name)
                 .put("type", "button")
                 .put("val", pressed);
@@ -111,6 +111,6 @@ public class PDashboardButton extends PInterface {
                 .put("action", "update")
                 .put("values", values);
 
-		CustomWebsocketServer.getInstance(getContext()).send(msg);
-	}
+        CustomWebsocketServer.getInstance(getContext()).send(msg);
+    }
 }

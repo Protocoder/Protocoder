@@ -68,291 +68,291 @@ import java.util.ArrayList;
 @SuppressLint("NewApi")
 public class FileManagerFragment extends BaseFragment {
 
-	public ArrayList<File> files;
-	protected FileAdapter projectAdapter;
-	protected ListView llFileView;
-	private String name;
-	private String folder;
+    public ArrayList<File> files;
+    protected FileAdapter projectAdapter;
+    protected ListView llFileView;
+    private String name;
+    private String folder;
 
-	public FileManagerFragment() {
-	}
+    public FileManagerFragment() {
+    }
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		Bundle bundle = getArguments();
+        Bundle bundle = getArguments();
 
-		if (bundle != null) {
-			this.name = bundle.getString(Project.NAME);
-			this.folder = bundle.getString(Project.FOLDER);
-		}
-	}
+        if (bundle != null) {
+            this.name = bundle.getString(Project.NAME);
+            this.folder = bundle.getString(Project.FOLDER);
+        }
+    }
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		View v = inflater.inflate(R.layout.fragment_file_manager, container, false);
+        View v = inflater.inflate(R.layout.fragment_file_manager, container, false);
 
-		// Get ListView and set adapter
-		llFileView = (ListView) v.findViewById(R.id.llFile);
-		Project p = ProjectManager.getInstance().get(folder, name);
-		files = ProjectManager.getInstance().listFilesInProject(p);
+        // Get ListView and set adapter
+        llFileView = (ListView) v.findViewById(R.id.llFile);
+        Project p = ProjectManager.getInstance().get(folder, name);
+        files = ProjectManager.getInstance().listFilesInProject(p);
 
-		// get files
-		projectAdapter = new FileAdapter(getActivity(), folder, files);
-		llFileView.setEmptyView(v.findViewById(R.id.empty_list_view));
-		// set the emptystate
-		llFileView.setAdapter(projectAdapter);
+        // get files
+        projectAdapter = new FileAdapter(getActivity(), folder, files);
+        llFileView.setEmptyView(v.findViewById(R.id.empty_list_view));
+        // set the emptystate
+        llFileView.setAdapter(projectAdapter);
 
-		notifyAddedProject();
-		registerForContextMenu(llFileView);
+        notifyAddedProject();
+        registerForContextMenu(llFileView);
 
-		llFileView.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, final View v, final int position, long id) {
+        llFileView.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, final View v, final int position, long id) {
 
-			}
-		});
+            }
+        });
 
-		return v;
-	}
+        return v;
+    }
 
-	protected void deleteFile(int position) {
+    protected void deleteFile(int position) {
 
-		File dir = new File(files.get(position).getAbsolutePath());
+        File dir = new File(files.get(position).getAbsolutePath());
 
-		if (dir.isDirectory()) {
-			String[] children = dir.list();
-			for (String element : children) {
-				new File(dir, element).delete();
-			}
-		}
-		dir.delete();
+        if (dir.isDirectory()) {
+            String[] children = dir.list();
+            for (String element : children) {
+                new File(dir, element).delete();
+            }
+        }
+        dir.delete();
 
-		files.remove(position);
+        files.remove(position);
 
-		projectAdapter.notifyDataSetChanged();
-		llFileView.invalidateViews();
-	}
+        projectAdapter.notifyDataSetChanged();
+        llFileView.invalidateViews();
+    }
 
-	public void clear() {
-		llFileView.removeAllViews();
-		projectAdapter.notifyDataSetChanged();
-	}
+    public void clear() {
+        llFileView.removeAllViews();
+        projectAdapter.notifyDataSetChanged();
+    }
 
-	public void notifyAddedProject() {
+    public void notifyAddedProject() {
 
-		projectAdapter.notifyDataSetChanged();
-		llFileView.invalidateViews();
-	}
+        projectAdapter.notifyDataSetChanged();
+        llFileView.invalidateViews();
+    }
 
-	@Override
-	public View getView() {
-		return super.getView();
-	}
+    @Override
+    public View getView() {
+        return super.getView();
+    }
 
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-		super.onCreateContextMenu(menu, v, menuInfo);
-		MenuInflater inflater = getActivity().getMenuInflater();
-		inflater.inflate(R.menu.file_list, menu);
-	}
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.file_list, menu);
+    }
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		super.onCreateOptionsMenu(menu, inflater);
-	}
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+    }
 
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
 
-		if (getUserVisibleHint()) {
-			// Handle menu events and return true
-		} else {
-			return false; // Pass the event to the next fragment
-		}
+        if (getUserVisibleHint()) {
+            // Handle menu events and return true
+        } else {
+            return false; // Pass the event to the next fragment
+        }
 
-		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-		final int index = info.position;
+        AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+        final int index = info.position;
 
-		File file = files.get(index);
+        File file = files.get(index);
 
-		int itemId = item.getItemId();
-		if (itemId == R.id.menu_project_list_run) {
-			return true;
-		} else if (itemId == R.id.menu_project_list_view) {
-			viewFile(index);
-			return true;
-		} else if (itemId == R.id.menu_project_list_delete) {
-			DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					switch (which) {
-					case DialogInterface.BUTTON_POSITIVE:
-						// Yes button clicked
-						deleteFile(index);
-						break;
+        int itemId = item.getItemId();
+        if (itemId == R.id.menu_project_list_run) {
+            return true;
+        } else if (itemId == R.id.menu_project_list_view) {
+            viewFile(index);
+            return true;
+        } else if (itemId == R.id.menu_project_list_delete) {
+            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which) {
+                        case DialogInterface.BUTTON_POSITIVE:
+                            // Yes button clicked
+                            deleteFile(index);
+                            break;
 
-					case DialogInterface.BUTTON_NEGATIVE:
-						// No button clicked
-						break;
-					}
-				}
-			};
-			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-			builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
-					.setNegativeButton("No", dialogClickListener).show();
-			return true;
-		} else if (itemId == R.id.menu_project_list_share_with) {
+                        case DialogInterface.BUTTON_NEGATIVE:
+                            // No button clicked
+                            break;
+                    }
+                }
+            };
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
+                    .setNegativeButton("No", dialogClickListener).show();
+            return true;
+        } else if (itemId == R.id.menu_project_list_share_with) {
 
-			return true;
+            return true;
 
-		} else {
-			return super.onContextItemSelected(item);
-		}
-	}
+        } else {
+            return super.onContextItemSelected(item);
+        }
+    }
 
-	private void viewFile(int index) {
-		MimeTypeMap myMime = MimeTypeMap.getSingleton();
+    private void viewFile(int index) {
+        MimeTypeMap myMime = MimeTypeMap.getSingleton();
 
-		Intent newIntent = new Intent(android.content.Intent.ACTION_VIEW);
+        Intent newIntent = new Intent(android.content.Intent.ACTION_VIEW);
 
-		// Intent newIntent = new Intent(Intent.ACTION_VIEW);
-		String mimeType = myMime.getMimeTypeFromExtension(fileExt(files.get(index).getName()).substring(1));
-		newIntent.setDataAndType(Uri.fromFile(files.get(index)), mimeType);
-		newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		try {
-			getActivity().startActivity(newIntent);
-		} catch (android.content.ActivityNotFoundException e) {
-			Toast.makeText(getActivity(), "No handler for this type of file.", Toast.LENGTH_LONG).show();
-		}
+        // Intent newIntent = new Intent(Intent.ACTION_VIEW);
+        String mimeType = myMime.getMimeTypeFromExtension(fileExt(files.get(index).getName()).substring(1));
+        newIntent.setDataAndType(Uri.fromFile(files.get(index)), mimeType);
+        newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        try {
+            getActivity().startActivity(newIntent);
+        } catch (android.content.ActivityNotFoundException e) {
+            Toast.makeText(getActivity(), "No handler for this type of file.", Toast.LENGTH_LONG).show();
+        }
 
-		Intent myIntent = new Intent(Intent.ACTION_VIEW);
-		myIntent.setData(Uri.fromFile(files.get(index)));
-		Intent j = Intent.createChooser(myIntent, "Choose an application to open with:");
-		startActivity(j);
+        Intent myIntent = new Intent(Intent.ACTION_VIEW);
+        myIntent.setData(Uri.fromFile(files.get(index)));
+        Intent j = Intent.createChooser(myIntent, "Choose an application to open with:");
+        startActivity(j);
 
-	}
+    }
 
-	private String fileExt(String url) {
-		if (url.indexOf("?") > -1) {
-			url = url.substring(0, url.indexOf("?"));
-		}
-		if (url.lastIndexOf(".") == -1) {
-			return null;
-		} else {
-			String ext = url.substring(url.lastIndexOf("."));
-			if (ext.indexOf("%") > -1) {
-				ext = ext.substring(0, ext.indexOf("%"));
-			}
-			if (ext.indexOf("/") > -1) {
-				ext = ext.substring(0, ext.indexOf("/"));
-			}
-			return ext.toLowerCase();
+    private String fileExt(String url) {
+        if (url.indexOf("?") > -1) {
+            url = url.substring(0, url.indexOf("?"));
+        }
+        if (url.lastIndexOf(".") == -1) {
+            return null;
+        } else {
+            String ext = url.substring(url.lastIndexOf("."));
+            if (ext.indexOf("%") > -1) {
+                ext = ext.substring(0, ext.indexOf("%"));
+            }
+            if (ext.indexOf("/") > -1) {
+                ext = ext.substring(0, ext.indexOf("/"));
+            }
+            return ext.toLowerCase();
 
-		}
-	}
+        }
+    }
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-	}
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
 
-	@Override
-	public void onPause() {
-		super.onPause();
+    @Override
+    public void onPause() {
+        super.onPause();
 
-	}
+    }
 
-	@Override
-	public void onResume() {
-		super.onResume();
+    @Override
+    public void onResume() {
+        super.onResume();
 //		getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
-	}
+    }
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-	}
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
 
-	public class FileAdapter extends BaseAdapter {
-		private final Context mContext;
+    public class FileAdapter extends BaseAdapter {
+        private final Context mContext;
 
-		ArrayList<File> files;
-		private final String projectFolder;
+        ArrayList<File> files;
+        private final String projectFolder;
 
-		public FileAdapter(Context c, String projectFolder, ArrayList<File> files) {
-			mContext = c;
-			this.files = files;
-			this.projectFolder = projectFolder;
-		}
+        public FileAdapter(Context c, String projectFolder, ArrayList<File> files) {
+            mContext = c;
+            this.files = files;
+            this.projectFolder = projectFolder;
+        }
 
-		@Override
-		public int getCount() {
-			return files.size();
-		}
+        @Override
+        public int getCount() {
+            return files.size();
+        }
 
-		@Override
-		public Object getItem(int position) {
-			return files.get(position);
-		}
+        @Override
+        public Object getItem(int position) {
+            return files.get(position);
+        }
 
-		@Override
-		public long getItemId(int position) {
-			return position;
-		}
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
 
-		// create mContext new ImageView for each item referenced by the Adapter
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			final FileItem customView;
+        // create mContext new ImageView for each item referenced by the Adapter
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            final FileItem customView;
 
-			if (convertView == null) { // if it's not recycled, initialize some
-				// attributes
-				customView = new FileItem(mContext);
-				customView.setImage(R.drawable.protocoder_script_project);
+            if (convertView == null) { // if it's not recycled, initialize some
+                // attributes
+                customView = new FileItem(mContext);
+                customView.setImage(R.drawable.protocoder_script_project);
 
-				customView.setText(files.get(position).getName());
+                customView.setText(files.get(position).getName());
 
-			} else {
-				customView = (FileItem) convertView;
-				customView.setText(files.get(position).getName());
-			}
-			customView.setTag(files.get(position).getName());
+            } else {
+                customView = (FileItem) convertView;
+                customView.setText(files.get(position).getName());
+            }
+            customView.setTag(files.get(position).getName());
 
-			return customView;
-		}
-	}
+            return customView;
+        }
+    }
 
-	public class FileItem extends LinearLayout {
+    public class FileItem extends LinearLayout {
 
-		private WeakReference<View> v;
-		// private Context c;
-		private Context c;
+        private WeakReference<View> v;
+        // private Context c;
+        private Context c;
 
-		public FileItem(Context context) {
-			super(context);
-			this.c = context;
-			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			this.v = new WeakReference<View>(inflater.inflate(R.layout.view_file_item, this, true));
-		}
+        public FileItem(Context context) {
+            super(context);
+            this.c = context;
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            this.v = new WeakReference<View>(inflater.inflate(R.layout.view_file_item, this, true));
+        }
 
-		public FileItem(Context context, AttributeSet attributeSet) {
-			super(context, attributeSet);
+        public FileItem(Context context, AttributeSet attributeSet) {
+            super(context, attributeSet);
 
-		}
+        }
 
-		public void setImage(int resId) {
-			ImageView imageView = (ImageView) v.get().findViewById(R.id.img_file);
-			imageView.setImageResource(resId);
-		}
+        public void setImage(int resId) {
+            ImageView imageView = (ImageView) v.get().findViewById(R.id.img_file);
+            imageView.setImageResource(resId);
+        }
 
-		public void setText(String text) {
-			TextView textView = (TextView) v.get().findViewById(R.id.txt_file_name);
-			// TextUtils.changeFont(c.get(), textView, Fonts.MENU_TITLE);
-			textView.setText(text);
-		}
-	}
+        public void setText(String text) {
+            TextView textView = (TextView) v.get().findViewById(R.id.txt_file_name);
+            // TextUtils.changeFont(c.get(), textView, Fonts.MENU_TITLE);
+            textView.setText(text);
+        }
+    }
 
 }

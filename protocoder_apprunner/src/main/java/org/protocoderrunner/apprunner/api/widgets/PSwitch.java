@@ -37,9 +37,9 @@ import android.widget.Switch;
 @SuppressLint("NewApi")
 public class PSwitch extends Switch implements PViewInterface {
 
-	public PSwitch(Context context) {
-		super(context);
-	}
+    public PSwitch(Context context) {
+        super(context);
+    }
 
 
     public interface addGenericSwitchCB {

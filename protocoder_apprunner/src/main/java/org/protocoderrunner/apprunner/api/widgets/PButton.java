@@ -47,15 +47,15 @@ import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 
 public class PButton extends Button implements PViewInterface, PViewMethodsInterface {
 
-	private int currentColor;
+    private int currentColor;
     private Paint paint;
 
     public PButton(Context context) {
-		super(context);
-		currentColor = Color.argb(255, 255, 255, 255);
+        super(context);
+        currentColor = Color.argb(255, 255, 255, 255);
 
         //init();
-	}
+    }
 
     // --------- newButton ---------//
     public interface addGenericButtonCB {
@@ -64,7 +64,7 @@ public class PButton extends Button implements PViewInterface, PViewMethodsInter
 
 
     @ProtoMethod(description = "Changes the font type to the button", example = "")
-    @ProtoMethodParam(params = { "Typeface" })
+    @ProtoMethodParam(params = {"Typeface"})
     public PButton onClick(final addGenericButtonCB callbackfn) {
         // Set on click behavior
         this.setOnClickListener(new OnClickListener() {
@@ -80,9 +80,8 @@ public class PButton extends Button implements PViewInterface, PViewMethodsInter
     }
 
 
-
     @ProtoMethod(description = "Changes the font type to the button", example = "")
-    @ProtoMethodParam(params = { "Typeface" })
+    @ProtoMethodParam(params = {"Typeface"})
     public PButton font(Typeface f) {
         this.setTypeface(f);
 
@@ -91,7 +90,7 @@ public class PButton extends Button implements PViewInterface, PViewMethodsInter
 
 
     @ProtoMethod(description = "Changes the font text color", example = "")
-    @ProtoMethodParam(params = { "colorHex" })
+    @ProtoMethodParam(params = {"colorHex"})
     public PButton color(String c) {
         this.setTextColor(Color.parseColor(c));
         return this;
@@ -99,7 +98,7 @@ public class PButton extends Button implements PViewInterface, PViewMethodsInter
 
 
     @ProtoMethod(description = "Changes the background color", example = "")
-    @ProtoMethodParam(params = { "colorHex" })
+    @ProtoMethodParam(params = {"colorHex"})
     public PButton background(String c) {
         this.setBackgroundColor(Color.parseColor(c));
         return this;
@@ -107,7 +106,7 @@ public class PButton extends Button implements PViewInterface, PViewMethodsInter
 
 
     @ProtoMethod(description = "Sets html text", example = "")
-    @ProtoMethodParam(params = { "htmlText" })
+    @ProtoMethodParam(params = {"htmlText"})
     public PButton html(String htmlText) {
         this.setText(Html.fromHtml(htmlText));
 
@@ -116,7 +115,7 @@ public class PButton extends Button implements PViewInterface, PViewMethodsInter
 
 
     @ProtoMethod(description = "Changes the button size", example = "")
-    @ProtoMethodParam(params = { "w", "h" })
+    @ProtoMethodParam(params = {"w", "h"})
     public PButton boxsize(int w, int h) {
         this.setWidth(w);
         this.setHeight(h);
@@ -126,7 +125,7 @@ public class PButton extends Button implements PViewInterface, PViewMethodsInter
 
 
     @ProtoMethod(description = "Changes the text size", example = "")
-    @ProtoMethodParam(params = { "size" })
+    @ProtoMethodParam(params = {"size"})
     public View textSize(int size) {
         this.setTextSize(size);
         return this;
@@ -134,7 +133,7 @@ public class PButton extends Button implements PViewInterface, PViewMethodsInter
 
 
     @ProtoMethod(description = "Button position", example = "")
-    @ProtoMethodParam(params = { "x", "y" })
+    @ProtoMethodParam(params = {"x", "y"})
     public PButton pos(int x, int y) {
         this.setX(x);
         this.setY(y);
@@ -149,7 +148,6 @@ public class PButton extends Button implements PViewInterface, PViewMethodsInter
         paint.setStrokeWidth(4);
 
 
-
         float radius = 2;
         float[] outerR = {radius, radius, radius, radius, radius, radius, radius, radius};
 
@@ -159,7 +157,7 @@ public class PButton extends Button implements PViewInterface, PViewMethodsInter
         pressed.getPaint().setShadowLayer(2, 5, 5, 0xFF000000);
         pressed.setPadding(15, 15, 15, 15);
 
-        GradientDrawable normal = new GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, new int[] {0xFF0000FF, 0xFF0000FF});
+        GradientDrawable normal = new GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, new int[]{0xFF0000FF, 0xFF0000FF});
         //normal.getPaint().setColor(0x550000FF);
         normal.setStroke(0, 0xFF000000);
         normal.setShape(GradientDrawable.RECTANGLE);
@@ -171,11 +169,10 @@ public class PButton extends Button implements PViewInterface, PViewMethodsInter
         disabled.getPaint().setColor(0xFF555555);
 
 
-
         StateListDrawable states = new StateListDrawable();
         states.addState(new int[]{android.R.attr.state_pressed, android.R.attr.state_enabled}, pressed);
-        states.addState(new int[]{ android.R.attr.state_focused, android.R.attr.state_enabled }, pressed);
-        states.addState(new int[]{ android.R.attr.state_enabled }, normal);
+        states.addState(new int[]{android.R.attr.state_focused, android.R.attr.state_enabled}, pressed);
+        states.addState(new int[]{android.R.attr.state_enabled}, normal);
         states.addState(new int[]{-android.R.attr.state_enabled}, disabled);
 
         setBackgroundDrawable(states);

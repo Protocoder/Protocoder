@@ -48,9 +48,9 @@ import org.protocoderrunner.apprunner.api.media.PAudioPlayer;
 import org.protocoderrunner.apprunner.api.media.PAudioRecorder;
 import org.protocoderrunner.apprunner.api.media.PMidi;
 import org.protocoderrunner.apprunner.api.media.PPureData;
+import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.media.Audio;
 import org.protocoderrunner.media.AudioServicePd;
-import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.utils.AndroidUtils;
 import org.protocoderrunner.utils.MLog;
 
@@ -66,37 +66,37 @@ public class PMedia extends PInterface {
     PAudioRecorder rec;
 
     public PMedia(Context c) {
-		super(c);
+        super(c);
         rec = new PAudioRecorder(getContext());
 
-		WhatIsRunning.getInstance().add(this);
-	}
+        WhatIsRunning.getInstance().add(this);
+    }
 
 
-	//public PAudioPlayer loadSound(String url, PAudioPlayer.LoadSoundCB callbackfn) {
-	//	return loadPlayer(url, callbackfn);
-	//}
+    //public PAudioPlayer loadSound(String url, PAudioPlayer.LoadSoundCB callbackfn) {
+    //	return loadPlayer(url, callbackfn);
+    //}
 
     PAudioPlayer player;
 
 
     @ProtoMethod(description = "Play a sound file giving its filename", example = "media.playSound(fileName);")
-    @ProtoMethodParam(params = { "fileName" })
+    @ProtoMethodParam(params = {"fileName"})
     public PAudioPlayer playSound(String url) {
         PAudioPlayer pAudioPlayer = new PAudioPlayer(url);
 
         return pAudioPlayer;
     }
 
-	@ProtoMethod(description = "Set the main volume", example = "")
-	@ProtoMethodParam(params = { "volume" })
-	public void volume(int volume) {
-		AndroidUtils.setVolume(getContext(), volume);
-	}
+    @ProtoMethod(description = "Set the main volume", example = "")
+    @ProtoMethodParam(params = {"volume"})
+    public void volume(int volume) {
+        AndroidUtils.setVolume(getContext(), volume);
+    }
 
 
     @ProtoMethod(description = "Routes the audio through the speakers", example = "media.playSound(fileName);")
-    @ProtoMethodParam(params = { "" })
+    @ProtoMethodParam(params = {""})
     public void audioOnSpeakers(boolean b) {
         AudioManager audioManager = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
         audioManager.setMode(AudioManager.MODE_IN_CALL);
@@ -105,14 +105,14 @@ public class PMedia extends PInterface {
 
 
     @ProtoMethod(description = "Enable sounds effects (default false)", example = "")
-    @ProtoMethodParam(params = { "boolean" })
+    @ProtoMethodParam(params = {"boolean"})
     public void enableSoundEffects(boolean b) {
         AndroidUtils.setEnableSoundEffects(getContext(), b);
     }
 
 
     @ProtoMethod(description = "Loads and initializes a PureData patch http://www.puredata.info using libpd", example = "")
-    @ProtoMethodParam(params = { "fileName", "micChannels", "outputChannels", "sampleRate", "buffer"})
+    @ProtoMethodParam(params = {"fileName", "micChannels", "outputChannels", "sampleRate", "buffer"})
     public PPureData loadPdPatch(String fileName, int micChannels, int outputChannels, int sampleRate, int buffer) {
         AudioServicePd.settingsSampleRate = sampleRate;
         AudioServicePd.settingsMicChannels = micChannels;
@@ -122,21 +122,21 @@ public class PMedia extends PInterface {
         return this.loadPdPatch(fileName);
     }
 
-	@ProtoMethod(description = "Loads and initializes a PureData patch http://www.puredata.info using libpd", example = "")
-	@ProtoMethodParam(params = { "fileName" })
-	public PPureData loadPdPatch(String fileName) {
-		PPureData pPureData = new PPureData(getActivity());
+    @ProtoMethod(description = "Loads and initializes a PureData patch http://www.puredata.info using libpd", example = "")
+    @ProtoMethodParam(params = {"fileName"})
+    public PPureData loadPdPatch(String fileName) {
+        PPureData pPureData = new PPureData(getActivity());
         pPureData.initPatch(fileName);
 
-		return pPureData;
-	}
+        return pPureData;
+    }
 
     boolean recording = false;
 
 
-	@ProtoMethod(description = "Record a sound with the microphone", example = "")
-	@ProtoMethodParam(params = { "fileName", "showProgressBoolean" })
-	public void audioRecord(String fileName, boolean showProgress) {
+    @ProtoMethod(description = "Record a sound with the microphone", example = "")
+    @ProtoMethodParam(params = {"fileName", "showProgressBoolean"})
+    public void audioRecord(String fileName, boolean showProgress) {
         if (!recording) {
             recording = true;
             if (AppRunnerSettings.get().hasUi) {
@@ -145,44 +145,43 @@ public class PMedia extends PInterface {
 
             rec.startRecording(fileName, showProgress & AppRunnerSettings.get().hasUi);
         }
-	}
+    }
 
 
-	@ProtoMethod(description = "Record a sound with the microphone", example = "")
-	@ProtoMethodParam(params = { "fileName", "showProgressBoolean" })
-	public void stopAudioRecord() {
+    @ProtoMethod(description = "Record a sound with the microphone", example = "")
+    @ProtoMethodParam(params = {"fileName", "showProgressBoolean"})
+    public void stopAudioRecord() {
         if (recording) {
             rec.stopRecording();
             recording = false;
         }
 
-	}
+    }
 
 
-
-	@ProtoMethod(description = "Says a text with voice", example = "media.textToSpeech('hello world');")
-	@ProtoMethodParam(params = { "text" })
-	public void textToSpeech(String text) {
+    @ProtoMethod(description = "Says a text with voice", example = "media.textToSpeech('hello world');")
+    @ProtoMethodParam(params = {"text"})
+    public void textToSpeech(String text) {
         Audio.speak(getContext(), text, Locale.getDefault());
-	}
+    }
 
 
-	@ProtoMethod(description = "Says a text with voice using a defined locale", example = "media.textToSpeech('hello world');")
-	@ProtoMethodParam(params = { "text", "Locale" })
-	public void textToSpeech(String text, Locale locale) {
+    @ProtoMethod(description = "Says a text with voice using a defined locale", example = "media.textToSpeech('hello world');")
+    @ProtoMethodParam(params = {"text", "Locale"})
+    public void textToSpeech(String text, Locale locale) {
         Audio.speak(getContext(), text, locale);
-	}
+    }
 
 
-	// --------- startVoiceRecognition ---------//
-	interface StartVoiceRecognitionCB {
-		void event(String responseString);
-	}
+    // --------- startVoiceRecognition ---------//
+    interface StartVoiceRecognitionCB {
+        void event(String responseString);
+    }
 
 
-	@ProtoMethod(description = "Fires the voice recognition and returns the best match", example = "media.startVoiceRecognition(function(text) { console.log(text) } );")
-	@ProtoMethodParam(params = { "function(recognizedText)" })
-	public void voiceRecognition(final StartVoiceRecognitionCB callbackfn) {
+    @ProtoMethod(description = "Fires the voice recognition and returns the best match", example = "media.startVoiceRecognition(function(text) { console.log(text) } );")
+    @ProtoMethodParam(params = {"function(recognizedText)"})
+    public void voiceRecognition(final StartVoiceRecognitionCB callbackfn) {
         if (getActivity() == null) return;
 
         (getActivity()).addVoiceRecognitionListener(new onVoiceRecognitionListener() {
@@ -195,16 +194,17 @@ public class PMedia extends PInterface {
 
         });
 
-		Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-		intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-		intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Tell me something!");
-		getActivity().startActivityForResult(intent, getActivity().VOICE_RECOGNITION_REQUEST_CODE);
-	}
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Tell me something!");
+        getActivity().startActivityForResult(intent, getActivity().VOICE_RECOGNITION_REQUEST_CODE);
+    }
 
     // --------- startVoiceRecognition ---------//
     interface StartVoiceRecognition2CB {
         void event(String status, String responseString);
     }
+
     public SpeechRecognizer startVoiceRecognition2(final StartVoiceRecognition2CB callbackfn) {
 
         String langMode = "en-US";
@@ -278,20 +278,20 @@ public class PMedia extends PInterface {
 
         return sr;
 
-       // sr.stopListening();
+        // sr.stopListening();
     }
 
-	public interface onVoiceRecognitionListener {
-		public void onNewResult(String text);
-	}
+    public interface onVoiceRecognitionListener {
+        public void onNewResult(String text);
+    }
 
-	public void stop() {
+    public void stop() {
         getContext().unregisterReceiver(headsetPluggedReceiver);
     }
 
 
     @ProtoMethod(description = "Start a connected midi device", example = "media.startVoiceRecognition(function(text) { console.log(text) } );")
-    @ProtoMethodParam(params = { "function(recognizedText)" })
+    @ProtoMethodParam(params = {"function(recognizedText)"})
     public PMidi connectMidiDevice() {
         PMidi pMidi = new PMidi(getContext());
 
@@ -317,7 +317,8 @@ public class PMedia extends PInterface {
     }
 
     private class HeadSetReceiver extends BroadcastReceiver {
-        @Override public void onReceive(Context context, Intent intent) {
+        @Override
+        public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Intent.ACTION_HEADSET_PLUG)) {
                 int state = intent.getIntExtra("state", -1);
                 switch (state) {

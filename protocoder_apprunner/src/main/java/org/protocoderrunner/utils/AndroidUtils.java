@@ -66,115 +66,117 @@ import java.security.NoSuchAlgorithmException;
 
 public class AndroidUtils {
 
-	private static final String TAG = "AndroidUtils";
+    private static final String TAG = "AndroidUtils";
 
-	public static void takeScreenshot(String where, String name, View v) {
+    public static void takeScreenshot(String where, String name, View v) {
 
-		// image naming and path to include sd card appending name you choose
-		// for file
-		String mPath = where + "/" + name;
+        // image naming and path to include sd card appending name you choose
+        // for file
+        String mPath = where + "/" + name;
 
-		// create bitmap screen capture
-		Bitmap bitmap;
-		View v1 = v.getRootView();
-		v1.setDrawingCacheEnabled(true);
-		bitmap = Bitmap.createBitmap(v1.getDrawingCache());
-		v1.setDrawingCacheEnabled(false);
+        // create bitmap screen capture
+        Bitmap bitmap;
+        View v1 = v.getRootView();
+        v1.setDrawingCacheEnabled(true);
+        bitmap = Bitmap.createBitmap(v1.getDrawingCache());
+        v1.setDrawingCacheEnabled(false);
 
-		OutputStream fout = null;
-		File imageFile = new File(mPath);
+        OutputStream fout = null;
+        File imageFile = new File(mPath);
 
-		try {
-			fout = new FileOutputStream(imageFile);
-			bitmap.compress(Bitmap.CompressFormat.PNG, 90, fout);
-			fout.flush();
-			fout.close();
+        try {
+            fout = new FileOutputStream(imageFile);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 90, fout);
+            fout.flush();
+            fout.close();
 
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-	}
+    }
 
-	public static Bitmap takeScreenshotView(String where, String name, View v) {
+    public static Bitmap takeScreenshotView(String where, String name, View v) {
 
-		// image naming and path to include sd card appending name you choose
-		// for file
-		String mPath = where + "/" + name;
+        // image naming and path to include sd card appending name you choose
+        // for file
+        String mPath = where + "/" + name;
 
-		// create bitmap screen capture
-		Bitmap bitmap;
-		v.setDrawingCacheEnabled(true);
-		bitmap = Bitmap.createBitmap(v.getDrawingCache());
-		v.setDrawingCacheEnabled(false);
+        // create bitmap screen capture
+        Bitmap bitmap;
+        v.setDrawingCacheEnabled(true);
+        bitmap = Bitmap.createBitmap(v.getDrawingCache());
+        v.setDrawingCacheEnabled(false);
 
-		// save if path is given
-		if (name.equals("") != true) {
-			MLog.d("qq", mPath + "entra");
-			OutputStream fout = null;
-			File imageFile = new File(mPath);
+        // save if path is given
+        if (name.equals("") != true) {
+            MLog.d("qq", mPath + "entra");
+            OutputStream fout = null;
+            File imageFile = new File(mPath);
 
-			try {
-				fout = new FileOutputStream(imageFile);
-				bitmap.compress(Bitmap.CompressFormat.PNG, 90, fout);
-				fout.flush();
-				fout.close();
+            try {
+                fout = new FileOutputStream(imageFile);
+                bitmap.compress(Bitmap.CompressFormat.PNG, 90, fout);
+                fout.flush();
+                fout.close();
 
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
-		return bitmap;
+        return bitmap;
 
-	}
+    }
 
-	public static int pixelsToDp(Context c, int px) {
+    public static int pixelsToDp(Context c, int px) {
 
         Resources resources = c.getResources();
         DisplayMetrics metrics = resources.getDisplayMetrics();
         float dp = px / (metrics.densityDpi / 160f);
 
-		return (int)dp;
-	}
+        return (int) dp;
+    }
 
-	public static int dpToPixels(Context c, int dp) {
+    public static int dpToPixels(Context c, int dp) {
 
         Resources resources = c.getResources();
         DisplayMetrics metrics = resources.getDisplayMetrics();
         float px = dp * (metrics.densityDpi / 160f);
 
-		return (int)px;
-	}
+        return (int) px;
+    }
 
-	/** Show an event in the LogCat view, for debugging */
-	public static void dumpMotionEvent(MotionEvent event) {
-		String names[] = { "DOWN", "UP", "MOVE", "CANCEL", "OUTSIDE", "POINTER_DOWN", "POINTER_UP", "7?", "8?", "9?" };
-		StringBuilder sb = new StringBuilder();
-		int action = event.getAction();
-		int actionCode = action & MotionEvent.ACTION_MASK;
-		sb.append("event ACTION_").append(names[actionCode]);
-		if (actionCode == MotionEvent.ACTION_POINTER_DOWN || actionCode == MotionEvent.ACTION_POINTER_UP) {
-			sb.append("(pid ").append(action >> MotionEvent.ACTION_POINTER_INDEX_SHIFT);
-			sb.append(")");
-		}
-		sb.append("[");
-		for (int i = 0; i < event.getPointerCount(); i++) {
-			sb.append("#").append(i);
-			sb.append("(pid ").append(event.getPointerId(i));
-			sb.append(")=").append((int) event.getX(i));
-			sb.append(",").append((int) event.getY(i));
-			if (i + 1 < event.getPointerCount()) {
-				sb.append(";");
-			}
-		}
-		sb.append("]");
-		MLog.d(TAG, sb.toString());
-	}
+    /**
+     * Show an event in the LogCat view, for debugging
+     */
+    public static void dumpMotionEvent(MotionEvent event) {
+        String names[] = {"DOWN", "UP", "MOVE", "CANCEL", "OUTSIDE", "POINTER_DOWN", "POINTER_UP", "7?", "8?", "9?"};
+        StringBuilder sb = new StringBuilder();
+        int action = event.getAction();
+        int actionCode = action & MotionEvent.ACTION_MASK;
+        sb.append("event ACTION_").append(names[actionCode]);
+        if (actionCode == MotionEvent.ACTION_POINTER_DOWN || actionCode == MotionEvent.ACTION_POINTER_UP) {
+            sb.append("(pid ").append(action >> MotionEvent.ACTION_POINTER_INDEX_SHIFT);
+            sb.append(")");
+        }
+        sb.append("[");
+        for (int i = 0; i < event.getPointerCount(); i++) {
+            sb.append("#").append(i);
+            sb.append("(pid ").append(event.getPointerId(i));
+            sb.append(")=").append((int) event.getX(i));
+            sb.append(",").append((int) event.getY(i));
+            if (i + 1 < event.getPointerCount()) {
+                sb.append(";");
+            }
+        }
+        sb.append("]");
+        MLog.d(TAG, sb.toString());
+    }
 
     public static void setViewGenericShadow(View v, int w, int h) {
         if (isVersionLollipop()) {
@@ -187,7 +189,7 @@ public class AndroidUtils {
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static void setViewGenericShadow(View v, int type, final int x, final int y, final int w, final int h, final int r) {
-       // MLog.d("qq", "no android L " + Build.VERSION.SDK + " " + L);
+        // MLog.d("qq", "no android L " + Build.VERSION.SDK + " " + L);
 
         if (isVersionLollipop()) {
 
@@ -215,8 +217,6 @@ public class AndroidUtils {
                 };
 
 
-
-
             } else {
                 Path path = new Path();
                 path.moveTo(10, 10);
@@ -235,11 +235,11 @@ public class AndroidUtils {
             }
             v.invalidate();
 
-           //    RippleDrawable rippleDrawable = (RippleDrawable) v.getBackground();
-           //     GradientDrawable rippleBackground = (GradientDrawable) rippleDrawable.getDrawable(0);
-           //    rippleBackground.setColor(Color.parseColor("#FF0000"));
-           //     rippleDrawable.setColor(ColorStateList.valueOf(Color.WHITE));
-               // rippleDrawable.setHotspot(0, 0);
+            //    RippleDrawable rippleDrawable = (RippleDrawable) v.getBackground();
+            //     GradientDrawable rippleBackground = (GradientDrawable) rippleDrawable.getDrawable(0);
+            //    rippleBackground.setColor(Color.parseColor("#FF0000"));
+            //     rippleDrawable.setColor(ColorStateList.valueOf(Color.WHITE));
+            // rippleDrawable.setHotspot(0, 0);
 
         }
     }
@@ -251,7 +251,7 @@ public class AndroidUtils {
 
 
     public static boolean isVersionMinSupported() {
-       return AppSettings.MIN_SUPPORTED_VERSION > Build.VERSION.SDK_INT;
+        return AppSettings.MIN_SUPPORTED_VERSION > Build.VERSION.SDK_INT;
     }
 
     public static int calculateColor(float fraction, int startValue, int endValue) {
@@ -313,10 +313,10 @@ public class AndroidUtils {
         return pm.isScreenOn();
     }
 
-   // public static void goToSleep(Context c) {
-        //PowerManager pm = (PowerManager) c.getSystemService(Context.POWER_SERVICE);
-        //pm.goToSleep(100);
-   // }
+    // public static void goToSleep(Context c) {
+    //PowerManager pm = (PowerManager) c.getSystemService(Context.POWER_SERVICE);
+    //pm.goToSleep(100);
+    // }
 
     public static boolean isAirplaneMode(Context c) {
         return Settings.System.getInt(c.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 0) != 0;

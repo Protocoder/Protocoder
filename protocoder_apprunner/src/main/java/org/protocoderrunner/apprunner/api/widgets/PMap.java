@@ -61,47 +61,47 @@ import java.util.ArrayList;
 
 public class PMap extends MapView {
 
-	final String TAG = "MapView";
+    final String TAG = "MapView";
 
-	private final IMapController mapController;
-	private final MapView mapView;
-	MyLocationNewOverlay myLocationOverlay;
-	ItemizedIconOverlay<OverlayItem> iconOverlay;
-	private final boolean firstMarker = false;
-	private final ArrayList<OverlayItem> markerList;
+    private final IMapController mapController;
+    private final MapView mapView;
+    MyLocationNewOverlay myLocationOverlay;
+    ItemizedIconOverlay<OverlayItem> iconOverlay;
+    private final boolean firstMarker = false;
+    private final ArrayList<OverlayItem> markerList;
 
-	private Context c;
+    private Context c;
 
-	public <T> PMap(Context c, int val) {
-		super(c, val);
-		this.c = c;
+    public <T> PMap(Context c, int val) {
+        super(c, val);
+        this.c = c;
 
-		// Create the mapview with the custom tile provider array
-		this.mapView = this;
-		markerList = new ArrayList<OverlayItem>();
-		iconOverlay = new ItemizedIconOverlay<OverlayItem>(markerList, c.getResources().getDrawable(R.drawable.icon),
-				new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
+        // Create the mapview with the custom tile provider array
+        this.mapView = this;
+        markerList = new ArrayList<OverlayItem>();
+        iconOverlay = new ItemizedIconOverlay<OverlayItem>(markerList, c.getResources().getDrawable(R.drawable.icon),
+                new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
 
-					@Override
-					public boolean onItemLongPress(int arg0, OverlayItem arg1) {
-						MLog.d(TAG, "long press");
-						return false;
-					}
+                    @Override
+                    public boolean onItemLongPress(int arg0, OverlayItem arg1) {
+                        MLog.d(TAG, "long press");
+                        return false;
+                    }
 
-					@Override
-					public boolean onItemSingleTapUp(int arg0, OverlayItem arg1) {
-						MLog.d(TAG, "single press");
-						return false;
-					}
-				}, new DefaultResourceProxyImpl(c.getApplicationContext()));
+                    @Override
+                    public boolean onItemSingleTapUp(int arg0, OverlayItem arg1) {
+                        MLog.d(TAG, "single press");
+                        return false;
+                    }
+                }, new DefaultResourceProxyImpl(c.getApplicationContext()));
 
-		mapView.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
+        mapView.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
 
-		mapView.setMultiTouchControls(true);
-		mapController = mapView.getController();
-		myLocationOverlay = new MyLocationNewOverlay(c, mapView);
-		mapView.getOverlays().add(myLocationOverlay);
-		mapView.getOverlays().add(iconOverlay);
+        mapView.setMultiTouchControls(true);
+        mapController = mapView.getController();
+        myLocationOverlay = new MyLocationNewOverlay(c, mapView);
+        mapView.getOverlays().add(myLocationOverlay);
+        mapView.getOverlays().add(iconOverlay);
 
         mapView.setClickable(true);
         mapView.setFocusable(true);
@@ -129,158 +129,158 @@ public class PMap extends MapView {
         }, 500));
 
 
-		// myLocationOverlay.enableMyLocation();
-		// myLocationOverlay.setDrawAccuracyEnabled(true);
+        // myLocationOverlay.enableMyLocation();
+        // myLocationOverlay.setDrawAccuracyEnabled(true);
 
-	}
+    }
 
 
     @ProtoMethod(description = "Creates a path in which it can be added new points", example = "")
-    @ProtoMethodParam(params = { "colorHex" })
-	public PathOverlay addPath(String color) {
-		int color1 = Color.parseColor(color);
-		PathOverlay line = new PathOverlay(color1, c);
-		mapView.getOverlays().add(line);
+    @ProtoMethodParam(params = {"colorHex"})
+    public PathOverlay addPath(String color) {
+        int color1 = Color.parseColor(color);
+        PathOverlay line = new PathOverlay(color1, c);
+        mapView.getOverlays().add(line);
 
-		return line;
-	}
+        return line;
+    }
 
 
     @ProtoMethod(description = "Add a point to the path", example = "")
-    @ProtoMethodParam(params = { "path", "latitude", "longitude" })
-	public MapView addPointToPath(PathOverlay p, double lat, double lon) {
-		p.addPoint(new GeoPoint(lat, lon));
-		mapView.invalidate();
+    @ProtoMethodParam(params = {"path", "latitude", "longitude"})
+    public MapView addPointToPath(PathOverlay p, double lat, double lon) {
+        p.addPoint(new GeoPoint(lat, lon));
+        mapView.invalidate();
 
         return this;
-	}
+    }
 
 
     @ProtoMethod(description = "Clear the path", example = "")
-    @ProtoMethodParam(params = { "path" })
-	public MapView clearPath(PathOverlay p) {
-		p.clearPath();
+    @ProtoMethodParam(params = {"path"})
+    public MapView clearPath(PathOverlay p) {
+        p.clearPath();
 
         return this;
-	}
+    }
 
 
     @ProtoMethod(description = "Set a new tile source such as mapbox and others", example = "")
-    @ProtoMethodParam(params = { "url" })
-	public MapView tileSource(String url) {
+    @ProtoMethodParam(params = {"url"})
+    public MapView tileSource(String url) {
 
-		String[] tileSourcesUrl = new String[1];
-		tileSourcesUrl[0] = url;
-		MapTileProviderBasic tileProvider = new MapTileProviderBasic(c);
-		ITileSource tileSource = new XYTileSource("Test", null, 3, 10, 256, ".png", tileSourcesUrl);
+        String[] tileSourcesUrl = new String[1];
+        tileSourcesUrl[0] = url;
+        MapTileProviderBasic tileProvider = new MapTileProviderBasic(c);
+        ITileSource tileSource = new XYTileSource("Test", null, 3, 10, 256, ".png", tileSourcesUrl);
 
-		tileProvider.setTileSource(tileSource);
-		mapView.setTileSource(tileSource);
+        tileProvider.setTileSource(tileSource);
+        mapView.setTileSource(tileSource);
 
         return this;
-	}
+    }
 
 
     @ProtoMethod(description = "Add a new marker", example = "")
-    @ProtoMethodParam(params = { "title", "text", "latitude", "longitude" })
-	public OverlayItem addMarker(String title, String text, double lat, double lon) {
+    @ProtoMethodParam(params = {"title", "text", "latitude", "longitude"})
+    public OverlayItem addMarker(String title, String text, double lat, double lon) {
 
-		OverlayItem olItem = new OverlayItem(title, text, new GeoPoint(lat, lon));
-		Drawable newMarker = c.getResources().getDrawable(R.drawable.marker);
-		olItem.setMarker(newMarker);
-		olItem.setMarkerHotspot(HotspotPlace.BOTTOM_CENTER);
-		markerList.add(olItem);
-		iconOverlay.addItem(olItem);
-		this.invalidate();
+        OverlayItem olItem = new OverlayItem(title, text, new GeoPoint(lat, lon));
+        Drawable newMarker = c.getResources().getDrawable(R.drawable.marker);
+        olItem.setMarker(newMarker);
+        olItem.setMarkerHotspot(HotspotPlace.BOTTOM_CENTER);
+        markerList.add(olItem);
+        iconOverlay.addItem(olItem);
+        this.invalidate();
 
-		return olItem;
+        return olItem;
 
-	}
+    }
 
     @ProtoMethod(description = "Clear the map cache", example = "")
-    @ProtoMethodParam(params = { "" })
-	public MapView clearCache() {
-		mapView.getTileProvider().clearTileCache();
+    @ProtoMethodParam(params = {""})
+    public MapView clearCache() {
+        mapView.getTileProvider().clearTileCache();
 
         return this;
-	}
+    }
 
 
     @ProtoMethod(description = "Zoom in/out depending on the integer given", example = "")
-    @ProtoMethodParam(params = { "zoomValue" })
-	public MapView zoom(int z) {
-		mapController.setZoom(z);
+    @ProtoMethodParam(params = {"zoomValue"})
+    public MapView zoom(int z) {
+        mapController.setZoom(z);
 
         return this;
     }
 
 
     @ProtoMethod(description = "Show/hide the map controls", example = "")
-    @ProtoMethodParam(params = { "boolean" })
-	public MapView showControls(boolean b) {
+    @ProtoMethodParam(params = {"boolean"})
+    public MapView showControls(boolean b) {
         mapView.setBuiltInZoomControls(b);
 
         return this;
-	}
+    }
 
 
     @ProtoMethod(description = "Enable/Disables the multitouch events in the map", example = "")
-    @ProtoMethodParam(params = { "boolean" })
-	public MapView multitouch(boolean b) {
-		mapView.setMultiTouchControls(b);
+    @ProtoMethodParam(params = {"boolean"})
+    public MapView multitouch(boolean b) {
+        mapView.setMultiTouchControls(b);
         return this;
-	}
+    }
 
 
     @ProtoMethod(description = "Enable/Disables the map following using the GPS", example = "")
-    @ProtoMethodParam(params = { "boolean" })
-	public MapView follow(boolean b) {
-		if (b) {
-			myLocationOverlay.enableFollowLocation();
-		} else {
-			myLocationOverlay.disableFollowLocation();
-		}
+    @ProtoMethodParam(params = {"boolean"})
+    public MapView follow(boolean b) {
+        if (b) {
+            myLocationOverlay.enableFollowLocation();
+        } else {
+            myLocationOverlay.disableFollowLocation();
+        }
 
         return this;
-	}
+    }
 
 
     @ProtoMethod(description = "Move to a specified location", example = "")
-    @ProtoMethodParam(params = { "latitude", "longitude" })
-	public MapView moveTo(double lat, double lon) {
-		GeoPoint point2 = new GeoPoint(lat, lon);
-		mapController.animateTo(point2);
+    @ProtoMethodParam(params = {"latitude", "longitude"})
+    public MapView moveTo(double lat, double lon) {
+        GeoPoint point2 = new GeoPoint(lat, lon);
+        mapController.animateTo(point2);
 
         return this;
-	}
+    }
 
 
     @ProtoMethod(description = "Set the center of the map with the specified location", example = "")
-    @ProtoMethodParam(params = { "latitude", "longitude" })
-	public MapView center(double lat, double lon) {
-		GeoPoint point2 = new GeoPoint(lat, lon);
-		mapController.setCenter(point2);
+    @ProtoMethodParam(params = {"latitude", "longitude"})
+    public MapView center(double lat, double lon) {
+        GeoPoint point2 = new GeoPoint(lat, lon);
+        mapController.setCenter(point2);
 
         return this;
-	}
+    }
 
 
     @ProtoMethod(description = "Gets the current center of the map", example = "")
-    @ProtoMethodParam(params = { "" })
+    @ProtoMethodParam(params = {""})
     public GeoPoint center() {
         return mapView.getBoundingBox().getCenter();
     }
 
 
     @ProtoMethod(description = "Gets the current zoom of the map", example = "")
-    @ProtoMethodParam(params = { "" })
+    @ProtoMethodParam(params = {""})
     public float zoom() {
         return mapView.getZoomLevel();
     }
 
 
     @ProtoMethod(description = "Set the zoom limits", example = "")
-    @ProtoMethodParam(params = { "min", "max" })
+    @ProtoMethodParam(params = {"min", "max"})
     public MapView zoomLimits(int min, int max) {
         mapView.setMinZoomLevel(min);
         mapView.setMaxZoomLevel(max);
@@ -290,19 +290,18 @@ public class PMap extends MapView {
 
 
     @ProtoMethod(description = "Get coordinates from the pixel position of the map", example = "")
-    @ProtoMethodParam(params = { "x", "y" })
+    @ProtoMethodParam(params = {"x", "y"})
     public org.osmdroid.api.IGeoPoint getCoordinatesFromPixels(int x, int y) {
         return mapView.getProjection().fromPixels(x, y);
     }
 
 
     @ProtoMethod(description = "Get coordinates from the pixel position of the map", example = "")
-    @ProtoMethodParam(params = { "x", "y" })
+    @ProtoMethodParam(params = {"x", "y"})
     public Point getPixelsFromCoordinates(double lat, double lon) {
         GeoPoint point = new GeoPoint(lat, lon);
         return mapView.getProjection().toPixels(point, null);
     }
-
 
 
 //    @Override

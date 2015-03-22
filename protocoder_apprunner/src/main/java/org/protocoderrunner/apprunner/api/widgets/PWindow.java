@@ -48,49 +48,49 @@ public class PWindow extends RelativeLayout implements PViewInterface {
 
     private static final String TAG = "PWindow";
     private final int currentColor;
-	private final int viewCount = 0;
-	private final Context c;
+    private final int viewCount = 0;
+    private final Context c;
     private final RelativeLayout mBar;
     private final LinearLayout mMainContainer;
     private final PWindow mWindow;
     private Button mBtnClose;
-	private TextView mTitle;
+    private TextView mTitle;
 
-	public PWindow(Context context) {
-		super(context);
-		c = context;
-		currentColor = Color.argb(255, 255, 255, 255);
+    public PWindow(Context context) {
+        super(context);
+        c = context;
+        currentColor = Color.argb(255, 255, 255, 255);
 
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		inflater.inflate(R.layout.pwidget_window, this, true);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater.inflate(R.layout.pwidget_window, this, true);
 
         mWindow = this;
         mBar = (RelativeLayout) findViewById(R.id.pWidgetWindowBar);
-		mTitle = (TextView) findViewById(R.id.pWidgetWindowTitle);
-		mBtnClose = (Button) findViewById(R.id.pWidgetWindowClose);
+        mTitle = (TextView) findViewById(R.id.pWidgetWindowTitle);
+        mBtnClose = (Button) findViewById(R.id.pWidgetWindowClose);
         mMainContainer = (LinearLayout) findViewById(R.id.pWidgetWindowMainContainer);
 
         //setOnTouchListener(this);
 
         mBar.setOnTouchListener(onMoveListener);
 
-	}
+    }
 
 
     @ProtoMethod(description = "Adds a new view", example = "")
-    @ProtoMethodParam(params = { "view" })
-	public PWindow addWidget(View v) {
-		v.setAlpha(0);
-		v.animate().alpha(1).setDuration(500).setStartDelay(100 * (1 + viewCount));
+    @ProtoMethodParam(params = {"view"})
+    public PWindow addWidget(View v) {
+        v.setAlpha(0);
+        v.animate().alpha(1).setDuration(500).setStartDelay(100 * (1 + viewCount));
 
-		mMainContainer.addView(v);
+        mMainContainer.addView(v);
 
         return mWindow;
-	}
+    }
 
 
     @ProtoMethod(description = "Show/hides the window bar", example = "")
-    @ProtoMethodParam(params = { "boolean" })
+    @ProtoMethodParam(params = {"boolean"})
     public PWindow showBar(boolean b) {
         if (b) {
             mBar.setVisibility(View.VISIBLE);
@@ -104,9 +104,9 @@ public class PWindow extends RelativeLayout implements PViewInterface {
 
 
     @ProtoMethod(description = "Sets the window title", example = "")
-    @ProtoMethodParam(params = { "text" })
-	public PWindow setTitle(String text) {
-		mTitle.setText(text);
+    @ProtoMethodParam(params = {"text"})
+    public PWindow setTitle(String text) {
+        mTitle.setText(text);
 
         return mWindow;
 
@@ -114,27 +114,27 @@ public class PWindow extends RelativeLayout implements PViewInterface {
 
 
     @ProtoMethod(description = "Sets the title color", example = "")
-    @ProtoMethodParam(params = { "colorHext" })
-	public PWindow setTitleColor(String color) {
-		mTitle.setTextColor(Color.parseColor(color));
+    @ProtoMethodParam(params = {"colorHext"})
+    public PWindow setTitleColor(String color) {
+        mTitle.setTextColor(Color.parseColor(color));
 
         return mWindow;
     }
 
 
     @ProtoMethod(description = "Sets the bar background color", example = "")
-    @ProtoMethodParam(params = { "colorHex" })
-	public PWindow setBarBackgroundColor(String color) {
-		mBar.setBackgroundColor(Color.parseColor(color));
+    @ProtoMethodParam(params = {"colorHex"})
+    public PWindow setBarBackgroundColor(String color) {
+        mBar.setBackgroundColor(Color.parseColor(color));
 
         return mWindow;
     }
 
 
     @ProtoMethod(description = "Sets the background color", example = "")
-    @ProtoMethodParam(params = { "colorHex" })
+    @ProtoMethodParam(params = {"colorHex"})
     public PWindow setWindowBackgroundColor(String color) {
-		mWindow.setBackgroundColor(Color.parseColor(color));
+        mWindow.setBackgroundColor(Color.parseColor(color));
 
         return mWindow;
     }

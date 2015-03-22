@@ -28,7 +28,6 @@
  */
 package org.protocoder.appApi;
 
-import android.app.Activity;
 import android.content.Context;
 
 import org.protocoderrunner.apprunner.api.PDevice;
@@ -111,14 +110,14 @@ public class Protocoder {
             });
         }
 
-       // if (debugApp) {
-       //     interp = new AppRunnerInterpreter(mActivityContext);
-       //     interp.createInterpreter(true);
+        // if (debugApp) {
+        //     interp = new AppRunnerInterpreter(mActivityContext);
+        //     interp.createInterpreter(true);
 
-            // interp.interpreter.addObjectToInterface("ui", mPUi);
-            // interp.interpreter.addObjectToInterface("util", mPUtil);
-            // interp.interpreter.addObjectToInterface("protocoder", mProtocoder);
-       // }
+        // interp.interpreter.addObjectToInterface("ui", mPUi);
+        // interp.interpreter.addObjectToInterface("util", mPUtil);
+        // interp.interpreter.addObjectToInterface("protocoder", mProtocoder);
+        // }
 
     }
 

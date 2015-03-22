@@ -32,9 +32,9 @@ package org.protocoderrunner.apidoc;
 import java.util.Vector;
 
 public class APIManagerClass {
-	public String name;
-	public String description;
+    public String name;
+    public String description;
     public boolean isMainObject;
-	public Vector<APIManagerMethod> apiMethods = new Vector<APIManagerMethod>();
+    public Vector<APIManagerMethod> apiMethods = new Vector<APIManagerMethod>();
 
 }

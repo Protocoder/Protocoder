@@ -37,9 +37,7 @@ import android.hardware.SensorManager;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunningInterface;
-import org.protocoderrunner.utils.MLog;
 
 public class PAccelerometer extends CustomSensorManager implements WhatIsRunningInterface {
 
@@ -54,10 +52,10 @@ public class PAccelerometer extends CustomSensorManager implements WhatIsRunning
         void event(float force);
     }
 
-	private final static String TAG = "PAccelerometer";
+    private final static String TAG = "PAccelerometer";
 
 
-	public PAccelerometer(Context c) {
+    public PAccelerometer(Context c) {
         super(c);
 
         type = Sensor.TYPE_ACCELEROMETER;
@@ -69,10 +67,10 @@ public class PAccelerometer extends CustomSensorManager implements WhatIsRunning
         }
         super.start();
 
-		listener = new SensorEventListener() {
+        listener = new SensorEventListener() {
 
-			@Override
-			public void onSensorChanged(SensorEvent event) {
+            @Override
+            public void onSensorChanged(SensorEvent event) {
                 if (mCallbackAccelerometerChange != null) {
                     mCallbackAccelerometerChange.event(event.values[0], event.values[1], event.values[2]);
                 }
@@ -83,32 +81,31 @@ public class PAccelerometer extends CustomSensorManager implements WhatIsRunning
 
                     mCallbackAccelerometerForce.event(force);
                 }
-			}
+            }
 
 
-			@Override
-			public void onAccuracyChanged(Sensor sensor, int accuracy) {
-				switch (accuracy) {
-				case SensorManager.SENSOR_STATUS_UNRELIABLE:
-					break;
-				case SensorManager.SENSOR_STATUS_ACCURACY_LOW:
-					break;
-				case SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM:
-					break;
-				case SensorManager.SENSOR_STATUS_ACCURACY_HIGH:
-					break;
-				}
-			}
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {
+                switch (accuracy) {
+                    case SensorManager.SENSOR_STATUS_UNRELIABLE:
+                        break;
+                    case SensorManager.SENSOR_STATUS_ACCURACY_LOW:
+                        break;
+                    case SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM:
+                        break;
+                    case SensorManager.SENSOR_STATUS_ACCURACY_HIGH:
+                        break;
+                }
+            }
 
-		};
+        };
 
         isSupported = sensormanager.registerListener(listener, sensor, speed);
-	}
-
+    }
 
 
     @ProtoMethod(description = "Start the accelerometer. Returns x, y, z", example = "")
-    @ProtoMethodParam(params = { "function(x, y, z)" })
+    @ProtoMethodParam(params = {"function(x, y, z)"})
     public void onChange(final AccelerometerChangeCB callbackfn) {
         mCallbackAccelerometerChange = callbackfn;
 
@@ -116,7 +113,7 @@ public class PAccelerometer extends CustomSensorManager implements WhatIsRunning
     }
 
     @ProtoMethod(description = "Start the accelerometer. Returns x, y, z", example = "")
-    @ProtoMethodParam(params = { "function(x, y, z)" })
+    @ProtoMethodParam(params = {"function(x, y, z)"})
     public void onForce(final AccelerometerChangeCB callbackfn) {
         mCallbackAccelerometerChange = callbackfn;
 

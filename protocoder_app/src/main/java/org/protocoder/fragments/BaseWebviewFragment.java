@@ -44,91 +44,93 @@ import org.protocoder.R;
 import org.protocoderrunner.base.BaseFragment;
 import org.protocoderrunner.utils.MLog;
 
-@SuppressLint({ "NewApi", "ValidFragment" })
+@SuppressLint({"NewApi", "ValidFragment"})
 public class BaseWebviewFragment extends BaseFragment {
 
-	protected WebView webView;
-	final Handler myHandler = new Handler();
-	protected View v;
-	private String mUrl = null;
+    protected WebView webView;
+    final Handler myHandler = new Handler();
+    protected View v;
+    private String mUrl = null;
 
-	public BaseWebviewFragment(String file) {
-		super();
-		mUrl = file;
-	}
+    public BaseWebviewFragment(String file) {
+        super();
+        mUrl = file;
+    }
 
-	public BaseWebviewFragment() {
-		super();
-	}
+    public BaseWebviewFragment() {
+        super();
+    }
 
-	/** Called when the activity is first created. */
-	@SuppressLint("SetJavaScriptEnabled")
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		super.onCreateView(inflater, container, savedInstanceState);
+    /**
+     * Called when the activity is first created.
+     */
+    @SuppressLint("SetJavaScriptEnabled")
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
 
-		MLog.d("WEBVIEW", "LOADED BaseWebView");
-		v = inflater.inflate(R.layout.webview, container, false);
+        MLog.d("WEBVIEW", "LOADED BaseWebView");
+        v = inflater.inflate(R.layout.webview, container, false);
 
-		return v;
-	}
+        return v;
+    }
 
-	public WebView getWebview() {
-		return webView;
-	}
+    public WebView getWebview() {
+        return webView;
+    }
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		Bundle bundle = getArguments();
+        Bundle bundle = getArguments();
 
-		if (bundle != null) {
-			this.mUrl = bundle.getString("url");
-		}
-	}
+        if (bundle != null) {
+            this.mUrl = bundle.getString("url");
+        }
+    }
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-		MLog.d("WEBVIEW", "onActivityCreated");
-		webView = (WebView) v.findViewById(R.id.webView1);
-		MLog.d("WEBVIEW", "Loaded WebView");
+        MLog.d("WEBVIEW", "onActivityCreated");
+        webView = (WebView) v.findViewById(R.id.webView1);
+        MLog.d("WEBVIEW", "Loaded WebView");
 
-		webView.setHorizontalScrollBarEnabled(false);
-		webView.setVerticalScrollBarEnabled(false);
-		webView.setOverScrollMode(View.OVER_SCROLL_NEVER);
-		WebSettings settings = webView.getSettings();
-		settings.setJavaScriptEnabled(true);
-		settings.setGeolocationEnabled(true);
-		settings.setAppCacheEnabled(false);
-		settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
-		settings.setJavaScriptCanOpenWindowsAutomatically(true);
+        webView.setHorizontalScrollBarEnabled(false);
+        webView.setVerticalScrollBarEnabled(false);
+        webView.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        WebSettings settings = webView.getSettings();
+        settings.setJavaScriptEnabled(true);
+        settings.setGeolocationEnabled(true);
+        settings.setAppCacheEnabled(false);
+        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        settings.setJavaScriptCanOpenWindowsAutomatically(true);
 
-		settings.setLightTouchEnabled(true);
+        settings.setLightTouchEnabled(true);
 
-		webView.setWebChromeClient(new WebChromeClient() {
-			@Override
-			public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
-				callback.invoke(origin, true, false);
-			}
-		});
+        webView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
+                callback.invoke(origin, true, false);
+            }
+        });
 
-		webView.getSettings().setGeolocationDatabasePath("/data/data/customwebview");
+        webView.getSettings().setGeolocationDatabasePath("/data/data/customwebview");
 
-		if (mUrl != null) {
-			webView.loadUrl(mUrl);
-		}
-	}
+        if (mUrl != null) {
+            webView.loadUrl(mUrl);
+        }
+    }
 
-	public void setPage(String Url) {
-		webView.loadUrl(Url);
-	}
+    public void setPage(String Url) {
+        webView.loadUrl(Url);
+    }
 
-	public void loadViewFromFile(String filename) {
-		filename = "file://" + filename;
-		webView.loadUrl(filename);
-	}
+    public void loadViewFromFile(String filename) {
+        filename = "file://" + filename;
+        webView.loadUrl(filename);
+    }
 
 }

@@ -41,11 +41,11 @@ import org.protocoderrunner.apprunner.api.other.WhatIsRunningInterface;
 
 public class PStep extends CustomSensorManager implements WhatIsRunningInterface {
 
-	public interface StepListener extends CustomSensorListener {
-		public void event();
-	}
+    public interface StepListener extends CustomSensorListener {
+        public void event();
+    }
 
-	private final static String TAG = "Step";
+    private final static String TAG = "Step";
     private StepListener mCallbackStepChange;
 
 
@@ -57,7 +57,7 @@ public class PStep extends CustomSensorManager implements WhatIsRunningInterface
 
 
     @ProtoMethod(description = "Start the step counter. Not superacurate and only few devices", example = "")
-    @ProtoMethodParam(params = { "function(value)" })
+    @ProtoMethodParam(params = {"function(value)"})
     public void start() {
         if (running) {
             return;
@@ -93,7 +93,7 @@ public class PStep extends CustomSensorManager implements WhatIsRunningInterface
 
 
     @ProtoMethod(description = "Start the accelerometer. Returns x, y, z", example = "")
-    @ProtoMethodParam(params = { "function(x, y, z)" })
+    @ProtoMethodParam(params = {"function(x, y, z)"})
     public void onChange(final StepListener callbackfn) {
         mCallbackStepChange = callbackfn;
 

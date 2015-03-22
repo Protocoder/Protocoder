@@ -47,42 +47,42 @@ import java.util.TimeZone;
 
 public class PConsole extends PInterface {
 
-	String TAG = "PConsole";
+    String TAG = "PConsole";
     private boolean showTime = false;
 
     public PConsole(Context a) {
-		super(a);
-	}
+        super(a);
+    }
 
 
-	@ProtoMethod(description = "shows any HTML text in the webIde console", example = "")
-	@ProtoMethodParam(params = { "text","text","..." })
-	public void log(String... outputs) {
+    @ProtoMethod(description = "shows any HTML text in the webIde console", example = "")
+    @ProtoMethodParam(params = {"text", "text", "..."})
+    public void log(String... outputs) {
 
-		StringBuilder builder = new StringBuilder();
+        StringBuilder builder = new StringBuilder();
         builder.append(getCurrentTime());
 
-		for (String output : outputs) {
-			builder.append(" ").append(output);
-		}
+        for (String output : outputs) {
+            builder.append(" ").append(output);
+        }
 
 
         JSONObject values = null;
         JSONObject msg = null;
         try {
-           values = new JSONObject().put("val", builder.toString());
-           msg = new JSONObject().put("type", "console").put("action", "log").put("values", values);
+            values = new JSONObject().put("val", builder.toString());
+            msg = new JSONObject().put("type", "console").put("action", "log").put("values", values);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         send(msg);
-	}
+    }
 
 
-	@ProtoMethod(description = "clear the webIde console", example = "")
-	@ProtoMethodParam(params = { "" })
-	public void clear() {
+    @ProtoMethod(description = "clear the webIde console", example = "")
+    @ProtoMethodParam(params = {""})
+    public void clear() {
         JSONObject msg = null;
         try {
             msg = new JSONObject().put("type", "console").put("action", "clear");
@@ -94,7 +94,7 @@ public class PConsole extends PInterface {
 
 
     @ProtoMethod(description = "show/hide the console", example = "")
-    @ProtoMethodParam(params = { "boolean" })
+    @ProtoMethodParam(params = {"boolean"})
     public void show(boolean b) {
         JSONObject values = null;
         JSONObject msg = null;
@@ -109,7 +109,7 @@ public class PConsole extends PInterface {
 
 
     @ProtoMethod(description = "Change the background color", example = "")
-    @ProtoMethodParam(params = { "colorHex" })
+    @ProtoMethodParam(params = {"colorHex"})
     public void backgroundColor(String colorHex) {
         String color = AndroidUtils.colorHexToHtmlRgba(colorHex);
 
@@ -127,7 +127,7 @@ public class PConsole extends PInterface {
 
 
     @ProtoMethod(description = "Log using a defined colorHex", example = "")
-    @ProtoMethodParam(params = { "colorHex" })
+    @ProtoMethodParam(params = {"colorHex"})
     public void logC(String text, String colorHex) {
         String color = AndroidUtils.colorHexToHtmlRgba(colorHex);
 
@@ -145,15 +145,14 @@ public class PConsole extends PInterface {
     }
 
 
-
     @ProtoMethod(description = "Changes the console text size", example = "")
-    @ProtoMethodParam(params = { "size" })
+    @ProtoMethodParam(params = {"size"})
     public void textSize(int textSize) {
 
         JSONObject values = null;
         JSONObject msg = null;
         try {
-            values = new JSONObject().put("textSize", textSize+"px");
+            values = new JSONObject().put("textSize", textSize + "px");
             msg = new JSONObject().put("type", "console").put("action", "textSize").put("values", values);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -163,10 +162,8 @@ public class PConsole extends PInterface {
     }
 
 
-
-
     @ProtoMethod(description = "Changes the console text color", example = "")
-    @ProtoMethodParam(params = { "colorHex" })
+    @ProtoMethodParam(params = {"colorHex"})
     public void textColor(String colorHex) {
         String color = AndroidUtils.colorHexToHtmlRgba(colorHex);
 
@@ -185,7 +182,7 @@ public class PConsole extends PInterface {
 
 
     @ProtoMethod(description = "Enable/Disable time in the log", example = "")
-    @ProtoMethodParam(params = { "boolean" })
+    @ProtoMethodParam(params = {"boolean"})
     public void showTime(boolean b) {
         showTime = b;
 

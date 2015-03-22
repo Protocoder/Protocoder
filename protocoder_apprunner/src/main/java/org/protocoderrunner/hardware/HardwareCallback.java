@@ -30,11 +30,11 @@
 package org.protocoderrunner.hardware;
 
 public interface HardwareCallback {
-	public void onConnect(Object obj);
+    public void onConnect(Object obj);
 
-	public void setup();
+    public void setup();
 
-	public void loop();
+    public void loop();
 
-	public void onComplete();
+    public void onComplete();
 }

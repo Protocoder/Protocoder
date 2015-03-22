@@ -47,7 +47,7 @@ public class PImageButton extends PImageView implements PViewInterface {
     public boolean hideBackground = false;
 
     public PImageButton(Context context) {
-		super(context);
+        super(context);
         this.img = this;
 
         /*
@@ -70,11 +70,10 @@ public class PImageButton extends PImageView implements PViewInterface {
             }
         });
         */
-	}
+    }
 
     /**
      * Adds an image with the option to hide the default background
-     *
      */
 
     public// --------- getRequest ---------//

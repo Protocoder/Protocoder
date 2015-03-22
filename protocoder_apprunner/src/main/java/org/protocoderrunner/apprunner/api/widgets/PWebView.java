@@ -41,44 +41,43 @@ import org.protocoderrunner.views.CustomWebView;
 
 public class PWebView extends CustomWebView implements PViewInterface {
 
-	public PWebView(Context a) {
-		super(a);
+    public PWebView(Context a) {
+        super(a);
 
         this.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-		WebSettings webSettings = this.getSettings();
-		webSettings.setJavaScriptEnabled(true);
-		webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
-		this.setFocusable(true);
-		this.setFocusableInTouchMode(true);
+        WebSettings webSettings = this.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        this.setFocusable(true);
+        this.setFocusableInTouchMode(true);
 
-		this.clearCache(false);
-		this.setBackgroundColor(0x00000000);
+        this.clearCache(false);
+        this.setBackgroundColor(0x00000000);
 
-		this.requestFocus(View.FOCUS_DOWN);
-		this.setOnTouchListener(new View.OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				switch (event.getAction()) {
-				case MotionEvent.ACTION_DOWN:
-				case MotionEvent.ACTION_UP:
-					if (!v.hasFocus()) {
-						v.requestFocus();
-					}
-					break;
-				}
-				return false;
-			}
-		});
+        this.requestFocus(View.FOCUS_DOWN);
+        this.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                    case MotionEvent.ACTION_UP:
+                        if (!v.hasFocus()) {
+                            v.requestFocus();
+                        }
+                        break;
+                }
+                return false;
+            }
+        });
 
         WebViewClient webViewClient = new CustomWebViewClient();
         this.setWebViewClient(webViewClient);
-		this.addJavascriptInterface(new PApp(a), "app");
+        this.addJavascriptInterface(new PApp(a), "app");
 
-	}
+    }
 
     private class CustomWebViewClient extends WebViewClient {
-        public boolean shouldOverrideUrlLoading(WebView view, String url)
-        {
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
             //do whatever you want with the url that is clicked inside the webview.
             //for example tell the webview to load that url.
             view.loadUrl(url);

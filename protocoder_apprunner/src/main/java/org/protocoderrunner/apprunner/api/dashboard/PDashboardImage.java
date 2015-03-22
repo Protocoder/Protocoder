@@ -43,19 +43,19 @@ import java.net.UnknownHostException;
 
 public class PDashboardImage extends PInterface {
 
-	private static final String TAG = "PDashboardImage";
-	String id;
+    private static final String TAG = "PDashboardImage";
+    String id;
 
-	public PDashboardImage(Context a) {
-		super(a);
-	}
+    public PDashboardImage(Context a) {
+        super(a);
+    }
 
 
-	@ProtoMethod(description = "", example = "")
-	public void add(String url, int x, int y, int w, int h) throws UnknownHostException, JSONException {
-		this.id = StrUtils.generateRandomString();
+    @ProtoMethod(description = "", example = "")
+    public void add(String url, int x, int y, int w, int h) throws UnknownHostException, JSONException {
+        this.id = StrUtils.generateRandomString();
 
-		JSONObject values = new JSONObject()
+        JSONObject values = new JSONObject()
                 .put("id", id)
                 .put("url", url)
                 .put("type", "image")
@@ -69,15 +69,15 @@ public class PDashboardImage extends PInterface {
                 .put("action", "add")
                 .put("values", values);
 
-		CustomWebsocketServer.getInstance(getContext()).send(msg);
-	}
+        CustomWebsocketServer.getInstance(getContext()).send(msg);
+    }
 
 
-	@ProtoMethod(description = "change image with a provided url", example = "")
-    @ProtoMethodParam(params = { "url"})
+    @ProtoMethod(description = "change image with a provided url", example = "")
+    @ProtoMethodParam(params = {"url"})
     public void changeImage(String url) throws JSONException, UnknownHostException {
 
-		JSONObject values = new JSONObject()
+        JSONObject values = new JSONObject()
                 .put("id", id)
                 .put("type", "label")
                 .put("url", url);
@@ -87,6 +87,6 @@ public class PDashboardImage extends PInterface {
                 .put("action", "changeImage")
                 .put("values", values);
 
-		CustomWebsocketServer.getInstance(getContext()).send(msg);
-	}
+        CustomWebsocketServer.getInstance(getContext()).send(msg);
+    }
 }

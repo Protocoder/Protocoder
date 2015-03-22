@@ -16,7 +16,6 @@ import org.apache.ftpserver.usermanager.SaltedPasswordEncryptor;
 import org.apache.ftpserver.usermanager.impl.BaseUser;
 import org.apache.ftpserver.usermanager.impl.WritePermission;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
-import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.MLog;
 
 import java.io.IOException;
@@ -48,7 +47,7 @@ public class PFtpServer {
         mPort = port;
         //mUserName = userName;
         //mPassword = password;
-        
+
         userManagerFactory = new PropertiesUserManagerFactory();
         //userManagerFactory.setAdminName(mUserName);
         userManagerFactory.setPasswordEncryptor(new SaltedPasswordEncryptor());
@@ -57,7 +56,6 @@ public class PFtpServer {
 
         WhatIsRunning.getInstance().add(this);
     }
-
 
 
     //we have to pass the protocoder project folder
@@ -70,8 +68,7 @@ public class PFtpServer {
         user.setHomeDirectory(directory);
 
         //check if user can write
-        if(canWrite)
-        {
+        if (canWrite) {
             List<Authority> auths = new ArrayList<Authority>();
             Authority auth = new WritePermission();
             auths.add(auth);
@@ -114,10 +111,9 @@ public class PFtpServer {
     }
 
     public void stop() {
-        try{
+        try {
             server.stop();
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             MLog.d(TAG, e.toString());
         }
     }
@@ -143,7 +139,8 @@ public class PFtpServer {
         public FtpletResult beforeCommand(FtpSession ftpSession, FtpRequest ftpRequest) throws FtpException, IOException {
             if (callback != null)
                 callback.event("Requested command: " + ftpRequest.getCommand() + " " + ftpRequest.getArgument() + " " + ftpRequest.getRequestLine());
-            return FtpletResult.DEFAULT;        }
+            return FtpletResult.DEFAULT;
+        }
 
         @Override
         public FtpletResult afterCommand(FtpSession ftpSession, FtpRequest ftpRequest, FtpReply ftpReply) throws FtpException, IOException {

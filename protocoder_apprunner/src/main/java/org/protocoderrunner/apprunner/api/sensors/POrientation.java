@@ -43,21 +43,21 @@ public class POrientation extends CustomSensorManager implements WhatIsRunningIn
 
 
     public interface OrientationListener extends CustomSensorListener {
-		public void event(float pitch, float roll, float z);
-	}
+        public void event(float pitch, float roll, float z);
+    }
 
     private OrientationListener mCallbackOrientationChange;
 
 
     @SuppressWarnings("deprecation")
-	public POrientation(Context c) {
-		super(c);
+    public POrientation(Context c) {
+        super(c);
 
         type = Sensor.TYPE_ORIENTATION;
     }
 
     @ProtoMethod(description = "Start the orientation sensor. Returns pitch, roll, yaw", example = "")
-    @ProtoMethodParam(params = { "function(pitch, roll, yaw)" })
+    @ProtoMethodParam(params = {"function(pitch, roll, yaw)"})
     public void start() {
         if (running) {
             return;
@@ -92,9 +92,8 @@ public class POrientation extends CustomSensorManager implements WhatIsRunningIn
     }
 
 
-
     @ProtoMethod(description = "Start the accelerometer. Returns x, y, z", example = "")
-    @ProtoMethodParam(params = { "function(x, y, z)" })
+    @ProtoMethodParam(params = {"function(x, y, z)"})
     public void onChange(final OrientationListener callbackfn) {
         mCallbackOrientationChange = callbackfn;
 

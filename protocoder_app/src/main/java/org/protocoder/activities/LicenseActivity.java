@@ -29,18 +29,13 @@
 
 package org.protocoder.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.ActionBar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import org.protocoder.MainActivity;
 import org.protocoder.R;
-import org.protocoderrunner.base.BaseActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -48,10 +43,10 @@ import java.io.InputStream;
 
 public class LicenseActivity extends AppBaseActivity {
 
-	@Override
+    @Override
     public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_license);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_license);
 
         setToolbar();
         setToolbarBack();
@@ -101,13 +96,13 @@ public class LicenseActivity extends AppBaseActivity {
         t.start();
     }
 
-	//@Override
-	//public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		// getMenuInflater().inflate(R.menu.license, menu);
-	//	return true;
-	//
-	// }
+    //@Override
+    //public boolean onCreateOptionsMenu(Menu menu) {
+    // Inflate the menu; this adds items to the action bar if it is present.
+    // getMenuInflater().inflate(R.menu.license, menu);
+    //	return true;
+    //
+    // }
 
 
     @Override
@@ -119,7 +114,7 @@ public class LicenseActivity extends AppBaseActivity {
                 Intent intentHome = new Intent(this, SetPreferenceActivity.class);
                 intentHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intentHome);
-               // overridePendingTransition(R.anim.splash_slide_in_anim_reverse_set, R.anim.splash_slide_out_anim_reverse_set);
+                // overridePendingTransition(R.anim.splash_slide_in_anim_reverse_set, R.anim.splash_slide_out_anim_reverse_set);
                 finish();
                 return true;
             default:
@@ -130,20 +125,20 @@ public class LicenseActivity extends AppBaseActivity {
 
 
     private String readFile(int resource) {
-		InputStream inputStream = getResources().openRawResource(resource);
-		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-		int i;
-		try {
-			i = inputStream.read();
-			while (i != -1) {
-				byteArrayOutputStream.write(i);
-				i = inputStream.read();
-			}
-			inputStream.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return byteArrayOutputStream.toString();
-	}
+        InputStream inputStream = getResources().openRawResource(resource);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        int i;
+        try {
+            i = inputStream.read();
+            while (i != -1) {
+                byteArrayOutputStream.write(i);
+                i = inputStream.read();
+            }
+            inputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return byteArrayOutputStream.toString();
+    }
 
 }

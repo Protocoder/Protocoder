@@ -44,70 +44,70 @@ import org.protocoderrunner.base.BaseFragment;
 
 public class AbsolutePositionFragment extends BaseFragment {
 
-	private View v;
+    private View v;
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-		v = new RelativeLayout(getActivity());
-		v.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.MATCH_PARENT));
-		// ac.setContentView(mainLayout);
+        v = new RelativeLayout(getActivity());
+        v.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.MATCH_PARENT));
+        // ac.setContentView(mainLayout);
 
-	}
+    }
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		super.onCreateView(inflater, container, savedInstanceState);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
 
-		v = inflater.inflate(R.layout.fragment_empty, container, false);
-		addSeekBar(10, 10, 100, 20, 100);
+        v = inflater.inflate(R.layout.fragment_empty, container, false);
+        addSeekBar(10, 10, 100, 20, 100);
 
-		return v;
+        return v;
 
-	}
+    }
 
-	private void addSeekBar(int x, int y, int w, int h, int max) {
-		SeekBar sb = new SeekBar(getActivity());
+    private void addSeekBar(int x, int y, int w, int h, int max) {
+        SeekBar sb = new SeekBar(getActivity());
 
-		sb.setMax(max);
-		sb.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+        sb.setMax(max);
+        sb.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
-			@Override
-			public void onStopTrackingTouch(SeekBar seekBar) {
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
 
-			}
+            }
 
-			@Override
-			public void onStartTrackingTouch(SeekBar seekBar) {
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
 
-			}
+            }
 
-			@Override
-			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
-			}
-		});
+            }
+        });
 
-		placeView(sb, x, y, w, h);
-	}
+        placeView(sb, x, y, w, h);
+    }
 
-	private void placeView(View v, int x, int y, int w, int h) {
-		RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(1, 1);
+    private void placeView(View v, int x, int y, int w, int h) {
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(1, 1);
 
-		layoutParams.leftMargin = x;
-		layoutParams.topMargin = y;
-		layoutParams.width = w;
-		layoutParams.height = h;
+        layoutParams.leftMargin = x;
+        layoutParams.topMargin = y;
+        layoutParams.width = w;
+        layoutParams.height = h;
 
-		v.setLayoutParams(layoutParams);
-	}
+        v.setLayoutParams(layoutParams);
+    }
 
-	public boolean onTouchEvent(MotionEvent event) {
-		if (event.getAction() == MotionEvent.ACTION_DOWN) {
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
 
-		}
-		return true;
-	}
+        }
+        return true;
+    }
 
 }

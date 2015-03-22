@@ -35,23 +35,24 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import org.protocoder.R;
-import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.utils.MLog;
 
 @SuppressLint("NewApi")
 public class ProtoScriptShareActivity extends AppBaseActivity {
 
-	private static final String TAG = "ProtoScriptShareActivity";
+    private static final String TAG = "ProtoScriptShareActivity";
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
     private MyAdapter mAdapter;
 
-    /** Called when the activity is first created. */
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    /**
+     * Called when the activity is first created.
+     */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_proto_script_share);
+        setContentView(R.layout.activity_proto_script_share);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.list_scripts_sharing);
         //mRecyclerView.setHasFixedSize(true);
@@ -62,39 +63,38 @@ public class ProtoScriptShareActivity extends AppBaseActivity {
         mAdapter = new MyAdapter(data);
         mRecyclerView.setAdapter(mAdapter);
         //mAdapter.notifyDataSetChanged();
-        
 
 
         // Create the action bar programmatically
-		//ActionBar mActionBar = getSupportActionBar();
-		//mActionBar.setDisplayHomeAsUpEnabled(true);
-	}
+        //ActionBar mActionBar = getSupportActionBar();
+        //mActionBar.setDisplayHomeAsUpEnabled(true);
+    }
 
-	/**
-	 * onResume
-	 */
-	@Override
-	protected void onResume() {
-		super.onResume();
-		MLog.d(TAG, "onResume");
-	}
+    /**
+     * onResume
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MLog.d(TAG, "onResume");
+    }
 
-	/**
-	 * onPause
-	 */
-	@Override
-	protected void onPause() {
-		super.onPause();
-		//overridePendingTransition(R.anim.splash_slide_in_anim_reverse_set, R.anim.splash_slide_out_anim_reverse_set);
-	}
+    /**
+     * onPause
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //overridePendingTransition(R.anim.splash_slide_in_anim_reverse_set, R.anim.splash_slide_out_anim_reverse_set);
+    }
 
-	/**
-	 * onDestroy
-	 */
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-	}
+    /**
+     * onDestroy
+     */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 
 
 }

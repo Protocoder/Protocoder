@@ -30,22 +30,15 @@
 package org.protocoder.activities;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Looper;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
 
-import org.protocoder.MainActivity;
 import org.protocoder.R;
-import org.protocoderrunner.apprunner.api.PUtil;
 import org.protocoderrunner.apprunner.api.other.PLooper;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.utils.AndroidUtils;
-import org.protocoderrunner.utils.MLog;
 
 @SuppressLint("NewApi")
 public class AppBaseActivity extends BaseActivity {
@@ -57,8 +50,8 @@ public class AppBaseActivity extends BaseActivity {
     private String prepend = "";
 
     @Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
     }
 
@@ -107,23 +100,23 @@ public class AppBaseActivity extends BaseActivity {
 
     }
 
-	@Override
-	protected void onResume() {
-		super.onResume();
+    @Override
+    protected void onResume() {
+        super.onResume();
         mLoop.start();
-	}
+    }
 
-	@Override
-	protected void onPause() {
-		super.onPause();
+    @Override
+    protected void onPause() {
+        super.onPause();
         mLoop.stop();
-	}
+    }
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
 
-	}
+    }
 
 
 }

@@ -199,7 +199,7 @@ public abstract class UsbMidiDriver implements OnMidiDeviceDetachedListener, OnM
 
     /**
      * Starts using UsbMidiDriver.
-     *
+     * <p/>
      * Starts the USB device watching and communicating thread.
      */
     public final void open() {
@@ -236,7 +236,7 @@ public abstract class UsbMidiDriver implements OnMidiDeviceDetachedListener, OnM
 
     /**
      * Stops using UsbMidiDriver.
-     *
+     * <p/>
      * Shutdown the USB device communicating thread.
      * The all connected devices will be closed.
      */

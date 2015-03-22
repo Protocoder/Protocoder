@@ -42,10 +42,10 @@ import org.protocoderrunner.apprunner.api.other.WhatIsRunningInterface;
 public class PLightIntensity extends CustomSensorManager implements WhatIsRunningInterface {
 
     public interface LightListener extends CustomSensorListener {
-		public void event(float f);
-	}
+        public void event(float f);
+    }
 
-	private final static String TAG = "PLight";
+    private final static String TAG = "PLight";
     private LightListener mCallbackLightChange;
 
 
@@ -57,7 +57,7 @@ public class PLightIntensity extends CustomSensorManager implements WhatIsRunnin
 
 
     @ProtoMethod(description = "Start the light sensor. Returns the intensity. The value per device might vary", example = "")
-    @ProtoMethodParam(params = { "function(intensity)" })
+    @ProtoMethodParam(params = {"function(intensity)"})
     public void start() {
         if (running) {
             return;
@@ -91,9 +91,8 @@ public class PLightIntensity extends CustomSensorManager implements WhatIsRunnin
     }
 
 
-
     @ProtoMethod(description = "Start the accelerometer. Returns x, y, z", example = "")
-    @ProtoMethodParam(params = { "function(x, y, z)" })
+    @ProtoMethodParam(params = {"function(x, y, z)"})
     public void onChange(final LightListener callbackfn) {
         mCallbackLightChange = callbackfn;
 

@@ -43,50 +43,50 @@ import java.lang.ref.WeakReference;
 
 public class PListItem extends LinearLayout {
 
-	private final WeakReference<View> v;
-	// private Context c;
-	private final Context c;
-	private String t;
+    private final WeakReference<View> v;
+    // private Context c;
+    private final Context c;
+    private String t;
 
-	public PListItem(Context context) {
-		super(context);
-		this.c = context;
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public PListItem(Context context) {
+        super(context);
+        this.c = context;
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		//TODO activate this
-		this.v = null; //new WeakReference<View>(inflater.inflate(R.layout.view_project_item_, this, true));
-	}
-
-    //TODO place holder
-
-    @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = { "" })
-	public void setImage(int resId) {
         //TODO activate this
-		ImageView imageView = null; //(ImageView) v.get().findViewById(R.id.customViewImage);
-		imageView.setImageResource(resId);
-
-		// drawText(imageView, t);
-	}
+        this.v = null; //new WeakReference<View>(inflater.inflate(R.layout.view_project_item_, this, true));
+    }
 
     //TODO place holder
 
     @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = { "" })
-	public void setText(String text) {
-		this.t = text;
+    @ProtoMethodParam(params = {""})
+    public void setImage(int resId) {
         //TODO activate this
-		TextView textView = null; //(TextView) v.get().findViewById(R.id.customViewText);
-		// TextUtils.changeFont(c.get(), textView, Fonts.MENU_TITLE);
-		textView.setText(text);
-	}
+        ImageView imageView = null; //(ImageView) v.get().findViewById(R.id.customViewImage);
+        imageView.setImageResource(resId);
+
+        // drawText(imageView, t);
+    }
 
     //TODO place holder
 
     @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = { "" })
-	public String getName() {
-		return t;
-	}
+    @ProtoMethodParam(params = {""})
+    public void setText(String text) {
+        this.t = text;
+        //TODO activate this
+        TextView textView = null; //(TextView) v.get().findViewById(R.id.customViewText);
+        // TextUtils.changeFont(c.get(), textView, Fonts.MENU_TITLE);
+        textView.setText(text);
+    }
+
+    //TODO place holder
+
+    @ProtoMethod(description = "", example = "")
+    @ProtoMethodParam(params = {""})
+    public String getName() {
+        return t;
+    }
 
 }

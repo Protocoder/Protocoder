@@ -30,37 +30,22 @@
 package org.protocoder.projectlist;
 
 import android.content.Context;
-import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import org.protocoder.R;
-import org.protocoder.activities.MyAdapter;
-import org.protocoderrunner.events.Events;
 import org.protocoderrunner.project.Project;
-import org.protocoderrunner.utils.MLog;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-import de.greenrobot.event.EventBus;
-
-public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.ViewHolder>  {
+public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.ViewHolder> {
     private static final String TAG = "ProjectItemAdapter";
     private final Context mContext;
     private final int mIcon;
     private final ProjectListFragment mPlf;
 
     public ArrayList<Project> mProjects;
-	private final String mProjectFolder;
-	private final boolean mListMode;
+    private final String mProjectFolder;
+    private final boolean mListMode;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private final ProjectItem mView;
@@ -73,14 +58,14 @@ public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.
         }
     }
 
-	public ProjectItemAdapter(Context c, ProjectListFragment plf) {
-		mContext = c;
+    public ProjectItemAdapter(Context c, ProjectListFragment plf) {
+        mContext = c;
         this.mPlf = plf;
-		this.mProjects = plf.mProjects;
-		this.mProjectFolder = plf.mProjectFolder;
-		this.mListMode = plf.mListMode;
+        this.mProjects = plf.mProjects;
+        this.mProjectFolder = plf.mProjectFolder;
+        this.mListMode = plf.mListMode;
         this.mIcon = plf.icon;
-	}
+    }
 
 
     // Create new views (invoked by the layout manager)

@@ -42,20 +42,20 @@ import java.net.UnknownHostException;
 
 public class PDashboardSlider extends PInterface {
 
-	private static final String TAG = "PDashboardSlider";
-	String id;
+    private static final String TAG = "PDashboardSlider";
+    String id;
 
-	public PDashboardSlider(Context a) {
-		super(a);
-	}
+    public PDashboardSlider(Context a) {
+        super(a);
+    }
 
-	// --------- JDashboardSlider add ---------//
-	public interface jDashboardSliderAddCB {
-		void event(double val);
-	}
+    // --------- JDashboardSlider add ---------//
+    public interface jDashboardSliderAddCB {
+        void event(double val);
+    }
 
-	public void add(String name, int x, int y, int w, int h, int min, int max)
-			throws UnknownHostException, JSONException {
+    public void add(String name, int x, int y, int w, int h, int min, int max)
+            throws UnknownHostException, JSONException {
         this.id = StrUtils.generateRandomString();
 
         JSONObject values = new JSONObject()
@@ -99,23 +99,23 @@ public class PDashboardSlider extends PInterface {
     }
 
     //TODO this method doesnt work yet
-	//
-	//@APIMethod(description = "change the slider value", example = "")
+    //
+    //@APIMethod(description = "change the slider value", example = "")
     //@APIParam(params = { "value" })
     public void position(float position) throws UnknownHostException, JSONException {
-		JSONObject msg = new JSONObject();
+        JSONObject msg = new JSONObject();
 
-		msg.put("type", "widget");
-		msg.put("action", "setValue");
+        msg.put("type", "widget");
+        msg.put("action", "setValue");
 
-		JSONObject values = new JSONObject();
-		values.put("id", id);
-		values.put("type", "label");
-		values.put("val", position);
-		msg.put("values", values);
+        JSONObject values = new JSONObject();
+        values.put("id", id);
+        values.put("type", "label");
+        values.put("val", position);
+        msg.put("values", values);
 
-		CustomWebsocketServer ws = CustomWebsocketServer.getInstance(getContext());
-		ws.send(msg);
+        CustomWebsocketServer ws = CustomWebsocketServer.getInstance(getContext());
+        ws.send(msg);
 
-	}
+    }
 }

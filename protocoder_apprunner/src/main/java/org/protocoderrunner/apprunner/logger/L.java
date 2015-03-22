@@ -33,41 +33,41 @@ import org.protocoderrunner.utils.MLog;
 
 public class L {
 
-	public static boolean enabled = true;
-	private static OverlayLogger overlayLogger = null;
-	private static String filter = null;
+    public static boolean enabled = true;
+    private static OverlayLogger overlayLogger = null;
+    private static String filter = null;
 
-	// TODO clean this up
-	public static void d(String TAG, String text) {
+    // TODO clean this up
+    public static void d(String TAG, String text) {
 
-		if (enabled) {
-			if (filter == null) {
-				MLog.d(TAG, text);
+        if (enabled) {
+            if (filter == null) {
+                MLog.d(TAG, text);
 
-				// MLog.d(TAG, "" + overlayLogger);
-				if (overlayLogger != null) {
-					overlayLogger.addItem(text);
-				}
-			} else if (TAG.equals(filter)) {
+                // MLog.d(TAG, "" + overlayLogger);
+                if (overlayLogger != null) {
+                    overlayLogger.addItem(text);
+                }
+            } else if (TAG.equals(filter)) {
 
-				MLog.d(TAG, text);
+                MLog.d(TAG, text);
 
-				// MLog.d(TAG, "" + overlayLogger);
-				if (overlayLogger != null) {
-					overlayLogger.addItem(text);
-				}
-			}
+                // MLog.d(TAG, "" + overlayLogger);
+                if (overlayLogger != null) {
+                    overlayLogger.addItem(text);
+                }
+            }
 
-		}
-	}
+        }
+    }
 
-	public static void filterByTag(String tag) {
-		filter = tag;
-	}
+    public static void filterByTag(String tag) {
+        filter = tag;
+    }
 
-	public static void addLoggerWindow(OverlayLogger ol) {
-		overlayLogger = ol;
+    public static void addLoggerWindow(OverlayLogger ol) {
+        overlayLogger = ol;
 
-	}
+    }
 
 }

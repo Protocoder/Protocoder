@@ -36,48 +36,47 @@ import android.os.Bundle;
 import org.protocoder.MainActivity;
 import org.protocoder.R;
 import org.protocoder.appApi.Protocoder;
-import org.protocoder.fragments.SettingsFragment;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.utils.StrUtils;
 
 public class LauncherActivity extends BaseActivity {
 
-	Intent intent = null;
+    Intent intent = null;
 
-	@Override
+    @Override
     public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
 
-		// Prepare intent to exit the activity and move to the main one
-		boolean firstLaunch; // If this is the first time the
-		SharedPreferences userDetails = getSharedPreferences("org.protocoder", MODE_PRIVATE);
-		firstLaunch = userDetails.getBoolean(getResources().getString(R.string.pref_is_first_launch), true);
+        // Prepare intent to exit the activity and move to the main one
+        boolean firstLaunch; // If this is the first time the
+        SharedPreferences userDetails = getSharedPreferences("org.protocoder", MODE_PRIVATE);
+        firstLaunch = userDetails.getBoolean(getResources().getString(R.string.pref_is_first_launch), true);
 
         //uncomment to avoid first launch
         //userDetails.edit().putBoolean(getResources().getString(R.string.pref_is_first_launch), false).commit();
 
-		if (firstLaunch) {
-			intent = new Intent(this, WelcomeActivity.class);
+        if (firstLaunch) {
+            intent = new Intent(this, WelcomeActivity.class);
             Protocoder.getInstance(this).settings.setId(StrUtils.generateRandomString());
             Protocoder.getInstance(this).settings.setConnectionAlert(true);
-		} else {
-			intent = new Intent(this, MainActivity.class);
-		}
+        } else {
+            intent = new Intent(this, MainActivity.class);
+        }
 
-		intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-		startActivity(intent);
-		finish();
+        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        startActivity(intent);
+        finish();
 
-	}
+    }
 
-	@Override
-	protected void onPause() {
-		super.onPause();
-	}
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-	}
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 
 }

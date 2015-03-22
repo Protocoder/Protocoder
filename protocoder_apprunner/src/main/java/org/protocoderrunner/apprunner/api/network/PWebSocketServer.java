@@ -59,7 +59,7 @@ public class PWebSocketServer {
         InetSocketAddress inetSocket = new InetSocketAddress(port);
         Draft d = new Draft_17();
 
-         websocketServer = new WebSocketServer(inetSocket, Collections.singletonList(d)) {
+        websocketServer = new WebSocketServer(inetSocket, Collections.singletonList(d)) {
 
             @Override
             public void onClose(final WebSocket arg0, int arg1, String arg2, boolean arg3) {
@@ -75,7 +75,7 @@ public class PWebSocketServer {
             }
 
             @Override
-            public void onError ( final WebSocket arg0, Exception arg1){
+            public void onError(final WebSocket arg0, Exception arg1) {
                 if (mCallbackfn == null) return;
 
                 mHandler.post(new Runnable() {
@@ -88,7 +88,7 @@ public class PWebSocketServer {
             }
 
             @Override
-            public void onMessage ( final WebSocket arg0, final String arg1) {
+            public void onMessage(final WebSocket arg0, final String arg1) {
                 if (mCallbackfn == null) return;
 
                 mHandler.post(new Runnable() {
@@ -102,7 +102,7 @@ public class PWebSocketServer {
             }
 
             @Override
-            public void onOpen ( final WebSocket arg0, ClientHandshake arg1) {
+            public void onOpen(final WebSocket arg0, ClientHandshake arg1) {
                 if (mCallbackfn == null) return;
 
                 mHandler.post(new Runnable() {

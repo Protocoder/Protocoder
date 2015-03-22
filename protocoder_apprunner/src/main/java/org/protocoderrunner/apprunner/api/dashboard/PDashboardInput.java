@@ -42,23 +42,23 @@ import java.net.UnknownHostException;
 
 public class PDashboardInput extends PInterface {
 
-	private static final String TAG = "PDashboardInput";
-	String id;
+    private static final String TAG = "PDashboardInput";
+    String id;
 
-	public PDashboardInput(Context a) {
-		super(a);
-	}
+    public PDashboardInput(Context a) {
+        super(a);
+    }
 
-	// --------- JDashboardInput add ---------//
-	public interface jDashboardInputCB {
-		void event(String responseString);
-	}
+    // --------- JDashboardInput add ---------//
+    public interface jDashboardInputCB {
+        void event(String responseString);
+    }
 
-	public void add(String name, int x, int y, int width, int height, final jDashboardInputCB callbackfn)
-			throws UnknownHostException, JSONException {
-		this.id = StrUtils.generateRandomString();
+    public void add(String name, int x, int y, int width, int height, final jDashboardInputCB callbackfn)
+            throws UnknownHostException, JSONException {
+        this.id = StrUtils.generateRandomString();
 
-		JSONObject values = new JSONObject()
+        JSONObject values = new JSONObject()
                 .put("id", id)
                 .put("name", name)
                 .put("type", "input")
@@ -72,28 +72,28 @@ public class PDashboardInput extends PInterface {
                 .put("action", "add")
                 .put("values", values);
 
-		CustomWebsocketServer.getInstance(getContext()).send(msg);
+        CustomWebsocketServer.getInstance(getContext()).send(msg);
 
-		CustomWebsocketServer.getInstance(getContext()).addListener(id, new WebSocketListener() {
-			@Override
-			public void onUpdated(JSONObject jsonObject) {
-				try {
+        CustomWebsocketServer.getInstance(getContext()).addListener(id, new WebSocketListener() {
+            @Override
+            public void onUpdated(JSONObject jsonObject) {
+                try {
 
-					final String val = jsonObject.getString("val");
-					mHandler.post(new Runnable() {
+                    final String val = jsonObject.getString("val");
+                    mHandler.post(new Runnable() {
 
-						@Override
-						public void run() {
-							callbackfn.event(val);
-						}
-					});
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
+                        @Override
+                        public void run() {
+                            callbackfn.event(val);
+                        }
+                    });
+                } catch (JSONException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+        });
 
-	}
+    }
 
 }

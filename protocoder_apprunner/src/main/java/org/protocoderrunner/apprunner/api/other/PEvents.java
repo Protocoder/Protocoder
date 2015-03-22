@@ -75,8 +75,8 @@ public class PEvents extends PInterface {
                 eventsList.get(i).cb.event(obj);
             }
         }
-    } 
-    
+    }
+
     class EventItem {
         public final String id;
         public final String name;

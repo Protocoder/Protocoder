@@ -39,7 +39,6 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.media.FaceDetector;
 import android.os.Handler;
-import android.os.Looper;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -65,112 +64,111 @@ import java.util.Iterator;
 
 public class PUtil extends PInterface {
 
-	private final Handler handler;
-	ArrayList<Runnable> rl = new ArrayList<Runnable>();
+    private final Handler handler;
+    ArrayList<Runnable> rl = new ArrayList<Runnable>();
 
-	public PUtil(Context a) {
-		super(a);
-		WhatIsRunning.getInstance().add(this);
-		handler = new Handler();
-	}
+    public PUtil(Context a) {
+        super(a);
+        WhatIsRunning.getInstance().add(this);
+        handler = new Handler();
+    }
 
-	// --------- getRequest ---------//
-	interface getRequestCB {
-		void event(int eventType, String responseString);
-	}
-
-
-	@ProtoMethod(description = "Creates a looper that loops a given function every 'n' milliseconds", example = "")
-	@ProtoMethodParam(params = { "milliseconds", "function()" })
-	public PLooper loop(final int duration, final PLooper.LooperCB callbackkfn) {
-		return new PLooper(duration, callbackkfn);
-	}
-
-	@ProtoMethod(description = "Creates a looper that loops a given function every 'n' milliseconds", example = "")
-	@ProtoMethodParam(params = { "milliseconds" })
-	public PLooper loop(final int duration) {
-		return new PLooper(duration, null);
-	}
-
-	// --------- delay ---------//
-	public interface delayCB {
-		void event();
-	}
+    // --------- getRequest ---------//
+    interface getRequestCB {
+        void event(int eventType, String responseString);
+    }
 
 
-	@ProtoMethod(description = "Delay a given function 'n' milliseconds", example = "")
-	@ProtoMethodParam(params = { "milliseconds", "function()" })
-	public void delay(final int duration, final delayCB fn) {
+    @ProtoMethod(description = "Creates a looper that loops a given function every 'n' milliseconds", example = "")
+    @ProtoMethodParam(params = {"milliseconds", "function()"})
+    public PLooper loop(final int duration, final PLooper.LooperCB callbackkfn) {
+        return new PLooper(duration, callbackkfn);
+    }
 
-		Runnable task = new Runnable() {
-			@Override
-			public void run() {
-				// handler.postDelayed(this, duration);
-				fn.event();
-				handler.removeCallbacks(this);
-				rl.remove(this);
-			}
-		};
-		handler.postDelayed(task, duration);
+    @ProtoMethod(description = "Creates a looper that loops a given function every 'n' milliseconds", example = "")
+    @ProtoMethodParam(params = {"milliseconds"})
+    public PLooper loop(final int duration) {
+        return new PLooper(duration, null);
+    }
 
-		rl.add(task);
-	}
+    // --------- delay ---------//
+    public interface delayCB {
+        void event();
+    }
 
+
+    @ProtoMethod(description = "Delay a given function 'n' milliseconds", example = "")
+    @ProtoMethodParam(params = {"milliseconds", "function()"})
+    public void delay(final int duration, final delayCB fn) {
+
+        Runnable task = new Runnable() {
+            @Override
+            public void run() {
+                // handler.postDelayed(this, duration);
+                fn.event();
+                handler.removeCallbacks(this);
+                rl.remove(this);
+            }
+        };
+        handler.postDelayed(task, duration);
+
+        rl.add(task);
+    }
 
 
     @ProtoMethod(description = "Stop all timers", example = "")
-    @ProtoMethodParam(params = { "" })
-	public void stopAllTimers() {
-		Iterator<Runnable> ir = rl.iterator();
-		while (ir.hasNext()) {
-			handler.removeCallbacks(ir.next());
-			// handler.post(ir.next());
-		}
-	}
+    @ProtoMethodParam(params = {""})
+    public void stopAllTimers() {
+        Iterator<Runnable> ir = rl.iterator();
+        while (ir.hasNext()) {
+            handler.removeCallbacks(ir.next());
+            // handler.post(ir.next());
+        }
+    }
 
-	public void stop() {
-		stopAllTimers();
-	}
+    public void stop() {
+        stopAllTimers();
+    }
 
-	// http://stackoverflow.com/questions/4605527/converting-pixels-to-dp
+    // http://stackoverflow.com/questions/4605527/converting-pixels-to-dp
 
     @ProtoMethod(description = "Convert given dp to pixels", example = "")
-    @ProtoMethodParam(params = { "" })
-	public float dpToPixels(float dp) {
-		Resources resources = getContext().getResources();
-		DisplayMetrics metrics = resources.getDisplayMetrics();
-		float px = dp * (metrics.densityDpi / 160f);
-		return px;
-	}
+    @ProtoMethodParam(params = {""})
+    public float dpToPixels(float dp) {
+        Resources resources = getContext().getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        float px = dp * (metrics.densityDpi / 160f);
+        return px;
+    }
 
 
     @ProtoMethod(description = "Convert given px to dp", example = "")
-    @ProtoMethodParam(params = { "" })
-	public float pixelsToDp(float px) {
-		Resources resources = getContext().getResources();
-		DisplayMetrics metrics = resources.getDisplayMetrics();
-		float dp = px / (metrics.densityDpi / 160f);
-		return dp;
-	}
+    @ProtoMethodParam(params = {""})
+    public float pixelsToDp(float px) {
+        Resources resources = getContext().getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        float dp = px / (metrics.densityDpi / 160f);
+        return dp;
+    }
 
 
     @ProtoMethod(description = "Convert given mm to pixels", example = "")
-    @ProtoMethodParam(params = { "" })
-	public float mmToPixels(float mm) {
-		float px = TypedValue
-				.applyDimension(TypedValue.COMPLEX_UNIT_MM, mm, getContext().getResources().getDisplayMetrics());
-		return px;
-	}
+    @ProtoMethodParam(params = {""})
+    public float mmToPixels(float mm) {
+        float px = TypedValue
+                .applyDimension(TypedValue.COMPLEX_UNIT_MM, mm, getContext().getResources().getDisplayMetrics());
+        return px;
+    }
 
 
     @ProtoMethod(description = "Convert given pixels to mm", example = "")
-    @ProtoMethodParam(params = { "" })
-	public float pixelsToMm(int px) {
-		float onepx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_MM, 1, getContext().getResources()
-				.getDisplayMetrics());
+    @ProtoMethodParam(params = {""})
+    public float pixelsToMm(int px) {
+        float onepx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_MM, 1, getContext().getResources()
+                .getDisplayMetrics());
 
-		return px * onepx;
-	}
+        return px * onepx;
+    }
 
     public interface AnimCB {
         void event(float data);
@@ -178,7 +176,7 @@ public class PUtil extends PInterface {
 
 
     @ProtoMethod(description = "Animate a variable from min to max in a specified time using 'bounce', 'linear', 'decelerate', 'anticipate', 'aovershoot', 'accelerate' type  ", example = "")
-    @ProtoMethodParam(params = { "type", "min", "max", "time", "function(val)" })
+    @ProtoMethodParam(params = {"type", "min", "max", "time", "function(val)"})
     public ValueAnimator anim(String type, float min, float max, int time, final AnimCB callback) {
         TimeInterpolator interpolator = null;
         if (type.equals("bounce")) {
@@ -212,21 +210,21 @@ public class PUtil extends PInterface {
 
 
     @ProtoMethod(description = "Parse a color and return and int representing it", example = "")
-    @ProtoMethodParam(params = { "colorString" })
+    @ProtoMethodParam(params = {"colorString"})
     public int parseColor(String c) {
         return Color.parseColor(c);
     }
 
 
     @ProtoMethod(description = "Loads a font", example = "")
-    @ProtoMethodParam(params = { "fontFile" })
+    @ProtoMethodParam(params = {"fontFile"})
     public Typeface loadFont(String fontName) {
         return Typeface.createFromFile(AppRunnerSettings.get().project.getStoragePath() + File.separator + fontName);
     }
 
 
     @ProtoMethod(description = "Detect faces in a bitmap", example = "")
-    @ProtoMethodParam(params = { "Bitmap", "numFaces" })
+    @ProtoMethodParam(params = {"Bitmap", "numFaces"})
     public int detectFaces(Bitmap bmp, int num_faces) {
         FaceDetector face_detector = new FaceDetector(bmp.getWidth(), bmp.getHeight(), num_faces);
         FaceDetector.Face[] faces = new FaceDetector.Face[num_faces];
@@ -236,9 +234,8 @@ public class PUtil extends PInterface {
     }
 
 
-
     @ProtoMethod(description = "Converts byte array to bmp", example = "")
-    @ProtoMethodParam(params = { "encodedImage" })
+    @ProtoMethodParam(params = {"encodedImage"})
     public Bitmap decodeBase64ToBitmap(String encodedImage) {
         byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
 

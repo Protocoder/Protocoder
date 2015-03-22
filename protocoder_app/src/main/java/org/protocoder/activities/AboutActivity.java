@@ -30,61 +30,55 @@
 package org.protocoder.activities;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
-import android.view.View;
 
-import org.protocoder.MainActivity;
 import org.protocoder.R;
-import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.utils.MLog;
 
 @SuppressLint("NewApi")
 public class AboutActivity extends AppBaseActivity {
 
-	private static final String TAG = "AboutHolder";
+    private static final String TAG = "AboutHolder";
 
-	/** Called when the activity is first created. */
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    /**
+     * Called when the activity is first created.
+     */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_about);
+        setContentView(R.layout.activity_about);
         setToolbar();
         setToolbarBack();
 
-		//mToolbar.setDisplayHomeAsUpEnabled(true);
-	}
+        //mToolbar.setDisplayHomeAsUpEnabled(true);
+    }
 
-	/**
-	 * onResume
-	 */
-	@Override
-	protected void onResume() {
-		super.onResume();
-		MLog.d(TAG, "onResume");
-	}
+    /**
+     * onResume
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MLog.d(TAG, "onResume");
+    }
 
-	/**
-	 * onPause
-	 */
-	@Override
-	protected void onPause() {
-		super.onPause();
-		//overridePendingTransition(R.anim.splash_slide_in_anim_reverse_set, R.anim.splash_slide_out_anim_reverse_set);
-	}
+    /**
+     * onPause
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //overridePendingTransition(R.anim.splash_slide_in_anim_reverse_set, R.anim.splash_slide_out_anim_reverse_set);
+    }
 
-	/**
-	 * onDestroy
-	 */
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-	}
+    /**
+     * onDestroy
+     */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 
 //	@Override
 //	public boolean onOptionsItemSelected(MenuItem item) {

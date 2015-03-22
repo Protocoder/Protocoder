@@ -48,6 +48,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just mContext string in this case
         public TextView mTextView;
+
         public ViewHolder(View v) {
             super(v);
             mTextView = (TextView) v.findViewById(R.id.customViewText);
@@ -63,7 +64,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     // Create new views (invoked by the layout manager)
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                   int viewType) {
+                                         int viewType) {
 
         MLog.d(TAG, "view created");
         // create mContext new view

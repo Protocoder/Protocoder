@@ -91,7 +91,7 @@ public class ProtoScripts {
         //init views
         mProjectPagerAdapter = new ProjectsPagerAdapter(mProtocoder.mActivityContext, mProtocoder.mActivityContext.getSupportFragmentManager());
 
-       // final ProjectSelectorStrip strip = (ProjectSelectorStrip) mProtocoder.mActivityContext.findViewById(R.id.pager_title_strip);
+        // final ProjectSelectorStrip strip = (ProjectSelectorStrip) mProtocoder.mActivityContext.findViewById(R.id.pager_title_strip);
 
         mViewPager = (ViewPager) mProtocoder.mActivityContext.findViewById(R.id.pager);
 
@@ -123,8 +123,8 @@ public class ProtoScripts {
 
         //TODO remove at some point
         //colors
-       //final int c0 = mProtocoder.mActivityContext.getResources().getColor(R.color.project_user_color);
-       // final int c1 = mProtocoder.mActivityContext.getResources().getColor(R.color.project_example_color);
+        //final int c0 = mProtocoder.mActivityContext.getResources().getColor(R.color.project_user_color);
+        // final int c1 = mProtocoder.mActivityContext.getResources().getColor(R.color.project_example_color);
 
 
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -143,8 +143,8 @@ public class ProtoScripts {
 
             @Override
             public void onPageScrolled(int arg0, float arg1, int arg2) {
-            //   int c = AndroidUtils.calculateColor(arg0 + arg1, c0, c1);
-            //   groupedToolbar.setBackgroundColor(c);
+                //   int c = AndroidUtils.calculateColor(arg0 + arg1, c0, c1);
+                //   groupedToolbar.setBackgroundColor(c);
             }
 
             @Override
@@ -212,7 +212,6 @@ public class ProtoScripts {
     public void goPrevious() {
         mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
     }
-
 
 
     public void addScriptList(int icon, String name, int color, boolean orderByName) {
@@ -293,9 +292,11 @@ public class ProtoScripts {
     public void createFileName(String folder, String appName, String fileName) {
 
     }
+
     public void deleteFileName(String folder, String appName, String fileName) {
 
     }
+
     public String exportProto(String folder, String fileName) {
         Project p = ProjectManager.getInstance().get(folder, fileName);
         String zipFilePath = ProjectManager.getInstance().createBackup(p);
@@ -394,8 +395,7 @@ public class ProtoScripts {
     }
 
 
-
-    private Fragment getFragment(int position){
+    private Fragment getFragment(int position) {
         return mProtocoder.mActivityContext.getSupportFragmentManager().findFragmentByTag(getFragmentTag(position));
     }
 
@@ -404,8 +404,8 @@ public class ProtoScripts {
     }
 
     // public void reinitScriptList() {
-      //  ProjectListFragment f0 = (ProjectListFragment) mProjectPagerAdapter.getItem(0);
-      //  mProjectPagerAdapter.addFragment("", );
+    //  ProjectListFragment f0 = (ProjectListFragment) mProjectPagerAdapter.getItem(0);
+    //  mProjectPagerAdapter.addFragment("", );
 
-   // }
+    // }
 }

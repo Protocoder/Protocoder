@@ -40,7 +40,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.protocoder.R;
-import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.MLog;
 
@@ -118,7 +117,6 @@ public class ProtoAppInstallerActivity extends AppBaseActivity {
         });
 
 
-
         //check if is autoinstall and proceed
         // Read in the script given in the intent.
         Intent intent = getIntent();
@@ -137,7 +135,7 @@ public class ProtoAppInstallerActivity extends AppBaseActivity {
     private void install(String folder) {
         progress.setVisibility(View.VISIBLE);
 
-        if(urlData != null) {
+        if (urlData != null) {
             //check if project already exist
 
             // install project
@@ -151,14 +149,14 @@ public class ProtoAppInstallerActivity extends AppBaseActivity {
         }
     }
 
-	@Override
-	protected void onPause() {
-		super.onPause();
-	}
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-	}
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 
 }

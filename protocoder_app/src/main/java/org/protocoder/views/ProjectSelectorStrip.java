@@ -23,41 +23,41 @@ import android.view.MotionEvent;
 import android.view.View;
 
 public class ProjectSelectorStrip extends PagerTitleStrip {
-	private static final String TAG = "PagerTabStrip";
-	private boolean mIgnoreTap;
-	private float mInitialMotionY;
-	private float mInitialMotionX;
-	private float mTouchSlop;
-	private View mCurrText;
+    private static final String TAG = "PagerTabStrip";
+    private boolean mIgnoreTap;
+    private float mInitialMotionY;
+    private float mInitialMotionX;
+    private float mTouchSlop;
+    private View mCurrText;
 
-	public ProjectSelectorStrip(Context context) {
-		this(context, null);
-	}
+    public ProjectSelectorStrip(Context context) {
+        this(context, null);
+    }
 
-	public ProjectSelectorStrip(Context context, AttributeSet attrs) {
-		super(context, attrs);
-	}
+    public ProjectSelectorStrip(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
 
-	@Override
-	public boolean onTouchEvent(MotionEvent ev) {
-		final int action = ev.getAction();
+    @Override
+    public boolean onTouchEvent(MotionEvent ev) {
+        final int action = ev.getAction();
 
-		// Any tap within touch slop to either side of the current item
-		// will scroll to prev/next.
-		final float x = ev.getX();
-		final float y = ev.getY();
+        // Any tap within touch slop to either side of the current item
+        // will scroll to prev/next.
+        final float x = ev.getX();
+        final float y = ev.getY();
 
-		switch (action) {
+        switch (action) {
 
-		case MotionEvent.ACTION_MOVE:
-			if (Math.abs(x - mInitialMotionX) > mTouchSlop || Math.abs(y - mInitialMotionY) > mTouchSlop) {
-				mIgnoreTap = true;
-			}
-			break;
+            case MotionEvent.ACTION_MOVE:
+                if (Math.abs(x - mInitialMotionX) > mTouchSlop || Math.abs(y - mInitialMotionY) > mTouchSlop) {
+                    mIgnoreTap = true;
+                }
+                break;
 
-		}
+        }
 
-		return true;
-	}
+        return true;
+    }
 
 }

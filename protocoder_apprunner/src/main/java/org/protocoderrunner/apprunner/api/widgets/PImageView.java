@@ -43,28 +43,27 @@ import java.io.File;
 
 public class PImageView extends ImageView implements PViewInterface {
 
-	public PImageView(Context context) {
-		super(context);
-	}
-
+    public PImageView(Context context) {
+        super(context);
+    }
 
 
     @ProtoMethod(description = "Sets an image", example = "")
-    @ProtoMethodParam(params = { "imageName" })
-	public PImageView setImage(String imagePath) {
+    @ProtoMethodParam(params = {"imageName"})
+    public PImageView setImage(String imagePath) {
 
-		if (imagePath.startsWith("http")) {
-			// Add image asynchronously
-			new PUIGeneric.DownloadImageTask(this, false).execute(imagePath);
-		} else {
-			// Add the image from file
-			new PUIGeneric.SetImageTask(this, false).execute(AppRunnerSettings.get().project.getStoragePath() + File.separator
-					+ imagePath);
+        if (imagePath.startsWith("http")) {
+            // Add image asynchronously
+            new PUIGeneric.DownloadImageTask(this, false).execute(imagePath);
+        } else {
+            // Add the image from file
+            new PUIGeneric.SetImageTask(this, false).execute(AppRunnerSettings.get().project.getStoragePath() + File.separator
+                    + imagePath);
 
-		}
+        }
 
         return this;
-	}
+    }
 
     public void setImage(Bitmap bmp) {
         this.setImageBitmap(bmp);
@@ -72,28 +71,28 @@ public class PImageView extends ImageView implements PViewInterface {
 
 
     @ProtoMethod(description = "Sets a tiled image", example = "")
-    @ProtoMethodParam(params = { "imageName" })
-	public PImageView setTiledImage(String imagePath) {
+    @ProtoMethodParam(params = {"imageName"})
+    public PImageView setTiledImage(String imagePath) {
 
-		if (imagePath.startsWith("http")) {
-			// Add image asynchronously
-			new PUIGeneric.DownloadImageTask(this, true).execute(imagePath);
-		} else {
-			// Add the image from file
-			new PUIGeneric.SetImageTask(this, true).execute(AppRunnerSettings.get().project.getStoragePath() + File.separator
-					+ imagePath);
+        if (imagePath.startsWith("http")) {
+            // Add image asynchronously
+            new PUIGeneric.DownloadImageTask(this, true).execute(imagePath);
+        } else {
+            // Add the image from file
+            new PUIGeneric.SetImageTask(this, true).execute(AppRunnerSettings.get().project.getStoragePath() + File.separator
+                    + imagePath);
 
-		}
+        }
 
         return this;
-	}
+    }
 
     public PImageView setRepeat() {
 
         BitmapDrawable bitmapDrawable = ((BitmapDrawable) this.getDrawable());
-       // Bitmap bmp = bitmapDrawable .getBitmap();
+        // Bitmap bmp = bitmapDrawable .getBitmap();
 
-       // BitmapDrawable bd = new BitmapDrawable(bmp);
+        // BitmapDrawable bd = new BitmapDrawable(bmp);
         Shader.TileMode mode = Shader.TileMode.REPEAT;
         bitmapDrawable.setTileModeXY(mode, mode);
 

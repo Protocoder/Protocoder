@@ -43,18 +43,18 @@ import java.net.UnknownHostException;
 
 public class PDashboardPlot extends PInterface {
 
-	private static final String TAG = "PDashboardPlot";
-	String id;
+    private static final String TAG = "PDashboardPlot";
+    String id;
 
-	public PDashboardPlot(Context a) {
-		super(a);
-	}
+    public PDashboardPlot(Context a) {
+        super(a);
+    }
 
-	public void add(String name, int x, int y, int w, int h, float minLimit, float maxLimit)
-			throws UnknownHostException, JSONException {
-		this.id = StrUtils.generateRandomString();
+    public void add(String name, int x, int y, int w, int h, float minLimit, float maxLimit)
+            throws UnknownHostException, JSONException {
+        this.id = StrUtils.generateRandomString();
 
-		JSONObject values = new JSONObject()
+        JSONObject values = new JSONObject()
                 .put("id", id)
                 .put("name", name)
                 .put("type", "plot")
@@ -70,15 +70,15 @@ public class PDashboardPlot extends PInterface {
                 .put("action", "add")
                 .put("values", values);
 
-		CustomWebsocketServer.getInstance(getContext()).send(msg);
-	}
+        CustomWebsocketServer.getInstance(getContext()).send(msg);
+    }
 
 
-	@ProtoMethod(description = "update the plot with a given value", example = "")
-    @ProtoMethodParam(params = { "value" })
+    @ProtoMethod(description = "update the plot with a given value", example = "")
+    @ProtoMethodParam(params = {"value"})
     public void update(float val) throws UnknownHostException, JSONException {
 
-		JSONObject values = new JSONObject()
+        JSONObject values = new JSONObject()
                 .put("id", id)
                 .put("type", "plot")
                 .put("val", val);
@@ -88,6 +88,6 @@ public class PDashboardPlot extends PInterface {
                 .put("action", "update")
                 .put("values", values);
 
-		CustomWebsocketServer.getInstance(getContext()).send(msg);
-	}
+        CustomWebsocketServer.getInstance(getContext()).send(msg);
+    }
 }

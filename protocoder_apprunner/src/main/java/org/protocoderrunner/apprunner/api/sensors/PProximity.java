@@ -39,30 +39,26 @@ import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunningInterface;
 
-import java.util.Vector;
-
 public class PProximity extends CustomSensorManager implements WhatIsRunningInterface {
 
 
     public interface ProximityListener {
-		public void event(float distance);
-	}
+        public void event(float distance);
+    }
 
-	private final static String TAG = "Proximity";
+    private final static String TAG = "Proximity";
     private ProximityListener mCallbackProximityChange;
 
 
-
-	public PProximity(Context c) {
+    public PProximity(Context c) {
         super(c);
 
         type = Sensor.TYPE_PROXIMITY;
     }
 
 
-
     @ProtoMethod(description = "Start the proximity sensor. Returns a proximty value. It might differ per device", example = "")
-    @ProtoMethodParam(params = { "function(proximity)" })
+    @ProtoMethodParam(params = {"function(proximity)"})
     public void start() {
         if (running) {
             return;
@@ -97,7 +93,7 @@ public class PProximity extends CustomSensorManager implements WhatIsRunningInte
 
 
     @ProtoMethod(description = "Start the accelerometer. Returns x, y, z", example = "")
-    @ProtoMethodParam(params = { "function(x, y, z)" })
+    @ProtoMethodParam(params = {"function(x, y, z)"})
     public void onChange(final ProximityListener callbackfn) {
         mCallbackProximityChange = callbackfn;
 

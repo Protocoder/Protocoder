@@ -42,36 +42,35 @@ import org.protocoderrunner.utils.MLog;
 
 public class PBoards extends PInterface {
 
-	private final String TAG = "PBoards";
+    private final String TAG = "PBoards";
 
-	public PBoards(Context a) {
-		super(a);
-	}
-
-
-	@ProtoMethod(description = "initializes the ioio board", example = "")
-	@ProtoMethodParam(params = { "function()" })
-	public PIOIO startIOIO(PIOIO.startCB callbackfn) {
-		PIOIO ioio = new PIOIO(getContext());
-		ioio.start(callbackfn);
-
-		return ioio;
-	}
+    public PBoards(Context a) {
+        super(a);
+    }
 
 
-	@ProtoMethod(description = "initializes serial communication", example = "")
-	@ProtoMethodParam(params = { "bauds", "function()" })
-	public PSerial connectSerial(int baud, PSerial.OnStartCallback callbackfn) {
-		PSerial serial = new PSerial(getContext());
-		serial.start(baud, callbackfn);
+    @ProtoMethod(description = "initializes the ioio board", example = "")
+    @ProtoMethodParam(params = {"function()"})
+    public PIOIO startIOIO(PIOIO.startCB callbackfn) {
+        PIOIO ioio = new PIOIO(getContext());
+        ioio.start(callbackfn);
 
-		return serial;
-	}
+        return ioio;
+    }
 
+
+    @ProtoMethod(description = "initializes serial communication", example = "")
+    @ProtoMethodParam(params = {"bauds", "function()"})
+    public PSerial connectSerial(int baud, PSerial.OnStartCallback callbackfn) {
+        PSerial serial = new PSerial(getContext());
+        serial.start(baud, callbackfn);
+
+        return serial;
+    }
 
 
     @ProtoMethod(description = "initializes arduino board without callback", example = "")
-    @ProtoMethodParam(params = { "" })
+    @ProtoMethodParam(params = {""})
     public PArduino connectArduino() {
         PArduino arduino = new PArduino(getContext());
         arduino.start();
@@ -81,7 +80,7 @@ public class PBoards extends PInterface {
 
 
     @ProtoMethod(description = "initializes arduino board with callback", example = "")
-    @ProtoMethodParam(params = { "bauds", "function()" })
+    @ProtoMethodParam(params = {"bauds", "function()"})
     public PArduino connectArduino(int bauds, String endline, PArduino.onReadCB callbackfn) {
         PArduino arduino = new PArduino(getContext());
         arduino.start(bauds, endline, callbackfn);
@@ -91,7 +90,7 @@ public class PBoards extends PInterface {
 
 
     @ProtoMethod(description = "initializes adk boards with callback", example = "")
-    @ProtoMethodParam(params = { "bauds", "function()" })
+    @ProtoMethodParam(params = {"bauds", "function()"})
     public AdkPort startADK(PArduino.onReadCB callbackfn) {
         final AdkPort adk = new AdkPort(getContext());
 
@@ -101,13 +100,12 @@ public class PBoards extends PInterface {
 
         String[] list = adk.getList(getContext());
         for (int i = 0; i < list.length; i++) {
-           // writeToConsole(list[i] + "\n\r");
+            // writeToConsole(list[i] + "\n\r");
         }
 
-        adk.attachOnNew(new AdkPort.MessageNotifier(){
+        adk.attachOnNew(new AdkPort.MessageNotifier() {
             @Override
-            public void onNew()
-            {
+            public void onNew() {
                 int av = adk.available();
                 byte[] buf = adk.readB();
 

@@ -58,10 +58,7 @@ import org.protocoder.R;
 import org.protocoder.appApi.Protocoder;
 import org.protocoderrunner.events.Events;
 import org.protocoderrunner.project.Project;
-import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.MLog;
-
-import java.lang.ref.WeakReference;
 
 import de.greenrobot.event.EventBus;
 
@@ -71,9 +68,9 @@ public class ProjectItem extends LinearLayout {
     private final Drawable bg;
     private final ProjectListFragment mPlf;
     private View mItemView;
-	// private Context c;
-	private final Context c;
-	private String t;
+    // private Context c;
+    private final Context c;
+    private String t;
     private boolean highlighted = false;
     private Project mProject;
     private TextView textViewName;
@@ -81,16 +78,16 @@ public class ProjectItem extends LinearLayout {
     private ImageView mMenuButton;
 
     public ProjectItem(Context context, ProjectListFragment plf, boolean listMode) {
-		super(context);
-		this.c = context;
+        super(context);
+        this.c = context;
         this.mPlf = plf;
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		if (listMode) {
-			this.mItemView = inflater.inflate(R.layout.view_project_item_list, this, true);
-		} else {
-			this.mItemView = inflater.inflate(R.layout.view_project_item, this, true);
-		}
+        if (listMode) {
+            this.mItemView = inflater.inflate(R.layout.view_project_item_list, this, true);
+        } else {
+            this.mItemView = inflater.inflate(R.layout.view_project_item, this, true);
+        }
 
         FrameLayout fl = (FrameLayout) findViewById(R.id.viewProjectItemBackground);
         bg = fl.getBackground();
@@ -100,7 +97,7 @@ public class ProjectItem extends LinearLayout {
         this.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-               // MLog.d(TAG, " " + position + " " + getPosition());
+                // MLog.d(TAG, " " + position + " " + getPosition());
 
 
                 AnimatorSet animSpin;
@@ -136,7 +133,7 @@ public class ProjectItem extends LinearLayout {
 
                         Events.ProjectEvent evt = new Events.ProjectEvent(mProject, "run");
                         EventBus.getDefault().post(evt);
-                       // getActivity().overridePendingTransition(R.anim.splash_slide_in_anim_set,
+                        // getActivity().overridePendingTransition(R.anim.splash_slide_in_anim_set,
                         //        R.anim.splash_slide_out_anim_set);
                     }
                 };
@@ -149,56 +146,56 @@ public class ProjectItem extends LinearLayout {
 
     }
 
-	public void setImage(int resId) {
-		ImageView imageView = (ImageView) mItemView.findViewById(R.id.customViewImage);
-		imageView.setImageResource(resId);
+    public void setImage(int resId) {
+        ImageView imageView = (ImageView) mItemView.findViewById(R.id.customViewImage);
+        imageView.setImageResource(resId);
 
-		// drawText(imageView, t);
-	}
+        // drawText(imageView, t);
+    }
 
-	public void setText(String text) {
-		this.t = text;
+    public void setText(String text) {
+        this.t = text;
 
-		// TextUtils.changeFont(c.get(), textView, Fonts.MENU_TITLE);
-		textViewName.setText(text);
+        // TextUtils.changeFont(c.get(), textView, Fonts.MENU_TITLE);
+        textViewName.setText(text);
         textViewIcon.setText(text.substring(0, 1).toUpperCase()); //"< " + text.substring(0, 1).toUpperCase() + " >");
-	}
+    }
 
     public void reInit(String text, boolean selected) {
         setText(text);
         setHighlighted(selected);
     }
 
-	public void drawText(ImageView imageView, String t2) {
+    public void drawText(ImageView imageView, String t2) {
 
-		// ImageView myImageView =
-		Bitmap myBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Config.RGB_565);
-		Paint myPaint = new Paint();
-		myPaint.setColor(Color.BLUE);
-		myPaint.setAntiAlias(true);
-		myPaint.setTextSize(80);
+        // ImageView myImageView =
+        Bitmap myBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Config.RGB_565);
+        Paint myPaint = new Paint();
+        myPaint.setColor(Color.BLUE);
+        myPaint.setAntiAlias(true);
+        myPaint.setTextSize(80);
 
-		int x1 = 10;
-		int y1 = 80;
-		int x2 = 20;
-		int y2 = 20;
+        int x1 = 10;
+        int y1 = 80;
+        int x2 = 20;
+        int y2 = 20;
 
-		// Create mContext new image bitmap and attach mContext brand new canvas to it
-		Bitmap tempBitmap = Bitmap.createBitmap(myBitmap.getWidth(), myBitmap.getHeight(), Bitmap.Config.RGB_565);
-		Canvas tempCanvas = new Canvas(tempBitmap);
+        // Create mContext new image bitmap and attach mContext brand new canvas to it
+        Bitmap tempBitmap = Bitmap.createBitmap(myBitmap.getWidth(), myBitmap.getHeight(), Bitmap.Config.RGB_565);
+        Canvas tempCanvas = new Canvas(tempBitmap);
 
-		// Draw the image bitmap into the cavas
-		tempCanvas.drawBitmap(myBitmap, 0, 0, null);
+        // Draw the image bitmap into the cavas
+        tempCanvas.drawBitmap(myBitmap, 0, 0, null);
 
-		// Draw everything else you want into the canvas, in this example mContext
-		// rectangle with rounded edges
-		tempCanvas.drawRoundRect(new RectF(x1, y1, x2, y2), 2, 2, myPaint);
-		tempCanvas.drawText(t2.substring(0, 1).toUpperCase(), x1, y1, myPaint);
+        // Draw everything else you want into the canvas, in this example mContext
+        // rectangle with rounded edges
+        tempCanvas.drawRoundRect(new RectF(x1, y1, x2, y2), 2, 2, myPaint);
+        tempCanvas.drawText(t2.substring(0, 1).toUpperCase(), x1, y1, myPaint);
 
-		// Attach the canvas to the ImageView
-		imageView.setImageDrawable(new BitmapDrawable(getResources(), tempBitmap));
+        // Attach the canvas to the ImageView
+        imageView.setImageDrawable(new BitmapDrawable(getResources(), tempBitmap));
 
-	}
+    }
 
 
     public void setMenu() {
@@ -219,7 +216,7 @@ public class ProjectItem extends LinearLayout {
         mMenuButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-               showMenu(mMenuButton);
+                showMenu(mMenuButton);
             }
         });
 //        this.setOnLongClickListener(new OnLongClickListener() {

@@ -46,60 +46,60 @@ import org.protocoder.R;
 
 public class NewTaskSchedulerFragment extends DialogFragment implements OnEditorActionListener {
 
-	public interface NewProjectDialogListener {
-		void onFinishEditDialog(String inputText);
-	}
+    public interface NewProjectDialogListener {
+        void onFinishEditDialog(String inputText);
+    }
 
-	private EditText mEditText;
+    private EditText mEditText;
 
-	public NewTaskSchedulerFragment() {
+    public NewTaskSchedulerFragment() {
 
-	}
+    }
 
-	@Override
-	public Dialog onCreateDialog(Bundle savedInstanceState) {
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setTitle("title")
-				.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int whichButton) {
-						doOK();
-					}
-				}).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int whichButton) {
-						dialog.dismiss();
-					}
-				});
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setTitle("title")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        doOK();
+                    }
+                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.dismiss();
+                    }
+                });
 
-		View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_dialog_new_task_scheduler, null);
-		mEditText = (EditText) view.findViewById(R.id.dialog_new_project_name_input);
+        View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_dialog_new_task_scheduler, null);
+        mEditText = (EditText) view.findViewById(R.id.dialog_new_project_name_input);
 
-		// Show soft keyboard automatically
-		mEditText.requestFocus();
-		mEditText.setOnEditorActionListener(this);
+        // Show soft keyboard automatically
+        mEditText.requestFocus();
+        mEditText.setOnEditorActionListener(this);
 
-		AlertDialog dialog = builder.create();
-		dialog.setView(view);
-		dialog.setTitle("New project");
-		dialog.getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        AlertDialog dialog = builder.create();
+        dialog.setView(view);
+        dialog.setTitle("New project");
+        dialog.getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
-		return dialog;
-	}
+        return dialog;
+    }
 
-	@Override
-	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-		if (EditorInfo.IME_ACTION_DONE == actionId) {
-			// Return input text to activity
-			doOK();
-			this.dismiss();
-			return true;
-		}
-		return false;
-	}
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        if (EditorInfo.IME_ACTION_DONE == actionId) {
+            // Return input text to activity
+            doOK();
+            this.dismiss();
+            return true;
+        }
+        return false;
+    }
 
-	public void doOK() {
-		NewProjectDialogListener activity = (NewProjectDialogListener) getActivity();
-		activity.onFinishEditDialog(mEditText.getText().toString());
-	}
+    public void doOK() {
+        NewProjectDialogListener activity = (NewProjectDialogListener) getActivity();
+        activity.onFinishEditDialog(mEditText.getText().toString());
+    }
 }

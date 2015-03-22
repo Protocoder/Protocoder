@@ -33,62 +33,67 @@ import org.protocoderrunner.project.Project;
 import org.protocoderrunner.project.ProjectManager;
 
 public class Events {
-	public static class ProjectEvent {
-		private Project project;
-		private String name;
-		private String action;
+    public static class ProjectEvent {
+        private Project project;
+        private String name;
+        private String action;
 
-		public ProjectEvent(Project aProject, String anAction) {
-			project = aProject;
-			action = anAction;
-		}
+        public ProjectEvent(Project aProject, String anAction) {
+            project = aProject;
+            action = anAction;
+        }
 
-		public ProjectEvent(Project aProject, String aName, String anAction) {
-			project = aProject;
-			action = anAction;
-			name = aName;
-		}
+        public ProjectEvent(Project aProject, String aName, String anAction) {
+            project = aProject;
+            action = anAction;
+            name = aName;
+        }
 
-		public String getAction() {
-			return action;
-		}
-		public void setAction(String newAction) {
-			action = newAction;
-		}
-		public Project getProject() {
-			if (project == null) {
-				project = ProjectManager.getInstance().get(project.getFolder(), project.getName());
-			}
-			return project;
-		}
-	}
+        public String getAction() {
+            return action;
+        }
 
-	public static class ExecuteCodeEvent {
-		private String code;
+        public void setAction(String newAction) {
+            action = newAction;
+        }
 
-		public ExecuteCodeEvent(String code) {
-			this.code = code;
-		}
-		public String getCode() {
-			return code;
-		}
-	}
+        public Project getProject() {
+            if (project == null) {
+                project = ProjectManager.getInstance().get(project.getFolder(), project.getName());
+            }
+            return project;
+        }
+    }
 
-	public static class LogEvent {
-		private String msg;
-		private String tag;
+    public static class ExecuteCodeEvent {
+        private String code;
 
-		public LogEvent(final String aTag, final String aMsg) {
-			msg = aMsg;
-			tag = aTag;
-		}
-		public String getMessage() {
-			return msg;
-		}
-		public String getTag() {
-			return tag;
-		}
-	}
+        public ExecuteCodeEvent(String code) {
+            this.code = code;
+        }
+
+        public String getCode() {
+            return code;
+        }
+    }
+
+    public static class LogEvent {
+        private String msg;
+        private String tag;
+
+        public LogEvent(final String aTag, final String aMsg) {
+            msg = aMsg;
+            tag = aTag;
+        }
+
+        public String getMessage() {
+            return msg;
+        }
+
+        public String getTag() {
+            return tag;
+        }
+    }
 
     public static class SelectedProjectEvent {
         private String folder;
@@ -98,9 +103,11 @@ public class Events {
             this.folder = folder;
             this.name = name;
         }
+
         public String getFolder() {
             return this.folder;
         }
+
         public String getName() {
             return this.name;
         }

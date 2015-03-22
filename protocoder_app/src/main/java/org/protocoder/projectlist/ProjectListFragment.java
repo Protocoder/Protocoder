@@ -42,7 +42,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.CycleInterpolator;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import org.protocoder.MainActivity;
 import org.protocoder.R;
@@ -62,10 +61,10 @@ public class ProjectListFragment extends BaseFragment {
     private String TAG = "ProjectListFragment";
 
     public ArrayList<Project> mProjects;
-	public ProjectItemAdapter mProjectAdapter;
-	protected FitRecyclerView mGrid;
-	public String mProjectFolder;
-	boolean mListMode;
+    public ProjectItemAdapter mProjectAdapter;
+    protected FitRecyclerView mGrid;
+    public String mProjectFolder;
+    boolean mListMode;
     public int color;
     public int icon;
     public boolean orderByName;
@@ -78,11 +77,11 @@ public class ProjectListFragment extends BaseFragment {
 
     public ProjectListFragment() {
         num = totalNum++;
-	}
+    }
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         this.mProjectFolder = getArguments().getString("folderName");
         this.color = getArguments().getInt("color");
@@ -92,8 +91,8 @@ public class ProjectListFragment extends BaseFragment {
         mProjects = ProjectManager.getInstance().list(this.mProjectFolder, this.orderByName);
     }
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //this.icon = getArguments().getString("icon");
 
         mContext = (Context) getActivity();
@@ -106,7 +105,7 @@ public class ProjectListFragment extends BaseFragment {
             v = inflater.inflate(R.layout.fragment_project, container, false);
         }
         // Get GridView and set adapter
-		mGrid = (FitRecyclerView) v.findViewById(R.id.gridprojects);
+        mGrid = (FitRecyclerView) v.findViewById(R.id.gridprojects);
         // mGrid.setHasFixedSize(true);
 
         mGrid.setItemAnimator(new DefaultItemAnimator());
@@ -115,14 +114,14 @@ public class ProjectListFragment extends BaseFragment {
         //mGrid.setLayoutManager(mLayoutManager);
 
         // set the empty state
-		mEmptyGrid = (LinearLayout) v.findViewById(R.id.empty_grid_view);
+        mEmptyGrid = (LinearLayout) v.findViewById(R.id.empty_grid_view);
         checkEmptyState();
 
-		registerForContextMenu(mGrid);
+        registerForContextMenu(mGrid);
 
 
         return v;
-	}
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -155,9 +154,9 @@ public class ProjectListFragment extends BaseFragment {
         return myFragment;
     }
 
-	public void refreshProjects() {
+    public void refreshProjects() {
         mProjects = ProjectManager.getInstance().list(this.mProjectFolder, this.orderByName);
-    	notifyAddedProject();
+        notifyAddedProject();
     }
 
     public int findAppIdByName(String appName) {
@@ -173,13 +172,14 @@ public class ProjectListFragment extends BaseFragment {
 
         return id;
     }
+
     public int findAppPosByName(String appName) {
         int pos = -1;
 
-       // MLog.d(TAG, "size " + mProjects.size());
+        // MLog.d(TAG, "size " + mProjects.size());
         for (int i = 0; i < mProjects.size(); i++) {
             String name = mProjects.get(i).getName();
-           // MLog.d(TAG, "name " + name);
+            // MLog.d(TAG, "name " + name);
 
             if (name.equals(appName)) {
                 pos = i; //(int) mProjectAdapter.getItemId(i);
@@ -210,11 +210,11 @@ public class ProjectListFragment extends BaseFragment {
         }
     }
 
-   // public View getViewByName(String appName) {
-     //   int pos = findAppPosByName(appName);
-        //View view = projectAdapter.getView(pos, null, null);
+    // public View getViewByName(String appName) {
+    //   int pos = findAppPosByName(appName);
+    //View view = projectAdapter.getView(pos, null, null);
 
-       // return null;
+    // return null;
     //}
 
     public void goTo(int pos) {
@@ -231,38 +231,38 @@ public class ProjectListFragment extends BaseFragment {
         return v;
     }
 
-	public void clear() {
-		mGrid.removeAllViews();
-		mProjectAdapter.notifyDataSetChanged();
-	}
-
-	public void notifyAddedProject() {
-		mProjectAdapter.notifyDataSetChanged();
-		//mGrid.invalidateViews();
-	}
-
-	@Override
-	public View getView() {
-		return super.getView();
-	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
+    public void clear() {
+        mGrid.removeAllViews();
+        mProjectAdapter.notifyDataSetChanged();
     }
 
-	@Override
-	public void onResume() {
-		super.onResume();
+    public void notifyAddedProject() {
+        mProjectAdapter.notifyDataSetChanged();
+        //mGrid.invalidateViews();
+    }
 
-        if(!AndroidUtils.isWear(getActivity())) {
+    @Override
+    public View getView() {
+        return super.getView();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (!AndroidUtils.isWear(getActivity())) {
             ((MainActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         }
-	}
+    }
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 
     @Override
@@ -272,7 +272,7 @@ public class ProjectListFragment extends BaseFragment {
 
     public void projectRefresh(String projectName) {
         getView(projectName).animate().alpha(0).setDuration(500).setInterpolator(new CycleInterpolator(1));
-	}
+    }
 
     public View getView(String projectName) {
         return mGrid.findViewWithTag(projectName);
@@ -292,10 +292,10 @@ public class ProjectListFragment extends BaseFragment {
         }
     }
 
-	public void onEventMainThread(ProjectEvent evt) {
-		if (evt.getAction() == "run") {
-			projectRefresh(evt.getProject().getName());
-		}
-	}
+    public void onEventMainThread(ProjectEvent evt) {
+        if (evt.getAction() == "run") {
+            projectRefresh(evt.getProject().getName());
+        }
+    }
 
 }

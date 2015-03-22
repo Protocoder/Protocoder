@@ -33,12 +33,7 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
-import org.protocoder.R;
 
 import java.util.Vector;
 
@@ -51,7 +46,7 @@ public class ProjectsPagerAdapter extends FragmentPagerAdapter {
     private String TAG = "ProjectsPagerAdapter";
 
     public ProjectsPagerAdapter(Context c, FragmentManager fm) {
-		super(fm);
+        super(fm);
 
         mContext = c;
 
@@ -60,23 +55,23 @@ public class ProjectsPagerAdapter extends FragmentPagerAdapter {
 
     }
 
-	@Override
-	public Fragment getItem(int i) {
-		ProjectListFragment f = fragments.get(i);
+    @Override
+    public Fragment getItem(int i) {
+        ProjectListFragment f = fragments.get(i);
 
-		return f;
-	}
+        return f;
+    }
 
-	@Override
-	public int getCount() {
-		return fragments.size();
-	}
+    @Override
+    public int getCount() {
+        return fragments.size();
+    }
 
-	@Override
-	public CharSequence getPageTitle(int position) {
+    @Override
+    public CharSequence getPageTitle(int position) {
         String name = fragments.get(position).mProjectFolder;
-		return name;
-	}
+        return name;
+    }
 
     public void addFragment(String name, ProjectListFragment f) {
         fragments.add(f);

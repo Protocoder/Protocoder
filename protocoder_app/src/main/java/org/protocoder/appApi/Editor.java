@@ -67,9 +67,11 @@ public class Editor {
     public void openTab(String fileName) {
 
     }
+
     public void closeTab(String fileName) {
 
     }
+
     public void closeAllTabs() {
 
     }

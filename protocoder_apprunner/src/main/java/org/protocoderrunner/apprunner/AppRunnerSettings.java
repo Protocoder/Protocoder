@@ -29,17 +29,14 @@
 
 package org.protocoderrunner.apprunner;
 
-import android.content.Context;
-
 import org.mozilla.javascript.Scriptable;
-import org.protocoderrunner.apprunner.api.other.ProtocoderNativeArray;
 import org.protocoderrunner.project.Project;
 
 import java.io.File;
 
 public class AppRunnerSettings {
 
-	private static AppRunnerSettings instance;
+    private static AppRunnerSettings instance;
     public AppRunnerInterpreter interp;
     public Project project;
     public boolean hasUi = false;
@@ -47,11 +44,11 @@ public class AppRunnerSettings {
 
 
     public static AppRunnerSettings get() {
-		if (instance == null)
-			instance = new AppRunnerSettings();
+        if (instance == null)
+            instance = new AppRunnerSettings();
 
-		return instance;
-	}
+        return instance;
+    }
 
     public Scriptable newArray() {
         return interp.interpreter.mainScriptContext.newArray(interp.interpreter.scope, 0);

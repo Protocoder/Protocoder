@@ -94,7 +94,7 @@ public class ProjectManager {
         //check if file exists and rename it if so
         File f = new File(givenName + ProjectManager.PROTOCODER_EXTENSION);
         int num = 1;
-        while(f.exists()) {
+        while (f.exists()) {
             f = new File(givenName + "_" + num++ + ProjectManager.PROTOCODER_EXTENSION);
         }
 

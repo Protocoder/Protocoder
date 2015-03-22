@@ -41,50 +41,50 @@ import java.io.File;
 
 public class PVideo extends CustomVideoTextureView implements PViewInterface {
 
-	protected Context c;
+    protected Context c;
 
-	public PVideo(Context c) {
-		super(c);
-		this.c = c;
-	}
+    public PVideo(Context c) {
+        super(c);
+        this.c = c;
+    }
 
-	@Override
+    @Override
 
     @ProtoMethod(description = "Plays a video", example = "")
-    @ProtoMethodParam(params = { "" })
-	public void play() {
-		super.play();
-	}
+    @ProtoMethodParam(params = {""})
+    public void play() {
+        super.play();
+    }
 
-	@Override
+    @Override
 
-	@ProtoMethod(description = "Seeks to a certain position in the video", example = "")
-	@ProtoMethodParam(params = { "milliseconds" })
-	public void seekTo(int ms) {
-		super.seekTo(ms);
-	}
+    @ProtoMethod(description = "Seeks to a certain position in the video", example = "")
+    @ProtoMethodParam(params = {"milliseconds"})
+    public void seekTo(int ms) {
+        super.seekTo(ms);
+    }
 
-	@Override
+    @Override
 
     @ProtoMethod(description = "Pauses the video", example = "")
-    @ProtoMethodParam(params = { "" })
-	public void pause() {
-		super.pause();
-	}
+    @ProtoMethodParam(params = {""})
+    public void pause() {
+        super.pause();
+    }
 
-	@Override
+    @Override
 
-	@ProtoMethod(description = "Stops the video", example = "")
-	public void stop() {
-		super.stop();
-	}
+    @ProtoMethod(description = "Stops the video", example = "")
+    public void stop() {
+        super.stop();
+    }
 
 
-	@ProtoMethod(description = "Loads a videoFile", example = "")
-	@ProtoMethodParam(params = { "fileName" })
-	public void load(String videoFile) {
-		super.loadExternalVideo(AppRunnerSettings.get().project.getStoragePath() + File.separator + videoFile);
-	}
+    @ProtoMethod(description = "Loads a videoFile", example = "")
+    @ProtoMethodParam(params = {"fileName"})
+    public void load(String videoFile) {
+        super.loadExternalVideo(AppRunnerSettings.get().project.getStoragePath() + File.separator + videoFile);
+    }
 
 
     // --------- onUpdate ---------//
@@ -104,7 +104,7 @@ public class PVideo extends CustomVideoTextureView implements PViewInterface {
 
 
     @ProtoMethod(description = "Callback that triggers when the video is loaded", example = "")
-    @ProtoMethodParam(params = { "function()" })
+    @ProtoMethodParam(params = {"function()"})
     public void onLoaded(final OnReadyCB callbackfn) {
         super.addListener(new VideoListener() {
             @Override
@@ -127,7 +127,7 @@ public class PVideo extends CustomVideoTextureView implements PViewInterface {
 
 
     @ProtoMethod(description = "Callback that triggers when the video playing is finished", example = "")
-    @ProtoMethodParam(params = { "function()" })
+    @ProtoMethodParam(params = {"function()"})
     public void onFinish(final OnFinishCB callback) {
         super.addListener(new VideoListener() {
             @Override
@@ -149,88 +149,88 @@ public class PVideo extends CustomVideoTextureView implements PViewInterface {
     }
 
 
-	@ProtoMethod(description = "Callback that gives information of the current video position", example = "")
-	@ProtoMethodParam(params = { "function(milliseconds, totalDuration)" })
-	public void onUpdate(final OnUpdateCB callbackfn) {
+    @ProtoMethod(description = "Callback that gives information of the current video position", example = "")
+    @ProtoMethodParam(params = {"function(milliseconds, totalDuration)"})
+    public void onUpdate(final OnUpdateCB callbackfn) {
 
-		super.addListener(new CustomVideoTextureView.VideoListener() {
-			@Override
-			public void onTimeUpdate(int ms, int totalDuration) {
+        super.addListener(new CustomVideoTextureView.VideoListener() {
+            @Override
+            public void onTimeUpdate(int ms, int totalDuration) {
                 MLog.d(TAG, "onUpdate");
 
                 callbackfn.event(ms, totalDuration);
-			}
+            }
 
-			@Override
-			public void onReady(boolean ready) {
-			}
+            @Override
+            public void onReady(boolean ready) {
+            }
 
-			@Override
-			public void onFinish(boolean finished) {
+            @Override
+            public void onFinish(boolean finished) {
 
-			}
-		});
-	}
-
-
-	@ProtoMethod(description = "Sets the video volume", example = "")
-	@ProtoMethodParam(params = { "volume" })
-	public void setVolume(int vol) {
-		super.setVolume(vol);
-	}
-
-	@Override
-
-	@ProtoMethod(description = "Gets the video width", example = "")
-	@ProtoMethodParam(params = { "" })
-	public void getVideoWidth() {
-		super.getVideoWidth();
-	}
-
-	@Override
-
-	@ProtoMethod(description = "Gets the video height", example = "")
-	@ProtoMethodParam(params = { "" })
-	public void getVideoHeight() {
-		super.getVideoHeight();
-	}
-
-	@Override
-
-	@ProtoMethod(description = "Enables/Disables looping the video", example = "")
-	@ProtoMethodParam(params = { "boolean" })
-	public void setLoop(boolean b) {
-		super.setLoop(b);
-	}
-
-	@Override
-
-	@ProtoMethod(description = "Get the total duration of the video", example = "")
-	@ProtoMethodParam(params = { "" })
-	public int getDuration() {
-		return super.getDuration();
-	}
-
-	@Override
-
-	@ProtoMethod(description = "Gets the current position of the video", example = "")
-	@ProtoMethodParam(params = { "" })
-	public int getCurrentPosition() {
-		return super.getCurrentPosition();
-	}
+            }
+        });
+    }
 
 
-	@ProtoMethod(description = "Fades in the audio in the given milliseconds", example = "")
-	@ProtoMethodParam(params = { "milliseconds" })
-	public void fadeAudioIn(int time) {
-		super.fadeAudio(time, 1.0f);
-	}
+    @ProtoMethod(description = "Sets the video volume", example = "")
+    @ProtoMethodParam(params = {"volume"})
+    public void setVolume(int vol) {
+        super.setVolume(vol);
+    }
+
+    @Override
+
+    @ProtoMethod(description = "Gets the video width", example = "")
+    @ProtoMethodParam(params = {""})
+    public void getVideoWidth() {
+        super.getVideoWidth();
+    }
+
+    @Override
+
+    @ProtoMethod(description = "Gets the video height", example = "")
+    @ProtoMethodParam(params = {""})
+    public void getVideoHeight() {
+        super.getVideoHeight();
+    }
+
+    @Override
+
+    @ProtoMethod(description = "Enables/Disables looping the video", example = "")
+    @ProtoMethodParam(params = {"boolean"})
+    public void setLoop(boolean b) {
+        super.setLoop(b);
+    }
+
+    @Override
+
+    @ProtoMethod(description = "Get the total duration of the video", example = "")
+    @ProtoMethodParam(params = {""})
+    public int getDuration() {
+        return super.getDuration();
+    }
+
+    @Override
+
+    @ProtoMethod(description = "Gets the current position of the video", example = "")
+    @ProtoMethodParam(params = {""})
+    public int getCurrentPosition() {
+        return super.getCurrentPosition();
+    }
 
 
-	@ProtoMethod(description = "Fades out the audio in the given milliseconds", example = "")
-	@ProtoMethodParam(params = { "milliseconds" })
-	public void fadeAudioOut(int time) {
-		super.fadeAudio(time, 0.0f);
-	}
+    @ProtoMethod(description = "Fades in the audio in the given milliseconds", example = "")
+    @ProtoMethodParam(params = {"milliseconds"})
+    public void fadeAudioIn(int time) {
+        super.fadeAudio(time, 1.0f);
+    }
+
+
+    @ProtoMethod(description = "Fades out the audio in the given milliseconds", example = "")
+    @ProtoMethodParam(params = {"milliseconds"})
+    public void fadeAudioOut(int time) {
+        super.fadeAudio(time, 0.0f);
+    }
 
 }

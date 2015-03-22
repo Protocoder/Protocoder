@@ -41,54 +41,54 @@ public class SignalUtils extends PInterface {
     FFT fft;
     double im[];
 
-	public SignalUtils(Context a, int n) {
-		super(a);
+    public SignalUtils(Context a, int n) {
+        super(a);
         fft = new FFT(n);
         im = new double[n];
 
-        for(int i = 0; i < n; i++){
+        for (int i = 0; i < n; i++) {
             im[i] = 0;
         }
     }
 
-	public LowPass lowpass() {
-		return null;
-	}
+    public LowPass lowpass() {
+        return null;
+    }
 
 
-	@ProtoMethod(description = "", example = "")
-	@ProtoMethodParam(params = { "function()" })
-	public double[] fft(double[] re) {
-		fft.fft(re, im.clone());
+    @ProtoMethod(description = "", example = "")
+    @ProtoMethodParam(params = {"function()"})
+    public double[] fft(double[] re) {
+        fft.fft(re, im.clone());
 
         return re;
-	}
+    }
 
-	class LowPass {
-		int n;
-		float[] vals;
-		float sum = 0.0f;
+    class LowPass {
+        int n;
+        float[] vals;
+        float sum = 0.0f;
 
-		public LowPass(int n) {
-			this.n = n;
-			vals = new float[n];
-		}
+        public LowPass(int n) {
+            this.n = n;
+            vals = new float[n];
+        }
 
-		public float smooth(float newVal) {
+        public float smooth(float newVal) {
 
-			for (int i = 0; i < vals.length; i++) {
-				sum = +vals[i];
+            for (int i = 0; i < vals.length; i++) {
+                sum = +vals[i];
 
-				// shift to the left
-				if (i < vals.length - 1) {
-					vals[i] = vals[i + 1];
-				} else {
-					vals[i] = newVal;
-				}
-			}
-			return sum / n;
-		}
+                // shift to the left
+                if (i < vals.length - 1) {
+                    vals[i] = vals[i + 1];
+                } else {
+                    vals[i] = newVal;
+                }
+            }
+            return sum / n;
+        }
 
-	}
+    }
 
 }

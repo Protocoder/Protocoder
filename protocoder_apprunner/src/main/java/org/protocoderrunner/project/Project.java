@@ -31,11 +31,11 @@ package org.protocoderrunner.project;
 
 public class Project {
 
-	//public final static String TYPE = "projectType";
-	public final static String FOLDER = "projectFolder";
-	public final static String NAME = "projectName";
-	public final static String URL = "projectUrl";
-	public final static String LOAD_FROM = "projectLoadFrom";
+    //public final static String TYPE = "projectType";
+    public final static String FOLDER = "projectFolder";
+    public final static String NAME = "projectName";
+    public final static String URL = "projectUrl";
+    public final static String LOAD_FROM = "projectLoadFrom";
     public static final String FORMAT = "projectFormat";
     public static final String COLOR = "projectColor";
     public static final String PREFIX = "prefix";
@@ -46,39 +46,39 @@ public class Project {
 
     public String name;
     public String folder;
-	public boolean containsReadme = false;
-	public boolean containsTutorial = false;
+    public boolean containsReadme = false;
+    public boolean containsTutorial = false;
     public boolean selected = false;
 
     public Project(String folder, String projectName, boolean containsReadme, boolean containsTutorial) {
-		this.folder = folder;
-        this.name = projectName;
-		this.containsReadme = containsReadme;
-		this.containsTutorial = containsTutorial;
-	}
-
-	public Project(String folder, String projectName) {
         this.folder = folder;
-		this.name = projectName;
-	}
+        this.name = projectName;
+        this.containsReadme = containsReadme;
+        this.containsTutorial = containsTutorial;
+    }
 
-	public String getName() {
-		return this.name;
-	}
+    public Project(String folder, String projectName) {
+        this.folder = folder;
+        this.name = projectName;
+    }
 
-	public String getStoragePath() {
-		return ProjectManager.getInstance().getProjectURL(this);
-	}
+    public String getName() {
+        return this.name;
+    }
 
-	public String getServingURL() {
-		String url = "http://" + ProjectManager.getInstance().getRemoteIP();
-		url += "apps/" + this.getFolder() + "/" + this.getName() + "/";
-		return url;
-	}
+    public String getStoragePath() {
+        return ProjectManager.getInstance().getProjectURL(this);
+    }
 
-	public String getFolder() {
-		return this.folder;
-	}
+    public String getServingURL() {
+        String url = "http://" + ProjectManager.getInstance().getRemoteIP();
+        url += "apps/" + this.getFolder() + "/" + this.getName() + "/";
+        return url;
+    }
+
+    public String getFolder() {
+        return this.folder;
+    }
 
 
     //public String getTypeName() {

@@ -38,61 +38,60 @@ import android.widget.ImageView;
 
 import org.protocoderrunner.R;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 public class PListAdapter extends BaseAdapter {
-	private final Context mContext;
+    private final Context mContext;
 
-	ArrayList<PListItem> items;
+    ArrayList<PListItem> items;
 
-	public PListAdapter(Context c, ArrayList<PListItem> items2) {
-		mContext = c;
-		this.items = items2;
-	}
+    public PListAdapter(Context c, ArrayList<PListItem> items2) {
+        mContext = c;
+        this.items = items2;
+    }
 
-	@Override
-	public int getCount() {
-		return items.size();
-	}
+    @Override
+    public int getCount() {
+        return items.size();
+    }
 
-	@Override
-	public Object getItem(int position) {
-		return items.get(position);
-	}
+    @Override
+    public Object getItem(int position) {
+        return items.get(position);
+    }
 
-	@Override
-	public long getItemId(int position) {
-		return position;
-	}
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 
-	// create mContext new ImageView for each item referenced by the Adapter
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		final PListItem customView;
+    // create mContext new ImageView for each item referenced by the Adapter
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        final PListItem customView;
 
-		if (convertView == null) { // if it's not recycled, initialize some
-			// attributes
-			customView = new PListItem(mContext);
+        if (convertView == null) { // if it's not recycled, initialize some
+            // attributes
+            customView = new PListItem(mContext);
 
-			customView.setText(items.get(position).getName());
-			customView.setImage(R.drawable.app_icon);
+            customView.setText(items.get(position).getName());
+            customView.setImage(R.drawable.app_icon);
 
             //TODO activate this
-			ImageView imageView = null; //(ImageView) customView.findViewById(R.id.card_menu_button);
-			imageView.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					customView.showContextMenu();
-				}
-			});
+            ImageView imageView = null; //(ImageView) customView.findViewById(R.id.card_menu_button);
+            imageView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    customView.showContextMenu();
+                }
+            });
 
-		} else {
-			customView = (PListItem) convertView;
-			customView.setText(items.get(position).getName());
-		}
-		customView.setTag(items.get(position).getName());
+        } else {
+            customView = (PListItem) convertView;
+            customView.setText(items.get(position).getName());
+        }
+        customView.setTag(items.get(position).getName());
 
-		return customView;
-	}
+        return customView;
+    }
 }

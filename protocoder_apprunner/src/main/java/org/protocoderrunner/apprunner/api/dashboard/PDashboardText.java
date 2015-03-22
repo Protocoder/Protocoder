@@ -43,18 +43,18 @@ import java.net.UnknownHostException;
 
 public class PDashboardText extends PInterface {
 
-	private static final String TAG = "PDashboardText";
-	String id;
+    private static final String TAG = "PDashboardText";
+    String id;
 
-	public PDashboardText(Context a) {
-		super(a);
-	}
+    public PDashboardText(Context a) {
+        super(a);
+    }
 
-	public void add(String name, int x, int y, int width, int height, int size, String color)
-			throws UnknownHostException, JSONException {
-		this.id = StrUtils.generateRandomString();
+    public void add(String name, int x, int y, int width, int height, int size, String color)
+            throws UnknownHostException, JSONException {
+        this.id = StrUtils.generateRandomString();
 
-		JSONObject values = new JSONObject()
+        JSONObject values = new JSONObject()
                 .put("id", id)
                 .put("name", name)
                 .put("type", "label")
@@ -70,15 +70,15 @@ public class PDashboardText extends PInterface {
                 .put("action", "add")
                 .put("values", values);
 
-		CustomWebsocketServer.getInstance(getContext()).send(msg);
-	}
+        CustomWebsocketServer.getInstance(getContext()).send(msg);
+    }
 
 
-	@ProtoMethod(description = "change the text", example = "")
-    @ProtoMethodParam(params = { "text" })
+    @ProtoMethod(description = "change the text", example = "")
+    @ProtoMethodParam(params = {"text"})
     public void setText(String text) throws UnknownHostException, JSONException {
 
-		JSONObject values = new JSONObject()
+        JSONObject values = new JSONObject()
                 .put("id", id)
                 .put("type", "label")
                 .put("val", text);
@@ -88,6 +88,6 @@ public class PDashboardText extends PInterface {
                 .put("action", "setLabelText")
                 .put("values", values);
 
-		CustomWebsocketServer.getInstance(getContext()).send(msg);
-	}
+        CustomWebsocketServer.getInstance(getContext()).send(msg);
+    }
 }

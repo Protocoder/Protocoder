@@ -33,8 +33,6 @@ import android.content.Context;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
 
-import com.hoho.android.usbserial.driver.CdcAcmSerialDriver;
-import com.hoho.android.usbserial.driver.ProbeTable;
 import com.hoho.android.usbserial.driver.UsbSerialDriver;
 import com.hoho.android.usbserial.driver.UsbSerialPort;
 import com.hoho.android.usbserial.driver.UsbSerialProber;
@@ -53,39 +51,39 @@ import java.util.concurrent.Executors;
 
 public class PSerial extends PInterface {
 
-	private String receivedData;
-	private final String TAG = "PSerial";
+    private String receivedData;
+    private final String TAG = "PSerial";
 
     private UsbSerialPort sPort = null;
 
     boolean isStarted = false;
-	private UsbSerialDriver driver;
-	private SerialInputOutputManager.Listener mListener;
-	private SerialInputOutputManager mSerialIoManager;
+    private UsbSerialDriver driver;
+    private SerialInputOutputManager.Listener mListener;
+    private SerialInputOutputManager mSerialIoManager;
     private final ExecutorService mExecutor = Executors.newSingleThreadExecutor();
-	String msg = "";
+    String msg = "";
     private OnNewDataCallback mCallbackData;
 
     public PSerial(Context a) {
-		super(a);
+        super(a);
 
-	}
+    }
 
-	// --------- getRequest ---------//
-	public interface OnStartCallback {
-		void event(boolean status);
-	}
+    // --------- getRequest ---------//
+    public interface OnStartCallback {
+        void event(boolean status);
+    }
 
-	// --------- getRequest ---------//
-	public interface OnNewDataCallback {
-		void event(String responseString);
-	}
+    // --------- getRequest ---------//
+    public interface OnNewDataCallback {
+        void event(String responseString);
+    }
 
 
-	@ProtoMethod(description = "starts serial", example = "")
-	public void start(int bauds, final OnStartCallback callbackConnected) {
-		WhatIsRunning.getInstance().add(this);
-		if (!isStarted) {
+    @ProtoMethod(description = "starts serial", example = "")
+    public void start(int bauds, final OnStartCallback callbackConnected) {
+        WhatIsRunning.getInstance().add(this);
+        if (!isStarted) {
 
             //UsbSerialProber devices = UsbSerialProber.getDefaultProber();
 
@@ -143,7 +141,7 @@ public class PSerial extends PInterface {
                         //mHandler.post(new Runnable() {
                         //    @Override
                         //    public void run() {
-                                //antes pasaba finalMsgReturn
+                        //antes pasaba finalMsgReturn
                         //        callbackfn.event(readMsg);
                         //    }
                         //});
@@ -168,7 +166,7 @@ public class PSerial extends PInterface {
                                 @Override
                                 public void run() {
                                     //antes pasaba finalMsgReturn
-                                        if (mCallbackData != null) mCallbackData.event(finalMsgReturn);
+                                    if (mCallbackData != null) mCallbackData.event(finalMsgReturn);
                                 }
                             });
                         }
@@ -197,7 +195,7 @@ public class PSerial extends PInterface {
 
         }
 
-	}
+    }
 
     public PSerial onNewData(OnNewDataCallback cb) {
         mCallbackData = cb;
@@ -205,34 +203,34 @@ public class PSerial extends PInterface {
         return this;
     }
 
-	private void stopIoManager() {
+    private void stopIoManager() {
         if (mSerialIoManager != null) {
             MLog.i(TAG, "Stopping io manager ..");
             mSerialIoManager.stop();
             mSerialIoManager = null;
         }
-	}
+    }
 
-	private void startIoManager() {
+    private void startIoManager() {
 
         if (sPort != null) {
             MLog.i(TAG, "Starting io manager ..");
             mSerialIoManager = new SerialInputOutputManager(sPort, mListener);
             mExecutor.submit(mSerialIoManager);
         }
-	}
+    }
 
-	private void onDeviceStateChange() {
-		stopIoManager();
-		startIoManager();
-	}
+    private void onDeviceStateChange() {
+        stopIoManager();
+        startIoManager();
+    }
 
 
-	@ProtoMethod(description = "stop serial", example = "")
-    @ProtoMethodParam(params = {  })
+    @ProtoMethod(description = "stop serial", example = "")
+    @ProtoMethodParam(params = {})
     public void stop() {
-		if (isStarted) {
-			isStarted = false;
+        if (isStarted) {
+            isStarted = false;
 
             stopIoManager();
             if (sPort != null) {
@@ -245,32 +243,32 @@ public class PSerial extends PInterface {
             }
 
 
-		}
-	}
+        }
+    }
 
 
-	@ProtoMethod(description = "sends commands to the serial")
-    @ProtoMethodParam(params = { "data" })
+    @ProtoMethod(description = "sends commands to the serial")
+    @ProtoMethodParam(params = {"data"})
     public void write(String data) {
-		if (isStarted) {
-			try {
-				sPort.write(data.getBytes(), 1000);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
+        if (isStarted) {
+            try {
+                sPort.write(data.getBytes(), 1000);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
 
-	//@ProtoMethod(description = "resumes serial")
-	public void resume() {
+    //@ProtoMethod(description = "resumes serial")
+    public void resume() {
 
-	}
+    }
 
 
-	//@ProtoMethod(description = "pause serial")
-	public void pause() {
+    //@ProtoMethod(description = "pause serial")
+    public void pause() {
 
-	}
+    }
 
 }

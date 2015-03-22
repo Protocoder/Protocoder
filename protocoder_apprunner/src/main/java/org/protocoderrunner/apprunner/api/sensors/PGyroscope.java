@@ -43,14 +43,14 @@ public class PGyroscope extends CustomSensorManager implements WhatIsRunningInte
 
 
     public interface GyroscopeListener extends CustomSensorListener {
-		public void event(float x, float y, float z);
+        public void event(float x, float y, float z);
 
-	}
+    }
 
-	private final static String TAG = "PGyroscope";
+    private final static String TAG = "PGyroscope";
     private GyroscopeListener mCallbackGyroscopeChange;
 
-	public PGyroscope(Context c) {
+    public PGyroscope(Context c) {
         super(c);
 
         type = Sensor.TYPE_GYROSCOPE;
@@ -91,9 +91,8 @@ public class PGyroscope extends CustomSensorManager implements WhatIsRunningInte
     }
 
 
-
     @ProtoMethod(description = "Start the accelerometer. Returns x, y, z", example = "")
-    @ProtoMethodParam(params = { "function(x, y, z)" })
+    @ProtoMethodParam(params = {"function(x, y, z)"})
     public void onChange(final GyroscopeListener callbackfn) {
         mCallbackGyroscopeChange = callbackfn;
 

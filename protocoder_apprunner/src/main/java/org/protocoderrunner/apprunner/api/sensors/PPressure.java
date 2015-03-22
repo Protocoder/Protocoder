@@ -43,13 +43,13 @@ public class PPressure extends CustomSensorManager implements WhatIsRunningInter
 
 
     public interface PressureListener extends CustomSensorListener {
-		public void event(float f);
-	}
+        public void event(float f);
+    }
 
-	private final static String TAG = "Pressure";
+    private final static String TAG = "Pressure";
     private PressureListener mCallbackPressureChange;
 
-	public PPressure(Context c) {
+    public PPressure(Context c) {
         super(c);
 
         type = Sensor.TYPE_PRESSURE;
@@ -89,9 +89,8 @@ public class PPressure extends CustomSensorManager implements WhatIsRunningInter
     }
 
 
-
     @ProtoMethod(description = "Start the accelerometer. Returns x, y, z", example = "")
-    @ProtoMethodParam(params = { "function(x, y, z)" })
+    @ProtoMethodParam(params = {"function(x, y, z)"})
     public void onChange(final PressureListener callbackfn) {
         mCallbackPressureChange = callbackfn;
 

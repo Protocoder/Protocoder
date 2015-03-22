@@ -34,11 +34,9 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.webkit.WebView;
 
-import org.protocoderrunner.apprunner.AppRunnerFragment;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
 
 import java.io.File;
-import java.lang.ref.WeakReference;
 
 /*
  * http://stackoverflow.com/questions/13257990/android-webview-inside-scrollview-scrolls-only-scrollview
@@ -46,34 +44,34 @@ import java.lang.ref.WeakReference;
 
 public class CustomWebView extends WebView {
 
-	private Context mContext;
+    private Context mContext;
 
-	public CustomWebView(Context context) {
-		super(context);
-		this.mContext = context;
-	}
+    public CustomWebView(Context context) {
+        super(context);
+        this.mContext = context;
+    }
 
-	public CustomWebView(Context context, AttributeSet attrs) {
-		super(context, attrs);
-	}
+    public CustomWebView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
 
-	public CustomWebView(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
-	}
+    public CustomWebView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+    }
 
-	public void loadData(String content) {
-		this.loadData(content, "text/html", "utf-8");
+    public void loadData(String content) {
+        this.loadData(content, "text/html", "utf-8");
 
-	}
+    }
 
-	public void loadHTMLFile(String fileName) {
-		String path = AppRunnerSettings.get().project.getStoragePath() + File.separator + fileName;
-		loadUrl("file://" + path);
-	}
+    public void loadHTMLFile(String fileName) {
+        String path = AppRunnerSettings.get().project.getStoragePath() + File.separator + fileName;
+        loadUrl("file://" + path);
+    }
 
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		requestDisallowInterceptTouchEvent(true);
-		return super.onTouchEvent(event);
-	}
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        requestDisallowInterceptTouchEvent(true);
+        return super.onTouchEvent(event);
+    }
 }

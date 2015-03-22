@@ -34,8 +34,8 @@ import android.widget.RadioButton;
 
 public class PRadioButton extends RadioButton implements PViewInterface {
 
-	public PRadioButton(Context context) {
-		super(context);
-	}
+    public PRadioButton(Context context) {
+        super(context);
+    }
 
 }

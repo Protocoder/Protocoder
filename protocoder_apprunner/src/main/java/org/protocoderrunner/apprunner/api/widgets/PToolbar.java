@@ -39,7 +39,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v7.app.ActionBar;
-import android.view.View;
 import android.widget.TextView;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
@@ -57,29 +56,27 @@ public class PToolbar implements PViewInterface {
     public PToolbar(AppRunnerActivity context) {
         mContext = context;
         mToolbar = mContext.getSupportActionBar();
-	}
+    }
 
 
     @ProtoMethod(description = "Set toolbar title name", example = "")
-    @ProtoMethodParam(params = { "titleName" })
+    @ProtoMethodParam(params = {"titleName"})
     public PToolbar title(String title) {
         mToolbar.setTitle(title);
         return this;
     }
 
 
-
     @ProtoMethod(description = "Sets toolbar secondary title", example = "")
-    @ProtoMethodParam(params = { "subtitleName" })
+    @ProtoMethodParam(params = {"subtitleName"})
     public PToolbar subtitle(String subtitle) {
         mToolbar.setSubtitle(subtitle);
         return this;
     }
 
 
-
     @ProtoMethod(description = "Show/Hide title bar", example = "")
-    @ProtoMethodParam(params = { "boolean" })
+    @ProtoMethodParam(params = {"boolean"})
     public PToolbar show(Boolean b) {
         if (b) {
             mToolbar.show();
@@ -91,7 +88,7 @@ public class PToolbar implements PViewInterface {
 
 
     @ProtoMethod(description = "Changes the title bar color", example = "")
-    @ProtoMethodParam(params = { "r", "g", "b", "alpha" })
+    @ProtoMethodParam(params = {"r", "g", "b", "alpha"})
     public PToolbar bgColor(int r, int g, int b, int alpha) {
         int c = Color.argb(alpha, r, g, b);
 
@@ -104,7 +101,7 @@ public class PToolbar implements PViewInterface {
 
 
     @ProtoMethod(description = "Changes the title text color", example = "")
-    @ProtoMethodParam(params = { "r", "g", "b", "mContext" })
+    @ProtoMethodParam(params = {"r", "g", "b", "mContext"})
     public PToolbar textColor(int r, int g, int b, int alpha) {
         int c = Color.argb(alpha, r, g, b);
 
@@ -114,7 +111,7 @@ public class PToolbar implements PViewInterface {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mContext.getWindow().setStatusBarColor(Color.BLUE);
         } else {
-           textTitleView.setTextColor(c);
+            textTitleView.setTextColor(c);
         }
 
         return this;
@@ -122,7 +119,7 @@ public class PToolbar implements PViewInterface {
 
 
     @ProtoMethod(description = "Sets an image rather than text as toolbar title", example = "")
-    @ProtoMethodParam(params = { "imageName" })
+    @ProtoMethodParam(params = {"imageName"})
     public PToolbar imageIcon(String imagePath) {
         Bitmap myBitmap = BitmapFactory.decodeFile(AppRunnerSettings.get().project.getStoragePath() + imagePath);
         Drawable icon = new BitmapDrawable(mContext.getResources(), myBitmap);

@@ -38,30 +38,30 @@ import org.protocoderrunner.network.IDEcommunication;
 
 public class PWebEditor extends PInterface {
 
-	public PWebEditor(Context a) {
-		super(a);
+    public PWebEditor(Context a) {
+        super(a);
 
-	}
-
-    //TODO this is mContext place holder
-
-	@ProtoMethod(description = "Loads a Html file in the webIde sidebar", example = "")
-	@ProtoMethodParam(params = { "boolean" })
-	public void loadHTMLonSideBar(boolean visible) {
-
-	}
+    }
 
     //TODO this is mContext place holder
 
-	@ProtoMethod(description = "Shows/Hides the webIde sidebar", example = "")
-	@ProtoMethodParam(params = { "boolean" })
-	public void showSideBar(boolean visible) {
+    @ProtoMethod(description = "Loads a Html file in the webIde sidebar", example = "")
+    @ProtoMethodParam(params = {"boolean"})
+    public void loadHTMLonSideBar(boolean visible) {
 
-	}
+    }
+
+    //TODO this is mContext place holder
+
+    @ProtoMethod(description = "Shows/Hides the webIde sidebar", example = "")
+    @ProtoMethodParam(params = {"boolean"})
+    public void showSideBar(boolean visible) {
+
+    }
 
 
     @ProtoMethod(description = "Execute custom js in the webIde", example = "")
-    @ProtoMethodParam(params = { "jsText" })
+    @ProtoMethodParam(params = {"jsText"})
     public void sendJs(String js) {
         IDEcommunication.getInstance(getContext()).sendCustomJs(js);
     }

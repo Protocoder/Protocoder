@@ -72,6 +72,7 @@ public class PBluetooth extends PInterface {
 
     public interface onBluetoothListener {
         public void onDeviceFound(String name, String macAddress, float strength);
+
         public void onActivityResult(int requestCode, int resultCode, Intent data);
     }
 
@@ -81,7 +82,7 @@ public class PBluetooth extends PInterface {
 
 
     @ProtoMethod(description = "Scan bluetooth networks. Gives back the name, mac and signal strength", example = "")
-    @ProtoMethodParam(params = { "function(name, macAddress, strength)" })
+    @ProtoMethodParam(params = {"function(name, macAddress, strength)"})
     public void scanNetworks(final scanBTNetworksCB callbackfn) {
         start();
         onBluetoothfn = callbackfn;
@@ -101,7 +102,7 @@ public class PBluetooth extends PInterface {
     }
 
     @ProtoMethod(description = "Start the bluetooth adapter", example = "")
-    @ProtoMethodParam(params = { "" })
+    @ProtoMethodParam(params = {""})
     public SimpleBT start() {
         if (mBtStarted) {
             return simpleBT;
@@ -150,7 +151,7 @@ public class PBluetooth extends PInterface {
     //TODO removed new impl needed
 
     @ProtoMethod(description = "Connects to mContext bluetooth device using mContext popup", example = "")
-    @ProtoMethodParam(params = { "function(name, macAddress, strength)" })
+    @ProtoMethodParam(params = {"function(name, macAddress, strength)"})
     public void connectSerialByUi(final connectBluetoothCB callbackfn) {
         start();
         NativeArray nativeArray = getBondedDevices();
@@ -170,7 +171,7 @@ public class PBluetooth extends PInterface {
 
 
     @ProtoMethod(description = "Connect to mContext bluetooth device using the mac address", example = "")
-    @ProtoMethodParam(params = { "mac", "function(data)" })
+    @ProtoMethodParam(params = {"mac", "function(data)"})
     public void connectSerialByMac(String mac, final connectBluetoothCB callbackfn) {
         start();
         simpleBT.connectByMac(mac);
@@ -180,7 +181,7 @@ public class PBluetooth extends PInterface {
 
 
     @ProtoMethod(description = "Connect to mContext bluetooth device using mContext name", example = "")
-    @ProtoMethodParam(params = { "name, function(data)" })
+    @ProtoMethodParam(params = {"name, function(data)"})
     public void connectSerialByName(String name, final connectBluetoothCB callbackfn) {
         start();
         simpleBT.connectByName(name);
@@ -218,9 +219,8 @@ public class PBluetooth extends PInterface {
     }
 
 
-
     @ProtoMethod(description = "Send bluetooth serial message", example = "")
-    @ProtoMethodParam(params = { "string" })
+    @ProtoMethodParam(params = {"string"})
     public NativeArray getBondedDevices() {
         start();
 
@@ -244,7 +244,7 @@ public class PBluetooth extends PInterface {
 
 
     @ProtoMethod(description = "Send bluetooth serial message", example = "")
-    @ProtoMethodParam(params = { "string" })
+    @ProtoMethodParam(params = {"string"})
     public void send(String string) {
         if (simpleBT.isConnected()) {
             simpleBT.send(string);
@@ -253,7 +253,7 @@ public class PBluetooth extends PInterface {
 
 
     @ProtoMethod(description = "Disconnect the bluetooth", example = "")
-    @ProtoMethodParam(params = { "" })
+    @ProtoMethodParam(params = {""})
     public void disconnect() {
         if (simpleBT.isConnected()) {
             simpleBT.disconnect();
@@ -262,7 +262,7 @@ public class PBluetooth extends PInterface {
 
 
     @ProtoMethod(description = "Enable/Disable the bluetooth adapter", example = "")
-    @ProtoMethodParam(params = { "boolean" })
+    @ProtoMethodParam(params = {"boolean"})
     public void enable(boolean b) {
         if (b) {
             simpleBT.start();
@@ -273,7 +273,7 @@ public class PBluetooth extends PInterface {
 
 
     @ProtoMethod(description = "Enable/Disable the bluetooth adapter", example = "")
-    @ProtoMethodParam(params = { "boolean" })
+    @ProtoMethodParam(params = {"boolean"})
     public boolean isConnected() {
         return simpleBT.isConnected();
     }

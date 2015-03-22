@@ -41,17 +41,17 @@ import java.net.UnknownHostException;
 
 public class PDashboardHTML extends PInterface {
 
-	private static final String TAG = "PDashboardHTML";
-	String id;
+    private static final String TAG = "PDashboardHTML";
+    String id;
 
-	public PDashboardHTML(Context a) {
-		super(a);
-	}
+    public PDashboardHTML(Context a) {
+        super(a);
+    }
 
-	public void add(String html, int posx, int posy) throws UnknownHostException, JSONException {
-		this.id = StrUtils.generateRandomString();
+    public void add(String html, int posx, int posy) throws UnknownHostException, JSONException {
+        this.id = StrUtils.generateRandomString();
 
-		JSONObject values = new JSONObject()
+        JSONObject values = new JSONObject()
                 .put("id", id)
                 .put("type", "html")
                 .put("x", posx)
@@ -63,7 +63,7 @@ public class PDashboardHTML extends PInterface {
                 .put("action", "add")
                 .put("values", values);
 
-		CustomWebsocketServer.getInstance(getContext()).send(msg);
-	}
+        CustomWebsocketServer.getInstance(getContext()).send(msg);
+    }
 
 }

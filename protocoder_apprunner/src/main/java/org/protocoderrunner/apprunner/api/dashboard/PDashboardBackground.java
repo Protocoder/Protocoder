@@ -41,16 +41,16 @@ import java.net.UnknownHostException;
 
 public class PDashboardBackground extends PInterface {
 
-	private static final String TAG = "PDashboardBackground";
+    private static final String TAG = "PDashboardBackground";
 
-	public PDashboardBackground(Context a) {
-		super(a);
-	}
+    public PDashboardBackground(Context a) {
+        super(a);
+    }
 
-	// --------- JDashboard add ---------//
-	public interface jDashboardAddCB {
-		void event();
-	}
+    // --------- JDashboard add ---------//
+    public interface jDashboardAddCB {
+        void event();
+    }
 
 
     public void updateColor(String hex) throws JSONException, UnknownHostException {
@@ -59,7 +59,7 @@ public class PDashboardBackground extends PInterface {
         int r = Color.red(c);
         int g = Color.green(c);
         int b = Color.blue(c);
-        
+
         JSONObject values = new JSONObject()
                 .put("type", "background")
                 .put("a", alpha)
@@ -73,7 +73,7 @@ public class PDashboardBackground extends PInterface {
                 .put("values", values);
 
         CustomWebsocketServer.getInstance(getContext()).send(msg);
-	}
+    }
 
 
 }

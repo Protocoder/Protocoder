@@ -115,9 +115,8 @@ public class PSocketIOClient {
     }
 
 
-
     @ProtoMethod(description = "Sends a JSONObject to the destination", example = "")
-    @ProtoMethodParam(params = { "jsonObject" })
+    @ProtoMethodParam(params = {"jsonObject"})
     public PSocketIOClient emit(JSONObject jsonMessage) throws JSONException {
         mSocketIOClient.emit(jsonMessage);
 
@@ -126,14 +125,14 @@ public class PSocketIOClient {
 
 
     @ProtoMethod(description = "Sends an array to the destination", example = "")
-    @ProtoMethodParam(params = { "message", "array" })
+    @ProtoMethodParam(params = {"message", "array"})
     public PSocketIOClient emit(String message, NativeArray array) {
         try {
             JSONArray jsonArray = new JSONArray();
             MLog.d(TAG, "mSocketIOClient " + mSocketIOClient);
             try {
                 jsonArray.put(array);
-            } catch(Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             mSocketIOClient.emit(message, jsonArray);
@@ -146,7 +145,7 @@ public class PSocketIOClient {
 
 
     @ProtoMethod(description = "Sends an array to the destination", example = "")
-    @ProtoMethodParam(params = { "message" })
+    @ProtoMethodParam(params = {"message"})
     public PSocketIOClient emit(String message) {
         mSocketIOClient.emit(message);
 
@@ -155,8 +154,8 @@ public class PSocketIOClient {
 
 
     @ProtoMethod(description = "Receiving callback", example = "")
-    @ProtoMethodParam(params = { "function(data)" })
-    public PSocketIOClient onNewData ( final connectSocketIOCB callbackfn) {
+    @ProtoMethodParam(params = {"function(data)"})
+    public PSocketIOClient onNewData(final connectSocketIOCB callbackfn) {
         mCallbackfn = callbackfn;
 
         return this;

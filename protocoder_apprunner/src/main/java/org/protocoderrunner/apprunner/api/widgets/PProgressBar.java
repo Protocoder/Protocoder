@@ -34,15 +34,15 @@ import android.widget.ProgressBar;
 
 public class PProgressBar extends ProgressBar implements PViewInterface {
 
-	public PProgressBar(Context context) {
-		super(context);
+    public PProgressBar(Context context) {
+        super(context);
 
-		// setProgressDrawable(getResources().getDrawable(R.drawable.ui_seekbar_progress));
-	}
+        // setProgressDrawable(getResources().getDrawable(R.drawable.ui_seekbar_progress));
+    }
 
-	public PProgressBar(Context a, int style) {
-		super(a, null, style);
+    public PProgressBar(Context a, int style) {
+        super(a, null, style);
 
-		this.setProgress(0);
-	}
+        this.setProgress(0);
+    }
 }

@@ -47,21 +47,27 @@ public class WebEditor {
     public void open(String folder, String appName) {
 
     }
+
     public void openInNewWindow(String folder, String appName) {
 
     }
+
     public void openTab(String filePath) {
 
     }
+
     public void closeTab(String filePath) {
 
     }
+
     public void closeAllTabs() {
 
     }
+
     public void refresh() {
 
     }
+
     public void showBar(boolean b) {
 
     }

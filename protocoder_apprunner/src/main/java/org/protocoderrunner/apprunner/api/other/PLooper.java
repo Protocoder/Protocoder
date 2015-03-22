@@ -81,7 +81,7 @@ public class PLooper {
     }
 
     @ProtoMethod(description = "Change the current time speed to a new one", example = "")
-    @ProtoMethodParam(params = { "duration" })
+    @ProtoMethodParam(params = {"duration"})
     public PLooper speed(int duration) {
         this.speed = duration;
         if (duration < this.speed) {
@@ -93,7 +93,7 @@ public class PLooper {
 
 
     @ProtoMethod(description = "Pause the looper", example = "")
-    @ProtoMethodParam(params = { "boolean" })
+    @ProtoMethodParam(params = {"boolean"})
     public PLooper pause(boolean b) {
         this.paused = b;
         if (b == false) {

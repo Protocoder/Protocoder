@@ -43,80 +43,80 @@ import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 
 public class PCard extends LinearLayout implements PViewInterface {
 
-	private final int currentColor;
-	private final int viewCount = 0;
-	private final Context c;
-	LinearLayout cardLl;
-	TextView title;
+    private final int currentColor;
+    private final int viewCount = 0;
+    private final Context c;
+    LinearLayout cardLl;
+    TextView title;
 
-	public PCard(Context context) {
-		super(context);
-		c = context;
-		currentColor = Color.argb(255, 255, 255, 255);
+    public PCard(Context context) {
+        super(context);
+        c = context;
+        currentColor = Color.argb(255, 255, 255, 255);
 
-		setOrientation(LinearLayout.HORIZONTAL);
-		setGravity(Gravity.CENTER_VERTICAL);
+        setOrientation(LinearLayout.HORIZONTAL);
+        setGravity(Gravity.CENTER_VERTICAL);
 
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		inflater.inflate(R.layout.pwidget_card, this, true);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater.inflate(R.layout.pwidget_card, this, true);
 
-		title = (TextView) findViewById(R.id.cardTitle);
-		cardLl = (LinearLayout) findViewById(R.id.cardWidgets);
+        title = (TextView) findViewById(R.id.cardTitle);
+        cardLl = (LinearLayout) findViewById(R.id.cardWidgets);
 
-	}
+    }
 
     @Override
 
     @ProtoMethod(description = "Adds a new view", example = "")
-    @ProtoMethodParam(params = { "view" })
-	public void addView(View v) {
-		v.setAlpha(0);
-		v.animate().alpha(1).setDuration(500).setStartDelay(100 * (1 + viewCount));
+    @ProtoMethodParam(params = {"view"})
+    public void addView(View v) {
+        v.setAlpha(0);
+        v.animate().alpha(1).setDuration(500).setStartDelay(100 * (1 + viewCount));
 
-		// v.setPadding(0, 0, 0, AndroidUtils.pixelsToDp(c, 3));
-		cardLl.addView(v);
-	}
+        // v.setPadding(0, 0, 0, AndroidUtils.pixelsToDp(c, 3));
+        cardLl.addView(v);
+    }
 
 
     @ProtoMethod(description = "Add a row of n columns", example = "")
-    @ProtoMethodParam(params = { "columnNumber" })
-	public PRow addRow(int n) {
-		PRow row = new PRow(c, cardLl, n);
+    @ProtoMethodParam(params = {"columnNumber"})
+    public PRow addRow(int n) {
+        PRow row = new PRow(c, cardLl, n);
 
-		return row;
-	}
+        return row;
+    }
 
 
     @ProtoMethod(description = "Set the title of the card", example = "")
-    @ProtoMethodParam(params = { "text" })
-	public void setTitle(String text) {
-		if (text.isEmpty() == false) {
-			title.setVisibility(View.VISIBLE);
-			title.setText(text);
-		}
-	}
+    @ProtoMethodParam(params = {"text"})
+    public void setTitle(String text) {
+        if (text.isEmpty() == false) {
+            title.setVisibility(View.VISIBLE);
+            title.setText(text);
+        }
+    }
 
 
     @ProtoMethod(description = "Changes the title color", example = "")
-    @ProtoMethodParam(params = { "colorHex" })
-	public void setTitleColor(String color) {
-		title.setBackgroundColor(Color.parseColor(color));
-	}
+    @ProtoMethodParam(params = {"colorHex"})
+    public void setTitleColor(String color) {
+        title.setBackgroundColor(Color.parseColor(color));
+    }
 
 
     @ProtoMethod(description = "Card with horizontal views", example = "")
-    @ProtoMethodParam(params = { "" })
-	public void setHorizontal() {
-		LinearLayout ll = (LinearLayout) findViewById(R.id.cardWidgets);
-		ll.setOrientation(LinearLayout.HORIZONTAL);
-	}
+    @ProtoMethodParam(params = {""})
+    public void setHorizontal() {
+        LinearLayout ll = (LinearLayout) findViewById(R.id.cardWidgets);
+        ll.setOrientation(LinearLayout.HORIZONTAL);
+    }
 
 
     @ProtoMethod(description = "Card with vertical views", example = "")
-    @ProtoMethodParam(params = { "" })
-	public void setVertical() {
-		LinearLayout ll = (LinearLayout) findViewById(R.id.cardWidgets);
-		ll.setOrientation(LinearLayout.VERTICAL);
-	}
+    @ProtoMethodParam(params = {""})
+    public void setVertical() {
+        LinearLayout ll = (LinearLayout) findViewById(R.id.cardWidgets);
+        ll.setOrientation(LinearLayout.VERTICAL);
+    }
 
 }

@@ -43,18 +43,17 @@ public class PSlider extends SeekBar implements PViewInterface {
     private float mCurrentValue = 0.0f;
     private int MAX_VALUE = 999999999;
 
-	public PSlider(Context context) {
-		super(context);
+    public PSlider(Context context) {
+        super(context);
         super.setMax(MAX_VALUE);
-		// setProgressDrawable(getResources().getDrawable(R.drawable.ui_seekbar_progress));
+        // setProgressDrawable(getResources().getDrawable(R.drawable.ui_seekbar_progress));
 
         mSlider = this;
-	}
-
+    }
 
 
     @ProtoMethod(description = "Changes slider value", example = "")
-    @ProtoMethodParam(params = { "value" })
+    @ProtoMethodParam(params = {"value"})
     public void setValue(float value) {
         mCurrentValue = value;
         int valueInt = (int) ((value - mMin) / (mMax - mMin) * MAX_VALUE);
@@ -69,35 +68,35 @@ public class PSlider extends SeekBar implements PViewInterface {
 
 
     @ProtoMethod(description = "Gets the slider value", example = "")
-    @ProtoMethodParam(params = { "" })
+    @ProtoMethodParam(params = {""})
     public float getValue() {
         return mCurrentValue;
     }
 
 
     @ProtoMethod(description = "Sets the minimum slider value", example = "")
-    @ProtoMethodParam(params = { "" })
+    @ProtoMethodParam(params = {""})
     public void setMin(float min) {
         mMin = min;
     }
 
 
     @ProtoMethod(description = "Sets the maximum slider value", example = "")
-    @ProtoMethodParam(params = { "" })
+    @ProtoMethodParam(params = {""})
     public void setMax(float max) {
         mMax = max;
     }
 
 
     @ProtoMethod(description = "Gets the minimum  slider value", example = "")
-    @ProtoMethodParam(params = { "" })
+    @ProtoMethodParam(params = {""})
     public float getMinVal() {
         return mMax;
     }
 
 
     @ProtoMethod(description = "Gets the maximum slider value", example = "")
-    @ProtoMethodParam(params = { "" })
+    @ProtoMethodParam(params = {""})
     public float getMaxVal() {
         return mMax;
     }
@@ -110,7 +109,7 @@ public class PSlider extends SeekBar implements PViewInterface {
 
 
     @ProtoMethod(description = "On slider change", example = "")
-    @ProtoMethodParam(params = { "function(value)" })
+    @ProtoMethodParam(params = {"function(value)"})
     public PSlider onChange(final addGenericSliderCB callbackfn) {
         // Add the change listener
         mSlider.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {

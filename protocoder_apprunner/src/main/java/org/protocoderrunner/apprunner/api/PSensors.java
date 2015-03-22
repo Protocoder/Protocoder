@@ -55,8 +55,8 @@ public class PSensors extends PInterface {
     public final PProximity proximity;
     public final PStep stepDetector;
 
-	public PSensors(Context context) {
-		super(context);
+    public PSensors(Context context) {
+        super(context);
 
         accelerometer = new PAccelerometer(context);
         gyroscope = new PGyroscope(context);
@@ -69,11 +69,11 @@ public class PSensors extends PInterface {
         proximity = new PProximity(context);
         stepDetector = new PStep(context);
 
-	}
+    }
 
     @Override
-	public void destroy() {
+    public void destroy() {
 
-	}
+    }
 
 }

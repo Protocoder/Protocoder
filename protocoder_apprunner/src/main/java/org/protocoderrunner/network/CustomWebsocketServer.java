@@ -49,111 +49,112 @@ import java.util.HashMap;
 import java.util.List;
 
 public class CustomWebsocketServer extends WebSocketServer {
-	private static CustomWebsocketServer inst;
-	private static int counter = 0;
-	private static final String TAG = "WebSocketServer";
-	private static Context ctx;
-	private final List<WebSocket> connections = new ArrayList<WebSocket>();
-	private static HashMap<String, WebSocketListener> listeners = new HashMap<String, WebSocketListener>();;
+    private static CustomWebsocketServer inst;
+    private static int counter = 0;
+    private static final String TAG = "WebSocketServer";
+    private static Context ctx;
+    private final List<WebSocket> connections = new ArrayList<WebSocket>();
+    private static HashMap<String, WebSocketListener> listeners = new HashMap<String, WebSocketListener>();
+    ;
 
-	public interface WebSocketListener {
+    public interface WebSocketListener {
 
-		public void onUpdated(JSONObject jsonObject);
+        public void onUpdated(JSONObject jsonObject);
 
-	}
+    }
 
-	// Singleton (one app view, different URLs)
-	public static CustomWebsocketServer getInstance(Context aCtx, int port, Draft d) throws UnknownHostException {
-		if (inst == null) {
-			inst = new CustomWebsocketServer(aCtx, port, d);
-			inst.start();
-		}
-		return inst;
-	}
+    // Singleton (one app view, different URLs)
+    public static CustomWebsocketServer getInstance(Context aCtx, int port, Draft d) throws UnknownHostException {
+        if (inst == null) {
+            inst = new CustomWebsocketServer(aCtx, port, d);
+            inst.start();
+        }
+        return inst;
+    }
 
-	// Singleton (one app view, different URLs)
-	public static CustomWebsocketServer getInstance(Context aCtx) throws UnknownHostException {
-		if (inst == null) {
+    // Singleton (one app view, different URLs)
+    public static CustomWebsocketServer getInstance(Context aCtx) throws UnknownHostException {
+        if (inst == null) {
             inst = new CustomWebsocketServer(aCtx, AppSettings.WEBSOCKET_PORT, new Draft_17());
             inst.start();
-		}
-		return inst;
-	}
+        }
+        return inst;
+    }
 
-	public CustomWebsocketServer(Context aCtx, int port, Draft d) throws UnknownHostException {
-		super(new InetSocketAddress(port), Collections.singletonList(d));
-		ctx = aCtx;
-		MLog.d(TAG, "Launched websocket server at on port " + aCtx);
-	}
+    public CustomWebsocketServer(Context aCtx, int port, Draft d) throws UnknownHostException {
+        super(new InetSocketAddress(port), Collections.singletonList(d));
+        ctx = aCtx;
+        MLog.d(TAG, "Launched websocket server at on port " + aCtx);
+    }
 
-	public CustomWebsocketServer(InetSocketAddress address, Draft d) {
-		super(address, Collections.singletonList(d));
-	}
+    public CustomWebsocketServer(InetSocketAddress address, Draft d) {
+        super(address, Collections.singletonList(d));
+    }
 
-	@Override
-	public void onOpen(WebSocket aConn, ClientHandshake handshake) {
-		counter++;
-		MLog.d(TAG, "New websocket connection " + counter);
-		connections.add(aConn);
+    @Override
+    public void onOpen(WebSocket aConn, ClientHandshake handshake) {
+        counter++;
+        MLog.d(TAG, "New websocket connection " + counter);
+        connections.add(aConn);
 
-	}
+    }
 
-	@Override
-	public void onClose(WebSocket conn, int code, String reason, boolean remote) {
-		MLog.d(TAG, "closed");
-		connections.remove(conn);
-	}
+    @Override
+    public void onClose(WebSocket conn, int code, String reason, boolean remote) {
+        MLog.d(TAG, "closed");
+        connections.remove(conn);
+    }
 
-	@Override
-	public void onError(WebSocket conn, Exception ex) {
-		MLog.d(TAG, "Error:");
-		ex.printStackTrace();
-	}
+    @Override
+    public void onError(WebSocket conn, Exception ex) {
+        MLog.d(TAG, "Error:");
+        ex.printStackTrace();
+    }
 
-	public void send(JSONObject obj) {
+    public void send(JSONObject obj) {
 
-		for (WebSocket sock : connections) {
-			if (sock.isOpen()) {
-				sock.send(obj.toString());
-			}
-		}
+        for (WebSocket sock : connections) {
+            if (sock.isOpen()) {
+                sock.send(obj.toString());
+            }
+        }
 
-	}
+    }
 
-	@Override
-	public void onMessage(WebSocket conn, String message) {
-		//MLog.d(TAG, "Received message " + message);
-		JSONObject json, res;
-		try {
-			json = new JSONObject(message);
-			String type = json.getString("type");
-			res = handleMessage(type, json);
-		} catch (JSONException e) {
-			e.printStackTrace();
-			MLog.e(TAG, "Error in handleMessage" + e.toString());
-			res = new JSONObject();
-			try {
-				res = res.put("Error", e.toString());
-			} catch (JSONException e1) {
-				e1.printStackTrace();
-			}
-		}
-		conn.send(res.toString());
-	}
+    @Override
+    public void onMessage(WebSocket conn, String message) {
+        //MLog.d(TAG, "Received message " + message);
+        JSONObject json, res;
+        try {
+            json = new JSONObject(message);
+            String type = json.getString("type");
+            res = handleMessage(type, json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            MLog.e(TAG, "Error in handleMessage" + e.toString());
+            res = new JSONObject();
+            try {
+                res = res.put("Error", e.toString());
+            } catch (JSONException e1) {
+                e1.printStackTrace();
+            }
+        }
+        conn.send(res.toString());
+    }
 
-	public void addListener(String name, WebSocketListener l) {
-		listeners.put(name, l);
+    public void addListener(String name, WebSocketListener l) {
+        listeners.put(name, l);
 
-	}
+    }
 
-	public void removeAllListeners() {
-		listeners.clear();
-	}
+    public void removeAllListeners() {
+        listeners.clear();
+    }
 
-	public void send(String type, String action, String... values) {
+    public void send(String type, String action, String... values) {
 
-		// send device ip address
-		/*
+        // send device ip address
+        /*
 		 * JSONObject msg = new JSONObject(); try { msg.put("type", "device");
 		 * msg.put("action", "info");
 		 * 
@@ -171,15 +172,15 @@ public class CustomWebsocketServer extends WebSocketServer {
 		 * (UnknownHostException e) { e.printStackTrace(); }
 		 */
 
-	}
+    }
 
-	// handle message from the webapp
-	private JSONObject handleMessage(String type, JSONObject msg) throws JSONException {
-		JSONObject data = new JSONObject();
-		WebSocketListener l = listeners.get(msg.get("id"));
-		l.onUpdated(msg);
+    // handle message from the webapp
+    private JSONObject handleMessage(String type, JSONObject msg) throws JSONException {
+        JSONObject data = new JSONObject();
+        WebSocketListener l = listeners.get(msg.get("id"));
+        l.onUpdated(msg);
 
-		return data;
-	}
+        return data;
+    }
 
 }

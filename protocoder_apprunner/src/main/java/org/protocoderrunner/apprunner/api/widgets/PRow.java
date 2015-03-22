@@ -9,30 +9,30 @@ import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 
 public class PRow {
-	int n;
+    int n;
 
-	LinearLayout ll;
-	LinearLayout.LayoutParams lParams;
+    LinearLayout ll;
+    LinearLayout.LayoutParams lParams;
 
-	public PRow(Context c, LinearLayout cardLl, int n) {
-		this.n = n;
-		float t = 100f;
-		float tt = t / n;
+    public PRow(Context c, LinearLayout cardLl, int n) {
+        this.n = n;
+        float t = 100f;
+        float tt = t / n;
 
-		ll = new LinearLayout(c);
-		ll.setOrientation(LinearLayout.HORIZONTAL);
-		ll.setWeightSum(t);
-		cardLl.addView(ll);
+        ll = new LinearLayout(c);
+        ll.setOrientation(LinearLayout.HORIZONTAL);
+        ll.setWeightSum(t);
+        cardLl.addView(ll);
 
-		lParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, tt);
-	}
+        lParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, tt);
+    }
 
 
     @ProtoMethod(description = "Add a new view to the row", example = "")
-    @ProtoMethodParam(params = { "view" })
-	public void addView(View v) {
-		v.setLayoutParams(lParams);
-		ll.addView(v);
-	}
+    @ProtoMethodParam(params = {"view"})
+    public void addView(View v) {
+        v.setLayoutParams(lParams);
+        ll.addView(v);
+    }
 
 }

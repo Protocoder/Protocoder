@@ -45,19 +45,16 @@ public class PAnimation {
     }
 
 
-
-
     @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = { "" })
+    @ProtoMethodParam(params = {""})
     public PAnimation move(float x, float y) {
         myView.animate().x(x).y(y);
         return this;
     }
 
 
-
     @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = { "" })
+    @ProtoMethodParam(params = {""})
     public PAnimation moveBy(float x, float y) {
         myView.animate().xBy(x).yBy(y);
         return this;
@@ -65,16 +62,15 @@ public class PAnimation {
 
 
     @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = { "" })
+    @ProtoMethodParam(params = {""})
     public PAnimation rotate(float x) {
         myView.animate().rotation(x);
         return this;
     }
 
 
-
     @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = { "" })
+    @ProtoMethodParam(params = {""})
     public PAnimation rotate(float x, float y, float z) {
         //return myView.animate().rotation(x).rotationX(y).rotationY(z);
         return this;
@@ -82,20 +78,17 @@ public class PAnimation {
 
 
     @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = { "" })
+    @ProtoMethodParam(params = {""})
     public void start() {
-       // myView.
+        // myView.
     }
-
-
 
 
     @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = { "" })
+    @ProtoMethodParam(params = {""})
     public void stop() {
 
     }
-
 
 
 }

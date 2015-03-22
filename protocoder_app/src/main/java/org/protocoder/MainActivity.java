@@ -63,25 +63,25 @@ import de.greenrobot.event.EventBus;
 @SuppressLint("NewApi")
 public class MainActivity extends AppBaseActivity {
 
-	private static final String TAG = "MainActivity";
+    private static final String TAG = "MainActivity";
 
-	MainActivity mContext;
-	Menu mMenu;
+    MainActivity mContext;
+    Menu mMenu;
 
     // file observer
     private FileObserver fileObserver;
     // connection change listener
     private ConnectivityChangeReceiver connectivityChangeReceiver;
 
-	BroadcastReceiver mStopServerReceiver;
+    BroadcastReceiver mStopServerReceiver;
 
     //singleton that controls protocoder
     private Protocoder mProtocoder;
 
 
     @Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         mContext = this;
 
 
@@ -109,23 +109,23 @@ public class MainActivity extends AppBaseActivity {
         }
 
         // Check when mContext file is changed in the protocoder dir
-		fileObserver = new FileObserver(ProjectManager.FOLDER_USER_PROJECTS, FileObserver.CREATE | FileObserver.DELETE) {
+        fileObserver = new FileObserver(ProjectManager.FOLDER_USER_PROJECTS, FileObserver.CREATE | FileObserver.DELETE) {
 
-			@Override
-			public void onEvent(int event, String file) {
-				if ((FileObserver.CREATE & event) != 0) {
+            @Override
+            public void onEvent(int event, String file) {
+                if ((FileObserver.CREATE & event) != 0) {
 
-					MLog.d(TAG, "File created [" + ProjectManager.FOLDER_USER_PROJECTS + "/" + file + "]");
+                    MLog.d(TAG, "File created [" + ProjectManager.FOLDER_USER_PROJECTS + "/" + file + "]");
 
-					// check if its mContext "create" and not equal to probe because
-					// thats created every time camera is
-					// launched
-				} else if ((FileObserver.DELETE & event) != 0) {
-					MLog.d(TAG, "File deleted [" + ProjectManager.FOLDER_USER_PROJECTS + "/" + file + "]");
+                    // check if its mContext "create" and not equal to probe because
+                    // thats created every time camera is
+                    // launched
+                } else if ((FileObserver.DELETE & event) != 0) {
+                    MLog.d(TAG, "File deleted [" + ProjectManager.FOLDER_USER_PROJECTS + "/" + file + "]");
 
-				}
-			}
-		};
+                }
+            }
+        };
 
         connectivityChangeReceiver = new ConnectivityChangeReceiver();
     }
@@ -150,96 +150,96 @@ public class MainActivity extends AppBaseActivity {
     }
 
     /**
-	 * onResume
-	 */
-	@Override
-	protected void onResume() {
-		super.onResume();
+     * onResume
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         //set settings
         setScreenAlwaysOn(mProtocoder.settings.getScreenOn());
 
         MLog.d(TAG, "Registering as an EventBus listener in MainActivity");
-		EventBus.getDefault().register(this);
+        EventBus.getDefault().register(this);
 
-		mStopServerReceiver = new BroadcastReceiver() {
+        mStopServerReceiver = new BroadcastReceiver() {
 
-			@Override
-			public void onReceive(Context context, Intent intent) {
+            @Override
+            public void onReceive(Context context, Intent intent) {
                 mProtocoder.app.killConnections();
-			}
-		};
+            }
+        };
 
-		registerReceiver(connectivityChangeReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        registerReceiver(connectivityChangeReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
         mProtocoder.app.startServers();
-		IntentFilter filterSend = new IntentFilter();
-		filterSend.addAction("org.protocoder.intent.action.STOP_SERVER");
-		registerReceiver(mStopServerReceiver, filterSend);
-		fileObserver.startWatching();
+        IntentFilter filterSend = new IntentFilter();
+        filterSend.addAction("org.protocoder.intent.action.STOP_SERVER");
+        registerReceiver(mStopServerReceiver, filterSend);
+        fileObserver.startWatching();
 
-		try {
-			ViewConfiguration config = ViewConfiguration.get(this);
-			Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
+        try {
+            ViewConfiguration config = ViewConfiguration.get(this);
+            Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
 
-			if (menuKeyField != null) {
-				menuKeyField.setAccessible(true);
-				menuKeyField.setBoolean(config, false);
-			}
-		} catch (Exception e) {
-			// presumably, not relevant
-		}
+            if (menuKeyField != null) {
+                menuKeyField.setAccessible(true);
+                menuKeyField.setBoolean(config, false);
+            }
+        } catch (Exception e) {
+            // presumably, not relevant
+        }
 
         IDEcommunication.getInstance(this).ready(false);
     }
 
-	/**
-	 * onPause
-	 */
-	@Override
-	protected void onPause() {
-		super.onPause();
+    /**
+     * onPause
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
 
-		EventBus.getDefault().unregister(this);
-		unregisterReceiver(mStopServerReceiver);
-		fileObserver.stopWatching();
-		unregisterReceiver(connectivityChangeReceiver);
+        EventBus.getDefault().unregister(this);
+        unregisterReceiver(mStopServerReceiver);
+        fileObserver.stopWatching();
+        unregisterReceiver(connectivityChangeReceiver);
 
-	}
+    }
 
-	/**
-	 * onDestroy
-	 */
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		ViewGroup vg = (ViewGroup) findViewById(R.layout.activity_main);
-		if (vg != null) {
-			vg.invalidate();
-			vg.removeAllViews();
-		}
-		mProtocoder.app.killConnections();
-	}
+    /**
+     * onDestroy
+     */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ViewGroup vg = (ViewGroup) findViewById(R.layout.activity_main);
+        if (vg != null) {
+            vg.invalidate();
+            vg.removeAllViews();
+        }
+        mProtocoder.app.killConnections();
+    }
 
 
-	// TODO call intent and kill it in an appropiate way
-	public void onEventMainThread(ProjectEvent evt) {
-		// Using transaction so the view blocks
-		MLog.d(TAG, "event -> " + evt.getAction());
+    // TODO call intent and kill it in an appropiate way
+    public void onEventMainThread(ProjectEvent evt) {
+        // Using transaction so the view blocks
+        MLog.d(TAG, "event -> " + evt.getAction());
 
-		if (evt.getAction() == "run") {
+        if (evt.getAction() == "run") {
             Project p = evt.getProject();
             mProtocoder.protoScripts.run(p.getFolder(), p.getName());
-		} else if (evt.getAction() == "save") {
+        } else if (evt.getAction() == "save") {
             Project p = evt.getProject();
             mProtocoder.protoScripts.refresh(p.getFolder(), p.getName());
-		} else if (evt.getAction() == "new") {
-			MLog.d(TAG, "creating new project " + evt.getProject().getName());
+        } else if (evt.getAction() == "new") {
+            MLog.d(TAG, "creating new project " + evt.getProject().getName());
             mProtocoder.protoScripts.createProject("projects", evt.getProject().getName());
-		} else if (evt.getAction() == "update") {
+        } else if (evt.getAction() == "update") {
             mProtocoder.protoScripts.listRefresh();
-		}
-	}
+        }
+    }
 
 
     // execute lines
@@ -247,10 +247,10 @@ public class MainActivity extends AppBaseActivity {
         String code = evt.getCode();
         MLog.d(TAG, "event -> " + code);
 
-       //TODO apprunner
-       // if (debugApp) {
-       //     interp.eval(code);
-       // }
+        //TODO apprunner
+        // if (debugApp) {
+        //     interp.eval(code);
+        // }
     }
 
     public void onEventMainThread(Events.SelectedProjectEvent evt) {
@@ -263,81 +263,81 @@ public class MainActivity extends AppBaseActivity {
     }
 
     @Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.main_activity_menu, menu);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_activity_menu, menu);
 
-		mMenu = menu;
-		return super.onCreateOptionsMenu(menu);
-	}
+        mMenu = menu;
+        return super.onCreateOptionsMenu(menu);
+    }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 
-		int itemId = item.getItemId();
-		if (itemId == android.R.id.home) {
-			return true;
-		} else if (itemId == R.id.menu_new) {
-			Protocoder.getInstance(this).protoScripts.createProjectDialog();
-			return true;
-		} else if (itemId == R.id.menu_help) {
+        int itemId = item.getItemId();
+        if (itemId == android.R.id.home) {
+            return true;
+        } else if (itemId == R.id.menu_new) {
+            Protocoder.getInstance(this).protoScripts.createProjectDialog();
+            return true;
+        } else if (itemId == R.id.menu_help) {
             Protocoder.getInstance(this).app.showHelp(true);
-			return true;
-		} else if (itemId == R.id.menu_settings) {
-		    Protocoder.getInstance(this).app.showSettings(true);
-			return true;
-		} else {
-			return super.onOptionsItemSelected(item);
-		}
-	}
+            return true;
+        } else if (itemId == R.id.menu_settings) {
+            Protocoder.getInstance(this).app.showSettings(true);
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
 
-	/*
-	 * Key management
-	 */
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent evt) {
-		MLog.d("BACK BUTTON", "Back button was pressed");
-		if (keyCode == 4) {
-			Fragment fragment = getSupportFragmentManager().findFragmentByTag("editorFragment");
-			if (fragment != null && fragment.isVisible()) {
-				MLog.d(TAG, "Removing editor");
-				removeFragment(fragment);
-				return true;
-			} else {
-				finish();
-				return true;
-			}
-		}
-		return true;
-	}
+    /*
+     * Key management
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent evt) {
+        MLog.d("BACK BUTTON", "Back button was pressed");
+        if (keyCode == 4) {
+            Fragment fragment = getSupportFragmentManager().findFragmentByTag("editorFragment");
+            if (fragment != null && fragment.isVisible()) {
+                MLog.d(TAG, "Removing editor");
+                removeFragment(fragment);
+                return true;
+            } else {
+                finish();
+                return true;
+            }
+        }
+        return true;
+    }
 
-	@Override
-	public boolean dispatchKeyEvent(KeyEvent event) {
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
 
-		if (event.getAction() == KeyEvent.ACTION_DOWN && event.isCtrlPressed()) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN && event.isCtrlPressed()) {
 
-			int keyCode = event.getKeyCode();
-			switch (keyCode) {
-			case KeyEvent.KEYCODE_R:
-				MLog.d(TAG, "run app");
-				break;
+            int keyCode = event.getKeyCode();
+            switch (keyCode) {
+                case KeyEvent.KEYCODE_R:
+                    MLog.d(TAG, "run app");
+                    break;
 
-			default:
-				break;
-			}
-		}
+                default:
+                    break;
+            }
+        }
 
-		return super.dispatchKeyEvent(event);
-	}
+        return super.dispatchKeyEvent(event);
+    }
 
-	// check if connection has changed
-	public class ConnectivityChangeReceiver extends BroadcastReceiver {
+    // check if connection has changed
+    public class ConnectivityChangeReceiver extends BroadcastReceiver {
 
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			AndroidUtils.debugIntent("connectivityChangerReceiver", intent);
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            AndroidUtils.debugIntent("connectivityChangerReceiver", intent);
             mProtocoder.app.startServers();
-		}
-	}
+        }
+    }
 }

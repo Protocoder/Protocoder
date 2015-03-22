@@ -43,20 +43,20 @@ public class PMagnetic extends CustomSensorManager implements WhatIsRunningInter
 
 
     public interface MagneticListener extends CustomSensorListener {
-		public void event(float f);
-	}
+        public void event(float f);
+    }
 
-	private final static String TAG = "Magnetic";
+    private final static String TAG = "Magnetic";
     private MagneticListener mCallbackMagneticChange;
 
-	public PMagnetic(Context c) {
+    public PMagnetic(Context c) {
         super(c);
 
         type = Sensor.TYPE_MAGNETIC_FIELD;
     }
 
     @ProtoMethod(description = "Start the magnetic sensor", example = "")
-    @ProtoMethodParam(params = { "function(value)" })
+    @ProtoMethodParam(params = {"function(value)"})
     public void start() {
         if (running) {
             return;
@@ -90,9 +90,8 @@ public class PMagnetic extends CustomSensorManager implements WhatIsRunningInter
     }
 
 
-
     @ProtoMethod(description = "Start the accelerometer. Returns x, y, z", example = "")
-    @ProtoMethodParam(params = { "function(x, y, z)" })
+    @ProtoMethodParam(params = {"function(x, y, z)"})
     public void onChange(final MagneticListener callbackfn) {
         mCallbackMagneticChange = callbackfn;
 

@@ -49,9 +49,9 @@ public class PCheckBox extends CheckBox implements PViewInterface {
         // Add the click callback
         this.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    callbackfn.event(isChecked);
-                }
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                callbackfn.event(isChecked);
+            }
         });
 
         return this;

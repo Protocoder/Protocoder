@@ -46,64 +46,64 @@ import java.io.IOException;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class HelpFragment extends BaseWebviewFragment {
-	private View v;
-	private static final int MENU_CLOSE = 101;
+    private View v;
+    private static final int MENU_CLOSE = 101;
 
-	private final String TAG = "ApplicationWebView";
+    private final String TAG = "ApplicationWebView";
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		Log.i("HELPFRAGMENT", "Hereere-----");
-		try {
-			String contents = FileIO.readFromAssets(getActivity(), "help.html");
-			loadViewFromTemplate(contents);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		// setVisible(false);
-	}
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Log.i("HELPFRAGMENT", "Hereere-----");
+        try {
+            String contents = FileIO.readFromAssets(getActivity(), "help.html");
+            loadViewFromTemplate(contents);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // setVisible(false);
+    }
 
-	@Override
-	public void loadViewFromFile(String filename) {
-		filename = "file://" + filename;
-		MLog.d(TAG, "loading " + filename);
-		getWebview().loadUrl(filename);
-	}
+    @Override
+    public void loadViewFromFile(String filename) {
+        filename = "file://" + filename;
+        MLog.d(TAG, "loading " + filename);
+        getWebview().loadUrl(filename);
+    }
 
-	@Override
-	public WebView getWebview() {
-		return webView;
-	}
+    @Override
+    public WebView getWebview() {
+        return webView;
+    }
 
-	public void loadViewFromTemplate(String template) {
-		getWebview().loadDataWithBaseURL("file://template", template, "text/html", "utf-8", null);
-	}
+    public void loadViewFromTemplate(String template) {
+        getWebview().loadDataWithBaseURL("file://template", template, "text/html", "utf-8", null);
+    }
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		menu.add(1, MENU_CLOSE, 0, "Close").setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-		super.onCreateOptionsMenu(menu, inflater);
-	}
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.add(1, MENU_CLOSE, 0, "Close").setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle item selection
-		switch (item.getItemId()) {
-		case MENU_CLOSE:
-			setVisible(false);
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case MENU_CLOSE:
+                setVisible(false);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
-	public void setVisible(boolean b) {
-		if (b) {
-			getWebview().setVisibility(View.VISIBLE);
-		} else {
-			getWebview().setVisibility(View.INVISIBLE);
-		}
-	}
+    public void setVisible(boolean b) {
+        if (b) {
+            getWebview().setVisibility(View.VISIBLE);
+        } else {
+            getWebview().setVisibility(View.INVISIBLE);
+        }
+    }
 
 }

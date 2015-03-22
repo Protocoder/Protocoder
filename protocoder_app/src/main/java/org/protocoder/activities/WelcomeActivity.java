@@ -34,7 +34,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -42,11 +41,8 @@ import android.widget.TextView;
 import org.protocoder.MainActivity;
 import org.protocoder.R;
 import org.protocoder.appApi.Protocoder;
-import org.protocoder.fragments.SettingsFragment;
-import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.project.ProjectManager.InstallListener;
-import org.protocoderrunner.utils.AndroidUtils;
 import org.protocoderrunner.utils.MLog;
 import org.protocoderrunner.utils.StrUtils;
 
@@ -57,101 +53,104 @@ import java.io.InputStream;
 @SuppressLint("NewApi")
 public class WelcomeActivity extends AppBaseActivity {
 
-	private static final String TAG = "WelcomeActivity";
+    private static final String TAG = "WelcomeActivity";
 
-	/** Called when the activity is first created. */
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    /**
+     * Called when the activity is first created.
+     */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_welcome);
+        setContentView(R.layout.activity_welcome);
         setToolbar();
         //setToolbarBack();
 
-		// Set copyright
-		TextView copyright = (TextView) findViewById(R.id.copyright);
-		copyright.setText(readFile(R.raw.copyright_notice));
+        // Set copyright
+        TextView copyright = (TextView) findViewById(R.id.copyright);
+        copyright.setText(readFile(R.raw.copyright_notice));
 
-		// first time id
-		Protocoder.getInstance(this).settings.setId(StrUtils.generateRandomString());
-	}
+        // first time id
+        Protocoder.getInstance(this).settings.setId(StrUtils.generateRandomString());
+    }
 
-	/**
-	 * onResume
-	 */
-	@Override
-	protected void onResume() {
-		super.onResume();
-		MLog.d(TAG, "onResume");
-	}
+    /**
+     * onResume
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MLog.d(TAG, "onResume");
+    }
 
-	/**
-	 * onPause
-	 */
-	@Override
-	protected void onPause() {
-		super.onPause();
-		// do something here
-	}
+    /**
+     * onPause
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // do something here
+    }
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-	}
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		return super.onOptionsItemSelected(item);
-	}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
+    }
 
-	public void onAcceptClick(View v) {
-		final ProgressDialog progress = new ProgressDialog(this);
-		progress.setTitle("Installing examples");
-		progress.setMessage("You can start creating with Protocoder in just a second");
-		progress.show();
-		progress.setCancelable(false);
-		progress.setCanceledOnTouchOutside(false);
+    public void onAcceptClick(View v) {
+        final ProgressDialog progress = new ProgressDialog(this);
+        progress.setTitle("Installing examples");
+        progress.setMessage("You can start creating with Protocoder in just a second");
+        progress.show();
+        progress.setCancelable(false);
+        progress.setCanceledOnTouchOutside(false);
 
-		// install examples
-		ProjectManager.getInstance().install(this, ProjectManager.getInstance().FOLDER_EXAMPLES, new InstallListener() {
+        // install examples
+        ProjectManager.getInstance().install(this, ProjectManager.getInstance().FOLDER_EXAMPLES, new InstallListener() {
 
-			@Override
-			public void onReady() {
-				progress.dismiss();
-				// Write mContext shared pref to never come back here
-				SharedPreferences userDetails = getSharedPreferences("org.protocoder", MODE_PRIVATE);
-				userDetails.edit().putBoolean(getResources().getString(R.string.pref_is_first_launch), false).commit();
-				// Start the activity
-				Intent i = new Intent(WelcomeActivity.this, MainActivity.class);
-				i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-				startActivity(i);
-			}
-		});
+            @Override
+            public void onReady() {
+                progress.dismiss();
+                // Write mContext shared pref to never come back here
+                SharedPreferences userDetails = getSharedPreferences("org.protocoder", MODE_PRIVATE);
+                userDetails.edit().putBoolean(getResources().getString(R.string.pref_is_first_launch), false).commit();
+                // Start the activity
+                Intent i = new Intent(WelcomeActivity.this, MainActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(i);
+            }
+        });
 
-	}
+    }
 
     //TODO remove and use fileIO methods
-	/**
-	 * Returns mContext string from mContext txt file resource
-	 * 
-	 * @return
-	 */
-	private String readFile(int resource) {
-		InputStream inputStream = getResources().openRawResource(resource);
-		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-		int i;
-		try {
-			i = inputStream.read();
-			while (i != -1) {
-				byteArrayOutputStream.write(i);
-				i = inputStream.read();
-			}
-			inputStream.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return byteArrayOutputStream.toString();
-	}
+
+    /**
+     * Returns mContext string from mContext txt file resource
+     *
+     * @return
+     */
+    private String readFile(int resource) {
+        InputStream inputStream = getResources().openRawResource(resource);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        int i;
+        try {
+            i = inputStream.read();
+            while (i != -1) {
+                byteArrayOutputStream.write(i);
+                i = inputStream.read();
+            }
+            inputStream.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return byteArrayOutputStream.toString();
+    }
 
 }

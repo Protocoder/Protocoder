@@ -73,31 +73,31 @@ import java.util.Vector;
 @SuppressLint("NewApi")
 public class CameraNew extends TextureView implements TextureView.SurfaceTextureListener {
 
-	public static final int MODE_CAMERA_FRONT = 0;
-	public static final int MODE_CAMERA_BACK = 1;
+    public static final int MODE_CAMERA_FRONT = 0;
+    public static final int MODE_CAMERA_BACK = 1;
     public static final int MODE_COLOR_BW = 2;
     public static final int MODE_COLOR_COLOR = 3;
     private static int cameraRotation = 0;
 
     int modeColor;
-	int modeCamera;
-	private int cameraId;
+    int modeCamera;
+    private int cameraId;
 
-	protected String TAG = "Camera";
+    protected String TAG = "Camera";
 
     AppRunnerActivity mContext;
 
-	// camera
-	//TextureView mTextureView;
-	protected Camera mCamera;
+    // camera
+    //TextureView mTextureView;
+    protected Camera mCamera;
 
-	// saving info
-	private String _rootPath;
-	private String _fileName;
-	private String _path;
-	private View v;
+    // saving info
+    private String _rootPath;
+    private String _fileName;
+    private String _path;
+    private View v;
 
-	private Vector<CameraListener> listeners = new Vector<CameraListener>();
+    private Vector<CameraListener> listeners = new Vector<CameraListener>();
     private CallbackBmp callbackBmp;
     private CallbackStream callbackStream;
     private boolean frameProcessing = false;
@@ -106,11 +106,11 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
 
     public interface CameraListener {
 
-		public void onPicTaken();
+        public void onPicTaken();
 
-		public void onVideoRecorded();
+        public void onVideoRecorded();
 
-	}
+    }
 
 
     public CameraNew(AppRunnerActivity context, int camera, int colorMode) {
@@ -190,12 +190,11 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
     protected interface CallbackBmp {
         public void event(Bitmap bmp);
     }
-    
+
     public void addCallbackBmp(CallbackBmp callbackBmp) {
         this.callbackBmp = callbackBmp;
         startOnFrameProcessing();
     }
-
 
 
     public interface CallbackStream {
@@ -286,217 +285,216 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
 
     }
 
-	protected void stopCamera() {
+    protected void stopCamera() {
 
-		if (mCamera != null) {
-			mCamera.stopPreview();
-			mCamera.setPreviewCallback(null);
-			mCamera.release();
-			mCamera = null;
-		}
+        if (mCamera != null) {
+            mCamera.stopPreview();
+            mCamera.setPreviewCallback(null);
+            mCamera.release();
+            mCamera = null;
+        }
 
-	}
-
-
-	File dir = null;
-	File file = null;
-	String fileName;
-
-	public String takePic(final String path) {
-		// final CountDownLatch latch = new CountDownLatch(1);
-
-		AudioManager mgr = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
-		mgr.setStreamMute(AudioManager.STREAM_SYSTEM, true);
-
-		SoundPool soundPool = new SoundPool(1, AudioManager.STREAM_NOTIFICATION, 0);
-		// final int shutterSound = soundPool.load(this, R.raw.camera_click, 0);
-
-		mCamera.takePicture(null, null, new PictureCallback() {
-
-			@Override
-			public void onPictureTaken(byte[] data, Camera camera) {
-
-				Bitmap bitmapPicture = BitmapFactory.decodeByteArray(data, 0, data.length);
+    }
 
 
+    File dir = null;
+    File file = null;
+    String fileName;
 
-				// soundPool.play(shutterSound, 1f, 1f, 0, 0, 1);
+    public String takePic(final String path) {
+        // final CountDownLatch latch = new CountDownLatch(1);
 
-				FileOutputStream outStream = null;
-				try {
+        AudioManager mgr = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+        mgr.setStreamMute(AudioManager.STREAM_SYSTEM, true);
 
-					file = new File(path);
+        SoundPool soundPool = new SoundPool(1, AudioManager.STREAM_NOTIFICATION, 0);
+        // final int shutterSound = soundPool.load(this, R.raw.camera_click, 0);
 
-					outStream = new FileOutputStream(file);
-					outStream.write(data);
-					outStream.flush();
-					outStream.close();
-					MLog.d(TAG, "onPictureTaken - wrote bytes: " + data.length);
+        mCamera.takePicture(null, null, new PictureCallback() {
 
-					for (CameraListener l : listeners) {
-						l.onPicTaken();
-					}
+            @Override
+            public void onPictureTaken(byte[] data, Camera camera) {
 
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				} finally {
-				}
+                Bitmap bitmapPicture = BitmapFactory.decodeByteArray(data, 0, data.length);
 
-				MLog.d(TAG, "onPictureTaken - jpeg");
 
-				camera.startPreview();
-				// latch.countDown();
+                // soundPool.play(shutterSound, 1f, 1f, 0, 0, 1);
 
-			}
-		});
+                FileOutputStream outStream = null;
+                try {
+
+                    file = new File(path);
+
+                    outStream = new FileOutputStream(file);
+                    outStream.write(data);
+                    outStream.flush();
+                    outStream.close();
+                    MLog.d(TAG, "onPictureTaken - wrote bytes: " + data.length);
+
+                    for (CameraListener l : listeners) {
+                        l.onPicTaken();
+                    }
+
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                }
+
+                MLog.d(TAG, "onPictureTaken - jpeg");
+
+                camera.startPreview();
+                // latch.countDown();
+
+            }
+        });
 
 		/*
-		 * try { latch.await(); } catch (InterruptedException e1) { // TODO
+         * try { latch.await(); } catch (InterruptedException e1) { // TODO
 		 * Auto-generated catch block e1.printStackTrace(); }
 		 */
 
-		return fileName;
+        return fileName;
 
-	}
+    }
 
-	private MediaRecorder recorder;
-	private boolean recording = false;
+    private MediaRecorder recorder;
+    private boolean recording = false;
 
-	public void stopRecordingVideo() {
-		recorder.stop();
-		recorder.release();
-		mCamera.lock();
-		recording = false;
-		MLog.d(TAG, "Recording Stopped");
-	}
+    public void stopRecordingVideo() {
+        recorder.stop();
+        recorder.release();
+        mCamera.lock();
+        recording = false;
+        MLog.d(TAG, "Recording Stopped");
+    }
 
-	public void recordVideo(String file) {
+    public void recordVideo(String file) {
 
-		MLog.d(TAG, "mCamera " + mCamera);
-		// Camera.Parameters parameters = mCamera.getParameters();
-		// MLog.d(TAG, "parameters " + parameters);
-		// parameters.setColorEffect(Camera.Parameters.EFFECT_MONO);
-		// mCamera.setParameters(parameters);
+        MLog.d(TAG, "mCamera " + mCamera);
+        // Camera.Parameters parameters = mCamera.getParameters();
+        // MLog.d(TAG, "parameters " + parameters);
+        // parameters.setColorEffect(Camera.Parameters.EFFECT_MONO);
+        // mCamera.setParameters(parameters);
 
-		recorder = new MediaRecorder();
-		MLog.d(TAG, "recorder " + recorder);
+        recorder = new MediaRecorder();
+        MLog.d(TAG, "recorder " + recorder);
 
-		mCamera.unlock();
-		recorder.setCamera(mCamera);
-		// recorder.setVideoFrameRate(15);
-		recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-		recorder.setVideoSource(MediaRecorder.VideoSource.DEFAULT);
-		// mCamera.getParameters().
-		CamcorderProfile profile = CamcorderProfile.get(cameraId, CamcorderProfile.QUALITY_HIGH);
-		recorder.setProfile(profile);
-		MLog.d(TAG, "setting profile ");
-		// CamcorderProfile cpHigh = CamcorderProfile.get(cameraId,
-		// CamcorderProfile.QUALITY_HIGH);
-		// MLog.d(TAG, "profile set " + cpHigh);
-		// recorder.setProfile(cpHigh);
-		MLog.d(TAG, "profile set 1 " + file);
-		// recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-		// recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-		// recorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
-		recorder.setOutputFile(file);
-		MLog.d(TAG, "profile set 2");
-		// recorder.setMaxDuration(5000 * 1000); // 50 seconds
-		// recorder.setMaxFileSize(5000 * 1000000); // Approximately 5 megabytes
+        mCamera.unlock();
+        recorder.setCamera(mCamera);
+        // recorder.setVideoFrameRate(15);
+        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        recorder.setVideoSource(MediaRecorder.VideoSource.DEFAULT);
+        // mCamera.getParameters().
+        CamcorderProfile profile = CamcorderProfile.get(cameraId, CamcorderProfile.QUALITY_HIGH);
+        recorder.setProfile(profile);
+        MLog.d(TAG, "setting profile ");
+        // CamcorderProfile cpHigh = CamcorderProfile.get(cameraId,
+        // CamcorderProfile.QUALITY_HIGH);
+        // MLog.d(TAG, "profile set " + cpHigh);
+        // recorder.setProfile(cpHigh);
+        MLog.d(TAG, "profile set 1 " + file);
+        // recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        // recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        // recorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
+        recorder.setOutputFile(file);
+        MLog.d(TAG, "profile set 2");
+        // recorder.setMaxDuration(5000 * 1000); // 50 seconds
+        // recorder.setMaxFileSize(5000 * 1000000); // Approximately 5 megabytes
 
-		// CamcorderProfile camcorderProfile =
-		// CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH);
-		// recorder.setProfile(camcorderProfile);
+        // CamcorderProfile camcorderProfile =
+        // CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH);
+        // recorder.setProfile(camcorderProfile);
 
-		// recorder.setPreviewDisplay(mTextureView.getSurfaceTexture());
-		// recorder.setPreviewDisplay(holder.getSurface());
-		// recorder.setP
+        // recorder.setPreviewDisplay(mTextureView.getSurfaceTexture());
+        // recorder.setPreviewDisplay(holder.getSurface());
+        // recorder.setP
 
-		try {
-			MLog.d(TAG, "preparing ");
-			recorder.prepare();
-			MLog.d(TAG, "prepare ");
+        try {
+            MLog.d(TAG, "preparing ");
+            recorder.prepare();
+            MLog.d(TAG, "prepare ");
 
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-			// finish();
-		} catch (IOException e) {
-			e.printStackTrace();
-			// finish();
-		}
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+            // finish();
+        } catch (IOException e) {
+            e.printStackTrace();
+            // finish();
+        }
 
-		if (recording) {
-			stopRecordingVideo();
-			// Let's initRecorder so we can record again
-			// prepareRecorder();
-		} else {
-			recording = true;
-			recorder.start();
-			MLog.d(TAG, "Recording Started");
-		}
+        if (recording) {
+            stopRecordingVideo();
+            // Let's initRecorder so we can record again
+            // prepareRecorder();
+        } else {
+            recording = true;
+            recorder.start();
+            MLog.d(TAG, "Recording Started");
+        }
 
-	}
+    }
 
-	@TargetApi(Build.VERSION_CODES.GINGERBREAD)
-	public void onPictureTaken(byte[] data, Camera camera) {
-		Log.i(TAG, "photo taken");
+    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
+    public void onPictureTaken(byte[] data, Camera camera) {
+        Log.i(TAG, "photo taken");
 
-		_fileName = TimeUtils.getCurrentTime() + ".jpg";
-		_path = _rootPath + _fileName;
+        _fileName = TimeUtils.getCurrentTime() + ".jpg";
+        _path = _rootPath + _fileName;
 
-		new File(_rootPath).mkdirs();
-		File file = new File(_path);
-		Uri outputFileUri = Uri.fromFile(file);
+        new File(_rootPath).mkdirs();
+        File file = new File(_path);
+        Uri outputFileUri = Uri.fromFile(file);
 
-		// Uri imageFileUri = getContentResolver().insert(
-		// Media.EXTERNAL_CONTENT_URI, new ContentValues());
+        // Uri imageFileUri = getContentResolver().insert(
+        // Media.EXTERNAL_CONTENT_URI, new ContentValues());
 
-		try {
-			OutputStream imageFileOS = mContext.getContentResolver().openOutputStream(outputFileUri);
-			imageFileOS.write(data);
-			imageFileOS.flush();
-			imageFileOS.close();
+        try {
+            OutputStream imageFileOS = mContext.getContentResolver().openOutputStream(outputFileUri);
+            imageFileOS.write(data);
+            imageFileOS.flush();
+            imageFileOS.close();
 
-		} catch (FileNotFoundException e) {
-			Toast t = Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT);
-			t.show();
-		} catch (IOException e) {
-			Toast t = Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT);
-			t.show();
-		}
+        } catch (FileNotFoundException e) {
+            Toast t = Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT);
+            t.show();
+        } catch (IOException e) {
+            Toast t = Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT);
+            t.show();
+        }
 
-		camera.startPreview();
-		camera.release();
+        camera.startPreview();
+        camera.release();
 
-		AudioManager mgr = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
-		mgr.setStreamMute(AudioManager.STREAM_SYSTEM, false);
+        AudioManager mgr = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+        mgr.setStreamMute(AudioManager.STREAM_SYSTEM, false);
 
-		// WindowManager.LayoutParams params = getWindow().getAttributes();
-		// params.flags |= LayoutParams.FLAG_KEEP_SCREEN_ON;
-		// params.screenBrightness = 0;
-		// getWindow().setAttributes(params);
+        // WindowManager.LayoutParams params = getWindow().getAttributes();
+        // params.flags |= LayoutParams.FLAG_KEEP_SCREEN_ON;
+        // params.screenBrightness = 0;
+        // getWindow().setAttributes(params);
 
-		Log.i(TAG, "photo saved");
+        Log.i(TAG, "photo saved");
 
-		// this.finish();
+        // this.finish();
 
-	}
+    }
 
-	@SuppressLint("NewApi")
-	private int getCameraId(int cameraId) {
-		CameraInfo ci = new CameraInfo();
-		for (int i = 0; i < Camera.getNumberOfCameras(); i++) {
-			Camera.getCameraInfo(i, ci);
-			if (ci.facing == cameraId) { //CameraInfo.CAMERA_FACING_FRONT) {
+    @SuppressLint("NewApi")
+    private int getCameraId(int cameraId) {
+        CameraInfo ci = new CameraInfo();
+        for (int i = 0; i < Camera.getNumberOfCameras(); i++) {
+            Camera.getCameraInfo(i, ci);
+            if (ci.facing == cameraId) { //CameraInfo.CAMERA_FACING_FRONT) {
                 MLog.d(TAG, "returning " + i);
-				return i;
-			//} else (ci.facing == CameraInfo.CAMERA_FACING_BACK) {
-            //    return i;
+                return i;
+                //} else (ci.facing == CameraInfo.CAMERA_FACING_BACK) {
+                //    return i;
             }
-		}
-		return -1; // No front-facing camera found
-	}
+        }
+        return -1; // No front-facing camera found
+    }
 
     public boolean isFlashAvailable() {
         boolean b = mContext.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
@@ -504,27 +502,27 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
         return b;
     }
 
-	public void turnOnFlash(boolean b) {
+    public void turnOnFlash(boolean b) {
         MLog.d(TAG, "qq " + b + " " + isFlashAvailable());
-		if (isFlashAvailable()) {
-			Parameters p = mCamera.getParameters();
-			if (b) {
-				p.setFlashMode(Parameters.FLASH_MODE_TORCH);
-				mCamera.setParameters(p);
-				//mCamera.startPreview();
-			} else {
-				p.setFlashMode(Parameters.FLASH_MODE_OFF);
-				mCamera.setParameters(p);
-				//mCamera.startPreview();
-			}
-		}
-	}
+        if (isFlashAvailable()) {
+            Parameters p = mCamera.getParameters();
+            if (b) {
+                p.setFlashMode(Parameters.FLASH_MODE_TORCH);
+                mCamera.setParameters(p);
+                //mCamera.startPreview();
+            } else {
+                p.setFlashMode(Parameters.FLASH_MODE_OFF);
+                mCamera.setParameters(p);
+                //mCamera.startPreview();
+            }
+        }
+    }
 
     public boolean hasAutofocus() {
         return mContext.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_AUTOFOCUS);
     }
 
-    public interface FocusCB  {
+    public interface FocusCB {
         public void event();
     }
 
@@ -543,13 +541,13 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
         }
     }
 
-	public void addListener(CameraListener listener) {
-		listeners.add(listener);
-	}
+    public void addListener(CameraListener listener) {
+        listeners.add(listener);
+    }
 
-	public void removeListener(CameraListener listener) {
-		listeners.remove(listener);
-	}
+    public void removeListener(CameraListener listener) {
+        listeners.remove(listener);
+    }
 
     public static void setCameraDisplayOrientation(Activity activity,
                                                    int cameraId, android.hardware.Camera camera) {
@@ -560,10 +558,18 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
                 .getRotation();
         int degrees = 0;
         switch (rotation) {
-            case Surface.ROTATION_0: degrees = 0; break;
-            case Surface.ROTATION_90: degrees = 90; break;
-            case Surface.ROTATION_180: degrees = 180; break;
-            case Surface.ROTATION_270: degrees = 270; break;
+            case Surface.ROTATION_0:
+                degrees = 0;
+                break;
+            case Surface.ROTATION_90:
+                degrees = 90;
+                break;
+            case Surface.ROTATION_180:
+                degrees = 180;
+                break;
+            case Surface.ROTATION_270:
+                degrees = 270;
+                break;
         }
 
         int result;
@@ -580,44 +586,44 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
 
 
     static public void decodeYUV420SP(int[] rgb, byte[] yuv420sp, int width, int height) {
-		final int frameSize = width * height;
+        final int frameSize = width * height;
 
-		for (int j = 0, yp = 0; j < height; j++) {
-			int uvp = frameSize + (j >> 1) * width, u = 0, v = 0;
-			for (int i = 0; i < width; i++, yp++) {
-				int y = (0xff & (yuv420sp[yp])) - 16;
-				if (y < 0) {
-					y = 0;
-				}
-				if ((i & 1) == 0) {
-					v = (0xff & yuv420sp[uvp++]) - 128;
-					u = (0xff & yuv420sp[uvp++]) - 128;
-				}
+        for (int j = 0, yp = 0; j < height; j++) {
+            int uvp = frameSize + (j >> 1) * width, u = 0, v = 0;
+            for (int i = 0; i < width; i++, yp++) {
+                int y = (0xff & (yuv420sp[yp])) - 16;
+                if (y < 0) {
+                    y = 0;
+                }
+                if ((i & 1) == 0) {
+                    v = (0xff & yuv420sp[uvp++]) - 128;
+                    u = (0xff & yuv420sp[uvp++]) - 128;
+                }
 
-				int y1192 = 1192 * y;
-				int r = (y1192 + 1634 * v);
-				int g = (y1192 - 833 * v - 400 * u);
-				int b = (y1192 + 2066 * u);
+                int y1192 = 1192 * y;
+                int r = (y1192 + 1634 * v);
+                int g = (y1192 - 833 * v - 400 * u);
+                int b = (y1192 + 2066 * u);
 
-				if (r < 0) {
-					r = 0;
-				} else if (r > 262143) {
-					r = 262143;
-				}
-				if (g < 0) {
-					g = 0;
-				} else if (g > 262143) {
-					g = 262143;
-				}
-				if (b < 0) {
-					b = 0;
-				} else if (b > 262143) {
-					b = 262143;
-				}
+                if (r < 0) {
+                    r = 0;
+                } else if (r > 262143) {
+                    r = 262143;
+                }
+                if (g < 0) {
+                    g = 0;
+                } else if (g > 262143) {
+                    g = 262143;
+                }
+                if (b < 0) {
+                    b = 0;
+                } else if (b > 262143) {
+                    b = 262143;
+                }
 
-				rgb[yp] = 0xff000000 | ((r << 6) & 0xff0000) | ((g >> 2) & 0xff00) | ((b >> 10) & 0xff);
-			}
-		}
-	}
+                rgb[yp] = 0xff000000 | ((r << 6) & 0xff0000) | ((g >> 2) & 0xff00) | ((b >> 10) & 0xff);
+            }
+        }
+    }
 
 }

@@ -42,21 +42,21 @@ import java.net.UnknownHostException;
 
 public class PDashboardVideoCamera extends PInterface {
 
-	private static final String TAG = "PDashboardVideoCamera";
-	String id;
+    private static final String TAG = "PDashboardVideoCamera";
+    String id;
 
 
     //TODO this is just mContext scaffold needs to be implemented
-	public PDashboardVideoCamera(Context a) {
-		super(a);
-	}
+    public PDashboardVideoCamera(Context a) {
+        super(a);
+    }
 
 
-	@ProtoMethod(description = "", example = "")
-	public void add(int x, int y, int w, int h) throws UnknownHostException, JSONException {
-		this.id = StrUtils.generateRandomString();
+    @ProtoMethod(description = "", example = "")
+    public void add(int x, int y, int w, int h) throws UnknownHostException, JSONException {
+        this.id = StrUtils.generateRandomString();
 
-		JSONObject values = new JSONObject()
+        JSONObject values = new JSONObject()
                 .put("id", id)
                 .put("type", "camera")
                 .put("x", x)
@@ -69,13 +69,13 @@ public class PDashboardVideoCamera extends PInterface {
                 .put("action", "add")
                 .put("values", values);
 
-		CustomWebsocketServer.getInstance(getContext()).send(msg);
+        CustomWebsocketServer.getInstance(getContext()).send(msg);
 
-	}
+    }
 
 
-	@ProtoMethod(description = "", example = "")
-	public void update(String encodedImage) throws JSONException, UnknownHostException {
+    @ProtoMethod(description = "", example = "")
+    public void update(String encodedImage) throws JSONException, UnknownHostException {
         JSONObject values = new JSONObject()
                 .put("id", id)
                 .put("type", "widget")
@@ -86,6 +86,6 @@ public class PDashboardVideoCamera extends PInterface {
                 .put("action", "updateCamera")
                 .put("values", values);
 
-		CustomWebsocketServer.getInstance(getContext()).send(msg);
-	}
+        CustomWebsocketServer.getInstance(getContext()).send(msg);
+    }
 }

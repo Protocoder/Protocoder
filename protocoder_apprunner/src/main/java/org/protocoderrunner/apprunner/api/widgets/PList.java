@@ -41,52 +41,52 @@ import java.util.ArrayList;
 
 public class PList extends LinearLayout implements PViewInterface {
 
-	private final ListView lv;
-	private final Context c;
-	private PListAdapter plistAdapter;
+    private final ListView lv;
+    private final Context c;
+    private PListAdapter plistAdapter;
 
-	public PList(Context context) {
-		super(context);
-		c = context;
+    public PList(Context context) {
+        super(context);
+        c = context;
 
-		lv = new ListView(c);
+        lv = new ListView(c);
 
-	}
-
-    //TODO place holder
-
-    @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = { "" })
-	public void setItems(ArrayList<PListItem> items) {
-		plistAdapter = new PListAdapter(c, items);
-		lv.setAdapter(plistAdapter);
-	}
-
-	@Override
-    //TODO place holder
-
-    @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = { "" })
-	public void addView(View v) {
-		lv.addView(v);
-	}
+    }
 
     //TODO place holder
 
     @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = { "" })
-	public void clear() {
-		lv.removeAllViews();
-		plistAdapter.notifyDataSetChanged();
-	}
+    @ProtoMethodParam(params = {""})
+    public void setItems(ArrayList<PListItem> items) {
+        plistAdapter = new PListAdapter(c, items);
+        lv.setAdapter(plistAdapter);
+    }
+
+    @Override
+    //TODO place holder
+
+    @ProtoMethod(description = "", example = "")
+    @ProtoMethodParam(params = {""})
+    public void addView(View v) {
+        lv.addView(v);
+    }
 
     //TODO place holder
 
     @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = { "" })
-	public void notifyAddedProject() {
-		plistAdapter.notifyDataSetChanged();
-		lv.invalidateViews();
-	}
+    @ProtoMethodParam(params = {""})
+    public void clear() {
+        lv.removeAllViews();
+        plistAdapter.notifyDataSetChanged();
+    }
+
+    //TODO place holder
+
+    @ProtoMethod(description = "", example = "")
+    @ProtoMethodParam(params = {""})
+    public void notifyAddedProject() {
+        plistAdapter.notifyDataSetChanged();
+        lv.invalidateViews();
+    }
 
 }

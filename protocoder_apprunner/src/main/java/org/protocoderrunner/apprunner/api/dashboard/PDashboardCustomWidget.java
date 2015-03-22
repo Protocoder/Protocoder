@@ -42,23 +42,23 @@ import java.net.UnknownHostException;
 
 public class PDashboardCustomWidget extends PInterface {
 
-	private static final String TAG = "PDashboardCustomWidget";
-	String id;
+    private static final String TAG = "PDashboardCustomWidget";
+    String id;
 
-	public PDashboardCustomWidget(Context a) {
-		super(a);
-	}
+    public PDashboardCustomWidget(Context a) {
+        super(a);
+    }
 
-	// --------- JDashboard add ---------//
-	public interface jDashboardAddCB {
-		void event(JSONObject obj);
-	}
+    // --------- JDashboard add ---------//
+    public interface jDashboardAddCB {
+        void event(JSONObject obj);
+    }
 
-	public void add(String url, int x, int y, int w, int h, final jDashboardAddCB callbackfn) throws JSONException,
-			UnknownHostException {
-		this.id = StrUtils.generateRandomString();
+    public void add(String url, int x, int y, int w, int h, final jDashboardAddCB callbackfn) throws JSONException,
+            UnknownHostException {
+        this.id = StrUtils.generateRandomString();
 
-		JSONObject values = new JSONObject()
+        JSONObject values = new JSONObject()
                 .put("id", id)
                 .put("url", url)
                 .put("type", "custom")
@@ -72,26 +72,26 @@ public class PDashboardCustomWidget extends PInterface {
                 .put("action", "add")
                 .put("values", values);
 
-		CustomWebsocketServer.getInstance(getContext()).send(msg);
-		CustomWebsocketServer.getInstance(getContext()).addListener(id, new WebSocketListener() {
+        CustomWebsocketServer.getInstance(getContext()).send(msg);
+        CustomWebsocketServer.getInstance(getContext()).addListener(id, new WebSocketListener() {
 
-			@Override
-			public void onUpdated(final JSONObject jsonObject) {
-				mHandler.post(new Runnable() {
+            @Override
+            public void onUpdated(final JSONObject jsonObject) {
+                mHandler.post(new Runnable() {
 
-					@Override
-					public void run() {
-						callbackfn.event(jsonObject);
-					}
-				});
-			}
-		});
+                    @Override
+                    public void run() {
+                        callbackfn.event(jsonObject);
+                    }
+                });
+            }
+        });
 
-	}
+    }
 
-	public void send(JSONObject obj) throws JSONException, UnknownHostException {
+    public void send(JSONObject obj) throws JSONException, UnknownHostException {
 
-		JSONObject values = new JSONObject()
+        JSONObject values = new JSONObject()
                 .put("id", id)
                 .put("type", "custom")
                 .put("val", obj);
@@ -101,6 +101,6 @@ public class PDashboardCustomWidget extends PInterface {
                 .put("action", "send")
                 .put("values", values);
 
-		CustomWebsocketServer.getInstance(getContext()).send(msg);
-	}
+        CustomWebsocketServer.getInstance(getContext()).send(msg);
+    }
 }

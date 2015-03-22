@@ -37,57 +37,54 @@ import android.hardware.SensorManager;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
-import org.protocoderrunner.utils.MLog;
-
-import java.util.Vector;
 
 public class CustomSensorManager {
 
-	private final static String TAG = "CustomSensor";
+    private final static String TAG = "CustomSensor";
 
-	Context c;
+    Context c;
 
-	public boolean running = false;
-	boolean isSupported;
+    public boolean running = false;
+    boolean isSupported;
 
     int speed = SensorManager.SENSOR_DELAY_FASTEST;
 
     Sensor sensor;
-	SensorManager sensormanager;
-	SensorEventListener listener;
+    SensorManager sensormanager;
+    SensorEventListener listener;
     protected int type = -1;
 
-	public CustomSensorManager(Context c) {
-		sensormanager = (SensorManager) c.getSystemService(Context.SENSOR_SERVICE);
+    public CustomSensorManager(Context c) {
+        sensormanager = (SensorManager) c.getSystemService(Context.SENSOR_SERVICE);
 
-	}
+    }
 
-	public boolean isListening() {
-		return false;
-	}
+    public boolean isListening() {
+        return false;
+    }
 
     @ProtoMethod(description = "Start the sensor", example = "")
     public void start() {
-	    running = true;
+        running = true;
         WhatIsRunning.getInstance().add(this);
         sensor = sensormanager.getDefaultSensor(type);
     }
 
     @ProtoMethod(description = "Stop the sensor", example = "")
-    @ProtoMethodParam(params = { "" })
-	public void stop() {
-		running = false;
+    @ProtoMethodParam(params = {""})
+    public void stop() {
+        running = false;
         if (listener != null) {
             sensormanager.unregisterListener(listener);
             listener = null;
 
-           // WhatIsRunning.getInstance().remove(this);
+            // WhatIsRunning.getInstance().remove(this);
         }
-	}
+    }
 
 
     @ProtoMethod(description = "Set the speed of the sensor 'slow', 'fast', 'normal'", example = "")
-    @ProtoMethodParam(params = { "function(x, y, z)" })
+    @ProtoMethodParam(params = {"function(x, y, z)"})
     public void sensorsSpeed(String speed) {
         if (speed.equals("slow")) {
             this.speed = SensorManager.SENSOR_DELAY_UI;
@@ -111,7 +108,6 @@ public class CustomSensorManager {
     public float resolution() {
         return sensor.getResolution();
     }
-
 
 
 }

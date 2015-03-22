@@ -53,7 +53,6 @@ import org.protocoderrunner.network.CustomWebsocketServer;
 import org.protocoderrunner.network.IDEcommunication;
 import org.protocoderrunner.network.NetworkUtils;
 import org.protocoderrunner.utils.AndroidUtils;
-import org.protocoderrunner.utils.MLog;
 
 import java.io.ByteArrayOutputStream;
 import java.net.UnknownHostException;
@@ -150,8 +149,8 @@ public class App {
 
         if (show) {
             Intent aboutActivityIntent = new Intent(protocoder.mActivityContext, AboutActivity.class);
-           protocoder.mActivityContext.startActivity(aboutActivityIntent);
-           //protocoder.mActivityContext.overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
+            protocoder.mActivityContext.startActivity(aboutActivityIntent);
+            //protocoder.mActivityContext.overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
 
             //HelpFragment helpFragment = new HelpFragment();
             //Bundle bundle = new Bundle();
@@ -176,6 +175,7 @@ public class App {
     public void showNumberConections() {
 
     }
+
     public void showNetworkBottomInfo(boolean show) {
         if (show) {
             textIP.setVisibility(View.VISIBLE);
@@ -183,6 +183,7 @@ public class App {
             textIP.setVisibility(View.GONE);
         }
     }
+
     public void showNetworkDetails(boolean show) {
         if (show) {
 
@@ -199,6 +200,7 @@ public class App {
 
         }
     }
+
     public void showLibrariesRepo(boolean show) {
         if (show) {
 
@@ -206,6 +208,7 @@ public class App {
 
         }
     }
+
     public void showLibaries(boolean show) {
         if (show) {
 
@@ -213,9 +216,11 @@ public class App {
 
         }
     }
+
     public void highlight(String color) {
         overlay.setFrame();
     }
+
     public void vibrate(int time) {
         //protocoder.pDevice.vibrate(time);
     }
@@ -229,9 +234,11 @@ public class App {
     public void mode(String mode) {
 
     }
+
     public void close() {
         protocoder.mActivityContext.superMegaForceKill();
     }
+
     public void restart() {
 
     }

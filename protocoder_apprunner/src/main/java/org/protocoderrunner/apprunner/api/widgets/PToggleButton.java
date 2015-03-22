@@ -35,9 +35,9 @@ import android.widget.ToggleButton;
 
 public class PToggleButton extends ToggleButton implements PViewInterface {
 
-	public PToggleButton(Context context) {
-		super(context);
-	}
+    public PToggleButton(Context context) {
+        super(context);
+    }
 
     // --------- Toggle ---------//
     public interface addGenericToggleCB {

@@ -40,10 +40,10 @@ import org.protocoderrunner.utils.MLog;
 import java.lang.ref.WeakReference;
 
 public class ProtocoderFtpServer extends PFtpServer {
-	public static final String TAG = "ProtocoderFtpServer";
-	private final WeakReference<Context> ctx;
+    public static final String TAG = "ProtocoderFtpServer";
+    private final WeakReference<Context> ctx;
 
-	private static ProtocoderFtpServer instance = null;
+    private static ProtocoderFtpServer instance = null;
     private static boolean started = false;
 
 
@@ -67,14 +67,14 @@ public class ProtocoderFtpServer extends PFtpServer {
         addUser(settings.getFtpUserName(), settings.getFtpUserPassword(), ProjectManager.getInstance().getBaseDir(), true);
     }
 
-	public void stopServer() {
-		instance = null;
+    public void stopServer() {
+        instance = null;
 
         if (instance != null) {
             stop();
             started = false;
         }
-	}
+    }
 
     public void startServer() {
         if (!started) {

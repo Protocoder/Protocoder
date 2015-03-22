@@ -24,7 +24,7 @@ public class PGrid extends LinearLayout {
 
 
     @ProtoMethod(description = "Adds a new row with n columns", example = "")
-    @ProtoMethodParam(params = { "numColumns" })
+    @ProtoMethodParam(params = {"numColumns"})
     public PGridRow addRow(int cols) {
         PGridRow ll2 = new PGridRow(context, cols);
         this.addView(ll2);
@@ -34,17 +34,17 @@ public class PGrid extends LinearLayout {
 
 
     @ProtoMethod(description = "Specify the number of columns", example = "")
-    @ProtoMethodParam(params = { "colums" })
+    @ProtoMethodParam(params = {"colums"})
     public PGrid columns(int cols) {
         this.columns = cols;
-        
+
         return this;
     }
 
     //TODO Placeholder
     //
     @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = { "" })
+    @ProtoMethodParam(params = {""})
     public PGrid inPlace(int x, int y, int w, int h) {
 
         return this;
@@ -53,7 +53,7 @@ public class PGrid extends LinearLayout {
     //TODO Placeholder
 
     @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = { "" })
+    @ProtoMethodParam(params = {""})
     public PGrid using(NativeArray array) {
 
         return this;
@@ -62,7 +62,7 @@ public class PGrid extends LinearLayout {
     //TODO placeholder
 
     @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = { "" })
+    @ProtoMethodParam(params = {""})
     public PGrid build() {
 
         return this;

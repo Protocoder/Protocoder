@@ -35,45 +35,47 @@ import java.util.Vector;
 
 public class WhatIsRunning {
 
-	private static WhatIsRunning instance;
+    private static WhatIsRunning instance;
 
-	protected WhatIsRunning() {
+    protected WhatIsRunning() {
 
-	}
+    }
 
-	public static WhatIsRunning getInstance() {
-		if (instance == null)
-			instance = new WhatIsRunning();
-		return instance;
+    public static WhatIsRunning getInstance() {
+        if (instance == null)
+            instance = new WhatIsRunning();
+        return instance;
 
-	}
+    }
 
-	Vector<Object> runners = new Vector<Object>();
+    Vector<Object> runners = new Vector<Object>();
 
-	public void stopAll() {
-		for (Object o : runners) {
-			Method method = null;
+    public void stopAll() {
+        for (Object o : runners) {
+            Method method = null;
 
             //MLog.d("name", o.getClass().getCanonicalName());
-			try {
-				method = o.getClass().getMethod("stop");
-			} catch (SecurityException e) {
-			} catch (NoSuchMethodException e) {
-			}
+            try {
+                method = o.getClass().getMethod("stop");
+            } catch (SecurityException e) {
+            } catch (NoSuchMethodException e) {
+            }
 
-			try {
-				method.invoke(o);
-			} catch (IllegalArgumentException e) {
-			} catch (IllegalAccessException e) {
-			} catch (InvocationTargetException e) {
-			}
+            try {
+                method.invoke(o);
+            } catch (IllegalArgumentException e) {
+            } catch (IllegalAccessException e) {
+            } catch (InvocationTargetException e) {
+            }
 
-		}
-	}
+        }
+    }
 
-	public void add(Object object) {
-		runners.add(object);
-	}
+    public void add(Object object) {
+        runners.add(object);
+    }
 
-    public void remove(Object object) {runners.remove(object); }
+    public void remove(Object object) {
+        runners.remove(object);
+    }
 }

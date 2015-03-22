@@ -41,50 +41,50 @@ import java.util.Calendar;
 
 public class SchedulerManager {
 
-	Context c;
-	private static SchedulerManager INSTANCE;
-	ArrayList<Task> tasks = new ArrayList<SchedulerManager.Task>();
+    Context c;
+    private static SchedulerManager INSTANCE;
+    ArrayList<Task> tasks = new ArrayList<SchedulerManager.Task>();
 
-	public SchedulerManager(Context c) {
-		this.c = c;
-	}
+    public SchedulerManager(Context c) {
+        this.c = c;
+    }
 
-	public static SchedulerManager getInstance(Context c) {
-		if (INSTANCE == null) {
-			INSTANCE = new SchedulerManager(c);
-		}
+    public static SchedulerManager getInstance(Context c) {
+        if (INSTANCE == null) {
+            INSTANCE = new SchedulerManager(c);
+        }
 
-		return INSTANCE;
-	}
+        return INSTANCE;
+    }
 
-	public void removeTask(Task t) {
-		tasks.remove(t);
-	}
+    public void removeTask(Task t) {
+        tasks.remove(t);
+    }
 
-	public ArrayList<Task> getTasks() {
-		return tasks;
-	}
+    public ArrayList<Task> getTasks() {
+        return tasks;
+    }
 
-	public void loadTasks() {
+    public void loadTasks() {
 
-	}
+    }
 
-	public void saveTasks() {
+    public void saveTasks() {
 
-	}
+    }
 
-	private static final String ALARM_INTENT = "protocoder_alarm_message";
+    private static final String ALARM_INTENT = "protocoder_alarm_message";
 
-	public void setAlarmDelayed(Project p, int delay, boolean alarmRepeat, boolean wakeUpScreen) {
-		// get mContext Calendar object with current time
-		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.SECOND, delay);
+    public void setAlarmDelayed(Project p, int delay, boolean alarmRepeat, boolean wakeUpScreen) {
+        // get mContext Calendar object with current time
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.SECOND, delay);
 
-		setAlarm(p, cal, delay, alarmRepeat, wakeUpScreen);
-	}
+        setAlarm(p, cal, delay, alarmRepeat, wakeUpScreen);
+    }
 
 	/*
-	 * public void setAlarm(Project p, int month, int day, int hourOfDay, int
+     * public void setAlarm(Project p, int month, int day, int hourOfDay, int
 	 * minute, int second, boolean wakeUpScren) { Calendar cal =
 	 * Calendar.getInstance(); cal.set(cal.get(Calendar.YEAR), month, day,
 	 * hourOfDay, minute, second);
@@ -92,71 +92,71 @@ public class SchedulerManager {
 	 * setAlarm(p, cal, false, wakeUpScren, -1); }
 	 */
 
-	public void setAlarm(Project p, int hourOfDay, int minute, int second, boolean wakeUpScren) {
-		Calendar cal = Calendar.getInstance();
-		cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), hourOfDay, minute,
-				second);
+    public void setAlarm(Project p, int hourOfDay, int minute, int second, boolean wakeUpScren) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), hourOfDay, minute,
+                second);
 
-		setAlarm(p, cal, 0, false, wakeUpScren);
-	}
+        setAlarm(p, cal, 0, false, wakeUpScren);
+    }
 
-	public void setAlarm(Project p, Calendar cal, int delay, boolean repeating, boolean wakeUpScreen) {
-		int id = (int) Math.round((999999999 * Math.random()));
+    public void setAlarm(Project p, Calendar cal, int delay, boolean repeating, boolean wakeUpScreen) {
+        int id = (int) Math.round((999999999 * Math.random()));
 
-		// add to mContext global alarm thingie
-		tasks.add(new Task(id, p, cal, delay, repeating, wakeUpScreen));
+        // add to mContext global alarm thingie
+        tasks.add(new Task(id, p, cal, delay, repeating, wakeUpScreen));
 
-		String message = "";
+        String message = "";
 
-		Intent intent = new Intent(c, AlarmReceiver.class);
-		intent.putExtra(ALARM_INTENT, message);
+        Intent intent = new Intent(c, AlarmReceiver.class);
+        intent.putExtra(ALARM_INTENT, message);
 
-		if (wakeUpScreen) {
-			intent.putExtra(Project.SETTINGS_SCREEN_WAKEUP, true);
-		}
+        if (wakeUpScreen) {
+            intent.putExtra(Project.SETTINGS_SCREEN_WAKEUP, true);
+        }
 
-		// Project p = ProjectManager.getInstance().getCurrentProject();
-		intent.putExtra(Project.NAME, p.getName());
-		intent.putExtra(Project.FOLDER, p.getFolder());
+        // Project p = ProjectManager.getInstance().getCurrentProject();
+        intent.putExtra(Project.NAME, p.getName());
+        intent.putExtra(Project.FOLDER, p.getFolder());
 
-		PendingIntent sender = PendingIntent.getBroadcast(c, id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent sender = PendingIntent.getBroadcast(c, id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-		// Get the AlarmManager service
-		AlarmManager am = (AlarmManager) (c).getSystemService(Context.ALARM_SERVICE);
+        // Get the AlarmManager service
+        AlarmManager am = (AlarmManager) (c).getSystemService(Context.ALARM_SERVICE);
 
-		if (repeating) {
-			am.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), delay, sender);
+        if (repeating) {
+            am.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), delay, sender);
 
-		} else {
-			am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
+        } else {
+            am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
 
-		}
+        }
 
-	}
+    }
 
-	class Task {
-		final int TYPE_ALARM = 0;
-		final int TYPE_BOOT = 1;
-		final int TYPE_SMS = 1;
+    class Task {
+        final int TYPE_ALARM = 0;
+        final int TYPE_BOOT = 1;
+        final int TYPE_SMS = 1;
 
-		int id;
-		int type;
-		Project p;
-		Calendar time;
-		int delay;
-		boolean wakeUpScreen;
+        int id;
+        int type;
+        Project p;
+        Calendar time;
+        int delay;
+        boolean wakeUpScreen;
 
-		public Task(int id, Project p, Calendar time, int delay, boolean repeating, boolean wakeUpScreen) {
-			this.id = id;
-			this.p = p;
-			this.time = time;
-			this.delay = delay;
-			this.wakeUpScreen = wakeUpScreen;
-		}
+        public Task(int id, Project p, Calendar time, int delay, boolean repeating, boolean wakeUpScreen) {
+            this.id = id;
+            this.p = p;
+            this.time = time;
+            this.delay = delay;
+            this.wakeUpScreen = wakeUpScreen;
+        }
 
-		public String getTimeString() {
-			return time.toString();
-		}
-	}
+        public String getTimeString() {
+            return time.toString();
+        }
+    }
 
 }

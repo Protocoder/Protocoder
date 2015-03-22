@@ -36,15 +36,15 @@ import org.protocoderrunner.utils.FileIO;
 
 public class BaseMainApp extends Application {
 
-	public BaseMainApp() {
+    public BaseMainApp() {
 
-	}
+    }
 
-	@Override
-	public void onCreate() {
-		super.onCreate();
+    @Override
+    public void onCreate() {
+        super.onCreate();
 
-		// Copy all example apps to the base directory
-		FileIO.copyAssetFolder(getAssets(), "ExampleApps", ProjectManager.getInstance().getBaseDir());
-	}
+        // Copy all example apps to the base directory
+        FileIO.copyAssetFolder(getAssets(), "ExampleApps", ProjectManager.getInstance().getBaseDir());
+    }
 }
