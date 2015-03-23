@@ -265,22 +265,22 @@ public class PUIGeneric extends PInterface {
     }
 
 
-    @ProtoMethod(description = "Uses a DARK / BLUE / NONE theme for some widgets", example = "ui.setTheme(\"DARK\"); ")
-    @ProtoMethodParam(params = {"themeName"})
-    public void setTheme(String theme) {
-        if (theme.equals("DARK")) {
-            this.theme = R.drawable.theme_rounded_rect_dark;
-        } else if (theme.equals("BLUE")) {
-            this.theme = R.drawable.theme_rounded_rect_blue;
-        } else if (theme.equals("NONE")) {
-            theme = null;
-        }
-
-    }
-
-    public void themeWidget(View v) {
-       // v.setBackgroundResource(theme);
-    }
+//    @ProtoMethod(description = "Uses a DARK / BLUE / NONE theme for some widgets", example = "ui.setTheme(\"DARK\"); ")
+//    @ProtoMethodParam(params = {"themeName"})
+//    public void setTheme(String theme) {
+//        if (theme.equals("DARK")) {
+//            this.theme = R.drawable.theme_rounded_rect_dark;
+//        } else if (theme.equals("BLUE")) {
+//            this.theme = R.drawable.theme_rounded_rect_blue;
+//        } else if (theme.equals("NONE")) {
+//            theme = null;
+//        }
+//
+//    }
+//
+//    public void themeWidget(View v) {
+//       // v.setBackgroundResource(theme);
+//    }
 
 
     @ProtoMethod(description = "Creates an absolute layout", example = "")
@@ -490,7 +490,7 @@ public class PUIGeneric extends PInterface {
         initializeLayout();
 
         tv.setText(label);
-        themeWidget(tv);
+        //themeWidget(tv);
 
         return tv;
     }
@@ -507,7 +507,7 @@ public class PUIGeneric extends PInterface {
 
 
         // Add the view
-        themeWidget(et);
+        //themeWidget(et);
 
         return et;
     }
@@ -562,7 +562,7 @@ public class PUIGeneric extends PInterface {
         cb.setText(label);
 
         // Add the view
-        themeWidget(cb);
+        //themeWidget(cb);
 
         return cb;
 
@@ -610,7 +610,7 @@ public class PUIGeneric extends PInterface {
         });
 
         // Add the view
-        themeWidget(rb);
+        //themeWidget(rb);
 
         return rb;
     }

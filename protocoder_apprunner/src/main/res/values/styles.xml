@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-
-
-
     <!-- toolbar -->
     <style name="ToolBarAppRunner.Base" parent="">
         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Dark</item>

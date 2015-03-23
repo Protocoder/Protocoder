@@ -397,7 +397,7 @@ public class AppRunnerFragment extends Fragment {
         mainLayout.setLayoutParams(layoutParams);
         mainLayout.setGravity(Gravity.BOTTOM);
         // mainLayout.setBackgroundColor(getResources().getColor(R.color.transparent));
-        mainLayout.setBackgroundColor(getResources().getColor(R.color.light_grey));
+        mainLayout.setBackgroundColor(getResources().getColor(R.color.white));
 
         // set the parent
         parentScriptedLayout = new RelativeLayout(mActivity);
