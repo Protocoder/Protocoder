@@ -99,6 +99,7 @@ public class AppRunnerActivity extends BaseActivity {
     public boolean keyVolumeEnabled = true;
     public boolean keyBackEnabled = true;
     private Toolbar mToolbar;
+    private ActionBar mActionbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,8 +110,8 @@ public class AppRunnerActivity extends BaseActivity {
         if (!AndroidUtils.isWear(this)) {
             mToolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(mToolbar);
-            setToolbarBack();
-            mToolbar.setTitle("lalalal");
+            mActionbar = getSupportActionBar();
+            mActionbar.setTitle("hola");
         }
 
         FrameLayout fl = (FrameLayout) findViewById(R.id.apprunner_fragment);
@@ -254,27 +255,27 @@ public class AppRunnerActivity extends BaseActivity {
     public void setToolBar(String name, Integer colorBg, Integer colorText) {
         mActionBarSet = true;
 
-        MLog.d("mocmoc", "setting tolbar for " + name + " " + mToolbar);
+        MLog.d("mocmoc", "setting tolbar for " + name + " " + mActionbar);
 
-        if(mToolbar != null) {
+        if(mActionbar != null) {
             // home clickable if is running inside protocoderapp
             if (AppSettings.STANDALONE == false) {
                 //mToolbar.setDisplayHomeAsUpEnabled(true);
+                setToolbarBack();
             }
-
-
-            // mActionBar.setDisplayUseLogoEnabled(false);
 
             // set color
             if (colorBg != null) {
-                //ColorDrawable d = new ColorDrawable();
-                //d.setColor(colorBg);
-                mToolbar.setBackgroundColor(colorBg);
+                ColorDrawable d = new ColorDrawable();
+                d.setColor(colorBg);
+                mActionbar.setBackgroundDrawable(d);
             }
 
             // title
             if (name != null) {
-                mToolbar.setTitle(name);
+                mActionbar.setTitle(name);
+                MLog.d("mocmoc2", "setting tolbar for " + name + " " + mToolbar);
+
             }
             // set title color
             if (colorText != null) {
@@ -287,14 +288,12 @@ public class AppRunnerActivity extends BaseActivity {
                 }
             }
         }
-
     }
 
     public void setToolbarBack() {
 
         if (null != mToolbar) {
             mToolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
-
             mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

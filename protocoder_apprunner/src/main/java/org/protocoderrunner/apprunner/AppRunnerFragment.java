@@ -222,7 +222,9 @@ public class AppRunnerFragment extends Fragment {
 
         String toolbarName = "";
         if (mProjectFolder.equals("examples")) {
-            toolbarName = "ex > " + mProjectName;
+            toolbarName = "example > " + mProjectName;
+        } else {
+            toolbarName = mProjectName;
         }
         mActivity.setToolBar(toolbarName, null, null);
 

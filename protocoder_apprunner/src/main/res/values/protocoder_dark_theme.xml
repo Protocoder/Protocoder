@@ -1,31 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="ProtocoderAppRunnerTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!--<item name="android:background">@color/transparent</item>-->
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:actionBarStyle">@style/ProtocoderAppRunnerTheme.ActionBarStyle</item>
+    <style name="ProtocoderAppRunnerTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:background">@color/transparent</item>
+        <!--<item name="android:windowContentOverlay">@null</item>-->
+
+        <item name="colorPrimary">@color/mwmblue</item>
+        <item name="colorAccent">@color/mwmmagenta</item>
+        <item name="colorPrimaryDark">@color/mwmyellow</item>
 
         <!--<item name="windowActionBar">false</item>-->
         <!--<item name="android:windowNoTitle">true</item>-->
         <!--<<item name="android:windowNoTitle">true</item>-->
         <!--<item name="android:listViewStyle">@style/MyListView</item>-->
-        <!--<item name="android:buttonStyle">@style/ProtocoderDark.Button</item>-->
+        <item name="android:buttonStyle">@style/ProtocoderDark.Button</item>
         <item name="android:textViewStyle">@style/ProtocoderDark.TextView</item>
         <!--<item name="android:seekBarStyle">@style/ProtocoderDark.SeekBar</item>-->
-    </style>
-
-    <style name="ProtocoderAppRunnerTheme.ActionBarStyle" parent="Theme.AppCompat.Light">
-        <item name="colorPrimary">@color/mwmgreen</item>
-        <item name="colorAccent">@color/mwmgreen</item>
-        <item name="android:background">@color/mwmblue</item>
-        <item name="android:colorBackground">@color/mwmyellow</item>
-
-        <!--<item name="android:titleTextStyle">@style/ProtocoderAppTheme.ActionBar.TitleTextStyle</item>-->
-        <item name="android:selectableItemBackground">@drawable/actionbar_highlight</item>
-        <!--<item name="android:actionOverflowButtonStyle">@style/OverFlow</item>-->
-        <item name="android:displayOptions">showHome|homeAsUp|showTitle</item>
-        <!--<item name="android:icon">@drawable/protocoder_icon</item>-->
     </style>
 
 
