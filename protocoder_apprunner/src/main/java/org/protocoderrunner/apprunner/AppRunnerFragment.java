@@ -116,9 +116,9 @@ public class AppRunnerFragment extends Fragment {
     private String mProjectName;
     private String mProjectFolder;
     private String mScript;
-    private int mActionBarColor;
+    //private int mActionBarColor;
     private View mMainView;
-    private int mActionBarColorInt;
+    //private int mActionBarColorInt;
     private String mIntentPrefixScript = "";
     private String mIntentCode = "";
     private String mIntentPostfixScript = "";
@@ -135,7 +135,7 @@ public class AppRunnerFragment extends Fragment {
         Bundle bundle = getArguments();
         mProjectName = bundle.getString(Project.NAME, "");
         mProjectFolder = bundle.getString(Project.FOLDER, "");
-        mActionBarColorInt = bundle.getInt(Project.COLOR, 0);
+        //mActionBarColorInt = bundle.getInt(Project.COLOR, 0);
         mIntentPrefixScript = bundle.getString(Project.PREFIX, "");
         mIntentCode = bundle.getString(Project.CODE, "");
         mIntentPostfixScript = bundle.getString(Project.POSTFIX, "");
@@ -150,12 +150,12 @@ public class AppRunnerFragment extends Fragment {
             mScript = ProjectManager.getInstance().getCode(mCurrentProject);
 
             //setup actionbar
-            int actionBarColor;
-            if (mProjectFolder.equals("examples")) {
-                mActionBarColor = getResources().getColor(R.color.project_example_color);
-            } else {
-                mActionBarColor = getResources().getColor(R.color.project_user_color);
-            }
+            // int actionBarColor;
+            //if (mProjectFolder.equals("examples")) {
+            //    mActionBarColor = getResources().getColor(R.color.project_example_color);
+            //} else {
+            //    mActionBarColor = getResources().getColor(R.color.project_user_color);
+            //}
         }
 
 
@@ -220,7 +220,11 @@ public class AppRunnerFragment extends Fragment {
 
         MLog.d(TAG, "onActivityCreated");
 
-        mActivity.setToolBar(mCurrentProject, mActionBarColor, 0xFFFFFF);
+        String toolbarName = "";
+        if (mProjectFolder.equals("examples")) {
+            toolbarName = "ex > " + mProjectName;
+        }
+        mActivity.setToolBar(toolbarName, null, null);
 
         //catch errors and send them to the webIDE or the app console
         AppRunnerInterpreter.InterpreterInfo appRunnerCb = new AppRunnerInterpreter.InterpreterInfo() {
@@ -265,9 +269,9 @@ public class AppRunnerFragment extends Fragment {
         interp.callJsFunction("setup");
 
         // TODO fix actionbar color
-        if (mActivity.mActionBarSet == false) {
-            mActivity.setToolBar(null, mActionBarColor, getResources().getColor(R.color.white));
-        }
+        //if (mActivity.mActionBarSet == false) {
+        //    mActivity.setToolBar(null, , getResources().getColor(R.color.white));
+        //}
         // Call the onCreate JavaScript function.
         interp.callJsFunction("onCreate", savedInstanceState);
 

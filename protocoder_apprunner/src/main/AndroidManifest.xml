@@ -59,7 +59,7 @@
             android:name=".apprunner.AppRunnerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/runner_name"
-            android:theme="@style/ProtocoderDarkTheme"
+            android:theme="@style/ProtocoderAppRunnerTheme"
             android:launchMode="standard"
             android:windowSoftInputMode="stateHidden" >
             <intent-filter>

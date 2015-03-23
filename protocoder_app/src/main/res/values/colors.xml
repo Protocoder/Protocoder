@@ -42,7 +42,7 @@
     <drawable name="drawable_blue">#33B5E5</drawable>
     <drawable name="drawable_blue_selected">#0099cc</drawable>
     <drawable name="drawable_grey_dark">#555555</drawable>
-    <drawable name="drawable_grey_selected">#aaaaaa</drawable>
+    <drawable name="drawable_grey_selected">#BB555555</drawable>
     <drawable name="drawable_grey">#cccccc</drawable>
     <drawable name="drawable_black_transparent">#aa000000</drawable>
     <drawable name="drawable_red_transparent">#66FF4444</drawable>

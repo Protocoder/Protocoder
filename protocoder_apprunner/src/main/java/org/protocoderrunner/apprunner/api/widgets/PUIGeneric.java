@@ -288,7 +288,7 @@ public class PUIGeneric extends PInterface {
     }
 
     public void themeWidget(View v) {
-        v.setBackgroundResource(theme);
+       // v.setBackgroundResource(theme);
     }
 
 

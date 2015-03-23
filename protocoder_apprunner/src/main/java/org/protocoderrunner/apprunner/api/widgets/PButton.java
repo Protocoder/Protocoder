@@ -47,12 +47,12 @@ import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 
 public class PButton extends Button implements PViewInterface, PViewMethodsInterface {
 
-    private int currentColor;
-    private Paint paint;
+   // private int currentColor;
+   // private Paint paint;
 
     public PButton(Context context) {
         super(context);
-        currentColor = Color.argb(255, 255, 255, 255);
+        //currentColor = Color.argb(255, 255, 255, 255);
 
         //init();
     }
@@ -140,52 +140,52 @@ public class PButton extends Button implements PViewInterface, PViewMethodsInter
         return this;
     }
 
-    private void init() {
+//    private void init() {
+//
+//        paint = new Paint();
+//        paint.setStyle(Paint.Style.STROKE);
+//        paint.setColor(Color.BLACK);
+//        paint.setStrokeWidth(4);
+//
+//
+//        float radius = 2;
+//        float[] outerR = {radius, radius, radius, radius, radius, radius, radius, radius};
+//
+//        ShapeDrawable pressed = new ShapeDrawable(new RoundRectShape(outerR, null, null));
+//        pressed.getPaint().setColor(0xFF00FF00);
+//        //pressed.getPaint().setStyle(S);
+//        pressed.getPaint().setShadowLayer(2, 5, 5, 0xFF000000);
+//        pressed.setPadding(15, 15, 15, 15);
+//
+//        GradientDrawable normal = new GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, new int[]{0xFF0000FF, 0xFF0000FF});
+//        //normal.getPaint().setColor(0x550000FF);
+//        normal.setStroke(0, 0xFF000000);
+//        normal.setShape(GradientDrawable.RECTANGLE);
+//        normal.setCornerRadius(2);
+//        //normal.get
+//
+//
+//        ShapeDrawable disabled = new ShapeDrawable(new RoundRectShape(outerR, null, null));
+//        disabled.getPaint().setColor(0xFF555555);
+//
+//
+//        StateListDrawable states = new StateListDrawable();
+//        states.addState(new int[]{android.R.attr.state_pressed, android.R.attr.state_enabled}, pressed);
+//        states.addState(new int[]{android.R.attr.state_focused, android.R.attr.state_enabled}, pressed);
+//        states.addState(new int[]{android.R.attr.state_enabled}, normal);
+//        states.addState(new int[]{-android.R.attr.state_enabled}, disabled);
+//
+//        setBackgroundDrawable(states);
+//
+//
+//        //getBackground().setColorFilter(new PorterDuffColorFilter(0xFF00FF00, PorterDuff.Mode.MULTIPLY));
+//        //states.
+//        setPadding(15, 15, 15, 15);
+//    }
 
-        paint = new Paint();
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setColor(Color.BLACK);
-        paint.setStrokeWidth(4);
-
-
-        float radius = 2;
-        float[] outerR = {radius, radius, radius, radius, radius, radius, radius, radius};
-
-        ShapeDrawable pressed = new ShapeDrawable(new RoundRectShape(outerR, null, null));
-        pressed.getPaint().setColor(0xFF00FF00);
-        //pressed.getPaint().setStyle(S);
-        pressed.getPaint().setShadowLayer(2, 5, 5, 0xFF000000);
-        pressed.setPadding(15, 15, 15, 15);
-
-        GradientDrawable normal = new GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, new int[]{0xFF0000FF, 0xFF0000FF});
-        //normal.getPaint().setColor(0x550000FF);
-        normal.setStroke(0, 0xFF000000);
-        normal.setShape(GradientDrawable.RECTANGLE);
-        normal.setCornerRadius(2);
-        //normal.get
-
-
-        ShapeDrawable disabled = new ShapeDrawable(new RoundRectShape(outerR, null, null));
-        disabled.getPaint().setColor(0xFF555555);
-
-
-        StateListDrawable states = new StateListDrawable();
-        states.addState(new int[]{android.R.attr.state_pressed, android.R.attr.state_enabled}, pressed);
-        states.addState(new int[]{android.R.attr.state_focused, android.R.attr.state_enabled}, pressed);
-        states.addState(new int[]{android.R.attr.state_enabled}, normal);
-        states.addState(new int[]{-android.R.attr.state_enabled}, disabled);
-
-        setBackgroundDrawable(states);
-
-
-        //getBackground().setColorFilter(new PorterDuffColorFilter(0xFF00FF00, PorterDuff.Mode.MULTIPLY));
-        //states.
-        setPadding(15, 15, 15, 15);
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
+//    @Override
+//    protected void onDraw(Canvas canvas) {
+//        super.onDraw(canvas);
 
         //paint.setStyle(Paint.Style.FILL);
         //paint.setColor(Color.parseColor("#550000FF"));
@@ -194,5 +194,5 @@ public class PButton extends Button implements PViewInterface, PViewMethodsInter
         //paint.setColor(Color.parseColor("#FF0000FF"));
         //super.onDraw(canvas);
         //canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), paint);
-    }
+//    }
 }

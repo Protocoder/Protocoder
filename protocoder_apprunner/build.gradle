@@ -14,7 +14,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 21
         versionCode 16
-        versionName "0.98"
+        versionName "0.10.0"
     }
 
     compileOptions {
@@ -96,7 +96,6 @@ dependencies {
     compile files('libs/httpcore-4.3.2.jar')
     compile files('libs/httpmime-4.3.4.jar')
     compile 'de.greenrobot:eventbus:2.2.1'
-    //compile 'org.apache.ftpserver:ftpserver-core:1.0.6'
     compile files('libs/ftpserver-core-1.0.6.jar')
     compile files('libs/mina-core-2.0.4.jar')
 

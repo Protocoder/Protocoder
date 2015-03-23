@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+
+
+    <!-- toolbar -->
+    <style name="ToolBarAppRunner.Base" parent="">
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
+        <item name="theme">@style/ThemeOverlay.AppCompat.Dark</item>
+    </style>
+
+    <style name="ToolBarAppRunner.AppRunner" parent="ToolBarAppRunner.Base">
+        <item name="titleTextAppearance">@style/TextAppearance.Widget.Event.Toolbar.Title.AppRunner</item>
+    </style>
+
+    <style name="TextAppearance.Widget.Event.Toolbar.Title.AppRunner" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <!--Any text styling can be done here-->
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">#88FFFFFF</item>
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+
+</resources>

@@ -45,10 +45,13 @@ import android.nfc.tech.NfcF;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
@@ -66,6 +69,7 @@ import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.events.Events;
 import org.protocoderrunner.network.IDEcommunication;
 import org.protocoderrunner.project.Project;
+import org.protocoderrunner.utils.AndroidUtils;
 import org.protocoderrunner.utils.MLog;
 import org.protocoderrunner.utils.StrUtils;
 
@@ -86,7 +90,6 @@ public class AppRunnerActivity extends BaseActivity {
     private PMedia.onVoiceRecognitionListener onVoiceRecognitionListener;
 
     public AppRunnerFragment mAppRunnerFragment;
-    public ActionBar mActionBar;
     public boolean mActionBarSet;
 
     //ui fragment dependent
@@ -95,13 +98,21 @@ public class AppRunnerActivity extends BaseActivity {
     private PUI.onKeyListener onKeyListener;
     public boolean keyVolumeEnabled = true;
     public boolean keyBackEnabled = true;
+    private Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        MLog.d(TAG, "onCreate");
         setContentView(R.layout.activity_apprunner_host);
+
+        if (!AndroidUtils.isWear(this)) {
+            mToolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(mToolbar);
+            setToolbarBack();
+            mToolbar.setTitle("lalalal");
+        }
+
         FrameLayout fl = (FrameLayout) findViewById(R.id.apprunner_fragment);
 
         // Read in the script given in the intent.
@@ -133,7 +144,7 @@ public class AppRunnerActivity extends BaseActivity {
             Bundle bundle = new Bundle();
             bundle.putString(Project.NAME, projectName);
             bundle.putString(Project.FOLDER, projectFolder);
-            bundle.putInt(Project.COLOR, intent.getIntExtra("color", 0));
+            //bundle.putInt(Project.COLOR, intent.getIntExtra("color", 0));
             bundle.putString(Project.PREFIX, prefixScript);
             bundle.putString(Project.CODE, code);
             bundle.putString(Project.POSTFIX, postfixScript);
@@ -240,32 +251,30 @@ public class AppRunnerActivity extends BaseActivity {
     }
 
 
-    public void setToolBar(Project p, Integer colorBg, Integer colorText) {
-        //MLog.d(TAG, "" + mActionBarSet + " " + mActionBar);
-
+    public void setToolBar(String name, Integer colorBg, Integer colorText) {
         mActionBarSet = true;
-        // Set up the actionbar
-        mActionBar = getSupportActionBar();
-        mActionBar.setElevation(0);
 
-        if (mActionBar != null) {
+        MLog.d("mocmoc", "setting tolbar for " + name + " " + mToolbar);
 
+        if(mToolbar != null) {
             // home clickable if is running inside protocoderapp
             if (AppSettings.STANDALONE == false) {
-                mActionBar.setDisplayHomeAsUpEnabled(true);
+                //mToolbar.setDisplayHomeAsUpEnabled(true);
             }
+
+
             // mActionBar.setDisplayUseLogoEnabled(false);
 
             // set color
             if (colorBg != null) {
-                ColorDrawable d = new ColorDrawable();
-                d.setColor(colorBg);
-                mActionBar.setBackgroundDrawable(d);
+                //ColorDrawable d = new ColorDrawable();
+                //d.setColor(colorBg);
+                mToolbar.setBackgroundColor(colorBg);
             }
 
             // title
-            if (p != null) {
-                mActionBar.setTitle(p.getName());
+            if (name != null) {
+                mToolbar.setTitle(name);
             }
             // set title color
             if (colorText != null) {
@@ -277,6 +286,21 @@ public class AppRunnerActivity extends BaseActivity {
                     textTitleView.setTextColor(colorText);
                 }
             }
+        }
+
+    }
+
+    public void setToolbarBack() {
+
+        if (null != mToolbar) {
+            mToolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+
+            mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
         }
 
     }
