@@ -169,11 +169,11 @@ public class AudioServicePd {
 
     private static void loadPatchFromResources() throws IOException {
 
-        File dir = pdService.getFilesDir();
-        IoUtils.extractZipResource(pdService.getResources().openRawResource(R.raw.tuner), dir, true);
-        File patchFile = new File(dir, "tuner/sampleplay.pd");
-        MLog.d(TAG, patchFile.getAbsolutePath());
-        PdBase.openPatch(patchFile.getAbsolutePath());
+       // File dir = pdService.getFilesDir();
+       // IoUtils.extractZipResource(pdService.getResources().openRawResource(R.raw.tuner), dir, true);
+       // File patchFile = new File(dir, "tuner/sampleplay.pd");
+       // MLog.d(TAG, patchFile.getAbsolutePath());
+       // PdBase.openPatch(patchFile.getAbsolutePath());
 
     }
 
