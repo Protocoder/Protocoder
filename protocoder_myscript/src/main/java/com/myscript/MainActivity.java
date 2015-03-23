@@ -13,18 +13,39 @@ import org.protocoderrunner.project.ProjectManager;
  */
 public class MainActivity extends AppRunnerActivity {
 
+    private static final boolean LOAD_FROM_ASSETS = true;
+    private static final String PROJECT_FOLDER = "myscript";
+    private static final String PROJECT_NAME = "myproject";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        // Solution 1: Using inheritance
-        Project project = new Project("myscript", "myproject");
-        project.load_from_assets = true;
+        // Load project from sdcard
+        if (!LOAD_FROM_ASSETS) {
+
+            // Copy the project files from assets to sdcard
+            installMyScript();
+
+            // TODO: Wait until the script has been installed
+            // Possible solution: Could we use the callback "onReady"?
+            // Temporary solution: Use Thread.sleep(x)
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        // Create a new project and inject it to the base class
+        Project project = new Project(PROJECT_FOLDER, PROJECT_NAME);
+        project.load_from_assets = LOAD_FROM_ASSETS;
         setProject(project);
 
         super.onCreate(savedInstanceState);
-
     }
 
+    // Copy the project files from assets to sdcard
     private void installMyScript() {
         ProjectManager.getInstance().install(this,
                 ProjectManager.getInstance().FOLDER_MYSCRIPT,
