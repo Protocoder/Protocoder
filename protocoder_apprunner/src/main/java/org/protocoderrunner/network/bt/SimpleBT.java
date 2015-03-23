@@ -44,13 +44,9 @@ public class SimpleBT implements WhatIsRunningInterface {
     private final Activity ac;
 
     public interface SimpleBTListener {
-
         public void onConnected();
-
         public void onMessageReceived(String data);
-
         public void onRawDataReceived(final byte[] buffer, final int size);
-
     }
 
     public SimpleBT(Activity ac) {

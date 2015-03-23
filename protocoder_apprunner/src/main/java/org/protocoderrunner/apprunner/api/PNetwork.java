@@ -520,7 +520,19 @@ public class PNetwork extends PInterface {
 
     @ProtoMethod(description = "Start the bluetooth interface", example = "")
     @ProtoMethodParam(params = {})
-    public PBluetooth createBluetooth() {
+    public PBluetooth createBluetoothSerialServer() {
+        PBluetooth pBluetooth = new PBluetooth(getActivity());
+        pBluetooth.initForParentFragment(getFragment());
+
+        pBluetooth.start();
+
+        return pBluetooth;
+    }
+
+
+    @ProtoMethod(description = "Start the bluetooth interface", example = "")
+    @ProtoMethodParam(params = {})
+    public PBluetooth connectBluetoothSerial() {
         PBluetooth pBluetooth = new PBluetooth(getActivity());
         pBluetooth.initForParentFragment(getFragment());
 

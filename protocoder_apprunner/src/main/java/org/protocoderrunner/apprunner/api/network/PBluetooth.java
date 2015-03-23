@@ -49,56 +49,32 @@ import org.protocoderrunner.utils.MLog;
 import java.util.Set;
 
 public class PBluetooth extends PInterface {
-    public PBluetooth(Context context) {
-        super(context);
-    }
-
-
-    //--------- Bluetooth ---------//
-    //methods
-    //scanNetworks
-    //connectBluetoothSerialByUi
-    //connectBluetoothSerialByMac
-    //connectBluetoothSerialByName
-    //send
-    //disconnect
-    //enable
-    //isConnected
-
     private scanBTNetworksCB onBluetoothfn;
     private SimpleBT simpleBT;
     private boolean mBtStarted = false;
 
-
-    public interface onBluetoothListener {
-        public void onDeviceFound(String name, String macAddress, float strength);
-
-        public void onActivityResult(int requestCode, int resultCode, Intent data);
+    public PBluetooth(Context context) {
+        super(context);
     }
 
-    interface scanBTNetworksCB {
-        void event(String name, String macAddress, float strength);
-    }
-
-
-    @ProtoMethod(description = "Scan bluetooth networks. Gives back the name, mac and signal strength", example = "")
-    @ProtoMethodParam(params = {"function(name, macAddress, strength)"})
-    public void scanNetworks(final scanBTNetworksCB callbackfn) {
+    @ProtoMethod(description = "")
+    @ProtoMethodParam(params = {""})
+    public void createSerialServer() {
         start();
-        onBluetoothfn = callbackfn;
-        simpleBT.scanBluetooth(new onBluetoothListener() {
+    }
 
-            @Override
-            public void onDeviceFound(String name, String macAddress, float strength) {
-                onBluetoothfn.event(name, macAddress, strength);
-            }
+    public void connectSerial(String mac, PBluetoothClient.CallbackConnected callback) {
+        start();
 
-            @Override
-            public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        PBluetoothClient pBluetoothClient = new PBluetoothClient(this, getContext());
+        pBluetoothClient.connectSerial(mac, callback);
+    }
 
-            }
-        });
+    public void connectSerial(PBluetoothClient.CallbackConnected callback) {
+        start();
 
+        PBluetoothClient pBluetoothClient = new PBluetoothClient(this, getContext());
+        pBluetoothClient.connectSerial(callback);
     }
 
     @ProtoMethod(description = "Start the bluetooth adapter", example = "")
@@ -143,81 +119,35 @@ public class PBluetooth extends PInterface {
         return simpleBT;
     }
 
-    // --------- connectBluetooth ---------//
-    interface connectBluetoothCB {
-        void event(String what, String data);
+    public interface onBluetoothListener {
+        public void onDeviceFound(String name, String macAddress, float strength);
+        public void onActivityResult(int requestCode, int resultCode, Intent data);
     }
 
-    //TODO removed new impl needed
+    interface scanBTNetworksCB {
+        void event(String name, String macAddress, float strength);
+    }
 
-    @ProtoMethod(description = "Connects to mContext bluetooth device using mContext popup", example = "")
+
+    @ProtoMethod(description = "Scan bluetooth networks. Gives back the name, mac and signal strength", example = "")
     @ProtoMethodParam(params = {"function(name, macAddress, strength)"})
-    public void connectSerialByUi(final connectBluetoothCB callbackfn) {
+    public void scanNetworks(final scanBTNetworksCB callbackfn) {
         start();
-        NativeArray nativeArray = getBondedDevices();
-        String[] arrayStrings = new String[(int) nativeArray.size()];
-        for (int i = 0; i < nativeArray.size(); i++) {
-            arrayStrings[i] = (String) nativeArray.get(i, null);
-        }
+        onBluetoothfn = callbackfn;
+        simpleBT.scanBluetooth(new onBluetoothListener() {
 
-        getFragment().pUi.popupChoice("Connect to device", arrayStrings, new PUI.choiceDialogCB() {
             @Override
-            public void event(String string) {
-                connectSerialByMac(string.split(" ")[1], callbackfn);
+            public void onDeviceFound(String name, String macAddress, float strength) {
+                onBluetoothfn.event(name, macAddress, strength);
+            }
+
+            @Override
+            public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
             }
         });
-        //simpleBT.startDeviceListActivity();
-    }
-
-
-    @ProtoMethod(description = "Connect to mContext bluetooth device using the mac address", example = "")
-    @ProtoMethodParam(params = {"mac", "function(data)"})
-    public void connectSerialByMac(String mac, final connectBluetoothCB callbackfn) {
-        start();
-        simpleBT.connectByMac(mac);
-        addBTConnectionListener(callbackfn);
 
     }
-
-
-    @ProtoMethod(description = "Connect to mContext bluetooth device using mContext name", example = "")
-    @ProtoMethodParam(params = {"name, function(data)"})
-    public void connectSerialByName(String name, final connectBluetoothCB callbackfn) {
-        start();
-        simpleBT.connectByName(name);
-        addBTConnectionListener(callbackfn);
-    }
-
-    private void addBTConnectionListener(final connectBluetoothCB callbackfn) {
-        simpleBT.addListener(new SimpleBT.SimpleBTListener() {
-
-            @Override
-            public void onRawDataReceived(byte[] buffer, int size) {
-                //MLog.network(mContext, "Bluetooth", "1. got " + buffer.toString());
-            }
-
-            @Override
-            public void onMessageReceived(final String data) {
-                //MLog.network(mContext, "Bluetooth", "2. got " + data);
-
-                if (data != "") {
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            //MLog.d(TAG, "Got data: " + data);
-                            callbackfn.event("data", data);
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onConnected() {
-                callbackfn.event("connected", null);
-            }
-        });
-    }
-
 
     @ProtoMethod(description = "Send bluetooth serial message", example = "")
     @ProtoMethodParam(params = {"string"})
@@ -242,25 +172,6 @@ public class PBluetooth extends PInterface {
         return array;
     }
 
-
-    @ProtoMethod(description = "Send bluetooth serial message", example = "")
-    @ProtoMethodParam(params = {"string"})
-    public void send(String string) {
-        if (simpleBT.isConnected()) {
-            simpleBT.send(string);
-        }
-    }
-
-
-    @ProtoMethod(description = "Disconnect the bluetooth", example = "")
-    @ProtoMethodParam(params = {""})
-    public void disconnect() {
-        if (simpleBT.isConnected()) {
-            simpleBT.disconnect();
-        }
-    }
-
-
     @ProtoMethod(description = "Enable/Disable the bluetooth adapter", example = "")
     @ProtoMethodParam(params = {"boolean"})
     public void enable(boolean b) {
@@ -272,10 +183,5 @@ public class PBluetooth extends PInterface {
     }
 
 
-    @ProtoMethod(description = "Enable/Disable the bluetooth adapter", example = "")
-    @ProtoMethodParam(params = {"boolean"})
-    public boolean isConnected() {
-        return simpleBT.isConnected();
-    }
 
 }
