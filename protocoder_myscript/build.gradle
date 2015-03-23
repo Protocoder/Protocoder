@@ -43,6 +43,11 @@ android {
             applicationId "com.myscript"
             resValue "string", "releaseMode", "normal"
         }
+
+        extended {
+            applicationId "com.myscript"
+            resValue "string", "releaseMode", "normal"
+        }
     }
 
     packagingOptions {
