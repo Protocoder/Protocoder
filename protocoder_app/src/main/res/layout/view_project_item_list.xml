@@ -10,12 +10,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingLeft="15dp">
+        android:paddingLeft="0dp">
 
 
         <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:background="#55000000"
+
             android:id="@+id/iconText">
             <TextView
                 android:id="@+id/symbolText"
@@ -36,15 +38,16 @@
                 android:text="@string/symbol"
                 android:textColor="#EEEEEE"
                 android:textSize="45sp"
+                android:visibility="gone"
                 android:typeface="normal" />
 
             <TextView
                 android:id="@+id/symbolTextC"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="10dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
                 android:ellipsize="end"
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="center_horizontal"
@@ -83,7 +86,7 @@
             android:gravity="right"
             android:paddingBottom="10dp"
             android:paddingLeft="10dp"
-            android:paddingTop="2dp"
+            android:paddingTop="10dp"
             android:scaleType="centerInside"
             android:src="@drawable/ic_action_overflow_light" />
 
@@ -105,14 +108,15 @@
             android:textColor="#666666"
             android:textSize="21sp"
             android:typeface="normal"
-            android:layout_below="@+id/card_menu_button"
+            android:layout_alignBottom="@+id/card_menu_button"
             android:layout_toRightOf="@+id/iconText"
-            android:layout_toEndOf="@+id/iconText" />
+            android:layout_toEndOf="@+id/iconText"
+            />
 
         <View
             android:id="@+id/view1"
             android:layout_alignParentBottom="true"
-            android:background="#55BBBBBB"
+            android:background="#22000000"
             android:layout_width="fill_parent"
             android:layout_height="1dp" />
 

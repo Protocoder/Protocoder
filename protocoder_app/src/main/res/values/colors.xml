@@ -12,7 +12,7 @@
     <color name="transparent_focused">#220000FF</color>
     <color name="transparent_pressed">#55FFFF00</color>
     <color name="transparent_selected">#5500FFFF</color>
-    <color name="transparent_normal">#55FF0000</color>
+    <color name="transparent_normal">#22FFFFFF</color>
     <color name="light_grey">#ffeeeeee</color>
 
     

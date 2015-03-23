@@ -3,7 +3,7 @@
 
     <style name="ProtocoderAppRunner.Button" parent="@android:style/Widget.Button">
         <item name="android:fontFamily">sans-serif-condensed</item>
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">125sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">#FF00FF</item>
         <item name="android:gravity">center</item>

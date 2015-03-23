@@ -13,10 +13,10 @@
         android:name="org.protocoder.MainApp"
         android:icon="@drawable/protocoder_icon"
         android:label="@string/app_name"
-        android:theme="@style/ProtocoderAppTheme"
         android:allowBackup="true"
         tools:replace="android:allowBackup">
 
+        <!--android:stateNotNeeded="true"-->
         <activity
             android:name=".activities.LauncherActivity"
             android:icon="@drawable/protocoder_icon"
@@ -24,7 +24,7 @@
             android:logo="@drawable/protocoder_icon"
             android:theme="@style/ProtocoderAppTheme"
             android:launchMode="singleInstance"
-            android:stateNotNeeded="true">
+         >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
