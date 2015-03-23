@@ -155,6 +155,13 @@ public class ProjectManager {
         }).start();
     }
 
+    // Get code from assets
+    public String getCode(Context c, Project p) {
+        return FileIO.readAssetFile(c, p.folder + File.separator +
+                p.name + File.separator + MAIN_FILE_NAME);
+    }
+
+    // Get code from sdcard
     public String getCode(Project p) {
         String out = null;
         File f = new File(p.getStoragePath() + File.separator + MAIN_FILE_NAME);

@@ -35,7 +35,7 @@ public class Project {
 	public final static String FOLDER = "projectFolder";
 	public final static String NAME = "projectName";
 	public final static String URL = "projectUrl";
-	public final static String LOAD_FROM = "projectLoadFrom";
+	public final static String LOAD_FROM_ASSETS = "projectLoadFromAssets";
     public static final String FORMAT = "projectFormat";
     public static final String COLOR = "projectColor";
     public static final String PREFIX = "prefix";
@@ -52,6 +52,7 @@ public class Project {
 	public boolean containsReadme = false;
 	public boolean containsTutorial = false;
     public boolean selected = false;
+    public boolean load_from_assets = false;
 
     public Project(String folder, String projectName, boolean containsReadme, boolean containsTutorial) {
 		this.folder = folder;

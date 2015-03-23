@@ -124,6 +124,7 @@ public class AppRunnerFragment extends Fragment {
     private String mIntentPostfixScript = "";
     private boolean mIsProjectLoaded = false;
     //private EditorFragment editorFragment;
+    private boolean mLoadProjectFromAssets = false;
 
     @Override
     public void onAttach(Activity activity) {
@@ -139,6 +140,7 @@ public class AppRunnerFragment extends Fragment {
         mIntentPrefixScript = bundle.getString(Project.PREFIX, "");
         mIntentCode = bundle.getString(Project.CODE, "");
         mIntentPostfixScript = bundle.getString(Project.POSTFIX, "");
+        mLoadProjectFromAssets = bundle.getBoolean(Project.LOAD_FROM_ASSETS, false);
 
         //load project checking if we got the folder and name in the intent
         mIsProjectLoaded = !mProjectName.isEmpty() && !mProjectFolder.isEmpty();
@@ -147,7 +149,16 @@ public class AppRunnerFragment extends Fragment {
             ProjectManager.getInstance().setCurrentProject(mCurrentProject);
             AppRunnerSettings.get().project = mCurrentProject;
             AppRunnerSettings.get().hasUi = true;
-            mScript = ProjectManager.getInstance().getCode(mCurrentProject);
+
+            // TEST ****
+            if (mLoadProjectFromAssets) {
+                // Get code from assets
+                mScript = ProjectManager.getInstance().getCode(mActivity, mCurrentProject);
+            } else {
+                // Get code from sdcard
+                mScript = ProjectManager.getInstance().getCode(mCurrentProject);
+            }
+            // *****
 
             //setup actionbar
             int actionBarColor;
