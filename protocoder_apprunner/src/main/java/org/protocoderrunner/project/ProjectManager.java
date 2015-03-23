@@ -55,6 +55,7 @@ public class ProjectManager {
     public static String MAIN_FILE_NAME = "main.js";
     public static final String FOLDER_EXAMPLES = "examples";
     public static final String FOLDER_USER_PROJECTS = "projects";
+    public static final String FOLDER_MYSCRIPT = "myscript";
     private static String PROTOCODER_EXTENSION = ".proto";
 
     private Project currentProject;

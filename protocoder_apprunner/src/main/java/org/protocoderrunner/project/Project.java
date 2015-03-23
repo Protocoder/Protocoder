@@ -46,6 +46,9 @@ public class Project {
 
     public String name;
     public String folder;
+    public String code;
+    public String prefix;
+    public String postfix;
 	public boolean containsReadme = false;
 	public boolean containsTutorial = false;
     public boolean selected = false;
@@ -62,7 +65,11 @@ public class Project {
 		this.name = projectName;
 	}
 
-	public String getName() {
+    public Project() {
+
+    }
+
+    public String getName() {
 		return this.name;
 	}
 
