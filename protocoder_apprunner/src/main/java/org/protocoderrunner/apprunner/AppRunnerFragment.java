@@ -205,6 +205,7 @@ public class AppRunnerFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        //setTheme(R.style.ProtocoderDark_Dialog);
         super.onCreateView(inflater, container, savedInstanceState);
         MLog.d(TAG, "onCreateView");
 

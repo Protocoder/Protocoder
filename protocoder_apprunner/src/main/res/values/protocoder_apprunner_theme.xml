@@ -17,8 +17,8 @@
         <!--<item name="android:windowNoTitle">true</item>-->
         <!--<<item name="android:windowNoTitle">true</item>-->
         <!--<item name="android:listViewStyle">@style/MyListView</item>-->
-        <item name="android:buttonStyle">@style/ProtocoderAppRunner.Button</item>
-        <item name="android:textViewStyle">@style/ProtocoderAppRunner.TextView</item>
+        <!--<item name="android:buttonStyle">@style/ProtocoderAppRunner.Button</item>-->
+        <!--<item name="android:textViewStyle">@style/ProtocoderAppRunner.TextView</item>-->
         <!--<item name="android:seekBarStyle">@style/ProtocoderDark.SeekBar</item>-->
     </style>
 

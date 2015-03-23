@@ -157,15 +157,15 @@ public class PUIGeneric extends PInterface {
             // [uiAbsoluteLayout] if (!isScrollLayout)
 
             // set the holder
-            holderLayout = new RelativeLayout(getContext());
+            holderLayout = new RelativeLayout(getActivity());
             holderLayout.setLayoutParams(layoutParams);
             holderLayout.setBackgroundColor(getContext().getResources().getColor(R.color.transparent));
 
             // We need to let the view scroll, so we're creating mContext scroll
             // view
-            sv = new PScrollView(getContext(), true);
+            sv = new PScrollView(getActivity(), true);
             sv.setLayoutParams(layoutParams);
-            sv.setBackgroundColor(getContext().getResources().getColor(R.color.transparent));
+            sv.setBackgroundColor(getActivity().getResources().getColor(R.color.transparent));
             sv.setFillViewport(true);
             // sv.setEnabled(false);
             allowScroll(isScrollLayout);
@@ -173,22 +173,22 @@ public class PUIGeneric extends PInterface {
             if (absoluteLayout) {
                 // Create the main layout. This is where all the items actually
                 // go
-                uiAbsoluteLayout = new PAbsoluteLayout(getContext());
+                uiAbsoluteLayout = new PAbsoluteLayout(getActivity());
                 uiAbsoluteLayout.setLayoutParams(layoutParams);
-                uiAbsoluteLayout.setBackgroundColor(getContext().getResources().getColor(R.color.transparent));
+                uiAbsoluteLayout.setBackgroundColor(getActivity().getResources().getColor(R.color.mwmblue));
                 sv.addView(uiAbsoluteLayout);
             } else {
-                uiLinearLayout = new LinearLayout(getContext());
+                uiLinearLayout = new LinearLayout(getActivity());
                 uiLinearLayout.setLayoutParams(layoutParams);
                 uiLinearLayout.setOrientation(LinearLayout.VERTICAL);
-                uiLinearLayout.setBackgroundColor(getContext().getResources().getColor(R.color.transparent));
+                uiLinearLayout.setBackgroundColor(getActivity().getResources().getColor(R.color.transparent));
                 uiLinearLayout.setLayoutTransition(new LayoutTransition());
                 sv.addView(uiLinearLayout);
-                holderLayout.setPadding(AndroidUtils.pixelsToDp(getContext(), 5), 0, AndroidUtils.pixelsToDp(getContext(), 5), 0);
+                holderLayout.setPadding(AndroidUtils.pixelsToDp(getActivity(), 5), 0, AndroidUtils.pixelsToDp(getActivity(), 5), 0);
             }
 
             // background image
-            bgImageView = new PImageView(getContext());
+            bgImageView = new PImageView(getActivity());
             holderLayout.addView(bgImageView, layoutParams);
 
             // set the layout
@@ -286,7 +286,7 @@ public class PUIGeneric extends PInterface {
     @ProtoMethod(description = "Creates an absolute layout", example = "")
     @ProtoMethodParam(params = {""})
     public PAbsoluteLayout newAbsoluteLayout() {
-        PAbsoluteLayout al = new PAbsoluteLayout(getContext());
+        PAbsoluteLayout al = new PAbsoluteLayout(getActivity());
 
         return al;
     }
@@ -297,7 +297,7 @@ public class PUIGeneric extends PInterface {
     public PCard newCard() {
         initializeLayout();
 
-        PCard card = new PCard(getContext());
+        PCard card = new PCard(getActivity());
         return card;
     }
 
@@ -307,7 +307,7 @@ public class PUIGeneric extends PInterface {
     public PWindow newWindow() {
         initializeLayout();
 
-        PWindow w = new PWindow(getContext());
+        PWindow w = new PWindow(getActivity());
         return w;
     }
 
@@ -318,7 +318,7 @@ public class PUIGeneric extends PInterface {
         initializeLayout();
 
         // Create the button
-        PButton b = new PButton(getContext());
+        PButton b = new PButton(getActivity());
         b.setText(label);
 
         return b;
@@ -335,7 +335,7 @@ public class PUIGeneric extends PInterface {
     public TouchAreaView newTouchArea(boolean showArea, final addGenericTouchAreaCB callbackfn) {
         initializeLayout();
 
-        TouchAreaView taV = new TouchAreaView(getContext(), showArea);
+        TouchAreaView taV = new TouchAreaView(getActivity(), showArea);
         taV.setTouchAreaListener(new TouchAreaView.OnTouchAreaListener() {
 
             @Override
@@ -370,7 +370,7 @@ public class PUIGeneric extends PInterface {
 
         final ArrayList<PadXYReturn> m = new ArrayList<PUIGeneric.PadXYReturn>();
 
-        PPadView taV = new PPadView(getContext());
+        PPadView taV = new PPadView(getActivity());
         taV.setTouchAreaListener(new PPadView.OnTouchAreaListener() {
 
             @Override
@@ -429,7 +429,7 @@ public class PUIGeneric extends PInterface {
 
         initializeLayout();
         // Create the position the view
-        final PSlider sb = new PSlider(getContext());
+        final PSlider sb = new PSlider(getActivity());
         sb.setMin(min);
         sb.setMax(max);
 
@@ -447,9 +447,9 @@ public class PUIGeneric extends PInterface {
     public PSpinner newChoiceBox(final String[] array, final addGenericSpinnerCB callbackfn) {
         initializeLayout();
 
-        PSpinner spinner = new PSpinner(getContext());
+        PSpinner spinner = new PSpinner(getActivity());
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, array);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, array);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
@@ -475,7 +475,7 @@ public class PUIGeneric extends PInterface {
 
         initializeLayout();
         // Create the position the view
-        PProgressBar pb = new PProgressBar(getContext(), android.R.attr.progressBarStyleHorizontal);
+        PProgressBar pb = new PProgressBar(getActivity(), android.R.attr.progressBarStyleHorizontal);
 
         return pb;
     }
@@ -486,7 +486,7 @@ public class PUIGeneric extends PInterface {
     public PTextView newText(String label) {
         // int defaultTextSize = 16;
         // tv.setTextSize((float) textSize);
-        PTextView tv = new PTextView(getContext());
+        PTextView tv = new PTextView(getActivity());
         initializeLayout();
 
         tv.setText(label);
@@ -502,7 +502,7 @@ public class PUIGeneric extends PInterface {
 
         initializeLayout();
         // Create view
-        final PEditText et = new PEditText(getContext());
+        final PEditText et = new PEditText(getActivity());
         et.setHint(label);
 
 
@@ -523,7 +523,7 @@ public class PUIGeneric extends PInterface {
     @ProtoMethodParam(params = {"from", "to", "function(data)"})
     public PNumberPicker newNumberPicker(int from, int to, final NewGenericNumberPickerCB callback) {
         initializeLayout();
-        PNumberPicker pNumberPicker = new PNumberPicker(getContext());
+        PNumberPicker pNumberPicker = new PNumberPicker(getActivity());
         pNumberPicker.setMinValue(from);
         pNumberPicker.setMaxValue(to);
         pNumberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
@@ -542,7 +542,7 @@ public class PUIGeneric extends PInterface {
     public PToggleButton newToggle(final String label, boolean initstate) {
         initializeLayout();
         // Create the view
-        PToggleButton tb = new PToggleButton(getContext());
+        PToggleButton tb = new PToggleButton(getActivity());
         tb.setChecked(initstate);
         tb.setText(label);
 
@@ -557,7 +557,7 @@ public class PUIGeneric extends PInterface {
         initializeLayout();
         // Adds mContext checkbox and set the initial state as initstate. if the button
         // state changes, call the callbackfn
-        PCheckBox cb = new PCheckBox(getContext());
+        PCheckBox cb = new PCheckBox(getActivity());
         cb.setChecked(initstate);
         cb.setText(label);
 
@@ -575,7 +575,7 @@ public class PUIGeneric extends PInterface {
 
         initializeLayout();
         // Adds mContext switch. If the state changes, we'll call the callback function
-        PSwitch s = new PSwitch(getContext());
+        PSwitch s = new PSwitch(getActivity());
         s.setChecked(initstate);
 
         return s;
@@ -597,7 +597,7 @@ public class PUIGeneric extends PInterface {
 
         initializeLayout();
         // Create and position the radio button
-        PRadioButton rb = new PRadioButton(getContext());
+        PRadioButton rb = new PRadioButton(getActivity());
         rb.setChecked(initstate);
         rb.setText(label);
 
@@ -622,7 +622,7 @@ public class PUIGeneric extends PInterface {
 
         initializeLayout();
         // Create and position the image view
-        final PImageView iv = new PImageView(getContext());
+        final PImageView iv = new PImageView(getActivity());
         if (imagePath != null) {
             iv.setImage(imagePath);
         }
@@ -636,7 +636,7 @@ public class PUIGeneric extends PInterface {
     @ProtoMethodParam(params = {"min", "max"})
     public PPlotView newPlot(int min, int max) {
         initializeLayout();
-        PPlotView jPlotView = new PPlotView(getContext());
+        PPlotView jPlotView = new PPlotView(getActivity());
         jPlotView.setLimits(min, max);
 
         return jPlotView;
@@ -650,7 +650,7 @@ public class PUIGeneric extends PInterface {
 
         initializeLayout();
         // Create and position the image button
-        final PImageButton ib = new PImageButton(getContext());
+        final PImageButton ib = new PImageButton(getActivity());
         ib.hideBackground = hideBackground;
 
         ib.setScaleType(ScaleType.FIT_XY);
@@ -676,7 +676,7 @@ public class PUIGeneric extends PInterface {
 
     public PGrid newGridOf(String type, NativeArray array, int cols, final addGridOfCB callbackfn) {
 
-        PGrid gridLayout = new PGrid(getContext());
+        PGrid gridLayout = new PGrid(getActivity());
         int counter = 0;
         int num = (int) array.getLength();
         int rows = (int) Math.ceil(num / 2);
@@ -708,7 +708,7 @@ public class PUIGeneric extends PInterface {
 
             if (counter >= num) {
                 Log.d(TAG, "this space");
-                ll2.addViewInRow(new Space(getContext()));
+                ll2.addViewInRow(new Space(getActivity()));
                 //   break;
             } else {
                 String name = (String) array.get(counter);
@@ -737,7 +737,7 @@ public class PUIGeneric extends PInterface {
 
                     //imagebutton
                 } else if (type.equals("imagebutton")) {
-                    PImageButton btn = new PImageButton(getContext());
+                    PImageButton btn = new PImageButton(getActivity());
 
 
                     //toggle
@@ -787,7 +787,7 @@ public class PUIGeneric extends PInterface {
     @ProtoMethodParam(params = {""})
     public PMap newMap() {
         initializeLayout();
-        PMap mapView = new PMap(getContext(), 256);
+        PMap mapView = new PMap(getActivity(), 256);
 
         mapView.setMapListener(new DelayedMapListener(new MapListener() {
             @Override
@@ -812,7 +812,7 @@ public class PUIGeneric extends PInterface {
     @ProtoMethodParam(params = {"fileName"})
     public PVideo newVideo(final String videoFile) {
         initializeLayout();
-        final PVideo video = new PVideo(getContext());
+        final PVideo video = new PVideo(getActivity());
 
         video.addListener(new CustomVideoTextureView.VideoListener() {
 
@@ -850,7 +850,7 @@ public class PUIGeneric extends PInterface {
     @ProtoMethodParam(params = {""})
     public PWebView newWebview() {
         initializeLayout();
-        PWebView webView = new PWebView(getContext());
+        PWebView webView = new PWebView(getActivity());
 
         return webView;
     }
