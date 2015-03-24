@@ -55,6 +55,8 @@ public class PBluetooth extends PInterface {
 
     public PBluetooth(Context context) {
         super(context);
+
+        WhatIsRunning.getInstance().add(this);
     }
 
     @ProtoMethod(description = "")
@@ -63,18 +65,22 @@ public class PBluetooth extends PInterface {
         start();
     }
 
-    public void connectSerial(String mac, PBluetoothClient.CallbackConnected callback) {
+    public PBluetoothClient connectSerial(String mac, PBluetoothClient.CallbackConnected callback) {
         start();
 
-        PBluetoothClient pBluetoothClient = new PBluetoothClient(this, getContext());
+        PBluetoothClient pBluetoothClient = new PBluetoothClient(this, getContext(), getFragment());
         pBluetoothClient.connectSerial(mac, callback);
+
+        return pBluetoothClient;
     }
 
-    public void connectSerial(PBluetoothClient.CallbackConnected callback) {
+    public PBluetoothClient connectSerial(PBluetoothClient.CallbackConnected callback) {
         start();
 
-        PBluetoothClient pBluetoothClient = new PBluetoothClient(this, getContext());
+        PBluetoothClient pBluetoothClient = new PBluetoothClient(this, getContext(), getFragment());
         pBluetoothClient.connectSerial(callback);
+
+        return pBluetoothClient;
     }
 
     @ProtoMethod(description = "Start the bluetooth adapter", example = "")
@@ -172,16 +178,27 @@ public class PBluetooth extends PInterface {
         return array;
     }
 
-    @ProtoMethod(description = "Enable/Disable the bluetooth adapter", example = "")
-    @ProtoMethodParam(params = {"boolean"})
-    public void enable(boolean b) {
-        if (b) {
-            simpleBT.start();
-        } else {
-            simpleBT.disable();
-        }
+    @ProtoMethod(description = "Enable the bluetooth adapter", example = "")
+    @ProtoMethodParam(params = {})
+    public void enable() {
+        start();
     }
 
 
+    @ProtoMethod(description = "Disable the bluetooth adapter", example = "")
+    @ProtoMethodParam(params = {})
+    public void disable() {
+        start();
+        simpleBT.disable();
+    }
+
+
+
+    public void stop() {
+        if (simpleBT.isConnected()) {
+            simpleBT.disconnect();
+        }
+
+    }
 
 }

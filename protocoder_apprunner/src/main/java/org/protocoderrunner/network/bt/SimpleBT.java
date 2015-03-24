@@ -39,12 +39,13 @@ public class SimpleBT implements WhatIsRunningInterface {
     // Member object for the Bluetooth services
     private BluetoothSerialService mBluetoothService = null;
 
-    Vector<SimpleBTListener> listeners = new Vector<SimpleBT.SimpleBTListener>();
+   // Vector<SimpleBTListener> listeners = new Vector<SimpleBT.SimpleBTListener>();
 
     private final Activity ac;
+    private SimpleBTListener mSimpleBTListener;
 
     public interface SimpleBTListener {
-        public void onConnected();
+        public void onConnected(boolean connected);
         public void onMessageReceived(String data);
         public void onRawDataReceived(final byte[] buffer, final int size);
     }
@@ -73,11 +74,22 @@ public class SimpleBT implements WhatIsRunningInterface {
                     switch (msg.arg1) {
                         case BluetoothSerialService.STATE_CONNECTED:
                             connected = true;
+                            //for (int i = 0; i < listeners.size(); i++) {
+                            //    SimpleBTListener l = listeners.get(0);
+                                if (mSimpleBTListener != null) mSimpleBTListener.onConnected(connected);
+                            //}
                             break;
                         case BluetoothSerialService.STATE_CONNECTING:
                             break;
                         case BluetoothSerialService.STATE_NONE:
                             connected = false;
+//                            for (int i = 0; i < listeners.size(); i++) {
+//                                SimpleBTListener l = listeners.get(0);
+//                                l.onConnected(connected);
+//                            }
+
+                            if (mSimpleBTListener != null) mSimpleBTListener.onConnected(connected);
+
                             break;
                     }
                     break;
@@ -96,17 +108,18 @@ public class SimpleBT implements WhatIsRunningInterface {
 
                     // here is where we get the BT data
                     Log.d(TAG, "received " + readMessage);
-                    for (int i = 0; i < listeners.size(); i++) {
-                        SimpleBTListener l = listeners.get(0);
-                        l.onMessageReceived(readMessage);
-                    }
+                    //for (int i = 0; i < listeners.size(); i++) {
+                    //    SimpleBTListener l = listeners.get(0);
+                    //    l.onMessageReceived(readMessage);
+                    //}
+                    if (mSimpleBTListener != null) mSimpleBTListener.onMessageReceived(readMessage);
 
                     break;
                 case MESSAGE_DEVICE_NAME:
-                    for (int i = 0; i < listeners.size(); i++) {
-                        SimpleBTListener l = listeners.get(0);
-                        l.onConnected();
-                    }
+                    //for (int i = 0; i < listeners.size(); i++) {
+                    //    SimpleBTListener l = listeners.get(0);
+                        //l.onConnected(connected);
+                    //}
                     //Toast.makeText(ac.getApplicationContext(), "Connected", Toast.LENGTH_SHORT).show();
                     break;
             }
@@ -191,11 +204,12 @@ public class SimpleBT implements WhatIsRunningInterface {
     }
 
     public void addListener(SimpleBTListener simpleBTListener) {
-        listeners.add(simpleBTListener);
+        mSimpleBTListener = simpleBTListener;
     }
 
     public void removeListener(SimpleBTListener simpleBTListener) {
-        listeners.remove(simpleBTListener);
+        //listeners.remove(simpleBTListener);
+        mSimpleBTListener = null;
     }
 
     public void send(String string) {

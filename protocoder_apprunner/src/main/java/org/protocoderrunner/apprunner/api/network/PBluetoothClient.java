@@ -35,8 +35,10 @@ import android.content.Context;
 import org.mozilla.javascript.NativeArray;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunnerFragment;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.PUI;
+import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.network.bt.SimpleBT;
 
 public class PBluetoothClient extends PInterface {
@@ -47,10 +49,14 @@ public class PBluetoothClient extends PInterface {
     private boolean mBtStarted = false;
     private CallbackConnected mCallbackConnected;
     private CallbackNewData mCallbackData;
+    private AppRunnerFragment mFragment;
 
-    public PBluetoothClient(PBluetooth pBluetooth, Context context) {
+    public PBluetoothClient(PBluetooth pBluetooth, Context context, AppRunnerFragment fragment) {
         super(context);
         mPBluetooth = pBluetooth;
+        mFragment = fragment;
+
+        WhatIsRunning.getInstance().add(this);
     }
 
 
@@ -61,19 +67,21 @@ public class PBluetoothClient extends PInterface {
 
     // --------- connectBluetooth ---------//
     interface CallbackNewData {
-        void event(String what, String data);
+        void event(String data);
     }
 
     @ProtoMethod(description = "Connects to mContext bluetooth device using mContext popup", example = "")
     @ProtoMethodParam(params = {"function(name, macAddress, strength)"})
     public void connectSerial(final CallbackConnected callbackfn) {
+        start();
+
         NativeArray nativeArray = mPBluetooth.getBondedDevices();
         String[] arrayStrings = new String[(int) nativeArray.size()];
         for (int i = 0; i < nativeArray.size(); i++) {
             arrayStrings[i] = (String) nativeArray.get(i, null);
         }
 
-        getFragment().pUi.popupChoice("Connect to device", arrayStrings, new PUI.choiceDialogCB() {
+        mFragment.pUi.popupChoice("Connect to device", arrayStrings, new PUI.choiceDialogCB() {
             @Override
             public void event(String string) {
                 connectSerial(string.split(" ")[1], callbackfn);
@@ -82,6 +90,11 @@ public class PBluetoothClient extends PInterface {
         listen();
     }
 
+    private void start() {
+        simpleBT = new SimpleBT(mFragment.getActivity());
+        simpleBT.start();
+
+    }
 
     @ProtoMethod(description = "Connect to mContext bluetooth device using the mac address", example = "")
     @ProtoMethodParam(params = {"mac", "function(data)"})
@@ -122,15 +135,15 @@ public class PBluetoothClient extends PInterface {
                         @Override
                         public void run() {
                             //MLog.d(TAG, "Got data: " + data);
-                            if (mCallbackData != null) mCallbackData.event("data", data);
+                            if (mCallbackData != null) mCallbackData.event(data);
                         }
                     });
                 }
             }
 
             @Override
-            public void onConnected() {
-                mCallbackConnected.event(true);
+            public void onConnected(boolean connected) {
+                mCallbackConnected.event(connected);
             }
         });
     }
@@ -148,6 +161,7 @@ public class PBluetoothClient extends PInterface {
     public void disconnect() {
         if (simpleBT.isConnected()) {
             simpleBT.disconnect();
+            //mCallbackConnected.event(false);
         }
     }
 
@@ -157,4 +171,12 @@ public class PBluetoothClient extends PInterface {
         return simpleBT.isConnected();
     }
 
+
+    public void stop() {
+        if (simpleBT.isConnected()) {
+            simpleBT.disconnect();
+            simpleBT = null;
+        }
+
+    }
 }

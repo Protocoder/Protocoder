@@ -50,6 +50,7 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunnerFragment;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.network.PBluetooth;
 import org.protocoderrunner.apprunner.api.network.PFtpClient;
@@ -93,12 +94,25 @@ import javax.mail.util.ByteArrayDataSource;
 public class PNetwork extends PInterface {
 
     private final String TAG = "PNetwork";
+    public PBluetooth bluetooth = null;
     private PWebSocketServer PWebsockerServer;
 
     public PNetwork(Context a) {
         super(a);
 
         WhatIsRunning.getInstance().add(this);
+    }
+
+    public void initForParentFragment(AppRunnerFragment fragment) {
+        super.initForParentFragment(fragment);
+
+        //prevent crashing in protocoder app
+        MLog.d(TAG, "is getActivity() " + getActivity());
+
+        if (getFragment() != null) {
+            bluetooth = new PBluetooth(getActivity());
+            bluetooth.initForParentFragment(getFragment());
+        }
     }
 
     // --------- download file ---------//
@@ -504,10 +518,10 @@ public class PNetwork extends PInterface {
 
     @ProtoMethod(description = "Simple http server, serving the content of the project folder", example = "")
     @ProtoMethodParam(params = {"port", "function(responseString)"})
-    public PSimpleHttpServer createSimpleHttpServer(int port, final PSimpleHttpServer.HttpCB callbackfn) {
+    public PSimpleHttpServer createSimpleHttpServer(int port) {
         PSimpleHttpServer httpServer = null;
         try {
-            httpServer = new PSimpleHttpServer(getContext(), port, callbackfn);
+            httpServer = new PSimpleHttpServer(getContext(), port);
             WhatIsRunning.getInstance().add(httpServer);
 
         } catch (IOException e) {
@@ -518,28 +532,28 @@ public class PNetwork extends PInterface {
     }
 
 
-    @ProtoMethod(description = "Start the bluetooth interface", example = "")
-    @ProtoMethodParam(params = {})
-    public PBluetooth createBluetoothSerialServer() {
-        PBluetooth pBluetooth = new PBluetooth(getActivity());
-        pBluetooth.initForParentFragment(getFragment());
-
-        pBluetooth.start();
-
-        return pBluetooth;
-    }
-
-
-    @ProtoMethod(description = "Start the bluetooth interface", example = "")
-    @ProtoMethodParam(params = {})
-    public PBluetooth connectBluetoothSerial() {
-        PBluetooth pBluetooth = new PBluetooth(getActivity());
-        pBluetooth.initForParentFragment(getFragment());
-
-        pBluetooth.start();
-
-        return pBluetooth;
-    }
+//    @ProtoMethod(description = "Start the bluetooth interface", example = "")
+//       @ProtoMethodParam(params = {})
+//       public PBluetooth createBluetoothSerialServer() {
+//        PBluetooth pBluetooth = new PBluetooth(getActivity());
+//        pBluetooth.initForParentFragment(getFragment());
+//
+//        pBluetooth.start();
+//
+//        return pBluetooth;
+//    }
+//
+//
+//    @ProtoMethod(description = "Start the bluetooth interface", example = "")
+//    @ProtoMethodParam(params = {})
+//    public PBluetooth connectBluetoothSerial() {
+//        PBluetooth pBluetooth = new PBluetooth(getActivity());
+//        pBluetooth.initForParentFragment(getFragment());
+//
+//        pBluetooth.start();
+//
+//        return pBluetooth;
+//    }
 
 
     @ProtoMethod(description = "Enable/Disable the Wifi adapter", example = "")

@@ -55,6 +55,8 @@ public class PBluetoothServer extends PInterface {
 
     public PBluetoothServer(Context context) {
         super(context);
+
+        WhatIsRunning.getInstance().add(this);
     }
 
 
