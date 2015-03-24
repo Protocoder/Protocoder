@@ -252,7 +252,7 @@ public class AppRunnerFragment extends Fragment {
         // load the libraries
         MLog.d(TAG, "loaded preloaded script" + mIntentPrefixScript);
         interp.eval(AppRunnerInterpreter.SCRIPT_PREFIX);
-        if (!mIntentPostfixScript.isEmpty()) interp.eval(mIntentPostfixScript);
+        if (!mIntentPrefixScript.isEmpty()) interp.eval(mIntentPrefixScript);
 
         // run the script
         if (null != mScript) {

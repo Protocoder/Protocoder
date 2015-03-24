@@ -36,11 +36,6 @@ import org.mozilla.javascript.debug.Debugger;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-/**
- * Derived from Droid Script :
- * https://github.com/divineprog/droidscript Copyright (c) Mikael Kindborg 2010
- * Source code license: MIT
- */
 
 public class AppRunnerInterpreter {
 
@@ -49,7 +44,7 @@ public class AppRunnerInterpreter {
     private ScriptContextFactory contextFactory;
     public Interpreter interpreter;
     private final android.content.Context a;
-    private InterpreterInfo mListener;
+    private InterpreterInfo mInterpreterListener;
 
     static String SCRIPT_PREFIX = "//Prepend text for all scripts \n" + "var window = this; \n";
     static final String SCRIPT_POSTFIX = "//Appends text for all scripts \n" + "function onAndroidPause(){ }  \n"
@@ -152,7 +147,7 @@ public class AppRunnerInterpreter {
     }
 
     public void addListener(InterpreterInfo listener) {
-        this.mListener = listener;
+        this.mInterpreterListener = listener;
     }
 
     public void reportError(Object e) {
@@ -165,7 +160,7 @@ public class AppRunnerInterpreter {
                     + (error.sourceName() != null ? " " + error.sourceName() : "")
                     + (error.lineSource() != null ? " " + error.lineSource() : "") + "\n" + error.getScriptStackTrace();
 
-            this.mListener.onError(message);
+            this.mInterpreterListener.onError(message);
 
         } else if (e instanceof IllegalArgumentException) {
             IllegalArgumentException err = (IllegalArgumentException) e;

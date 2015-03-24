@@ -37,7 +37,7 @@ ui.addButton("adios", 0, 400, 500, 100).onClick(function(){
 
 
 //---------- DASHBOARD UI ---------------------
-dashboard.setBackgroundColor("#EE000000");
+dashboard.backgroundColor("#EE000000");
 var text = dashboard.addText("Use the Dashboard to see information and interact remotely with your device", 50, 50, 200, 100, 28, "#FFFFFF");
 var textChange = dashboard.addText("This text can change", 50, 250, 200, 100, 28, "#FF00FF");
 
@@ -47,16 +47,16 @@ slider = dashboard.addSlider("name", 50, 400, 200, 100, 0, 100).onChange(functio
 });
 
 input = dashboard.addInput("say it", 50, 450, 200, 100).onSubmit(function(val) {
-    console.log(val);
-    media.textToSpeech(val);
-    device.vibrate(100);
+     console.log(val);
+     media.textToSpeech(val);
+     device.vibrate(100);
 });
 
 //add a button on the webpapp and when clicked will execute the inner function
-var webbutton = dashboard.addButton("hola", 310, 100, 150, 50).onChange(function() {
+var webbutton = dashboard.addButton("hola", 310, 100, 150, 50).onClick(function() {
     ui.toast("hola", 200);
     device.vibrate(500);
 });
 
-//add custom html
+// //add custom html
 dashboard.addHtml("<a href = 'http://www.protocoder.org' style='font-size:20px'> This is a link to Protocoder! </a>", 280, 280);

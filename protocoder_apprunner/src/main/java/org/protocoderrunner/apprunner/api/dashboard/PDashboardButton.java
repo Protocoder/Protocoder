@@ -66,28 +66,26 @@ public class PDashboardButton extends PInterface {
                 .put("action", "add")
                 .put("values", values);
 
+
+        CustomWebsocketServer.getInstance(getContext()).addListener(id, new WebSocketListener() {
+            @Override
+            public void onUpdated(JSONObject jsonObject) {
+                mHandler.post(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        if (mCallback != null) mCallback.event();
+                    }
+                });
+            }
+        });
+
         CustomWebsocketServer.getInstance(getContext()).send(msg);
 
     }
 
     public void onClick(final jDashboardAddCB callbackfn) throws UnknownHostException {
-        if (mCallback == null) {
-            mCallback = callbackfn;
-        } else {
-            CustomWebsocketServer.getInstance(getContext()).addListener(id, new WebSocketListener() {
-
-                @Override
-                public void onUpdated(JSONObject jsonObject) {
-                    mHandler.post(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            mCallback.event();
-                        }
-                    });
-                }
-            });
-        }
+        mCallback = callbackfn;
     }
 
     public void update(boolean pressed) throws JSONException, UnknownHostException {

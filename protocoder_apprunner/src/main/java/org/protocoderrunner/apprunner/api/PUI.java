@@ -1119,9 +1119,9 @@ public class PUI extends PUIGeneric {
 
     @ProtoMethod(description = "Add camera view", example = "")
     @ProtoMethodParam(params = {"type", "x", "y", "w", "h"})
-    public PCamera addCamera(String type, int x, int y, int w, int h) {
+    public PCamera addCameraView(String type, int x, int y, int w, int h) {
 
-        PCamera pCamera = newCamera(type);
+        PCamera pCamera = newCameraView(type);
         addViewAbsolute(pCamera, x, y, w, h);
 
         return pCamera;

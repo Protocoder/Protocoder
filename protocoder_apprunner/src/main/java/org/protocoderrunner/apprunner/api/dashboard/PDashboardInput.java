@@ -35,6 +35,7 @@ public class PDashboardInput extends PInterface {
 
     private static final String TAG = "PDashboardInput";
     String id;
+    private jDashboardInputCB mCallback;
 
     public PDashboardInput(Context a) {
         super(a);
@@ -45,7 +46,7 @@ public class PDashboardInput extends PInterface {
         void event(String responseString);
     }
 
-    public void add(String name, int x, int y, int width, int height, final jDashboardInputCB callbackfn)
+    public void add(String name, int x, int y, int width, int height)
             throws UnknownHostException, JSONException {
         this.id = StrUtils.generateRandomString();
 
@@ -75,7 +76,7 @@ public class PDashboardInput extends PInterface {
 
                         @Override
                         public void run() {
-                            callbackfn.event(val);
+                            if (mCallback != null) mCallback.event(val);
                         }
                     });
                 } catch (JSONException e) {
@@ -85,6 +86,10 @@ public class PDashboardInput extends PInterface {
             }
         });
 
+    }
+
+    public void onSubmit(final jDashboardInputCB callbackfn) throws UnknownHostException {
+        mCallback = callbackfn;
     }
 
 }

@@ -35,6 +35,7 @@ public class PDashboardSlider extends PInterface {
 
     private static final String TAG = "PDashboardSlider";
     String id;
+    private jDashboardSliderAddCB mCallback;
 
     public PDashboardSlider(Context a) {
         super(a);
@@ -65,10 +66,6 @@ public class PDashboardSlider extends PInterface {
                 .put("action", "add")
                 .put("values", values);
 
-        CustomWebsocketServer.getInstance(getContext()).send(msg);
-    }
-
-    public void onClick(final jDashboardSliderAddCB callbackfn) throws UnknownHostException {
         CustomWebsocketServer.getInstance(getContext()).addListener(id, new WebSocketListener() {
             @Override
             public void onUpdated(JSONObject jsonObject) {
@@ -78,7 +75,7 @@ public class PDashboardSlider extends PInterface {
 
                         @Override
                         public void run() {
-                            callbackfn.event(val);
+                            if (mCallback != null) mCallback.event(val);
                         }
                     });
                 } catch (JSONException e) {
@@ -87,6 +84,11 @@ public class PDashboardSlider extends PInterface {
             }
         });
 
+        CustomWebsocketServer.getInstance(getContext()).send(msg);
+    }
+
+    public void onChange(final jDashboardSliderAddCB callbackfn) throws UnknownHostException {
+        mCallback = callbackfn;
     }
 
     //TODO this method doesnt work yet

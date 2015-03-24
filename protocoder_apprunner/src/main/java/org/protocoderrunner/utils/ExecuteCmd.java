@@ -109,9 +109,12 @@ public class ExecuteCmd {
             }
 
         });
-        mThread.start();
 
         WhatIsRunning.getInstance().add(this);
+    }
+
+    public void start() {
+        mThread.start();
     }
 
     @ProtoMethod(description = "stop the running command", example = "")

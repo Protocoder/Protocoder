@@ -35,6 +35,7 @@ import android.support.v4.app.NotificationCompat;
 
 import org.mozilla.javascript.NativeObject;
 import org.protocoderrunner.R;
+import org.protocoderrunner.apidoc.annotation.ProtoField;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunnerActivity;
@@ -47,25 +48,34 @@ import org.protocoderrunner.project.SchedulerManager;
 import org.protocoderrunner.utils.ExecuteCmd;
 import org.protocoderrunner.utils.FileIO;
 
+import java.io.File;
+
 public class PApp extends PInterface {
 
-    public interface onAppStatus {
 
-        public void onStart();
-
-        public void onPause();
-
-        public void onResume();
-
-        public void onStop();
-    }
+    @ProtoField(description = "get the current project path", example = "")
+    String path;
+    @ProtoField(description = "get the current project HTTP URL", example = "")
+    String servingUrl;
 
     PEvents pevents;
+
+    public interface onAppStatus {
+        public void onStart();
+        public void onPause();
+        public void onResume();
+        public void onStop();
+    }
 
     public PApp(Context a) {
         super(a);
         pevents = new PEvents(a);
+
+        servingUrl = ProjectManager.getInstance().getCurrentProject().getServingURL();
+        path = ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/";
+
     }
+
 
 
     //TODO reenable this
@@ -121,7 +131,8 @@ public class PApp extends PInterface {
     @ProtoMethod(description = "loads and external file containing code", example = "")
     @ProtoMethodParam(params = {"fileName"})
     public void load(String filename) {
-        String code = FileIO.loadFile(filename);
+        String code = FileIO.loadFile(path + File.separator + filename);
+
         getActivity().mAppRunnerFragment.interp.eval(code);
     }
 
@@ -187,20 +198,6 @@ public class PApp extends PInterface {
         shareIntent.setType("text/*");
         shareIntent.putExtra(Intent.EXTRA_TEXT, text);
         getContext().startActivity(shareIntent);
-    }
-
-
-    @ProtoMethod(description = "get the current project HTTP URL", example = "")
-    public String projectUrl() {
-        String url = ProjectManager.getInstance().getCurrentProject().getServingURL();
-        return url;
-    }
-
-
-    @ProtoMethod(description = "get the current project path", example = "")
-    public String projectPath() {
-        String url = ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/";
-        return url;
     }
 
     // --------- doNotExecute ---------//

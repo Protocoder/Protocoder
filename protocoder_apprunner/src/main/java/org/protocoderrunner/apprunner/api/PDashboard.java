@@ -98,11 +98,11 @@ public class PDashboard extends PInterface {
 
     @ProtoMethod(description = "add a input box in the dashboard", example = "")
     @ProtoMethodParam(params = {"name", "x", "y", "w", "h", "function(text)"})
-    public PDashboardInput addInput(String name, int x, int y, int w, int h, final PDashboardInput.jDashboardInputCB callbackfn)
+    public PDashboardInput addInput(String name, int x, int y, int w, int h)
             throws UnknownHostException, JSONException {
 
         PDashboardInput pWebAppInput = new PDashboardInput(getContext());
-        pWebAppInput.add(name, x, y, w, h, callbackfn);
+        pWebAppInput.add(name, x, y, w, h);
 
         return pWebAppInput;
     }

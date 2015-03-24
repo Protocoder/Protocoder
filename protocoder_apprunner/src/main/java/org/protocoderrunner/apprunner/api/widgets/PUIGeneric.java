@@ -858,7 +858,7 @@ public class PUIGeneric extends PInterface {
 
     @ProtoMethod(description = "Creates a new camera view", example = "")
     @ProtoMethodParam(params = {"type={0,1}"})
-    public PCamera newCamera(String type) {
+    public PCamera newCameraView(String type) {
         initializeLayout();
 
         int camNum = -1;
