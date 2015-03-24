@@ -175,7 +175,7 @@ public class PUIGeneric extends PInterface {
                 // go
                 uiAbsoluteLayout = new PAbsoluteLayout(getActivity());
                 uiAbsoluteLayout.setLayoutParams(layoutParams);
-                uiAbsoluteLayout.setBackgroundColor(getActivity().getResources().getColor(R.color.mwmblue));
+                uiAbsoluteLayout.setBackgroundColor(getActivity().getResources().getColor(R.color.transparent));
                 sv.addView(uiAbsoluteLayout);
             } else {
                 uiLinearLayout = new LinearLayout(getActivity());
