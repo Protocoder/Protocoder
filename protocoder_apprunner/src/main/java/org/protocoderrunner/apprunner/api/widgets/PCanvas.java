@@ -247,7 +247,7 @@ public class PCanvas extends View implements PViewInterface {
                 pCanvasInterfaceDraw.onDraw(mCanvas);
                 invalidate();
             }
-        });
+        }).start();
 
         mAutoDraw = true;
     }
