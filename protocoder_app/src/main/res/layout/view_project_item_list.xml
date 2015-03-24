@@ -14,8 +14,8 @@
 
 
         <FrameLayout
-            android:layout_width="75dp"
-            android:layout_height="75dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             android:background="#55000000"
 
             android:id="@+id/iconText">
@@ -59,7 +59,7 @@
                 android:shadowRadius="0.1"
                 android:text="P"
                 android:textColor="#BBBBBB"
-                android:textSize="45sp"
+                android:textSize="35sp"
                 android:typeface="normal"
                 android:textStyle="bold"
                 />
@@ -111,12 +111,12 @@
             android:layout_alignBottom="@+id/card_menu_button"
             android:layout_toRightOf="@+id/iconText"
             android:layout_toEndOf="@+id/iconText"
-            />
+            android:textAlignment="viewStart"/>
 
         <View
             android:id="@+id/view1"
             android:layout_alignParentBottom="true"
-            android:background="#22000000"
+            android:background="#11000000"
             android:layout_width="fill_parent"
             android:layout_height="1dp" />
 
