@@ -51,7 +51,6 @@
 
     <application
         android:allowBackup="false"
-        android:theme="@style/ProtocoderAppRunnerTheme"
         android:hardwareAccelerated="true">
 
         <!--android:autoRemoveFromRecents="true"-->
@@ -59,6 +58,7 @@
         <activity
             android:name=".apprunner.AppRunnerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@style/ProtocoderAppRunnerTheme"
             android:label="@string/runner_name"
             android:launchMode="standard"
             android:windowSoftInputMode="stateHidden" >

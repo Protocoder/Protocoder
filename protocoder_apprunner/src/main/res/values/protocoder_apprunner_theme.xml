@@ -9,8 +9,8 @@
         <item name="android:windowBackground">@color/white</item>
         <item name="android:windowContentOverlay">@null</item>
 
-        <!--<item name="colorPrimary">@color/mwmblue</item>-->
-        <!--<item name="colorAccent">@color/mwmmagenta</item>-->
+        <item name="colorPrimary">@color/mwmblue</item>
+        <item name="colorAccent">@color/mwmmagenta</item>
         <item name="colorPrimaryDark">#333333</item>
 
         <!--<item name="windowActionBar">false</item>-->
@@ -19,7 +19,7 @@
         <!--<item name="android:listViewStyle">@style/MyListView</item>-->
         <!--<item name="android:buttonStyle">@style/ProtocoderAppRunner.Button</item>-->
         <!--<item name="android:textViewStyle">@style/ProtocoderAppRunner.TextView</item>-->
-        <!--<item name="android:seekBarStyle">@style/ProtocoderDark.SeekBar</item>-->
+        <!--<item name="android:seekBarStyle">@style/ProtocoderAppRunner.SeekBar</item>-->
     </style>
 
 
