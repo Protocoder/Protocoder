@@ -79,7 +79,7 @@ public class PSimpleHttpServer extends NanoHTTPD {
             put("class", "application/octet-stream");
         }
     };
-    private final HttpCB callbackfn;
+    private HttpCB mCallbackfn = null;
     private final Project p;
 
 
@@ -87,11 +87,10 @@ public class PSimpleHttpServer extends NanoHTTPD {
         Response event(String uri, String method, Properties header, Properties parms, Properties files);
     }
 
-    public PSimpleHttpServer(Context aCtx, int port, HttpCB callbackfn) throws IOException {
+    public PSimpleHttpServer(Context aCtx, int port) throws IOException {
         super(port);
         p = ProjectManager.getInstance().getCurrentProject();
 
-        this.callbackfn = callbackfn;
         ctx = new WeakReference<Context>(aCtx);
         String ip = NetworkUtils.getLocalIpAddress(aCtx);
         if (ip == null) {
@@ -101,6 +100,10 @@ public class PSimpleHttpServer extends NanoHTTPD {
         }
     }
 
+    public void onNewData(PSimpleHttpServer.HttpCB callbackfn) {
+        this.mCallbackfn = callbackfn;
+
+    }
 
     @ProtoMethod(description = "Responds to the request with a given text", example = "")
     @ProtoMethodParam(params = {"boolean"})
@@ -184,7 +187,8 @@ public class PSimpleHttpServer extends NanoHTTPD {
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    res[0] = callbackfn.event(uri, method, header, parms, files);
+                    //if (mCallbackfn != null)
+                        res[0] = mCallbackfn.event(uri, method, header, parms, files);
                 }
             });
 
