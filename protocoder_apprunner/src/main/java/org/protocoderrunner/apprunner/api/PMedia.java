@@ -104,18 +104,18 @@ public class PMedia extends PInterface {
 
     @ProtoMethod(description = "Loads and initializes a PureData patch http://www.puredata.info using libpd", example = "")
     @ProtoMethodParam(params = {"fileName", "micChannels", "outputChannels", "sampleRate", "buffer"})
-    public PPureData loadPdPatch(String fileName, int micChannels, int outputChannels, int sampleRate, int buffer) {
+    public PPureData initPdPatch(String fileName, int micChannels, int outputChannels, int sampleRate, int buffer) {
         AudioServicePd.settingsSampleRate = sampleRate;
         AudioServicePd.settingsMicChannels = micChannels;
         AudioServicePd.settingsOutputChannels = outputChannels;
         AudioServicePd.settingsBuffer = buffer;
 
-        return this.loadPdPatch(fileName);
+        return this.initPdPatch(fileName);
     }
 
     @ProtoMethod(description = "Loads and initializes a PureData patch http://www.puredata.info using libpd", example = "")
     @ProtoMethodParam(params = {"fileName"})
-    public PPureData loadPdPatch(String fileName) {
+    public PPureData initPdPatch(String fileName) {
         PPureData pPureData = new PPureData(getActivity());
         pPureData.initPatch(fileName);
 
