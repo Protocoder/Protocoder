@@ -522,8 +522,6 @@ public class PNetwork extends PInterface {
         PSimpleHttpServer httpServer = null;
         try {
             httpServer = new PSimpleHttpServer(getContext(), port);
-            WhatIsRunning.getInstance().add(httpServer);
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -532,8 +530,7 @@ public class PNetwork extends PInterface {
     }
 
 
-//    @ProtoMethod(description = "Start the bluetooth interface", example = "")
-//       @ProtoMethodParam(params = {})
+
 //       public PBluetooth createBluetoothSerialServer() {
 //        PBluetooth pBluetooth = new PBluetooth(getActivity());
 //        pBluetooth.initForParentFragment(getFragment());

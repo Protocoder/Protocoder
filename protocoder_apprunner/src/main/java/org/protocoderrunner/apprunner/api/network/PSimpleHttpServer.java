@@ -28,6 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.network.NanoHTTPD;
 import org.protocoderrunner.network.NetworkUtils;
 import org.protocoderrunner.project.Project;
@@ -42,9 +43,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-/**
- * An example of subclassing NanoHTTPD to make mContext custom HTTP server.
- */
 public class PSimpleHttpServer extends NanoHTTPD {
     public static final String TAG = "ProtocoderHttpServer";
     public Handler mHandler = new Handler(Looper.getMainLooper());
@@ -84,7 +82,7 @@ public class PSimpleHttpServer extends NanoHTTPD {
 
 
     public interface HttpCB {
-        Response event(String uri, String method, Properties header, Properties parms, Properties files);
+        void event(String uri, String method, Properties header, Properties parms, Properties files);
     }
 
     public PSimpleHttpServer(Context aCtx, int port) throws IOException {
@@ -94,15 +92,16 @@ public class PSimpleHttpServer extends NanoHTTPD {
         ctx = new WeakReference<Context>(aCtx);
         String ip = NetworkUtils.getLocalIpAddress(aCtx);
         if (ip == null) {
-            MLog.d(TAG, "No IP found. Please connect to a newwork and try again");
+            MLog.d(TAG, "No IP found. Please connect to a network and try again");
         } else {
             MLog.d(TAG, "Launched server at http://" + ip.toString() + ":" + port);
         }
+
+        WhatIsRunning.getInstance().add(this);
     }
 
     public void onNewData(PSimpleHttpServer.HttpCB callbackfn) {
         this.mCallbackfn = callbackfn;
-
     }
 
     @ProtoMethod(description = "Responds to the request with a given text", example = "")
@@ -118,15 +117,10 @@ public class PSimpleHttpServer extends NanoHTTPD {
         super.serveFile(uri.substring(uri.lastIndexOf('/') + 1, uri.length()), header,
                 new File(p.getStoragePath()), false);
 
-        // MLog.network(ctx.get(), TAG, "lalalalal " + res.toString());
-
-
         Response res = null;
         try {
             //MLog.d(TAG, "received String" + uri + " " + method + " " + header + " " + " " + parms + " " + files);
-
             String projectFolder = p.getStoragePath();
-
             File file = new File(p.getStoragePath());
 
             if (file.exists()) {
@@ -179,16 +173,17 @@ public class PSimpleHttpServer extends NanoHTTPD {
     }
 
 
+
     public Response serve(final String uri, final String method, final Properties header, final Properties parms, final Properties files) {
-        final Response[] res = {null};
         MLog.d(TAG, uri + " " + method + " " + header + " " + parms + " " + files);
 
         try {
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    //if (mCallbackfn != null)
-                        res[0] = mCallbackfn.event(uri, method, header, parms, files);
+                    if (mCallbackfn != null) {
+                        mCallbackfn.event(uri, method, header, parms, files);
+                    }
                 }
             });
 
@@ -196,8 +191,9 @@ public class PSimpleHttpServer extends NanoHTTPD {
             MLog.d(TAG, e.toString());
         }
 
-        return res[0];
+        return super.serve(uri, method, header, parms, files);
     }
+
 
 
 }
