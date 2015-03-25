@@ -74,6 +74,8 @@ public class PBluetooth extends PInterface {
         return pBluetoothClient;
     }
 
+    @ProtoMethod(description = "Connect to a bluetooth serial device", example = "")
+    @ProtoMethodParam(params = {})
     public PBluetoothClient connectSerial(PBluetoothClient.CallbackConnected callback) {
         start();
 
