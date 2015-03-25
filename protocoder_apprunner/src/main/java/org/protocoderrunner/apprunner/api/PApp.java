@@ -212,6 +212,21 @@ public class PApp extends PInterface {
 
     }
 
+    public interface CallbackRunUi {
+        void event();
+    }
+
+    @ProtoMethod(description = "This runs on the UI thread", example = "")
+    @ProtoMethodParam(params = {"function(code)"})
+    public void runOnUiThread(final CallbackRunUi callback) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                callback.event();
+            }
+        });
+    }
+
 
     @ProtoMethod(description = "execute a shell command", example = "")
     @ProtoMethodParam(params = {"cmd", "function(data)"})
