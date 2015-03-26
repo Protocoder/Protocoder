@@ -81,12 +81,6 @@ public class Project {
 		return ProjectManager.getInstance().getProjectURL(this);
     }
 
-    // TEST ***
-    public String getAssetsPath() {
-        return "file:///android_asset/" + (this.folder) + "/" + this.getName();
-    }
-    // ***
-
 	public String getServingURL() {
 		String url = "http://" + ProjectManager.getInstance().getRemoteIP();
 		url += "apps/" + this.getFolder() + "/" + this.getName() + "/";
