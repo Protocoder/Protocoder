@@ -1026,58 +1026,61 @@ public class PUIGeneric extends PInterface {
 	/**
 	 * This class lets us set the background asynchronously
 	 * 
-	 * @author ncbq76
-	 * 
+	 * @author ncbq76 / Modifications by @josejuansanchez
+     *
 	 */
 	// We need to set the bitmap image asynchronously
-	protected class SetBgImageTask extends AsyncTask<String, Void, Bitmap> {
-		PImageView fl;
+    protected class SetBgImageTask extends AsyncTask<String, Void, Bitmap> {
+        PImageView fl;
         boolean isTiled;
+        boolean loadFromAssets;
 
-		public SetBgImageTask(PImageView bgImageView, boolean isTiled) {
-			this.fl = bgImageView;
+        public SetBgImageTask(PImageView bgImageView, boolean isTiled, boolean loadFromAssets) {
+            this.fl = bgImageView;
             this.isTiled = isTiled;
-		}
+            this.loadFromAssets = loadFromAssets;
+        }
 
-		@Override
-		protected Bitmap doInBackground(String... paths) {
-			String imagePath = paths[0];
+        @Override
+        protected Bitmap doInBackground(String... paths) {
+            String imagePath = paths[0];
 
-            // TEST
+            if (loadFromAssets == true) {
+                return loadImageFromAssets(imagePath);
+            } else {
+                return loadImage(imagePath);
+            }
+        }
+
+        private Bitmap loadImageFromAssets(String imagePath) {
             try {
-                final InputStream in = getContext().getAssets().open("myscript/myproject/patata2.png");
+                final InputStream in = getContext().getAssets().open(imagePath);
                 Bitmap bmp = BitmapFactory.decodeStream(in);
                 return bmp;
-
             } catch(final Throwable tx) {
-
+                return null;
             }
-            return null;
-            // ****
+        }
 
-            /*
-			File imgFile = new File(imagePath);
-			if (imgFile.exists()) {
-				// Get the bitmap with appropriate options
-				final BitmapFactory.Options options = new BitmapFactory.Options();
-				options.inPurgeable = true;
-				Bitmap bmp = BitmapFactory.decodeFile(imagePath, options);
-				return bmp;
-			}
-			return null;
-			*/
-		}
+        private Bitmap loadImage(String imagePath) {
+            try {
+                Bitmap bmp = BitmapFactory.decodeFile(imagePath);
+                return bmp;
+            } catch(final Throwable tx) {
+                return null;
+            }
+        }
 
-		@Override
-		protected void onPostExecute(Bitmap result) {
-			fl.setImageBitmap(result);
-			fl.setScaleType(ScaleType.CENTER_INSIDE);
-			// fl.setBackgroundDrawable(d);
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            fl.setImageBitmap(result);
+            fl.setScaleType(ScaleType.CENTER_INSIDE);
+            // fl.setBackgroundDrawable(d);
 
             if (isTiled == true) {
                 fl.setRepeat();
             }
-		}
-	}
+        }
+    }
 
 }
