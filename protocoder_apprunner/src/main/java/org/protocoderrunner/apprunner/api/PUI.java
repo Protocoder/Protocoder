@@ -728,7 +728,9 @@ public class PUI extends PUIGeneric {
 	public void backgroundImageTile(String imagePath) {
 		initializeLayout();
 		// Add the bg image asynchronously
-		new SetBgImageTask(bgImageView, true).execute(AppRunnerSettings.get().project.getStoragePath() + File.separator
+        new SetBgImageTask(bgImageView, true).execute(
+                AppRunnerSettings.get().project.getStoragePath()
+                + File.separator
 				+ imagePath);
 	}
 

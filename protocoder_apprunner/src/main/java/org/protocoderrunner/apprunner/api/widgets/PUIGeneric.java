@@ -32,9 +32,11 @@ package org.protocoderrunner.apprunner.api.widgets;
 import android.animation.LayoutTransition;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
@@ -81,6 +83,7 @@ import org.protocoderrunner.views.TouchAreaView;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -954,7 +957,7 @@ public class PUIGeneric extends PInterface {
 		@Override
 		protected Object doInBackground(String... paths) {
 			imagePath = paths[0];
-			File imgFile = new File(imagePath);
+            File imgFile = new File(imagePath);
 			//MLog.d("svg", "imagePath " + imagePath);
 			if (imgFile.exists()) {
 				fileExtension = FileIO.getFileExtension(imagePath);
@@ -1020,7 +1023,6 @@ public class PUIGeneric extends PInterface {
 	}
 
 
-
 	/**
 	 * This class lets us set the background asynchronously
 	 * 
@@ -1040,6 +1042,20 @@ public class PUIGeneric extends PInterface {
 		@Override
 		protected Bitmap doInBackground(String... paths) {
 			String imagePath = paths[0];
+
+            // TEST
+            try {
+                final InputStream in = getContext().getAssets().open("myscript/myproject/patata2.png");
+                Bitmap bmp = BitmapFactory.decodeStream(in);
+                return bmp;
+
+            } catch(final Throwable tx) {
+
+            }
+            return null;
+            // ****
+
+            /*
 			File imgFile = new File(imagePath);
 			if (imgFile.exists()) {
 				// Get the bitmap with appropriate options
@@ -1049,6 +1065,7 @@ public class PUIGeneric extends PInterface {
 				return bmp;
 			}
 			return null;
+			*/
 		}
 
 		@Override

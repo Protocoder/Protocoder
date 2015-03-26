@@ -43,7 +43,7 @@ public class AppSettings {
 	public final static boolean HIDE_HOME_BAR = false;
 	public final static boolean SCREEN_ALWAYS_ON = false;
 	public final static boolean CLOSE_WITH_BACK = true;
-	public final static boolean STANDALONE = false;
+	public static boolean STANDALONE = false;
     public static int MIN_SUPPORTED_VERSION = Build.VERSION_CODES.ICE_CREAM_SANDWICH;
 
 	public final static String APP_FOLDER = "protocoder";

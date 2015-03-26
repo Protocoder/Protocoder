@@ -50,6 +50,7 @@ import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.protocoderrunner.AppSettings;
 import org.protocoderrunner.R;
 import org.protocoderrunner.apprunner.api.PApp;
 import org.protocoderrunner.apprunner.api.PBoards;
@@ -124,7 +125,6 @@ public class AppRunnerFragment extends Fragment {
     private String mIntentPostfixScript = "";
     private boolean mIsProjectLoaded = false;
     //private EditorFragment editorFragment;
-    private boolean mLoadProjectFromAssets = false;
 
     @Override
     public void onAttach(Activity activity) {
@@ -140,7 +140,6 @@ public class AppRunnerFragment extends Fragment {
         mIntentPrefixScript = bundle.getString(Project.PREFIX, "");
         mIntentCode = bundle.getString(Project.CODE, "");
         mIntentPostfixScript = bundle.getString(Project.POSTFIX, "");
-        mLoadProjectFromAssets = bundle.getBoolean(Project.LOAD_FROM_ASSETS, false);
 
         //load project checking if we got the folder and name in the intent
         mIsProjectLoaded = !mProjectName.isEmpty() && !mProjectFolder.isEmpty();
@@ -150,9 +149,9 @@ public class AppRunnerFragment extends Fragment {
             AppRunnerSettings.get().project = mCurrentProject;
             AppRunnerSettings.get().hasUi = true;
 
-            if (mLoadProjectFromAssets) {
+            if (AppSettings.STANDALONE == true) {
                 // Get code from assets
-                mScript = ProjectManager.getInstance().getCode(mActivity, mCurrentProject);
+                mScript = ProjectManager.getInstance().getCodeFromAssets(mActivity, mCurrentProject);
             } else {
                 // Get code from sdcard
                 mScript = ProjectManager.getInstance().getCode(mCurrentProject);

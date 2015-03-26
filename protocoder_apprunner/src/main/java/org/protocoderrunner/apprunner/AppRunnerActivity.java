@@ -151,7 +151,6 @@ public class AppRunnerActivity extends BaseActivity {
             bundle.putString(Project.PREFIX, mProject.prefix);
             bundle.putString(Project.CODE, mProject.code);
             bundle.putString(Project.POSTFIX, mProject.postfix);
-            bundle.putBoolean(Project.LOAD_FROM_ASSETS, mProject.load_from_assets);
 
             //MLog.d(TAG, "load " + projectName + " in " + projectFolder);
 

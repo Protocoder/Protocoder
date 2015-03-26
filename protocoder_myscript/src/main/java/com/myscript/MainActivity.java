@@ -1,8 +1,10 @@
 package com.myscript;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
+import org.protocoderrunner.AppSettings;
 import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.project.Project;
 import org.protocoderrunner.project.ProjectManager;
@@ -13,15 +15,16 @@ import org.protocoderrunner.project.ProjectManager;
  */
 public class MainActivity extends AppRunnerActivity {
 
-    private static final boolean LOAD_FROM_ASSETS = true;
     private static final String PROJECT_FOLDER = "myscript";
     private static final String PROJECT_NAME = "myproject";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        //AppSettings.STANDALONE = true;
+
         // Load project from sdcard
-        if (!LOAD_FROM_ASSETS) {
+        if (AppSettings.STANDALONE == false) {
 
             // Copy the project files from assets to sdcard
             installMyScript();
@@ -39,7 +42,6 @@ public class MainActivity extends AppRunnerActivity {
 
         // Create a new project and inject it to the base class
         Project project = new Project(PROJECT_FOLDER, PROJECT_NAME);
-        project.load_from_assets = LOAD_FROM_ASSETS;
         setProject(project);
 
         super.onCreate(savedInstanceState);

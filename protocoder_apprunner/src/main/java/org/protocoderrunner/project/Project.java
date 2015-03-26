@@ -29,6 +29,10 @@
 
 package org.protocoderrunner.project;
 
+import android.content.Context;
+import android.content.res.AssetManager;
+import android.net.Uri;
+
 public class Project {
 
 	//public final static String TYPE = "projectType";
@@ -52,7 +56,6 @@ public class Project {
 	public boolean containsReadme = false;
 	public boolean containsTutorial = false;
     public boolean selected = false;
-    public boolean load_from_assets = false;
 
     public Project(String folder, String projectName, boolean containsReadme, boolean containsTutorial) {
 		this.folder = folder;
@@ -76,7 +79,13 @@ public class Project {
 
 	public String getStoragePath() {
 		return ProjectManager.getInstance().getProjectURL(this);
-	}
+    }
+
+    // TEST ***
+    public String getAssetsPath() {
+        return "file:///android_asset/" + (this.folder) + "/" + this.getName();
+    }
+    // ***
 
 	public String getServingURL() {
 		String url = "http://" + ProjectManager.getInstance().getRemoteIP();

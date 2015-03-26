@@ -156,7 +156,7 @@ public class ProjectManager {
     }
 
     // Get code from assets
-    public String getCode(Context c, Project p) {
+    public String getCodeFromAssets(Context c, Project p) {
         return FileIO.readAssetFile(c, p.folder + File.separator +
                 p.name + File.separator + MAIN_FILE_NAME);
     }
