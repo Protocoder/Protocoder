@@ -37,7 +37,6 @@ import android.view.TextureView;
 import org.protocoderrunner.utils.MLog;
 
 import java.io.IOException;
-import java.util.Vector;
 
 @SuppressLint("NewApi")
 public class CustomVideoTextureView extends TextureView implements TextureView.SurfaceTextureListener,
@@ -47,8 +46,8 @@ public class CustomVideoTextureView extends TextureView implements TextureView.S
     private final Context c;
     private MediaPlayer mMediaPlayer;
     private TextureView mPreview;
-    Vector<VideoListener> listeners = new Vector<VideoListener>();
-    Runnable r;
+    VideoListener mListener;
+    Runnable mTimeUpdateRunnable;
     protected Handler handler;
     private Surface s;
     private boolean playingVideo = false;
@@ -57,21 +56,20 @@ public class CustomVideoTextureView extends TextureView implements TextureView.S
     private boolean isUpdating = false;
 
     public interface VideoListener {
-
+        public void onLoad(boolean ready);
         public void onReady(boolean ready);
-
         public void onFinish(boolean finished);
-
         public void onTimeUpdate(int ms, int totalDuration);
     }
 
     public CustomVideoTextureView(Context context) {
         super(context);
         this.c = context;
+    }
+
+    public void init() {
         this.setSurfaceTextureListener(this);
-
         handler = new Handler();
-
         setBackgroundColor(Color.parseColor("#FFFFFF"));
     }
 
@@ -92,6 +90,7 @@ public class CustomVideoTextureView extends TextureView implements TextureView.S
             unloadVideo();
         }
         loadVideo(path);
+        mListener.onReady(true);
     }
 
     public void loadVideo(String path) {
@@ -110,6 +109,15 @@ public class CustomVideoTextureView extends TextureView implements TextureView.S
             mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             //mMediaPlayer.start();
             currentVolume = 1.0f;
+
+            mTimeUpdateRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    //MLog.d(TAG, "update ");
+                    if (mListener != null) mListener.onTimeUpdate(mMediaPlayer.getCurrentPosition(), mMediaPlayer.getDuration());
+                    handler.postDelayed(this, 100);
+                }
+            };
             // mPreview.animate().rotation(200).alpha((float) 0.5).scaleX(0.5f)
             // .scaleY(0.5f).setDuration(5000);
 
@@ -131,10 +139,9 @@ public class CustomVideoTextureView extends TextureView implements TextureView.S
 
     public void unloadVideo() {
         // mp_.stop();
-        for (VideoListener l : listeners) {
-            l = null;
-        }
-        handler.removeCallbacks(r);
+        mListener = null;
+
+        handler.removeCallbacks(mTimeUpdateRunnable);
         handler.removeCallbacks(fadeRunnable);
         mMediaPlayer.stop();
         mMediaPlayer.release();
@@ -146,8 +153,8 @@ public class CustomVideoTextureView extends TextureView implements TextureView.S
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
         s = new Surface(surface);
 
-        for (VideoListener l : listeners) {
-            l.onReady(true);
+        if (mListener != null) {
+            mListener.onLoad(true);
         }
 
         w = width;
@@ -186,27 +193,12 @@ public class CustomVideoTextureView extends TextureView implements TextureView.S
     public void onPrepared(MediaPlayer mp) {
         mMediaPlayer = mp;
         mMediaPlayer.setLooping(false);
-
-        r = new Runnable() {
-
-            @Override
-            public void run() {
-                for (VideoListener l : listeners) {
-                    l.onTimeUpdate(mMediaPlayer.getCurrentPosition(), mMediaPlayer.getDuration());
-                }
-                handler.postDelayed(this, 100);
-            }
-        };
+        //MLog.d(TAG, "onPrepared");
     }
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-
-        // finish();
-        for (VideoListener l : listeners) {
-            l.onFinish(true);
-        }
-
+        if (mListener != null) mListener.onFinish(true);
     }
 
     @Override
@@ -225,7 +217,7 @@ public class CustomVideoTextureView extends TextureView implements TextureView.S
     }
 
     public void close() {
-        handler.removeCallbacks(r);
+        handler.removeCallbacks(mTimeUpdateRunnable);
         // mVideoView.stopPlayback();
 
     }
@@ -247,17 +239,18 @@ public class CustomVideoTextureView extends TextureView implements TextureView.S
     }
 
     public void play() {
-        handler.post(r);
+        //MLog.d(TAG, "play");
         mMediaPlayer.start();
+        handler.postDelayed(mTimeUpdateRunnable, 200);
     }
 
     public void pause() {
-        handler.removeCallbacks(r);
+        handler.removeCallbacks(mTimeUpdateRunnable);
         mMediaPlayer.pause();
     }
 
     public void stop() {
-        handler.removeCallbacks(r);
+        handler.removeCallbacks(mTimeUpdateRunnable);
         mMediaPlayer.stop();
     }
 
@@ -266,16 +259,17 @@ public class CustomVideoTextureView extends TextureView implements TextureView.S
     }
 
     public void addListener(VideoListener videoListener) {
-        listeners.add(videoListener);
+        //MLog.d(TAG, "adding videolistener");
+        mListener = videoListener;
     }
 
     public void removeListener(VideoListener videoListener) {
-        listeners.remove(videoListener);
+        mListener = null;
     }
 
     public void fadeAudio(int time, float finalVolume) {
 
-        MLog.d(TAG, "->" + finalVolume + " " + time);
+        //MLog.d(TAG, "->" + finalVolume + " " + time);
 
         final float incr = (finalVolume - currentVolume) / time;
 
@@ -283,9 +277,9 @@ public class CustomVideoTextureView extends TextureView implements TextureView.S
             @Override
             public void run() {
                 currentVolume += incr;
-                MLog.d(TAG, "" + currentVolume + " " + incr);
+                //MLog.d(TAG, "" + currentVolume + " " + incr);
                 if (currentVolume >= 0.0f || currentVolume <= 1.0f) {
-                    MLog.d(TAG, "qq");
+                    //MLog.d(TAG, "qq");
                     mMediaPlayer.setVolume(currentVolume, currentVolume);
                     handler.post(this);
                 } else {

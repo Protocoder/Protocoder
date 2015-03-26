@@ -170,8 +170,9 @@ public class ProjectManager {
     }
 
     public void writeNewCode(Project p, String code, String fileName) {
-        MLog.d(TAG, "--> " + fileName);
-        writeNewFile(p.getStoragePath() + File.separator + fileName, code);
+        String path = p.getStoragePath() + File.separator + fileName;
+        MLog.d(TAG, "--> " + fileName + " " + path);
+        writeNewFile(path, code);
     }
 
     public void writeNewFile(String file, String code) {
@@ -186,8 +187,10 @@ public class ProjectManager {
             fo.write(data);
             fo.flush();
             fo.close();
+            MLog.d(TAG, "--> saved");
+
         } catch (FileNotFoundException ex) {
-            // Log.e("Project", ex.toString());
+            MLog.e("ProjectManager", ex.toString());
         } catch (IOException e) {
             e.printStackTrace();
             // Log.e("Project", e.toString());

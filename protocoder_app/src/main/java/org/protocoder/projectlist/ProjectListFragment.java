@@ -189,8 +189,6 @@ public class ProjectListFragment extends BaseFragment {
         int id = findAppPosByName(p.getName());
         mProjects.remove(id);
         notifyAddedProject();
-
-        checkEmptyState();
     }
 
     private void checkEmptyState() {
@@ -228,6 +226,7 @@ public class ProjectListFragment extends BaseFragment {
     }
 
     public void notifyAddedProject() {
+        checkEmptyState();
         mProjectAdapter.notifyDataSetChanged();
         //mGrid.invalidateViews();
     }

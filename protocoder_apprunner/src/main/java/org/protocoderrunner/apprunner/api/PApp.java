@@ -47,16 +47,11 @@ import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.project.SchedulerManager;
 import org.protocoderrunner.utils.ExecuteCmd;
 import org.protocoderrunner.utils.FileIO;
+import org.protocoderrunner.utils.MLog;
 
 import java.io.File;
 
 public class PApp extends PInterface {
-
-
-    @ProtoField(description = "get the current project path", example = "")
-    String path;
-    @ProtoField(description = "get the current project HTTP URL", example = "")
-    String servingUrl;
 
     PEvents pevents;
 
@@ -70,10 +65,6 @@ public class PApp extends PInterface {
     public PApp(Context a) {
         super(a);
         pevents = new PEvents(a);
-
-        servingUrl = ProjectManager.getInstance().getCurrentProject().getServingURL();
-        path = ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/";
-
     }
 
 
@@ -131,7 +122,7 @@ public class PApp extends PInterface {
     @ProtoMethod(description = "loads and external file containing code", example = "")
     @ProtoMethodParam(params = {"fileName"})
     public void load(String filename) {
-        String code = FileIO.loadFile(path + File.separator + filename);
+        String code = FileIO.loadFile(path() + File.separator + filename);
 
         getActivity().mAppRunnerFragment.interp.eval(code);
     }
@@ -198,6 +189,20 @@ public class PApp extends PInterface {
         shareIntent.setType("text/*");
         shareIntent.putExtra(Intent.EXTRA_TEXT, text);
         getContext().startActivity(shareIntent);
+    }
+
+
+    @ProtoMethod(description = "get the current project HTTP URL", example = "")
+    public String servingUrl() {
+        String url = ProjectManager.getInstance().getCurrentProject().getServingURL();
+        return url;
+    }
+
+
+    @ProtoMethod(description = "get the current project path", example = "")
+    public String path() {
+        String url = ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/";
+        return url;
     }
 
     // --------- doNotExecute ---------//

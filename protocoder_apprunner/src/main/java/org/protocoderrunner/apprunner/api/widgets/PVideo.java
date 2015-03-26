@@ -33,14 +33,46 @@ import java.io.File;
 public class PVideo extends CustomVideoTextureView implements PViewInterface {
 
     protected Context c;
+    private OnUpdateCB mCallbackUpdate;
+    private OnFinishCB mCallbackOnFinish;
+    private OnReadyCB mCallbackOnReady;
 
-    public PVideo(Context c) {
+    public PVideo(Context c, final String videoFile) {
         super(c);
         this.c = c;
+
+
+        addListener(new CustomVideoTextureView.VideoListener() {
+            @Override
+            public void onTimeUpdate(int ms, int totalDuration) {
+                //MLog.d(TAG, "onUpdate");
+                if (mCallbackUpdate != null) mCallbackUpdate.event(ms, totalDuration);
+            }
+
+            @Override
+            public void onLoad(boolean ready) {
+                load(videoFile);
+            }
+
+            @Override
+            public void onReady(boolean ready) {
+                //MLog.d(TAG, "onReady");
+                if (mCallbackOnReady != null) mCallbackOnReady.event();
+            }
+
+            @Override
+            public void onFinish(boolean finished) {
+                //MLog.d(TAG, "onFinish");
+
+                if (mCallbackOnFinish != null) mCallbackOnFinish.event();
+            }
+        });
+
+        init();
+
     }
 
     @Override
-
     @ProtoMethod(description = "Plays a video", example = "")
     @ProtoMethodParam(params = {""})
     public void play() {
@@ -48,7 +80,6 @@ public class PVideo extends CustomVideoTextureView implements PViewInterface {
     }
 
     @Override
-
     @ProtoMethod(description = "Seeks to a certain position in the video", example = "")
     @ProtoMethodParam(params = {"milliseconds"})
     public void seekTo(int ms) {
@@ -56,7 +87,6 @@ public class PVideo extends CustomVideoTextureView implements PViewInterface {
     }
 
     @Override
-
     @ProtoMethod(description = "Pauses the video", example = "")
     @ProtoMethodParam(params = {""})
     public void pause() {
@@ -64,7 +94,6 @@ public class PVideo extends CustomVideoTextureView implements PViewInterface {
     }
 
     @Override
-
     @ProtoMethod(description = "Stops the video", example = "")
     public void stop() {
         super.stop();
@@ -75,6 +104,7 @@ public class PVideo extends CustomVideoTextureView implements PViewInterface {
     @ProtoMethodParam(params = {"fileName"})
     public void load(String videoFile) {
         super.loadExternalVideo(AppRunnerSettings.get().project.getStoragePath() + File.separator + videoFile);
+
     }
 
 
@@ -97,22 +127,7 @@ public class PVideo extends CustomVideoTextureView implements PViewInterface {
     @ProtoMethod(description = "Callback that triggers when the video is loaded", example = "")
     @ProtoMethodParam(params = {"function()"})
     public void onLoaded(final OnReadyCB callbackfn) {
-        super.addListener(new VideoListener() {
-            @Override
-            public void onReady(boolean ready) {
-                callbackfn.event();
-            }
-
-            @Override
-            public void onFinish(boolean finished) {
-
-            }
-
-            @Override
-            public void onTimeUpdate(int ms, int totalDuration) {
-
-            }
-        });
+        mCallbackOnReady = callbackfn;
 
     }
 
@@ -120,47 +135,14 @@ public class PVideo extends CustomVideoTextureView implements PViewInterface {
     @ProtoMethod(description = "Callback that triggers when the video playing is finished", example = "")
     @ProtoMethodParam(params = {"function()"})
     public void onFinish(final OnFinishCB callback) {
-        super.addListener(new VideoListener() {
-            @Override
-            public void onReady(boolean ready) {
-
-            }
-
-            @Override
-            public void onFinish(boolean finished) {
-                callback.event();
-            }
-
-            @Override
-            public void onTimeUpdate(int ms, int totalDuration) {
-
-            }
-        });
-
+        mCallbackOnFinish = callback;
     }
 
 
     @ProtoMethod(description = "Callback that gives information of the current video position", example = "")
     @ProtoMethodParam(params = {"function(milliseconds, totalDuration)"})
     public void onUpdate(final OnUpdateCB callbackfn) {
-
-        super.addListener(new CustomVideoTextureView.VideoListener() {
-            @Override
-            public void onTimeUpdate(int ms, int totalDuration) {
-                MLog.d(TAG, "onUpdate");
-
-                callbackfn.event(ms, totalDuration);
-            }
-
-            @Override
-            public void onReady(boolean ready) {
-            }
-
-            @Override
-            public void onFinish(boolean finished) {
-
-            }
-        });
+        mCallbackUpdate = callbackfn;
     }
 
 
@@ -171,7 +153,6 @@ public class PVideo extends CustomVideoTextureView implements PViewInterface {
     }
 
     @Override
-
     @ProtoMethod(description = "Gets the video width", example = "")
     @ProtoMethodParam(params = {""})
     public void getVideoWidth() {
@@ -179,7 +160,6 @@ public class PVideo extends CustomVideoTextureView implements PViewInterface {
     }
 
     @Override
-
     @ProtoMethod(description = "Gets the video height", example = "")
     @ProtoMethodParam(params = {""})
     public void getVideoHeight() {
@@ -187,7 +167,6 @@ public class PVideo extends CustomVideoTextureView implements PViewInterface {
     }
 
     @Override
-
     @ProtoMethod(description = "Enables/Disables looping the video", example = "")
     @ProtoMethodParam(params = {"boolean"})
     public void setLoop(boolean b) {
@@ -195,7 +174,6 @@ public class PVideo extends CustomVideoTextureView implements PViewInterface {
     }
 
     @Override
-
     @ProtoMethod(description = "Get the total duration of the video", example = "")
     @ProtoMethodParam(params = {""})
     public int getDuration() {
@@ -203,7 +181,6 @@ public class PVideo extends CustomVideoTextureView implements PViewInterface {
     }
 
     @Override
-
     @ProtoMethod(description = "Gets the current position of the video", example = "")
     @ProtoMethodParam(params = {""})
     public int getCurrentPosition() {

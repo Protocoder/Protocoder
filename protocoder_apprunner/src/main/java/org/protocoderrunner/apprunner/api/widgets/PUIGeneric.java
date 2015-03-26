@@ -812,25 +812,7 @@ public class PUIGeneric extends PInterface {
     @ProtoMethodParam(params = {"fileName"})
     public PVideo newVideo(final String videoFile) {
         initializeLayout();
-        final PVideo video = new PVideo(getActivity());
-
-        video.addListener(new CustomVideoTextureView.VideoListener() {
-
-            @Override
-            public void onTimeUpdate(int ms, int totalDuration) {
-                // callback(fn, args)
-            }
-
-            @Override
-            public void onReady(boolean ready) {
-                video.loadExternalVideo(AppRunnerSettings.get().project.getStoragePath() + File.separator + videoFile);
-            }
-
-            @Override
-            public void onFinish(boolean finished) {
-
-            }
-        });
+        final PVideo video = new PVideo(getActivity(), videoFile);
 
         return video;
     }

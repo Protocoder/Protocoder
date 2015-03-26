@@ -42,7 +42,7 @@ public class PBoards extends PInterface {
 
     @ProtoMethod(description = "initializes the ioio board", example = "")
     @ProtoMethodParam(params = {"function()"})
-    public PIOIO startIOIO(PIOIO.startCB callbackfn) {
+    public PIOIO connectIOIO(PIOIO.startCB callbackfn) {
         PIOIO ioio = new PIOIO(getContext());
         ioio.start(callbackfn);
 

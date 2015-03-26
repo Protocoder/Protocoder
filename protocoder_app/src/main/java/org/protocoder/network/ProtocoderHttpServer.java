@@ -348,6 +348,31 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 
                     MLog.i(TAG, "Saved");
 
+                // hack, this should be changed
+                } else if (cmd.equals("push_code_and_run")) {
+                    MLog.d(TAG, "--> push code " + method + " " + header);
+                    name = parms.get("name").toString();
+                    String fileName = parms.get("fileName").toString();
+                    newCode = parms.get("code").toString();
+                    // MLog.d(TAG, "code -> " + newCode);
+                    folder = parms.get("type").toString();
+
+                    // add type
+                    Project p = ProjectManager.getInstance().get(folder, name);
+                    MLog.d(TAG, "qqm" + p.getName() + " " + p.getFolder() + " " + fileName + " " + newCode);
+
+                    ProjectManager.getInstance().writeNewCode(p, newCode, fileName);
+                    data.put("project", ProjectManager.getInstance().toJson(p));
+                    ProjectEvent evt = new ProjectEvent(p, "save");
+                    EventBus.getDefault().post(evt);
+
+                    MLog.i(TAG, "Saved");
+
+                   // ProjectManager.getInstance().setRemoteIP(parms.get("remoteIP").toString());
+                    //ProjectEvent evt2 = new ProjectEvent(p, "run");
+                    //EventBus.getDefault().post(evt2);
+                    //MLog.i(TAG, "Running...");
+
                     // list files in project
                 } else if (cmd.equals("list_files_in_project")) {
                     MLog.d(TAG, "--> create new project");
