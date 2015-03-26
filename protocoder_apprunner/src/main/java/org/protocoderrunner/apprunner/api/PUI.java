@@ -716,10 +716,23 @@ public class PUI extends PUIGeneric {
 	@ProtoMethodParam(params = { "imageName" })
 	public void backgroundImage(String imagePath) {
 		initializeLayout();
-		// Add the bg image asynchronously
-		new SetBgImageTask(bgImageView, false).execute(AppRunnerSettings.get().project.getStoragePath() + File.separator
-				+ imagePath);
 
+        if (AppSettings.STANDALONE == true) {
+            // Add the bg image asynchronously from the assets
+            new SetBgImageTask(bgImageView, false, true).execute(
+                    AppRunnerSettings.get().project.getFolder()
+                            + File.separator
+                            + AppRunnerSettings.get().project.getName()
+                            + File.separator
+                            + imagePath);
+
+        } else {
+            // Add the bg image asynchronously from the sdcard
+            new SetBgImageTask(bgImageView, false, false).execute(
+                    AppRunnerSettings.get().project.getStoragePath()
+                            + File.separator
+                            + imagePath);
+        }
 	}
 
     
@@ -727,11 +740,23 @@ public class PUI extends PUIGeneric {
 	@ProtoMethodParam(params = { "imageName" })
 	public void backgroundImageTile(String imagePath) {
 		initializeLayout();
-		// Add the bg image asynchronously
-        new SetBgImageTask(bgImageView, true).execute(
-                AppRunnerSettings.get().project.getStoragePath()
-                + File.separator
-				+ imagePath);
+
+        if (AppSettings.STANDALONE == true) {
+            // Add the bg image asynchronously from the assets
+            new SetBgImageTask(bgImageView, true, true).execute(
+                    AppRunnerSettings.get().project.getFolder()
+                    + File.separator
+                    + AppRunnerSettings.get().project.getName()
+                    + File.separator
+                    + imagePath);
+
+        } else {
+            // Add the bg image asynchronously from the sdcard
+            new SetBgImageTask(bgImageView, true, false).execute(
+                    AppRunnerSettings.get().project.getStoragePath()
+                    + File.separator
+                    + imagePath);
+        }
 	}
 
 	
