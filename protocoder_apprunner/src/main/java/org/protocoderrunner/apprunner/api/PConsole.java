@@ -1,31 +1,22 @@
 /*
- * Protocoder 
- * A prototyping platform for Android devices 
- * 
- * Victor Diaz Barrales victormdb@gmail.com
- *
- * Copyright (C) 2014 Victor Diaz
- * Copyright (C) 2013 Motorola Mobility LLC
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the "Software"),
- * to deal in the Software without restriction, including without limitation
- * the rights to use, copy, modify, merge, publish, distribute, sublicense,
- * and/or sell copies of the Software, and to permit persons to whom the Software
- * is furnished to do so, subject to the following conditions: 
- * 
- * The above copyright notice and this permission notice shall be included in all 
- * copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
- * THE SOFTWARE.
- * 
- */
+* Part of Protocoder http://www.protocoder.org
+* A prototyping platform for Android devices 
+*
+* Copyright (C) 2013 Victor Diaz Barrales victormdb@gmail.com
+* 
+* Protocoder is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Lesser General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Protocoder is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU Lesser General Public License
+* along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
+*/
 
 package org.protocoderrunner.apprunner.api;
 
@@ -47,42 +38,42 @@ import java.util.TimeZone;
 
 public class PConsole extends PInterface {
 
-	String TAG = "PConsole";
+    String TAG = "PConsole";
     private boolean showTime = false;
 
     public PConsole(Context a) {
-		super(a);
-	}
+        super(a);
+    }
 
 
-	@ProtoMethod(description = "shows any HTML text in the webIde console", example = "")
-	@ProtoMethodParam(params = { "text","text","..." })
-	public void log(String... outputs) {
+    @ProtoMethod(description = "shows any HTML text in the webIde console", example = "")
+    @ProtoMethodParam(params = {"text", "text", "..."})
+    public void log(String... outputs) {
 
-		StringBuilder builder = new StringBuilder();
+        StringBuilder builder = new StringBuilder();
         builder.append(getCurrentTime());
 
-		for (String output : outputs) {
-			builder.append(" ").append(output);
-		}
+        for (String output : outputs) {
+            builder.append(" ").append(output);
+        }
 
 
         JSONObject values = null;
         JSONObject msg = null;
         try {
-           values = new JSONObject().put("val", builder.toString());
-           msg = new JSONObject().put("type", "console").put("action", "log").put("values", values);
+            values = new JSONObject().put("val", builder.toString());
+            msg = new JSONObject().put("type", "console").put("action", "log").put("values", values);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         send(msg);
-	}
+    }
 
 
-	@ProtoMethod(description = "clear the webIde console", example = "")
-	@ProtoMethodParam(params = { "" })
-	public void clear() {
+    @ProtoMethod(description = "clear the webIde console", example = "")
+    @ProtoMethodParam(params = {""})
+    public void clear() {
         JSONObject msg = null;
         try {
             msg = new JSONObject().put("type", "console").put("action", "clear");
@@ -94,7 +85,7 @@ public class PConsole extends PInterface {
 
 
     @ProtoMethod(description = "show/hide the console", example = "")
-    @ProtoMethodParam(params = { "boolean" })
+    @ProtoMethodParam(params = {"boolean"})
     public void show(boolean b) {
         JSONObject values = null;
         JSONObject msg = null;
@@ -109,7 +100,7 @@ public class PConsole extends PInterface {
 
 
     @ProtoMethod(description = "Change the background color", example = "")
-    @ProtoMethodParam(params = { "colorHex" })
+    @ProtoMethodParam(params = {"colorHex"})
     public void backgroundColor(String colorHex) {
         String color = AndroidUtils.colorHexToHtmlRgba(colorHex);
 
@@ -127,7 +118,7 @@ public class PConsole extends PInterface {
 
 
     @ProtoMethod(description = "Log using a defined colorHex", example = "")
-    @ProtoMethodParam(params = { "colorHex" })
+    @ProtoMethodParam(params = {"colorHex"})
     public void logC(String text, String colorHex) {
         String color = AndroidUtils.colorHexToHtmlRgba(colorHex);
 
@@ -145,15 +136,14 @@ public class PConsole extends PInterface {
     }
 
 
-
     @ProtoMethod(description = "Changes the console text size", example = "")
-    @ProtoMethodParam(params = { "size" })
+    @ProtoMethodParam(params = {"size"})
     public void textSize(int textSize) {
 
         JSONObject values = null;
         JSONObject msg = null;
         try {
-            values = new JSONObject().put("textSize", textSize+"px");
+            values = new JSONObject().put("textSize", textSize + "px");
             msg = new JSONObject().put("type", "console").put("action", "textSize").put("values", values);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -163,10 +153,8 @@ public class PConsole extends PInterface {
     }
 
 
-
-
     @ProtoMethod(description = "Changes the console text color", example = "")
-    @ProtoMethodParam(params = { "colorHex" })
+    @ProtoMethodParam(params = {"colorHex"})
     public void textColor(String colorHex) {
         String color = AndroidUtils.colorHexToHtmlRgba(colorHex);
 
@@ -185,7 +173,7 @@ public class PConsole extends PInterface {
 
 
     @ProtoMethod(description = "Enable/Disable time in the log", example = "")
-    @ProtoMethodParam(params = { "boolean" })
+    @ProtoMethodParam(params = {"boolean"})
     public void showTime(boolean b) {
         showTime = b;
 

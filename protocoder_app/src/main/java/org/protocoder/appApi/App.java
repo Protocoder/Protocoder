@@ -1,31 +1,22 @@
 /*
- * Protocoder
- * A prototyping platform for Android devices
- *
- * Victor Diaz Barrales victormdb@gmail.com
- *
- * Copyright (C) 2014 Victor Diaz
- * Copyright (C) 2013 Motorola Mobility LLC
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the "Software"),
- * to deal in the Software without restriction, including without limitation
- * the rights to use, copy, modify, merge, publish, distribute, sublicense,
- * and/or sell copies of the Software, and to permit persons to whom the Software
- * is furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- */
+* Part of Protocoder http://www.protocoder.org
+* A prototyping platform for Android devices
+*
+* Copyright (C) 2013 Victor Diaz Barrales victormdb@gmail.com
+*
+* Protocoder is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Lesser General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Protocoder is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU Lesser General Public License
+* along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
+*/
 package org.protocoder.appApi;
 
 import android.animation.AnimatorSet;
@@ -53,7 +44,6 @@ import org.protocoderrunner.network.CustomWebsocketServer;
 import org.protocoderrunner.network.IDEcommunication;
 import org.protocoderrunner.network.NetworkUtils;
 import org.protocoderrunner.utils.AndroidUtils;
-import org.protocoderrunner.utils.MLog;
 
 import java.io.ByteArrayOutputStream;
 import java.net.UnknownHostException;
@@ -150,8 +140,8 @@ public class App {
 
         if (show) {
             Intent aboutActivityIntent = new Intent(protocoder.mActivityContext, AboutActivity.class);
-           protocoder.mActivityContext.startActivity(aboutActivityIntent);
-           protocoder.mActivityContext.overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
+            protocoder.mActivityContext.startActivity(aboutActivityIntent);
+            //protocoder.mActivityContext.overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
 
             //HelpFragment helpFragment = new HelpFragment();
             //Bundle bundle = new Bundle();
@@ -167,9 +157,16 @@ public class App {
         }
     }
 
+    public void showSettings(boolean b) {
+        Intent preferencesIntent = new Intent(protocoder.mActivityContext, SetPreferenceActivity.class);
+        protocoder.mActivityContext.startActivity(preferencesIntent);
+        //protocoder.mActivityContext.overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
+    }
+
     public void showNumberConections() {
 
     }
+
     public void showNetworkBottomInfo(boolean show) {
         if (show) {
             textIP.setVisibility(View.VISIBLE);
@@ -177,6 +174,7 @@ public class App {
             textIP.setVisibility(View.GONE);
         }
     }
+
     public void showNetworkDetails(boolean show) {
         if (show) {
 
@@ -193,6 +191,7 @@ public class App {
 
         }
     }
+
     public void showLibrariesRepo(boolean show) {
         if (show) {
 
@@ -200,6 +199,7 @@ public class App {
 
         }
     }
+
     public void showLibaries(boolean show) {
         if (show) {
 
@@ -207,9 +207,11 @@ public class App {
 
         }
     }
+
     public void highlight(String color) {
         overlay.setFrame();
     }
+
     public void vibrate(int time) {
         //protocoder.pDevice.vibrate(time);
     }
@@ -223,17 +225,13 @@ public class App {
     public void mode(String mode) {
 
     }
+
     public void close() {
         protocoder.mActivityContext.superMegaForceKill();
     }
+
     public void restart() {
 
-    }
-
-    public void showSettings(boolean b) {
-        Intent preferencesIntent = new Intent(protocoder.mActivityContext, SetPreferenceActivity.class);
-        protocoder.mActivityContext.startActivity(preferencesIntent);
-        protocoder.mActivityContext.overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
     }
 
     public void setIp(String s) {

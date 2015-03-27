@@ -1,31 +1,22 @@
 /*
- * Protocoder 
- * A prototyping platform for Android devices 
- * 
- * Victor Diaz Barrales victormdb@gmail.com
- *
- * Copyright (C) 2014 Victor Diaz
- * Copyright (C) 2013 Motorola Mobility LLC
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the "Software"),
- * to deal in the Software without restriction, including without limitation
- * the rights to use, copy, modify, merge, publish, distribute, sublicense,
- * and/or sell copies of the Software, and to permit persons to whom the Software
- * is furnished to do so, subject to the following conditions: 
- * 
- * The above copyright notice and this permission notice shall be included in all 
- * copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
- * THE SOFTWARE.
- * 
- */
+* Part of Protocoder http://www.protocoder.org
+* A prototyping platform for Android devices 
+*
+* Copyright (C) 2013 Victor Diaz Barrales victormdb@gmail.com
+* 
+* Protocoder is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Lesser General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Protocoder is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU Lesser General Public License
+* along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
+*/
 
 package org.protocoder.projectlist;
 
@@ -58,10 +49,7 @@ import org.protocoder.R;
 import org.protocoder.appApi.Protocoder;
 import org.protocoderrunner.events.Events;
 import org.protocoderrunner.project.Project;
-import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.MLog;
-
-import java.lang.ref.WeakReference;
 
 import de.greenrobot.event.EventBus;
 
@@ -71,9 +59,9 @@ public class ProjectItem extends LinearLayout {
     private final Drawable bg;
     private final ProjectListFragment mPlf;
     private View mItemView;
-	// private Context c;
-	private final Context c;
-	private String t;
+    // private Context c;
+    private final Context c;
+    private String t;
     private boolean highlighted = false;
     private Project mProject;
     private TextView textViewName;
@@ -81,16 +69,16 @@ public class ProjectItem extends LinearLayout {
     private ImageView mMenuButton;
 
     public ProjectItem(Context context, ProjectListFragment plf, boolean listMode) {
-		super(context);
-		this.c = context;
+        super(context);
+        this.c = context;
         this.mPlf = plf;
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		if (listMode) {
-			this.mItemView = inflater.inflate(R.layout.view_project_item_list, this, true);
-		} else {
-			this.mItemView = inflater.inflate(R.layout.view_project_item, this, true);
-		}
+        if (listMode) {
+            this.mItemView = inflater.inflate(R.layout.view_project_item_list, this, true);
+        } else {
+            this.mItemView = inflater.inflate(R.layout.view_project_item, this, true);
+        }
 
         FrameLayout fl = (FrameLayout) findViewById(R.id.viewProjectItemBackground);
         bg = fl.getBackground();
@@ -100,7 +88,7 @@ public class ProjectItem extends LinearLayout {
         this.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-               // MLog.d(TAG, " " + position + " " + getPosition());
+                // MLog.d(TAG, " " + position + " " + getPosition());
 
 
                 AnimatorSet animSpin;
@@ -136,7 +124,7 @@ public class ProjectItem extends LinearLayout {
 
                         Events.ProjectEvent evt = new Events.ProjectEvent(mProject, "run");
                         EventBus.getDefault().post(evt);
-                       // getActivity().overridePendingTransition(R.anim.splash_slide_in_anim_set,
+                        // getActivity().overridePendingTransition(R.anim.splash_slide_in_anim_set,
                         //        R.anim.splash_slide_out_anim_set);
                     }
                 };
@@ -149,56 +137,56 @@ public class ProjectItem extends LinearLayout {
 
     }
 
-	public void setImage(int resId) {
-		ImageView imageView = (ImageView) mItemView.findViewById(R.id.customViewImage);
-		imageView.setImageResource(resId);
+    public void setImage(int resId) {
+        ImageView imageView = (ImageView) mItemView.findViewById(R.id.customViewImage);
+        imageView.setImageResource(resId);
 
-		// drawText(imageView, t);
-	}
+        // drawText(imageView, t);
+    }
 
-	public void setText(String text) {
-		this.t = text;
+    public void setText(String text) {
+        this.t = text;
 
-		// TextUtils.changeFont(c.get(), textView, Fonts.MENU_TITLE);
-		textViewName.setText(text);
+        // TextUtils.changeFont(c.get(), textView, Fonts.MENU_TITLE);
+        textViewName.setText(text);
         textViewIcon.setText(text.substring(0, 1).toUpperCase()); //"< " + text.substring(0, 1).toUpperCase() + " >");
-	}
+    }
 
     public void reInit(String text, boolean selected) {
         setText(text);
         setHighlighted(selected);
     }
 
-	public void drawText(ImageView imageView, String t2) {
+    public void drawText(ImageView imageView, String t2) {
 
-		// ImageView myImageView =
-		Bitmap myBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Config.RGB_565);
-		Paint myPaint = new Paint();
-		myPaint.setColor(Color.BLUE);
-		myPaint.setAntiAlias(true);
-		myPaint.setTextSize(80);
+        // ImageView myImageView =
+        Bitmap myBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Config.RGB_565);
+        Paint myPaint = new Paint();
+        myPaint.setColor(Color.BLUE);
+        myPaint.setAntiAlias(true);
+        myPaint.setTextSize(80);
 
-		int x1 = 10;
-		int y1 = 80;
-		int x2 = 20;
-		int y2 = 20;
+        int x1 = 10;
+        int y1 = 80;
+        int x2 = 20;
+        int y2 = 20;
 
-		// Create mContext new image bitmap and attach mContext brand new canvas to it
-		Bitmap tempBitmap = Bitmap.createBitmap(myBitmap.getWidth(), myBitmap.getHeight(), Bitmap.Config.RGB_565);
-		Canvas tempCanvas = new Canvas(tempBitmap);
+        // Create mContext new image bitmap and attach mContext brand new canvas to it
+        Bitmap tempBitmap = Bitmap.createBitmap(myBitmap.getWidth(), myBitmap.getHeight(), Bitmap.Config.RGB_565);
+        Canvas tempCanvas = new Canvas(tempBitmap);
 
-		// Draw the image bitmap into the cavas
-		tempCanvas.drawBitmap(myBitmap, 0, 0, null);
+        // Draw the image bitmap into the cavas
+        tempCanvas.drawBitmap(myBitmap, 0, 0, null);
 
-		// Draw everything else you want into the canvas, in this example mContext
-		// rectangle with rounded edges
-		tempCanvas.drawRoundRect(new RectF(x1, y1, x2, y2), 2, 2, myPaint);
-		tempCanvas.drawText(t2.substring(0, 1).toUpperCase(), x1, y1, myPaint);
+        // Draw everything else you want into the canvas, in this example mContext
+        // rectangle with rounded edges
+        tempCanvas.drawRoundRect(new RectF(x1, y1, x2, y2), 2, 2, myPaint);
+        tempCanvas.drawText(t2.substring(0, 1).toUpperCase(), x1, y1, myPaint);
 
-		// Attach the canvas to the ImageView
-		imageView.setImageDrawable(new BitmapDrawable(getResources(), tempBitmap));
+        // Attach the canvas to the ImageView
+        imageView.setImageDrawable(new BitmapDrawable(getResources(), tempBitmap));
 
-	}
+    }
 
 
     public void setMenu() {
@@ -219,7 +207,7 @@ public class ProjectItem extends LinearLayout {
         mMenuButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-               showMenu(mMenuButton);
+                showMenu(mMenuButton);
             }
         });
 //        this.setOnLongClickListener(new OnLongClickListener() {

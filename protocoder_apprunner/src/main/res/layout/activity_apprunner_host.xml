@@ -8,6 +8,19 @@
         android:background="@color/white"
     >
 
+    <android.support.v7.widget.Toolbar
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        style="@style/ToolBarAppRunner.AppRunner"
+        android:id="@+id/toolbar"
+        android:minHeight="?attr/actionBarSize"
+        android:background="#FF444444">
+    </android.support.v7.widget.Toolbar>
+    <!--style="@style/ToolBarStyle.Event"-->
+
+
     <!--<android.support.v7.widget.Toolbar-->
         <!--android:layout_alignParentRight="true"-->
         <!--android:layout_alignParentTop="true"-->
@@ -22,7 +35,7 @@
         android:id="@+id/apprunner_fragment"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_alignParentTop="true"
+        android:layout_below="@id/toolbar"
         android:layout_alignParentRight="true"/>
 
         <!--android:layout_below="@id/my_awesome_toolbar"/>-->

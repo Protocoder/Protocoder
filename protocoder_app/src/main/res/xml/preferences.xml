@@ -31,16 +31,17 @@
             android:key="pref_list_mode"
             android:summary="@string/setting_list_mode_description"
             android:title="@string/setting_list_mode_title" />
-        <CheckBoxPreference
-            android:checked="false"
-            android:key="pref_background_mode"
-            android:summary="@string/setting_background_mode_description"
-            android:title="@string/setting_background_mode_title" />
-        <CheckBoxPreference
-            android:checked="true"
-            android:key="pref_connection_alert"
-            android:summary="@string/setting_connection_alert_description"
-            android:title="@string/setting_connection_alert_title" />
+        <!--<CheckBoxPreference-->
+            <!--android:checked="false"-->
+            <!--android:key="pref_background_mode"-->
+            <!--android:summary="@string/setting_background_mode_description"-->
+            <!--android:title="@string/setting_background_mode_title" -->
+            <!--/>-->
+        <!--<CheckBoxPreference-->
+            <!--android:checked="true"-->
+            <!--android:key="pref_connection_alert"-->
+            <!--android:summary="@string/setting_connection_alert_description"-->
+            <!--android:title="@string/setting_connection_alert_title" />-->
         <CheckBoxPreference
             android:checked="true"
             android:key="pref_new_version_check"
@@ -62,7 +63,7 @@
         <Preference
             android:key="pref_ftp"
             android:checked="false"
-            android:summary="Protocoder starts with a ftp server that can be used to transfer files to it"
+            android:summary="Protocoder starts with a ftp server in the port 8589 that can be used to transfer files to it"
             android:title="Enable ftp" />
     </PreferenceCategory>
 

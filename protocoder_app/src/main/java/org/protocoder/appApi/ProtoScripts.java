@@ -1,31 +1,22 @@
 /*
- * Protocoder
- * A prototyping platform for Android devices
- *
- * Victor Diaz Barrales victormdb@gmail.com
- *
- * Copyright (C) 2014 Victor Diaz
- * Copyright (C) 2013 Motorola Mobility LLC
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the "Software"),
- * to deal in the Software without restriction, including without limitation
- * the rights to use, copy, modify, merge, publish, distribute, sublicense,
- * and/or sell copies of the Software, and to permit persons to whom the Software
- * is furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- */
+* Part of Protocoder http://www.protocoder.org
+* A prototyping platform for Android devices
+*
+* Copyright (C) 2013 Victor Diaz Barrales victormdb@gmail.com
+*
+* Protocoder is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Lesser General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Protocoder is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU Lesser General Public License
+* along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
+*/
 
 package org.protocoder.appApi;
 
@@ -37,8 +28,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,12 +36,9 @@ import org.protocoder.fragments.NewProjectDialogFragment;
 import org.protocoder.projectlist.ProjectItem;
 import org.protocoder.projectlist.ProjectListFragment;
 import org.protocoder.projectlist.ProjectsPagerAdapter;
-import org.protocoder.projectlist.SlidingTabLayout;
 import org.protocoder.projectlist.ZoomOutPageTransformer;
-import org.protocoder.views.ProjectSelectorStrip;
 import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.apprunner.api.PUtil;
-import org.protocoderrunner.apprunner.logger.L;
 import org.protocoderrunner.project.Project;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.AndroidUtils;
@@ -96,7 +82,7 @@ public class ProtoScripts {
         //init views
         mProjectPagerAdapter = new ProjectsPagerAdapter(mProtocoder.mActivityContext, mProtocoder.mActivityContext.getSupportFragmentManager());
 
-       // final ProjectSelectorStrip strip = (ProjectSelectorStrip) mProtocoder.mActivityContext.findViewById(R.id.pager_title_strip);
+        // final ProjectSelectorStrip strip = (ProjectSelectorStrip) mProtocoder.mActivityContext.findViewById(R.id.pager_title_strip);
 
         mViewPager = (ViewPager) mProtocoder.mActivityContext.findViewById(R.id.pager);
 
@@ -128,8 +114,8 @@ public class ProtoScripts {
 
         //TODO remove at some point
         //colors
-       //final int c0 = mProtocoder.mActivityContext.getResources().getColor(R.color.project_user_color);
-       // final int c1 = mProtocoder.mActivityContext.getResources().getColor(R.color.project_example_color);
+        //final int c0 = mProtocoder.mActivityContext.getResources().getColor(R.color.project_user_color);
+        // final int c1 = mProtocoder.mActivityContext.getResources().getColor(R.color.project_example_color);
 
 
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -148,8 +134,8 @@ public class ProtoScripts {
 
             @Override
             public void onPageScrolled(int arg0, float arg1, int arg2) {
-            //   int c = AndroidUtils.calculateColor(arg0 + arg1, c0, c1);
-            //   groupedToolbar.setBackgroundColor(c);
+                //   int c = AndroidUtils.calculateColor(arg0 + arg1, c0, c1);
+                //   groupedToolbar.setBackgroundColor(c);
             }
 
             @Override
@@ -219,7 +205,6 @@ public class ProtoScripts {
     }
 
 
-
     public void addScriptList(int icon, String name, int color, boolean orderByName) {
         ProjectListFragment listFragmentBase = ProjectListFragment.newInstance(icon, name, color, orderByName);
         listFragmentBase.icon = icon;
@@ -252,7 +237,7 @@ public class ProtoScripts {
         try {
             currentProjectApplicationIntent = new Intent(mProtocoder.mActivityContext, AppRunnerActivity.class);
 
-            if (AndroidUtils.isVersionL()) {
+            if (AndroidUtils.isVersionLollipop()) {
                 //TODO enable version Android-L
                 //currentProjectApplicationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
             } else {
@@ -298,9 +283,11 @@ public class ProtoScripts {
     public void createFileName(String folder, String appName, String fileName) {
 
     }
+
     public void deleteFileName(String folder, String appName, String fileName) {
 
     }
+
     public String exportProto(String folder, String fileName) {
         Project p = ProjectManager.getInstance().get(folder, fileName);
         String zipFilePath = ProjectManager.getInstance().createBackup(p);
@@ -399,8 +386,7 @@ public class ProtoScripts {
     }
 
 
-
-    private Fragment getFragment(int position){
+    private Fragment getFragment(int position) {
         return mProtocoder.mActivityContext.getSupportFragmentManager().findFragmentByTag(getFragmentTag(position));
     }
 
@@ -409,8 +395,8 @@ public class ProtoScripts {
     }
 
     // public void reinitScriptList() {
-      //  ProjectListFragment f0 = (ProjectListFragment) mProjectPagerAdapter.getItem(0);
-      //  mProjectPagerAdapter.addFragment("", );
+    //  ProjectListFragment f0 = (ProjectListFragment) mProjectPagerAdapter.getItem(0);
+    //  mProjectPagerAdapter.addFragment("", );
 
-   // }
+    // }
 }

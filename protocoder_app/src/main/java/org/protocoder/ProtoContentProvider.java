@@ -1,14 +1,10 @@
 package org.protocoder;
 
 import android.app.SearchManager;
-import android.content.Intent;
-import android.database.MatrixCursor;
-import android.net.Uri;
-
-
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.net.Uri;
 import android.util.Log;
 
@@ -20,7 +16,7 @@ import java.util.ArrayList;
 public class ProtoContentProvider extends ContentProvider {
     static final String TAG = "ProtoContentProvider";
 
-    private static final String[] COLUMNS = new String[] {
+    private static final String[] COLUMNS = new String[]{
             "_id",
             SearchManager.SUGGEST_COLUMN_TEXT_1,
     };

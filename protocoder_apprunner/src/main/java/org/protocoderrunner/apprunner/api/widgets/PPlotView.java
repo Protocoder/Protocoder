@@ -1,31 +1,22 @@
 /*
- * Protocoder 
- * A prototyping platform for Android devices 
- * 
- * Victor Diaz Barrales victormdb@gmail.com
- *
- * Copyright (C) 2014 Victor Diaz
- * Copyright (C) 2013 Motorola Mobility LLC
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the "Software"),
- * to deal in the Software without restriction, including without limitation
- * the rights to use, copy, modify, merge, publish, distribute, sublicense,
- * and/or sell copies of the Software, and to permit persons to whom the Software
- * is furnished to do so, subject to the following conditions: 
- * 
- * The above copyright notice and this permission notice shall be included in all 
- * copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
- * THE SOFTWARE.
- * 
- */
+* Part of Protocoder http://www.protocoder.org
+* A prototyping platform for Android devices 
+*
+* Copyright (C) 2013 Victor Diaz Barrales victormdb@gmail.com
+* 
+* Protocoder is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Lesser General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Protocoder is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU Lesser General Public License
+* along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
+*/
 
 package org.protocoderrunner.apprunner.api.widgets;
 
@@ -51,7 +42,7 @@ import java.util.Vector;
 
 public class PPlotView extends View implements PViewInterface {
 
-	private static final String TAG = "PPlotView";
+    private static final String TAG = "PPlotView";
 
     // paint
     private final Paint mPaint = new Paint();
@@ -222,7 +213,7 @@ public class PPlotView extends View implements PViewInterface {
 
 
     @ProtoMethod(description = "Init a plot name", example = "")
-    @ProtoMethodParam(params = { "" })
+    @ProtoMethodParam(params = {""})
     public PPlotView init(String plotName) {
 
         if (plots.containsKey(plotName) == false) {
@@ -234,9 +225,8 @@ public class PPlotView extends View implements PViewInterface {
     }
 
 
-
     @ProtoMethod(description = "Updates the value of the plotName plot", example = "")
-    @ProtoMethodParam(params = { "plotName", "value" })
+    @ProtoMethodParam(params = {"plotName", "value"})
     public PPlotView update(String plotName, float v1) {
 
         if (mReady) {
@@ -263,7 +253,7 @@ public class PPlotView extends View implements PViewInterface {
 
 
     @ProtoMethod(description = "Updates the value of the default plot", example = "")
-    @ProtoMethodParam(params = { "value" })
+    @ProtoMethodParam(params = {"value"})
     public PPlotView update(float v) {
         update("default", v);
 
@@ -272,7 +262,7 @@ public class PPlotView extends View implements PViewInterface {
 
 
     @ProtoMethod(description = "Changes the plot limits", example = "")
-    @ProtoMethodParam(params = { "min", "max" })
+    @ProtoMethodParam(params = {"min", "max"})
     public PPlotView setLimits(float min, float max) {
         mMinBoundary = min;
         mMaxBoundary = max;
@@ -282,7 +272,7 @@ public class PPlotView extends View implements PViewInterface {
 
 
     @ProtoMethod(description = "Changes the plot definition", example = "")
-    @ProtoMethodParam(params = { "definition" })
+    @ProtoMethodParam(params = {"definition"})
     public PPlotView setDefinition(int definition) {
         mDefinition = definition;
         return this;
@@ -318,7 +308,7 @@ public class PPlotView extends View implements PViewInterface {
 
 
     @ProtoMethod(description = "Sets the line thickness", example = "")
-    @ProtoMethodParam(params = { "thickness" })
+    @ProtoMethodParam(params = {"thickness"})
     public PPlotView setThickness(float r) {
         thickness = r; // when dot
         mPaint.setStrokeWidth(thickness); // when line
@@ -327,7 +317,7 @@ public class PPlotView extends View implements PViewInterface {
 
 
     @ProtoMethod(description = "Changes the plot color", example = "")
-    @ProtoMethodParam(params = { "plotName", "colorHex" })
+    @ProtoMethodParam(params = {"plotName", "colorHex"})
     public PPlotView setColor(String plotName, String rgb) {
         new Color();
         int c = Color.parseColor(rgb);
@@ -342,15 +332,14 @@ public class PPlotView extends View implements PViewInterface {
 
 
     @ProtoMethod(description = "Get the plot array size", example = "")
-    @ProtoMethodParam(params = { "" })
+    @ProtoMethodParam(params = {""})
     public int getSize() {
         return mNumPoints;
     }
 
 
-
     @ProtoMethod(description = "Get the current values of the plot as an array", example = "")
-    @ProtoMethodParam(params = { "plotName" })
+    @ProtoMethodParam(params = {"plotName"})
     public Float[] getArray(String plotName) {
         Plot p = plots.get(plotName);
         //MLog.d(TAG, "plot " + p);
@@ -359,9 +348,8 @@ public class PPlotView extends View implements PViewInterface {
     }
 
 
-
     @ProtoMethod(description = "Set an array of values in the plot", example = "")
-    @ProtoMethodParam(params = { "plotName", "value" })
+    @ProtoMethodParam(params = {"plotName", "value"})
     public PPlotView setArray(String plotName, float[] values) {
         Plot p = plots.get(plotName);
 
@@ -378,18 +366,13 @@ public class PPlotView extends View implements PViewInterface {
     }
 
 
-
     @ProtoMethod(description = "Sets the background color", example = "")
-    @ProtoMethodParam(params = { "colorHex" })
+    @ProtoMethodParam(params = {"colorHex"})
     public PPlotView setBackground(String c) {
         super.setBackgroundColor(Color.parseColor(c));
 
         return this;
     }
-
-
-
-
 
 
 }

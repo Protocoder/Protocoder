@@ -1,31 +1,22 @@
 /*
- * Protocoder 
- * A prototyping platform for Android devices 
- * 
- * Victor Diaz Barrales victormdb@gmail.com
- *
- * Copyright (C) 2014 Victor Diaz
- * Copyright (C) 2013 Motorola Mobility LLC
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the "Software"),
- * to deal in the Software without restriction, including without limitation
- * the rights to use, copy, modify, merge, publish, distribute, sublicense,
- * and/or sell copies of the Software, and to permit persons to whom the Software
- * is furnished to do so, subject to the following conditions: 
- * 
- * The above copyright notice and this permission notice shall be included in all 
- * copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
- * THE SOFTWARE.
- * 
- */
+* Part of Protocoder http://www.protocoder.org
+* A prototyping platform for Android devices 
+*
+* Copyright (C) 2013 Victor Diaz Barrales victormdb@gmail.com
+* 
+* Protocoder is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Lesser General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Protocoder is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU Lesser General Public License
+* along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
+*/
 
 package org.protocoderrunner.apprunner.api;
 
@@ -59,20 +50,21 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunnerFragment;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.network.PBluetooth;
 import org.protocoderrunner.apprunner.api.network.PFtpClient;
 import org.protocoderrunner.apprunner.api.network.PFtpServer;
-import org.protocoderrunner.apprunner.api.network.PSimpleHttpServer;
 import org.protocoderrunner.apprunner.api.network.PSocketIOClient;
 import org.protocoderrunner.apprunner.api.network.PWebSocketClient;
 import org.protocoderrunner.apprunner.api.network.PWebSocketServer;
+import org.protocoderrunner.apprunner.api.network.PSimpleHttpServer;
+import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.network.NetworkUtils;
 import org.protocoderrunner.network.NetworkUtils.DownloadTask.DownloadListener;
 import org.protocoderrunner.network.OSC;
 import org.protocoderrunner.network.ServiceDiscovery;
 import org.protocoderrunner.project.ProjectManager;
-import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.utils.ExecuteCmd;
 import org.protocoderrunner.utils.MLog;
 
@@ -101,13 +93,26 @@ import javax.mail.util.ByteArrayDataSource;
 
 public class PNetwork extends PInterface {
 
-	private final String TAG = "PNetwork";
+    private final String TAG = "PNetwork";
+    public PBluetooth bluetooth = null;
     private PWebSocketServer PWebsockerServer;
 
     public PNetwork(Context a) {
         super(a);
 
         WhatIsRunning.getInstance().add(this);
+    }
+
+    public void initForParentFragment(AppRunnerFragment fragment) {
+        super.initForParentFragment(fragment);
+
+        //prevent crashing in protocoder app
+        MLog.d(TAG, "is getActivity() " + getActivity());
+
+        if (getFragment() != null) {
+            bluetooth = new PBluetooth(getActivity());
+            bluetooth.initForParentFragment(getFragment());
+        }
     }
 
     // --------- download file ---------//
@@ -161,8 +166,6 @@ public class PNetwork extends PInterface {
     }
 
 
-
-
     @ProtoMethod(description = "Check if internet connection is available", example = "")
     @ProtoMethodParam(params = {""})
     public boolean isNetworkAvailable() {
@@ -187,7 +190,6 @@ public class PNetwork extends PInterface {
     }
 
 
-
     @ProtoMethod(description = "Starts an OSC server", example = "")
     @ProtoMethodParam(params = {"port", "function(jsonData)"})
     public OSC.Server createOSCServer(String port) {
@@ -210,7 +212,6 @@ public class PNetwork extends PInterface {
 
         return client;
     }
-
 
 
     WifiManager.MulticastLock wifiLock;
@@ -264,8 +265,6 @@ public class PNetwork extends PInterface {
     }
 
 
-
-
     @ProtoMethod(description = "Connect to a websocket server", example = "")
     @ProtoMethodParam(params = {"uri", "function(status, data)"})
     public PWebSocketClient connectWebsocket(String uri) {
@@ -298,7 +297,7 @@ public class PNetwork extends PInterface {
     @ProtoMethod(description = "Creates an object where to set the e-mail sending settings", example = "")
     @ProtoMethodParam(params = {"url", "function(data)"})
     public EmailConf createEmailSettings() {
-		/*
+        /*
 		 * String host, String user, String pass, String iPort, String bAuth,
 		 * String bTtl) {
 		 * 
@@ -517,97 +516,104 @@ public class PNetwork extends PInterface {
     //}
 
 
-
-	@ProtoMethod(description = "Simple http server, serving the content of the project folder", example = "")
-	@ProtoMethodParam(params = { "port", "function(responseString)" })
-	public PSimpleHttpServer createSimpleHttpServer(int port, final PSimpleHttpServer.HttpCB callbackfn) {
+    @ProtoMethod(description = "Simple http server, serving the content of the project folder", example = "")
+    @ProtoMethodParam(params = {"port", "function(responseString)"})
+    public PSimpleHttpServer createSimpleHttpServer(int port) {
         PSimpleHttpServer httpServer = null;
         try {
-			httpServer = new PSimpleHttpServer(getContext(), port, callbackfn);
-            WhatIsRunning.getInstance().add(httpServer);
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+            httpServer = new PSimpleHttpServer(getContext(), port);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         return httpServer;
-	}
-
-
-
-    @ProtoMethod(description = "Start the bluetooth interface", example = "")
-    @ProtoMethodParam(params = { })
-    public PBluetooth createBluetooth() {
-        PBluetooth pBluetooth = new PBluetooth(getActivity());
-        pBluetooth.initForParentFragment(getFragment());
-
-        pBluetooth.start();
-
-        return pBluetooth;
     }
 
 
-	@ProtoMethod(description = "Enable/Disable the Wifi adapter", example = "")
-	@ProtoMethodParam(params = { "boolean" })
-	public void enableWifi(boolean enabled) {
-		WifiManager wifiManager = (WifiManager) getContext().getSystemService(Context.WIFI_SERVICE);
-		wifiManager.setWifiEnabled(enabled);
-	}
+
+//       public PBluetooth createBluetoothSerialServer() {
+//        PBluetooth pBluetooth = new PBluetooth(getActivity());
+//        pBluetooth.initForParentFragment(getFragment());
+//
+//        pBluetooth.start();
+//
+//        return pBluetooth;
+//    }
+//
+//
+//    @ProtoMethod(description = "Start the bluetooth interface", example = "")
+//    @ProtoMethodParam(params = {})
+//    public PBluetooth connectBluetoothSerial() {
+//        PBluetooth pBluetooth = new PBluetooth(getActivity());
+//        pBluetooth.initForParentFragment(getFragment());
+//
+//        pBluetooth.start();
+//
+//        return pBluetooth;
+//    }
 
 
-	@ProtoMethod(description = "Check if the Wifi adapter is enabled", example = "")
-	@ProtoMethodParam(params = {})
-	public boolean isWifiEnabled() {
-		WifiManager wifiManager = (WifiManager) getContext().getSystemService(Context.WIFI_SERVICE);
-		return wifiManager.isWifiEnabled();
-	}
-
-	// http://stackoverflow.com/questions/8818290/how-to-connect-to-mContext-specific-wifi-network-in-android-programmatically
-
-	@ProtoMethod(description = "Connect to mContext given Wifi network with mContext given 'wpa', 'wep', 'open' type and mContext password", example = "")
-	@ProtoMethodParam(params = { "ssidName", "type", "password" })
-	public void connectWifi(String networkSSID, String type, String networkPass) {
-
-		WifiConfiguration conf = new WifiConfiguration();
-		conf.SSID = "\"" + networkSSID + "\""; // Please note the quotes. String
-												// should contain ssid in quotes
-
-		if (type.equals("wep")) {
-			// wep
-			conf.wepKeys[0] = "\"" + networkPass + "\"";
-			conf.wepTxKeyIndex = 0;
-			conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
-			conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
-		} else if (type.equals("wpa")) {
-			// wpa
-			conf.preSharedKey = "\"" + networkPass + "\"";
-		} else if (type.equals("open")) {
-			// open
-			conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
-		}
-
-		WifiManager wifiManager = (WifiManager) getContext().getSystemService(Context.WIFI_SERVICE);
-		wifiManager.addNetwork(conf);
-
-		List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
-		for (WifiConfiguration i : list) {
-			if (i.SSID != null && i.SSID.equals("\"" + networkSSID + "\"")) {
-				wifiManager.disconnect();
-				wifiManager.enableNetwork(i.networkId, true);
-				wifiManager.reconnect();
-
-				break;
-			}
-		}
-
-	}
-
-	private Object mIsWifiAPEnabled = true;
+    @ProtoMethod(description = "Enable/Disable the Wifi adapter", example = "")
+    @ProtoMethodParam(params = {"boolean"})
+    public void enableWifi(boolean enabled) {
+        WifiManager wifiManager = (WifiManager) getContext().getSystemService(Context.WIFI_SERVICE);
+        wifiManager.setWifiEnabled(enabled);
+    }
 
 
-	@ProtoMethod(description = "Enable/Disable mContext Wifi access point", example = "")
-	@ProtoMethodParam(params = { "boolean, apName" })
-	public void wifiAP(boolean enabled, String wifiName) {
+    @ProtoMethod(description = "Check if the Wifi adapter is enabled", example = "")
+    @ProtoMethodParam(params = {})
+    public boolean isWifiEnabled() {
+        WifiManager wifiManager = (WifiManager) getContext().getSystemService(Context.WIFI_SERVICE);
+        return wifiManager.isWifiEnabled();
+    }
+
+    // http://stackoverflow.com/questions/8818290/how-to-connect-to-mContext-specific-wifi-network-in-android-programmatically
+
+    @ProtoMethod(description = "Connect to mContext given Wifi network with mContext given 'wpa', 'wep', 'open' type and mContext password", example = "")
+    @ProtoMethodParam(params = {"ssidName", "type", "password"})
+    public void connectWifi(String networkSSID, String type, String networkPass) {
+
+        WifiConfiguration conf = new WifiConfiguration();
+        conf.SSID = "\"" + networkSSID + "\""; // Please note the quotes. String
+        // should contain ssid in quotes
+
+        if (type.equals("wep")) {
+            // wep
+            conf.wepKeys[0] = "\"" + networkPass + "\"";
+            conf.wepTxKeyIndex = 0;
+            conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+            conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
+        } else if (type.equals("wpa")) {
+            // wpa
+            conf.preSharedKey = "\"" + networkPass + "\"";
+        } else if (type.equals("open")) {
+            // open
+            conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+        }
+
+        WifiManager wifiManager = (WifiManager) getContext().getSystemService(Context.WIFI_SERVICE);
+        wifiManager.addNetwork(conf);
+
+        List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
+        for (WifiConfiguration i : list) {
+            if (i.SSID != null && i.SSID.equals("\"" + networkSSID + "\"")) {
+                wifiManager.disconnect();
+                wifiManager.enableNetwork(i.networkId, true);
+                wifiManager.reconnect();
+
+                break;
+            }
+        }
+
+    }
+
+    private Object mIsWifiAPEnabled = true;
+
+
+    @ProtoMethod(description = "Enable/Disable mContext Wifi access point", example = "")
+    @ProtoMethodParam(params = {"boolean, apName"})
+    public void wifiAP(boolean enabled, String wifiName) {
 
         WifiManager wifi = (WifiManager) getContext().getSystemService(getContext().WIFI_SERVICE);
         Method[] wmMethods = wifi.getClass().getDeclaredMethods();
@@ -646,7 +652,7 @@ public class PNetwork extends PInterface {
 
 
     @ProtoMethod(description = "Register mContext discovery service", example = "")
-    @ProtoMethodParam(params = { "serviceName, serviceType, port, function(name, status)" })
+    @ProtoMethodParam(params = {"serviceName, serviceType, port, function(name, status)"})
     public void registerService(String serviceName, String serviceType, int port, ServiceDiscovery.CreateCB callbackfn) {
         ServiceDiscovery.Create rD = new ServiceDiscovery().create(getContext(), serviceName, serviceType, port, callbackfn);
         WhatIsRunning.getInstance().add(rD);
@@ -654,7 +660,7 @@ public class PNetwork extends PInterface {
 
 
     @ProtoMethod(description = "Discover services in the current network", example = "")
-    @ProtoMethodParam(params = { "serviceType, function(name, jsonData)" })
+    @ProtoMethodParam(params = {"serviceType, function(name, jsonData)"})
     public void discoverServices(final String serviceType, ServiceDiscovery.DiscoverCB callbackfn) {
         ServiceDiscovery.Discover sD = new ServiceDiscovery().discover(getContext(), serviceType, callbackfn);
         WhatIsRunning.getInstance().add(sD);
@@ -662,22 +668,20 @@ public class PNetwork extends PInterface {
     }
 
 
-
     @ProtoMethod(description = "Ping mContext Ip address", example = "")
-    @ProtoMethodParam(params = { "ip", "function(result)" })
+    @ProtoMethodParam(params = {"ip", "function(result)"})
     public ExecuteCmd ping(final String where, final ExecuteCmd.ExecuteCommandCB callbackfn) {
 //        mHandler.post(new Runnable() {
 //            @Override
 //            public void run() {
-               return new ExecuteCmd("/system/bin/ping -c 8 " + where, callbackfn);
-     //       }
-     //   });
+        return new ExecuteCmd("/system/bin/ping -c 8 " + where, callbackfn);
+        //       }
+        //   });
     }
 
 
-
     @ProtoMethod(description = "Start a ftp server in the given port", example = "")
-    @ProtoMethodParam(params = { "port", "function(activity)" })
+    @ProtoMethodParam(params = {"port", "function(activity)"})
     public PFtpServer createFtpServer(final int port, PFtpServer.FtpServerCb callback) {
         PFtpServer ftpServer = new PFtpServer(port, callback);
 
@@ -686,7 +690,7 @@ public class PNetwork extends PInterface {
 
 
     @ProtoMethod(description = "Connect to ftp", example = "")
-    @ProtoMethodParam(params = { })
+    @ProtoMethodParam(params = {})
     public PFtpClient createFtpConnection() {
         PFtpClient ftpClient = new PFtpClient(getContext());
 
@@ -694,11 +698,9 @@ public class PNetwork extends PInterface {
     }
 
 
-
     public void stop() {
 
-	}
-
+    }
 
 
 }

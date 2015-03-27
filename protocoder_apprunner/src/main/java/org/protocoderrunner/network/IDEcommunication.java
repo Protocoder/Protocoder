@@ -1,6 +1,5 @@
 package org.protocoderrunner.network;
 
-import android.app.Activity;
 import android.content.Context;
 
 import org.json.JSONException;
@@ -16,12 +15,12 @@ import de.greenrobot.event.EventBus;
 public class IDEcommunication {
 
     private String TAG = "IDECommunication";
-	private static IDEcommunication inst;
-	public WeakReference<Context> a;
+    private static IDEcommunication inst;
+    public WeakReference<Context> a;
     CustomWebsocketServer ws;
 
-	public IDEcommunication(Context appActivity) {
-		this.a = new WeakReference<>(appActivity);
+    public IDEcommunication(Context appActivity) {
+        this.a = new WeakReference<>(appActivity);
 
         try {
             MLog.d(TAG, "intentando empezar websocket");
@@ -58,32 +57,32 @@ public class IDEcommunication {
 
     }
 
-	// Singleton (one app view, different URLs)
-	public static IDEcommunication getInstance(Context a) {
-		if (inst == null) {
-			inst = new IDEcommunication(a);
-		}
-		return inst;
-	}
+    // Singleton (one app view, different URLs)
+    public static IDEcommunication getInstance(Context a) {
+        if (inst == null) {
+            inst = new IDEcommunication(a);
+        }
+        return inst;
+    }
 
-	public void ready(boolean r) {
+    public void ready(boolean r) {
 
-		JSONObject msg = new JSONObject();
-		try {
-			msg.put("type", "ide");
-			msg.put("action", "ready");
+        JSONObject msg = new JSONObject();
+        try {
+            msg.put("type", "ide");
+            msg.put("action", "ready");
 
-			JSONObject values = new JSONObject();
+            JSONObject values = new JSONObject();
 
-			values.put("ready", r);
-			msg.put("values", values);
+            values.put("ready", r);
+            msg.put("values", values);
 
-		} catch (JSONException e1) {
-			e1.printStackTrace();
-		}
+        } catch (JSONException e1) {
+            e1.printStackTrace();
+        }
 
         ws.send(msg);
-	}
+    }
 
     public void sendCustomJs(String jsString) {
 

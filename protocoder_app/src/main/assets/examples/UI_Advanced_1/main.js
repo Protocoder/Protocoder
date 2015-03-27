@@ -5,10 +5,10 @@
 */
 
 // this line must be at the very beginning of the script
-ui.setScreenMode("immersive");
+ui.screenMode("immersive");
 
 // forces portrait mode 
-ui.setScreenMode("portrait");
+ui.screenMode("portrait");
 
 // prevents the app to scroll vertically which is nice when
 // you have some inner widgets that might scroll on touch events 
@@ -17,8 +17,8 @@ ui.allowScroll(false);
 //adding a card, basically they group rows of n elements 
 var card = ui.addCard("label", 0, 0, ui.screenWidth, 200); 
 var r = card.addRow(2); // add a row to the card with two slots 
-r.addView(ui.newButton("show", function() { ui.show(pad, true) })); // add firt view
-r.addView(ui.newButton("hide", function() { ui.show(pad, false); })); // add second view
+r.addView(ui.newButton("show").onClick(function() { ui.show(pad, true) })); // add firt view
+r.addView(ui.newButton("hide").onClick(function() { ui.show(pad, false); })); // add second view
 
 //this is a touchable pad 
 var pad = ui.addXYPad(10, 210, ui.screenWidth - 20, 400, function(e) {
@@ -33,13 +33,13 @@ var pad = ui.addXYPad(10, 210, ui.screenWidth - 20, 400, function(e) {
 var al = ui.addAbsoluteLayout(10, 620, 520, 220);
 al.backgroundColor("#550000FF");
 
-al.addView(ui.newButton("btn1".onClick(function() {
+al.addView(ui.newButton("btn1").onClick(function() {
     ui.popupInfo("title", "description", "yes", "no", function(e) {
         console.log("you pressed " + e);
     });
 }), 0, 0, 150, 150);
 
-al.addView(ui.newButton("btn2".onClick(function() { 
+al.addView(ui.newButton("btn2").onClick(function() { 
     ui.move(al, Math.random() * ui.screenWidth, Math.random() * ui.screenHeight);
 }), 150, 0, 150, 150);
 

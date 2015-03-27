@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="ProtocoderAppRunner.Button" parent="@android:style/Widget.Button">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textSize">125sp</item>
+        <item name="android:textStyle">bold</item>
+        <!--<item name="android:textColor">#FF00FF</item>-->
+        <item name="android:gravity">center</item>
+        <!--<item name="android:shadowColor">#000000</item>-->
+        <!--<item name="android:background">@drawable/protocoder_theme_dark_btn_selector</item>-->
+        <!--<item name="android:padding">10dip</item>-->
+    </style>
+
+</resources>

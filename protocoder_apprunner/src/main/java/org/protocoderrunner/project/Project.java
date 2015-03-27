@@ -1,31 +1,22 @@
 /*
- * Protocoder 
- * A prototyping platform for Android devices 
- * 
- * Victor Diaz Barrales victormdb@gmail.com
- *
- * Copyright (C) 2014 Victor Diaz
- * Copyright (C) 2013 Motorola Mobility LLC
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the "Software"),
- * to deal in the Software without restriction, including without limitation
- * the rights to use, copy, modify, merge, publish, distribute, sublicense,
- * and/or sell copies of the Software, and to permit persons to whom the Software
- * is furnished to do so, subject to the following conditions: 
- * 
- * The above copyright notice and this permission notice shall be included in all 
- * copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
- * THE SOFTWARE.
- * 
- */
+* Part of Protocoder http://www.protocoder.org
+* A prototyping platform for Android devices 
+*
+* Copyright (C) 2013 Victor Diaz Barrales victormdb@gmail.com
+* 
+* Protocoder is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Lesser General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Protocoder is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU Lesser General Public License
+* along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
+*/
 
 package org.protocoderrunner.project;
 
@@ -35,11 +26,11 @@ import android.net.Uri;
 
 public class Project {
 
-	//public final static String TYPE = "projectType";
-	public final static String FOLDER = "projectFolder";
-	public final static String NAME = "projectName";
-	public final static String URL = "projectUrl";
-	public final static String LOAD_FROM_ASSETS = "projectLoadFromAssets";
+    //public final static String TYPE = "projectType";
+    public final static String FOLDER = "projectFolder";
+    public final static String NAME = "projectName";
+    public final static String URL = "projectUrl";
+    public final static String LOAD_FROM = "projectLoadFrom";
     public static final String FORMAT = "projectFormat";
     public static final String COLOR = "projectColor";
     public static final String PREFIX = "prefix";
@@ -58,39 +49,38 @@ public class Project {
     public boolean selected = false;
 
     public Project(String folder, String projectName, boolean containsReadme, boolean containsTutorial) {
-		this.folder = folder;
-        this.name = projectName;
-		this.containsReadme = containsReadme;
-		this.containsTutorial = containsTutorial;
-	}
-
-	public Project(String folder, String projectName) {
         this.folder = folder;
-		this.name = projectName;
-	}
+        this.name = projectName;
+        this.containsReadme = containsReadme;
+        this.containsTutorial = containsTutorial;
+    }
+
+    public Project(String folder, String projectName) {
+        this.folder = folder;
+        this.name = projectName;
+    }
 
     public Project() {
 
     }
 
     public String getName() {
-		return this.name;
-	}
-
-	public String getStoragePath() {
-		return ProjectManager.getInstance().getProjectURL(this);
+        return this.name;
     }
 
-	public String getServingURL() {
-		String url = "http://" + ProjectManager.getInstance().getRemoteIP();
-		url += "apps/" + this.getFolder() + "/" + this.getName() + "/";
-		return url;
-	}
+    public String getStoragePath() {
+        return ProjectManager.getInstance().getProjectURL(this);
+    }
 
-	public String getFolder() {
-		return this.folder;
-	}
+    public String getServingURL() {
+        String url = "http://" + ProjectManager.getInstance().getRemoteIP();
+        url += "apps/" + this.getFolder() + "/" + this.getName() + "/";
+        return url;
+    }
 
+    public String getFolder() {
+        return this.folder;
+    }
 
     //public String getTypeName() {
     //    return folder;

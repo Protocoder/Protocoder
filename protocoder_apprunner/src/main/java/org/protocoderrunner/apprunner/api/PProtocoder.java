@@ -1,31 +1,22 @@
 /*
- * Protocoder 
- * A prototyping platform for Android devices 
- * 
- * Victor Diaz Barrales victormdb@gmail.com
- *
- * Copyright (C) 2014 Victor Diaz
- * Copyright (C) 2013 Motorola Mobility LLC
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the "Software"),
- * to deal in the Software without restriction, including without limitation
- * the rights to use, copy, modify, merge, publish, distribute, sublicense,
- * and/or sell copies of the Software, and to permit persons to whom the Software
- * is furnished to do so, subject to the following conditions: 
- * 
- * The above copyright notice and this permission notice shall be included in all 
- * copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
- * THE SOFTWARE.
- * 
- */
+* Part of Protocoder http://www.protocoder.org
+* A prototyping platform for Android devices 
+*
+* Copyright (C) 2013 Victor Diaz Barrales victormdb@gmail.com
+* 
+* Protocoder is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Lesser General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Protocoder is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU Lesser General Public License
+* along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
+*/
 
 package org.protocoderrunner.apprunner.api;
 
@@ -48,10 +39,10 @@ import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.debug.DebugFrame;
 import org.mozilla.javascript.debug.DebuggableScript;
-import org.protocoderrunner.apidoc.annotation.ProtoMethod;
-import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apidoc.annotation.APIRequires;
 import org.protocoderrunner.apidoc.annotation.APIVersion;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.other.ApplicationInfo;
 import org.protocoderrunner.apprunner.api.widgets.PWebEditor;
@@ -70,15 +61,15 @@ import java.util.List;
  */
 public class PProtocoder extends PInterface {
 
-	public String id;
+    public String id;
 
-	public PProtocoder(android.content.Context a) {
-		super(a);
+    public PProtocoder(android.content.Context a) {
+        super(a);
 
-		// get org.apprunner settings
-		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(a);
-		id = sharedPrefs.getString("pref_id", "-1");
-	}
+        // get org.apprunner settings
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(a);
+        id = sharedPrefs.getString("pref_id", "-1");
+    }
 
     //TODO enable this after refactor
 //
@@ -96,9 +87,9 @@ public class PProtocoder extends PInterface {
 //	}
 
     //TODO this is mContext place holder
-   //
+    //
     @ProtoMethod(description = "Returns an object to manipulate the device app webIDE", example = "")
-    @ProtoMethodParam(params = { })
+    @ProtoMethodParam(params = {})
     public PWebEditor webEditor() {
         PWebEditor pWebEditor = new PWebEditor(getContext());
 
@@ -106,7 +97,7 @@ public class PProtocoder extends PInterface {
     }
 
 //TODO reenable this
-  //
+    //
 //    @APIMethod(description = "Returns an object to manipulate the device app", example = "")
 //    @APIParam(params = { })
 //    public PDeviceEditor deviceEditor() {
@@ -135,16 +126,16 @@ public class PProtocoder extends PInterface {
 //	}
 
     //TODO this is mContext place holder
-	//
-	@ProtoMethod(description = "", example = "")
-	@APIVersion(minLevel = "2")
-	@APIRequires("android.permission.INTERNET")
-	public void returnValueToScript(String returnValue) {
-		Intent output = new Intent();
-		output.putExtra("return", returnValue);
-		//contextUi.get().setResult(22, output);
-		//contextUi.get().finish();
-	}
+    //
+    @ProtoMethod(description = "", example = "")
+    @APIVersion(minLevel = "2")
+    @APIRequires("android.permission.INTERNET")
+    public void returnValueToScript(String returnValue) {
+        Intent output = new Intent();
+        output.putExtra("return", returnValue);
+        //contextUi.get().setResult(22, output);
+        //contextUi.get().finish();
+    }
 
 
     //TODO this doesnt work
@@ -156,8 +147,8 @@ public class PProtocoder extends PInterface {
         conData.putString("param_result", data);
         Intent intent = new Intent();
         intent.putExtras(conData);
-       // contextUi.get().setResult(contextUi.get().RESULT_OK, intent);
-       // contextUi.get().finish();
+        // contextUi.get().setResult(contextUi.get().RESULT_OK, intent);
+        // contextUi.get().finish();
 
     }
 
@@ -213,7 +204,7 @@ public class PProtocoder extends PInterface {
 
         public void onExit(Context cx, boolean byThrow,
                            Object resultOrException) {
-            MLog.network(getContext(), TAG, "" + "Frame exit, result="+resultOrException);
+            MLog.network(getContext(), TAG, "" + "Frame exit, result=" + resultOrException);
 
         }
 
@@ -224,7 +215,7 @@ public class PProtocoder extends PInterface {
 
         public void onLineChange(Context cx, int lineNumber) {
             if (isBreakpoint(lineNumber)) {
-                MLog.network(getContext(), TAG, "" + "Breakpoint hit: "+debuggableScript.getSourceName()+":"+lineNumber);
+                MLog.network(getContext(), TAG, "" + "Breakpoint hit: " + debuggableScript.getSourceName() + ":" + lineNumber);
             }
         }
 
@@ -234,31 +225,28 @@ public class PProtocoder extends PInterface {
     }
 
 
-
-
     @ProtoMethod(description = "Get the current Protocoder version name", example = "")
-	public String versionName() {
-		PackageInfo pInfo = null;
-		try {
-			pInfo = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0);
-		} catch (NameNotFoundException e) {
-			e.printStackTrace();
-		}
-		return pInfo.versionName;
-	}
+    public String versionName() {
+        PackageInfo pInfo = null;
+        try {
+            pInfo = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0);
+        } catch (NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return pInfo.versionName;
+    }
 
 
     @ProtoMethod(description = "Get the current Protocoder version code", example = "")
-	public int versionCode() {
-		PackageInfo pInfo = null;
-		try {
-			pInfo = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0);
-		} catch (NameNotFoundException e) {
-			e.printStackTrace();
-		}
-		return pInfo.versionCode;
-	}
-
+    public int versionCode() {
+        PackageInfo pInfo = null;
+        try {
+            pInfo = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0);
+        } catch (NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return pInfo.versionCode;
+    }
 
 
     @ProtoMethod(description = "Install a Proto app programatically", example = "")
@@ -269,72 +257,70 @@ public class PProtocoder extends PInterface {
         intent.setComponent(new ComponentName("org.protocoder", "org.protocoder.ProtoAppInstallerActivity"));
         intent.setData(Uri.parse(projectPath + "/" + src));
         intent.putExtra("autoInstall", b);
-       // intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        // intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         getContext().startActivity(intent);
     }
 
 
-
-
     //TODO this is not finished either
-	public static ArrayList<ApplicationInfo> mApplications;
+    public static ArrayList<ApplicationInfo> mApplications;
 
-	/**
-	 * Loads the list of installed applications in mApplications.
-	 */
-	private void loadApplications(boolean isLaunching) {
-		if (isLaunching && mApplications != null) {
-			return;
-		}
+    /**
+     * Loads the list of installed applications in mApplications.
+     */
+    private void loadApplications(boolean isLaunching) {
+        if (isLaunching && mApplications != null) {
+            return;
+        }
 
-		PackageManager manager = getContext().getPackageManager();
+        PackageManager manager = getContext().getPackageManager();
 
-		Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
-		mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+        Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
 
-		final List<ResolveInfo> apps = manager.queryIntentActivities(mainIntent, 0);
-		Collections.sort(apps, new ResolveInfo.DisplayNameComparator(manager));
+        final List<ResolveInfo> apps = manager.queryIntentActivities(mainIntent, 0);
+        Collections.sort(apps, new ResolveInfo.DisplayNameComparator(manager));
 
-		if (apps != null) {
-			final int count = apps.size();
+        if (apps != null) {
+            final int count = apps.size();
 
-			if (mApplications == null) {
-				mApplications = new ArrayList<ApplicationInfo>(count);
-			}
-			mApplications.clear();
+            if (mApplications == null) {
+                mApplications = new ArrayList<ApplicationInfo>(count);
+            }
+            mApplications.clear();
 
-			for (int i = 0; i < count; i++) {
-				ApplicationInfo application = new ApplicationInfo();
-				ResolveInfo info = apps.get(i);
+            for (int i = 0; i < count; i++) {
+                ApplicationInfo application = new ApplicationInfo();
+                ResolveInfo info = apps.get(i);
 
-				application.title = info.loadLabel(manager);
-				application.packageName = info.activityInfo.packageName;
-				Log.d("qq", "qq " + application.packageName);
-				application.setActivity(new ComponentName(info.activityInfo.applicationInfo.packageName,
-						info.activityInfo.name), Intent.FLAG_ACTIVITY_NEW_TASK
-						| Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-				application.icon = info.activityInfo.loadIcon(manager);
+                application.title = info.loadLabel(manager);
+                application.packageName = info.activityInfo.packageName;
+                Log.d("qq", "qq " + application.packageName);
+                application.setActivity(new ComponentName(info.activityInfo.applicationInfo.packageName,
+                        info.activityInfo.name), Intent.FLAG_ACTIVITY_NEW_TASK
+                        | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                application.icon = info.activityInfo.loadIcon(manager);
 
-				Bitmap bitmap = ((BitmapDrawable) application.icon).getBitmap();
+                Bitmap bitmap = ((BitmapDrawable) application.icon).getBitmap();
 
-				// Bitmap icon =
-				// BitmapFactory.decodeResource(this.getResources(),
-				// application.icon);
+                // Bitmap icon =
+                // BitmapFactory.decodeResource(this.getResources(),
+                // application.icon);
 
-				String path = Environment.getExternalStorageDirectory().toString();
-				application.iconURL = path + "/" + application.packageName + ".png";
+                String path = Environment.getExternalStorageDirectory().toString();
+                application.iconURL = path + "/" + application.packageName + ".png";
 
-				try {
-					FileOutputStream out = new FileOutputStream(application.iconURL);
-					bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+                try {
+                    FileOutputStream out = new FileOutputStream(application.iconURL);
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
-				mApplications.add(application);
-			}
-		}
-	}
+                mApplications.add(application);
+            }
+        }
+    }
 
 }

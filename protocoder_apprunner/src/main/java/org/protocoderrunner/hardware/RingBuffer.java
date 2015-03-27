@@ -11,104 +11,91 @@ package org.protocoderrunner.hardware;
  */
 
 public class RingBuffer {
-	
-private int length = 16348;
-private byte[] buffer;
-private int start;
-private int end;
-private int count;
+
+    private int length = 16348;
+    private byte[] buffer;
+    private int start;
+    private int end;
+    private int count;
 
 
-public RingBuffer(int buflen) {
-	length = buflen;
-	buffer = new byte[length];
-	for(int i = 0; i<length; i++)
-	{
-		buffer[i] = 0;
-	}
-	end = 0;
-	start = 0;
-	count = 0;
-}
+    public RingBuffer(int buflen) {
+        length = buflen;
+        buffer = new byte[length];
+        for (int i = 0; i < length; i++) {
+            buffer[i] = 0;
+        }
+        end = 0;
+        start = 0;
+        count = 0;
+    }
 
-public int available()
-{
-	return count;
-}
+    public int available() {
+        return count;
+    }
 
-public byte[] getAll()
-{
-	byte[] temp;
-	if(count>0)
-	{
-	temp = new byte[count];
-	
-	for(int i = 0; i< count; i++)
-	{
-		temp[i] = buffer[start];
-		start++;
-		start = wrap(start);
-	}
-	count = 0;
-	}
-	else
-	{
-		temp = new byte[1];
-		temp[0] = 0;
-		
-	}
-	return temp;
-}
+    public byte[] getAll() {
+        byte[] temp;
+        if (count > 0) {
+            temp = new byte[count];
 
-public byte[] get(int len)
-{
-	byte[] temp = new byte[len];
-	for(int i = 0; i< len; i++)
-	{
-		temp[i] = buffer[wrap(start)];
-		start++;
-		start = wrap(start);
-		
-	}
-	count -= len;
-	return temp;
-}
+            for (int i = 0; i < count; i++) {
+                temp[i] = buffer[start];
+                start++;
+                start = wrap(start);
+            }
+            count = 0;
+        } else {
+            temp = new byte[1];
+            temp[0] = 0;
 
-private int wrap(int i) {
-	// TODO Auto-generated method stub
-	while(i >= length)
-	{
-		i -= length;
-	}
-	return i;
-}
+        }
+        return temp;
+    }
 
-public void add(byte[] b)
-{
-	for(int i = 0; i < b.length; i++)
-	{
-		buffer[end] = b[i];
-		end++;
-		end = wrap(end);
-		count++;
-	}
-}
-public void add(byte[] b,int offset, int len)
-{
-	for(int i = 0; i < len; i++)
-	{
-		buffer[end] = b[i+offset];
-		end++;
-		end = wrap(end);
-		count++;
-	}
-}
+    public byte[] get(int len) {
+        byte[] temp = new byte[len];
+        for (int i = 0; i < len; i++) {
+            temp[i] = buffer[wrap(start)];
+            start++;
+            start = wrap(start);
 
-public int getC() {
-	start++;
-	count--;
-	return buffer[start-1];
-}
+        }
+        count -= len;
+        return temp;
+    }
+
+    private int wrap(int i) {
+        // TODO Auto-generated method stub
+        while (i >= length) {
+            i -= length;
+        }
+        return i;
+    }
+
+    public void add(byte[] b) {
+        for (int i = 0; i < b.length; i++) {
+            buffer[end] = b[i];
+            end++;
+            end = wrap(end);
+            count++;
+        }
+    }
+
+    public void add(byte[] b, int offset, int len) {
+        for (int i = 0; i < len; i++) {
+            buffer[end] = b[i + offset];
+            end++;
+            end = wrap(end);
+            count++;
+        }
+    }
+
+    public int getC() {
+        start++;
+        count--;
+        return buffer[start - 1];
+    }
 
 
 };

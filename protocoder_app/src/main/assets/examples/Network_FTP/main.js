@@ -1,7 +1,7 @@
 /*
 *	
-*	Description ........ 
-*	by ........ 
+*	FTP client and server 
+*	still not fully working, contributions are welcomed 
 *
 */
 
@@ -14,14 +14,13 @@ if (false) {
         console.log(info);
     });
     
-    ftpServer.addUser("qq", "qq", "/", true);
+    ftpServer.addUser("user", "password", "/", true);
     ftpServer.start(); 
     ftpServer.stop();
     
     var ftpClient = network.createFtpConnection();
-    //var connected = ftpClient.connect("ps62473.dreamhostps.com", 21, "probandoo", "1qwertyasdfg");
     
-    ftpClient.connect("127.0.0.1", 9292, "qq", "qq", function(connected) {
+    ftpClient.connect("127.0.0.1", 9292, "user", "password", function(connected) {
        console.log(connected); 
     });
     

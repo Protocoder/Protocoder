@@ -1,31 +1,22 @@
 /*
- * Protocoder 
- * A prototyping platform for Android devices 
- * 
- * Victor Diaz Barrales victormdb@gmail.com
- *
- * Copyright (C) 2014 Victor Diaz
- * Copyright (C) 2013 Motorola Mobility LLC
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the "Software"),
- * to deal in the Software without restriction, including without limitation
- * the rights to use, copy, modify, merge, publish, distribute, sublicense,
- * and/or sell copies of the Software, and to permit persons to whom the Software
- * is furnished to do so, subject to the following conditions: 
- * 
- * The above copyright notice and this permission notice shall be included in all 
- * copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
- * THE SOFTWARE.
- * 
- */
+* Part of Protocoder http://www.protocoder.org
+* A prototyping platform for Android devices 
+*
+* Copyright (C) 2013 Victor Diaz Barrales victormdb@gmail.com
+* 
+* Protocoder is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Lesser General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Protocoder is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU Lesser General Public License
+* along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
+*/
 
 package org.protocoderrunner.apprunner.api.boards;
 
@@ -33,8 +24,6 @@ import android.content.Context;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
 
-import com.hoho.android.usbserial.driver.CdcAcmSerialDriver;
-import com.hoho.android.usbserial.driver.ProbeTable;
 import com.hoho.android.usbserial.driver.UsbSerialDriver;
 import com.hoho.android.usbserial.driver.UsbSerialPort;
 import com.hoho.android.usbserial.driver.UsbSerialProber;
@@ -53,39 +42,39 @@ import java.util.concurrent.Executors;
 
 public class PSerial extends PInterface {
 
-	private String receivedData;
-	private final String TAG = "PSerial";
+    private String receivedData;
+    private final String TAG = "PSerial";
 
     private UsbSerialPort sPort = null;
 
     boolean isStarted = false;
-	private UsbSerialDriver driver;
-	private SerialInputOutputManager.Listener mListener;
-	private SerialInputOutputManager mSerialIoManager;
+    private UsbSerialDriver driver;
+    private SerialInputOutputManager.Listener mListener;
+    private SerialInputOutputManager mSerialIoManager;
     private final ExecutorService mExecutor = Executors.newSingleThreadExecutor();
-	String msg = "";
+    String msg = "";
     private OnNewDataCallback mCallbackData;
 
     public PSerial(Context a) {
-		super(a);
+        super(a);
 
-	}
+    }
 
-	// --------- getRequest ---------//
-	public interface OnStartCallback {
-		void event(boolean status);
-	}
+    // --------- getRequest ---------//
+    public interface OnStartCallback {
+        void event(boolean status);
+    }
 
-	// --------- getRequest ---------//
-	public interface OnNewDataCallback {
-		void event(String responseString);
-	}
+    // --------- getRequest ---------//
+    public interface OnNewDataCallback {
+        void event(String responseString);
+    }
 
 
-	@ProtoMethod(description = "starts serial", example = "")
-	public void start(int bauds, final OnStartCallback callbackConnected) {
-		WhatIsRunning.getInstance().add(this);
-		if (!isStarted) {
+    @ProtoMethod(description = "starts serial", example = "")
+    public void start(int bauds, final OnStartCallback callbackConnected) {
+        WhatIsRunning.getInstance().add(this);
+        if (!isStarted) {
 
             //UsbSerialProber devices = UsbSerialProber.getDefaultProber();
 
@@ -143,7 +132,7 @@ public class PSerial extends PInterface {
                         //mHandler.post(new Runnable() {
                         //    @Override
                         //    public void run() {
-                                //antes pasaba finalMsgReturn
+                        //antes pasaba finalMsgReturn
                         //        callbackfn.event(readMsg);
                         //    }
                         //});
@@ -168,7 +157,7 @@ public class PSerial extends PInterface {
                                 @Override
                                 public void run() {
                                     //antes pasaba finalMsgReturn
-                                        if (mCallbackData != null) mCallbackData.event(finalMsgReturn);
+                                    if (mCallbackData != null) mCallbackData.event(finalMsgReturn);
                                 }
                             });
                         }
@@ -197,7 +186,7 @@ public class PSerial extends PInterface {
 
         }
 
-	}
+    }
 
     public PSerial onNewData(OnNewDataCallback cb) {
         mCallbackData = cb;
@@ -205,34 +194,34 @@ public class PSerial extends PInterface {
         return this;
     }
 
-	private void stopIoManager() {
+    private void stopIoManager() {
         if (mSerialIoManager != null) {
             MLog.i(TAG, "Stopping io manager ..");
             mSerialIoManager.stop();
             mSerialIoManager = null;
         }
-	}
+    }
 
-	private void startIoManager() {
+    private void startIoManager() {
 
         if (sPort != null) {
             MLog.i(TAG, "Starting io manager ..");
             mSerialIoManager = new SerialInputOutputManager(sPort, mListener);
             mExecutor.submit(mSerialIoManager);
         }
-	}
+    }
 
-	private void onDeviceStateChange() {
-		stopIoManager();
-		startIoManager();
-	}
+    private void onDeviceStateChange() {
+        stopIoManager();
+        startIoManager();
+    }
 
 
-	@ProtoMethod(description = "stop serial", example = "")
-    @ProtoMethodParam(params = {  })
+    @ProtoMethod(description = "stop serial", example = "")
+    @ProtoMethodParam(params = {})
     public void stop() {
-		if (isStarted) {
-			isStarted = false;
+        if (isStarted) {
+            isStarted = false;
 
             stopIoManager();
             if (sPort != null) {
@@ -245,32 +234,32 @@ public class PSerial extends PInterface {
             }
 
 
-		}
-	}
+        }
+    }
 
 
-	@ProtoMethod(description = "sends commands to the serial")
-    @ProtoMethodParam(params = { "data" })
+    @ProtoMethod(description = "sends commands to the serial")
+    @ProtoMethodParam(params = {"data"})
     public void write(String data) {
-		if (isStarted) {
-			try {
-				sPort.write(data.getBytes(), 1000);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
+        if (isStarted) {
+            try {
+                sPort.write(data.getBytes(), 1000);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
 
-	//@ProtoMethod(description = "resumes serial")
-	public void resume() {
+    //@ProtoMethod(description = "resumes serial")
+    public void resume() {
 
-	}
+    }
 
 
-	//@ProtoMethod(description = "pause serial")
-	public void pause() {
+    //@ProtoMethod(description = "pause serial")
+    public void pause() {
 
-	}
+    }
 
 }

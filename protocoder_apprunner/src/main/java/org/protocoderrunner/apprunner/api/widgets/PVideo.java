@@ -1,31 +1,22 @@
 /*
- * Protocoder 
- * A prototyping platform for Android devices 
- * 
- * Victor Diaz Barrales victormdb@gmail.com
- *
- * Copyright (C) 2014 Victor Diaz
- * Copyright (C) 2013 Motorola Mobility LLC
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the "Software"),
- * to deal in the Software without restriction, including without limitation
- * the rights to use, copy, modify, merge, publish, distribute, sublicense,
- * and/or sell copies of the Software, and to permit persons to whom the Software
- * is furnished to do so, subject to the following conditions: 
- * 
- * The above copyright notice and this permission notice shall be included in all 
- * copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
- * THE SOFTWARE.
- * 
- */
+* Part of Protocoder http://www.protocoder.org
+* A prototyping platform for Android devices 
+*
+* Copyright (C) 2013 Victor Diaz Barrales victormdb@gmail.com
+* 
+* Protocoder is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Lesser General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Protocoder is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU Lesser General Public License
+* along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
+*/
 
 package org.protocoderrunner.apprunner.api.widgets;
 
@@ -41,50 +32,80 @@ import java.io.File;
 
 public class PVideo extends CustomVideoTextureView implements PViewInterface {
 
-	protected Context c;
+    protected Context c;
+    private OnUpdateCB mCallbackUpdate;
+    private OnFinishCB mCallbackOnFinish;
+    private OnReadyCB mCallbackOnReady;
 
-	public PVideo(Context c) {
-		super(c);
-		this.c = c;
-	}
+    public PVideo(Context c, final String videoFile) {
+        super(c);
+        this.c = c;
 
-	@Override
 
+        addListener(new CustomVideoTextureView.VideoListener() {
+            @Override
+            public void onTimeUpdate(int ms, int totalDuration) {
+                //MLog.d(TAG, "onUpdate");
+                if (mCallbackUpdate != null) mCallbackUpdate.event(ms, totalDuration);
+            }
+
+            @Override
+            public void onLoad(boolean ready) {
+                load(videoFile);
+            }
+
+            @Override
+            public void onReady(boolean ready) {
+                //MLog.d(TAG, "onReady");
+                if (mCallbackOnReady != null) mCallbackOnReady.event();
+            }
+
+            @Override
+            public void onFinish(boolean finished) {
+                //MLog.d(TAG, "onFinish");
+
+                if (mCallbackOnFinish != null) mCallbackOnFinish.event();
+            }
+        });
+
+        init();
+
+    }
+
+    @Override
     @ProtoMethod(description = "Plays a video", example = "")
-    @ProtoMethodParam(params = { "" })
-	public void play() {
-		super.play();
-	}
+    @ProtoMethodParam(params = {""})
+    public void play() {
+        super.play();
+    }
 
-	@Override
+    @Override
+    @ProtoMethod(description = "Seeks to a certain position in the video", example = "")
+    @ProtoMethodParam(params = {"milliseconds"})
+    public void seekTo(int ms) {
+        super.seekTo(ms);
+    }
 
-	@ProtoMethod(description = "Seeks to a certain position in the video", example = "")
-	@ProtoMethodParam(params = { "milliseconds" })
-	public void seekTo(int ms) {
-		super.seekTo(ms);
-	}
-
-	@Override
-
+    @Override
     @ProtoMethod(description = "Pauses the video", example = "")
-    @ProtoMethodParam(params = { "" })
-	public void pause() {
-		super.pause();
-	}
+    @ProtoMethodParam(params = {""})
+    public void pause() {
+        super.pause();
+    }
 
-	@Override
+    @Override
+    @ProtoMethod(description = "Stops the video", example = "")
+    public void stop() {
+        super.stop();
+    }
 
-	@ProtoMethod(description = "Stops the video", example = "")
-	public void stop() {
-		super.stop();
-	}
 
+    @ProtoMethod(description = "Loads a videoFile", example = "")
+    @ProtoMethodParam(params = {"fileName"})
+    public void load(String videoFile) {
+        super.loadExternalVideo(AppRunnerSettings.get().project.getStoragePath() + File.separator + videoFile);
 
-	@ProtoMethod(description = "Loads a videoFile", example = "")
-	@ProtoMethodParam(params = { "fileName" })
-	public void load(String videoFile) {
-		super.loadExternalVideo(AppRunnerSettings.get().project.getStoragePath() + File.separator + videoFile);
-	}
+    }
 
 
     // --------- onUpdate ---------//
@@ -104,133 +125,80 @@ public class PVideo extends CustomVideoTextureView implements PViewInterface {
 
 
     @ProtoMethod(description = "Callback that triggers when the video is loaded", example = "")
-    @ProtoMethodParam(params = { "function()" })
+    @ProtoMethodParam(params = {"function()"})
     public void onLoaded(final OnReadyCB callbackfn) {
-        super.addListener(new VideoListener() {
-            @Override
-            public void onReady(boolean ready) {
-                callbackfn.event();
-            }
-
-            @Override
-            public void onFinish(boolean finished) {
-
-            }
-
-            @Override
-            public void onTimeUpdate(int ms, int totalDuration) {
-
-            }
-        });
+        mCallbackOnReady = callbackfn;
 
     }
 
 
     @ProtoMethod(description = "Callback that triggers when the video playing is finished", example = "")
-    @ProtoMethodParam(params = { "function()" })
+    @ProtoMethodParam(params = {"function()"})
     public void onFinish(final OnFinishCB callback) {
-        super.addListener(new VideoListener() {
-            @Override
-            public void onReady(boolean ready) {
-
-            }
-
-            @Override
-            public void onFinish(boolean finished) {
-                callback.event();
-            }
-
-            @Override
-            public void onTimeUpdate(int ms, int totalDuration) {
-
-            }
-        });
-
+        mCallbackOnFinish = callback;
     }
 
 
-	@ProtoMethod(description = "Callback that gives information of the current video position", example = "")
-	@ProtoMethodParam(params = { "function(milliseconds, totalDuration)" })
-	public void onUpdate(final OnUpdateCB callbackfn) {
-
-		super.addListener(new CustomVideoTextureView.VideoListener() {
-			@Override
-			public void onTimeUpdate(int ms, int totalDuration) {
-                MLog.d(TAG, "onUpdate");
-
-                callbackfn.event(ms, totalDuration);
-			}
-
-			@Override
-			public void onReady(boolean ready) {
-			}
-
-			@Override
-			public void onFinish(boolean finished) {
-
-			}
-		});
-	}
+    @ProtoMethod(description = "Callback that gives information of the current video position", example = "")
+    @ProtoMethodParam(params = {"function(milliseconds, totalDuration)"})
+    public void onUpdate(final OnUpdateCB callbackfn) {
+        mCallbackUpdate = callbackfn;
+    }
 
 
-	@ProtoMethod(description = "Sets the video volume", example = "")
-	@ProtoMethodParam(params = { "volume" })
-	public void setVolume(int vol) {
-		super.setVolume(vol);
-	}
+    @ProtoMethod(description = "Sets the video volume", example = "")
+    @ProtoMethodParam(params = {"volume"})
+    public void setVolume(int vol) {
+        super.setVolume(vol);
+    }
 
-	@Override
+    @Override
+    @ProtoMethod(description = "Gets the video width", example = "")
+    @ProtoMethodParam(params = {""})
+    public void getVideoWidth() {
+        super.getVideoWidth();
+    }
 
-	@ProtoMethod(description = "Gets the video width", example = "")
-	@ProtoMethodParam(params = { "" })
-	public void getVideoWidth() {
-		super.getVideoWidth();
-	}
+    @Override
+    @ProtoMethod(description = "Gets the video height", example = "")
+    @ProtoMethodParam(params = {""})
+    public void getVideoHeight() {
+        super.getVideoHeight();
+    }
 
-	@Override
+    @Override
+    @ProtoMethod(description = "Enables/Disables looping the video", example = "")
+    @ProtoMethodParam(params = {"boolean"})
+    public void setLoop(boolean b) {
+        super.setLoop(b);
+    }
 
-	@ProtoMethod(description = "Gets the video height", example = "")
-	@ProtoMethodParam(params = { "" })
-	public void getVideoHeight() {
-		super.getVideoHeight();
-	}
+    @Override
+    @ProtoMethod(description = "Get the total duration of the video", example = "")
+    @ProtoMethodParam(params = {""})
+    public int getDuration() {
+        return super.getDuration();
+    }
 
-	@Override
-
-	@ProtoMethod(description = "Enables/Disables looping the video", example = "")
-	@ProtoMethodParam(params = { "boolean" })
-	public void setLoop(boolean b) {
-		super.setLoop(b);
-	}
-
-	@Override
-
-	@ProtoMethod(description = "Get the total duration of the video", example = "")
-	@ProtoMethodParam(params = { "" })
-	public int getDuration() {
-		return super.getDuration();
-	}
-
-	@Override
-
-	@ProtoMethod(description = "Gets the current position of the video", example = "")
-	@ProtoMethodParam(params = { "" })
-	public int getCurrentPosition() {
-		return super.getCurrentPosition();
-	}
+    @Override
+    @ProtoMethod(description = "Gets the current position of the video", example = "")
+    @ProtoMethodParam(params = {""})
+    public int getCurrentPosition() {
+        return super.getCurrentPosition();
+    }
 
 
-	@ProtoMethod(description = "Fades in the audio in the given milliseconds", example = "")
-	@ProtoMethodParam(params = { "milliseconds" })
-	public void fadeAudioIn(int time) {
-		super.fadeAudio(time, 1.0f);
-	}
+    @ProtoMethod(description = "Fades in the audio in the given milliseconds", example = "")
+    @ProtoMethodParam(params = {"milliseconds"})
+    public void fadeAudioIn(int time) {
+        super.fadeAudio(time, 1.0f);
+    }
 
 
-	@ProtoMethod(description = "Fades out the audio in the given milliseconds", example = "")
-	@ProtoMethodParam(params = { "milliseconds" })
-	public void fadeAudioOut(int time) {
-		super.fadeAudio(time, 0.0f);
-	}
+    @ProtoMethod(description = "Fades out the audio in the given milliseconds", example = "")
+    @ProtoMethodParam(params = {"milliseconds"})
+    public void fadeAudioOut(int time) {
+        super.fadeAudio(time, 0.0f);
+    }
 
 }

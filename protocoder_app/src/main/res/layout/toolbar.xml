@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 25dp margin top -->
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_marginTop="0dp"
+    style="@style/ToolBarApp.App"
+    android:id="@+id/toolbar"
+    android:navigationIcon="@drawable/protocoder_icon"
+    android:minHeight="?attr/actionBarSize"
+    android:background="#00000000">
+</android.support.v7.widget.Toolbar>
+

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="ProtocoderAppRunnerTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
+
+    </style>
+
+    <style name="ProtocoderAppRunnerTheme" parent="ProtocoderAppRunnerTheme.Base">
+        <item name="android:windowBackground">@color/white</item>
+        <item name="android:windowContentOverlay">@null</item>
+
+        <item name="colorPrimary">@color/mwmblue</item>
+        <item name="colorAccent">@color/mwmyellow</item>
+        <item name="colorPrimaryDark">#333333</item>
+
+        <!--<item name="windowActionBar">false</item>-->
+        <!--<item name="android:windowNoTitle">true</item>-->
+        <!--<<item name="android:windowNoTitle">true</item>-->
+        <!--<item name="android:listViewStyle">@style/MyListView</item>-->
+        <!--<item name="android:buttonStyle">@style/ProtocoderAppRunner.Button</item>-->
+        <!--<item name="android:textViewStyle">@style/ProtocoderAppRunner.TextView</item>-->
+        <!--<item name="android:seekBarStyle">@style/ProtocoderAppRunner.SeekBar</item>-->
+    </style>
+
+
+</resources>

@@ -1,31 +1,22 @@
 /*
- * Protocoder 
- * A prototyping platform for Android devices 
- * 
- * Victor Diaz Barrales victormdb@gmail.com
- *
- * Copyright (C) 2014 Victor Diaz
- * Copyright (C) 2013 Motorola Mobility LLC
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the "Software"),
- * to deal in the Software without restriction, including without limitation
- * the rights to use, copy, modify, merge, publish, distribute, sublicense,
- * and/or sell copies of the Software, and to permit persons to whom the Software
- * is furnished to do so, subject to the following conditions: 
- * 
- * The above copyright notice and this permission notice shall be included in all 
- * copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
- * THE SOFTWARE.
- * 
- */
+* Part of Protocoder http://www.protocoder.org
+* A prototyping platform for Android devices 
+*
+* Copyright (C) 2013 Victor Diaz Barrales victormdb@gmail.com
+* 
+* Protocoder is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Lesser General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Protocoder is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU Lesser General Public License
+* along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
+*/
 
 package org.protocoder.fragments;
 
@@ -48,64 +39,65 @@ public class NewProjectDialogFragment extends DialogFragment implements OnEditor
 
 
     public interface NewProjectDialogListener {
-		void onFinishEditDialog(String inputText);
-	}
+        void onFinishEditDialog(String inputText);
+    }
 
-	private EditText mEditText;
+    private EditText mEditText;
     private NewProjectDialogListener mListener;
 
 
     public NewProjectDialogFragment() {
 
-	}
+    }
 
-	@Override
-	public Dialog onCreateDialog(Bundle savedInstanceState) {
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setTitle("title")
-				.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int whichButton) {
-						doOK();
-					}
-				}).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int whichButton) {
-						dialog.dismiss();
-					}
-				});
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setTitle("title")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        doOK();
+                    }
+                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.dismiss();
+                    }
+                });
 
-		View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_dialog_new_project, null);
-		mEditText = (EditText) view.findViewById(R.id.dialog_new_project_name_input);
+        View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_dialog_new_project, null);
+        mEditText = (EditText) view.findViewById(R.id.dialog_new_project_name_input);
 
-		// Show soft keyboard automatically
-		mEditText.requestFocus();
-		mEditText.setOnEditorActionListener(this);
+        // Show soft keyboard automatically
+        mEditText.requestFocus();
+        mEditText.setOnEditorActionListener(this);
 
-		AlertDialog dialog = builder.create();
-		dialog.setView(view);
-		dialog.setTitle("New project");
-		dialog.getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        AlertDialog dialog = builder.create();
+        dialog.setView(view);
+        dialog.setTitle("New project");
+        dialog.getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
-		return dialog;
-	}
+        return dialog;
+    }
 
-	@Override
-	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-		if (EditorInfo.IME_ACTION_DONE == actionId) {
-			// Return input text to activity
-			doOK();
-			this.dismiss();
-			return true;
-		}
-		return false;
-	}
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        if (EditorInfo.IME_ACTION_DONE == actionId) {
+            // Return input text to activity
+            doOK();
+            this.dismiss();
+            return true;
+        }
+        return false;
+    }
 
     public void setListener(NewProjectDialogListener listener) {
         this.mListener = listener;
-        
+
     }
-	public void doOK() {
-		mListener.onFinishEditDialog(mEditText.getText().toString());
-	}
+
+    public void doOK() {
+        mListener.onFinishEditDialog(mEditText.getText().toString());
+    }
 }

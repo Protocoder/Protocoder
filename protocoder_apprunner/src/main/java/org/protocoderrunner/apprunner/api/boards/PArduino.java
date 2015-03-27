@@ -1,31 +1,22 @@
 /*
- * Protocoder 
- * A prototyping platform for Android devices 
- * 
- * Victor Diaz Barrales victormdb@gmail.com
- *
- * Copyright (C) 2014 Victor Diaz
- * Copyright (C) 2013 Motorola Mobility LLC
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the "Software"),
- * to deal in the Software without restriction, including without limitation
- * the rights to use, copy, modify, merge, publish, distribute, sublicense,
- * and/or sell copies of the Software, and to permit persons to whom the Software
- * is furnished to do so, subject to the following conditions: 
- * 
- * The above copyright notice and this permission notice shall be included in all 
- * copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
- * THE SOFTWARE.
- * 
- */
+* Part of Protocoder http://www.protocoder.org
+* A prototyping platform for Android devices 
+*
+* Copyright (C) 2013 Victor Diaz Barrales victormdb@gmail.com
+* 
+* Protocoder is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Lesser General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Protocoder is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU Lesser General Public License
+* along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
+*/
 
 package org.protocoderrunner.apprunner.api.boards;
 
@@ -105,15 +96,15 @@ public class PArduino extends PInterface {
             } else if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
                 MLog.d(TAG, "Device detached");
 
-          //  } else if (ACTION_USB_PERMISSION.equals(action)) {
-          //      MLog.d(TAG, "Request permission");
-          //
-           }
+                //  } else if (ACTION_USB_PERMISSION.equals(action)) {
+                //      MLog.d(TAG, "Request permission");
+                //
+            }
         }
     };
 
     public PArduino(Context a) {
-		super(a);
+        super(a);
     }
 
     public void start() {
@@ -122,8 +113,8 @@ public class PArduino extends PInterface {
         open();
     }
 
-        // Initializes arduino board
-	public void start(int bauds, String endline, onReadCB callbackfn) {
+    // Initializes arduino board
+    public void start(int bauds, String endline, onReadCB callbackfn) {
         WhatIsRunning.getInstance().add(this);
 
         mEndLine = endline;
@@ -135,7 +126,7 @@ public class PArduino extends PInterface {
             UsbManager manager = (UsbManager) getContext().getSystemService(Context.USB_SERVICE);
             HashMap<String, UsbDevice> deviceList = manager.getDeviceList();
             Iterator<UsbDevice> deviceIterator = deviceList.values().iterator();
-            while(deviceIterator.hasNext()){
+            while (deviceIterator.hasNext()) {
                 UsbDevice device = deviceIterator.next();
                 MLog.network(getContext(), TAG, "USB " + device.getDeviceName());
                 //your code
@@ -156,12 +147,12 @@ public class PArduino extends PInterface {
 //                dtrOn = true;
 //                rtsOn = true;
 //            }
-        //    mPhysicaloid.setConfig(new UartConfig(bauds, mDataBits, mStopBits, mParity, dtrOn, rtsOn));
+            //    mPhysicaloid.setConfig(new UartConfig(bauds, mDataBits, mStopBits, mParity, dtrOn, rtsOn));
 
 
             onRead(callbackfn);
         }
-	}
+    }
 
     // Opens mContext device and communicate USB UART by default settings
     public void open() {
@@ -213,7 +204,7 @@ public class PArduino extends PInterface {
             byte[] buf = new byte[256];
             int readSize = mPhysicaloid.read(buf);
 
-            if(readSize>0) {
+            if (readSize > 0) {
                 try {
                     str = new String(buf, "UTF-8");
                 } catch (UnsupportedEncodingException e) {
@@ -227,9 +218,8 @@ public class PArduino extends PInterface {
     }
 
 
-
     @ProtoMethod(description = "adds a read callback that is called when one or more bytes are read", example = "")
-    @ProtoMethodParam(params = { "function(data)" })
+    @ProtoMethodParam(params = {"function(data)"})
     public void onRead(final onReadCB callbackfn) {
         if (mPhysicaloid.isOpened()) {
             mPhysicaloid.addReadListener(new ReadLisener() {
@@ -242,14 +232,14 @@ public class PArduino extends PInterface {
                     mPhysicaloid.read(buf, size);
                     try {
                         readStr = new String(buf, "UTF-8");
-                       // MLog.d(TAG, " " + readStr);
+                        // MLog.d(TAG, " " + readStr);
 
                     } catch (UnsupportedEncodingException e) {
-                       // MLog.d(TAG, e.toString());
+                        // MLog.d(TAG, e.toString());
                         return;
                     }
 
-                  
+
                     //MLog.network(mContext, TAG, "msg " + msg);
                     //MLog.network(mContext, TAG, "readStr " + readStr);
 
@@ -300,7 +290,7 @@ public class PArduino extends PInterface {
     //
 
     @ProtoMethod(description = "uploads a binary file to a device on background process", example = "")
-    @ProtoMethodParam(params = { "board", "fileName", "function(error)" })
+    @ProtoMethodParam(params = {"board", "fileName", "function(error)"})
     public void upload(Boards board, String fileName, final uploadCB callbackfn) {
         if (mPhysicaloid.isOpened()) {
             // Build the absolute path
@@ -332,8 +322,8 @@ public class PArduino extends PInterface {
                     public void onPostUpload(boolean success) {
                         //MLog.network(mContext, TAG, "5");
 
-                        if(success) {
-                       //     uploadCallbackEvent(100, callbackfn);
+                        if (success) {
+                            //     uploadCallbackEvent(100, callbackfn);
                         } else {
 
                             uploadCallbackEvent(-1, callbackfn);
@@ -372,7 +362,7 @@ public class PArduino extends PInterface {
 
 
     @ProtoMethod(description = "uploads a binary file to a device on background process", example = "")
-    @ProtoMethodParam(params = { "board", "fileName" })
+    @ProtoMethodParam(params = {"board", "fileName"})
     public void upload(Boards board, String fileName) {
 
         upload(board, fileName, new uploadCB() {
@@ -385,7 +375,7 @@ public class PArduino extends PInterface {
 
 
     @ProtoMethod(description = "sets baud rate", example = "arduino.setBaudrate(9600)")
-    @ProtoMethodParam(params = { "baudrate" })
+    @ProtoMethodParam(params = {"baudrate"})
     public boolean setBaudrate(int baudrate) {
         try {
             return mPhysicaloid.setBaudrate(baudrate);
@@ -434,7 +424,7 @@ public class PArduino extends PInterface {
 
 
     @ProtoMethod(description = "sets serial configuration", example = "")
-    @ProtoMethodParam(params = { "settings" })
+    @ProtoMethodParam(params = {"settings"})
     public void setConfig(UartConfig settings) {
         try {
             mPhysicaloid.setConfig(settings);
@@ -445,7 +435,7 @@ public class PArduino extends PInterface {
 
 
     @ProtoMethod(description = "sets data bits", example = "")
-    @ProtoMethodParam(params = { "dataBits" })
+    @ProtoMethodParam(params = {"dataBits"})
     public boolean setDataBits(int dataBits) {
         try {
             return mPhysicaloid.setDataBits(dataBits);
@@ -457,7 +447,7 @@ public class PArduino extends PInterface {
 
 
     @ProtoMethod(description = "sets parity bits", example = "")
-    @ProtoMethodParam(params = { "parity" })
+    @ProtoMethodParam(params = {"parity"})
     public boolean setParity(int parity) {
         try {
             return mPhysicaloid.setParity(parity);
@@ -469,7 +459,7 @@ public class PArduino extends PInterface {
 
 
     @ProtoMethod(description = "sets stop bits", example = "")
-    @ProtoMethodParam(params = { "stopBits" })
+    @ProtoMethodParam(params = {"stopBits"})
     public boolean setStopBits(int stopBits) {
         try {
             return mPhysicaloid.setStopBits(stopBits);
@@ -481,7 +471,7 @@ public class PArduino extends PInterface {
 
 
     @ProtoMethod(description = "sets flow control DTR/RTS", example = "")
-    @ProtoMethodParam(params = { "stopBits" })
+    @ProtoMethodParam(params = {"stopBits"})
     public boolean setDtrRts(boolean dtrOn, boolean rtsOn) {
         try {
             return mPhysicaloid.setDtrRts(dtrOn, rtsOn);

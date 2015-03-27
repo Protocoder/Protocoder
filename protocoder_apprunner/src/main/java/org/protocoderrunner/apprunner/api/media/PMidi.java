@@ -36,7 +36,6 @@ public class PMidi extends PInterface {
     });
 
 
-
     private void callback(final int cable, final int channel, final int function, final int value) {
 
         mHandler.post(new Runnable() {
@@ -72,13 +71,13 @@ public class PMidi extends PInterface {
         usbMidiDriver = new UsbMidiDriver(appActivity) {
             @Override
             public void onDeviceAttached(UsbDevice usbDevice) {
-               Toast.makeText(getContext(), "USB MIDI Device " + usbDevice.getDeviceName() + " has been attached.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "USB MIDI Device " + usbDevice.getDeviceName() + " has been attached.", Toast.LENGTH_LONG).show();
                 //mConnectedCallback.event(true);
             }
 
             @Override
             public void onDeviceDetached(UsbDevice usbDevice) {
-              //  Toast.makeText(UsbMidiDriverSampleActivity.this, "USB MIDI Device " + usbDevice.getDeviceName() + " has been detached.", Toast.LENGTH_LONG).show();
+                //  Toast.makeText(UsbMidiDriverSampleActivity.this, "USB MIDI Device " + usbDevice.getDeviceName() + " has been detached.", Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -177,7 +176,6 @@ public class PMidi extends PInterface {
     public void stop() {
         usbMidiDriver.close();
     }
-
 
 
 }

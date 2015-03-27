@@ -1,31 +1,22 @@
 /*
- * Protocoder 
- * A prototyping platform for Android devices 
- * 
- * Victor Diaz Barrales victormdb@gmail.com
- *
- * Copyright (C) 2014 Victor Diaz
- * Copyright (C) 2013 Motorola Mobility LLC
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the "Software"),
- * to deal in the Software without restriction, including without limitation
- * the rights to use, copy, modify, merge, publish, distribute, sublicense,
- * and/or sell copies of the Software, and to permit persons to whom the Software
- * is furnished to do so, subject to the following conditions: 
- * 
- * The above copyright notice and this permission notice shall be included in all 
- * copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
- * THE SOFTWARE.
- * 
- */
+* Part of Protocoder http://www.protocoder.org
+* A prototyping platform for Android devices 
+*
+* Copyright (C) 2013 Victor Diaz Barrales victormdb@gmail.com
+* 
+* Protocoder is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Lesser General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Protocoder is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU Lesser General Public License
+* along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
+*/
 
 package org.protocoderrunner.apidoc;
 
@@ -51,157 +42,157 @@ import java.util.Map;
 
 public class APIManager {
 
-	public static APIManager getInstance() {
-		if (instance == null) {
-			instance = new APIManager();
-		}
-		return instance;
-	}
+    public static APIManager getInstance() {
+        if (instance == null) {
+            instance = new APIManager();
+        }
+        return instance;
+    }
 
-	private static final String TAG = "APIManager";
-	private static APIManager instance;
+    private static final String TAG = "APIManager";
+    private static APIManager instance;
     private static int methodCount = 0;
 
-	HashMap<String, API> apis = new HashMap<String, API>();
-	APIManagerDoc doc = new APIManagerDoc();
+    HashMap<String, API> apis = new HashMap<String, API>();
+    APIManagerDoc doc = new APIManagerDoc();
 
-	public APIManager() {
+    public APIManager() {
 
-	}
+    }
 
-	/**
-	 * add mContext new class to extract the methods
-	 * 
-	 * @param c
-	 */
-	public void addClass(Class c, boolean b) {
+    /**
+     * add mContext new class to extract the methods
+     *
+     * @param c
+     */
+    public void addClass(Class c, boolean b) {
 
-		try {
-			// api docs
-			APIManagerClass apiClass = new APIManagerClass();
-			apiClass.name = c.getSimpleName().substring(1).toLowerCase();
+        try {
+            // api docs
+            APIManagerClass apiClass = new APIManagerClass();
+            apiClass.name = c.getSimpleName().substring(1).toLowerCase();
             apiClass.isMainObject = b;
-			MLog.d(TAG, "" + c.getName());
+            MLog.d(TAG, "" + c.getName());
 
-			// getting all the methods
-			Method m[] = c.getDeclaredMethods();
-			for (Method element : m) {
+            // getting all the methods
+            Method m[] = c.getDeclaredMethods();
+            for (Method element : m) {
 
-				// get method
-				APIManagerMethod apiMethod = new APIManagerMethod();
+                // get method
+                APIManagerMethod apiMethod = new APIManagerMethod();
                 apiMethod.id = methodCount++;
                 apiMethod.parent = apiClass.name;
-				apiMethod.name = element.getName();
+                apiMethod.name = element.getName();
 
-				// get parameter types
-				Class<?>[] param = element.getParameterTypes();
-				String[] paramsType = new String[param.length];
+                // get parameter types
+                Class<?>[] param = element.getParameterTypes();
+                String[] paramsType = new String[param.length];
 
-				for (int j = 0; j < param.length; j++) {
-					String p = param[j].getSimpleName().toString();
-					paramsType[j] = p;
-				}
-				apiMethod.paramsType = paramsType;
+                for (int j = 0; j < param.length; j++) {
+                    String p = param[j].getSimpleName().toString();
+                    paramsType[j] = p;
+                }
+                apiMethod.paramsType = paramsType;
 
-				// return type
-				apiMethod.returnType = element.getReturnType().getSimpleName().toString();
+                // return type
+                apiMethod.returnType = element.getReturnType().getSimpleName().toString();
 
-				// get method information
-				if (apiMethod.name.contains("$") == false) {
-					Annotation[] annotations = element.getDeclaredAnnotations();
-					// check if annotation exist and add apidocs
-					for (Annotation annotation2 : annotations) {
+                // get method information
+                if (apiMethod.name.contains("$") == false) {
+                    Annotation[] annotations = element.getDeclaredAnnotations();
+                    // check if annotation exist and add apidocs
+                    for (Annotation annotation2 : annotations) {
 
-						// description and example
-						if (annotation2.annotationType().getSimpleName().equals(ProtoMethod.class.getSimpleName())) {
-							apiMethod.description = ((ProtoMethod) annotation2).description();
-							apiMethod.example = ((ProtoMethod) annotation2).example();
+                        // description and example
+                        if (annotation2.annotationType().getSimpleName().equals(ProtoMethod.class.getSimpleName())) {
+                            apiMethod.description = ((ProtoMethod) annotation2).description();
+                            apiMethod.example = ((ProtoMethod) annotation2).example();
 
-						}
+                        }
 
-						// get parameters names
-						if (annotation2.annotationType().getSimpleName().equals(ProtoMethodParam.class.getSimpleName())) {
-							apiMethod.parametersName = ((ProtoMethodParam) annotation2).params();
-							MLog.d(TAG, "getting names " + apiMethod.parametersName);
-						}
+                        // get parameters names
+                        if (annotation2.annotationType().getSimpleName().equals(ProtoMethodParam.class.getSimpleName())) {
+                            apiMethod.parametersName = ((ProtoMethodParam) annotation2).params();
+                            MLog.d(TAG, "getting names " + apiMethod.parametersName);
+                        }
 
-					}
+                    }
 
-					apiClass.apiMethods.add(apiMethod);
-				}
-			}
+                    apiClass.apiMethods.add(apiMethod);
+                }
+            }
 
-			doc.apiClasses.add(apiClass);
+            doc.apiClasses.add(apiClass);
 
-			// classes and methods
-			// apis.put(c.getSimpleName(), new API(c, m));
+            // classes and methods
+            // apis.put(c.getSimpleName(), new API(c, m));
 
-		} catch (Throwable e) {
-			System.err.println(e);
-		}
+        } catch (Throwable e) {
+            System.err.println(e);
+        }
 
-	}
+    }
 
-	public HashMap<String, API> getAPIs() {
+    public HashMap<String, API> getAPIs() {
 
-		return apis;
-	}
+        return apis;
+    }
 
-	public void listAPIs() {
-		Iterator it = apis.entrySet().iterator();
-		while (it.hasNext()) {
-			Map.Entry pairs = (Map.Entry) it.next();
+    public void listAPIs() {
+        Iterator it = apis.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pairs = (Map.Entry) it.next();
 
-			API p = (API) pairs.getValue();
-			Method[] methods = p.methods;
+            API p = (API) pairs.getValue();
+            Method[] methods = p.methods;
 
-			for (Method m : methods) {
-				// get class and method
-				MLog.d(TAG, pairs.getKey() + " = " + m.getName());
+            for (Method m : methods) {
+                // get class and method
+                MLog.d(TAG, pairs.getKey() + " = " + m.getName());
 
-				Annotation[] annotations = m.getDeclaredAnnotations();
+                Annotation[] annotations = m.getDeclaredAnnotations();
 
-				for (Annotation annotation2 : annotations) {
+                for (Annotation annotation2 : annotations) {
 
-					MLog.d(TAG, annotation2.toString() + " " + annotation2.annotationType().getSimpleName() + " "
-							+ ProtoMethod.class.getSimpleName());
+                    MLog.d(TAG, annotation2.toString() + " " + annotation2.annotationType().getSimpleName() + " "
+                            + ProtoMethod.class.getSimpleName());
 
-					if (annotation2.annotationType().getSimpleName().equals(ProtoMethod.class.getSimpleName())) {
-						String desc = ((ProtoMethod) annotation2).description();
-						String example = ((ProtoMethod) annotation2).example();
-						MLog.d(TAG, desc);
-					}
-				}
+                    if (annotation2.annotationType().getSimpleName().equals(ProtoMethod.class.getSimpleName())) {
+                        String desc = ((ProtoMethod) annotation2).description();
+                        String example = ((ProtoMethod) annotation2).example();
+                        MLog.d(TAG, desc);
+                    }
+                }
 
-			}
-			it.remove(); // avoids mContext ConcurrentModificationException
-		}
+            }
+            it.remove(); // avoids mContext ConcurrentModificationException
+        }
 
-	}
+    }
 
-	public String getDocumentation() {
-		Gson gson = new Gson();
-		String json = gson.toJson(doc);
+    public String getDocumentation() {
+        Gson gson = new Gson();
+        String json = gson.toJson(doc);
 
-		return json.toString();
-	}
+        return json.toString();
+    }
 
-	public void clear() {
-		apis.clear();
-		doc = null;
-		apis = new HashMap<String, API>();
-		doc = new APIManagerDoc();
-	}
+    public void clear() {
+        apis.clear();
+        doc = null;
+        apis = new HashMap<String, API>();
+        doc = new APIManagerDoc();
+    }
 
-	class API {
+    class API {
 
-		public Class cls;
-		public Method[] methods;
+        public Class cls;
+        public Method[] methods;
 
-		public API(Class cls, Method[] m) {
-			this.cls = cls;
-			this.methods = m;
-		}
-	}
+        public API(Class cls, Method[] m) {
+            this.cls = cls;
+            this.methods = m;
+        }
+    }
 
 }

@@ -11,28 +11,28 @@ import org.protocoderrunner.R;
 
 public class EmptyFragment extends Fragment {
 
-	private View v;
+    private View v;
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		super.onCreateView(inflater, container, savedInstanceState);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
 
-		v = inflater.inflate(R.layout.fragment_empty, container, false);
-		return v;
+        v = inflater.inflate(R.layout.fragment_empty, container, false);
+        return v;
 
-	}
+    }
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-	}
+    }
 
-	public boolean onTouchEvent(MotionEvent event) {
-		if (event.getAction() == MotionEvent.ACTION_DOWN) {
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
 
-		}
-		return true;
-	}
+        }
+        return true;
+    }
 
 }

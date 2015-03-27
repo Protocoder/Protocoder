@@ -19,5 +19,5 @@ var brightnessLabel = ui.addText("brightness " + device.brightness(), 10, 110, 2
 var info = device.info();
 var infoText = "screenDpi " + info.screenDpi + " versionRelease" + info.versionRelease;
 var infoLabel = ui.addText(infoText, 10, 160, 500, 50);
-var wifiTxt = network.getIp() + " " + network.wifiInfo().getSSID();
-var ipTxt = ui.addText(wifiTxt, 10, 210, 500, 50);
+var wifiTxt = network.ipAddress() + " " + network.wifiInfo().getSSID();
+var ipTxt = ui.addText(wifiTxt, 10, 210);

@@ -1,30 +1,22 @@
 /*
-
- * Protocoder 
- * A prototyping platform for Android devices 
- * 
- * Copyright (C) 2014 Victor Diaz
- * Copyright (C) 2013 Motorola Mobility LLC
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the "Software"),
- * to deal in the Software without restriction, including without limitation
- * the rights to use, copy, modify, merge, publish, distribute, sublicense,
- * and/or sell copies of the Software, and to permit persons to whom the Software
- * is furnished to do so, subject to the following conditions: 
- * 
- * The above copyright notice and this permission notice shall be included in all 
- * copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
- * THE SOFTWARE.
- * 
- */
+* Part of Protocoder http://www.protocoder.org
+* A prototyping platform for Android devices
+*
+* Copyright (C) 2013 Victor Diaz Barrales victormdb@gmail.com
+*
+* Protocoder is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Lesser General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Protocoder is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU Lesser General Public License
+* along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
+*/
 
 package org.protocoderrunner.apprunner;
 
@@ -45,10 +37,13 @@ import android.nfc.tech.NfcF;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
@@ -66,6 +61,7 @@ import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.events.Events;
 import org.protocoderrunner.network.IDEcommunication;
 import org.protocoderrunner.project.Project;
+import org.protocoderrunner.utils.AndroidUtils;
 import org.protocoderrunner.utils.MLog;
 import org.protocoderrunner.utils.StrUtils;
 
@@ -75,7 +71,7 @@ import de.greenrobot.event.EventBus;
 
 public class AppRunnerActivity extends BaseActivity {
 
-	private static final String TAG = "AppRunnerActivity";
+    private static final String TAG = "AppRunnerActivity";
 
     private BroadcastReceiver mIntentReceiver;
 
@@ -86,7 +82,6 @@ public class AppRunnerActivity extends BaseActivity {
     private PMedia.onVoiceRecognitionListener onVoiceRecognitionListener;
 
     public AppRunnerFragment mAppRunnerFragment;
-    public ActionBar mActionBar;
     public boolean mActionBarSet;
 
     //ui fragment dependent
@@ -95,15 +90,24 @@ public class AppRunnerActivity extends BaseActivity {
     private PUI.onKeyListener onKeyListener;
     public boolean keyVolumeEnabled = true;
     public boolean keyBackEnabled = true;
+    private Toolbar mToolbar;
+    private ActionBar mActionbar;
 
     private Project mProject = null;
 
     @Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-        MLog.d(TAG, "onCreate");
         setContentView(R.layout.activity_apprunner_host);
+
+        if (!AndroidUtils.isWear(this)) {
+            mToolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(mToolbar);
+            mActionbar = getSupportActionBar();
+            mActionbar.setTitle("hola");
+        }
+
         FrameLayout fl = (FrameLayout) findViewById(R.id.apprunner_fragment);
 
         // Read in the script given in the intent.
@@ -147,7 +151,7 @@ public class AppRunnerActivity extends BaseActivity {
             Bundle bundle = new Bundle();
             bundle.putString(Project.NAME, mProject.name);
             bundle.putString(Project.FOLDER, mProject.folder);
-            bundle.putInt(Project.COLOR, intent.getIntExtra("color", 0));
+            //bundle.putInt(Project.COLOR, intent.getIntExtra("color", 0));
             bundle.putString(Project.PREFIX, mProject.prefix);
             bundle.putString(Project.CODE, mProject.code);
             bundle.putString(Project.POSTFIX, mProject.postfix);
@@ -172,15 +176,15 @@ public class AppRunnerActivity extends BaseActivity {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.add(fl.getId(), mAppRunnerFragment, String.valueOf(fl.getId()));
 
-           // ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-           // ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-           // ft.addToBackStack(null);
+            // ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            // ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+            // ft.addToBackStack(null);
             ft.commit();
 
             IDEcommunication.getInstance(this).ready(true);
         }
 
-	}
+    }
 
     @Override
     protected void onResume() {
@@ -229,20 +233,20 @@ public class AppRunnerActivity extends BaseActivity {
     }
 
     @Override
-	public void onStop() {
-		super.onStop();
-	}
+    public void onStop() {
+        super.onStop();
+    }
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
         IDEcommunication.getInstance(this).ready(false);
-	}
+    }
 
-	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-		super.onRestoreInstanceState(savedInstanceState);
-	}
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }
 
     public void onEventMainThread(Events.ProjectEvent evt) {
         MLog.d(TAG, "event -> " + evt.getAction());
@@ -253,32 +257,30 @@ public class AppRunnerActivity extends BaseActivity {
     }
 
 
-    public void setToolBar(Project p, Integer colorBg, Integer colorText) {
-        //MLog.d(TAG, "" + mActionBarSet + " " + mActionBar);
-
+    public void setToolBar(String name, Integer colorBg, Integer colorText) {
         mActionBarSet = true;
-        // Set up the actionbar
-        mActionBar = getSupportActionBar();
-        mActionBar.setElevation(0);
 
-        if (mActionBar != null) {
+        MLog.d("mocmoc", "setting tolbar for " + name + " " + mActionbar);
 
+        if(mActionbar != null) {
             // home clickable if is running inside protocoderapp
             if (AppSettings.STANDALONE == false) {
-                mActionBar.setDisplayHomeAsUpEnabled(true);
+                //mToolbar.setDisplayHomeAsUpEnabled(true);
+                setToolbarBack();
             }
-            // mActionBar.setDisplayUseLogoEnabled(false);
 
             // set color
             if (colorBg != null) {
                 ColorDrawable d = new ColorDrawable();
                 d.setColor(colorBg);
-                mActionBar.setBackgroundDrawable(d);
+                mActionbar.setBackgroundDrawable(d);
             }
 
             // title
-            if (p != null) {
-                mActionBar.setTitle(p.getName());
+            if (name != null) {
+                mActionbar.setTitle(name);
+                MLog.d("mocmoc2", "setting tolbar for " + name + " " + mToolbar);
+
             }
             // set title color
             if (colorText != null) {
@@ -291,11 +293,24 @@ public class AppRunnerActivity extends BaseActivity {
                 }
             }
         }
+    }
+
+    public void setToolbarBack() {
+
+        if (null != mToolbar) {
+            mToolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+            mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
+        }
 
     }
 
     /*
-	 * NFC
+     * NFC
 	 */
 
     private NfcAdapter mAdapter;
@@ -343,14 +358,13 @@ public class AppRunnerActivity extends BaseActivity {
             } catch (IntentFilter.MalformedMimeTypeException e) {
                 throw new RuntimeException("fail", e);
             }
-            mFilters = new IntentFilter[] { ndef, };
+            mFilters = new IntentFilter[]{ndef,};
 
             // Setup mContext tech list for all NfcF tags
-            mTechLists = new String[][] { new String[] { NfcF.class.getName() } };
+            mTechLists = new String[][]{new String[]{NfcF.class.getName()}};
             nfcInit = true;
         }
     }
-
 
 
     @Override
@@ -428,6 +442,7 @@ public class AppRunnerActivity extends BaseActivity {
         return true;
         //return super.onKeyDown(keyCode, event);
     }
+
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         if (onKeyListener != null) {
@@ -488,16 +503,13 @@ public class AppRunnerActivity extends BaseActivity {
         }
 
 
-
         super.onActivityResult(requestCode, resultCode, data);
     }
-
 
 
     public void onResult(String result) {
 
     }
-
 
 
     public void showCodeExecuted() {

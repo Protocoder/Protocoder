@@ -1,31 +1,22 @@
 /*
- * Protocoder 
- * A prototyping platform for Android devices 
- * 
- * Victor Diaz Barrales victormdb@gmail.com
- *
- * Copyright (C) 2014 Victor Diaz
- * Copyright (C) 2013 Motorola Mobility LLC
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the "Software"),
- * to deal in the Software without restriction, including without limitation
- * the rights to use, copy, modify, merge, publish, distribute, sublicense,
- * and/or sell copies of the Software, and to permit persons to whom the Software
- * is furnished to do so, subject to the following conditions: 
- * 
- * The above copyright notice and this permission notice shall be included in all 
- * copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
- * THE SOFTWARE.
- * 
- */
+* Part of Protocoder http://www.protocoder.org
+* A prototyping platform for Android devices 
+*
+* Copyright (C) 2013 Victor Diaz Barrales victormdb@gmail.com
+* 
+* Protocoder is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Lesser General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Protocoder is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU Lesser General Public License
+* along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
+*/
 
 package org.protocoderrunner.apprunner.api;
 
@@ -59,36 +50,36 @@ public class PDevice extends PInterface {
     private BroadcastReceiver batteryReceiver;
 
     public PDevice(Context a) {
-		super(a);
-		WhatIsRunning.getInstance().add(this);
+        super(a);
+        WhatIsRunning.getInstance().add(this);
 
-	}
-
-
-	@ProtoMethod(description = "makes the phone vibrate", example = "android.vibrate(500);")
-	@ProtoMethodParam(params = { "duration" })
-	public void vibrate(int duration) {
-		Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
-		v.vibrate(duration);
-	}
+    }
 
 
-	@ProtoMethod(description = "send an sms to the given number", example = "")
-	@ProtoMethodParam(params = { "number", "message" })
-	public void smsSend(String number, String msg) {
-		SmsManager sm = SmsManager.getDefault();
-		sm.sendTextMessage(number, null, msg, null, null);
-	}
+    @ProtoMethod(description = "makes the phone vibrate", example = "android.vibrate(500);")
+    @ProtoMethodParam(params = {"duration"})
+    public void vibrate(int duration) {
+        Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
+        v.vibrate(duration);
+    }
+
+
+    @ProtoMethod(description = "send an sms to the given number", example = "")
+    @ProtoMethodParam(params = {"number", "message"})
+    public void smsSend(String number, String msg) {
+        SmsManager sm = SmsManager.getDefault();
+        sm.sendTextMessage(number, null, msg, null, null);
+    }
 
     // --------- onSmsReceived ---------//
-	interface onSmsReceivedCB {
-		void event(String number, String responseString);
-	}
+    interface onSmsReceivedCB {
+        void event(String number, String responseString);
+    }
 
 
-	@ProtoMethod(description = "Gives back the number and sms of the sender", example = "")
-	@ProtoMethodParam(params = { "function(number, message)" })
-	public void onSmsReceived(final onSmsReceivedCB fn) {
+    @ProtoMethod(description = "Gives back the number and sms of the sender", example = "")
+    @ProtoMethodParam(params = {"function(number, message)"})
+    public void onSmsReceived(final onSmsReceivedCB fn) {
         getActivity().addOnSmsReceivedListener(new onSmsReceivedListener() {
 
             @Override
@@ -96,294 +87,292 @@ public class PDevice extends PInterface {
                 fn.event(number, msg);
             }
         });
-	}
+    }
 
 
-	@ProtoMethod(description = "Set brightness", example = "")
-	@ProtoMethodParam(params = { "brightness" })
-	public void brightness(float val) {
-		getActivity().setBrightness(val);
-	}
+    @ProtoMethod(description = "Set brightness", example = "")
+    @ProtoMethodParam(params = {"brightness"})
+    public void brightness(float val) {
+        getActivity().setBrightness(val);
+    }
 
 
-	@ProtoMethod(description = "Set the global brightness from 0 to 255", example = "")
-    @ProtoMethodParam(params = { "brightness" })
+    @ProtoMethod(description = "Set the global brightness from 0 to 255", example = "")
+    @ProtoMethodParam(params = {"brightness"})
     public void globalBrightness(int b) {
-		AndroidUtils.setGlobalBrightness(getContext(), b);
-	}
+        AndroidUtils.setGlobalBrightness(getContext(), b);
+    }
 
 
-	@ProtoMethod(description = "Get the current brightness", example = "")
-	public float brightness() {
-		return getActivity().getCurrentBrightness();
-	}
+    @ProtoMethod(description = "Get the current brightness", example = "")
+    public float brightness() {
+        return getActivity().getCurrentBrightness();
+    }
 
 
-	@ProtoMethod(description = "Set the screen always on", example = "")
-    @ProtoMethodParam(params = { "boolean" })
+    @ProtoMethod(description = "Set the screen always on", example = "")
+    @ProtoMethodParam(params = {"boolean"})
     public void screenAlwaysOn(boolean b) {
-		getActivity().setScreenAlwaysOn(b);
-	}
+        getActivity().setScreenAlwaysOn(b);
+    }
 
 
-	@ProtoMethod(description = "Check if the scrren is on", example = "")
-	public boolean isScreenOn() {
-		return AndroidUtils.isScreenOn(getContext());
-	}
+    @ProtoMethod(description = "Check if the scrren is on", example = "")
+    public boolean isScreenOn() {
+        return AndroidUtils.isScreenOn(getContext());
+    }
 
-	//
-	// @APIMethod(description = "", example = "")
-	//public void goToSleep() {
-	//	AndroidUtils.goToSleep(mContext);
-	//}
+    //
+    // @APIMethod(description = "", example = "")
+    //public void goToSleep() {
+    //	AndroidUtils.goToSleep(mContext);
+    //}
 
 
-	@ProtoMethod(description = "Set the screen timeout", example = "")
-    @ProtoMethodParam(params = { "time" })
+    @ProtoMethod(description = "Set the screen timeout", example = "")
+    @ProtoMethodParam(params = {"time"})
     public void screenTimeout(int time) {
-		AndroidUtils.setScreenTimeout(getContext(), time);
-	}
+        AndroidUtils.setScreenTimeout(getContext(), time);
+    }
 
 
-	@ProtoMethod(description = "Check if is in airplane mode", example = "")
-	public boolean isAirplaneMode() {
-		return AndroidUtils.isAirplaneMode(getContext());
-	}
+    @ProtoMethod(description = "Check if is in airplane mode", example = "")
+    public boolean isAirplaneMode() {
+        return AndroidUtils.isAirplaneMode(getContext());
+    }
 
 
-	@ProtoMethod(description = "Check what type of device is", example = "")
-    @ProtoMethodParam(params = { "" })
+    @ProtoMethod(description = "Check what type of device is", example = "")
+    @ProtoMethodParam(params = {""})
     public String type() {
         if (AndroidUtils.isTablet(getContext())) {
             return "tablet";
         } else {
             return "phone";
         }
-	}
+    }
 
 
-	@ProtoMethod(description = "Prevent the device suspend at any time. Good for long living operations.", example = "")
-    @ProtoMethodParam(params = { "boolean" })
+    @ProtoMethod(description = "Prevent the device suspend at any time. Good for long living operations.", example = "")
+    @ProtoMethodParam(params = {"boolean"})
     public void wakeLock(boolean b) {
-		AndroidUtils.setWakeLock(getContext(), b);
-	}
+        AndroidUtils.setWakeLock(getContext(), b);
+    }
 
 
-	@ProtoMethod(description = "Launch an intent", example = "")
-	@ProtoMethodParam(params = { "intent" })
-	public void launchIntent(String intent) {
-		Intent market_intent = new Intent(intent);
-		getContext().startActivity(market_intent);
-	}
+    @ProtoMethod(description = "Launch an intent", example = "")
+    @ProtoMethodParam(params = {"intent"})
+    public void launchIntent(String intent) {
+        Intent market_intent = new Intent(intent);
+        getContext().startActivity(market_intent);
+    }
 
 
-	@ProtoMethod(description = "Open the default e-mail app", example = "")
-	@ProtoMethodParam(params = { "recipient", "subject", "message" })
-	public void openEmailApp(String recipient, String subject, String msg) {
-		Intents.sendEmail(getContext(), recipient, subject, msg);
-	}
+    @ProtoMethod(description = "Open the default e-mail app", example = "")
+    @ProtoMethodParam(params = {"recipient", "subject", "message"})
+    public void openEmailApp(String recipient, String subject, String msg) {
+        Intents.sendEmail(getContext(), recipient, subject, msg);
+    }
 
 
-	@ProtoMethod(description = "Open the default Map app", example = "")
-	@ProtoMethodParam(params = { "longitude", "latitude" })
-	public void openMapApp(double longitude, double latitude) {
-		Intents.openMap(getContext(), longitude, latitude);
-	}
+    @ProtoMethod(description = "Open the default Map app", example = "")
+    @ProtoMethodParam(params = {"longitude", "latitude"})
+    public void openMapApp(double longitude, double latitude) {
+        Intents.openMap(getContext(), longitude, latitude);
+    }
 
 
-	@ProtoMethod(description = "Open the phone dial", example = "")
-	public void openDial() {
-		Intents.openDial(getContext());
-	}
+    @ProtoMethod(description = "Open the phone dial", example = "")
+    public void openDial() {
+        Intents.openDial(getContext());
+    }
 
 
-	@ProtoMethod(description = "Call a given phone number", example = "")
-	@ProtoMethodParam(params = { "number" })
-	public void call(String number) {
-		Intents.call(getContext(), number);
-	}
+    @ProtoMethod(description = "Call a given phone number", example = "")
+    @ProtoMethodParam(params = {"number"})
+    public void call(String number) {
+        Intents.call(getContext(), number);
+    }
 
 
-	@ProtoMethod(description = "Open the default web browser with a given Url", example = "")
-	@ProtoMethodParam(params = { "url" })
-	public void openWebApp(String url) {
-		Intents.openWeb(getContext(), url);
-	}
+    @ProtoMethod(description = "Open the default web browser with a given Url", example = "")
+    @ProtoMethodParam(params = {"url"})
+    public void openWebApp(String url) {
+        Intents.openWeb(getContext(), url);
+    }
 
 
-	@ProtoMethod(description = "Open the search app with the given text", example = "")
-	@ProtoMethodParam(params = { "text" })
-	public void openWebSearch(String text) {
-		Intents.webSearch(getContext(), text);
-	}
+    @ProtoMethod(description = "Open the search app with the given text", example = "")
+    @ProtoMethodParam(params = {"text"})
+    public void openWebSearch(String text) {
+        Intents.webSearch(getContext(), text);
+    }
 
-	// --------- battery ---------//
-	interface StartBateryListenerCB {
-		void event(BatteryReturn o);
-	}
+    // --------- battery ---------//
+    interface StartBateryListenerCB {
+        void event(BatteryReturn o);
+    }
 
-	class BatteryReturn {
-		public int level;
-		public int temperature;
-		public boolean connected;
-	}
+    class BatteryReturn {
+        public int level;
+        public int temperature;
+        public boolean connected;
+    }
 
 
     @ProtoMethod(description = "Copy the content into the clipboard", example = "")
-    @ProtoMethodParam(params = { "label", "text" })
-	public void copyToClipboard(String label, String text) {
-		ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-		clipboard.setPrimaryClip(ClipData.newPlainText(label, text));
-	}
+    @ProtoMethodParam(params = {"label", "text"})
+    public void copyToClipboard(String label, String text) {
+        ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+        clipboard.setPrimaryClip(ClipData.newPlainText(label, text));
+    }
 
 
     @ProtoMethod(description = "Get the content from the clipboard", example = "")
-    @ProtoMethodParam(params = { "label", "text" })
-	public String getFromClipboard(String label, String text) {
-		ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-		return clipboard.getPrimaryClip().getItemAt(clipboard.getPrimaryClip().getItemCount()).getText().toString();
-	}
+    @ProtoMethodParam(params = {"label", "text"})
+    public String getFromClipboard(String label, String text) {
+        ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+        return clipboard.getPrimaryClip().getItemAt(clipboard.getPrimaryClip().getItemCount()).getText().toString();
+    }
 
 
-	@ProtoMethod(description = "", example = "")
-	@ProtoMethodParam(params = { "" })
-	public void battery(final StartBateryListenerCB cb) {
-		WhatIsRunning.getInstance().add(this);
-		batteryReceiver = new BroadcastReceiver() {
-			int scale = -1;
-			int level = -1;
-			int voltage = -1;
-			int temp = -1;
-			boolean isConnected = false;
-			private int status;
-			private final boolean alreadyKilled = false;
+    @ProtoMethod(description = "", example = "")
+    @ProtoMethodParam(params = {""})
+    public void battery(final StartBateryListenerCB cb) {
+        WhatIsRunning.getInstance().add(this);
+        batteryReceiver = new BroadcastReceiver() {
+            int scale = -1;
+            int level = -1;
+            int voltage = -1;
+            int temp = -1;
+            boolean isConnected = false;
+            private int status;
+            private final boolean alreadyKilled = false;
 
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
-				scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
-				temp = intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, -1);
-				voltage = intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, -1);
-				// isCharging =
-				// intent.getBooleanExtra(BatteryManager.EXTRA_PLUGGED, false);
-				// status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
-				status = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+                scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+                temp = intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, -1);
+                voltage = intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, -1);
+                // isCharging =
+                // intent.getBooleanExtra(BatteryManager.EXTRA_PLUGGED, false);
+                // status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+                status = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
 
-				if (status == BatteryManager.BATTERY_PLUGGED_AC) {
-					isConnected = true;
-				} else if (status == BatteryManager.BATTERY_PLUGGED_USB) {
-					isConnected = true;
-				} else {
-					isConnected = false;
-				}
+                if (status == BatteryManager.BATTERY_PLUGGED_AC) {
+                    isConnected = true;
+                } else if (status == BatteryManager.BATTERY_PLUGGED_USB) {
+                    isConnected = true;
+                } else {
+                    isConnected = false;
+                }
 
-				BatteryReturn o = new BatteryReturn();
+                BatteryReturn o = new BatteryReturn();
 
-				o.level = level;
-				o.temperature = temp;
-				o.connected = isConnected;
+                o.level = level;
+                o.temperature = temp;
+                o.connected = isConnected;
 
-				// plugConnected = isConnected;
-				cb.event(o);
-				Log.d("BATTERY", "level is " + level + " is connected " + isConnected);
-			}
-		};
+                // plugConnected = isConnected;
+                cb.event(o);
+                Log.d("BATTERY", "level is " + level + " is connected " + isConnected);
+            }
+        };
 
-		IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-		getContext().registerReceiver(batteryReceiver, filter);
-	}
-
-
-	@ProtoMethod(description = "Get the current device battery level", example = "")
-	@ProtoMethodParam(params = { "" })
-	public float battery() {
-		Intent batteryIntent = getContext().registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-		int level = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
-		int scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
-
-		// Error checking that probably isn't needed but I added just in case.
-		if (level == -1 || scale == -1) {
-			return 50.0f;
-		}
-
-		return ((float) level / (float) scale) * 100.0f;
-	}
-
-	class DeviceInfo {
-		public int screenDpi;
-		public String androidId;
-		public String imei;
-		public String versionRelease;
-		public String sdk;
-		public String board;
-		public String brand;
-		public String device;
-		public String host;
-		public String fingerPrint;
-		public String id;
-		public String cpuAbi;
-		public String cpuAbi2;
-
-		public String toJSON() {
-			return new Gson().toJson(this);
-		}
-
-	}
+        IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        getContext().registerReceiver(batteryReceiver, filter);
+    }
 
 
-	@ProtoMethod(description = "Get some device information", example = "")
-	@ProtoMethodParam(params = { "" })
-	public DeviceInfo info() {
-		DeviceInfo deviceInfo = new DeviceInfo();
+    @ProtoMethod(description = "Get the current device battery level", example = "")
+    @ProtoMethodParam(params = {""})
+    public float battery() {
+        Intent batteryIntent = getContext().registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        int level = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+        int scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
 
-		// density dpi
-		DisplayMetrics metrics = new DisplayMetrics();
+        // Error checking that probably isn't needed but I added just in case.
+        if (level == -1 || scale == -1) {
+            return 50.0f;
+        }
 
-		//TODO reenable this
-		//contextUi.get().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-		deviceInfo.screenDpi = metrics.densityDpi;
+        return ((float) level / (float) scale) * 100.0f;
+    }
 
-		// id
-		deviceInfo.androidId = Secure.getString(getContext().getContentResolver(), Secure.ANDROID_ID);
+    class DeviceInfo {
+        public int screenDpi;
+        public String androidId;
+        public String imei;
+        public String versionRelease;
+        public String sdk;
+        public String board;
+        public String brand;
+        public String device;
+        public String host;
+        public String fingerPrint;
+        public String id;
+        public String cpuAbi;
+        public String cpuAbi2;
 
-		// imei
-		deviceInfo.imei = ((TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
+        public String toJSON() {
+            return new Gson().toJson(this);
+        }
 
-		deviceInfo.versionRelease = Build.VERSION.RELEASE;
-		deviceInfo.versionRelease = Build.VERSION.INCREMENTAL;
-		deviceInfo.sdk = Build.VERSION.SDK;
-		deviceInfo.board = Build.BOARD;
-		deviceInfo.brand = Build.BRAND;
-		deviceInfo.device = Build.DEVICE;
-		deviceInfo.fingerPrint = Build.FINGERPRINT;
-		deviceInfo.host = Build.HOST;
-		deviceInfo.id = Build.ID;
-		deviceInfo.cpuAbi = Build.CPU_ABI;
-		deviceInfo.cpuAbi2 = Build.CPU_ABI2;
-
-		return deviceInfo;
-	}
-
-	class Memory {
-		public long total;
-		public long used;
-		public long max;
-	}
+    }
 
 
-	@ProtoMethod(description = "Get memory usage", example = "")
-	@ProtoMethodParam(params = { "" })
-	public Memory memory() {
-		Memory mem = new Memory();
+    @ProtoMethod(description = "Get some device information", example = "")
+    @ProtoMethodParam(params = {""})
+    public DeviceInfo info() {
+        DeviceInfo deviceInfo = new DeviceInfo();
 
-		mem.total = Runtime.getRuntime().totalMemory();
-		mem.used = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-		mem.max = Runtime.getRuntime().maxMemory();
+        // density dpi
+        DisplayMetrics metrics = new DisplayMetrics();
 
-		return mem;
-	}
+        //TODO reenable this
+        //contextUi.get().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        deviceInfo.screenDpi = metrics.densityDpi;
+
+        // id
+        deviceInfo.androidId = Secure.getString(getContext().getContentResolver(), Secure.ANDROID_ID);
+
+        // imei
+        deviceInfo.imei = ((TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
+
+        deviceInfo.versionRelease = Build.VERSION.RELEASE;
+        deviceInfo.versionRelease = Build.VERSION.INCREMENTAL;
+        deviceInfo.sdk = Build.VERSION.SDK;
+        deviceInfo.board = Build.BOARD;
+        deviceInfo.brand = Build.BRAND;
+        deviceInfo.device = Build.DEVICE;
+        deviceInfo.fingerPrint = Build.FINGERPRINT;
+        deviceInfo.host = Build.HOST;
+        deviceInfo.id = Build.ID;
+        deviceInfo.cpuAbi = Build.CPU_ABI;
+        deviceInfo.cpuAbi2 = Build.CPU_ABI2;
+
+        return deviceInfo;
+    }
+
+    class Memory {
+        public long total;
+        public long used;
+        public long max;
+    }
 
 
+    @ProtoMethod(description = "Get memory usage", example = "")
+    @ProtoMethodParam(params = {""})
+    public Memory memory() {
+        Memory mem = new Memory();
+
+        mem.total = Runtime.getRuntime().totalMemory();
+        mem.used = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+        mem.max = Runtime.getRuntime().maxMemory();
+
+        return mem;
+    }
 
 
     @ProtoMethod(description = "Check if the device has camera", example = "")
@@ -442,7 +431,6 @@ public class PDevice extends PInterface {
     }
 
 
-
     @ProtoMethod(description = "Check if the device has accelerometer", example = "")
     public boolean hasAccelerometer() {
         PackageManager pm = getContext().getPackageManager();
@@ -478,13 +466,11 @@ public class PDevice extends PInterface {
     }
 
 
-
     @ProtoMethod(description = "Check if the device has proximity sensor", example = "")
     public boolean hasProximitySensor() {
         PackageManager pm = getContext().getPackageManager();
         return pm.hasSystemFeature(PackageManager.FEATURE_SENSOR_PROXIMITY);
     }
-
 
 
     @ProtoMethod(description = "Check if the device has step detector", example = "")
@@ -494,7 +480,6 @@ public class PDevice extends PInterface {
     }
 
 
-
     @ProtoMethod(description = "Check if the device has barometer", example = "")
     public boolean hasBarometer() {
         PackageManager pm = getContext().getPackageManager();
@@ -502,13 +487,12 @@ public class PDevice extends PInterface {
     }
 
 
-
     public void stop() {
-		getContext().unregisterReceiver(batteryReceiver);
-	}
+        getContext().unregisterReceiver(batteryReceiver);
+    }
 
-	public interface onSmsReceivedListener {
-		public void onSmsReceived(String number, String msg);
-	}
+    public interface onSmsReceivedListener {
+        public void onSmsReceived(String number, String msg);
+    }
 
 }

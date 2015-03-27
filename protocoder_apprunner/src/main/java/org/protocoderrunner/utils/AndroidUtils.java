@@ -1,31 +1,22 @@
 /*
- * Protocoder 
- * A prototyping platform for Android devices 
- * 
- * Victor Diaz Barrales victormdb@gmail.com
- *
- * Copyright (C) 2014 Victor Diaz
- * Copyright (C) 2013 Motorola Mobility LLC
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the "Software"),
- * to deal in the Software without restriction, including without limitation
- * the rights to use, copy, modify, merge, publish, distribute, sublicense,
- * and/or sell copies of the Software, and to permit persons to whom the Software
- * is furnished to do so, subject to the following conditions: 
- * 
- * The above copyright notice and this permission notice shall be included in all 
- * copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
- * THE SOFTWARE.
- * 
- */
+* Part of Protocoder http://www.protocoder.org
+* A prototyping platform for Android devices 
+*
+* Copyright (C) 2013 Victor Diaz Barrales victormdb@gmail.com
+* 
+* Protocoder is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Lesser General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Protocoder is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU Lesser General Public License
+* along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
+*/
 
 package org.protocoderrunner.utils;
 
@@ -52,7 +43,6 @@ import android.view.ViewOutlineProvider;
 
 import org.protocoderrunner.AppSettings;
 import org.protocoderrunner.R;
-import org.protocoderrunner.apprunner.logger.L;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -67,118 +57,122 @@ import java.security.NoSuchAlgorithmException;
 
 public class AndroidUtils {
 
-	private static final String TAG = "AndroidUtils";
+    private static final String TAG = "AndroidUtils";
 
-	public static void takeScreenshot(String where, String name, View v) {
+    public static void takeScreenshot(String where, String name, View v) {
 
-		// image naming and path to include sd card appending name you choose
-		// for file
-		String mPath = where + "/" + name;
+        // image naming and path to include sd card appending name you choose
+        // for file
+        String mPath = where + "/" + name;
 
-		// create bitmap screen capture
-		Bitmap bitmap;
-		View v1 = v.getRootView();
-		v1.setDrawingCacheEnabled(true);
-		bitmap = Bitmap.createBitmap(v1.getDrawingCache());
-		v1.setDrawingCacheEnabled(false);
+        // create bitmap screen capture
+        Bitmap bitmap;
+        View v1 = v.getRootView();
+        v1.setDrawingCacheEnabled(true);
+        bitmap = Bitmap.createBitmap(v1.getDrawingCache());
+        v1.setDrawingCacheEnabled(false);
 
-		OutputStream fout = null;
-		File imageFile = new File(mPath);
+        OutputStream fout = null;
+        File imageFile = new File(mPath);
 
-		try {
-			fout = new FileOutputStream(imageFile);
-			bitmap.compress(Bitmap.CompressFormat.PNG, 90, fout);
-			fout.flush();
-			fout.close();
+        try {
+            fout = new FileOutputStream(imageFile);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 90, fout);
+            fout.flush();
+            fout.close();
 
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-	}
+    }
 
-	public static Bitmap takeScreenshotView(String where, String name, View v) {
+    public static Bitmap takeScreenshotView(String where, String name, View v) {
 
-		// image naming and path to include sd card appending name you choose
-		// for file
-		String mPath = where + "/" + name;
+        // image naming and path to include sd card appending name you choose
+        // for file
+        String mPath = where + "/" + name;
 
-		// create bitmap screen capture
-		Bitmap bitmap;
-		v.setDrawingCacheEnabled(true);
-		bitmap = Bitmap.createBitmap(v.getDrawingCache());
-		v.setDrawingCacheEnabled(false);
+        // create bitmap screen capture
+        Bitmap bitmap;
+        v.setDrawingCacheEnabled(true);
+        bitmap = Bitmap.createBitmap(v.getDrawingCache());
+        v.setDrawingCacheEnabled(false);
 
-		// save if path is given
-		if (name.equals("") != true) {
-			MLog.d("qq", mPath + "entra");
-			OutputStream fout = null;
-			File imageFile = new File(mPath);
+        // save if path is given
+        if (name.equals("") != true) {
+            MLog.d("qq", mPath + "entra");
+            OutputStream fout = null;
+            File imageFile = new File(mPath);
 
-			try {
-				fout = new FileOutputStream(imageFile);
-				bitmap.compress(Bitmap.CompressFormat.PNG, 90, fout);
-				fout.flush();
-				fout.close();
+            try {
+                fout = new FileOutputStream(imageFile);
+                bitmap.compress(Bitmap.CompressFormat.PNG, 90, fout);
+                fout.flush();
+                fout.close();
 
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
-		return bitmap;
+        return bitmap;
 
-	}
+    }
 
-	public static int pixelsToDp(Context c, int px) {
+    public static int pixelsToDp(Context c, int px) {
 
         Resources resources = c.getResources();
         DisplayMetrics metrics = resources.getDisplayMetrics();
         float dp = px / (metrics.densityDpi / 160f);
 
-		return (int)dp;
-	}
+        return (int) dp;
+    }
 
-	public static int dpToPixels(Context c, int dp) {
+    public static int dpToPixels(Context c, int dp) {
 
         Resources resources = c.getResources();
         DisplayMetrics metrics = resources.getDisplayMetrics();
         float px = dp * (metrics.densityDpi / 160f);
 
-		return (int)px;
-	}
+        return (int) px;
+    }
 
-	/** Show an event in the LogCat view, for debugging */
-	public static void dumpMotionEvent(MotionEvent event) {
-		String names[] = { "DOWN", "UP", "MOVE", "CANCEL", "OUTSIDE", "POINTER_DOWN", "POINTER_UP", "7?", "8?", "9?" };
-		StringBuilder sb = new StringBuilder();
-		int action = event.getAction();
-		int actionCode = action & MotionEvent.ACTION_MASK;
-		sb.append("event ACTION_").append(names[actionCode]);
-		if (actionCode == MotionEvent.ACTION_POINTER_DOWN || actionCode == MotionEvent.ACTION_POINTER_UP) {
-			sb.append("(pid ").append(action >> MotionEvent.ACTION_POINTER_INDEX_SHIFT);
-			sb.append(")");
-		}
-		sb.append("[");
-		for (int i = 0; i < event.getPointerCount(); i++) {
-			sb.append("#").append(i);
-			sb.append("(pid ").append(event.getPointerId(i));
-			sb.append(")=").append((int) event.getX(i));
-			sb.append(",").append((int) event.getY(i));
-			if (i + 1 < event.getPointerCount()) {
-				sb.append(";");
-			}
-		}
-		sb.append("]");
-		MLog.d(TAG, sb.toString());
-	}
+    /**
+     * Show an event in the LogCat view, for debugging
+     */
+    public static void dumpMotionEvent(MotionEvent event) {
+        String names[] = {"DOWN", "UP", "MOVE", "CANCEL", "OUTSIDE", "POINTER_DOWN", "POINTER_UP", "7?", "8?", "9?"};
+        StringBuilder sb = new StringBuilder();
+        int action = event.getAction();
+        int actionCode = action & MotionEvent.ACTION_MASK;
+        sb.append("event ACTION_").append(names[actionCode]);
+        if (actionCode == MotionEvent.ACTION_POINTER_DOWN || actionCode == MotionEvent.ACTION_POINTER_UP) {
+            sb.append("(pid ").append(action >> MotionEvent.ACTION_POINTER_INDEX_SHIFT);
+            sb.append(")");
+        }
+        sb.append("[");
+        for (int i = 0; i < event.getPointerCount(); i++) {
+            sb.append("#").append(i);
+            sb.append("(pid ").append(event.getPointerId(i));
+            sb.append(")=").append((int) event.getX(i));
+            sb.append(",").append((int) event.getY(i));
+            if (i + 1 < event.getPointerCount()) {
+                sb.append(";");
+            }
+        }
+        sb.append("]");
+        MLog.d(TAG, sb.toString());
+    }
 
     public static void setViewGenericShadow(View v, int w, int h) {
-        setViewGenericShadow(v, CLIP_RECT, 0, 0, w, h, 10);
+        if (isVersionLollipop()) {
+            setViewGenericShadow(v, CLIP_RECT, 0, 0, w, h, 10);
+        }
     }
 
     public static int CLIP_RECT = 0;
@@ -186,71 +180,69 @@ public class AndroidUtils {
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static void setViewGenericShadow(View v, int type, final int x, final int y, final int w, final int h, final int r) {
-       // MLog.d("qq", "no android L " + Build.VERSION.SDK + " " + L);
+        // MLog.d("qq", "no android L " + Build.VERSION.SDK + " " + L);
 
-       // if (AndroidUtils.isVersionL()) {
+        if (isVersionLollipop()) {
 
-        ViewOutlineProvider viewOutlineProvider = null;
+            ViewOutlineProvider viewOutlineProvider = null;
 
-        MLog.d("qq", "is android L");
-        if (type == CLIP_RECT) {
+            MLog.d("qq", "is android L");
+            if (type == CLIP_RECT) {
 
-            viewOutlineProvider = new ViewOutlineProvider() {
-                @Override
-                public void getOutline(View view, Outline outline) {
-                    // Or read size directly from the view's width/height
-                    outline.setRoundRect(new Rect(x, y, w, h), r);
-                }
-            };
+                viewOutlineProvider = new ViewOutlineProvider() {
+                    @Override
+                    public void getOutline(View view, Outline outline) {
+                        // Or read size directly from the view's width/height
+                        outline.setRoundRect(new Rect(x, y, w, h), r);
+                    }
+                };
 
-        } else if (type == CLIP_ROUND) {
+            } else if (type == CLIP_ROUND) {
 
-            viewOutlineProvider = new ViewOutlineProvider() {
-                @Override
-                public void getOutline(View view, Outline outline) {
-                    // Or read size directly from the view's width/height
-                    outline.setOval(x, y, w, h);
-                }
-            };
-
-
+                viewOutlineProvider = new ViewOutlineProvider() {
+                    @Override
+                    public void getOutline(View view, Outline outline) {
+                        // Or read size directly from the view's width/height
+                        outline.setOval(x, y, w, h);
+                    }
+                };
 
 
-        } else {
-            Path path = new Path();
-            path.moveTo(10, 10);
-            path.lineTo(100, 100);
-            path.lineTo(100, 200);
-            path.lineTo(10, 10);
-            path.close();
-            //outline.setConvexPath(path);
+            } else {
+                Path path = new Path();
+                path.moveTo(10, 10);
+                path.lineTo(100, 100);
+                path.lineTo(100, 200);
+                path.lineTo(10, 10);
+                path.close();
+                //outline.setConvexPath(path);
 
-            // return;
+                // return;
+            }
+            v.setClipToOutline(true);
+
+            if (viewOutlineProvider != null) {
+                v.setOutlineProvider(viewOutlineProvider);
+            }
+            v.invalidate();
+
+            //    RippleDrawable rippleDrawable = (RippleDrawable) v.getBackground();
+            //     GradientDrawable rippleBackground = (GradientDrawable) rippleDrawable.getDrawable(0);
+            //    rippleBackground.setColor(Color.parseColor("#FF0000"));
+            //     rippleDrawable.setColor(ColorStateList.valueOf(Color.WHITE));
+            // rippleDrawable.setHotspot(0, 0);
+
         }
-        v.setClipToOutline(true);
-
-        if (viewOutlineProvider != null) {
-            v.setOutlineProvider(viewOutlineProvider);
-        }
-        v.invalidate();
-
-       //    RippleDrawable rippleDrawable = (RippleDrawable) v.getBackground();
-       //     GradientDrawable rippleBackground = (GradientDrawable) rippleDrawable.getDrawable(0);
-       //    rippleBackground.setColor(Color.parseColor("#FF0000"));
-       //     rippleDrawable.setColor(ColorStateList.valueOf(Color.WHITE));
-           // rippleDrawable.setHotspot(0, 0);
-
-        // }
     }
 
-    public static boolean isVersionL() {
+    public static boolean isVersionLollipop() {
 
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }
 
 
     public static boolean isVersionMinSupported() {
-       return AppSettings.MIN_SUPPORTED_VERSION > Build.VERSION.SDK_INT;
+        return AppSettings.MIN_SUPPORTED_VERSION > Build.VERSION.SDK_INT;
     }
 
     public static int calculateColor(float fraction, int startValue, int endValue) {
@@ -312,10 +304,10 @@ public class AndroidUtils {
         return pm.isScreenOn();
     }
 
-   // public static void goToSleep(Context c) {
-        //PowerManager pm = (PowerManager) c.getSystemService(Context.POWER_SERVICE);
-        //pm.goToSleep(100);
-   // }
+    // public static void goToSleep(Context c) {
+    //PowerManager pm = (PowerManager) c.getSystemService(Context.POWER_SERVICE);
+    //pm.goToSleep(100);
+    // }
 
     public static boolean isAirplaneMode(Context c) {
         return Settings.System.getInt(c.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 0) != 0;

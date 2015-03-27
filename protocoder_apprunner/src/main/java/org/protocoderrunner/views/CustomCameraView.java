@@ -1,31 +1,22 @@
 /*
- * Protocoder 
- * A prototyping platform for Android devices 
- * 
- * Victor Diaz Barrales victormdb@gmail.com
- *
- * Copyright (C) 2014 Victor Diaz
- * Copyright (C) 2013 Motorola Mobility LLC
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the "Software"),
- * to deal in the Software without restriction, including without limitation
- * the rights to use, copy, modify, merge, publish, distribute, sublicense,
- * and/or sell copies of the Software, and to permit persons to whom the Software
- * is furnished to do so, subject to the following conditions: 
- * 
- * The above copyright notice and this permission notice shall be included in all 
- * copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
- * THE SOFTWARE.
- * 
- */
+* Part of Protocoder http://www.protocoder.org
+* A prototyping platform for Android devices 
+*
+* Copyright (C) 2013 Victor Diaz Barrales victormdb@gmail.com
+* 
+* Protocoder is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Lesser General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Protocoder is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU Lesser General Public License
+* along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
+*/
 
 package org.protocoderrunner.views;
 
@@ -60,325 +51,325 @@ import java.util.Vector;
 @SuppressLint("NewApi")
 public class CustomCameraView extends TextureView {
 
-	public static final int MODE_COLOR_BW = 0;
-	public static final int MODE_COLOR_COLOR = 1;
-	public static final int MODE_CAMERA_FRONT = 2;
-	public static final int MODE_CAMERA_BACK = 3;
-	int modeColor;
-	int modeCamera;
+    public static final int MODE_COLOR_BW = 0;
+    public static final int MODE_COLOR_COLOR = 1;
+    public static final int MODE_CAMERA_FRONT = 2;
+    public static final int MODE_CAMERA_BACK = 3;
+    int modeColor;
+    int modeCamera;
 
-	protected String TAG = "Camera";
+    protected String TAG = "Camera";
 
-	// camera
-	protected Camera mCamera;
+    // camera
+    protected Camera mCamera;
 
-	// saving info
-	private String _rootPath;
-	private String _fileName;
-	private String _path;
+    // saving info
+    private String _rootPath;
+    private String _fileName;
+    private String _path;
 
-	private final Vector<CameraListener> listeners;
-	private final Context c;
+    private final Vector<CameraListener> listeners;
+    private final Context c;
 
-	public interface CameraListener {
+    public interface CameraListener {
 
-		public void onPicTaken();
+        public void onPicTaken();
 
-		public void onVideoRecorded();
+        public void onVideoRecorded();
 
-	}
+    }
 
-	public CustomCameraView(Context context, int id) {
-		super(context);
-		c = context;
-		modeCamera = id;
-		listeners = new Vector<CameraListener>();
-	}
+    public CustomCameraView(Context context, int id) {
+        super(context);
+        c = context;
+        modeCamera = id;
+        listeners = new Vector<CameraListener>();
+    }
 
-	@Override
-	protected void onAttachedToWindow() {
-		super.onAttachedToWindow();
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
 
-		this.setOnClickListener(new OnClickListener() {
+        this.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				// takePic();
-			}
-		});
+            @Override
+            public void onClick(View v) {
+                // takePic();
+            }
+        });
 
-		this.setSurfaceTextureListener(new SurfaceTextureListener() {
+        this.setSurfaceTextureListener(new SurfaceTextureListener() {
 
-			@Override
-			public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+            @Override
+            public void onSurfaceTextureUpdated(SurfaceTexture surface) {
 
-			}
+            }
 
-			@Override
-			public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+            @Override
+            public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
 
-			}
+            }
 
-			@Override
-			public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-				// mCamera.stopPreview();
-				// mCamera.release();
-				return true;
-			}
+            @Override
+            public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+                // mCamera.stopPreview();
+                // mCamera.release();
+                return true;
+            }
 
-			@Override
-			public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+            @Override
+            public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
 
-				if (modeCamera == MODE_CAMERA_FRONT) {
-					int cameraId = getFrontCameraId();
-					MLog.d(TAG, "" + cameraId);
-					if (cameraId == -1) {
-						MLog.d(TAG, "there is no camera");
-					}
-					mCamera = Camera.open(cameraId);
+                if (modeCamera == MODE_CAMERA_FRONT) {
+                    int cameraId = getFrontCameraId();
+                    MLog.d(TAG, "" + cameraId);
+                    if (cameraId == -1) {
+                        MLog.d(TAG, "there is no camera");
+                    }
+                    mCamera = Camera.open(cameraId);
 
-				} else {
-					mCamera = Camera.open();
-				}
+                } else {
+                    mCamera = Camera.open();
+                }
 
-				MLog.d("qq", "qq1 " + mCamera);
-				try {
+                MLog.d("qq", "qq1 " + mCamera);
+                try {
 
-					Camera.Parameters parameters = mCamera.getParameters();
-					MLog.d("qq", "qq2 " + mCamera);
+                    Camera.Parameters parameters = mCamera.getParameters();
+                    MLog.d("qq", "qq2 " + mCamera);
 
-					if (modeColor == MODE_COLOR_BW && parameters.getSupportedColorEffects() != null) {
-						// parameters.setColorEffect(Camera.Parameters.EFFECT_MONO);
-					}
-					MLog.d("qq", "qq3 " + mCamera);
+                    if (modeColor == MODE_COLOR_BW && parameters.getSupportedColorEffects() != null) {
+                        // parameters.setColorEffect(Camera.Parameters.EFFECT_MONO);
+                    }
+                    MLog.d("qq", "qq3 " + mCamera);
 
-					if (c.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
-						// parameters.set("orientation", "PORTRAIT"); // For
-						// Android Version 2.2 and above
-						MLog.d("qq", "qq4 " + mCamera);
-						mCamera.setDisplayOrientation(90);
-						MLog.d("qq", "qq5" + mCamera);
-						// For Android Version 2.0 and above
-						parameters.setRotation(90);
-						MLog.d("qq", "qq6" + mCamera);
-					} else if (modeCamera == MODE_CAMERA_FRONT) {
+                    if (c.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
+                        // parameters.set("orientation", "PORTRAIT"); // For
+                        // Android Version 2.2 and above
+                        MLog.d("qq", "qq4 " + mCamera);
+                        mCamera.setDisplayOrientation(90);
+                        MLog.d("qq", "qq5" + mCamera);
+                        // For Android Version 2.0 and above
+                        parameters.setRotation(90);
+                        MLog.d("qq", "qq6" + mCamera);
+                    } else if (modeCamera == MODE_CAMERA_FRONT) {
 
-					}
+                    }
 
-					MLog.d("qq", "qq 7" + mCamera);
-					List<Size> supportedPreviewSizes = mCamera.getParameters().getSupportedPreviewSizes();
-					parameters.setPreviewSize(supportedPreviewSizes.get(0).width, supportedPreviewSizes.get(0).height);
+                    MLog.d("qq", "qq 7" + mCamera);
+                    List<Size> supportedPreviewSizes = mCamera.getParameters().getSupportedPreviewSizes();
+                    parameters.setPreviewSize(supportedPreviewSizes.get(0).width, supportedPreviewSizes.get(0).height);
 
-					mCamera.setParameters(parameters);
-					mCamera.setPreviewTexture(surface);
-					MLog.d("qq", "primer mCamera " + mCamera);
-				} catch (IOException exception) {
-					MLog.d("qq", "camara released");
-					mCamera.release();
-				}
+                    mCamera.setParameters(parameters);
+                    mCamera.setPreviewTexture(surface);
+                    MLog.d("qq", "primer mCamera " + mCamera);
+                } catch (IOException exception) {
+                    MLog.d("qq", "camara released");
+                    mCamera.release();
+                }
 
-				mCamera.startPreview();
+                mCamera.startPreview();
 
-			}
-		});
+            }
+        });
 
-	}
+    }
 
-	protected void stopCamera() {
-		MLog.d("qq", "segunda mCamera " + mCamera);
+    protected void stopCamera() {
+        MLog.d("qq", "segunda mCamera " + mCamera);
 
-		if (mCamera != null) {
-			mCamera.stopPreview();
-			mCamera.setPreviewCallback(null);
-			mCamera.release();
-			mCamera = null;
-		}
+        if (mCamera != null) {
+            mCamera.stopPreview();
+            mCamera.setPreviewCallback(null);
+            mCamera.release();
+            mCamera = null;
+        }
 
-	}
+    }
 
-	@Override
-	protected void onDetachedFromWindow() {
-		super.onDetachedFromWindow();
-		stopCamera();
-	}
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        stopCamera();
+    }
 
-	File dir = null;
-	File file = null;
-	String fileName;
+    File dir = null;
+    File file = null;
+    String fileName;
 
-	public String takePic(final String path) {
-		// final CountDownLatch latch = new CountDownLatch(1);
+    public String takePic(final String path) {
+        // final CountDownLatch latch = new CountDownLatch(1);
 
-		AudioManager mgr = (AudioManager) c.getSystemService(Context.AUDIO_SERVICE);
-		mgr.setStreamMute(AudioManager.STREAM_SYSTEM, true);
+        AudioManager mgr = (AudioManager) c.getSystemService(Context.AUDIO_SERVICE);
+        mgr.setStreamMute(AudioManager.STREAM_SYSTEM, true);
 
-		// SoundPool soundPool = new SoundPool(1,
-		// AudioManager.STREAM_NOTIFICATION, 0);
-		// final int shutterSound = soundPool.load(this, R.raw.camera_click, 0);
+        // SoundPool soundPool = new SoundPool(1,
+        // AudioManager.STREAM_NOTIFICATION, 0);
+        // final int shutterSound = soundPool.load(this, R.raw.camera_click, 0);
 
-		MLog.d("qq", "tercera mCamera " + mCamera);
+        MLog.d("qq", "tercera mCamera " + mCamera);
 
-		// System.gc();
-		mCamera.setPreviewCallback(null);
-		mCamera.takePicture(null, null, new PictureCallback() {
+        // System.gc();
+        mCamera.setPreviewCallback(null);
+        mCamera.takePicture(null, null, new PictureCallback() {
 
-			@Override
-			public void onPictureTaken(byte[] data, Camera camera) {
-				MLog.d("qq", "" + data.length);
-				MLog.d("qq", "" + camera);
+            @Override
+            public void onPictureTaken(byte[] data, Camera camera) {
+                MLog.d("qq", "" + data.length);
+                MLog.d("qq", "" + camera);
 
-				Bitmap bitmapPicture = BitmapFactory.decodeByteArray(data, 0, data.length);
+                Bitmap bitmapPicture = BitmapFactory.decodeByteArray(data, 0, data.length);
 
-				// soundPool.play(shutterSound, 1f, 1f, 0, 0, 1);
+                // soundPool.play(shutterSound, 1f, 1f, 0, 0, 1);
 
-				FileOutputStream outStream = null;
-				try {
+                FileOutputStream outStream = null;
+                try {
 
-					file = new File(path);
+                    file = new File(path);
 
-					outStream = new FileOutputStream(file);
-					outStream.write(data);
-					outStream.flush();
-					outStream.close();
-					MLog.d(TAG, "onPictureTaken - wrote bytes: " + data.length);
+                    outStream = new FileOutputStream(file);
+                    outStream.write(data);
+                    outStream.flush();
+                    outStream.close();
+                    MLog.d(TAG, "onPictureTaken - wrote bytes: " + data.length);
 
-					for (CameraListener l : listeners) {
-						l.onPicTaken();
-					}
+                    for (CameraListener l : listeners) {
+                        l.onPicTaken();
+                    }
 
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				} finally {
-				}
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                }
 
-				MLog.d(TAG, "onPictureTaken - jpeg");
+                MLog.d(TAG, "onPictureTaken - jpeg");
 
-				camera.startPreview();
-				// latch.countDown();
+                camera.startPreview();
+                // latch.countDown();
 
-			}
-		});
+            }
+        });
 
 		/*
-		 * try { latch.await(); } catch (InterruptedException e1) { // TODO
+         * try { latch.await(); } catch (InterruptedException e1) { // TODO
 		 * Auto-generated catch block e1.printStackTrace(); }
 		 */
 
-		return fileName;
+        return fileName;
 
-	}
+    }
 
-	private MediaRecorder recorder;
-	private boolean recording = false;
+    private MediaRecorder recorder;
+    private boolean recording = false;
 
-	public void recordVideo(String file) {
+    public void recordVideo(String file) {
 
-		Camera.Parameters parameters = mCamera.getParameters();
-		parameters.setColorEffect(Camera.Parameters.EFFECT_MONO);
-		mCamera.setParameters(parameters);
+        Camera.Parameters parameters = mCamera.getParameters();
+        parameters.setColorEffect(Camera.Parameters.EFFECT_MONO);
+        mCamera.setParameters(parameters);
 
-		recorder = new MediaRecorder();
+        recorder = new MediaRecorder();
 
-		recorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
-		recorder.setVideoSource(MediaRecorder.VideoSource.DEFAULT);
+        recorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
+        recorder.setVideoSource(MediaRecorder.VideoSource.DEFAULT);
 
-		CamcorderProfile cpHigh = CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH);
-		recorder.setProfile(cpHigh);
-		recorder.setOutputFile(file);
-		recorder.setMaxDuration(5000 * 1000); // 50 seconds
-		recorder.setMaxFileSize(5000 * 1000000); // Approximately 5 megabytes
+        CamcorderProfile cpHigh = CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH);
+        recorder.setProfile(cpHigh);
+        recorder.setOutputFile(file);
+        recorder.setMaxDuration(5000 * 1000); // 50 seconds
+        recorder.setMaxFileSize(5000 * 1000000); // Approximately 5 megabytes
 
-		// CamcorderProfile camcorderProfile =
-		// CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH);
-		// recorder.setProfile(camcorderProfile);
+        // CamcorderProfile camcorderProfile =
+        // CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH);
+        // recorder.setProfile(camcorderProfile);
 
-		// recorder.setPreviewDisplay(mTextureView.getSurfaceTexture());
-		// recorder.setPreviewDisplay(holder.getSurface());
+        // recorder.setPreviewDisplay(mTextureView.getSurfaceTexture());
+        // recorder.setPreviewDisplay(holder.getSurface());
 
-		try {
-			recorder.prepare();
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-			// finish();
-		} catch (IOException e) {
-			e.printStackTrace();
-			// finish();
-		}
+        try {
+            recorder.prepare();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+            // finish();
+        } catch (IOException e) {
+            e.printStackTrace();
+            // finish();
+        }
 
-		if (recording) {
-			recorder.stop();
-			recorder.release();
-			recording = false;
-			MLog.d(TAG, "Recording Stopped");
-			// Let's initRecorder so we can record again
-			// prepareRecorder();
-		} else {
-			recording = true;
-			recorder.start();
-			MLog.d(TAG, "Recording Started");
-		}
+        if (recording) {
+            recorder.stop();
+            recorder.release();
+            recording = false;
+            MLog.d(TAG, "Recording Stopped");
+            // Let's initRecorder so we can record again
+            // prepareRecorder();
+        } else {
+            recording = true;
+            recorder.start();
+            MLog.d(TAG, "Recording Started");
+        }
 
-	}
+    }
 
-	// @TargetApi(Build.VERSION_CODES.GINGERBREAD)
-	// public void onPictureTaken(byte[] data, Camera camera) {
-	// Log.i(TAG, "photo taken");
-	//
-	// _fileName = TimeUtils.getCurrentTime() + ".jpg";
-	// _path = _rootPath + _fileName;
-	//
-	// new File(_rootPath).mkdirs();
-	// File file = new File(_path);
-	// Uri outputFileUri = Uri.fromFile(file);
-	//
-	// // Uri imageFileUri = getContentResolver().insert(
-	// // Media.EXTERNAL_CONTENT_URI, new ContentValues());
-	//
-	// try {
-	// OutputStream imageFileOS =
-	// c.getContentResolver().openOutputStream(outputFileUri);
-	// imageFileOS.write(data);
-	// imageFileOS.flush();
-	// imageFileOS.close();
-	//
-	// } catch (FileNotFoundException e) {
-	// Toast t = Toast.makeText(c, e.getMessage(), Toast.LENGTH_SHORT);
-	// t.show();
-	// } catch (IOException e) {
-	// Toast t = Toast.makeText(c, e.getMessage(), Toast.LENGTH_SHORT);
-	// t.show();
-	// }
-	//
-	// camera.startPreview();
-	// camera.release();
-	//
-	// AudioManager mgr = (AudioManager)
-	// c.getSystemService(Context.AUDIO_SERVICE);
-	// mgr.setStreamMute(AudioManager.STREAM_SYSTEM, false);
-	//
-	// Log.i(TAG, "photo saved");
-	// }
+    // @TargetApi(Build.VERSION_CODES.GINGERBREAD)
+    // public void onPictureTaken(byte[] data, Camera camera) {
+    // Log.i(TAG, "photo taken");
+    //
+    // _fileName = TimeUtils.getCurrentTime() + ".jpg";
+    // _path = _rootPath + _fileName;
+    //
+    // new File(_rootPath).mkdirs();
+    // File file = new File(_path);
+    // Uri outputFileUri = Uri.fromFile(file);
+    //
+    // // Uri imageFileUri = getContentResolver().insert(
+    // // Media.EXTERNAL_CONTENT_URI, new ContentValues());
+    //
+    // try {
+    // OutputStream imageFileOS =
+    // c.getContentResolver().openOutputStream(outputFileUri);
+    // imageFileOS.write(data);
+    // imageFileOS.flush();
+    // imageFileOS.close();
+    //
+    // } catch (FileNotFoundException e) {
+    // Toast t = Toast.makeText(c, e.getMessage(), Toast.LENGTH_SHORT);
+    // t.show();
+    // } catch (IOException e) {
+    // Toast t = Toast.makeText(c, e.getMessage(), Toast.LENGTH_SHORT);
+    // t.show();
+    // }
+    //
+    // camera.startPreview();
+    // camera.release();
+    //
+    // AudioManager mgr = (AudioManager)
+    // c.getSystemService(Context.AUDIO_SERVICE);
+    // mgr.setStreamMute(AudioManager.STREAM_SYSTEM, false);
+    //
+    // Log.i(TAG, "photo saved");
+    // }
 
-	@SuppressLint("NewApi")
-	private int getFrontCameraId() {
-		CameraInfo ci = new CameraInfo();
-		for (int i = 0; i < Camera.getNumberOfCameras(); i++) {
-			Camera.getCameraInfo(i, ci);
-			if (ci.facing == CameraInfo.CAMERA_FACING_FRONT) {
-				return i;
-			}
-		}
-		return -1; // No front-facing camera found
-	}
+    @SuppressLint("NewApi")
+    private int getFrontCameraId() {
+        CameraInfo ci = new CameraInfo();
+        for (int i = 0; i < Camera.getNumberOfCameras(); i++) {
+            Camera.getCameraInfo(i, ci);
+            if (ci.facing == CameraInfo.CAMERA_FACING_FRONT) {
+                return i;
+            }
+        }
+        return -1; // No front-facing camera found
+    }
 
-	public void addListener(CameraListener listener) {
-		listeners.add(listener);
-	}
+    public void addListener(CameraListener listener) {
+        listeners.add(listener);
+    }
 
-	public void removeListener(CameraListener listener) {
-		listeners.remove(listener);
-	}
+    public void removeListener(CameraListener listener) {
+        listeners.remove(listener);
+    }
 
 }

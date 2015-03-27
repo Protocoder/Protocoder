@@ -1,31 +1,22 @@
 /*
- * Protocoder 
- * A prototyping platform for Android devices 
- * 
- * Victor Diaz Barrales victormdb@gmail.com
- *
- * Copyright (C) 2014 Victor Diaz
- * Copyright (C) 2013 Motorola Mobility LLC
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the "Software"),
- * to deal in the Software without restriction, including without limitation
- * the rights to use, copy, modify, merge, publish, distribute, sublicense,
- * and/or sell copies of the Software, and to permit persons to whom the Software
- * is furnished to do so, subject to the following conditions: 
- * 
- * The above copyright notice and this permission notice shall be included in all 
- * copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
- * THE SOFTWARE.
- * 
- */
+* Part of Protocoder http://www.protocoder.org
+* A prototyping platform for Android devices 
+*
+* Copyright (C) 2013 Victor Diaz Barrales victormdb@gmail.com
+* 
+* Protocoder is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Lesser General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Protocoder is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU Lesser General Public License
+* along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
+*/
 
 package org.protocoderrunner.apprunner.api.dashboard;
 
@@ -42,20 +33,21 @@ import java.net.UnknownHostException;
 
 public class PDashboardSlider extends PInterface {
 
-	private static final String TAG = "PDashboardSlider";
-	String id;
+    private static final String TAG = "PDashboardSlider";
+    String id;
+    private jDashboardSliderAddCB mCallback;
 
-	public PDashboardSlider(Context a) {
-		super(a);
-	}
+    public PDashboardSlider(Context a) {
+        super(a);
+    }
 
-	// --------- JDashboardSlider add ---------//
-	public interface jDashboardSliderAddCB {
-		void event(double val);
-	}
+    // --------- JDashboardSlider add ---------//
+    public interface jDashboardSliderAddCB {
+        void event(double val);
+    }
 
-	public void add(String name, int x, int y, int w, int h, int min, int max)
-			throws UnknownHostException, JSONException {
+    public void add(String name, int x, int y, int w, int h, int min, int max)
+            throws UnknownHostException, JSONException {
         this.id = StrUtils.generateRandomString();
 
         JSONObject values = new JSONObject()
@@ -74,10 +66,6 @@ public class PDashboardSlider extends PInterface {
                 .put("action", "add")
                 .put("values", values);
 
-        CustomWebsocketServer.getInstance(getContext()).send(msg);
-    }
-
-    public void onClick(final jDashboardSliderAddCB callbackfn) throws UnknownHostException {
         CustomWebsocketServer.getInstance(getContext()).addListener(id, new WebSocketListener() {
             @Override
             public void onUpdated(JSONObject jsonObject) {
@@ -87,7 +75,7 @@ public class PDashboardSlider extends PInterface {
 
                         @Override
                         public void run() {
-                            callbackfn.event(val);
+                            if (mCallback != null) mCallback.event(val);
                         }
                     });
                 } catch (JSONException e) {
@@ -96,26 +84,31 @@ public class PDashboardSlider extends PInterface {
             }
         });
 
+        CustomWebsocketServer.getInstance(getContext()).send(msg);
+    }
+
+    public void onChange(final jDashboardSliderAddCB callbackfn) throws UnknownHostException {
+        mCallback = callbackfn;
     }
 
     //TODO this method doesnt work yet
-	//
-	//@APIMethod(description = "change the slider value", example = "")
+    //
+    //@APIMethod(description = "change the slider value", example = "")
     //@APIParam(params = { "value" })
     public void position(float position) throws UnknownHostException, JSONException {
-		JSONObject msg = new JSONObject();
+        JSONObject msg = new JSONObject();
 
-		msg.put("type", "widget");
-		msg.put("action", "setValue");
+        msg.put("type", "widget");
+        msg.put("action", "setValue");
 
-		JSONObject values = new JSONObject();
-		values.put("id", id);
-		values.put("type", "label");
-		values.put("val", position);
-		msg.put("values", values);
+        JSONObject values = new JSONObject();
+        values.put("id", id);
+        values.put("type", "label");
+        values.put("val", position);
+        msg.put("values", values);
 
-		CustomWebsocketServer ws = CustomWebsocketServer.getInstance(getContext());
-		ws.send(msg);
+        CustomWebsocketServer ws = CustomWebsocketServer.getInstance(getContext());
+        ws.send(msg);
 
-	}
+    }
 }

@@ -13,10 +13,10 @@
         android:name="org.protocoder.MainApp"
         android:icon="@drawable/protocoder_icon"
         android:label="@string/app_name"
-        android:theme="@style/ProtocoderAppTheme"
         android:allowBackup="true"
         tools:replace="android:allowBackup">
 
+        <!--android:stateNotNeeded="true"-->
         <activity
             android:name=".activities.LauncherActivity"
             android:icon="@drawable/protocoder_icon"
@@ -24,7 +24,7 @@
             android:logo="@drawable/protocoder_icon"
             android:theme="@style/ProtocoderAppTheme"
             android:launchMode="singleInstance"
-            android:stateNotNeeded="true">
+         >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -59,24 +59,27 @@
         </activity>
         <activity
             android:name=".activities.AboutActivity"
-            android:theme="@style/ProtocoderAppTheme.Toolbar"
+            android:theme="@style/ProtocoderAppTheme"
+            android:parentActivityName=".MainActivity"
             android:label="@string/about_activity_name" >
         </activity>
         <activity
             android:name=".activities.WelcomeActivity"
-            android:theme="@style/ProtocoderAppTheme.Toolbar"
+            android:theme="@style/ProtocoderAppTheme"
             android:label="@string/welcome_activity_name" >
             android:noHistory="true" >
         </activity>
         <activity
             android:name=".activities.LicenseActivity"
-            android:theme="@style/ProtocoderAppTheme.Toolbar"
+            android:theme="@style/ProtocoderAppTheme"
+            android:parentActivityName=".activities.SetPreferenceActivity"
             android:label="@string/licenses_activity_name"
             android:noHistory="true" >
         </activity>
         <activity
             android:name=".activities.SetPreferenceActivity"
-            android:theme="@style/ProtocoderAppTheme.Toolbar"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/ProtocoderAppTheme"
             android:label="@string/settings_activity_name"
             android:noHistory="true" >
         </activity>
@@ -98,7 +101,7 @@
 
         <activity android:name=".activities.ProtoAppInstallerActivity"
             android:label="@string/activity_name"
-            android:theme="@style/ProtocoderAppTheme.Toolbar"
+            android:theme="@style/ProtocoderAppTheme"
             android:logo="@drawable/protocoder_icon"
             >
             <intent-filter>

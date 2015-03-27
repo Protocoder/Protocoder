@@ -1,30 +1,22 @@
 /*
-
- * Protocoder 
- * A prototyping platform for Android devices 
- * 
- * Copyright (C) 2014 Victor Diaz
- * Copyright (C) 2013 Motorola Mobility LLC
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the "Software"),
- * to deal in the Software without restriction, including without limitation
- * the rights to use, copy, modify, merge, publish, distribute, sublicense,
- * and/or sell copies of the Software, and to permit persons to whom the Software
- * is furnished to do so, subject to the following conditions: 
- * 
- * The above copyright notice and this permission notice shall be included in all 
- * copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
- * THE SOFTWARE.
- * 
- */
+* Part of Protocoder http://www.protocoder.org
+* A prototyping platform for Android devices
+*
+* Copyright (C) 2013 Victor Diaz Barrales victormdb@gmail.com
+*
+* Protocoder is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Lesser General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Protocoder is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU Lesser General Public License
+* along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
+*/
 
 package org.protocoderrunner.apprunner;
 
@@ -65,11 +57,11 @@ import org.protocoderrunner.apprunner.api.PSensors;
 import org.protocoderrunner.apprunner.api.PUI;
 import org.protocoderrunner.apprunner.api.PUtil;
 import org.protocoderrunner.apprunner.api.other.PLiveCodingFeedback;
+import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.events.Events;
 import org.protocoderrunner.network.IDEcommunication;
 import org.protocoderrunner.project.Project;
 import org.protocoderrunner.project.ProjectManager;
-import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.utils.MLog;
 
 import de.greenrobot.event.EventBus;
@@ -77,27 +69,27 @@ import de.greenrobot.event.EventBus;
 @SuppressLint("NewApi")
 public class AppRunnerFragment extends Fragment {
 
-	private static final String TAG = "AppRunnerFragment";
+    private static final String TAG = "AppRunnerFragment";
 
     private AppRunnerActivity mActivity;
 
-	public AppRunnerInterpreter interp;
-	private FileObserver fileObserver;
+    public AppRunnerInterpreter interp;
+    private FileObserver fileObserver;
 
-	// listeners in the main activity that will pass the info to the API classes
-	private PApp.onAppStatus onAppStatusListener;
+    // listeners in the main activity that will pass the info to the API classes
+    private PApp.onAppStatus onAppStatusListener;
 
-	// Layout
-	private final int EDITOR_ID = 1231212345;
+    // Layout
+    private final int EDITOR_ID = 1231212345;
 
-	public RelativeLayout mainLayout;
+    public RelativeLayout mainLayout;
 
-	private RelativeLayout parentScriptedLayout;
-	private RelativeLayout consoleRLayout;
+    private RelativeLayout parentScriptedLayout;
+    private RelativeLayout consoleRLayout;
     public FrameLayout editorLayout;
-	private TextView consoleText;
+    private TextView consoleText;
 
-	public PLiveCodingFeedback liveCoding;
+    public PLiveCodingFeedback liveCoding;
 
     //API Objects for the interpreter
     public PApp pApp;
@@ -117,9 +109,9 @@ public class AppRunnerFragment extends Fragment {
     private String mProjectName;
     private String mProjectFolder;
     private String mScript;
-    private int mActionBarColor;
+    //private int mActionBarColor;
     private View mMainView;
-    private int mActionBarColorInt;
+    //private int mActionBarColorInt;
     private String mIntentPrefixScript = "";
     private String mIntentCode = "";
     private String mIntentPostfixScript = "";
@@ -136,7 +128,7 @@ public class AppRunnerFragment extends Fragment {
         Bundle bundle = getArguments();
         mProjectName = bundle.getString(Project.NAME, "");
         mProjectFolder = bundle.getString(Project.FOLDER, "");
-        mActionBarColorInt = bundle.getInt(Project.COLOR, 0);
+        //mActionBarColorInt = bundle.getInt(Project.COLOR, 0);
         mIntentPrefixScript = bundle.getString(Project.PREFIX, "");
         mIntentCode = bundle.getString(Project.CODE, "");
         mIntentPostfixScript = bundle.getString(Project.POSTFIX, "");
@@ -158,14 +150,13 @@ public class AppRunnerFragment extends Fragment {
             }
 
             //setup actionbar
-            int actionBarColor;
-            if (mProjectFolder.equals("examples")) {
-                mActionBarColor = getResources().getColor(R.color.project_example_color);
-            } else {
-                mActionBarColor = getResources().getColor(R.color.project_user_color);
-            }
+            // int actionBarColor;
+            //if (mProjectFolder.equals("examples")) {
+            //    mActionBarColor = getResources().getColor(R.color.project_example_color);
+            //} else {
+            //    mActionBarColor = getResources().getColor(R.color.project_user_color);
+            //}
         }
-
 
 
         //instantiate the objects that can be accessed from the interpreter
@@ -190,7 +181,7 @@ public class AppRunnerFragment extends Fragment {
         pSensors.initForParentFragment(this);
         pUi = new PUI(mActivity);
         pUi.initForParentFragment(this);
-        pUtil  = new PUtil(mActivity);
+        pUtil = new PUtil(mActivity);
 
 
         //create mContext new interpreter and add the objects to it
@@ -213,7 +204,7 @@ public class AppRunnerFragment extends Fragment {
     }
 
     @Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //setTheme(R.style.ProtocoderDark_Dialog);
         super.onCreateView(inflater, container, savedInstanceState);
         MLog.d(TAG, "onCreateView");
@@ -229,7 +220,13 @@ public class AppRunnerFragment extends Fragment {
 
         MLog.d(TAG, "onActivityCreated");
 
-        mActivity.setToolBar(mCurrentProject, mActionBarColor, 0xFFFFFF);
+        String toolbarName = "";
+        if (mProjectFolder.equals("examples")) {
+            toolbarName = "example > " + mProjectName;
+        } else {
+            toolbarName = mProjectName;
+        }
+        mActivity.setToolBar(toolbarName, null, null);
 
         //catch errors and send them to the webIDE or the app console
         AppRunnerInterpreter.InterpreterInfo appRunnerCb = new AppRunnerInterpreter.InterpreterInfo() {
@@ -255,7 +252,7 @@ public class AppRunnerFragment extends Fragment {
         // load the libraries
         MLog.d(TAG, "loaded preloaded script" + mIntentPrefixScript);
         interp.eval(AppRunnerInterpreter.SCRIPT_PREFIX);
-        if (!mIntentPostfixScript.isEmpty()) interp.eval(mIntentPostfixScript);
+        if (!mIntentPrefixScript.isEmpty()) interp.eval(mIntentPrefixScript);
 
         // run the script
         if (null != mScript) {
@@ -274,9 +271,9 @@ public class AppRunnerFragment extends Fragment {
         interp.callJsFunction("setup");
 
         // TODO fix actionbar color
-        if (mActivity.mActionBarSet == false) {
-            mActivity.setToolBar(null, mActionBarColor, getResources().getColor(R.color.white));
-        }
+        //if (mActivity.mActionBarSet == false) {
+        //    mActivity.setToolBar(null, , getResources().getColor(R.color.white));
+        //}
         // Call the onCreate JavaScript function.
         interp.callJsFunction("onCreate", savedInstanceState);
 
@@ -293,7 +290,7 @@ public class AppRunnerFragment extends Fragment {
 
         // send ready to the webIDE
         //TODO this is gone ?!
-	}
+    }
 
     public static AppRunnerFragment newInstance(Bundle bundle) {
         AppRunnerFragment myFragment = new AppRunnerFragment();
@@ -302,63 +299,63 @@ public class AppRunnerFragment extends Fragment {
         return myFragment;
     }
 
-	@Override
-	public void onStart() {
+    @Override
+    public void onStart() {
         MLog.d(TAG, "onStart");
 
         super.onStart();
-		interp.callJsFunction("onStart");
-	}
+        interp.callJsFunction("onStart");
+    }
 
-	@Override
-	public void onResume() {
-		super.onResume();
+    @Override
+    public void onResume() {
+        super.onResume();
         MLog.d(TAG, "onResume");
 
         EventBus.getDefault().register(this);
 
         if (onAppStatusListener != null) {
-			onAppStatusListener.onResume();
-		}
+            onAppStatusListener.onResume();
+        }
 
         if (fileObserver != null) {
             fileObserver.startWatching();
         }
-		interp.callJsFunction("onResume");
-	}
+        interp.callJsFunction("onResume");
+    }
 
-	@Override
-	public void onPause() {
-		super.onPause();
+    @Override
+    public void onPause() {
+        super.onPause();
         MLog.d(TAG, "onPause");
 
         EventBus.getDefault().unregister(this);
 
         interp.callJsFunction("onPause");
 
-		IDEcommunication.getInstance(mActivity).ready(false);
+        IDEcommunication.getInstance(mActivity).ready(false);
         if (fileObserver != null) {
             fileObserver.stopWatching();
         }
-	}
+    }
 
-	@Override
-	public void onStop() {
-		super.onStop();
+    @Override
+    public void onStop() {
+        super.onStop();
         MLog.d(TAG, "onStop");
 
         interp.callJsFunction("onStop");
-	}
+    }
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
         MLog.d(TAG, "onDestroy");
 
         interp.callJsFunction("onDestroy");
 
-		interp = null;
-	}
+        interp = null;
+    }
 
     @Override
     public void onDestroyView() {
@@ -384,15 +381,15 @@ public class AppRunnerFragment extends Fragment {
 
     }
 
-	public void addOnAppStatusListener(PApp.onAppStatus onAppStatus) {
+    public void addOnAppStatusListener(PApp.onAppStatus onAppStatus) {
 
-	}
+    }
 
-	public void addScriptedLayout(RelativeLayout scriptedUILayout) {
-		parentScriptedLayout.addView(scriptedUILayout);
-	}
+    public void addScriptedLayout(RelativeLayout scriptedUILayout) {
+        parentScriptedLayout.addView(scriptedUILayout);
+    }
 
-	public RelativeLayout initLayout() {
+    public RelativeLayout initLayout() {
         LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 
         // add main layout
@@ -400,7 +397,7 @@ public class AppRunnerFragment extends Fragment {
         mainLayout.setLayoutParams(layoutParams);
         mainLayout.setGravity(Gravity.BOTTOM);
         // mainLayout.setBackgroundColor(getResources().getColor(R.color.transparent));
-        mainLayout.setBackgroundColor(getResources().getColor(R.color.light_grey));
+        mainLayout.setBackgroundColor(getResources().getColor(R.color.white));
 
         // set the parent
         parentScriptedLayout = new RelativeLayout(mActivity);
@@ -510,37 +507,37 @@ public class AppRunnerFragment extends Fragment {
 //		}
 //	}
 
-	public void showConsole(boolean visible) {
+    public void showConsole(boolean visible) {
 
-		if (visible) {
-			consoleRLayout.setAlpha(0);
-			consoleRLayout.setTranslationY(50);
-			consoleRLayout.setVisibility(View.VISIBLE);
-			consoleRLayout.animate().alpha(1).translationYBy(-50).setDuration(500);
-		} else {
-			consoleRLayout.animate().alpha(0).translationYBy(50).setDuration(500).setListener(new AnimatorListener() {
+        if (visible) {
+            consoleRLayout.setAlpha(0);
+            consoleRLayout.setTranslationY(50);
+            consoleRLayout.setVisibility(View.VISIBLE);
+            consoleRLayout.animate().alpha(1).translationYBy(-50).setDuration(500);
+        } else {
+            consoleRLayout.animate().alpha(0).translationYBy(50).setDuration(500).setListener(new AnimatorListener() {
 
-				@Override
-				public void onAnimationStart(Animator animation) {
-				}
+                @Override
+                public void onAnimationStart(Animator animation) {
+                }
 
-				@Override
-				public void onAnimationRepeat(Animator animation) {
-				}
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+                }
 
-				@Override
-				public void onAnimationEnd(Animator animation) {
-					consoleRLayout.setVisibility(View.VISIBLE);
-				}
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    consoleRLayout.setVisibility(View.VISIBLE);
+                }
 
-				@Override
-				public void onAnimationCancel(Animator animation) {
-				}
-			});
-		}
-	}
+                @Override
+                public void onAnimationCancel(Animator animation) {
+                }
+            });
+        }
+    }
 
-	public void showConsole(final String message) {
+    public void showConsole(final String message) {
         mActivity.runOnUiThread(new Runnable() {
 
             @Override
@@ -551,9 +548,9 @@ public class AppRunnerFragment extends Fragment {
                 MLog.d(TAG, "msg text");
             }
         });
-	}
+    }
 
-	public void startFileObserver() {
+    public void startFileObserver() {
 
         if (mIsProjectLoaded) {
 
@@ -587,7 +584,7 @@ public class AppRunnerFragment extends Fragment {
             };
         }
 
-	}
+    }
 
     // execute lines
     public void onEventMainThread(Events.ExecuteCodeEvent evt) {

@@ -1,31 +1,22 @@
 /*
- * Protocoder 
- * A prototyping platform for Android devices 
- * 
- * Victor Diaz Barrales victormdb@gmail.com
- *
- * Copyright (C) 2014 Victor Diaz
- * Copyright (C) 2013 Motorola Mobility LLC
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the "Software"),
- * to deal in the Software without restriction, including without limitation
- * the rights to use, copy, modify, merge, publish, distribute, sublicense,
- * and/or sell copies of the Software, and to permit persons to whom the Software
- * is furnished to do so, subject to the following conditions: 
- * 
- * The above copyright notice and this permission notice shall be included in all 
- * copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
- * THE SOFTWARE.
- * 
- */
+* Part of Protocoder http://www.protocoder.org
+* A prototyping platform for Android devices 
+*
+* Copyright (C) 2013 Victor Diaz Barrales victormdb@gmail.com
+* 
+* Protocoder is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Lesser General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Protocoder is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU Lesser General Public License
+* along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
+*/
 
 package org.protocoderrunner.network;
 
@@ -60,183 +51,183 @@ import java.util.Enumeration;
 
 public class NetworkUtils {
 
-	private static final String TAG = "NetworkUtils";
+    private static final String TAG = "NetworkUtils";
 
-	// usually, subclasses of AsyncTask are declared inside the activity class.
-	// that way, you can easily modify the UI thread from here
-	public static class DownloadTask extends AsyncTask<String, Integer, String> {
+    // usually, subclasses of AsyncTask are declared inside the activity class.
+    // that way, you can easily modify the UI thread from here
+    public static class DownloadTask extends AsyncTask<String, Integer, String> {
 
-		private final Context context;
-		private DownloadListener downloadListener;
-		private final String path;
+        private final Context context;
+        private DownloadListener downloadListener;
+        private final String path;
 
-		public interface DownloadListener {
-			public void onUpdate(int progress);
-		}
+        public interface DownloadListener {
+            public void onUpdate(int progress);
+        }
 
-		public DownloadTask(Context context, String fileName) {
-			this.context = context;
-			path = AppRunnerSettings.get().project.getStoragePath() + File.separator + fileName;
-		}
+        public DownloadTask(Context context, String fileName) {
+            this.context = context;
+            path = AppRunnerSettings.get().project.getStoragePath() + File.separator + fileName;
+        }
 
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-		}
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
 
-		@Override
-		protected void onProgressUpdate(Integer... progress) {
-			super.onProgressUpdate(progress);
-			// if we get here, length is known, now set indeterminate to false
-			// mProgressDialog.setProgress(progress[0]);
-			downloadListener.onUpdate(progress[0]);
-		}
+        @Override
+        protected void onProgressUpdate(Integer... progress) {
+            super.onProgressUpdate(progress);
+            // if we get here, length is known, now set indeterminate to false
+            // mProgressDialog.setProgress(progress[0]);
+            downloadListener.onUpdate(progress[0]);
+        }
 
-		@Override
-		protected void onPostExecute(String result) {
-			downloadListener = null;
-		}
+        @Override
+        protected void onPostExecute(String result) {
+            downloadListener = null;
+        }
 
-		@Override
-		protected String doInBackground(String... sUrl) {
-			// take CPU lock to prevent CPU from going off if the user
-			// presses the power button during download
-			PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-			PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, getClass().getName());
-			wl.acquire();
+        @Override
+        protected String doInBackground(String... sUrl) {
+            // take CPU lock to prevent CPU from going off if the user
+            // presses the power button during download
+            PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+            PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, getClass().getName());
+            wl.acquire();
 
-			try {
-				InputStream input = null;
-				OutputStream output = null;
-				HttpURLConnection connection = null;
-				try {
-					URL url = new URL(sUrl[0]);
-					connection = (HttpURLConnection) url.openConnection();
-					connection.connect();
+            try {
+                InputStream input = null;
+                OutputStream output = null;
+                HttpURLConnection connection = null;
+                try {
+                    URL url = new URL(sUrl[0]);
+                    connection = (HttpURLConnection) url.openConnection();
+                    connection.connect();
 
-					// expect HTTP 200 OK, so we don't mistakenly save error
-					// report
-					// instead of the file
-					if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-						return "Server returned HTTP " + connection.getResponseCode() + " "
-								+ connection.getResponseMessage();
-					}
+                    // expect HTTP 200 OK, so we don't mistakenly save error
+                    // report
+                    // instead of the file
+                    if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                        return "Server returned HTTP " + connection.getResponseCode() + " "
+                                + connection.getResponseMessage();
+                    }
 
-					// this will be useful to display download percentage
-					// might be -1: server did not report the length
-					int fileLength = connection.getContentLength();
+                    // this will be useful to display download percentage
+                    // might be -1: server did not report the length
+                    int fileLength = connection.getContentLength();
 
-					// download the file
-					input = connection.getInputStream();
-					output = new FileOutputStream(path);
+                    // download the file
+                    input = connection.getInputStream();
+                    output = new FileOutputStream(path);
 
-					byte data[] = new byte[4096];
-					long total = 0;
-					int count;
-					while ((count = input.read(data)) != -1) {
-						// allow canceling with back button
-						if (isCancelled()) {
-							return null;
-						}
-						total += count;
-						// publishing the progress....
-						if (fileLength > 0) {
-							publishProgress((int) (total * 100 / fileLength));
-						}
-						output.write(data, 0, count);
-					}
-				} catch (Exception e) {
-					return e.toString();
-				} finally {
-					try {
-						if (output != null) {
-							output.close();
-						}
-						if (input != null) {
-							input.close();
-						}
-					} catch (IOException ignored) {
-					}
+                    byte data[] = new byte[4096];
+                    long total = 0;
+                    int count;
+                    while ((count = input.read(data)) != -1) {
+                        // allow canceling with back button
+                        if (isCancelled()) {
+                            return null;
+                        }
+                        total += count;
+                        // publishing the progress....
+                        if (fileLength > 0) {
+                            publishProgress((int) (total * 100 / fileLength));
+                        }
+                        output.write(data, 0, count);
+                    }
+                } catch (Exception e) {
+                    return e.toString();
+                } finally {
+                    try {
+                        if (output != null) {
+                            output.close();
+                        }
+                        if (input != null) {
+                            input.close();
+                        }
+                    } catch (IOException ignored) {
+                    }
 
-					if (connection != null) {
-						connection.disconnect();
-					}
-				}
-			} finally {
-				wl.release();
-			}
-			return null;
-		}
+                    if (connection != null) {
+                        connection.disconnect();
+                    }
+                }
+            } finally {
+                wl.release();
+            }
+            return null;
+        }
 
-		public void addListener(DownloadListener listener) {
-			downloadListener = listener;
+        public void addListener(DownloadListener listener) {
+            downloadListener = listener;
 
-		}
-	}
+        }
+    }
 
-	public static boolean isNetworkAvailable(Context con) {
-		ConnectivityManager connectivityManager = (ConnectivityManager) con
-				.getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+    public static boolean isNetworkAvailable(Context con) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) con
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 
-		// return (activeNetworkInfo != null &&
-		// activeNetworkInfo.isConnectedOrConnecting());
-		return (activeNetworkInfo != null && activeNetworkInfo.isConnected());
-	}
+        // return (activeNetworkInfo != null &&
+        // activeNetworkInfo.isConnectedOrConnecting());
+        return (activeNetworkInfo != null && activeNetworkInfo.isConnected());
+    }
 
-	// Get broadcast Address
-	public static InetAddress getBroadcastAddress(Context c) throws UnknownHostException {
-		WifiManager wifi = (WifiManager) c.getSystemService(Context.WIFI_SERVICE);
-		DhcpInfo dhcp = wifi.getDhcpInfo();
+    // Get broadcast Address
+    public static InetAddress getBroadcastAddress(Context c) throws UnknownHostException {
+        WifiManager wifi = (WifiManager) c.getSystemService(Context.WIFI_SERVICE);
+        DhcpInfo dhcp = wifi.getDhcpInfo();
 
-		if (dhcp == null) {
-			return InetAddress.getByAddress(null);
-		}
+        if (dhcp == null) {
+            return InetAddress.getByAddress(null);
+        }
 
-		int broadcast = (dhcp.ipAddress & dhcp.netmask) | ~dhcp.netmask;
+        int broadcast = (dhcp.ipAddress & dhcp.netmask) | ~dhcp.netmask;
 
-		byte[] quads = new byte[4];
-		for (int k = 0; k < 4; k++) {
-			quads[k] = (byte) ((broadcast >> k * 8) & 0xFF);
-		}
+        byte[] quads = new byte[4];
+        for (int k = 0; k < 4; k++) {
+            quads[k] = (byte) ((broadcast >> k * 8) & 0xFF);
+        }
 
-		return InetAddress.getByAddress(quads);
-	}
+        return InetAddress.getByAddress(quads);
+    }
 
-	public static void getGatewayIpAddress(Context c) {
-		// get wifi ip
+    public static void getGatewayIpAddress(Context c) {
+        // get wifi ip
 
-		final WifiManager manager = (WifiManager) c.getSystemService(Context.WIFI_SERVICE);
-		final DhcpInfo dhcp = manager.getDhcpInfo();
-		final String address = Formatter.formatIpAddress(dhcp.gateway);
+        final WifiManager manager = (WifiManager) c.getSystemService(Context.WIFI_SERVICE);
+        final DhcpInfo dhcp = manager.getDhcpInfo();
+        final String address = Formatter.formatIpAddress(dhcp.gateway);
 
-		StringBuilder IFCONFIG = new StringBuilder();
-		try {
-			for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
-				NetworkInterface intf = en.nextElement();
-				for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
-					InetAddress inetAddress = enumIpAddr.nextElement();
-					if (!inetAddress.isLoopbackAddress() && !inetAddress.isLinkLocalAddress()
-							&& inetAddress.isSiteLocalAddress()) {
-						IFCONFIG.append(inetAddress.getHostAddress().toString() + "\n");
-					}
+        StringBuilder IFCONFIG = new StringBuilder();
+        try {
+            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
+                NetworkInterface intf = en.nextElement();
+                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
+                    InetAddress inetAddress = enumIpAddr.nextElement();
+                    if (!inetAddress.isLoopbackAddress() && !inetAddress.isLinkLocalAddress()
+                            && inetAddress.isSiteLocalAddress()) {
+                        IFCONFIG.append(inetAddress.getHostAddress().toString() + "\n");
+                    }
 
-				}
-			}
-		} catch (SocketException ex) {
-			Log.e("LOG_TAG", ex.toString());
-		}
-		MLog.d(TAG, "ifconfig " + IFCONFIG.toString());
+                }
+            }
+        } catch (SocketException ex) {
+            Log.e("LOG_TAG", ex.toString());
+        }
+        MLog.d(TAG, "ifconfig " + IFCONFIG.toString());
 
-		MLog.d(TAG, "hotspot address is " + address);
+        MLog.d(TAG, "hotspot address is " + address);
 
-	}
+    }
 
-	// Get the local IP address
-	public static String getLocalIpAddress(Context c) {
+    // Get the local IP address
+    public static String getLocalIpAddress(Context c) {
 
-		WifiManager wifiManager = (WifiManager) c.getSystemService(Context.WIFI_SERVICE);
-		int ipAddress = wifiManager.getConnectionInfo().getIpAddress();
+        WifiManager wifiManager = (WifiManager) c.getSystemService(Context.WIFI_SERVICE);
+        int ipAddress = wifiManager.getConnectionInfo().getIpAddress();
         String ipAddressString = "-1";
         if (ipAddress != 0) {
 
@@ -256,30 +247,30 @@ public class NetworkUtils {
             }
         }
 
-		return ipAddressString;
+        return ipAddressString;
 
-		// try {
-		// for (Enumeration<NetworkInterface> en =
-		// NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
-		// NetworkInterface intf = en.nextElement();
-		// for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses();
-		// enumIpAddr.hasMoreElements();) {
-		// InetAddress inetAddress = enumIpAddr.nextElement();
-		// // if (!inetAddress.isLoopbackAddress() &&
-		// // !inetAddress.isLinkLocalAddress() &&
-		// // inetAddress.isSiteLocalAddress() ) {
-		// if (!inetAddress.isLoopbackAddress()
-		// && InetAddressUtils.isIPv4Address(inetAddress.getHostAddress())) {
-		// return inetAddress;
-		// }
-		// }
-		// }
-		// } catch (SocketException ex) {
-		// MLog.d(TAG, ex.toString());
-		// }
-		// return null;
+        // try {
+        // for (Enumeration<NetworkInterface> en =
+        // NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
+        // NetworkInterface intf = en.nextElement();
+        // for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses();
+        // enumIpAddr.hasMoreElements();) {
+        // InetAddress inetAddress = enumIpAddr.nextElement();
+        // // if (!inetAddress.isLoopbackAddress() &&
+        // // !inetAddress.isLinkLocalAddress() &&
+        // // inetAddress.isSiteLocalAddress() ) {
+        // if (!inetAddress.isLoopbackAddress()
+        // && InetAddressUtils.isIPv4Address(inetAddress.getHostAddress())) {
+        // return inetAddress;
+        // }
+        // }
+        // }
+        // } catch (SocketException ex) {
+        // MLog.d(TAG, ex.toString());
+        // }
+        // return null;
 
-	}
+    }
 
     public static WifiInfo getWifiInfo(Context c) {
         WifiManager wifiManager = (WifiManager) c.getSystemService(c.WIFI_SERVICE);

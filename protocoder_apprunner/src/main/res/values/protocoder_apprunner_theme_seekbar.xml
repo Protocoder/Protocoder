@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="ProtocoderAppRunner.SeekBar" parent="@android:style/Widget.SeekBar">
+        <item name="android:gravity">center</item>
+        <!-- <item name="android:background">@drawable/protocoder_theme_dark_btn_selector</item> -->
+        <item name="android:progressDrawable">@drawable/protocoder_theme_dark_seekbar_progress</item>
+        <item name="android:thumb">@drawable/protocoder_theme_dark_seekbar_thumb</item>
+        <item name="android:minHeight">2dip</item>
+        <item name="android:maxHeight">5dip</item>
+    </style>
+
+</resources>

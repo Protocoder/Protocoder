@@ -16,9 +16,9 @@
     <string name="run">Run</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
-    <string name="add_shortcut">Add shortcut</string>
-    <string name="share">Share code</string>
-    <string name="share_proto_file">Share .proto</string>
+    <string name="add_shortcut">Add shortcut to desktop</string>
+    <string name="share">Share main.js code</string>
+    <string name="share_proto_file">Share project as .proto file</string>
     <string name="send_to">Send to...</string>
     <string name="beam">NFC Share</string>
     <string name="projects_zero">\nPress + to get started or slide to the right to check the examples</string>
@@ -76,7 +76,7 @@
     <string name="setting_id_description">This ID is generated the first time you install the app. You can always change it!</string>
 
 
-    <string name="licenses_activity_name">About</string>
+    <string name="licenses_activity_name">Licenses</string>
     <string name="licenses">Licenses</string>
     <string name="license_title_websockets">Android Websockets</string>
     <string name="license_title_svgandroid">Svg-Android</string>
