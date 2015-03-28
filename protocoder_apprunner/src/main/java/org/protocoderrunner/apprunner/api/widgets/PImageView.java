@@ -26,6 +26,7 @@ import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.widget.ImageView;
 
+import org.protocoderrunner.AppSettings;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
@@ -34,8 +35,11 @@ import java.io.File;
 
 public class PImageView extends ImageView implements PViewInterface {
 
+    private Context mContext;
+
     public PImageView(Context context) {
         super(context);
+        this.mContext = context;
     }
 
 
@@ -47,10 +51,23 @@ public class PImageView extends ImageView implements PViewInterface {
             // Add image asynchronously
             new PUIGeneric.DownloadImageTask(this, false).execute(imagePath);
         } else {
-            // Add the image from file
-            new PUIGeneric.SetImageTask(this, false).execute(AppRunnerSettings.get().project.getStoragePath() + File.separator
-                    + imagePath);
 
+           if (AppSettings.STANDALONE == true) {
+                // Add the image asynchronously from the assets
+                new PUIGeneric.SetImageTask(mContext, this, false, true).execute(
+                       AppRunnerSettings.get().project.getFolder()
+                               + File.separator
+                               + AppRunnerSettings.get().project.getName()
+                               + File.separator
+                               + imagePath);
+
+            } else {
+                // Add the image from the sdcard
+                new PUIGeneric.SetImageTask(mContext, this, false, false).execute(
+                        AppRunnerSettings.get().project.getStoragePath()
+                        + File.separator
+                        + imagePath);
+            }
         }
 
         return this;
@@ -69,10 +86,23 @@ public class PImageView extends ImageView implements PViewInterface {
             // Add image asynchronously
             new PUIGeneric.DownloadImageTask(this, true).execute(imagePath);
         } else {
-            // Add the image from file
-            new PUIGeneric.SetImageTask(this, true).execute(AppRunnerSettings.get().project.getStoragePath() + File.separator
-                    + imagePath);
 
+            if (AppSettings.STANDALONE == true) {
+                // Add the image asynchronously from the assets
+                new PUIGeneric.SetImageTask(mContext, this, true, true).execute(
+                        AppRunnerSettings.get().project.getFolder()
+                        + File.separator
+                        + AppRunnerSettings.get().project.getName()
+                        + File.separator
+                        + imagePath);
+
+            } else {
+                // Add the image from the sdcard
+                new PUIGeneric.SetImageTask(mContext, this, true, false).execute(
+                        AppRunnerSettings.get().project.getStoragePath()
+                        + File.separator
+                        + imagePath);
+            }
         }
 
         return this;

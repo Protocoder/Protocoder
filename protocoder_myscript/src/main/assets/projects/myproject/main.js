@@ -1,1 +1,0 @@
-media.textToSpeech("hola");

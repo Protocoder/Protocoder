@@ -93,6 +93,8 @@ public class AppRunnerActivity extends BaseActivity {
     private Toolbar mToolbar;
     private ActionBar mActionbar;
 
+    private Project mProject = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,26 +124,37 @@ public class AppRunnerActivity extends BaseActivity {
                 finish();
             }
 
-            // get projects intent
-            //settings
-            boolean settingScreenAlwaysOn = intent.getBooleanExtra(Project.SETTINGS_SCREEN_ALWAYS_ON, false);
-            boolean settingWakeUpScreen = intent.getBooleanExtra(Project.SETTINGS_SCREEN_WAKEUP, false);
+            // NOTE:
+            // if mProject == null , Protocoder is running in "standard" mode
+            // if mProject != null , Protocoder is running in "standalone" mode
 
-            //project info
-            String projectName = intent.getStringExtra(Project.NAME);
-            String projectFolder = intent.getStringExtra(Project.FOLDER);
-            String prefixScript = intent.getStringExtra(Project.PREFIX);
-            String code = intent.getStringExtra(Project.CODE);
-            String postfixScript = intent.getStringExtra(Project.POSTFIX);
+            boolean settingScreenAlwaysOn = false;
+            boolean settingWakeUpScreen = false;
+
+            if (mProject == null) {
+
+                mProject = new Project();
+
+                // get projects intent
+                //settings
+                settingScreenAlwaysOn = intent.getBooleanExtra(Project.SETTINGS_SCREEN_ALWAYS_ON, false);
+                settingWakeUpScreen = intent.getBooleanExtra(Project.SETTINGS_SCREEN_WAKEUP, false);
+
+                //project info
+                mProject.name = intent.getStringExtra(Project.NAME);
+                mProject.folder = intent.getStringExtra(Project.FOLDER);
+                mProject.prefix = intent.getStringExtra(Project.PREFIX);
+                mProject.code = intent.getStringExtra(Project.CODE);
+                mProject.postfix = intent.getStringExtra(Project.POSTFIX);
+            }
 
             Bundle bundle = new Bundle();
-            bundle.putString(Project.NAME, projectName);
-            bundle.putString(Project.FOLDER, projectFolder);
+            bundle.putString(Project.NAME, mProject.name);
+            bundle.putString(Project.FOLDER, mProject.folder);
             //bundle.putInt(Project.COLOR, intent.getIntExtra("color", 0));
-            bundle.putString(Project.PREFIX, prefixScript);
-            bundle.putString(Project.CODE, code);
-            bundle.putString(Project.POSTFIX, postfixScript);
-
+            bundle.putString(Project.PREFIX, mProject.prefix);
+            bundle.putString(Project.CODE, mProject.code);
+            bundle.putString(Project.POSTFIX, mProject.postfix);
 
             //MLog.d(TAG, "load " + projectName + " in " + projectFolder);
 
@@ -618,6 +631,10 @@ public class AppRunnerActivity extends BaseActivity {
 
         return r;
 
+    }
+
+    public void setProject(Project project) {
+        this.mProject = project;
     }
 
 }

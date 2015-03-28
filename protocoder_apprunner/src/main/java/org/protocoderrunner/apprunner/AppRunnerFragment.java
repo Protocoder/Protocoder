@@ -42,6 +42,7 @@ import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.protocoderrunner.AppSettings;
 import org.protocoderrunner.R;
 import org.protocoderrunner.apprunner.api.PApp;
 import org.protocoderrunner.apprunner.api.PBoards;
@@ -139,7 +140,14 @@ public class AppRunnerFragment extends Fragment {
             ProjectManager.getInstance().setCurrentProject(mCurrentProject);
             AppRunnerSettings.get().project = mCurrentProject;
             AppRunnerSettings.get().hasUi = true;
-            mScript = ProjectManager.getInstance().getCode(mCurrentProject);
+
+            if (AppSettings.STANDALONE == true) {
+                // Get code from assets
+                mScript = ProjectManager.getInstance().getCodeFromAssets(mActivity, mCurrentProject);
+            } else {
+                // Get code from sdcard
+                mScript = ProjectManager.getInstance().getCode(mCurrentProject);
+            }
 
             //setup actionbar
             // int actionBarColor;

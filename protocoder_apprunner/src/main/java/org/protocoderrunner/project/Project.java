@@ -20,6 +20,10 @@
 
 package org.protocoderrunner.project;
 
+import android.content.Context;
+import android.content.res.AssetManager;
+import android.net.Uri;
+
 public class Project {
 
     //public final static String TYPE = "projectType";
@@ -37,8 +41,11 @@ public class Project {
 
     public String name;
     public String folder;
-    public boolean containsReadme = false;
-    public boolean containsTutorial = false;
+    public String code;
+    public String prefix;
+    public String postfix;
+	public boolean containsReadme = false;
+	public boolean containsTutorial = false;
     public boolean selected = false;
 
     public Project(String folder, String projectName, boolean containsReadme, boolean containsTutorial) {
@@ -51,6 +58,10 @@ public class Project {
     public Project(String folder, String projectName) {
         this.folder = folder;
         this.name = projectName;
+    }
+
+    public Project() {
+
     }
 
     public String getName() {
@@ -70,7 +81,6 @@ public class Project {
     public String getFolder() {
         return this.folder;
     }
-
 
     //public String getTypeName() {
     //    return folder;

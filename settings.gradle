@@ -1,2 +1,1 @@
-include ':protocoder_app', ':protocoder_apprunner'
-//, ':protocoder_myscript'
+include ':protocoder_app', ':protocoder_apprunner', ':protocoder_myscript'
