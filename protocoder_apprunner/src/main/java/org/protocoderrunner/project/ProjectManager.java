@@ -46,7 +46,6 @@ public class ProjectManager {
     public static String MAIN_FILE_NAME = "main.js";
     public static final String FOLDER_EXAMPLES = "examples";
     public static final String FOLDER_USER_PROJECTS = "projects";
-    public static final String FOLDER_MYSCRIPT = "myscript";
     private static String PROTOCODER_EXTENSION = ".proto";
 
     private Project currentProject;
@@ -146,13 +145,6 @@ public class ProjectManager {
         }).start();
     }
 
-    // Get code from assets
-    public String getCodeFromAssets(Context c, Project p) {
-        return FileIO.readAssetFile(c, p.folder + File.separator +
-                p.name + File.separator + MAIN_FILE_NAME);
-    }
-
-    // Get code from sdcard
     public String getCode(Project p) {
         String out = null;
         File f = new File(p.getStoragePath() + File.separator + MAIN_FILE_NAME);

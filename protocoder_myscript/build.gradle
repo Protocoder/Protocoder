@@ -10,43 +10,16 @@ android {
         targetSdkVersion 21
         versionCode 1
         versionName "0.1"
-
-        compileOptions {
-            sourceCompatibility JavaVersion.VERSION_1_7
-            targetCompatibility JavaVersion.VERSION_1_7
-        }
-
     }
-
-    signingConfigs {
-        releaseConfig {
-
-        }
-    }
-
     buildTypes {
         release {
-            minifyEnabled false
-            debuggable false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-            signingConfig signingConfigs.releaseConfig;
+            runProguard false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
         debug {
             debuggable true;
             //applicationIdSuffix ".nineteen";
-        }
-    }
-
-    productFlavors {
-        normal {
-            applicationId "com.myscript"
-            resValue "string", "releaseMode", "normal"
-        }
-
-        extended {
-            applicationId "com.myscript"
-            resValue "string", "releaseMode", "normal"
         }
     }
 
@@ -62,10 +35,6 @@ android {
         exclude 'META-INF/dependencies.txt'
         exclude 'META-INF/LGPL2.1'
     }
-
-    dexOptions {
-        jumboMode true
-    }
 }
 
 
@@ -78,11 +47,9 @@ repositories {
     maven { url 'https://github.com/kshoji/USB-MIDI-Driver/raw/master/MIDIDriver/snapshots' }
 }
 
-dependencies {
-    normalCompile project(path: ':protocoder_apprunner', configuration:'normalrunnerRelease')
-    //extendedCompile project(path: ':protocoder_apprunner', configuration:'extendedrunnerRelease')
 
+dependencies {
+    compile project(':protocoder_apprunner')
     compile(name: 'processing_fragmented', ext: 'aar')
     compile 'jp.kshoji:midi-driver:0.0.2-SNAPSHOT:@aar'
-    compile 'com.android.support:appcompat-v7:21.0.+'
 }
