@@ -1,31 +1,27 @@
 package com.myscript;
 
-import android.os.Bundle;
+import android.app.Activity;
+import android.content.Intent;
 
-import org.protocoderrunner.AppSettings;
 import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.project.Project;
 
-
 /**
  * Created by victormanueldiazbarrales on 15/09/14.
- * Recreated by @josejuansanchez on 26/03/15 :)
  */
-public class MainActivity extends AppRunnerActivity {
+public class MainActivity extends Activity {
 
-    private static final String PROJECT_FOLDER = "myscript";
-    private static final String PROJECT_NAME = "myproject";
+    public MainActivity() {
+        Intent currentProjectApplicationIntent = new Intent(this, AppRunnerActivity.class);
+        currentProjectApplicationIntent.putExtra(Project.NAME, "myproject");
+        currentProjectApplicationIntent.putExtra(Project.FOLDER, "project");
+        currentProjectApplicationIntent.putExtra(Project.LOAD_FROM, "assets");
+        currentProjectApplicationIntent.putExtra(Project.FORMAT, "dir");
+        //currentProjectApplicationIntent.putExtra(Project.FORMAT, "protoFile");
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
 
-        // Enable the standalone mode
-        AppSettings.STANDALONE = true;
-
-        // Create a new project and inject it to the base class
-        Project project = new Project(PROJECT_FOLDER, PROJECT_NAME);
-        setProject(project);
-
-        super.onCreate(savedInstanceState);
+        startActivity(currentProjectApplicationIntent);
     }
+
+
 }

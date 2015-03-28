@@ -23,7 +23,6 @@ package org.protocoderrunner.apprunner.api.widgets;
 import android.animation.LayoutTransition;
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
@@ -36,7 +35,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
@@ -53,7 +51,6 @@ import org.osmdroid.events.DelayedMapListener;
 import org.osmdroid.events.MapListener;
 import org.osmdroid.events.ScrollEvent;
 import org.osmdroid.events.ZoomEvent;
-import org.protocoderrunner.AppSettings;
 import org.protocoderrunner.R;
 import org.protocoderrunner.apidoc.annotation.ProtoField;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
@@ -65,6 +62,7 @@ import org.protocoderrunner.apprunner.api.media.PCamera;
 import org.protocoderrunner.apprunner.api.other.ProtocoderNativeObject;
 import org.protocoderrunner.apprunner.api.widgets.PPadView.TouchEvent;
 import org.protocoderrunner.fragments.CameraNew;
+import org.protocoderrunner.fragments.CustomVideoTextureView;
 import org.protocoderrunner.utils.AndroidUtils;
 import org.protocoderrunner.utils.FileIO;
 import org.protocoderrunner.utils.Image;
@@ -112,14 +110,12 @@ public class PUIGeneric extends PInterface {
     protected boolean absoluteLayout = true;
     protected boolean isScrollLayout = true;
 
-    private Context mContext;
 
     @ProtoField(description = "Toolbar", example = "")
     public PToolbar toolbar;
 
     public PUIGeneric(Context a) {
         super(a);
-        this.mContext = a;
     }
 
     @Override
@@ -663,22 +659,8 @@ public class PUIGeneric extends PInterface {
             ib.setBackgroundResource(0);
         }
 
-        if (AppSettings.STANDALONE == true) {
-            // Add the image asynchronously from the assets
-            new SetImageTask(mContext, ib, true, true).execute(
-                    AppRunnerSettings.get().project.getFolder()
-                    + File.separator
-                    + AppRunnerSettings.get().project.getName()
-                    + File.separator
-                    + imgNotPressed);
-
-        } else {
-            // Add image asynchronously from the sdcard
-            new SetImageTask(mContext, ib, false, false).execute(
-                    AppRunnerSettings.get().project.getStoragePath()
-                    + File.separator
-                    + imgNotPressed);
-        }
+        // Add image asynchronously
+        new SetImageTask(ib, false).execute(AppRunnerSettings.get().project.getStoragePath() + File.separator + imgNotPressed);
 
         // Add the view
         addViewAbsolute(ib, x, y, w, h);
@@ -916,58 +898,27 @@ public class PUIGeneric extends PInterface {
     /**
      * This class lets us set images from file asynchronously
      *
-     * @author ncbq76 / Modifications by @josejuansanchez
+     * @author ncbq76
      */
     public static class SetImageTask extends AsyncTask<String, Void, Object> {
         PImageView bgImage;
         String imagePath;
         private String fileExtension;
         boolean isTiled = false;
-        private Context mContext;
-        boolean loadFromAssets;
 
-        public SetImageTask(Context context, PImageView bmImage, boolean isTiled, boolean loadFromAssets) {
-            this.mContext = context;
+        public SetImageTask(PImageView bmImage, boolean isTiled) {
             this.bgImage = bmImage;
             this.isTiled = isTiled;
-            this.loadFromAssets = loadFromAssets;
         }
 
         @Override
         protected Object doInBackground(String... paths) {
             imagePath = paths[0];
-
-            if (loadFromAssets == true) {
-                return loadImageFromAssets(imagePath);
-            } else {
-                return loadImage(imagePath);
-            }
-        }
-
-        private Object loadImageFromAssets(String imagePath) {
-            try {
-                final InputStream in = mContext.getAssets().open(imagePath);
-                fileExtension = FileIO.getFileExtension(imagePath);
-
-                if (fileExtension.equals("svg")) {
-                    AssetManager assetManager = mContext.getAssets();
-                    SVG svg = new SVGBuilder().readFromAsset(assetManager, imagePath).build();
-                    return svg.getDrawable();
-                } else {
-                    return BitmapFactory.decodeStream(in);
-                }
-
-            } catch (final Throwable tx) {
-                tx.printStackTrace();
-                return null;
-            }
-        }
-
-        private Object loadImage(String imagePath) {
             File imgFile = new File(imagePath);
-
+            //MLog.d("svg", "imagePath " + imagePath);
             if (imgFile.exists()) {
                 fileExtension = FileIO.getFileExtension(imagePath);
+                //MLog.d("svg", "fileExtension " + fileExtension);
                 if (fileExtension.equals("svg")) {
 
                     File file = new File(imagePath);
@@ -975,14 +926,36 @@ public class PUIGeneric extends PInterface {
                     try {
                         fileInputStream = new FileInputStream(file);
                         SVG svg = new SVGBuilder().readFromInputStream(fileInputStream).build();
+                        SVGParser svgParser = new SVGParser();
+                        //new SVGBuilder().
+                        //       SVGParser.
+
+
+                        //svg.
                         return svg.getDrawable();
 
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
 
+
+//                    try {
+//						//MLog.d("svg", "is SVG 1");
+//						File file = new File(imagePath);
+//						FileInputStream fileInputStream = new FileInputStream(file);
+//
+//						SVG svg = SVG.getFromInputStream(fileInputStream);
+//						Drawable drawable = new PictureDrawable(svg.renderToPicture());
+//
+//						return drawable;
+//					} catch (SVGParseException e) {
+//						e.printStackTrace();
+//					} catch (FileNotFoundException e) {
+//						e.printStackTrace();
+//					}
                 } else {
-                    return Image.loadBitmap(imagePath);
+                    Bitmap bmp = Image.loadBitmap(imagePath);
+                    return bmp;
                 }
             }
             return null;
@@ -990,7 +963,7 @@ public class PUIGeneric extends PInterface {
 
         @Override
         protected void onPostExecute(Object result) {
-            bgImage.setScaleType(ImageView.ScaleType.FIT_XY);
+            bgImage.setScaleType(ScaleType.FIT_XY);
 
             if (fileExtension.equals("svg")) {
                 MLog.d("svg", "is SVG 2 " + result);
@@ -1006,52 +979,34 @@ public class PUIGeneric extends PInterface {
         }
     }
 
-	/**
-	 * This class lets us set the background asynchronously
-	 * 
-	 * @author ncbq76 / Modifications by @josejuansanchez
+
+    /**
+     * This class lets us set the background asynchronously
      *
-	 */
-	// We need to set the bitmap image asynchronously
+     * @author ncbq76
+     */
+    // We need to set the bitmap image asynchronously
     protected class SetBgImageTask extends AsyncTask<String, Void, Bitmap> {
         PImageView fl;
         boolean isTiled;
-        boolean loadFromAssets;
 
-        public SetBgImageTask(PImageView bgImageView, boolean isTiled, boolean loadFromAssets) {
+        public SetBgImageTask(PImageView bgImageView, boolean isTiled) {
             this.fl = bgImageView;
             this.isTiled = isTiled;
-            this.loadFromAssets = loadFromAssets;
         }
 
         @Override
         protected Bitmap doInBackground(String... paths) {
             String imagePath = paths[0];
-
-            if (loadFromAssets == true) {
-                return loadImageFromAssets(imagePath);
-            } else {
-                return loadImage(imagePath);
-            }
-        }
-
-        private Bitmap loadImageFromAssets(String imagePath) {
-            try {
-                final InputStream in = getContext().getAssets().open(imagePath);
-                Bitmap bmp = BitmapFactory.decodeStream(in);
+            File imgFile = new File(imagePath);
+            if (imgFile.exists()) {
+                // Get the bitmap with appropriate options
+                final BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inPurgeable = true;
+                Bitmap bmp = BitmapFactory.decodeFile(imagePath, options);
                 return bmp;
-            } catch(final Throwable tx) {
-                return null;
             }
-        }
-
-        private Bitmap loadImage(String imagePath) {
-            try {
-                Bitmap bmp = BitmapFactory.decodeFile(imagePath);
-                return bmp;
-            } catch(final Throwable tx) {
-                return null;
-            }
+            return null;
         }
 
         @Override
