@@ -1,13 +1,10 @@
 package com.myscript;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 
 import org.protocoderrunner.AppSettings;
 import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.project.Project;
-import org.protocoderrunner.project.ProjectManager;
 
 
 /**
