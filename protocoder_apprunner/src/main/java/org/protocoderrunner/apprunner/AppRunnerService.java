@@ -4,6 +4,8 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
+import org.protocoderrunner.apprunner.api.PDevice;
+import org.protocoderrunner.apprunner.api.PUtil;
 import org.protocoderrunner.project.Project;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.MLog;
@@ -16,6 +18,8 @@ public class AppRunnerService extends Service {
     private AppRunnerInterpreter interp;
     private final String TAG = "AppRunnerService";
     private Project currentProject;
+    private PDevice pDevice;
+    private PUtil pUtil;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -33,6 +37,11 @@ public class AppRunnerService extends Service {
         AppRunnerSettings.get().project = currentProject;
         String script = ProjectManager.getInstance().getCode(currentProject);
 
+        pDevice = new PDevice(this);
+        pUtil = new PUtil(this);
+
+        interp.interpreter.addObjectToInterface("device", pDevice);
+        interp.interpreter.addObjectToInterface("util", pUtil);
         interp.evalFromService(script);
 
         return Service.START_NOT_STICKY;
@@ -48,5 +57,10 @@ public class AppRunnerService extends Service {
     public void onCreate() {
         super.onCreate();
         // its called only once
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 }

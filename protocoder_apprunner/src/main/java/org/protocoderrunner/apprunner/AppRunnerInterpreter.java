@@ -33,6 +33,7 @@ import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.commonjs.module.Require;
 import org.mozilla.javascript.debug.Debugger;
+import org.protocoderrunner.utils.MLog;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -63,7 +64,9 @@ public class AppRunnerInterpreter {
         final AtomicReference<Object> result = new AtomicReference<Object>(null);
 
         try {
-            result.set(interpreter.eval(code, ""));
+            result.set(
+                    interpreter.eval(code, "")
+            );
         } catch (Throwable e) {
             reportError(e);
             result.set(e);
@@ -160,7 +163,8 @@ public class AppRunnerInterpreter {
                     + (error.sourceName() != null ? " " + error.sourceName() : "")
                     + (error.lineSource() != null ? " " + error.lineSource() : "") + "\n" + error.getScriptStackTrace();
 
-            this.mInterpreterListener.onError(message);
+            MLog.d(TAG, " " + message);
+            if (mInterpreterListener != null) mInterpreterListener.onError(message);
 
         } else if (e instanceof IllegalArgumentException) {
             IllegalArgumentException err = (IllegalArgumentException) e;

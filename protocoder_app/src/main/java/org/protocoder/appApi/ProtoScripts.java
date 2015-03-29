@@ -38,6 +38,7 @@ import org.protocoder.projectlist.ProjectListFragment;
 import org.protocoder.projectlist.ProjectsPagerAdapter;
 import org.protocoder.projectlist.ZoomOutPageTransformer;
 import org.protocoderrunner.apprunner.AppRunnerActivity;
+import org.protocoderrunner.apprunner.AppRunnerService;
 import org.protocoderrunner.apprunner.api.PUtil;
 import org.protocoderrunner.project.Project;
 import org.protocoderrunner.project.ProjectManager;
@@ -233,35 +234,43 @@ public class ProtoScripts {
             currentProjectApplicationIntent = null;
         }
 
-        //open new activity
-        try {
-            currentProjectApplicationIntent = new Intent(mProtocoder.mActivityContext, AppRunnerActivity.class);
-
-            if (AndroidUtils.isVersionLollipop()) {
-                //TODO enable version Android-L
-                //currentProjectApplicationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-            } else {
-                currentProjectApplicationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            }
-
-            //settings
-            currentProjectApplicationIntent.putExtra(Project.SETTINGS_SCREEN_ALWAYS_ON, mProtocoder.settings.getScreenOn());
-
-            //set the folder and app name to be loaded
+        if (appName.toLowerCase().endsWith("service")) {
+            currentProjectApplicationIntent = new Intent(mProtocoder.mActivityContext, AppRunnerService.class);
             currentProjectApplicationIntent.putExtra(Project.FOLDER, folder);
             currentProjectApplicationIntent.putExtra(Project.NAME, appName);
 
-            currentProjectApplicationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-            //currentProjectApplicationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            currentProjectApplicationIntent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+            mProtocoder.mActivityContext.startService(currentProjectApplicationIntent);
+        } else {
+            //open new activity
+            try {
+                currentProjectApplicationIntent = new Intent(mProtocoder.mActivityContext, AppRunnerActivity.class);
 
-            //load the custom js interpreter if exists with the webide
-            currentProjectApplicationIntent.putExtra(Project.PREFIX, EditorManager.getInstance().getCustomJSInterpreterIfExist(mProtocoder.mActivityContext));
+                if (AndroidUtils.isVersionLollipop()) {
+                    //TODO enable version Android-L
+                    //currentProjectApplicationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+                } else {
+                    currentProjectApplicationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                }
 
-            mProtocoder.mActivityContext.overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
-            mProtocoder.mActivityContext.startActivityForResult(currentProjectApplicationIntent, mProjectRequestCode);
-        } catch (Exception e) {
-            MLog.d(TAG, "Error launching script");
+                //settings
+                currentProjectApplicationIntent.putExtra(Project.SETTINGS_SCREEN_ALWAYS_ON, mProtocoder.settings.getScreenOn());
+
+                //set the folder and app name to be loaded
+                currentProjectApplicationIntent.putExtra(Project.FOLDER, folder);
+                currentProjectApplicationIntent.putExtra(Project.NAME, appName);
+
+                currentProjectApplicationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+                //currentProjectApplicationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                currentProjectApplicationIntent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+
+                //load the custom js interpreter if exists with the webide
+                currentProjectApplicationIntent.putExtra(Project.PREFIX, EditorManager.getInstance().getCustomJSInterpreterIfExist(mProtocoder.mActivityContext));
+
+                mProtocoder.mActivityContext.overridePendingTransition(R.anim.splash_slide_in_anim_set, R.anim.splash_slide_out_anim_set);
+                mProtocoder.mActivityContext.startActivityForResult(currentProjectApplicationIntent, mProjectRequestCode);
+            } catch (Exception e) {
+                MLog.d(TAG, "Error launching script");
+            }
         }
     }
 
