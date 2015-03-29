@@ -30,6 +30,7 @@ android {
             debuggable false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
             signingConfig signingConfigs.releaseConfig;
+            zipAlignEnabled true
         }
 
         debug {
@@ -40,12 +41,14 @@ android {
 
     productFlavors {
         normal {
-            applicationId "com.myscript"
+            applicationId "com.myscript.normal"
+            versionName "0.1.0_normal"
             resValue "string", "releaseMode", "normal"
         }
 
         extended {
-            applicationId "com.myscript"
+            applicationId "com.myscript.extended"
+            versionName "0.1.0_normal"
             resValue "string", "releaseMode", "normal"
         }
     }
@@ -80,7 +83,7 @@ repositories {
 
 dependencies {
     normalCompile project(path: ':protocoder_apprunner', configuration:'normalrunnerRelease')
-    //extendedCompile project(path: ':protocoder_apprunner', configuration:'extendedrunnerRelease')
+    extendedCompile project(path: ':protocoder_apprunner', configuration:'extendedrunnerRelease')
 
     compile(name: 'processing_fragmented', ext: 'aar')
     compile 'jp.kshoji:midi-driver:0.0.2-SNAPSHOT:@aar'
