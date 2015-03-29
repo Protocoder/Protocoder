@@ -225,7 +225,7 @@ public class FileIO {
             if (assets.length == 0) {
                 copyFile(c, path);
             } else {
-                String fullPath = ProjectManager.getInstance().getBaseDir() + "/" + path;
+                String fullPath = ProjectManager.getInstance().getBaseDir() + path;
                 File dir = new File(fullPath);
                 if (!dir.exists()) {
                     dir.mkdir();
