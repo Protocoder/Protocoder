@@ -26,6 +26,7 @@ import android.os.Environment;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.protocoderrunner.AppRunnerContext;
 import org.protocoderrunner.AppSettings;
 import org.protocoderrunner.utils.FileIO;
 import org.protocoderrunner.utils.MLog;
@@ -71,8 +72,16 @@ public class ProjectManager {
     }
 
     public String getBaseDir() {
-        String baseDir = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + AppSettings.APP_FOLDER
-                + File.separator;
+        String baseDir;
+
+        if (AppSettings.STANDALONE == true) {
+            baseDir = AppRunnerContext.get().getAppContext().getFilesDir().getPath()
+                    + File.separator;
+
+        } else {
+            baseDir = Environment.getExternalStorageDirectory().getAbsolutePath()
+                    + File.separator + AppSettings.APP_FOLDER + File.separator;
+        }
 
         return baseDir;
     }
@@ -305,9 +314,7 @@ public class ProjectManager {
 
     // TODO fix this hack
     public String getProjectURL(Project p) {
-        String projectURL = getProjectFolderUrl(p.folder) + "/" + p.getName();
-
-        return projectURL;
+        return getProjectFolderUrl(p.folder) + "/" + p.getName();
     }
 
     public void setCurrentProject(Project project) {

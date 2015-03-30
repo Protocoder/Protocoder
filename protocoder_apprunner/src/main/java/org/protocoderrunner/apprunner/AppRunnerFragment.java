@@ -141,13 +141,8 @@ public class AppRunnerFragment extends Fragment {
             AppRunnerSettings.get().project = mCurrentProject;
             AppRunnerSettings.get().hasUi = true;
 
-            if (AppSettings.STANDALONE == true) {
-                // Get code from assets
-                mScript = ProjectManager.getInstance().getCodeFromAssets(mActivity, mCurrentProject);
-            } else {
-                // Get code from sdcard
-                mScript = ProjectManager.getInstance().getCode(mCurrentProject);
-            }
+            // Get the script code
+            mScript = ProjectManager.getInstance().getCode(mCurrentProject);
 
             //setup actionbar
             // int actionBarColor;

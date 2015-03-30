@@ -703,22 +703,11 @@ public class PUI extends PUIGeneric {
 	public void backgroundImage(String imagePath) {
 		initializeLayout();
 
-        if (AppSettings.STANDALONE == true) {
-            // Add the bg image asynchronously from the assets
-            new SetBgImageTask(bgImageView, false, true).execute(
-                    AppRunnerSettings.get().project.getFolder()
-                            + File.separator
-                            + AppRunnerSettings.get().project.getName()
-                            + File.separator
-                            + imagePath);
-
-        } else {
-            // Add the bg image asynchronously from the sdcard
-            new SetBgImageTask(bgImageView, false, false).execute(
-                    AppRunnerSettings.get().project.getStoragePath()
-                            + File.separator
-                            + imagePath);
-        }
+        // Add the bg image asynchronously from the sdcard
+        new SetBgImageTask(bgImageView, false).execute(
+                AppRunnerSettings.get().project.getStoragePath()
+                        + File.separator
+                        + imagePath);
 	}
 
     @ProtoMethod(description = "Sets an image as tiled background", example = "")
@@ -726,22 +715,11 @@ public class PUI extends PUIGeneric {
 	public void backgroundImageTile(String imagePath) {
 		initializeLayout();
 
-        if (AppSettings.STANDALONE == true) {
-            // Add the bg image asynchronously from the assets
-            new SetBgImageTask(bgImageView, true, true).execute(
-                    AppRunnerSettings.get().project.getFolder()
-                    + File.separator
-                    + AppRunnerSettings.get().project.getName()
-                    + File.separator
-                    + imagePath);
-
-        } else {
-            // Add the bg image asynchronously from the sdcard
-            new SetBgImageTask(bgImageView, true, false).execute(
-                    AppRunnerSettings.get().project.getStoragePath()
-                    + File.separator
-                    + imagePath);
-        }
+        // Add the bg image asynchronously
+        new SetBgImageTask(bgImageView, true).execute(
+                AppRunnerSettings.get().project.getStoragePath()
+                        + File.separator
+                        + imagePath);
 	}
 
 
