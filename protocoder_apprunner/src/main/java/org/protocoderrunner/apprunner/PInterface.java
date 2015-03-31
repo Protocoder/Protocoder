@@ -34,6 +34,7 @@ public class PInterface {
 
     private WeakReference<Context> mContext;
     private AppRunnerFragment mFragment;
+    private AppRunnerService mService;
     private AppRunnerActivity mActivity;
 
     public PInterface(Context context) {
@@ -50,12 +51,19 @@ public class PInterface {
         this.mActivity = (AppRunnerActivity) (mFragment.getActivity());
     }
 
+    public void initForParentService(AppRunnerService service) {
+        this.mService = service;
+    }
+
     public Context getContext() {
         return mContext.get();
     }
 
     public AppRunnerFragment getFragment() {
         return mFragment;
+    }
+    public AppRunnerService getService() {
+        return mService;
     }
 
     public AppRunnerActivity getActivity() {

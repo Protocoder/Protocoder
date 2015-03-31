@@ -7,8 +7,10 @@ import android.graphics.PixelFormat;
 import android.media.AudioManager;
 import android.os.IBinder;
 import android.view.Gravity;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import org.protocoderrunner.R;
 import org.protocoderrunner.apprunner.api.PApp;
@@ -54,6 +56,8 @@ public class AppRunnerService extends Service {
 
     private WindowManager windowManager;
     private ImageView img;
+    private RelativeLayout parentScriptedLayout;
+    private RelativeLayout mainLayout;
 
 
     @Override
@@ -78,6 +82,7 @@ public class AppRunnerService extends Service {
         pSensors = new PSensors(this);
         //pSensors.initForParentFragment(this);
         pUi = new PUI(this);
+        pUi.initForParentService(this);
         //pUi.initForParentFragment(this);
         pUtil = new PUtil(this);
 
@@ -94,6 +99,8 @@ public class AppRunnerService extends Service {
         interp.interpreter.addObjectToInterface("ui", pUi);
         interp.interpreter.addObjectToInterface("util", pUtil);
 
+        mainLayout = initLayout();
+
         String projectName = intent.getStringExtra(Project.NAME);
         String projectFolder = intent.getStringExtra(Project.FOLDER);
 
@@ -104,11 +111,6 @@ public class AppRunnerService extends Service {
         AppRunnerSettings.get().project = currentProject;
         String script = ProjectManager.getInstance().getCode(currentProject);
 
-
-
-
-        interp.interpreter.addObjectToInterface("device", pDevice);
-        interp.interpreter.addObjectToInterface("util", pUtil);
         interp.evalFromService(script);
 
         //audio
@@ -124,10 +126,10 @@ public class AppRunnerService extends Service {
         img.setAlpha(0.5f);
 
         WindowManager.LayoutParams params = new WindowManager.LayoutParams(
-                //WindowManager.LayoutParams.WRAP_CONTENT,
-                //WindowManager.LayoutParams.WRAP_CONTENT,
-                50,
-                50,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                //50,
+                //50,
                 WindowManager.LayoutParams.TYPE_PHONE,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
@@ -136,14 +138,31 @@ public class AppRunnerService extends Service {
         params.x = 0;
         params.y = 100;
 
-        windowManager.addView(img, params);
+        windowManager.addView(mainLayout, params);
 
         EventBus.getDefault().register(this);
 
         return Service.START_NOT_STICKY;
     }
 
-    @Override
+
+    public void addScriptedLayout(RelativeLayout scriptedUILayout) {
+        parentScriptedLayout.addView(scriptedUILayout);
+    }
+
+    public RelativeLayout initLayout() {
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+
+        // set the parent
+        parentScriptedLayout = new RelativeLayout(this);
+        parentScriptedLayout.setLayoutParams(layoutParams);
+        parentScriptedLayout.setGravity(Gravity.BOTTOM);
+        parentScriptedLayout.setBackgroundColor(getResources().getColor(R.color.transparent));
+
+        return parentScriptedLayout;
+    }
+
+        @Override
     public IBinder onBind(Intent intent) {
         // TODO for communication return IBinder implementation
         return null;
