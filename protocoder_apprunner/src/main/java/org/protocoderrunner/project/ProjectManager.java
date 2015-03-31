@@ -26,7 +26,7 @@ import android.os.Environment;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.protocoderrunner.AppRunnerContext;
+import org.protocoderrunner.apprunner.AppRunnerContext;
 import org.protocoderrunner.AppSettings;
 import org.protocoderrunner.utils.FileIO;
 import org.protocoderrunner.utils.MLog;

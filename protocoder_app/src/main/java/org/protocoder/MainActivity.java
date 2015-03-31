@@ -39,7 +39,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import org.protocoder.activities.AppBaseActivity;
 import org.protocoder.appApi.Protocoder;
-import org.protocoderrunner.AppRunnerContext;
+import org.protocoderrunner.apprunner.AppRunnerContext;
 import org.protocoderrunner.events.Events;
 import org.protocoderrunner.events.Events.ProjectEvent;
 import org.protocoderrunner.network.IDEcommunication;

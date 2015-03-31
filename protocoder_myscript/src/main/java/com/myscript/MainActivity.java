@@ -2,7 +2,7 @@ package com.myscript;
 
 import android.os.Bundle;
 
-import org.protocoderrunner.AppRunnerContext;
+import org.protocoderrunner.apprunner.AppRunnerContext;
 import org.protocoderrunner.AppSettings;
 import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.project.Project;
