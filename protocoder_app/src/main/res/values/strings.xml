@@ -55,6 +55,8 @@
     <string name="setting_screen_on_description">Force the device to be awake all the time</string>
     <string name="setting_list_mode_title">Use List Mode</string>
     <string name="setting_list_mode_description">Switch between grid or list mode in the main screen, list mode is nice for wearable devices</string>
+    <string name="setting_app_color_title">Change the app primary color</string>
+    <string name="setting_app_color_description">To change the color use the format #aarrggbb</string>
     <string name="setting_background_mode_title">Background mode</string>
     <string name="setting_background_mode_description">Servers will work in the background so you can keep working even if you are in a different app</string>
     <string name="setting_connection_alert_title">Connection Alert</string>

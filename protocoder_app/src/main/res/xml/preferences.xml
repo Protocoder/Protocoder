@@ -42,6 +42,10 @@
             <!--android:key="pref_connection_alert"-->
             <!--android:summary="@string/setting_connection_alert_description"-->
             <!--android:title="@string/setting_connection_alert_title" />-->
+        <EditTextPreference
+            android:key="pref_app_color"
+            android:summary="@string/setting_app_color_description"
+            android:title="@string/setting_app_color_title" />
         <CheckBoxPreference
             android:checked="true"
             android:key="pref_new_version_check"

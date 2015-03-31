@@ -95,6 +95,18 @@ public class SettingsFragment extends PreferenceFragment {
 
         prefId.setText(mSettings.getId());
 
+        final EditTextPreference appColor = (EditTextPreference) findPreference("pref_app_color");
+        prefId.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                prefId.setText((String) newValue);
+                return false;
+            }
+        });
+
+        appColor.setText(mSettings.getColor());
+
         Preference btnShowLicenses = findPreference("licenses_detail");
         btnShowLicenses.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override

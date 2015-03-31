@@ -23,6 +23,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Intent;
+import android.graphics.Color;
 import android.provider.Settings;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -80,6 +81,7 @@ public class App {
     public void init() {
 
         mainAppView = (RelativeLayout) protocoder.mActivityContext.findViewById(R.id.contentHolder);
+        mainAppView.setBackgroundColor(Color.parseColor(protocoder.settings.getColor()));
         // Create the IP text view
         textIP = (TextView) protocoder.mActivityContext.findViewById(R.id.ip);
         textIP.setOnClickListener(null);// Remove the old listener explicitly

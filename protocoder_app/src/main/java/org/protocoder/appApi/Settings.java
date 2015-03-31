@@ -119,5 +119,11 @@ public class Settings {
         return mSharedPrefs.getBoolean("pref_new_version_check", true);
     }
 
+    public boolean setColor(String color) {
+        return mSharedPrefs.edit().putString("pref_app_color", "#FFFFFFFF").commit();
+    }
 
+    public String getColor() {
+        return mSharedPrefs.getString("pref_app_color", "#FFFFFFFF");
+    }
 }
