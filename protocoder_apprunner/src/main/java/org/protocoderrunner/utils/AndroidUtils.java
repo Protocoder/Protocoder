@@ -236,8 +236,11 @@ public class AndroidUtils {
     }
 
     public static boolean isVersionLollipop() {
-
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
+    }
+
+    public static boolean isVersionKitKat() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
     }
 
 

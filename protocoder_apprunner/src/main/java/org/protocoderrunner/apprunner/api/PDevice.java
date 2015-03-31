@@ -27,14 +27,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Vibrator;
 import android.provider.Settings.Secure;
+import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
+import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.widget.TableRow;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 
@@ -48,6 +53,7 @@ import org.protocoderrunner.utils.Intents;
 public class PDevice extends PInterface {
 
     private BroadcastReceiver batteryReceiver;
+    private BroadcastReceiver onNotification;
 
     public PDevice(Context a) {
         super(a);
@@ -76,6 +82,9 @@ public class PDevice extends PInterface {
         void event(String number, String responseString);
     }
 
+    public interface onSmsReceivedListener {
+        public void onSmsReceived(String number, String msg);
+    }
 
     @ProtoMethod(description = "Gives back the number and sms of the sender", example = "")
     @ProtoMethodParam(params = {"function(number, message)"})
@@ -487,12 +496,32 @@ public class PDevice extends PInterface {
     }
 
 
-    public void stop() {
-        getContext().unregisterReceiver(batteryReceiver);
+    public interface OnNotificationCallback {
+        public void event(String[] notification);
     }
 
-    public interface onSmsReceivedListener {
-        public void onSmsReceived(String number, String msg);
+    public void onNewNotification(final OnNotificationCallback callback) {
+        final String[] notification = new String[3];
+
+        onNotification = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                notification[0] = intent.getStringExtra("package");
+                notification[1] = intent.getStringExtra("title");
+                notification[2] = intent.getStringExtra("text");
+
+                callback.event(notification);
+            }
+        };
+
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(onNotification, new IntentFilter("Msg"));
+    }
+
+    public void stop() {
+        getContext().unregisterReceiver(batteryReceiver);
+        getContext().unregisterReceiver(onNotification);
+        batteryReceiver = null;
+        onNotification = null;
     }
 
 }
