@@ -26,32 +26,14 @@ public class NotificationService extends NotificationListenerService {
     public void onNotificationPosted(StatusBarNotification sbn) {
 
         if (AndroidUtils.isVersionKitKat()) {
-            String pack = "";
-            String ticker = "";
-            Bundle extras = null;
+            String pack = sbn.getPackageName();
+            String ticker = getString(sbn.getNotification().tickerText);
+            Bundle extras = sbn.getNotification().extras;
             String title = "";
             String text = "";
-
-            pack = sbn.getPackageName();
-            try {
-                ticker = sbn.getNotification().tickerText.toString();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                extras = sbn.getNotification().extras;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
+            if (extras != null) {
                 title = extras.getString("android.title");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                text = extras.getCharSequence("android.text").toString();
-            } catch (Exception e) {
-                e.printStackTrace();
+                text = getString(extras.getCharSequence("android.text")).toString();
             }
 
             Log.i("Package", pack);
@@ -65,6 +47,18 @@ public class NotificationService extends NotificationListenerService {
             msgrcv.putExtra("text", text);
             LocalBroadcastManager.getInstance(context).sendBroadcast(msgrcv);
         }
+    }
+
+    private String getString(CharSequence c) {
+       String ret;
+
+        if (c == null) {
+            ret = "";
+        } else {
+            ret = c.toString();
+        }
+
+        return ret;
     }
 
     @Override
