@@ -35,7 +35,6 @@ import android.support.v4.app.NotificationCompat;
 
 import org.mozilla.javascript.NativeObject;
 import org.protocoderrunner.R;
-import org.protocoderrunner.apidoc.annotation.ProtoField;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunnerActivity;
@@ -47,7 +46,6 @@ import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.project.SchedulerManager;
 import org.protocoderrunner.utils.ExecuteCmd;
 import org.protocoderrunner.utils.FileIO;
-import org.protocoderrunner.utils.MLog;
 
 import java.io.File;
 
@@ -57,8 +55,11 @@ public class PApp extends PInterface {
 
     public interface onAppStatus {
         public void onStart();
+
         public void onPause();
+
         public void onResume();
+
         public void onStop();
     }
 
@@ -66,7 +67,6 @@ public class PApp extends PInterface {
         super(a);
         pevents = new PEvents(a);
     }
-
 
 
     //TODO reenable this
@@ -141,27 +141,23 @@ public class PApp extends PInterface {
     @ProtoMethod(description = "", example = "")
     @ProtoMethodParam(params = {"id", "title", "description"})
     public void notification(int id, String title, String description) {
+
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getContext())
                 .setSmallIcon(R.drawable.app_icon).setContentTitle(title).setContentText(description);
         // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(getContext(), AppRunnerActivity.class);
 
         // The stack builder object will contain an artificial back stack for
-        // the started Activity.
-        // This ensures that navigating backward from the Activity leads out of
-        // your application to the Home screen.
+        // navigating backward from the Activity leads out your application to the Home screen.
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(getContext());
-        // Adds the back stack for the Intent (but not the Intent itself)
         stackBuilder.addParentStack(AppRunnerActivity.class);
-        // Adds the Intent that starts the Activity to the top of the stack
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
         mBuilder.setContentIntent(resultPendingIntent);
         NotificationManager mNotificationManager = (NotificationManager) getContext().getSystemService(
                 getContext().NOTIFICATION_SERVICE);
-        // mId allows you to update the notification later on.
         mNotificationManager.notify(id, mBuilder.build());
-
     }
 
     // TOFIX not working yet
