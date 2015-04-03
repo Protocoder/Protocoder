@@ -12,17 +12,17 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.apprunner.api.network.PBluetooth;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunningInterface;
+import org.protocoderrunner.utils.MLog;
 
 import java.util.Set;
-import java.util.Vector;
 
 public class SimpleBT implements WhatIsRunningInterface {
     private static final String TAG = "BT";
 
     // Intent request codes
-    public static final int REQUEST_CONNECT_DEVICE = 1;
     public static final int REQUEST_ENABLE_BT = 2;
 
     // Message types sent from the BluetoothService Handler
@@ -41,7 +41,9 @@ public class SimpleBT implements WhatIsRunningInterface {
 
    // Vector<SimpleBTListener> listeners = new Vector<SimpleBT.SimpleBTListener>();
 
-    private final Activity ac;
+    private final Context mContext;
+    private final AppRunnerActivity mActivity;
+
     private SimpleBTListener mSimpleBTListener;
 
     public interface SimpleBTListener {
@@ -50,11 +52,11 @@ public class SimpleBT implements WhatIsRunningInterface {
         public void onRawDataReceived(final byte[] buffer, final int size);
     }
 
-    public SimpleBT(Activity ac) {
-        this.ac = ac;
+    public SimpleBT(Context c, AppRunnerActivity activity) {
+        this.mContext = c;
+        this.mActivity = activity;
         // Get local Bluetooth adapter
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
     }
 
     public void startBtService() {
@@ -74,20 +76,12 @@ public class SimpleBT implements WhatIsRunningInterface {
                     switch (msg.arg1) {
                         case BluetoothSerialService.STATE_CONNECTED:
                             connected = true;
-                            //for (int i = 0; i < listeners.size(); i++) {
-                            //    SimpleBTListener l = listeners.get(0);
                                 if (mSimpleBTListener != null) mSimpleBTListener.onConnected(connected);
-                            //}
                             break;
                         case BluetoothSerialService.STATE_CONNECTING:
                             break;
                         case BluetoothSerialService.STATE_NONE:
                             connected = false;
-//                            for (int i = 0; i < listeners.size(); i++) {
-//                                SimpleBTListener l = listeners.get(0);
-//                                l.onConnected(connected);
-//                            }
-
                             if (mSimpleBTListener != null) mSimpleBTListener.onConnected(connected);
 
                             break;
@@ -108,31 +102,24 @@ public class SimpleBT implements WhatIsRunningInterface {
 
                     // here is where we get the BT data
                     Log.d(TAG, "received " + readMessage);
-                    //for (int i = 0; i < listeners.size(); i++) {
-                    //    SimpleBTListener l = listeners.get(0);
-                    //    l.onMessageReceived(readMessage);
-                    //}
+
                     if (mSimpleBTListener != null) mSimpleBTListener.onMessageReceived(readMessage);
 
-                    break;
-                case MESSAGE_DEVICE_NAME:
-                    //for (int i = 0; i < listeners.size(); i++) {
-                    //    SimpleBTListener l = listeners.get(0);
-                        //l.onConnected(connected);
-                    //}
-                    //Toast.makeText(ac.getApplicationContext(), "Connected", Toast.LENGTH_SHORT).show();
                     break;
             }
         }
     };
 
-    public void start() {
 
-        // If BT is not on, request that it be enabled.
-        // setupUserInterface() will then be called during onActivityResult
+    public void start() {
+        //try to start the bluetooth if not enabled
         if (!mBluetoothAdapter.isEnabled()) {
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            ac.startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+            if (mActivity != null) {
+                mActivity.startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+            } else {
+                MLog.d(TAG, "you must enabled bluetooth before");
+            }
             // Otherwise, setup the Bluetooth session
         } else {
             if (mBluetoothService == null) {
@@ -165,7 +152,7 @@ public class SimpleBT implements WhatIsRunningInterface {
         };
 
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        ac.registerReceiver(mReceiver, filter);
+        mContext.registerReceiver(mReceiver, filter);
     }
 
     public void destroy() {
@@ -177,28 +164,15 @@ public class SimpleBT implements WhatIsRunningInterface {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case REQUEST_CONNECT_DEVICE:
-                // When DeviceListActivity returns with mContext device to connect
-                if (resultCode == Activity.RESULT_OK) {
-                    // Get the device MAC address
-                    //String address = data.getExtras().getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-                    // Get the BLuetoothDevice object
-                    //BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
-                    // Attempt to connect to the device
-                    //mBluetoothService.connect(device);
-                }
-                break;
             case REQUEST_ENABLE_BT:
                 // When the request to enable Bluetooth returns
                 if (resultCode == Activity.RESULT_OK) {
-                    // Bluetooth is now enabled, so set up mContext Bluetooth session
+                    // Bluetooth is now enabled, so set up the Bluetooth session
                     startBtService();
                 } else {
                     // User did not enable Bluetooth or an error occurred
                     //Log.d(TAG, "BT not enabled");
-                    Toast.makeText(ac.getApplicationContext(), "BT not enabled :(", Toast.LENGTH_SHORT).show();
-
-                    // finish();
+                    Toast.makeText(mContext.getApplicationContext(), "BT not enabled :(", Toast.LENGTH_SHORT).show();
                 }
         }
     }

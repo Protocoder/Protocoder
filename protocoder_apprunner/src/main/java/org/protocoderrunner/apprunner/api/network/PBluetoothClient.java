@@ -47,6 +47,9 @@ public class PBluetoothClient extends PInterface {
         mPBluetooth = pBluetooth;
         mFragment = fragment;
 
+        simpleBT = new SimpleBT(getContext(), null);
+        simpleBT.start();
+
         WhatIsRunning.getInstance().add(this);
     }
 
@@ -61,11 +64,9 @@ public class PBluetoothClient extends PInterface {
         void event(String data);
     }
 
-    @ProtoMethod(description = "Connects to mContext bluetooth device using mContext popup", example = "")
+    @ProtoMethod(description = "Connects to mContext bluetooth device using the popup", example = "")
     @ProtoMethodParam(params = {"function(name, macAddress, strength)"})
     public void connectSerial(final CallbackConnected callbackfn) {
-        start();
-
         NativeArray nativeArray = mPBluetooth.getBondedDevices();
         String[] arrayStrings = new String[(int) nativeArray.size()];
         for (int i = 0; i < nativeArray.size(); i++) {
@@ -79,12 +80,6 @@ public class PBluetoothClient extends PInterface {
             }
         });
         listen();
-    }
-
-    private void start() {
-        simpleBT = new SimpleBT(mFragment.getActivity());
-        simpleBT.start();
-
     }
 
     @ProtoMethod(description = "Connect to mContext bluetooth device using the mac address", example = "")

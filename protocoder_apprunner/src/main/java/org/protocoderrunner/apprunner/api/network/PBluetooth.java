@@ -56,6 +56,8 @@ public class PBluetooth extends PInterface {
         start();
     }
 
+    @ProtoMethod(description = "")
+    @ProtoMethodParam(params = {""})
     public PBluetoothClient connectSerial(String mac, PBluetoothClient.CallbackConnected callback) {
         start();
 
@@ -82,37 +84,44 @@ public class PBluetooth extends PInterface {
         if (mBtStarted) {
             return simpleBT;
         }
-        simpleBT = new SimpleBT(getActivity());
+        simpleBT = new SimpleBT(getContext(), getActivity());
         simpleBT.start();
-        getActivity().addBluetoothListener(new onBluetoothListener() {
 
-            @Override
-            public void onDeviceFound(String name, String macAddress, float strength) {
-            }
+        if (getActivity() != null) {
+            MLog.d(TAG, "starting bluetooth in a activity");
 
-            @Override
-            public void onActivityResult(int requestCode, int resultCode, Intent data) {
-                simpleBT.onActivityResult(requestCode, resultCode, data);
+            getActivity().addBluetoothListener(new onBluetoothListener() {
 
-                switch (requestCode) {
-                    case SimpleBT.REQUEST_ENABLE_BT:
-                        // When the request to enable Bluetooth returns
-                        if (resultCode == Activity.RESULT_OK) {
-                            //MLog.d(TAG, "enabling BT");
-                            // Bluetooth is now enabled, so set up mContext Bluetooth session
-                            mBtStarted = true;
-                            simpleBT.startBtService();
-
-                            // User did not enable Bluetooth or an error occurred
-                        } else {
-                            //	MLog.d(TAG, "BT not enabled");
-                            Toast.makeText(getActivity().getApplicationContext(), "BT not enabled :(", Toast.LENGTH_SHORT)
-                                    .show();
-
-                        }
+                @Override
+                public void onDeviceFound(String name, String macAddress, float strength) {
                 }
-            }
-        });
+
+                @Override
+                public void onActivityResult(int requestCode, int resultCode, Intent data) {
+                    simpleBT.onActivityResult(requestCode, resultCode, data);
+
+                    switch (requestCode) {
+                        case SimpleBT.REQUEST_ENABLE_BT:
+                            // When the request to enable Bluetooth returns
+                            if (resultCode == Activity.RESULT_OK) {
+                                //MLog.d(TAG, "enabling BT");
+                                // Bluetooth is now enabled, so set up mContext Bluetooth session
+                                mBtStarted = true;
+                                simpleBT.startBtService();
+
+                                // User did not enable Bluetooth or an error occurred
+                            } else {
+                                //	MLog.d(TAG, "BT not enabled");
+                                Toast.makeText(getActivity().getApplicationContext(), "BT not enabled :(", Toast.LENGTH_SHORT)
+                                        .show();
+
+                            }
+                    }
+                }
+            });
+        } else {
+            MLog.d(TAG, "starting bluetooth as service");
+        }
 
         WhatIsRunning.getInstance().add(simpleBT);
         return simpleBT;

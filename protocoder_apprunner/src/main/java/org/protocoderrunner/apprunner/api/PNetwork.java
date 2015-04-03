@@ -100,6 +100,8 @@ public class PNetwork extends PInterface {
     public PNetwork(Context a) {
         super(a);
 
+        bluetooth = new PBluetooth(a);
+
         WhatIsRunning.getInstance().add(this);
     }
 
@@ -110,7 +112,6 @@ public class PNetwork extends PInterface {
         MLog.d(TAG, "is getActivity() " + getActivity());
 
         if (getFragment() != null) {
-            bluetooth = new PBluetooth(getActivity());
             bluetooth.initForParentFragment(getFragment());
         }
     }
@@ -358,16 +359,14 @@ public class PNetwork extends PInterface {
             @Override
             public void run() {
                 try {
-                    MLog.i("check", "transport");
+                    //MLog.i("check", "transport");
                     Transport transport = session.getTransport("smtp");
-                    MLog.i("check", "connecting");
+                    //MLog.i("check", "connecting");
                     transport.connect(emailSettings.host, emailSettings.user, emailSettings.password);
-                    MLog.i("check", "wana send");
+                    //MLog.i("check", "wana send");
                     transport.sendMessage(message, message.getAllRecipients());
                     transport.close();
-
-                    MLog.i("check", "sent");
-
+                    //MLog.i("check", "sent");
                 } catch (AddressException e) {
                     e.printStackTrace();
                 } catch (MessagingException e) {
