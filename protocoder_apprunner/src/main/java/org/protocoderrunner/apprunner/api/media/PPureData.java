@@ -47,9 +47,9 @@ public class PPureData extends PInterface {
 
     private String TAG = "PPureData";
 
-    public PPureData(AppRunnerActivity c) {
+    public PPureData(Context c) {
         super(c);
-        setActivity(c);
+        //setActivity(c);
     }
 
 
@@ -83,7 +83,7 @@ public class PPureData extends PInterface {
         AudioServicePd.file = filePath;
 
         Intent intent = new Intent(getContext(), PdService.class);
-        (getActivity()).bindService(intent, AudioServicePd.pdConnection, Context.BIND_AUTO_CREATE);
+        (getContext()).bindService(intent, AudioServicePd.pdConnection, Context.BIND_AUTO_CREATE);
 
         initSystemServices();
 
