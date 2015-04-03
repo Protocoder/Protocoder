@@ -116,7 +116,7 @@ public class PMedia extends PInterface {
     @ProtoMethod(description = "Loads and initializes a PureData patch http://www.puredata.info using libpd", example = "")
     @ProtoMethodParam(params = {"fileName"})
     public PPureData initPdPatch(String fileName) {
-        PPureData pPureData = new PPureData(getActivity());
+        PPureData pPureData = new PPureData(getContext());
         pPureData.initPatch(fileName);
 
         return pPureData;
