@@ -23,16 +23,19 @@ package org.protocoder.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import org.protocoder.MainActivity;
 import org.protocoder.R;
 import org.protocoder.appApi.Protocoder;
 import org.protocoderrunner.base.BaseActivity;
+import org.protocoderrunner.utils.MLog;
 import org.protocoderrunner.utils.StrUtils;
 
 public class LauncherActivity extends BaseActivity {
 
     Intent intent = null;
+    private String TAG = "LauncherActivity";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,12 +49,20 @@ public class LauncherActivity extends BaseActivity {
         //uncomment to avoid first launch
         //userDetails.edit().putBoolean(getResources().getString(R.string.pref_is_first_launch), false).commit();
 
+        Intent i = getIntent();
+        boolean wasCrash = i.getBooleanExtra("wasCrash", false);
+        if (wasCrash) {
+            MLog.d(TAG, "lalall");
+            Toast.makeText(this, "The script crashed :(", Toast.LENGTH_LONG).show();
+        }
+
         if (firstLaunch) {
             intent = new Intent(this, WelcomeActivity.class);
             Protocoder.getInstance(this).settings.setId(StrUtils.generateRandomString());
             Protocoder.getInstance(this).settings.setConnectionAlert(true);
         } else {
             intent = new Intent(this, MainActivity.class);
+           // intent.putExtras();
         }
 
         intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
