@@ -25,8 +25,12 @@
             android:theme="@style/ProtocoderAppTheme"
             android:launchMode="singleInstance"
          >
+
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <action android:name="org.protocoder.LauncherActivity" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.HOME"/>
                 <category android:name="android.intent.category.DEFAULT" />
