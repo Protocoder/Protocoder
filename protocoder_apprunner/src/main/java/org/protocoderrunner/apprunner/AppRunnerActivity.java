@@ -117,7 +117,7 @@ public class AppRunnerActivity extends BaseActivity {
 
             if (isService) {
                 Intent i = new Intent(this, AppRunnerService.class);
-                i.putExtras(i);
+                i.putExtras(intent);
                 // potentially add data to the intent
                 // i.putExtra("KEY1", "Value to be used by the service");
                 this.startService(i);
