@@ -20,7 +20,6 @@
 
 package org.protocoderrunner.apprunner.api.sensors;
 
-import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -28,6 +27,7 @@ import android.hardware.SensorManager;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunningInterface;
 
 public class PPressure extends CustomSensorManager implements WhatIsRunningInterface {
@@ -40,8 +40,8 @@ public class PPressure extends CustomSensorManager implements WhatIsRunningInter
     private final static String TAG = "Pressure";
     private PressureListener mCallbackPressureChange;
 
-    public PPressure(Context c) {
-        super(c);
+    public PPressure(AppRunner appRunner) {
+        super(appRunner);
 
         type = Sensor.TYPE_PRESSURE;
     }

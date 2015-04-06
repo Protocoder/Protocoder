@@ -26,20 +26,12 @@ import java.util.Vector;
 
 public class WhatIsRunning {
 
-    private static WhatIsRunning instance;
+    private WhatIsRunning instance;
+    Vector<Object> runners;
 
-    protected WhatIsRunning() {
-
+    public WhatIsRunning() {
+        runners = new Vector<Object>();
     }
-
-    public static WhatIsRunning getInstance() {
-        if (instance == null)
-            instance = new WhatIsRunning();
-        return instance;
-
-    }
-
-    Vector<Object> runners = new Vector<Object>();
 
     public void stopAll() {
         for (Object o : runners) {

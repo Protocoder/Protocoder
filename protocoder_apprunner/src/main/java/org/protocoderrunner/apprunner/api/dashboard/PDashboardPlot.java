@@ -26,6 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.network.CustomWebsocketServer;
 import org.protocoderrunner.utils.StrUtils;
@@ -37,8 +38,8 @@ public class PDashboardPlot extends PInterface {
     private static final String TAG = "PDashboardPlot";
     String id;
 
-    public PDashboardPlot(Context a) {
-        super(a);
+    public PDashboardPlot(AppRunner appRunner) {
+        super(appRunner);
     }
 
     public void add(String name, int x, int y, int w, int h, float minLimit, float maxLimit)

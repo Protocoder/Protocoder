@@ -43,6 +43,7 @@ import org.protocoderrunner.apidoc.annotation.APIRequires;
 import org.protocoderrunner.apidoc.annotation.APIVersion;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.other.ApplicationInfo;
 import org.protocoderrunner.apprunner.api.widgets.PWebEditor;
@@ -63,11 +64,11 @@ public class PProtocoder extends PInterface {
 
     public String id;
 
-    public PProtocoder(android.content.Context a) {
-        super(a);
+    public PProtocoder(AppRunner appRunner) {
+        super(appRunner);
 
         // get org.apprunner settings
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(a);
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(appRunner.getAppContext());
         id = sharedPrefs.getString("pref_id", "-1");
     }
 
@@ -91,7 +92,7 @@ public class PProtocoder extends PInterface {
     @ProtoMethod(description = "Returns an object to manipulate the device app webIDE", example = "")
     @ProtoMethodParam(params = {})
     public PWebEditor webEditor() {
-        PWebEditor pWebEditor = new PWebEditor(getContext());
+        PWebEditor pWebEditor = new PWebEditor(getAppRunner());
 
         return pWebEditor;
     }

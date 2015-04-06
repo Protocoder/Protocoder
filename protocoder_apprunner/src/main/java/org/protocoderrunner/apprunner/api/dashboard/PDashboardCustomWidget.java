@@ -24,6 +24,7 @@ import android.content.Context;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.network.CustomWebsocketServer;
 import org.protocoderrunner.network.CustomWebsocketServer.WebSocketListener;
@@ -36,8 +37,8 @@ public class PDashboardCustomWidget extends PInterface {
     private static final String TAG = "PDashboardCustomWidget";
     String id;
 
-    public PDashboardCustomWidget(Context a) {
-        super(a);
+    public PDashboardCustomWidget(AppRunner appRunner) {
+        super(appRunner);
     }
 
     // --------- JDashboard add ---------//

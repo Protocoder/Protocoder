@@ -28,35 +28,44 @@ import java.lang.ref.WeakReference;
 
 public class PInterface {
 
-    public Handler mHandler = new Handler(Looper.getMainLooper());
-
     protected String TAG = getClass().getSimpleName();
 
-    private WeakReference<Context> mContext;
+    private AppRunner mAppRunner;
+    public Handler mHandler = new Handler(Looper.getMainLooper());
+
+    private Context mContext;
     private AppRunnerFragment mFragment;
     private AppRunnerService mService;
     private AppRunnerActivity mActivity;
 
-    public PInterface(Context context) {
+    public PInterface(AppRunner appRunner) {
         super();
-        this.mContext = new WeakReference<Context>(context.getApplicationContext());
+        this.mAppRunner = appRunner;
+        this.mContext = appRunner.getAppContext();
 
+        appRunner.whatIsRunning.add(this);
     }
 
     public void destroy() {
     }
 
     public void initForParentFragment(AppRunnerFragment fragment) {
-        this.mFragment = fragment;
-        this.mActivity = (AppRunnerActivity) (mFragment.getActivity());
+        if (fragment != null) {
+            this.mFragment = fragment;
+            this.mActivity = (AppRunnerActivity) (mFragment.getActivity());
+        }
     }
 
     public void initForParentService(AppRunnerService service) {
         this.mService = service;
     }
 
+    public AppRunner getAppRunner() {
+        return mAppRunner;
+    }
+
     public Context getContext() {
-        return mContext.get();
+        return mContext;
     }
 
     public AppRunnerFragment getFragment() {

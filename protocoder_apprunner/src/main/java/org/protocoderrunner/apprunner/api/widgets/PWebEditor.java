@@ -24,13 +24,14 @@ import android.content.Context;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.network.IDEcommunication;
 
 public class PWebEditor extends PInterface {
 
-    public PWebEditor(Context a) {
-        super(a);
+    public PWebEditor(AppRunner appRunner) {
+        super(appRunner);
 
     }
 

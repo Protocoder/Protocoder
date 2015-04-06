@@ -28,12 +28,14 @@ import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
 import org.java_websocket.drafts.Draft_17;
 import org.java_websocket.handshake.ServerHandshake;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 
-public class PWebSocketClient {
+public class PWebSocketClient extends PInterface {
 
     private static final String TAG = "PWebSocketClient";
     private Handler mHandler = new Handler(Looper.getMainLooper());
@@ -46,8 +48,8 @@ public class PWebSocketClient {
         void event(String string, String string2);
     }
 
-    public PWebSocketClient(String uri) {
-        WhatIsRunning.getInstance().add(this);
+    public PWebSocketClient(AppRunner appRunner, String uri) {
+        super(appRunner);
 
         Draft d = new Draft_17();
 

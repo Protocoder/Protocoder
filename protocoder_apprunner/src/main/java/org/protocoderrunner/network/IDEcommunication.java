@@ -23,16 +23,12 @@ public class IDEcommunication {
         this.a = new WeakReference<>(appActivity);
 
         try {
-            MLog.d(TAG, "intentando empezar websocket");
             ws = CustomWebsocketServer.getInstance(a.get());
-            MLog.d(TAG, "empezado websocket");
+            MLog.d(TAG, "websocket started");
         } catch (UnknownHostException e) {
             e.printStackTrace();
-            MLog.d(TAG, "petado empezar websocket");
-
+            MLog.d(TAG, "websocket :(");
         }
-
-        MLog.d(TAG, "esto va a petar? websocket " + ws);
 
         ws.addListener("protocoderApp", new CustomWebsocketServer.WebSocketListener() {
             @Override

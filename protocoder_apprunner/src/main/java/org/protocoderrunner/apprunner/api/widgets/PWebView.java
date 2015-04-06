@@ -27,13 +27,14 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.api.PApp;
 import org.protocoderrunner.views.CustomWebView;
 
 public class PWebView extends CustomWebView implements PViewInterface {
 
-    public PWebView(Context a) {
-        super(a);
+    public PWebView(AppRunner appRunner) {
+        super(appRunner);
 
         this.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         WebSettings webSettings = this.getSettings();
@@ -63,7 +64,7 @@ public class PWebView extends CustomWebView implements PViewInterface {
 
         WebViewClient webViewClient = new CustomWebViewClient();
         this.setWebViewClient(webViewClient);
-        this.addJavascriptInterface(new PApp(a), "app");
+        this.addJavascriptInterface(new PApp(mAppRunner), "app");
 
     }
 

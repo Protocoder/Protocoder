@@ -35,7 +35,7 @@ import com.physicaloid.lib.usb.driver.uart.UartConfig;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.apprunner.AppRunnerSettings;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.utils.MLog;
@@ -103,19 +103,19 @@ public class PArduino extends PInterface {
         }
     };
 
-    public PArduino(Context a) {
-        super(a);
+    public PArduino(AppRunner appRunner) {
+        super(appRunner);
     }
 
     public void start() {
-        WhatIsRunning.getInstance().add(this);
+        getAppRunner().whatIsRunning.add(this);
         mPhysicaloid = new Physicaloid(getContext());
         open();
     }
 
     // Initializes arduino board
     public void start(int bauds, String endline, onReadCB callbackfn) {
-        WhatIsRunning.getInstance().add(this);
+        getAppRunner().whatIsRunning.add(this);
 
         mEndLine = endline;
 
@@ -294,7 +294,7 @@ public class PArduino extends PInterface {
     public void upload(Boards board, String fileName, final uploadCB callbackfn) {
         if (mPhysicaloid.isOpened()) {
             // Build the absolute path
-            String filePath = AppRunnerSettings.get().project.getStoragePath() + File.separator + fileName;
+            String filePath = getAppRunner().project.getStoragePath() + File.separator + fileName;
 
             callbackfn.event(0);
             // Check if the fileName includes the .hex extension

@@ -24,22 +24,21 @@ import android.content.Context;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.apprunner.AppRunnerSettings;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.fragments.CustomVideoTextureView;
-import org.protocoderrunner.utils.MLog;
 
 import java.io.File;
 
 public class PVideo extends CustomVideoTextureView implements PViewInterface {
 
-    protected Context c;
+    protected AppRunner mAppRunner;
     private OnUpdateCB mCallbackUpdate;
     private OnFinishCB mCallbackOnFinish;
     private OnReadyCB mCallbackOnReady;
 
-    public PVideo(Context c, final String videoFile) {
-        super(c);
-        this.c = c;
+    public PVideo(AppRunner appRunner, final String videoFile) {
+        super(appRunner.getAppContext());
+        this.mAppRunner = appRunner;
 
 
         addListener(new CustomVideoTextureView.VideoListener() {
@@ -103,8 +102,7 @@ public class PVideo extends CustomVideoTextureView implements PViewInterface {
     @ProtoMethod(description = "Loads a videoFile", example = "")
     @ProtoMethodParam(params = {"fileName"})
     public void load(String videoFile) {
-        super.loadExternalVideo(AppRunnerSettings.get().project.getStoragePath() + File.separator + videoFile);
-
+        super.loadExternalVideo(mAppRunner.project.getStoragePath() + File.separator + videoFile);
     }
 
 

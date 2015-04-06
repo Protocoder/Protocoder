@@ -45,6 +45,7 @@ import com.google.gson.Gson;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.utils.AndroidUtils;
@@ -55,10 +56,8 @@ public class PDevice extends PInterface {
     private BroadcastReceiver batteryReceiver;
     private BroadcastReceiver onNotification;
 
-    public PDevice(Context a) {
-        super(a);
-        WhatIsRunning.getInstance().add(this);
-
+    public PDevice(AppRunner appRunner) {
+        super(appRunner);
     }
 
 
@@ -248,7 +247,6 @@ public class PDevice extends PInterface {
     @ProtoMethod(description = "", example = "")
     @ProtoMethodParam(params = {""})
     public void battery(final StartBateryListenerCB cb) {
-        WhatIsRunning.getInstance().add(this);
         batteryReceiver = new BroadcastReceiver() {
             int scale = -1;
             int level = -1;

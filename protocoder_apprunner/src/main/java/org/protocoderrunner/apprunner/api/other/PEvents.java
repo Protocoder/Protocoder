@@ -23,6 +23,7 @@ package org.protocoderrunner.apprunner.api.other;
 import android.content.Context;
 
 import org.mozilla.javascript.NativeObject;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.utils.StrUtils;
 
@@ -36,10 +37,9 @@ public class PEvents extends PInterface {
 
     }
 
-    public PEvents(Context appActivity) {
-        super(appActivity);
+    public PEvents(AppRunner appRunner) {
+        super(appRunner);
         eventsList = new ArrayList<EventItem>();
-        WhatIsRunning.getInstance().add(this);
     }
 
     public String add(String name, EventCB callback) {

@@ -1,0 +1,83 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="@string/setting_options_title" >
+        <!-- 
+        <EditTextPreference
+            android:key="@string/pref_webserver_port"
+            android:summary="@string/setting_webserver_port"
+            android:title="@string/setting_swebserver_port_title" />
+        <EditTextPreference
+            android:key="@string/pref_webserver_port"
+            android:summary="@string/setting_websocket_port"
+            android:title="@string/setting_websocket_port_title" />
+        <CheckBoxPreference
+            android:checked="true"
+            android:key="@string/pref_curtain_notifications"
+            android:summary="@string/setting_show_notifications_body"
+            android:title="@string/setting_show_notifications_title" />
+		-->
+        <EditTextPreference
+            android:key="pref_id"
+            android:summary="@string/setting_id_description"
+            android:title="@string/setting_id_title" />
+
+        <CheckBoxPreference
+            android:checked="false"
+            android:key="pref_screen_on"
+            android:summary="@string/setting_screen_on_description"
+            android:title="@string/setting_screen_on_title" />
+        <CheckBoxPreference
+            android:checked="false"
+            android:key="pref_list_mode"
+            android:summary="@string/setting_list_mode_description"
+            android:title="@string/setting_list_mode_title" />
+        <!--<CheckBoxPreference-->
+            <!--android:checked="false"-->
+            <!--android:key="pref_background_mode"-->
+            <!--android:summary="@string/setting_background_mode_description"-->
+            <!--android:title="@string/setting_background_mode_title" -->
+            <!--/>-->
+        <!--<CheckBoxPreference-->
+            <!--android:checked="true"-->
+            <!--android:key="pref_connection_alert"-->
+            <!--android:summary="@string/setting_connection_alert_description"-->
+            <!--android:title="@string/setting_connection_alert_title" />-->
+        <EditTextPreference
+            android:key="pref_app_color"
+            android:summary="@string/setting_app_color_description"
+            android:title="@string/setting_app_color_title" />
+        <CheckBoxPreference
+            android:checked="true"
+            android:key="pref_new_version_check"
+            android:summary="@string/setting_new_version_description"
+            android:title="@string/setting_new_version_title" />
+        <Preference
+            android:key="reinstall_examples"
+            android:summary="@string/setting_reinstall_description"
+            android:title="@string/setting_reinstall_title" />
+
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Advance">
+        <ListPreference
+            android:key="pref_change_editor"
+            android:summary="Load a custom-made web-editor from the SD card"
+            android:title="Change Editor" />
+        <Preference
+            android:key="pref_ftp"
+            android:checked="false"
+            android:summary="Protocoder starts with a ftp server in the port 8589 that can be used to transfer files to it"
+            android:title="Enable ftp" />
+    </PreferenceCategory>
+
+
+
+    <PreferenceCategory android:title="@string/setting_about" >
+        <Preference
+            android:key="licenses_detail"
+            android:summary="@string/setting_opensource_description"
+            android:title="@string/setting_opensource_title" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

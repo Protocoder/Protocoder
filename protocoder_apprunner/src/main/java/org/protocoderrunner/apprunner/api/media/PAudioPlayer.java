@@ -25,13 +25,14 @@ import android.media.MediaPlayer;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.apprunner.AppRunnerSettings;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 
 import java.io.File;
 import java.io.IOException;
 
-public class PAudioPlayer {
+public class PAudioPlayer extends PInterface {
 
     private final String TAG = "PAudioPlayer";
     private MediaPlayer mMediaPlayer;
@@ -45,9 +46,8 @@ public class PAudioPlayer {
         void event();
     }
 
-    public PAudioPlayer(String url) {
-
-        WhatIsRunning.getInstance().add(this);
+    public PAudioPlayer(AppRunner appRunner, String url) {
+        super(appRunner);
 
         mMediaPlayer = new MediaPlayer();
         mMediaPlayer.setLooping(false);
@@ -83,7 +83,7 @@ public class PAudioPlayer {
 
         try {
             if (url.startsWith("http://") == false) {
-                url = AppRunnerSettings.get().project.getStoragePath() + File.separator + url;
+                url = getAppRunner().project.getStoragePath() + File.separator + url;
             }
 
             mMediaPlayer.setDataSource(url);

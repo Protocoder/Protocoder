@@ -24,6 +24,7 @@ import android.content.Context;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.network.CustomWebsocketServer;
 import org.protocoderrunner.network.CustomWebsocketServer.WebSocketListener;
@@ -38,8 +39,8 @@ public class PDashboardButton extends PInterface {
     String name;
     private jDashboardAddCB mCallback;
 
-    public PDashboardButton(Context a) {
-        super(a);
+    public PDashboardButton(AppRunner appRunner) {
+        super(appRunner);
     }
 
     // --------- JDashboard add ---------//

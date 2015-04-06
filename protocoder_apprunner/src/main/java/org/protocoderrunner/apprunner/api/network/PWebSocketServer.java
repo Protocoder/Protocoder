@@ -29,12 +29,14 @@ import org.java_websocket.drafts.Draft;
 import org.java_websocket.drafts.Draft_17;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 
 import java.net.InetSocketAddress;
 import java.util.Collections;
 
-public class PWebSocketServer {
+public class PWebSocketServer extends PInterface {
 
     public Handler mHandler = new Handler(Looper.getMainLooper());
     WebSocketServer websocketServer;
@@ -45,7 +47,8 @@ public class PWebSocketServer {
         void event(String string, WebSocket socket, String arg1);
     }
 
-    public PWebSocketServer(int port) {
+    public PWebSocketServer(AppRunner appRunner, int port) {
+        super(appRunner);
 
         InetSocketAddress inetSocket = new InetSocketAddress(port);
         Draft d = new Draft_17();
@@ -107,8 +110,6 @@ public class PWebSocketServer {
 
         };
         websocketServer.start();
-        WhatIsRunning.getInstance().add(websocketServer);
-
     }
 
     public PWebSocketServer onNewData(final startWebSocketServerCB callbackfn) {

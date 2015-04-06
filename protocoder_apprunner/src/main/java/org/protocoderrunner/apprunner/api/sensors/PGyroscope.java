@@ -28,6 +28,7 @@ import android.hardware.SensorManager;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunningInterface;
 
 public class PGyroscope extends CustomSensorManager implements WhatIsRunningInterface {
@@ -41,8 +42,8 @@ public class PGyroscope extends CustomSensorManager implements WhatIsRunningInte
     private final static String TAG = "PGyroscope";
     private GyroscopeListener mCallbackGyroscopeChange;
 
-    public PGyroscope(Context c) {
-        super(c);
+    public PGyroscope(AppRunner appRunner) {
+        super(appRunner);
 
         type = Sensor.TYPE_GYROSCOPE;
     }

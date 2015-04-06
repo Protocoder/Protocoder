@@ -24,6 +24,7 @@ import android.content.Context;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.boards.PArduino;
 import org.protocoderrunner.apprunner.api.boards.PIOIO;
@@ -35,15 +36,15 @@ public class PBoards extends PInterface {
 
     private final String TAG = "PBoards";
 
-    public PBoards(Context a) {
-        super(a);
+    public PBoards(AppRunner appRunner) {
+        super(appRunner);
     }
 
 
     @ProtoMethod(description = "initializes the ioio board", example = "")
     @ProtoMethodParam(params = {"function()"})
     public PIOIO connectIOIO(PIOIO.startCB callbackfn) {
-        PIOIO ioio = new PIOIO(getContext());
+        PIOIO ioio = new PIOIO(getAppRunner());
         ioio.start(callbackfn);
 
         return ioio;
@@ -53,7 +54,7 @@ public class PBoards extends PInterface {
     @ProtoMethod(description = "initializes serial communication", example = "")
     @ProtoMethodParam(params = {"bauds", "function()"})
     public PSerial connectSerial(int baud, PSerial.OnStartCallback callbackfn) {
-        PSerial serial = new PSerial(getContext());
+        PSerial serial = new PSerial(getAppRunner());
         serial.start(baud, callbackfn);
 
         return serial;
@@ -63,7 +64,7 @@ public class PBoards extends PInterface {
     @ProtoMethod(description = "initializes arduino board without callback", example = "")
     @ProtoMethodParam(params = {""})
     public PArduino connectArduino() {
-        PArduino arduino = new PArduino(getContext());
+        PArduino arduino = new PArduino(getAppRunner());
         arduino.start();
 
         return arduino;
@@ -73,7 +74,7 @@ public class PBoards extends PInterface {
     @ProtoMethod(description = "initializes arduino board with callback", example = "")
     @ProtoMethodParam(params = {"bauds", "function()"})
     public PArduino connectArduino(int bauds, String endline, PArduino.onReadCB callbackfn) {
-        PArduino arduino = new PArduino(getContext());
+        PArduino arduino = new PArduino(getAppRunner());
         arduino.start(bauds, endline, callbackfn);
 
         return arduino;

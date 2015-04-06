@@ -25,6 +25,7 @@ import android.graphics.Color;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.network.CustomWebsocketServer;
 
@@ -34,8 +35,8 @@ public class PDashboardBackground extends PInterface {
 
     private static final String TAG = "PDashboardBackground";
 
-    public PDashboardBackground(Context a) {
-        super(a);
+    public PDashboardBackground(AppRunner appRunner) {
+        super(appRunner);
     }
 
     // --------- JDashboard add ---------//

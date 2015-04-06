@@ -27,6 +27,7 @@ import org.mozilla.javascript.Callable;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContextFactory;
 import org.mozilla.javascript.ErrorReporter;
+import org.mozilla.javascript.EvaluatorException;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.RhinoException;
 import org.mozilla.javascript.Scriptable;
@@ -44,7 +45,7 @@ public class AppRunnerInterpreter {
 
     private ScriptContextFactory contextFactory;
     public Interpreter interpreter;
-    private final android.content.Context a;
+    private final android.content.Context mContext;
     private InterpreterInfo mInterpreterListener;
 
     static String SCRIPT_PREFIX = "//Prepend text for all scripts \n" + "var window = this; \n";
@@ -52,7 +53,7 @@ public class AppRunnerInterpreter {
             + "// End of Append Section" + "\n";
 
     public AppRunnerInterpreter(android.content.Context context) {
-        this.a = context;
+        this.mContext = context;
     }
 
     public Object eval(final String code) {
@@ -64,9 +65,7 @@ public class AppRunnerInterpreter {
         final AtomicReference<Object> result = new AtomicReference<Object>(null);
 
         try {
-            result.set(
-                    interpreter.eval(code, "")
-            );
+            result.set(interpreter.eval(code, ""));
         } catch (Throwable e) {
             reportError(e);
             result.set(e);
@@ -75,9 +74,10 @@ public class AppRunnerInterpreter {
 
     }
 
+    //change to Handler
     public Object eval(final String code, final String sourceName) {
         final AtomicReference<Object> result = new AtomicReference<Object>(null);
-        ((Activity) a).runOnUiThread(new Runnable() {
+        ((Activity) mContext).runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -110,7 +110,7 @@ public class AppRunnerInterpreter {
         }
     }
 
-    public void createInterpreter(boolean isActivity) {
+    public void createInterpreter() {
         // Initialize global mainScriptContext factory with our custom factory.
         if (null == contextFactory) {
             contextFactory = new ScriptContextFactory(this);
@@ -118,27 +118,14 @@ public class AppRunnerInterpreter {
             Log.i(TAG, "Creating ContextFactory");
         }
 
-        contextFactory.setActivity(a);
+        contextFactory.setActivity(mContext);
 
         if (null == interpreter) {
             // Get the interpreter, if previously created in activity
-            if (isActivity) {
-                Object obj = ((Activity) a).getLastNonConfigurationInstance();
-
-                if (null == obj) {
-                    // Create interpreter.
-                    interpreter = new Interpreter();
-                } else {
-                    // Restore interpreter state.
-                    interpreter = (Interpreter) obj;
-                }
-            } else {
-                interpreter = new Interpreter();
-
-            }
+            interpreter = new Interpreter();
         }
 
-        interpreter.setActivity(a);
+        interpreter.setActivity(mContext);
     }
 
     public void addDebugger(Debugger debugger) {
@@ -174,7 +161,7 @@ public class AppRunnerInterpreter {
         }
 
         // Log the error message.
-        Log.i(TAG, "JavaScript Error: " + message);
+        MLog.i(TAG, "JavaScript Error: " + message);
     }
 
     public static String preprocess(String code) throws Exception {
@@ -295,6 +282,25 @@ public class AppRunnerInterpreter {
             mainScriptContext = Context.enter();
             mainScriptContext.getWrapFactory().setJavaPrimitiveWrap(false);
             mainScriptContext.setOptimizationLevel(-1);
+            mainScriptContext.setErrorReporter(new ErrorReporter() {
+                @Override
+                public void warning(String message, String sourceName, int line, String lineSource, int lineOffset) {
+                  MLog.i(TAG, "WARNING " + message + " " + sourceName + " " + line + " " + lineSource + " " + lineOffset);
+                }
+
+                @Override
+                public void error(String message, String sourceName, int line, String lineSource, int lineOffset) {
+                    MLog.i(TAG, "WARNING " + message + " " + sourceName + " " + line + " " + lineSource + " " + lineOffset);
+
+                }
+
+                @Override
+                public EvaluatorException runtimeError(String message, String sourceName, int line, String lineSource, int lineOffset) {
+                    MLog.i(TAG, "RUNTIMEERROR " + message + " " + sourceName + " " + line + " " + lineSource + " " + lineOffset);
+
+                    return null;
+                }
+            });
 
             // Initialize the standard objects (Object, Function, etc.)
             // This must be done before scripts can be executed. Returns
@@ -305,11 +311,6 @@ public class AppRunnerInterpreter {
         public Interpreter setActivity(android.content.Context a) {
             // Set the global JavaScript variable Activity.
             ScriptableObject.putProperty(scope, "Activity", Context.javaToJS(a, scope));
-            return this;
-        }
-
-        public Interpreter setErrorReporter(ErrorReporter reporter) {
-            mainScriptContext.setErrorReporter(reporter);
             return this;
         }
 

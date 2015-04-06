@@ -1,0 +1,13 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="license_card_marginTop">10dp</dimen>
+    <dimen name="license_card_marginBottom">5dp</dimen>
+    <dimen name="license_card_title_padding">10dp</dimen>
+
+    <dimen name="apprunner_console">150dp</dimen>
+    <dimen name="apprunner_console_text_padding">15dp</dimen>
+
+</resources>

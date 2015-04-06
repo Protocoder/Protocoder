@@ -28,6 +28,7 @@ import android.hardware.SensorManager;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunningInterface;
 
 public class PAccelerometer extends CustomSensorManager implements WhatIsRunningInterface {
@@ -46,8 +47,8 @@ public class PAccelerometer extends CustomSensorManager implements WhatIsRunning
     private final static String TAG = "PAccelerometer";
 
 
-    public PAccelerometer(Context c) {
-        super(c);
+    public PAccelerometer(AppRunner appRunner) {
+        super(appRunner);
 
         type = Sensor.TYPE_ACCELEROMETER;
     }

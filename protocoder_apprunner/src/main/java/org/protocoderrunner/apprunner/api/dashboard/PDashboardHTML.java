@@ -24,6 +24,7 @@ import android.content.Context;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.network.CustomWebsocketServer;
 import org.protocoderrunner.utils.StrUtils;
@@ -35,8 +36,8 @@ public class PDashboardHTML extends PInterface {
     private static final String TAG = "PDashboardHTML";
     String id;
 
-    public PDashboardHTML(Context a) {
-        super(a);
+    public PDashboardHTML(AppRunner appRunner) {
+        super(appRunner);
     }
 
     public void add(String html, int posx, int posy) throws UnknownHostException, JSONException {

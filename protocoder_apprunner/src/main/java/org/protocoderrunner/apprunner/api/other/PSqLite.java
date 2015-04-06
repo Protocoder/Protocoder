@@ -27,6 +27,7 @@ import android.util.Log;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.project.ProjectManager;
 
@@ -37,11 +38,10 @@ public class PSqLite extends PInterface {
     String TAG = "PSqlite";
     private SQLiteDatabase db;
 
-    public PSqLite(Context a, String dbName) {
-        super(a);
+    public PSqLite(AppRunner appRunner, String dbName) {
+        super(appRunner);
 
         open(dbName);
-        WhatIsRunning.getInstance().add(this);
     }
 
 

@@ -42,7 +42,7 @@ import android.view.animation.LinearInterpolator;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.apprunner.AppRunnerSettings;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.other.PLooper;
 import org.protocoderrunner.apprunner.api.other.SignalUtils;
@@ -58,9 +58,8 @@ public class PUtil extends PInterface {
     private final Handler handler;
     ArrayList<Runnable> rl = new ArrayList<Runnable>();
 
-    public PUtil(Context a) {
-        super(a);
-        WhatIsRunning.getInstance().add(this);
+    public PUtil(AppRunner appRunner) {
+        super(appRunner);
         handler = new Handler();
     }
 
@@ -210,7 +209,7 @@ public class PUtil extends PInterface {
     @ProtoMethod(description = "Loads a font", example = "")
     @ProtoMethodParam(params = {"fontFile"})
     public Typeface loadFont(String fontName) {
-        return Typeface.createFromFile(AppRunnerSettings.get().project.getStoragePath() + File.separator + fontName);
+        return Typeface.createFromFile(getAppRunner().project.getStoragePath() + File.separator + fontName);
     }
 
 
@@ -242,7 +241,7 @@ public class PUtil extends PInterface {
     }
 
     public SignalUtils signal(int n) {
-        return new SignalUtils(getContext(), n);
+        return new SignalUtils(getAppRunner(), n);
     }
 
 }

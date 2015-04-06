@@ -8,6 +8,7 @@ import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.project.ProjectManager;
@@ -28,10 +29,8 @@ public class PFtpClient extends PInterface {
     String TAG = "PFtpClient";
     Boolean isConnected = false;
 
-    public PFtpClient(Context c) {
-        super(c);
-
-        WhatIsRunning.getInstance().add(this);
+    public PFtpClient(AppRunner appRunner) {
+        super(appRunner);
     }
 
     public interface FtpConnectedCb {

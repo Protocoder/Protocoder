@@ -1,0 +1,27 @@
+<resources>
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+
+    <!-- Style for the header of each license card -->
+    <style name="LicenseCardTitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/license_white</item>
+        <item name="android:background">@color/license_darkgrey</item>
+        <item name="android:padding">@dimen/license_card_title_padding</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <!-- Style for the body of each license card -->
+    <style name="LicenseCardBody">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/license_grey</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:padding">@dimen/license_card_title_padding</item>
+    </style>
+
+</resources>

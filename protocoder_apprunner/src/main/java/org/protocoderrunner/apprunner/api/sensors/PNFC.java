@@ -11,6 +11,7 @@ import android.nfc.tech.NdefFormatable;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
 
 import java.io.IOException;
@@ -23,8 +24,8 @@ public class PNFC extends PInterface {
     private NdefMessage messageToWrite;
     private onNFCCB onNFCfn;
 
-    public PNFC(Context context) {
-        super(context);
+    public PNFC(AppRunner appRunner) {
+        super(appRunner);
     }
 
 

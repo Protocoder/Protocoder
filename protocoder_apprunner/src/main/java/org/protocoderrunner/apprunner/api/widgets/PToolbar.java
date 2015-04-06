@@ -20,7 +20,6 @@
 
 package org.protocoderrunner.apprunner.api.widgets;
 
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -28,27 +27,26 @@ import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.support.v7.app.ActionBar;
-import android.widget.TextView;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunnerActivity;
-import org.protocoderrunner.apprunner.AppRunnerSettings;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.apprunner.PInterface;
 
-public class PToolbar implements PViewInterface {
+public class PToolbar extends PInterface {
 
-    private final AppRunnerActivity mContext;
+    private final AppRunner mAppRunner;
     private final ActionBar mToolbar;
     private int currentColor;
     private Paint paint;
 
-    public PToolbar(AppRunnerActivity context) {
-        mContext = context;
-        mToolbar = mContext.getSupportActionBar();
+    public PToolbar(AppRunner appRunner, ActionBar toolbar) {
+        super(appRunner);
+        mAppRunner = appRunner;
+        mToolbar = toolbar;
     }
-
 
     @ProtoMethod(description = "Set toolbar title name", example = "")
     @ProtoMethodParam(params = {"titleName"})
@@ -112,8 +110,8 @@ public class PToolbar implements PViewInterface {
     @ProtoMethod(description = "Sets an image rather than text as toolbar title", example = "")
     @ProtoMethodParam(params = {"imageName"})
     public PToolbar imageIcon(String imagePath) {
-        Bitmap myBitmap = BitmapFactory.decodeFile(AppRunnerSettings.get().project.getStoragePath() + imagePath);
-        Drawable icon = new BitmapDrawable(mContext.getResources(), myBitmap);
+        Bitmap myBitmap = BitmapFactory.decodeFile(mAppRunner.project.getStoragePath() + imagePath);
+        Drawable icon = new BitmapDrawable(mAppRunner.getAppContext().getResources(), myBitmap);
 
         mToolbar.setIcon(icon);
 

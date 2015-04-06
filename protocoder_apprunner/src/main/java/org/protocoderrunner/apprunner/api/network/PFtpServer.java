@@ -53,8 +53,6 @@ public class PFtpServer {
         userManagerFactory.setPasswordEncryptor(new SaltedPasswordEncryptor());
 
         um = userManagerFactory.createUserManager();
-
-        WhatIsRunning.getInstance().add(this);
     }
 
 

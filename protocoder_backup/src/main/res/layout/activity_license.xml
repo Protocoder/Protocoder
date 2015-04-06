@@ -1,0 +1,370 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <include layout="@layout/toolbar"
+             android:layout_alignParentRight="true"
+             android:layout_alignParentTop="true"
+             android:layout_height="wrap_content"
+             android:layout_width="match_parent">
+    </include>
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
+        tools:context=".LicenseActivity" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/license_background"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin" >
+
+
+        <!-- Websockets -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/license_card_marginBottom"
+            android:layout_marginTop="@dimen/license_card_marginTop"
+            android:background="@color/license_white"
+            android:orientation="vertical" >
+
+            <TextView
+                style="@style/LicenseCardTitle"
+                android:text="@string/license_title_websockets" />
+
+            <TextView
+                style="@style/LicenseCardBody"
+                android:id="@+id/websockets"/>
+        </LinearLayout>
+
+        <!-- Svg android -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/license_card_marginBottom"
+            android:layout_marginTop="@dimen/license_card_marginTop"
+            android:background="@color/license_white"
+            android:orientation="vertical" >
+
+            <TextView
+                style="@style/LicenseCardTitle"
+                android:text="@string/license_title_svgandroid" />
+
+            <TextView
+                style="@style/LicenseCardBody"
+                android:id="@+id/svg_android"/>
+        </LinearLayout>
+
+        <!-- NetUtil -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/license_card_marginBottom"
+            android:layout_marginTop="@dimen/license_card_marginTop"
+            android:background="@color/license_white"
+            android:orientation="vertical" >
+
+            <TextView
+                style="@style/LicenseCardTitle"
+                android:text="@string/license_title_netutil" />
+
+            <TextView
+                style="@style/LicenseCardBody"
+                android:id="@+id/netutil"/>
+        </LinearLayout>
+
+        <!-- libpd -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/license_card_marginBottom"
+            android:layout_marginTop="@dimen/license_card_marginTop"
+            android:background="@color/license_white"
+            android:orientation="vertical" >
+
+            <TextView
+                style="@style/LicenseCardTitle"
+                android:text="@string/license_title_libpd" />
+
+            <TextView
+                style="@style/LicenseCardBody"
+                android:id="@+id/libpd"/>
+        </LinearLayout>
+
+        <!-- Commons Lang -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/license_card_marginBottom"
+            android:layout_marginTop="@dimen/license_card_marginTop"
+            android:background="@color/license_white"
+            android:orientation="vertical" >
+
+            <TextView
+                style="@style/LicenseCardTitle"
+                android:text="@string/license_title_commons_lang" />
+
+            <TextView
+                style="@style/LicenseCardBody"
+                android:id="@+id/commonslang"/>
+        </LinearLayout>
+
+        <!-- Commons Net -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/license_card_marginBottom"
+            android:layout_marginTop="@dimen/license_card_marginTop"
+            android:background="@color/license_white"
+            android:orientation="vertical" >
+
+            <TextView
+                style="@style/LicenseCardTitle"
+                android:text="@string/license_title_commons_net" />
+
+            <TextView
+                style="@style/LicenseCardBody"
+                android:id="@+id/commonsnet"/>
+        </LinearLayout>
+
+        <!-- EventBus -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/license_card_marginBottom"
+            android:layout_marginTop="@dimen/license_card_marginTop"
+            android:background="@color/license_white"
+            android:orientation="vertical" >
+
+            <TextView
+                style="@style/LicenseCardTitle"
+                android:text="@string/license_title_eventbus" />
+
+            <TextView
+                style="@style/LicenseCardBody"
+                android:id="@+id/eventbus"/>
+        </LinearLayout>
+
+
+        <!-- httpclient -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/license_card_marginBottom"
+            android:layout_marginTop="@dimen/license_card_marginTop"
+            android:background="@color/license_white"
+            android:orientation="vertical" >
+
+            <TextView
+                style="@style/LicenseCardTitle"
+                android:text="@string/license_title_httpclient" />
+
+            <TextView
+                style="@style/LicenseCardBody"
+                android:id="@+id/httpclient"/>
+        </LinearLayout>
+
+        <!-- Google GSON -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/license_card_marginBottom"
+            android:layout_marginTop="@dimen/license_card_marginTop"
+            android:background="@color/license_white"
+            android:orientation="vertical" >
+
+            <TextView
+                style="@style/LicenseCardTitle"
+                android:text="@string/license_title_gson" />
+
+            <TextView
+                style="@style/LicenseCardBody"
+                android:id="@+id/gson"/>
+        </LinearLayout>
+
+        <!-- ioio -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/license_card_marginBottom"
+            android:layout_marginTop="@dimen/license_card_marginTop"
+            android:background="@color/license_white"
+            android:orientation="vertical" >
+
+            <TextView
+                style="@style/LicenseCardTitle"
+                android:text="@string/license_title_ioio" />
+
+            <TextView
+                style="@style/LicenseCardBody"
+                android:id="@+id/ioio"/>
+        </LinearLayout>
+
+        <!-- mail -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/license_card_marginBottom"
+            android:layout_marginTop="@dimen/license_card_marginTop"
+            android:background="@color/license_white"
+            android:orientation="vertical" >
+
+            <TextView
+                style="@style/LicenseCardTitle"
+                android:text="@string/license_title_mail" />
+
+            <TextView
+                style="@style/LicenseCardBody"
+                android:id="@+id/mail"/>
+        </LinearLayout>
+
+        <!-- osmdroid -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/license_card_marginBottom"
+            android:layout_marginTop="@dimen/license_card_marginTop"
+            android:background="@color/license_white"
+            android:orientation="vertical" >
+
+            <TextView
+                style="@style/LicenseCardTitle"
+                android:text="@string/license_title_osmdroid" />
+
+            <TextView
+                style="@style/LicenseCardBody"
+                android:id="@+id/osmdroid"/>
+        </LinearLayout>
+
+        <!-- processing -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/license_card_marginBottom"
+            android:layout_marginTop="@dimen/license_card_marginTop"
+            android:background="@color/license_white"
+            android:orientation="vertical" >
+
+            <TextView
+                style="@style/LicenseCardTitle"
+                android:text="@string/license_title_processing" />
+
+            <TextView
+                style="@style/LicenseCardBody"
+                android:id="@+id/processing"/>
+        </LinearLayout>
+
+
+        <!-- physicaloid -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/license_card_marginBottom"
+            android:layout_marginTop="@dimen/license_card_marginTop"
+            android:background="@color/license_white"
+            android:orientation="vertical" >
+
+            <TextView
+                style="@style/LicenseCardTitle"
+                android:text="@string/license_title_physicaloid" />
+
+            <TextView
+                style="@style/LicenseCardBody"
+                android:id="@+id/physicaloid"/>
+        </LinearLayout>
+
+
+        <!-- usb-serial -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/license_card_marginBottom"
+            android:layout_marginTop="@dimen/license_card_marginTop"
+            android:background="@color/license_white"
+            android:orientation="vertical" >
+
+            <TextView
+                style="@style/LicenseCardTitle"
+                android:text="@string/license_title_usb_serial" />
+
+            <TextView
+                style="@style/LicenseCardBody"
+                android:id="@+id/usb_serial"/>
+        </LinearLayout>
+
+
+        <!-- Rhino -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/license_card_marginBottom"
+            android:layout_marginTop="@dimen/license_card_marginTop"
+            android:background="@color/license_white"
+            android:orientation="vertical" >
+
+            <TextView
+                style="@style/LicenseCardTitle"
+                android:text="@string/license_title_rhino" />
+
+            <TextView
+                style="@style/LicenseCardBody"
+                android:id="@+id/rhino"/>
+        </LinearLayout>
+
+        <!-- nano -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/license_card_marginBottom"
+            android:layout_marginTop="@dimen/license_card_marginTop"
+            android:background="@color/license_white"
+            android:orientation="vertical" >
+
+            <TextView
+                style="@style/LicenseCardTitle"
+                android:text="@string/license_title_nano" />
+
+            <TextView
+                style="@style/LicenseCardBody"
+                android:id="@+id/nano"/>
+        </LinearLayout>
+
+
+        <!-- zip4j -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/license_card_marginBottom"
+            android:layout_marginTop="@dimen/license_card_marginTop"
+            android:background="@color/license_white"
+            android:orientation="vertical" >
+
+            <TextView
+                style="@style/LicenseCardTitle"
+                android:text="@string/license_title_zip4j" />
+
+            <TextView
+                style="@style/LicenseCardBody"
+                android:id="@+id/zip4j"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+  </ScrollView>
+</RelativeLayout>

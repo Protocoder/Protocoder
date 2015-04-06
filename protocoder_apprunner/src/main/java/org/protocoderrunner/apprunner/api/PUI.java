@@ -60,7 +60,7 @@ import org.protocoderrunner.AppSettings;
 import org.protocoderrunner.R;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.apprunner.AppRunnerSettings;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.api.media.PCamera;
 import org.protocoderrunner.apprunner.api.other.PAnimation;
 import org.protocoderrunner.apprunner.api.other.PProcessing;
@@ -114,9 +114,8 @@ public class PUI extends PUIGeneric {
     private boolean keyInit = false;
 
 
-    public PUI(Context a) {
-        super(a);
-        WhatIsRunning.getInstance().add(this);
+    public PUI(AppRunner appRunner) {
+        super(appRunner);
     }
 
     @ProtoMethod(description = "Gets the main layout, usually absolute", example = "")
@@ -705,7 +704,7 @@ public class PUI extends PUIGeneric {
 
         // Add the bg image asynchronously from the sdcard
         new SetBgImageTask(bgImageView, false).execute(
-                AppRunnerSettings.get().project.getStoragePath()
+                getAppRunner().project.getStoragePath()
                         + File.separator
                         + imagePath);
 	}
@@ -717,7 +716,7 @@ public class PUI extends PUIGeneric {
 
         // Add the bg image asynchronously
         new SetBgImageTask(bgImageView, true).execute(
-                AppRunnerSettings.get().project.getStoragePath()
+                getAppRunner().project.getStoragePath()
                         + File.separator
                         + imagePath);
 	}
@@ -1269,13 +1268,13 @@ public class PUI extends PUIGeneric {
     @ProtoMethod(description = "Takes a screenshot of the whole app and stores it to a given file name", example = "")
     @ProtoMethodParam(params = {"imageName"})
     public void takeScreenshot(String imagePath) {
-        AndroidUtils.takeScreenshot(AppRunnerSettings.get().project.getStoragePath(), imagePath, uiAbsoluteLayout);
+        AndroidUtils.takeScreenshot(getAppRunner().project.getStoragePath(), imagePath, uiAbsoluteLayout);
     }
 
     @ProtoMethod(description = "Takes a screenshot of a view and save it to an image", example = "")
     @ProtoMethodParam(params = {"view", "imageName"})
     public void takeViewScreenshot(View v, String imagePath) {
-        AndroidUtils.takeScreenshotView(AppRunnerSettings.get().project.getStoragePath(), imagePath, v);
+        AndroidUtils.takeScreenshotView(getAppRunner().project.getStoragePath(), imagePath, v);
     }
 
     @ProtoMethod(description = "Takes a screenshot of a view", example = "")

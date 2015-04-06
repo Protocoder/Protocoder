@@ -25,6 +25,7 @@ import android.graphics.PorterDuff;
 import android.view.MotionEvent;
 import android.view.View;
 
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.utils.MLog;
 
 public class PImageButton extends PImageView implements PViewInterface {
@@ -37,8 +38,8 @@ public class PImageButton extends PImageView implements PViewInterface {
     int mColorReset;
     public boolean hideBackground = false;
 
-    public PImageButton(Context context) {
-        super(context);
+    public PImageButton(AppRunner appRunner) {
+        super(appRunner);
         this.img = this;
 
         /*

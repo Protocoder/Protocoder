@@ -105,7 +105,6 @@ public class AppRunnerActivity extends BaseActivity {
             mToolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(mToolbar);
             mActionbar = getSupportActionBar();
-            mActionbar.setTitle("hola");
         }
 
         FrameLayout fl = (FrameLayout) findViewById(R.id.apprunner_fragment);
@@ -260,8 +259,6 @@ public class AppRunnerActivity extends BaseActivity {
     public void setToolBar(String name, Integer colorBg, Integer colorText) {
         mActionBarSet = true;
 
-        MLog.d("mocmoc", "setting tolbar for " + name + " " + mActionbar);
-
         if(mActionbar != null) {
             // home clickable if is running inside protocoderapp
             if (AppSettings.STANDALONE == false) {
@@ -279,8 +276,6 @@ public class AppRunnerActivity extends BaseActivity {
             // title
             if (name != null) {
                 mActionbar.setTitle(name);
-                MLog.d("mocmoc2", "setting tolbar for " + name + " " + mToolbar);
-
             }
             // set title color
             if (colorText != null) {
@@ -493,9 +488,10 @@ public class AppRunnerActivity extends BaseActivity {
             }
             onVoiceRecognitionListener.onNewResult(matches.get(0));
 
+            //TODO disabled
         } else if (requestCode == 22 && resultCode == Activity.RESULT_OK) {
             String result = data.getStringExtra("json");
-            mAppRunnerFragment.interp.callJsFunction("onResult", result);
+            //mAppRunnerFragment.interp.callJsFunction("onResult", result);
         }
 
         if (onBluetoothListener != null) {

@@ -26,6 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.network.CustomWebsocketServer;
 import org.protocoderrunner.utils.AndroidUtils;
@@ -41,8 +42,8 @@ public class PConsole extends PInterface {
     String TAG = "PConsole";
     private boolean showTime = false;
 
-    public PConsole(Context a) {
-        super(a);
+    public PConsole(AppRunner appRunner) {
+        super(appRunner);
     }
 
 

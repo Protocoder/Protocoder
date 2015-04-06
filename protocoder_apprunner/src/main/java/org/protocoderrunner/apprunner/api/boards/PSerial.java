@@ -31,6 +31,7 @@ import com.hoho.android.usbserial.util.SerialInputOutputManager;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.utils.MLog;
@@ -55,8 +56,8 @@ public class PSerial extends PInterface {
     String msg = "";
     private OnNewDataCallback mCallbackData;
 
-    public PSerial(Context a) {
-        super(a);
+    public PSerial(AppRunner appRunner) {
+        super(appRunner);
 
     }
 
@@ -73,7 +74,7 @@ public class PSerial extends PInterface {
 
     @ProtoMethod(description = "starts serial", example = "")
     public void start(int bauds, final OnStartCallback callbackConnected) {
-        WhatIsRunning.getInstance().add(this);
+        getAppRunner().whatIsRunning.add(this);
         if (!isStarted) {
 
             //UsbSerialProber devices = UsbSerialProber.getDefaultProber();

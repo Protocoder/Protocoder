@@ -24,6 +24,7 @@ import android.content.Context;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.utils.FFT;
 
@@ -32,8 +33,8 @@ public class SignalUtils extends PInterface {
     FFT fft;
     double im[];
 
-    public SignalUtils(Context a, int n) {
-        super(a);
+    public SignalUtils(AppRunner appRunner, int n) {
+        super(appRunner);
         fft = new FFT(n);
         im = new double[n];
 

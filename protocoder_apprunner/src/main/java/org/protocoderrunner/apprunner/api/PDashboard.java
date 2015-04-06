@@ -26,6 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.dashboard.PDashboardBackground;
 import org.protocoderrunner.apprunner.api.dashboard.PDashboardButton;
@@ -46,8 +47,8 @@ public class PDashboard extends PInterface {
 
     String TAG = "PDashboard";
 
-    public PDashboard(Context a) {
-        super(a);
+    public PDashboard(AppRunner appRunner) {
+        super(appRunner);
     }
 
 
@@ -56,7 +57,7 @@ public class PDashboard extends PInterface {
     public PDashboardPlot addPlot(String name, int x, int y, int w, int h, float minLimit, float maxLimit)
             throws UnknownHostException, JSONException {
 
-        PDashboardPlot pWebAppPlot = new PDashboardPlot(getContext());
+        PDashboardPlot pWebAppPlot = new PDashboardPlot(getAppRunner());
         pWebAppPlot.add(name, x, y, w, h, minLimit, maxLimit);
 
         return pWebAppPlot;
@@ -67,7 +68,7 @@ public class PDashboard extends PInterface {
     @ProtoMethodParam(params = {"htmlFile", "x", "y"})
     public PDashboardHTML addHtml(String html, int x, int y) throws UnknownHostException, JSONException {
 
-        PDashboardHTML pWebAppHTML = new PDashboardHTML(getContext());
+        PDashboardHTML pWebAppHTML = new PDashboardHTML(getAppRunner());
         pWebAppHTML.add(html, x, y);
 
         return pWebAppHTML;
@@ -78,7 +79,7 @@ public class PDashboard extends PInterface {
     @ProtoMethodParam(params = {"name", "x", "y", "w", "h", "function()"})
     public PDashboardButton addButton(String name, int x, int y, int w, int h) throws UnknownHostException, JSONException {
 
-        PDashboardButton pWebAppButton = new PDashboardButton(getContext());
+        PDashboardButton pWebAppButton = new PDashboardButton(getAppRunner());
         pWebAppButton.add(name, x, y, w, h);
 
         return pWebAppButton;
@@ -89,7 +90,7 @@ public class PDashboard extends PInterface {
     @ProtoMethodParam(params = {"name", "x", "y", "w", "h", "min", "max", "function(num)"})
     public PDashboardSlider addSlider(String name, int x, int y, int w, int h, int min, int max) throws UnknownHostException, JSONException {
 
-        PDashboardSlider pWebAppSlider = new PDashboardSlider(getContext());
+        PDashboardSlider pWebAppSlider = new PDashboardSlider(getAppRunner());
         pWebAppSlider.add(name, x, y, w, h, min, max);
 
         return pWebAppSlider;
@@ -101,7 +102,7 @@ public class PDashboard extends PInterface {
     public PDashboardInput addInput(String name, int x, int y, int w, int h)
             throws UnknownHostException, JSONException {
 
-        PDashboardInput pWebAppInput = new PDashboardInput(getContext());
+        PDashboardInput pWebAppInput = new PDashboardInput(getAppRunner());
         pWebAppInput.add(name, x, y, w, h);
 
         return pWebAppInput;
@@ -113,7 +114,7 @@ public class PDashboard extends PInterface {
     public PDashboardText addText(String name, int x, int y, int width, int height, int size, String color)
             throws UnknownHostException, JSONException {
 
-        PDashboardText pWebAppText = new PDashboardText(getContext());
+        PDashboardText pWebAppText = new PDashboardText(getAppRunner());
         pWebAppText.add(name, x, y, width, height, size, color);
 
         return pWebAppText;
@@ -124,7 +125,7 @@ public class PDashboard extends PInterface {
     @ProtoMethodParam(params = {"url", "x", "y", "w", "h"})
     public PDashboardImage addImage(String url, int x, int y, int w, int h) throws UnknownHostException, JSONException {
 
-        PDashboardImage pWebAppImage = new PDashboardImage(getContext());
+        PDashboardImage pWebAppImage = new PDashboardImage(getAppRunner());
         pWebAppImage.add(url, x, y, w, h);
 
         return pWebAppImage;
@@ -135,7 +136,7 @@ public class PDashboard extends PInterface {
     @ProtoMethodParam(params = {"url", "x", "y", "w", "h"})
     public PDashboardVideoCamera addCameraPreview(int x, int y, int w, int h) throws UnknownHostException, JSONException {
 
-        PDashboardVideoCamera pWebAppVideoCamera = new PDashboardVideoCamera(getContext());
+        PDashboardVideoCamera pWebAppVideoCamera = new PDashboardVideoCamera(getAppRunner());
         pWebAppVideoCamera.add(x, y, w, h);
 
         return pWebAppVideoCamera;
@@ -146,7 +147,7 @@ public class PDashboard extends PInterface {
     @ProtoMethodParam(params = {"url", "x", "y", "w", "h", "function(obj)"})
     public PDashboardCustomWidget addCustomWidget(String url, int x, int y, int w, int h, PDashboardCustomWidget.jDashboardAddCB callback) throws UnknownHostException, JSONException {
 
-        PDashboardCustomWidget pWebAppCustom = new PDashboardCustomWidget(getContext());
+        PDashboardCustomWidget pWebAppCustom = new PDashboardCustomWidget(getAppRunner());
         pWebAppCustom.add(url, x, y, w, h, callback);
 
         return pWebAppCustom;
@@ -156,7 +157,7 @@ public class PDashboard extends PInterface {
     @ProtoMethod(description = "change the background color (HEX format) of the dashboard", example = "")
     @ProtoMethodParam(params = {"hexColor"})
     public PDashboardBackground backgroundColor(String hex) throws JSONException, UnknownHostException {
-        PDashboardBackground pDashboardBackground = new PDashboardBackground(getContext());
+        PDashboardBackground pDashboardBackground = new PDashboardBackground(getAppRunner());
         pDashboardBackground.updateColor(hex);
 
         return pDashboardBackground;

@@ -25,9 +25,11 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -56,7 +58,7 @@ import org.protocoderrunner.apidoc.annotation.ProtoField;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunnerFragment;
-import org.protocoderrunner.apprunner.AppRunnerSettings;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.media.PCamera;
 import org.protocoderrunner.apprunner.api.other.ProtocoderNativeObject;
@@ -114,36 +116,35 @@ public class PUIGeneric extends PInterface {
     @ProtoField(description = "Toolbar", example = "")
     public PToolbar toolbar;
 
-    public PUIGeneric(Context a) {
-        super(a);
-        this.mContext = a;
+    public PUIGeneric(AppRunner appRunner) {
+        super(appRunner);
+        this.mContext = appRunner.getAppContext();
     }
 
     @Override
     public void initForParentFragment(AppRunnerFragment fragment) {
         super.initForParentFragment(fragment);
 
-        toolbar = new PToolbar(getActivity());
-
-        updateScreenSizes();
+        if (fragment != null) {
+            toolbar = new PToolbar(getAppRunner(), getActivity().getSupportActionBar());
+        }
+     //   updateScreenSizes();
     }
 
     public void updateScreenSizes() {
+        Point p = AndroidUtils.getScreenSize(getContext());
+        screenWidth = 500; //p.x;
+        screenHeight = 500; //p.y;
 
-        if (getActivity() != null) {
-            screenWidth = getActivity().getScrenSize().x;
-            screenHeight = getActivity().getScrenSize().y;
+        MLog.d("qq", " " + screenWidth + " " + screenHeight);
 
-            MLog.d("qq", " " + screenWidth + " " + screenHeight);
-
-            //if in immersive mode then add the navigation bar height
-            if (isImmersiveMode) {
-                screenHeight += getActivity().getNavigationBarHeight();
-            }
-
-            sw = screenWidth;
-            sh = screenHeight;
+        //if in immersive mode then add the navigation bar height
+        if (isImmersiveMode) {
+            screenHeight += AndroidUtils.getNavigationBarHeight(getContext());
         }
+
+        sw = screenWidth;
+        sh = screenHeight;
     }
 
     protected void initializeLayout() {
@@ -189,7 +190,7 @@ public class PUIGeneric extends PInterface {
             }
 
             // background image
-            bgImageView = new PImageView(getContext());
+            bgImageView = new PImageView(getAppRunner());
             holderLayout.addView(bgImageView, layoutParams);
 
             // set the layout
@@ -628,7 +629,7 @@ public class PUIGeneric extends PInterface {
 
         initializeLayout();
         // Create and position the image view
-        final PImageView iv = new PImageView(getContext());
+        final PImageView iv = new PImageView(getAppRunner());
         if (imagePath != null) {
             iv.setImage(imagePath);
         }
@@ -656,7 +657,7 @@ public class PUIGeneric extends PInterface {
 
         initializeLayout();
         // Create and position the image button
-        final PImageButton ib = new PImageButton(getContext());
+        final PImageButton ib = new PImageButton(getAppRunner());
         ib.hideBackground = hideBackground;
 
         ib.setScaleType(ScaleType.FIT_XY);
@@ -667,7 +668,7 @@ public class PUIGeneric extends PInterface {
 
         // Add image asynchronously
         new SetImageTask(ib, false).execute(
-                AppRunnerSettings.get().project.getStoragePath()
+                getAppRunner().project.getStoragePath()
                         + File.separator
                         + imgNotPressed);
 
@@ -746,7 +747,7 @@ public class PUIGeneric extends PInterface {
 
                     //imagebutton
                 } else if (type.equals("imagebutton")) {
-                    PImageButton btn = new PImageButton(getContext());
+                    PImageButton btn = new PImageButton(getAppRunner());
 
 
                     //toggle
@@ -821,7 +822,7 @@ public class PUIGeneric extends PInterface {
     @ProtoMethodParam(params = {"fileName"})
     public PVideo newVideo(final String videoFile) {
         initializeLayout();
-        final PVideo video = new PVideo(getContext(), videoFile);
+        final PVideo video = new PVideo(getAppRunner(), videoFile);
 
         return video;
     }
@@ -831,7 +832,7 @@ public class PUIGeneric extends PInterface {
     @ProtoMethodParam(params = {"width", "height"})
     public PCanvas newCanvas(int w, int h) {
         initializeLayout();
-        PCanvas canvasView = new PCanvas(getContext(), w, h);
+        PCanvas canvasView = new PCanvas(getAppRunner(), w, h);
 
         return canvasView;
     }
@@ -841,7 +842,7 @@ public class PUIGeneric extends PInterface {
     @ProtoMethodParam(params = {""})
     public PWebView newWebview() {
         initializeLayout();
-        PWebView webView = new PWebView(getContext());
+        PWebView webView = new PWebView(getAppRunner());
 
         return webView;
     }
@@ -859,7 +860,7 @@ public class PUIGeneric extends PInterface {
             camNum = CameraNew.MODE_CAMERA_BACK;
         }
 
-        PCamera pCamera = new PCamera(getActivity(), camNum, PCamera.MODE_COLOR_COLOR);
+        PCamera pCamera = new PCamera(getAppRunner(), camNum, PCamera.MODE_COLOR_COLOR);
 
         return pCamera;
     }

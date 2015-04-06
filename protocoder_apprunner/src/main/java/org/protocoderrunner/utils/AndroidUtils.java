@@ -30,6 +30,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Outline;
 import android.graphics.Path;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.media.AudioManager;
 import android.os.Build;
@@ -37,6 +38,7 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewOutlineProvider;
@@ -122,6 +124,29 @@ public class AndroidUtils {
 
         return bitmap;
 
+    }
+
+
+    public static Point getScreenSize(Context context) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+
+        int screenWidth = displayMetrics.widthPixels; //getActivity().getScrenSize().x;
+        int screenHeight = displayMetrics.heightPixels; //getActivity().getScrenSize().y;
+
+        Point size = new Point();
+        size.x = screenWidth;
+        size.y = screenHeight;
+
+        return size;
+    }
+
+    public static int getNavigationBarHeight(Context context) {
+        Resources resources = context.getResources();
+        int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            return resources.getDimensionPixelSize(resourceId);
+        }
+        return 0;
     }
 
     public static int pixelsToDp(Context c, int px) {

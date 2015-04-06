@@ -24,6 +24,7 @@ import android.content.Context;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.hardware.HardwareCallback;
@@ -46,8 +47,8 @@ public class PIOIO extends PInterface implements HardwareCallback {
     private IOIO mIoio;
     private startCB mIoioCallbackfn;
 
-    public PIOIO(Context a) {
-        super(a);
+    public PIOIO(AppRunner appRunner) {
+        super(appRunner);
     }
 
     // --------- getRequest ---------//
@@ -62,7 +63,7 @@ public class PIOIO extends PInterface implements HardwareCallback {
         if (!mIoioStarted) {
             this.board = new IOIOBoard(getContext(), this);
             board.powerOn();
-            WhatIsRunning.getInstance().add(board);
+            getAppRunner().whatIsRunning.add(board);
         }
     }
 
@@ -74,8 +75,7 @@ public class PIOIO extends PInterface implements HardwareCallback {
         if (!mIoioStarted) {
             this.board = new IOIOBoard(getContext(), this);
             board.powerOn();
-            WhatIsRunning.getInstance().add(board);
-
+            getAppRunner().whatIsRunning.add(board);
         }
     }
 

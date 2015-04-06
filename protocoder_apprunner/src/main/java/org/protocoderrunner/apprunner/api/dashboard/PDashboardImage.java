@@ -26,6 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.network.CustomWebsocketServer;
 import org.protocoderrunner.utils.StrUtils;
@@ -37,8 +38,8 @@ public class PDashboardImage extends PInterface {
     private static final String TAG = "PDashboardImage";
     String id;
 
-    public PDashboardImage(Context a) {
-        super(a);
+    public PDashboardImage(AppRunner appRunner) {
+        super(appRunner);
     }
 
 

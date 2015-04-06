@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_project_list_run"
+          android:icon="@drawable/protocoder_icon"
+          android:title="@string/run" />
+    <item android:id="@+id/menu_project_list_edit"
+          android:icon="@drawable/protocoder_icon"
+          android:title="@string/edit" />
+    <item android:id="@+id/menu_project_list_delete"
+          android:icon="@drawable/protocoder_icon"
+          android:title="@string/delete" />
+    <item android:id="@+id/menu_project_list_add_shortcut"
+          android:icon="@drawable/protocoder_icon"
+          android:title="@string/add_shortcut" />
+    <item android:id="@+id/menu_project_list_share_with"
+          android:icon="@drawable/protocoder_icon"
+          android:title="@string/share" />
+    <item android:id="@+id/menu_project_list_share_proto_file"
+          android:icon="@drawable/protocoder_icon"
+          android:title="@string/share_proto_file" />
+
+    <!--  Bean is broken disabled till fixed
+    <item android:id="@+id/menu_project_list_beam"
+          android:icon="@drawable/ic_action_logo"
+          android:title="@string/beam"
+          android:menuCategory="system" 
+          /> 
+    -->
+</menu>

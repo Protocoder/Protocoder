@@ -30,6 +30,7 @@ import android.widget.Toast;
 import org.mozilla.javascript.NativeArray;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.PUI;
 import org.protocoderrunner.apprunner.api.other.ProtocoderNativeArray;
@@ -44,14 +45,9 @@ public class PBluetoothServer extends PInterface {
     private SimpleBT simpleBT;
     private boolean mBtStarted = false;
 
-    public PBluetoothServer(Context context) {
-        super(context);
-
-        WhatIsRunning.getInstance().add(this);
+    public PBluetoothServer(AppRunner appRunner) {
+        super(appRunner);
     }
-
-
-
 
 
     @ProtoMethod(description = "Send bluetooth serial message", example = "")
@@ -61,7 +57,6 @@ public class PBluetoothServer extends PInterface {
             simpleBT.send(string);
         }
     }
-
 
     @ProtoMethod(description = "Disconnect the bluetooth", example = "")
     @ProtoMethodParam(params = {""})

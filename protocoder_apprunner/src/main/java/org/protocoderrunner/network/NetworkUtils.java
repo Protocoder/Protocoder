@@ -31,7 +31,7 @@ import android.os.PowerManager;
 import android.text.format.Formatter;
 import android.util.Log;
 
-import org.protocoderrunner.apprunner.AppRunnerSettings;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.utils.MLog;
 
 import java.io.File;
@@ -65,9 +65,9 @@ public class NetworkUtils {
             public void onUpdate(int progress);
         }
 
-        public DownloadTask(Context context, String fileName) {
-            this.context = context;
-            path = AppRunnerSettings.get().project.getStoragePath() + File.separator + fileName;
+        public DownloadTask(AppRunner appRunner, String fileName) {
+            this.context = appRunner.getAppContext();
+            path = appRunner.project.getStoragePath() + File.separator + fileName;
         }
 
         @Override

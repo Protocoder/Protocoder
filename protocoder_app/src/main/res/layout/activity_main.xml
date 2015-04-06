@@ -14,51 +14,12 @@
         android:layout_width="match_parent"
     ></include>
 
-    <LinearLayout
-        android:id="@+id/tabs"
-        android:orientation="horizontal"
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_below="@id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="projects"
-            android:layout_weight="1"
-            android:layout_gravity="center"
-            android:textAllCaps="false"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="#88000000"
-            android:id="@+id/textProjects"
-            android:gravity="center_horizontal"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="examples"
-            android:layout_weight="1"
-            android:layout_gravity="center"
-            android:textAllCaps="false"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="#55000000"
-            android:id="@+id/textExamples"
-            android:gravity="center_horizontal"/>
-
-    </LinearLayout>
-
-    <android.support.v4.view.ViewPager
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/pager"
-        android:layout_below="@id/tabs"
-        android:layout_alignParentRight="true"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="0dp" >
-    </android.support.v4.view.ViewPager>
+      />
 
     <LinearLayout
         android:id="@+id/ip_container"
@@ -103,6 +64,7 @@
         android:layout_height="fill_parent"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true" >
+
     </FrameLayout>
 
 </RelativeLayout>

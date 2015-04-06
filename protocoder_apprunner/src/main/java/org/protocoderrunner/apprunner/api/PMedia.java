@@ -33,7 +33,7 @@ import android.util.Log;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.apprunner.AppRunnerSettings;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.media.PAudioPlayer;
 import org.protocoderrunner.apprunner.api.media.PAudioRecorder;
@@ -56,11 +56,9 @@ public class PMedia extends PInterface {
     private MicPluggedCB headsetCallbackfn;
     PAudioRecorder rec;
 
-    public PMedia(Context c) {
-        super(c);
-        rec = new PAudioRecorder(getContext());
-
-        WhatIsRunning.getInstance().add(this);
+    public PMedia(AppRunner appRunner) {
+        super(appRunner);
+        rec = new PAudioRecorder(appRunner);
     }
 
 
@@ -74,7 +72,7 @@ public class PMedia extends PInterface {
     @ProtoMethod(description = "Play a sound file giving its filename", example = "media.playSound(fileName);")
     @ProtoMethodParam(params = {"fileName"})
     public PAudioPlayer playSound(String url) {
-        PAudioPlayer pAudioPlayer = new PAudioPlayer(url);
+        PAudioPlayer pAudioPlayer = new PAudioPlayer(getAppRunner(), url);
 
         return pAudioPlayer;
     }
@@ -116,7 +114,7 @@ public class PMedia extends PInterface {
     @ProtoMethod(description = "Loads and initializes a PureData patch http://www.puredata.info using libpd", example = "")
     @ProtoMethodParam(params = {"fileName"})
     public PPureData initPdPatch(String fileName) {
-        PPureData pPureData = new PPureData(getContext());
+        PPureData pPureData = new PPureData(getAppRunner());
         pPureData.initPatch(fileName);
 
         return pPureData;
@@ -130,11 +128,11 @@ public class PMedia extends PInterface {
     public void audioRecord(String fileName, boolean showProgress) {
         if (!recording) {
             recording = true;
-            if (AppRunnerSettings.get().hasUi) {
+            if (getAppRunner().hasUserInterface) {
                 rec.startRecordingWithUi(getActivity());
             }
 
-            rec.startRecording(fileName, showProgress & AppRunnerSettings.get().hasUi);
+            rec.startRecording(fileName, showProgress & getAppRunner().hasUserInterface);
         }
     }
 
@@ -284,7 +282,7 @@ public class PMedia extends PInterface {
     @ProtoMethod(description = "Start a connected midi device", example = "media.startVoiceRecognition(function(text) { console.log(text) } );")
     @ProtoMethodParam(params = {"function(recognizedText)"})
     public PMidi connectMidiDevice() {
-        PMidi pMidi = new PMidi(getContext());
+        PMidi pMidi = new PMidi(getAppRunner());
 
         return pMidi;
     }
@@ -299,7 +297,6 @@ public class PMedia extends PInterface {
     }
 
     public void headsetListener(MicPluggedCB callbackfn) {
-        WhatIsRunning.getInstance().add(this);
         headsetCallbackfn = callbackfn;
 
         IntentFilter filter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);

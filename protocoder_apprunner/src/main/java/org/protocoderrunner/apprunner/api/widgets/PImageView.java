@@ -28,17 +28,19 @@ import android.widget.ImageView;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.apprunner.AppRunnerSettings;
+import org.protocoderrunner.apprunner.AppRunner;
 
 import java.io.File;
 
 public class PImageView extends ImageView implements PViewInterface {
 
+    private final AppRunner mAppRunner;
     private Context mContext;
 
-    public PImageView(Context context) {
-        super(context);
-        this.mContext = context;
+    public PImageView(AppRunner appRunner) {
+        super(appRunner.getAppContext());
+        this.mContext = appRunner.getAppContext();
+        this.mAppRunner = appRunner;
     }
 
 
@@ -53,7 +55,7 @@ public class PImageView extends ImageView implements PViewInterface {
 
             // Add the image
             new PUIGeneric.SetImageTask(this, false).execute(
-                    AppRunnerSettings.get().project.getStoragePath()
+                    mAppRunner.project.getStoragePath()
                             + File.separator
                             + imagePath);
         }
@@ -77,7 +79,7 @@ public class PImageView extends ImageView implements PViewInterface {
 
             // Add the image
             new PUIGeneric.SetImageTask(this, true).execute(
-                    AppRunnerSettings.get().project.getStoragePath()
+                    mAppRunner.project.getStoragePath()
                             + File.separator
                             + imagePath);
         }

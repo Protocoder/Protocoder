@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="license_white">#FFFFFF</color>
+    <color name="license_blue">#33b5e5</color>
+    <color name="license_grey">#777777</color>
+    <color name="license_darkgrey">#333333</color>
+    <color name="license_background">#e5e5e5</color>
+
+</resources>

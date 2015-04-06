@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Protocoder</string>
+    <string name="activity_name">Protocoder</string>
+    <string name="runner_name">Protocoder AppRunner</string>
+    <string name="connect_message">Click to connect</string>
+    <string name="menu_settings">Settings</string>
+    <string name="BT_Home">Connect</string>
+    <string name="title_activity_launcher">LauncherActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="symbol">&lt;\u0020\u0020\u0020&gt;</string>
+
+    <string name="view">View</string>
+    <string name="run">Run</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="add_shortcut">Add shortcut to desktop</string>
+    <string name="share">Share main.js code</string>
+    <string name="share_proto_file">Share project as .proto file</string>
+    <string name="send_to">Send to...</string>
+    <string name="beam">NFC Share</string>
+    <string name="projects_zero">\nPress + to get started or slide to the right to check the examples</string>
+    <string name="files_zero">\nNo files in the project</string>
+    <string name="start_the_server">Connect to a WIFI and start the server to edit via web-IDE</string>
+    <string name="new_project_name_hint">Project name</string>
+
+    <!-- Menu items -->
+    <string name="menu_label_new">New</string>
+    <string name="menu_label_about">About</string>
+    <string name="menu_label_start_server">Start server</string>
+    <string name="menu_label_stop_server">Stop server</string>
+    <string name="menu_label_settings">Settings</string>
+
+    <!-- Help/About -->
+    <string name="about_activity_name">About</string>
+    <string name="about_how_to_title">How-to</string>
+    <string name="about_credits">Credits</string>
+    <string name="about_how_to_contents">Connect your Android device and your laptop to the same Wifi network. Your Android device acts as server that you can access simply access with your web browser. \nYou just need to type the URL shown at the bottom of the device screen in your computer\'s web browser and you will be ready to code.\n All the code that you execute is executed in your device. Now you got a pocketable IDE!  </string>
+    <string name="about_special_thanks">Special thanks to José Juan Sánchez Hernández, Maciej Górski, bq.com, Ali Javidan, Gopi Palaniappan, Alan Sien and the MWM Crew :)</string>
+
+    <!-- Welcome -->
+    <string name="welcome_activity_name">protocoder</string>
+    <string name="welcome_title">Good to see you.</string>
+    <string name="welcome_body">Protocoder makes simple to create, edit and run projects from your Android device or computer at the same time. \n\nJust start the app from your mobile, navigate to the displayed URL and start coding with the WebIDE.\n\nAre you in?</string>
+    <string name="welcome_accept">Let\'s go.</string>
+
+    <!-- Settings screen -->
+    <string name="setting_about">About</string>
+    <string name="setting_opensource_title">Open Source Licenses</string>
+    <string name="setting_opensource_description">License Details for open source software</string>
+
+    <string name="setting_screen_on_title">Keep screen on</string>
+    <string name="setting_screen_on_description">Force the device to be awake all the time</string>
+    <string name="setting_list_mode_title">Use List Mode</string>
+    <string name="setting_list_mode_description">Switch between grid or list mode in the main screen, list mode is nice for wearable devices</string>
+    <string name="setting_app_color_title">Change the app primary color</string>
+    <string name="setting_app_color_description">To change the color use the format #aarrggbb</string>
+    <string name="setting_background_mode_title">Background mode</string>
+    <string name="setting_background_mode_description">Servers will work in the background so you can keep working even if you are in a different app</string>
+    <string name="setting_connection_alert_title">Connection Alert</string>
+    <string name="setting_connection_alert_description">Protocoder will show when a new user is connecting</string>
+    <string name="setting_new_version_title">Notify New version</string>
+    <string name="setting_new_version_description">Protocoder will download (only Wifi) and notify when there is a new version</string>
+
+    <string name="setting_reinstall_title">Reinstall examples</string>
+    <string name="setting_reinstall_description">Ovewrite all the examples with the default ones</string>
+    <string name="settings_activity_name">Settings</string>
+    <string name="setting_options_title">Normal</string>
+    <string name="setting_show_notifications_title">Show notifications</string>
+    <string name="setting_show_notifications_body">Display a persistent notification when the server is running</string>
+    <string name="setting_show_webserver_title">Webserver port</string>
+    <string name="setting_show_webserver"></string>
+    <string name="setting_show_websocket_title">Websocket port</string>
+    <string name="setting_show_websocket"></string>
+    <string name="setting_id_title"> Device ID </string>
+    <string name="setting_id_description">This ID is generated the first time you install the app. You can always change it!</string>
+
+
+    <string name="licenses_activity_name">Licenses</string>
+    <string name="licenses">Licenses</string>
+    <string name="license_title_websockets">Android Websockets</string>
+    <string name="license_title_svgandroid">Svg-Android</string>
+    <string name="license_title_netutil">NetUtil</string>
+    <string name="license_title_libpd">libpd</string>
+    <string name="license_title_commons_lang">Commons Lang</string>
+    <string name="license_title_commons_net">Commons Net</string>
+    <string name="license_title_eventbus">EventBus</string>
+    <string name="license_title_httpclient">EventBus</string>
+    <string name="license_title_gson">Google GSON</string>
+    <string name="license_title_ioio">ioio</string>
+    <string name="license_title_mail">mail.jar</string>
+    <string name="license_title_osmdroid">osmdroid</string>
+    <string name="license_title_usb_serial">Usb-Serial</string>
+    <string name="license_title_processing">Processing</string>
+    <string name="license_title_physicaloid">Physicaloid</string>
+    <string name="license_title_rhino">Mozilla Rhino</string>
+    <string name="license_title_nano">Nano HTTPD</string>
+    <string name="license_title_zip4j">Zip4j</string>
+
+    <string name="title_item_list">Items</string>
+    <string name="title_item_detail">Item Detail</string>
+
+    <!-- puredata -->
+    <string name="pref_title">Pure Data Preferences</string>
+	<string name="pref_sum">Pure Data Preferences</string>
+	<string name="pref_key_srate">SAMPLE_RATE</string>
+	<string name="pref_title_srate">Sample rate</string>
+	<string name="pref_sum_srate">Sample rate for Pure Data</string>
+	<string name="pref_key_inchannels">INPUT_CHANNELS</string>
+	<string name="pref_title_inchannels">Input channels</string>
+	<string name="pref_sum_inchannels">Number of input channels</string>
+	<string name="pref_key_outchannels">OUTPUT_CHANNELS</string>
+	<string name="pref_title_outchannels">Output channels</string>
+	<string name="pref_sum_outchannels">Number of output channels</string>
+    
+</resources>

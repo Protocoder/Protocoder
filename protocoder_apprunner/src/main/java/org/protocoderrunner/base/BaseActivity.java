@@ -70,24 +70,6 @@ public class BaseActivity extends ActionBarActivity {
 
     }
 
-    public Point getScrenSize() {
-
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-
-        return size;
-    }
-
-    public int getNavigationBarHeight() {
-        Resources resources = getResources();
-        int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            return resources.getDimensionPixelSize(resourceId);
-        }
-        return 0;
-    }
-
     public void setFullScreen() {
         actionBarAllowed = true;
         // activity in full screen

@@ -38,9 +38,9 @@ public class MLog {
     private static final int LOG_W = 3;
     private static final int LOG_V = 4;
 
-    public static boolean network = true;
+    public static boolean network = false;
     public static boolean device = true;
-    public static boolean verbose = false;
+    public static boolean verbose = true;
 
     public static void d(final String tag, final String msg) {
         generic(LOG_D, tag, msg);
@@ -48,12 +48,10 @@ public class MLog {
 
     public static void e(String tag, String msg) {
         generic(LOG_E, tag, msg);
-
     }
 
     public static void i(String tag, String msg) {
         generic(LOG_I, tag, msg);
-
     }
 
     public static void w(String tag, String msg) {
@@ -72,29 +70,29 @@ public class MLog {
             final Throwable th = new Throwable();
             final StackTraceElement[] elements = th.getStackTrace();
 
-            callerClassName = elements[1].getClassName();
-            callerMethodName = elements[1].getMethodName();
+            callerClassName = elements[2].getClassName();
+            callerMethodName = elements[2].getMethodName() + " >>>";
         }
 
         if (device) {
             switch (type) {
                 case LOG_D:
-                    Log.d(tag, "[" + callerMethodName + "] " + msg);
+                    Log.d(tag, "[[ " + tag + " ]] " + callerMethodName + " " + msg);
 
                     break;
 
                 case LOG_E:
-                    Log.e(tag, "[" + callerMethodName + "] " + msg);
+                    Log.e(tag, "[[ " + tag + " ]] " + callerMethodName + " " + msg);
 
                     break;
 
                 case LOG_I:
-                    Log.i(tag, "[" + callerMethodName + "] " + msg);
+                    Log.i(tag, "[[ " + tag + " ]] " + callerMethodName + " " + msg);
 
                     break;
 
                 case LOG_W:
-                    Log.w(tag, "[" + callerMethodName + "] " + msg);
+                    Log.w(tag, "[[ " +tag + " ]] " + callerMethodName + " " + msg);
 
                     break;
 

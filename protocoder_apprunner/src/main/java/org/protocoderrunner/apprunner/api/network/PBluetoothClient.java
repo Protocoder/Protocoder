@@ -26,6 +26,7 @@ import android.content.Context;
 import org.mozilla.javascript.NativeArray;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.AppRunnerFragment;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.PUI;
@@ -40,17 +41,13 @@ public class PBluetoothClient extends PInterface {
     private boolean mBtStarted = false;
     private CallbackConnected mCallbackConnected;
     private CallbackNewData mCallbackData;
-    private AppRunnerFragment mFragment;
 
-    public PBluetoothClient(PBluetooth pBluetooth, Context context, AppRunnerFragment fragment) {
-        super(context);
+    public PBluetoothClient(PBluetooth pBluetooth, AppRunner appRunner) {
+        super(appRunner);
         mPBluetooth = pBluetooth;
-        mFragment = fragment;
 
         simpleBT = new SimpleBT(getContext(), null);
         simpleBT.start();
-
-        WhatIsRunning.getInstance().add(this);
     }
 
 
@@ -73,7 +70,7 @@ public class PBluetoothClient extends PInterface {
             arrayStrings[i] = (String) nativeArray.get(i, null);
         }
 
-        mFragment.pUi.popupChoice("Connect to device", arrayStrings, new PUI.choiceDialogCB() {
+        getAppRunner().pUi.popupChoice("Connect to device", arrayStrings, new PUI.choiceDialogCB() {
             @Override
             public void event(String string) {
                 connectSerial(string.split(" ")[1], callbackfn);

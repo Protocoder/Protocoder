@@ -30,6 +30,7 @@ import android.widget.Toast;
 import org.mozilla.javascript.NativeArray;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.PUI;
 import org.protocoderrunner.apprunner.api.other.ProtocoderNativeArray;
@@ -44,10 +45,8 @@ public class PBluetooth extends PInterface {
     private SimpleBT simpleBT;
     private boolean mBtStarted = false;
 
-    public PBluetooth(Context context) {
-        super(context);
-
-        WhatIsRunning.getInstance().add(this);
+    public PBluetooth(AppRunner appRunner) {
+        super(appRunner);
     }
 
     @ProtoMethod(description = "")
@@ -61,7 +60,7 @@ public class PBluetooth extends PInterface {
     public PBluetoothClient connectSerial(String mac, PBluetoothClient.CallbackConnected callback) {
         start();
 
-        PBluetoothClient pBluetoothClient = new PBluetoothClient(this, getContext(), getFragment());
+        PBluetoothClient pBluetoothClient = new PBluetoothClient(this, getAppRunner());
         pBluetoothClient.connectSerial(mac, callback);
 
         return pBluetoothClient;
@@ -72,7 +71,7 @@ public class PBluetooth extends PInterface {
     public PBluetoothClient connectSerial(PBluetoothClient.CallbackConnected callback) {
         start();
 
-        PBluetoothClient pBluetoothClient = new PBluetoothClient(this, getContext(), getFragment());
+        PBluetoothClient pBluetoothClient = new PBluetoothClient(this, getAppRunner());
         pBluetoothClient.connectSerial(callback);
 
         return pBluetoothClient;
@@ -123,7 +122,8 @@ public class PBluetooth extends PInterface {
             MLog.d(TAG, "starting bluetooth as service");
         }
 
-        WhatIsRunning.getInstance().add(simpleBT);
+        getAppRunner().whatIsRunning.add(simpleBT);
+
         return simpleBT;
     }
 

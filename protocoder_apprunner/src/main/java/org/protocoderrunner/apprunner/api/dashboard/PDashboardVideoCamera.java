@@ -25,6 +25,7 @@ import android.content.Context;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.network.CustomWebsocketServer;
 import org.protocoderrunner.utils.StrUtils;
@@ -38,8 +39,8 @@ public class PDashboardVideoCamera extends PInterface {
 
 
     //TODO this is just mContext scaffold needs to be implemented
-    public PDashboardVideoCamera(Context a) {
-        super(a);
+    public PDashboardVideoCamera(AppRunner appRunner) {
+        super(appRunner);
     }
 
 

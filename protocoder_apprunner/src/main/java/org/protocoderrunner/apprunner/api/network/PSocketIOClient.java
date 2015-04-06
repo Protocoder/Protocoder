@@ -28,6 +28,8 @@ import org.json.JSONObject;
 import org.mozilla.javascript.NativeArray;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.utils.MLog;
 
@@ -35,7 +37,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-public class PSocketIOClient {
+public class PSocketIOClient extends PInterface {
 
     private String TAG = "PSocketIOClient";
     private SocketIOClient mSocketIOClient;
@@ -48,7 +50,8 @@ public class PSocketIOClient {
     }
 
 
-    public PSocketIOClient(String uri) {
+    public PSocketIOClient(AppRunner appRunner, String uri) {
+        super(appRunner);
         SocketIOClient.Handler handler = new SocketIOClient.Handler() {
 
             @Override
@@ -96,7 +99,7 @@ public class PSocketIOClient {
         try {
             mSocketIOClient = new SocketIOClient(new URI(uri), handler);
             mSocketIOClient.connect();
-            WhatIsRunning.getInstance().add(this);
+            getAppRunner().whatIsRunning.add(this);
 
         } catch (URISyntaxException e) {
             e.printStackTrace();

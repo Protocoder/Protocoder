@@ -26,7 +26,6 @@ import android.os.Environment;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.protocoderrunner.apprunner.AppRunnerContext;
 import org.protocoderrunner.AppSettings;
 import org.protocoderrunner.utils.FileIO;
 import org.protocoderrunner.utils.MLog;
@@ -74,14 +73,14 @@ public class ProjectManager {
     public String getBaseDir() {
         String baseDir;
 
-        if (AppSettings.STANDALONE == true) {
-            baseDir = AppRunnerContext.get().getAppContext().getFilesDir().getPath()
-                    + File.separator;
+        //if (AppSettings.STANDALONE == true) {
+            //baseDir = AppRunnerContext.get().getAppContext().getFilesDir().getPath()
+            //        + File.separator;
 
-        } else {
+        //} else {
             baseDir = Environment.getExternalStorageDirectory().getAbsolutePath()
                     + File.separator + AppSettings.APP_FOLDER + File.separator;
-        }
+        //}
 
         return baseDir;
     }

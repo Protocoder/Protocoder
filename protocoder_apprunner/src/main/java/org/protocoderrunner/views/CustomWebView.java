@@ -25,7 +25,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.webkit.WebView;
 
-import org.protocoderrunner.apprunner.AppRunnerSettings;
+import org.protocoderrunner.apprunner.AppRunner;
 
 import java.io.File;
 
@@ -35,11 +35,11 @@ import java.io.File;
 
 public class CustomWebView extends WebView {
 
-    private Context mContext;
+    protected AppRunner mAppRunner;
 
-    public CustomWebView(Context context) {
-        super(context);
-        this.mContext = context;
+    public CustomWebView(AppRunner appRunner) {
+        super(appRunner.getAppContext());
+        this.mAppRunner = appRunner;
     }
 
     public CustomWebView(Context context, AttributeSet attrs) {
@@ -56,7 +56,7 @@ public class CustomWebView extends WebView {
     }
 
     public void loadHTMLFile(String fileName) {
-        String path = AppRunnerSettings.get().project.getStoragePath() + File.separator + fileName;
+        String path = mAppRunner.project.getStoragePath() + File.separator + fileName;
         loadUrl("file://" + path);
     }
 

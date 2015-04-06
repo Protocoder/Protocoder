@@ -30,8 +30,6 @@ public class PAnimation {
     private final View myView;
 
     public PAnimation(View view) {
-        WhatIsRunning.getInstance().add(this);
-
         myView = view;
     }
 

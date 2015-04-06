@@ -28,7 +28,7 @@ import net.lingala.zip4j.exception.ZipException;
 import org.apache.commons.io.FileUtils;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.apprunner.AppRunnerSettings;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.other.PSqLite;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
@@ -43,16 +43,15 @@ public class PFileIO extends PInterface {
     String TAG = "PFileIO";
     private FileObserver fileObserver;
 
-    public PFileIO(Context c) {
-        super(c);
-        WhatIsRunning.getInstance().add(this);
+    public PFileIO(AppRunner appRunner) {
+        super(appRunner);
     }
 
 
     @ProtoMethod(description = "Create a directory", example = "")
     @ProtoMethodParam(params = {"dirName"})
     public void createDir(String name) {
-        File file = new File(AppRunnerSettings.get().project.getStoragePath() + File.separator + name);
+        File file = new File(getAppRunner().project.getStoragePath() + File.separator + name);
         file.mkdirs();
     }
 
@@ -69,7 +68,7 @@ public class PFileIO extends PInterface {
     public int type(String name) {
         int ret = 0;
 
-        File file = new File(AppRunnerSettings.get().project.getStoragePath() + File.separator + name);
+        File file = new File(getAppRunner().project.getStoragePath() + File.separator + name);
 
         if (!file.exists()) ret = -1;
         else if (file.isFile()) ret = 1;
@@ -82,8 +81,8 @@ public class PFileIO extends PInterface {
     @ProtoMethod(description = "Move a file to a directory", example = "")
     @ProtoMethodParam(params = {"name", "destination"})
     public void moveFileToDir(String name, String to) {
-        File fromFile = new File(AppRunnerSettings.get().project.getStoragePath() + File.separator + name);
-        File dir = new File(AppRunnerSettings.get().project.getStoragePath() + File.separator + to);
+        File fromFile = new File(getAppRunner().project.getStoragePath() + File.separator + name);
+        File dir = new File(getAppRunner().project.getStoragePath() + File.separator + to);
 
         dir.mkdirs();
         try {
@@ -97,8 +96,8 @@ public class PFileIO extends PInterface {
     @ProtoMethod(description = "Move a directory to another directory", example = "")
     @ProtoMethodParam(params = {"name", "destination"})
     public void moveDirToDir(String name, String to) {
-        File fromDir = new File(AppRunnerSettings.get().project.getStoragePath() + File.separator + name);
-        File dir = new File(AppRunnerSettings.get().project.getStoragePath() + File.separator + to);
+        File fromDir = new File(getAppRunner().project.getStoragePath() + File.separator + name);
+        File dir = new File(getAppRunner().project.getStoragePath() + File.separator + to);
 
         dir.mkdirs();
         try {
@@ -112,8 +111,8 @@ public class PFileIO extends PInterface {
     @ProtoMethod(description = "Copy a file or directory", example = "")
     @ProtoMethodParam(params = {"name", "destination"})
     public void copyFileToDir(String name, String to) {
-        File file = new File(AppRunnerSettings.get().project.getStoragePath() + File.separator + name);
-        File dir = new File(AppRunnerSettings.get().project.getStoragePath() + File.separator + to);
+        File file = new File(getAppRunner().project.getStoragePath() + File.separator + name);
+        File dir = new File(getAppRunner().project.getStoragePath() + File.separator + to);
         dir.mkdirs();
 
         try {
@@ -127,8 +126,8 @@ public class PFileIO extends PInterface {
     @ProtoMethod(description = "Copy a file or directory", example = "")
     @ProtoMethodParam(params = {"name", "destination"})
     public void copyDirToDir(String name, String to) {
-        File file = new File(AppRunnerSettings.get().project.getStoragePath() + File.separator + name);
-        File dir = new File(AppRunnerSettings.get().project.getStoragePath() + File.separator + to);
+        File file = new File(getAppRunner().project.getStoragePath() + File.separator + name);
+        File dir = new File(getAppRunner().project.getStoragePath() + File.separator + to);
         dir.mkdirs();
 
         try {
@@ -180,7 +179,7 @@ public class PFileIO extends PInterface {
     @ProtoMethod(description = "Move a file or directory", example = "")
     @ProtoMethodParam(params = {"name", "destination"})
     public void createEmptyFile(String name) {
-        File file = new File(AppRunnerSettings.get().project.getStoragePath() + File.separator + name);
+        File file = new File(getAppRunner().project.getStoragePath() + File.separator + name);
         try {
             file.createNewFile();
         } catch (IOException e) {
@@ -222,7 +221,7 @@ public class PFileIO extends PInterface {
     @ProtoMethod(description = "Load the Strings of a text file into an array", example = "")
     @ProtoMethodParam(params = {"fileName"})
     public String[] loadStrings(String fileName) {
-        return FileIO.loadStrings(AppRunnerSettings.get().project.getStoragePath() + File.separator + fileName);
+        return FileIO.loadStrings(getAppRunner().project.getStoragePath() + File.separator + fileName);
     }
 
 
@@ -253,7 +252,7 @@ public class PFileIO extends PInterface {
     @ProtoMethod(description = "Open a sqlite database", example = "")
     @ProtoMethodParam(params = {"filename"})
     public PSqLite openSqlLite(String db) {
-        return new PSqLite(getContext(), db);
+        return new PSqLite(getAppRunner(), db);
     }
 
     public interface addZipUnzipCB {

@@ -39,6 +39,8 @@ import android.provider.Settings;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.apprunner.logger.L;
 import org.protocoderrunner.utils.MLog;
@@ -48,7 +50,7 @@ import java.util.List;
 import java.util.Locale;
 
 @TargetApi(Build.VERSION_CODES.GINGERBREAD)
-public class PGPS {
+public class PGPS extends PInterface {
 
 
     interface GPSListener {
@@ -57,7 +59,7 @@ public class PGPS {
 
 
     protected static final String TAG = "GPSManager";
-    private final Context c;
+    private final Context mContext;
     LocationManager locationManager;
     String provider;
 
@@ -78,8 +80,9 @@ public class PGPS {
     // private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1
     // minute
 
-    public PGPS(Context c) {
-        this.c = c;
+    public PGPS(AppRunner appRunner) {
+        super(appRunner);
+        mContext = appRunner.getAppContext();
     }
 
 
@@ -90,13 +93,10 @@ public class PGPS {
             return;
         }
 
-        WhatIsRunning.getInstance().add(this);
-
-
         MLog.d(TAG, "starting GPS");
 
         // criteria.setSpeedRequired(true);
-        locationManager = (LocationManager) c.getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
 
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) == false) {
             MLog.d(TAG, "GPS not enabled");
@@ -158,7 +158,7 @@ public class PGPS {
             @Override
             public void onProviderDisabled(String provider) {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                c.startActivity(intent);
+                mContext.startActivity(intent);
             }
 
             @Override
@@ -203,7 +203,7 @@ public class PGPS {
     @ProtoMethodParam(params = {"latitude", "longitude"})
     public String getLocationName(double lat, double lon) {
         String gpsLocation = "";
-        Geocoder gcd = new Geocoder(c, Locale.getDefault());
+        Geocoder gcd = new Geocoder(mContext, Locale.getDefault());
         List<Address> addresses;
         try {
             addresses = gcd.getFromLocation(lat, lon, 1);
@@ -221,7 +221,7 @@ public class PGPS {
      * lauch Settings Options
      */
     private void showSettingsAlert() {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(c);
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
 
         // Setting Dialog Title
         alertDialog.setTitle("GPS settings");
@@ -234,7 +234,7 @@ public class PGPS {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                c.startActivity(intent);
+                mContext.startActivity(intent);
             }
         });
 

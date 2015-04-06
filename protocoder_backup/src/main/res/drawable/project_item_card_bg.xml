@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--<selector xmlns:android="http://schemas.android.com/apk/res/android">-->
+
+    <!--<item android:drawable="@drawable/project_item_list_bg_pressed" android:state_pressed="true"></item>-->
+    <!--<item android:drawable="@drawable/project_item_list_bg_focused" android:state_focused="true"></item>-->
+    <!--<item android:drawable="@drawable/project_item_list_bg_hovered" android:state_hovered="true"></item>-->
+    <!--<item android:drawable="@drawable/project_item_list_bg_selected" android:state_selected="true"></item>-->
+    <!--<item android:drawable="@drawable/project_item_list_bg_normal"></item>-->
+
+<!--</selector>-->
+
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item>
+        <shape
+            android:dither="true"
+            android:shape="rectangle" >
+            <corners android:radius="2dp" />
+            <solid android:color="#55dddddd" />
+        </shape>
+    </item>
+
+
+    <item android:bottom="2dp">
+        <shape
+            android:dither="true"
+            android:shape="rectangle" >
+            <corners android:radius="2dp" />
+            <solid android:color="#55ffffff" />
+            <padding
+                android:bottom="4dp"
+                android:left="4dp"
+                android:right="4dp"
+                android:top="4dp" />
+        </shape>
+    </item>
+
+</layer-list>

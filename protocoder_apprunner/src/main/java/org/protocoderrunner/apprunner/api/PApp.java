@@ -25,7 +25,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -37,6 +36,7 @@ import org.mozilla.javascript.NativeObject;
 import org.protocoderrunner.R;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.other.PEvents;
@@ -63,9 +63,10 @@ public class PApp extends PInterface {
         public void onStop();
     }
 
-    public PApp(Context a) {
-        super(a);
-        pevents = new PEvents(a);
+    public PApp(AppRunner appRunner) {
+        super(appRunner);
+
+        pevents = new PEvents(appRunner);
     }
 
 
@@ -112,10 +113,10 @@ public class PApp extends PInterface {
 
     @android.webkit.JavascriptInterface
 
-    @ProtoMethod(description = "evaluate mContext script", example = "")
+    @ProtoMethod(description = "evaluate script", example = "")
     @ProtoMethodParam(params = {"code"})
     public void eval(String code) {
-        getActivity().mAppRunnerFragment.interp.eval(code);
+        getAppRunner().interp.eval(code);
     }
 
 
@@ -124,7 +125,7 @@ public class PApp extends PInterface {
     public void load(String filename) {
         String code = FileIO.loadFile(path() + File.separator + filename);
 
-        getActivity().mAppRunnerFragment.interp.eval(code);
+        getAppRunner().interp.eval(code);
     }
 
 
@@ -132,7 +133,7 @@ public class PApp extends PInterface {
     @ProtoMethodParam(params = {"libraryName"})
     public void loadLibrary(String name) {
         String code = FileIO.loadFile("../../libraries/" + name + "/main.js");
-        getActivity().mAppRunnerFragment.interp.eval(code);
+        getAppRunner().interp.eval(code);
     }
 
     //TODO way to cancel notification and come back to the script
@@ -233,7 +234,7 @@ public class PApp extends PInterface {
     @ProtoMethodParam(params = {"cmd", "function(data)"})
     public ExecuteCmd executeCommand(final String cmd, final ExecuteCmd.ExecuteCommandCB callbackfn) {
 
-        return new ExecuteCmd(cmd, callbackfn);
+        return new ExecuteCmd(getAppRunner(), cmd, callbackfn);
     }
 
 

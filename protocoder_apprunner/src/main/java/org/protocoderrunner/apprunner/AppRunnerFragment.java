@@ -42,7 +42,6 @@ import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.protocoderrunner.AppSettings;
 import org.protocoderrunner.R;
 import org.protocoderrunner.apprunner.api.PApp;
 import org.protocoderrunner.apprunner.api.PBoards;
@@ -69,54 +68,26 @@ import de.greenrobot.event.EventBus;
 @SuppressLint("NewApi")
 public class AppRunnerFragment extends Fragment {
 
-    private static final String TAG = "AppRunnerFragment";
+    private static final String TAG = AppRunnerFragment.class.getSimpleName();
 
+    //
+    private AppRunner mAppRunner;
     private AppRunnerActivity mActivity;
-
-    public AppRunnerInterpreter interp;
     private FileObserver fileObserver;
 
     // listeners in the main activity that will pass the info to the API classes
     private PApp.onAppStatus onAppStatusListener;
 
-    // Layout
+    // Layout stuff
     private final int EDITOR_ID = 1231212345;
-
-    public RelativeLayout mainLayout;
-
+    public  RelativeLayout mainLayout;
     private RelativeLayout parentScriptedLayout;
     private RelativeLayout consoleRLayout;
-    public FrameLayout editorLayout;
+    public  FrameLayout editorLayout;
     private TextView consoleText;
-
-    public PLiveCodingFeedback liveCoding;
-
-    //API Objects for the interpreter
-    public PApp pApp;
-    public PBoards pBoards;
-    public PConsole pConsole;
-    public PDashboard pDashboard;
-    public PDevice pDevice;
-    public PFileIO pFileIO;
-    public PMedia pMedia;
-    public PNetwork pNetwork;
-    public PProtocoder pProtocoder;
-    public PSensors pSensors;
-    public PUI pUi;
-    public PUtil pUtil;
-
-    private Project mCurrentProject;
-    private String mProjectName;
-    private String mProjectFolder;
-    private String mScript;
-    //private int mActionBarColor;
+    public  PLiveCodingFeedback liveCoding;
     private View mMainView;
-    //private int mActionBarColorInt;
-    private String mIntentPrefixScript = "";
-    private String mIntentCode = "";
-    private String mIntentPostfixScript = "";
-    private boolean mIsProjectLoaded = false;
-    //private EditorFragment editorFragment;
+
 
     @Override
     public void onAttach(Activity activity) {
@@ -124,85 +95,24 @@ public class AppRunnerFragment extends Fragment {
 
         mActivity = (AppRunnerActivity) getActivity();
 
-        //get parameters
+        mAppRunner = new AppRunner(activity);
+        mAppRunner.hasUserInterface = true;
+
+        //get parameters and set them in the AppRunner
         Bundle bundle = getArguments();
-        mProjectName = bundle.getString(Project.NAME, "");
-        mProjectFolder = bundle.getString(Project.FOLDER, "");
-        //mActionBarColorInt = bundle.getInt(Project.COLOR, 0);
-        mIntentPrefixScript = bundle.getString(Project.PREFIX, "");
-        mIntentCode = bundle.getString(Project.CODE, "");
-        mIntentPostfixScript = bundle.getString(Project.POSTFIX, "");
+        mAppRunner.mProjectName = bundle.getString(Project.NAME, "");
+        mAppRunner.mProjectFolder = bundle.getString(Project.FOLDER, "");
+        mAppRunner.mIntentPrefixScript = bundle.getString(Project.PREFIX, "");
+        mAppRunner.mIntentCode = bundle.getString(Project.CODE, "");
+        mAppRunner.mIntentPostfixScript = bundle.getString(Project.POSTFIX, "");
 
-        //load project checking if we got the folder and name in the intent
-        mIsProjectLoaded = !mProjectName.isEmpty() && !mProjectFolder.isEmpty();
-        if (mIsProjectLoaded) {
-            mCurrentProject = ProjectManager.getInstance().get(mProjectFolder, mProjectName);
-            ProjectManager.getInstance().setCurrentProject(mCurrentProject);
-            AppRunnerSettings.get().project = mCurrentProject;
-            AppRunnerSettings.get().hasUi = true;
-
-            // Get the script code
-            mScript = ProjectManager.getInstance().getCode(mCurrentProject);
-
-            //setup actionbar
-            // int actionBarColor;
-            //if (mProjectFolder.equals("examples")) {
-            //    mActionBarColor = getResources().getColor(R.color.project_example_color);
-            //} else {
-            //    mActionBarColor = getResources().getColor(R.color.project_user_color);
-            //}
-        }
-
-
-        //instantiate the objects that can be accessed from the interpreter
-
-        //the reason to call initForParentFragment is because the class depends on the fragment ui.
-        //its not very clean and at some point it will be change to a more elegant solution that will allow to
-        //have services
-        pApp = new PApp(mActivity);
-        pApp.initForParentFragment(this);
-        pBoards = new PBoards(mActivity);
-        pConsole = new PConsole(mActivity);
-        pDashboard = new PDashboard(mActivity);
-        pDevice = new PDevice(mActivity);
-        pDevice.initForParentFragment(this);
-        pFileIO = new PFileIO(mActivity);
-        pMedia = new PMedia(mActivity);
-        pMedia.initForParentFragment(this);
-        pNetwork = new PNetwork(mActivity);
-        pNetwork.initForParentFragment(this);
-        pProtocoder = new PProtocoder(mActivity);
-        pSensors = new PSensors(mActivity);
-        pSensors.initForParentFragment(this);
-        pUi = new PUI(mActivity);
-        pUi.initForParentFragment(this);
-        pUtil = new PUtil(mActivity);
-
-
-        //create mContext new interpreter and add the objects to it
-        interp = new AppRunnerInterpreter(mActivity);
-        interp.createInterpreter(true);
-        interp.interpreter.addObjectToInterface("app", pApp);
-        interp.interpreter.addObjectToInterface("boards", pBoards);
-        interp.interpreter.addObjectToInterface("console", pConsole);
-        interp.interpreter.addObjectToInterface("dashboard", pDashboard);
-        interp.interpreter.addObjectToInterface("device", pDevice);
-        interp.interpreter.addObjectToInterface("fileio", pFileIO);
-        interp.interpreter.addObjectToInterface("media", pMedia);
-        interp.interpreter.addObjectToInterface("network", pNetwork);
-        interp.interpreter.addObjectToInterface("protocoder", pProtocoder);
-        interp.interpreter.addObjectToInterface("sensors", pSensors);
-        interp.interpreter.addObjectToInterface("ui", pUi);
-        interp.interpreter.addObjectToInterface("util", pUtil);
-
-        AppRunnerSettings.get().interp = interp;
+        mAppRunner.initInterpreter().loadProject();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //setTheme(R.style.ProtocoderDark_Dialog);
         super.onCreateView(inflater, container, savedInstanceState);
-        MLog.d(TAG, "onCreateView");
 
         //init the layout and pass it to the activity
         mMainView = initLayout();
@@ -213,13 +123,11 @@ public class AppRunnerFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        MLog.d(TAG, "onActivityCreated");
-
         String toolbarName = "";
-        if (mProjectFolder.equals("examples")) {
-            toolbarName = "example > " + mProjectName;
+        if (mAppRunner.mProjectFolder.equals("examples")) {
+            toolbarName = "example > " + mAppRunner.mProjectName;
         } else {
-            toolbarName = mProjectName;
+            toolbarName = mAppRunner.mProjectName;
         }
         mActivity.setToolBar(toolbarName, null, null);
 
@@ -235,42 +143,19 @@ public class AppRunnerFragment extends Fragment {
                 try {
                     obj.put("type", "error");
                     obj.put("values", message);
-                    //MLog.d(TAG, "error " + obj.toString(2));
+                    MLog.d(TAG, "error " + obj.toString(2));
                     IDEcommunication.getInstance(mActivity).send(obj);
                 } catch (JSONException er1) {
                     er1.printStackTrace();
                 }
             }
         };
-        interp.addListener(appRunnerCb);
 
-        // load the libraries
-        MLog.d(TAG, "loaded preloaded script" + mIntentPrefixScript);
-        interp.eval(AppRunnerInterpreter.SCRIPT_PREFIX);
-        if (!mIntentPrefixScript.isEmpty()) interp.eval(mIntentPrefixScript);
+        mAppRunner.interp.addListener(appRunnerCb);
+        mAppRunner.initProject();
 
-        // run the script
-        if (null != mScript) {
-            interp.eval(mScript, mProjectName);
-        }
-        //can accept intent code if no project is loaded
-        if (!mIsProjectLoaded) {
-            interp.eval(mIntentCode);
-        }
-
-        //script postfix
-        if (!mIntentPostfixScript.isEmpty()) interp.eval(mIntentPostfixScript);
-        interp.eval(AppRunnerInterpreter.SCRIPT_POSTFIX);
-
-        //call the javascript method setup
-        interp.callJsFunction("setup");
-
-        // TODO fix actionbar color
-        //if (mActivity.mActionBarSet == false) {
-        //    mActivity.setToolBar(null, , getResources().getColor(R.color.white));
-        //}
         // Call the onCreate JavaScript function.
-        interp.callJsFunction("onCreate", savedInstanceState);
+        mAppRunner.interp.callJsFunction("onCreate", savedInstanceState);
 
         //audio
         AudioManager audio = (AudioManager) mActivity.getSystemService(Context.AUDIO_SERVICE);
@@ -299,13 +184,12 @@ public class AppRunnerFragment extends Fragment {
         MLog.d(TAG, "onStart");
 
         super.onStart();
-        interp.callJsFunction("onStart");
+        mAppRunner.interp.callJsFunction("onStart");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        MLog.d(TAG, "onResume");
 
         EventBus.getDefault().register(this);
 
@@ -316,17 +200,16 @@ public class AppRunnerFragment extends Fragment {
         if (fileObserver != null) {
             fileObserver.startWatching();
         }
-        interp.callJsFunction("onResume");
+        mAppRunner.interp.callJsFunction("onResume");
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        MLog.d(TAG, "onPause");
 
         EventBus.getDefault().unregister(this);
 
-        interp.callJsFunction("onPause");
+        mAppRunner.interp.callJsFunction("onPause");
 
         IDEcommunication.getInstance(mActivity).ready(false);
         if (fileObserver != null) {
@@ -337,19 +220,16 @@ public class AppRunnerFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        MLog.d(TAG, "onStop");
 
-        interp.callJsFunction("onStop");
+        mAppRunner.interp.callJsFunction("onStop");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        MLog.d(TAG, "onDestroy");
 
-        interp.callJsFunction("onDestroy");
-
-        interp = null;
+        mAppRunner.interp.callJsFunction("onDestroy");
+        mAppRunner.byebye();
     }
 
     @Override
@@ -362,7 +242,6 @@ public class AppRunnerFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         MLog.d(TAG, "onDetach");
-        WhatIsRunning.getInstance().stopAll();
 
         //mContext = null;
         //mActivity = null;
@@ -547,10 +426,10 @@ public class AppRunnerFragment extends Fragment {
 
     public void startFileObserver() {
 
-        if (mIsProjectLoaded) {
+        if (mAppRunner.mIsProjectLoaded) {
 
             // set up mContext file observer to watch this directory on sd card
-            fileObserver = new FileObserver(mCurrentProject.getStoragePath(), FileObserver.CREATE | FileObserver.DELETE) {
+            fileObserver = new FileObserver(mAppRunner.mCurrentProject.getStoragePath(), FileObserver.CREATE | FileObserver.DELETE) {
 
                 @Override
                 public void onEvent(int event, String file) {
@@ -589,7 +468,7 @@ public class AppRunnerFragment extends Fragment {
         if (liveCoding != null) {
             liveCoding.write(code);
         }
-        interp.eval(code);
+        mAppRunner.interp.eval(code);
     }
 
     public PLiveCodingFeedback liveCodingFeedback() {

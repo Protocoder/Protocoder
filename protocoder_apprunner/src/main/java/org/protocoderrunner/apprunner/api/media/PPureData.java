@@ -29,10 +29,10 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.apprunner.AppRunnerActivity;
-import org.protocoderrunner.apprunner.AppRunnerSettings;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
+import org.protocoderrunner.media.Audio;
 import org.protocoderrunner.media.AudioServicePd;
 import org.protocoderrunner.utils.MLog;
 import org.puredata.android.service.PdService;
@@ -47,8 +47,8 @@ public class PPureData extends PInterface {
 
     private String TAG = "PPureData";
 
-    public PPureData(Context c) {
-        super(c);
+    public PPureData(AppRunner appRunner) {
+        super(appRunner);
         //setActivity(c);
     }
 
@@ -79,7 +79,7 @@ public class PPureData extends PInterface {
         PdBase.setReceiver(dispatcher);
         PdBase.subscribe("android");
 
-        String filePath = AppRunnerSettings.get().project.getStoragePath() + File.separator + fileName;
+        String filePath = getAppRunner().project.getStoragePath() + File.separator + fileName;
         AudioServicePd.file = filePath;
 
         Intent intent = new Intent(getContext(), PdService.class);
@@ -87,8 +87,7 @@ public class PPureData extends PInterface {
 
         initSystemServices();
 
-        WhatIsRunning.getInstance().add(this);
-        WhatIsRunning.getInstance().add(AudioServicePd.pdConnection);
+        getAppRunner().whatIsRunning.add(AudioServicePd.pdConnection);
     }
 
     public PPureData onNewData(final initPDPatchCB callbackfn) {

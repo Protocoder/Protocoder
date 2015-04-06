@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_project_list_view"
+          android:icon="@drawable/protocoder_icon"
+          android:title="@string/view" />
+    <item android:id="@+id/menu_project_list_delete"
+          android:icon="@drawable/protocoder_icon"
+          android:title="@string/delete" />
+    
+</menu>

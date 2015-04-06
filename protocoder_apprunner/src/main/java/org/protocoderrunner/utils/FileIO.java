@@ -31,7 +31,7 @@ import net.lingala.zip4j.model.ZipParameters;
 import net.lingala.zip4j.util.Zip4jConstants;
 
 import org.apache.commons.io.FileUtils;
-import org.protocoderrunner.apprunner.AppRunnerSettings;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.project.ProjectManager;
 
 import java.io.BufferedInputStream;
@@ -60,7 +60,7 @@ import java.util.zip.ZipInputStream;
 
 public class FileIO {
 
-    private static final String TAG = "FILEIO";
+    private static final String TAG = FileIO.class.getSimpleName();
 
     /**
      * Write the data to the file indicate by fileName. The file is created if
@@ -337,7 +337,7 @@ public class FileIO {
      * Method borrowed from Processing PApplet.java
      */
     public static File saveFile(String where) {
-        return new File(AppRunnerSettings.get().project.getStoragePath() + File.separator + where);
+        return new File(ProjectManager.getInstance().getCurrentProject().getStoragePath() + File.separator + where);
     }
 
     /*
@@ -599,7 +599,7 @@ public class FileIO {
     }
 
     public static File[] listFiles(String url, final String extension) {
-        File f = new File(AppRunnerSettings.get().project.getStoragePath() + File.separator + url + File.separator);
+        File f = new File(ProjectManager.getInstance().getCurrentProject().getStoragePath() + File.separator + url + File.separator);
 
         return f.listFiles(new FilenameFilter() {
 

@@ -27,13 +27,15 @@ import android.hardware.SensorManager;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 
 public class CustomSensorManager {
 
     private final static String TAG = "CustomSensor";
 
-    Context c;
+    AppRunner mAppRunner;
+    Context mContext;
 
     public boolean running = false;
     boolean isSupported;
@@ -45,9 +47,10 @@ public class CustomSensorManager {
     SensorEventListener listener;
     protected int type = -1;
 
-    public CustomSensorManager(Context c) {
-        sensormanager = (SensorManager) c.getSystemService(Context.SENSOR_SERVICE);
-
+    public CustomSensorManager(AppRunner appRunner) {
+        mAppRunner = appRunner;
+        mContext = appRunner.getAppContext();
+        sensormanager = (SensorManager) mContext.getSystemService(Context.SENSOR_SERVICE);
     }
 
     public boolean isListening() {
@@ -57,7 +60,7 @@ public class CustomSensorManager {
     @ProtoMethod(description = "Start the sensor", example = "")
     public void start() {
         running = true;
-        WhatIsRunning.getInstance().add(this);
+        mAppRunner.whatIsRunning.add(this);
         sensor = sensormanager.getDefaultSensor(type);
     }
 

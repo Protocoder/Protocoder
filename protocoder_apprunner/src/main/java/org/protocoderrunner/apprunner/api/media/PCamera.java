@@ -23,7 +23,7 @@ package org.protocoderrunner.apprunner.api.media;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunnerActivity;
-import org.protocoderrunner.apprunner.AppRunnerSettings;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.api.widgets.PViewInterface;
 import org.protocoderrunner.fragments.CameraNew;
 
@@ -33,11 +33,11 @@ public class PCamera extends CameraNew implements PViewInterface {
 
 
     private final PCamera cam;
-    protected AppRunnerActivity a;
+    protected AppRunner mAppRunner;
 
-    public PCamera(AppRunnerActivity a, int camera, int color) {
-        super(a, camera, color);
-        this.a = a;
+    public PCamera(AppRunner appRunner, int camera, int color) {
+        super(appRunner, camera, color);
+        this.mAppRunner = appRunner;
         cam = this;
     }
 
@@ -52,7 +52,7 @@ public class PCamera extends CameraNew implements PViewInterface {
     // @APIRequires()
     public void takePicture(String file, final TakePictureCB callbackfn) {
 
-        takePic(AppRunnerSettings.get().project.getStoragePath() + File.separator + file);
+        takePic(mAppRunner.project.getStoragePath() + File.separator + file);
         addListener(new CameraListener() {
 
             @Override
@@ -108,7 +108,7 @@ public class PCamera extends CameraNew implements PViewInterface {
     @ProtoMethod(description = "Records a video in fileName", example = "")
     @ProtoMethodParam(params = {"fileName"})
     public void recordVideo(String file) {
-        recordVideo(AppRunnerSettings.get().project.getStoragePath() + File.separator + file);
+        recordVideo(mAppRunner.project.getStoragePath() + File.separator + file);
     }
 
 

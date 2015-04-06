@@ -27,7 +27,7 @@ import android.os.Looper;
 import org.json.JSONObject;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.network.NanoHTTPD;
 import org.protocoderrunner.network.NetworkUtils;
 import org.protocoderrunner.project.Project;
@@ -49,7 +49,7 @@ public class PSimpleHttpServer extends NanoHTTPD {
     public static final String TAG = "ProtocoderHttpServer";
     public Handler mHandler = new Handler(Looper.getMainLooper());
 
-    private final WeakReference<Context> ctx;
+    private Context mContext;
 
     private static final Map<String, String> MIME_TYPES = new HashMap<String, String>() {
         {
@@ -87,19 +87,19 @@ public class PSimpleHttpServer extends NanoHTTPD {
         Response event(String uri, String method, Properties header, Properties parms, Properties files);
     }
 
-    public PSimpleHttpServer(Context aCtx, int port) throws IOException {
+    public PSimpleHttpServer(AppRunner appRunner, int port) throws IOException {
         super(port);
         p = ProjectManager.getInstance().getCurrentProject();
 
-        ctx = new WeakReference<Context>(aCtx);
-        String ip = NetworkUtils.getLocalIpAddress(aCtx);
+        mContext = appRunner.getAppContext();
+        String ip = NetworkUtils.getLocalIpAddress(mContext);
         if (ip == null) {
             MLog.d(TAG, "No IP found. Please connect to a newwork and try again");
         } else {
             MLog.d(TAG, "Launched server at http://" + ip.toString() + ":" + port);
         }
 
-        WhatIsRunning.getInstance().add(this);
+        appRunner.whatIsRunning.add(this);
     }
 
     public void onNewRequest(HttpCB callbackfn) {

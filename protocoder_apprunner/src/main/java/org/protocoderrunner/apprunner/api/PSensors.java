@@ -22,6 +22,7 @@ package org.protocoderrunner.apprunner.api;
 
 import android.content.Context;
 
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.sensors.PAccelerometer;
 import org.protocoderrunner.apprunner.api.sensors.PGPS;
@@ -46,19 +47,19 @@ public class PSensors extends PInterface {
     public final PProximity proximity;
     public final PStep stepDetector;
 
-    public PSensors(Context context) {
-        super(context);
+    public PSensors(AppRunner appRunner) {
+        super(appRunner);
 
-        accelerometer = new PAccelerometer(context);
-        gyroscope = new PGyroscope(context);
-        gps = new PGPS(context);
-        lightIntensity = new PLightIntensity(context);
-        magnetic = new PMagnetic(context);
+        accelerometer = new PAccelerometer(appRunner);
+        gyroscope = new PGyroscope(appRunner);
+        gps = new PGPS(appRunner);
+        lightIntensity = new PLightIntensity(appRunner);
+        magnetic = new PMagnetic(appRunner);
         //nfc = new PNFC(context);
-        orientation = new POrientation(context);
-        pressure = new PPressure(context);
-        proximity = new PProximity(context);
-        stepDetector = new PStep(context);
+        orientation = new POrientation(appRunner);
+        pressure = new PPressure(appRunner);
+        proximity = new PProximity(appRunner);
+        stepDetector = new PStep(appRunner);
 
     }
 

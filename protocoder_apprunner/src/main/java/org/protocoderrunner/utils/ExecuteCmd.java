@@ -25,13 +25,15 @@ import android.os.Looper;
 import android.os.Message;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class ExecuteCmd {
+public class ExecuteCmd extends PInterface {
 
     private static final String TAG = "ExecuteCmd";
 
@@ -45,11 +47,10 @@ public class ExecuteCmd {
     private Handler mHandler;
     private Thread mThread;
 
-    public ExecuteCmd(final String cmd, final ExecuteCommandCB callbackfn) {
+    public ExecuteCmd(AppRunner appRunner, final String cmd, final ExecuteCommandCB callbackfn) {
+        super(appRunner);
         this.cmd = cmd;
         this.callbackfn = callbackfn;
-
-        WhatIsRunning.getInstance().add(this);
     }
 
     private void initThread() {

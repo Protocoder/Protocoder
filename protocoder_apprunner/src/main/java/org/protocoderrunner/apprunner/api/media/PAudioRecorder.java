@@ -28,7 +28,7 @@ import android.media.MediaRecorder;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunnerActivity;
-import org.protocoderrunner.apprunner.AppRunnerSettings;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 
@@ -41,9 +41,8 @@ public class PAudioRecorder extends PInterface {
     ProgressDialog mProgressDialog;
     boolean showProgress = false;
 
-    public PAudioRecorder(Context c) {
-        super(c);
-        WhatIsRunning.getInstance().add(this);
+    public PAudioRecorder(AppRunner appRunner) {
+        super(appRunner);
     }
 
 
@@ -62,7 +61,7 @@ public class PAudioRecorder extends PInterface {
         recorder.setAudioEncodingBitRate(16);
         recorder.setAudioSamplingRate(44100);
 
-        recorder.setOutputFile(AppRunnerSettings.get().project.getStoragePath() + File.separator + fileName);
+        recorder.setOutputFile(getAppRunner().project.getStoragePath() + File.separator + fileName);
         try {
             recorder.prepare();
         } catch (Exception e) {

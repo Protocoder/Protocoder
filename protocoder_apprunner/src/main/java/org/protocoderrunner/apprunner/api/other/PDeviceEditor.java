@@ -24,12 +24,13 @@ import android.content.Context;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
 
 public class PDeviceEditor extends PInterface {
 
-    public PDeviceEditor(Context a) {
-        super(a);
+    public PDeviceEditor(AppRunner appRunner) {
+        super(appRunner);
 
     }
 

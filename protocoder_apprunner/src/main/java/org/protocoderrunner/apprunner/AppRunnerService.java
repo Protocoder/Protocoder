@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.PixelFormat;
-import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
@@ -36,7 +35,6 @@ import org.protocoderrunner.apprunner.api.PUtil;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.events.Events;
 import org.protocoderrunner.project.Project;
-import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.MLog;
 
 //stopService 
@@ -69,66 +67,22 @@ public class AppRunnerService extends Service {
     private NotificationManager mNotifManager;
     private PendingIntent mRestartPendingIntent;
     private Toast mToast;
+    private AppRunner mAppRunner;
 
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        // Can be called twice
-        interp = new AppRunnerInterpreter(this);
-        interp.createInterpreter(false);
-
-        pApp = new PApp(this);
-        //pApp.initForParentFragment(this);
-        pBoards = new PBoards(this);
-        pConsole = new PConsole(this);
-        pDashboard = new PDashboard(this);
-        pDevice = new PDevice(this);
-        //pDevice.initForParentFragment(this);
-        pFileIO = new PFileIO(this);
-        pMedia = new PMedia(this);
-        //pMedia.initForParentFragment(this);
-        pNetwork = new PNetwork(this);
-        //pNetwork.initForParentFragment(this);
-        pProtocoder = new PProtocoder(this);
-        pSensors = new PSensors(this);
-        //pSensors.initForParentFragment(this);
-        pUi = new PUI(this);
-        pUi.initForParentService(this);
-        //pUi.initForParentFragment(this);
-        pUtil = new PUtil(this);
-
-        interp.interpreter.addObjectToInterface("app", pApp);
-        interp.interpreter.addObjectToInterface("boards", pBoards);
-        interp.interpreter.addObjectToInterface("console", pConsole);
-        interp.interpreter.addObjectToInterface("dashboard", pDashboard);
-        interp.interpreter.addObjectToInterface("device", pDevice);
-        interp.interpreter.addObjectToInterface("fileio", pFileIO);
-        interp.interpreter.addObjectToInterface("media", pMedia);
-        interp.interpreter.addObjectToInterface("network", pNetwork);
-        interp.interpreter.addObjectToInterface("protocoder", pProtocoder);
-        interp.interpreter.addObjectToInterface("sensors", pSensors);
-        interp.interpreter.addObjectToInterface("ui", pUi);
-        interp.interpreter.addObjectToInterface("util", pUtil);
-
         mainLayout = initLayout();
 
-        String projectName = intent.getStringExtra(Project.NAME);
-        String projectFolder = intent.getStringExtra(Project.FOLDER);
+        mAppRunner = new AppRunner(this);
+        mAppRunner.hasUserInterface = false;
 
-        currentProject = ProjectManager.getInstance().get(projectFolder, projectName);
-        ProjectManager.getInstance().setCurrentProject(currentProject);
-        MLog.d(TAG, "launching " + projectName + " in " + projectFolder);
-
-        AppRunnerSettings.get().project = currentProject;
-        String script = ProjectManager.getInstance().getCode(currentProject);
-
-        interp.evalFromService(script);
-
-        //audio
-        //AudioManager audio = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
-        //int currentVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
-        //this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
-
+        mAppRunner.mProjectName = intent.getStringExtra(Project.NAME);
+        mAppRunner.mProjectFolder = intent.getStringExtra(Project.FOLDER);
+        //  mAppRunner.mIntentPrefixScript = intent.getString(Project.PREFIX, "");
+        //  mAppRunner.mIntentCode = intent.getString(Project.CODE, "");
+        //  mAppRunner.mIntentPostfixScript = intent.getString(Project.POSTFIX, "");
+        mAppRunner.initInterpreter().loadProject().initProject();
 
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 
@@ -138,7 +92,6 @@ public class AppRunnerService extends Service {
             touchParam = WindowManager.LayoutParams.TYPE_PHONE;
         } else {
             touchParam = WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY;
-
         }
 
         WindowManager.LayoutParams params = new WindowManager.LayoutParams(
@@ -159,7 +112,7 @@ public class AppRunnerService extends Service {
         mNotifManager = (NotificationManager) AppRunnerService.this.getSystemService(Context.NOTIFICATION_SERVICE);
 
         int notificationId = (int) Math.ceil(100000 * Math.random());
-        createNotification(notificationId, projectFolder, projectName);
+        createNotification(notificationId, mAppRunner.mProjectFolder, mAppRunner.mProjectName);
 
 
         //just in case it crash
@@ -167,7 +120,7 @@ public class AppRunnerService extends Service {
         restartIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         restartIntent.putExtra("wasCrash", true);
 
-       // intent.setPackage("org.protocoder");
+        // intent.setPackage("org.protocoder");
         //intent.setClassName("org.protocoder", "MainActivity");
         mRestartPendingIntent = PendingIntent.getActivity(AppRunnerService.this, 0, restartIntent, 0);
         mToast = Toast.makeText(AppRunnerService.this, "Crash :(", Toast.LENGTH_LONG);
@@ -230,17 +183,15 @@ public class AppRunnerService extends Service {
         public void uncaughtException(Thread thread, Throwable ex) {
 
             new Thread() {
-
                 @Override
                 public void run() {
                     Looper.prepare();
                     Toast.makeText(AppRunnerService.this, "lalll", Toast.LENGTH_LONG);
                     Looper.loop();
                 }
-
             }.start();
 
-  //          handlerToast.post(runnable);
+            //          handlerToast.post(runnable);
 
 
             AlarmManager mgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
@@ -249,14 +200,12 @@ public class AppRunnerService extends Service {
             mNotifManager.cancelAll();
 
 
-
             android.os.Process.killProcess(android.os.Process.myPid());
             System.exit(10);
 
             throw new RuntimeException(ex);
         }
     };
-
 
 
     public void addScriptedLayout(RelativeLayout scriptedUILayout) {
@@ -285,7 +234,7 @@ public class AppRunnerService extends Service {
     public void onCreate() {
         super.onCreate();
         MLog.d(TAG, "onCreate");
-       // interp.callJsFunction("onCreate");
+        // interp.callJsFunction("onCreate");
 
         // its called only once
     }
@@ -298,7 +247,7 @@ public class AppRunnerService extends Service {
 
         windowManager.removeView(mainLayout);
         unregisterReceiver(mReceiver);
-        WhatIsRunning.getInstance().stopAll();
+        mAppRunner.whatIsRunning.stopAll();
         interp = null;
         //EventBus.getDefault().unregister(this);
     }
@@ -309,7 +258,7 @@ public class AppRunnerService extends Service {
         String code = evt.getCode(); // .trim();
         MLog.d(TAG, "event -> q " + code);
 
-        interp.evalFromService(code);
+        mAppRunner.evaluate(code, "");
     }
 
 }

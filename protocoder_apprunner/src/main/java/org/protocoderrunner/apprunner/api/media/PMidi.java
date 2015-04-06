@@ -7,6 +7,7 @@ import android.os.Handler.Callback;
 import android.os.Message;
 import android.widget.Toast;
 
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 
@@ -62,13 +63,10 @@ public class PMidi extends PInterface {
 
     MidiDeviceEventCB mMidiEvent;
 
-    public PMidi(Context appActivity) {
-        super(appActivity);
+    public PMidi(AppRunner appRunner) {
+        super(appRunner);
 
-        WhatIsRunning.getInstance().add(this);
-
-
-        usbMidiDriver = new UsbMidiDriver(appActivity) {
+        usbMidiDriver = new UsbMidiDriver(appRunner.getAppContext()) {
             @Override
             public void onDeviceAttached(UsbDevice usbDevice) {
                 Toast.makeText(getContext(), "USB MIDI Device " + usbDevice.getDeviceName() + " has been attached.", Toast.LENGTH_LONG).show();

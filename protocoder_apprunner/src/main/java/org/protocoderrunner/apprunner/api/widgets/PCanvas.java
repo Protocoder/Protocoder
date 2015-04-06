@@ -20,7 +20,6 @@
 
 package org.protocoderrunner.apprunner.api.widgets;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
@@ -44,6 +43,7 @@ import android.view.View;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.api.PUtil;
 import org.protocoderrunner.apprunner.api.other.PLooper;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
@@ -59,7 +59,10 @@ import static android.graphics.Shader.TileMode;
 
 public class PCanvas extends View implements PViewInterface {
 
-    private static final String TAG = "PCanvasView";
+    private static final String TAG = PCanvas.class.getSimpleName();
+
+    private AppRunner mAppRunner;
+    private final Context mContext;
 
     public PorterDuff.Mode FILTER_ADD = PorterDuff.Mode.ADD;
     public PorterDuff.Mode FILTER_XOR = PorterDuff.Mode.XOR;
@@ -95,7 +98,6 @@ public class PCanvas extends View implements PViewInterface {
     public Paint.Cap CAP_BUTT = Paint.Cap.BUTT;
     public Paint.Cap CAP_SQUARE = Paint.Cap.SQUARE;
 
-    private final Context context;
     private PLooper loop;
     private Paint mPaintFill;
     private Paint mPaintStroke;
@@ -109,6 +111,28 @@ public class PCanvas extends View implements PViewInterface {
     private int mWidth;
     private int mHeight;
 
+
+    public PCanvas(AppRunner appRunner) {
+        super(appRunner.getAppContext());
+        mAppRunner = appRunner;
+        MLog.d(TAG, "onCreate");
+
+        this.mContext = appRunner.getAppContext();
+        init();
+        initLayers();
+    }
+
+
+    public PCanvas(AppRunner appRunner, int w, int h) {
+        super(appRunner.getAppContext());
+        MLog.d(TAG, "onCreate");
+        mWidth = w;
+        mHeight = h;
+
+        this.mContext = appRunner.getAppContext();
+        init();
+        initLayers();
+    }
 
     public interface PCanvasInterfaceDraw {
         void onDraw(Canvas c);
@@ -129,7 +153,7 @@ public class PCanvas extends View implements PViewInterface {
 
     public void init() {
         MLog.d(TAG, "init");
-        WhatIsRunning.getInstance().add(this);
+        mAppRunner.whatIsRunning.add(this);
 
         mPaintFill = new Paint();
         mPaintStroke = new Paint();
@@ -155,28 +179,6 @@ public class PCanvas extends View implements PViewInterface {
         draw(mCanvas);
         viewIsInit = true;
         MLog.d(TAG, "viewIsInit " + viewIsInit);
-    }
-
-
-    public PCanvas(Context context) {
-        super(context);
-        MLog.d(TAG, "onCreate");
-
-        this.context = context;
-        init();
-        initLayers();
-    }
-
-
-    public PCanvas(Context context, int w, int h) {
-        super(context);
-        MLog.d(TAG, "onCreate");
-        mWidth = w;
-        mHeight = h;
-
-        this.context = context;
-        init();
-        initLayers();
     }
 
 
@@ -231,7 +233,7 @@ public class PCanvas extends View implements PViewInterface {
             loop = null;
         }
 
-        PUtil util = new PUtil((Activity) context);
+        PUtil util = new PUtil(mAppRunner);
         loop = util.loop(ms, new PLooper.LooperCB() {
             @Override
             public void event() {

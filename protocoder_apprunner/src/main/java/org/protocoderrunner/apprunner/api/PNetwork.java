@@ -50,7 +50,7 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.apprunner.AppRunnerFragment;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.network.PBluetooth;
 import org.protocoderrunner.apprunner.api.network.PFtpClient;
@@ -59,7 +59,6 @@ import org.protocoderrunner.apprunner.api.network.PSocketIOClient;
 import org.protocoderrunner.apprunner.api.network.PWebSocketClient;
 import org.protocoderrunner.apprunner.api.network.PWebSocketServer;
 import org.protocoderrunner.apprunner.api.network.PSimpleHttpServer;
-import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.network.NetworkUtils;
 import org.protocoderrunner.network.NetworkUtils.DownloadTask.DownloadListener;
 import org.protocoderrunner.network.OSC;
@@ -97,24 +96,22 @@ public class PNetwork extends PInterface {
     public PBluetooth bluetooth = null;
     private PWebSocketServer PWebsockerServer;
 
-    public PNetwork(Context a) {
-        super(a);
+    public PNetwork(AppRunner appRunner) {
+        super(appRunner);
 
-        bluetooth = new PBluetooth(a);
-
-        WhatIsRunning.getInstance().add(this);
+        bluetooth = new PBluetooth(appRunner);
     }
-
-    public void initForParentFragment(AppRunnerFragment fragment) {
-        super.initForParentFragment(fragment);
-
-        //prevent crashing in protocoder app
-        MLog.d(TAG, "is getActivity() " + getActivity());
-
-        if (getFragment() != null) {
-            bluetooth.initForParentFragment(getFragment());
-        }
-    }
+//
+//    public void initForParentFragment(AppRunnerFragment fragment) {
+//        super.initForParentFragment(fragment);
+//
+//        //prevent crashing in protocoder app
+//        MLog.d(TAG, "is getActivity() " + getActivity());
+//
+//        if (getFragment() != null) {
+//            bluetooth.initForParentFragment(getFragment());
+//        }
+//    }
 
     // --------- download file ---------//
     interface downloadFileCB {
@@ -126,7 +123,7 @@ public class PNetwork extends PInterface {
     @ProtoMethodParam(params = {"url", "fileName", "function(progress)"})
     public void downloadFile(String url, String fileName, final downloadFileCB callbackfn) {
 
-        NetworkUtils.DownloadTask downloadTask = new NetworkUtils.DownloadTask(getContext(), fileName);
+        NetworkUtils.DownloadTask downloadTask = new NetworkUtils.DownloadTask(getAppRunner(), fileName);
         downloadTask.execute(url);
         downloadTask.addListener(new DownloadListener() {
 
@@ -198,7 +195,7 @@ public class PNetwork extends PInterface {
         OSC.Server server = osc.new Server();
 
         server.start(port);
-        WhatIsRunning.getInstance().add(server);
+        getAppRunner().whatIsRunning.add(server);
 
         return server;
     }
@@ -209,7 +206,7 @@ public class PNetwork extends PInterface {
     public OSC.Client connectOSC(String address, int port) {
         OSC osc = new OSC();
         OSC.Client client = osc.new Client(address, port);
-        WhatIsRunning.getInstance().add(client);
+        getAppRunner().whatIsRunning.add(client);
 
         return client;
     }
@@ -241,7 +238,8 @@ public class PNetwork extends PInterface {
                 if (b) {
                     wifiLock = wifi.createMulticastLock("mylock");
                     wifiLock.acquire();
-                    WhatIsRunning.getInstance().add(this);
+                    getAppRunner().whatIsRunning.add(this);
+
                 } else {
                     wifiLock.release();
                 }
@@ -260,7 +258,7 @@ public class PNetwork extends PInterface {
     @ProtoMethod(description = "Start a websocket server", example = "")
     @ProtoMethodParam(params = {"port", "function(status, socket, data)"})
     public PWebSocketServer createWebsocketServer(int port) {
-        PWebSocketServer pWebSocketServer = new PWebSocketServer(port);
+        PWebSocketServer pWebSocketServer = new PWebSocketServer(getAppRunner(), port);
 
         return pWebSocketServer;
     }
@@ -269,7 +267,7 @@ public class PNetwork extends PInterface {
     @ProtoMethod(description = "Connect to a websocket server", example = "")
     @ProtoMethodParam(params = {"uri", "function(status, data)"})
     public PWebSocketClient connectWebsocket(String uri) {
-        PWebSocketClient pWebSocketClient = new PWebSocketClient(uri);
+        PWebSocketClient pWebSocketClient = new PWebSocketClient(getAppRunner(), uri);
 
         return pWebSocketClient;
     }
@@ -278,7 +276,7 @@ public class PNetwork extends PInterface {
     @ProtoMethod(description = "Connect to a SocketIO server", example = "")
     @ProtoMethodParam(params = {"uri", "function(status, message, data)"})
     public PSocketIOClient connectSocketIO(String uri) {
-        PSocketIOClient socketIOClient = new PSocketIOClient(uri);
+        PSocketIOClient socketIOClient = new PSocketIOClient(getAppRunner(), uri);
 
         return socketIOClient;
     }
@@ -410,11 +408,14 @@ public class PNetwork extends PInterface {
                         response.getEntity().getContent().close();
                         throw new IOException(statusLine.getReasonPhrase());
                     }
+                    MLog.d(TAG, "lalal1");
+
 
                     mHandler.post(new Runnable() {
 
                         @Override
                         public void run() {
+                            MLog.d(TAG, "lalal2 " + statusLine + " " + responseString);
                             callbackfn.event(statusLine.getStatusCode(), responseString);
                         }
                     });
@@ -520,7 +521,7 @@ public class PNetwork extends PInterface {
     public PSimpleHttpServer createSimpleHttpServer(int port) {
         PSimpleHttpServer httpServer = null;
         try {
-            httpServer = new PSimpleHttpServer(getContext(), port);
+            httpServer = new PSimpleHttpServer(getAppRunner(), port);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -654,7 +655,7 @@ public class PNetwork extends PInterface {
     @ProtoMethodParam(params = {"serviceName, serviceType, port, function(name, status)"})
     public void registerService(String serviceName, String serviceType, int port, ServiceDiscovery.CreateCB callbackfn) {
         ServiceDiscovery.Create rD = new ServiceDiscovery().create(getContext(), serviceName, serviceType, port, callbackfn);
-        WhatIsRunning.getInstance().add(rD);
+        getAppRunner().whatIsRunning.add(rD);
     }
 
 
@@ -662,8 +663,7 @@ public class PNetwork extends PInterface {
     @ProtoMethodParam(params = {"serviceType, function(name, jsonData)"})
     public void discoverServices(final String serviceType, ServiceDiscovery.DiscoverCB callbackfn) {
         ServiceDiscovery.Discover sD = new ServiceDiscovery().discover(getContext(), serviceType, callbackfn);
-        WhatIsRunning.getInstance().add(sD);
-
+        getAppRunner().whatIsRunning.add(sD);
     }
 
 
@@ -673,7 +673,7 @@ public class PNetwork extends PInterface {
 //        mHandler.post(new Runnable() {
 //            @Override
 //            public void run() {
-        return new ExecuteCmd("/system/bin/ping -c 8 " + where, callbackfn);
+        return new ExecuteCmd(getAppRunner(), "/system/bin/ping -c 8 " + where, callbackfn);
         //       }
         //   });
     }
@@ -683,6 +683,7 @@ public class PNetwork extends PInterface {
     @ProtoMethodParam(params = {"port", "function(activity)"})
     public PFtpServer createFtpServer(final int port, PFtpServer.FtpServerCb callback) {
         PFtpServer ftpServer = new PFtpServer(port, callback);
+        getAppRunner().whatIsRunning.add(ftpServer);
 
         return ftpServer;
     }
@@ -691,7 +692,7 @@ public class PNetwork extends PInterface {
     @ProtoMethod(description = "Connect to ftp", example = "")
     @ProtoMethodParam(params = {})
     public PFtpClient createFtpConnection() {
-        PFtpClient ftpClient = new PFtpClient(getContext());
+        PFtpClient ftpClient = new PFtpClient(getAppRunner());
 
         return ftpClient;
     }
