@@ -18,7 +18,7 @@
 * along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package org.protocoder.projectlist;
+package org.protocoder.qq;
 
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
@@ -46,7 +46,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.protocoder.R;
-import org.protocoder.appApi.Protocoder;
 import org.protocoderrunner.events.Events;
 import org.protocoderrunner.project.Project;
 import org.protocoderrunner.utils.MLog;
@@ -230,13 +229,16 @@ public class ProjectItem extends LinearLayout {
                 int itemId = menuItem.getItemId();
 
                 if (itemId == R.id.menu_project_list_run) {
-                    Protocoder.getInstance(c).protoScripts.run(mProject.getFolder(), mProject.getName());
+                    //TODO make it work again
+                    //Protocoder.getInstance(c).protoScripts.run(mProject.getFolder(), mProject.getName());
                     return true;
                 } else if (itemId == R.id.menu_project_list_edit) {
-                    Protocoder.getInstance(c).app.editor.show(true, mProject.getFolder(), mProject.getName());
+                    //TODO make it work again
+                    //Protocoder.getInstance(c).app.editor.show(true, mProject.getFolder(), mProject.getName());
                     return true;
                 } else if (itemId == R.id.menu_project_list_delete) {
-                    Protocoder.getInstance(c).protoScripts.delete(mProject.getFolder(), mProject.getName());
+                    //TODO make it work again
+                    //Protocoder.getInstance(c).protoScripts.delete(mProject.getFolder(), mProject.getName());
 
                     DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                         @Override
@@ -257,13 +259,16 @@ public class ProjectItem extends LinearLayout {
                             .setNegativeButton("No", dialogClickListener).show();
                     return true;
                 } else if (itemId == R.id.menu_project_list_add_shortcut) {
-                    Protocoder.getInstance(c).protoScripts.addShortcut(mProject.getFolder(), mProject.getName());
+                    //TODO make it work again
+                    //Protocoder.getInstance(c).protoScripts.addShortcut(mProject.getFolder(), mProject.getName());
                     return true;
                 } else if (itemId == R.id.menu_project_list_share_with) {
-                    Protocoder.getInstance(c).protoScripts.shareMainJsDialog(mProject.getFolder(), mProject.getName());
+                    //TODO make it work again
+                    //Protocoder.getInstance(c).protoScripts.shareMainJsDialog(mProject.getFolder(), mProject.getName());
                     return true;
                 } else if (itemId == R.id.menu_project_list_share_proto_file) {
-                    Protocoder.getInstance(c).protoScripts.shareProtoFileDialog(mProject.getFolder(), mProject.getName());
+                    //TODO make it work again
+                    //Protocoder.getInstance(c).protoScripts.shareProtoFileDialog(mProject.getFolder(), mProject.getName());
                     return true;
                 } else {
                     return false;

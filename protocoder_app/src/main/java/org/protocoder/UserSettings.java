@@ -27,17 +27,16 @@ import android.preference.PreferenceManager;
 import org.protocoderrunner.apprunner.AppRunner;
 
 
-public class Settings {
+public class UserSettings {
 
+    public static boolean allowLaunchFromBackground = false;
     private final SharedPreferences mSharedPrefs;
 
-    public Settings(AppRunnerCustom appRunner) {
-        mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(appRunner.getAppContext());
+    public UserSettings(Context context) {
+        mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
-
     //---------------- save / load methods
-
     public void setId(String id) {
         mSharedPrefs.edit().putString("pref_id", id);
         mSharedPrefs.edit().commit();
@@ -122,10 +121,18 @@ public class Settings {
     }
 
     public boolean setColor(String color) {
-        return mSharedPrefs.edit().putString("pref_app_color", "#FFFFFFFF").commit();
+        return mSharedPrefs.edit().putString("pref_app_color", color).commit();
     }
 
     public String getColor() {
         return mSharedPrefs.getString("pref_app_color", "#FFFFFFFF");
+    }
+
+    public boolean setAllowBackgroundLaunch(boolean b) {
+        return mSharedPrefs.edit().putBoolean("pref_allow_background_launch", b).commit();
+    }
+
+    public boolean getAllowBackgroundLaunch() {
+        return mSharedPrefs.getBoolean("pref_allow_background_launch", false);
     }
 }

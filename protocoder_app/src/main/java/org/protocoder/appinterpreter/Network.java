@@ -18,9 +18,8 @@
 * along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package org.protocoder;
+package org.protocoder.appinterpreter;
 
-import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.api.PNetwork;
 import org.protocoderrunner.apprunner.api.PUI;
 
@@ -37,7 +36,7 @@ public class Network {
         //TODO reenable
         //check if new version is available
 
-        if (mAppRunner.pNetwork.isNetworkAvailable() && mAppRunner.protocoderApp.settings.getNewVersionCheckEnabled()) {
+        if (mAppRunner.pNetwork.isNetworkAvailable() && mAppRunner.protocoderApp.userSettings.getNewVersionCheckEnabled()) {
             mAppRunner.pNetwork.httpGet("http://www.protocoder.org/downloads/list_latest.php", new PNetwork.HttpGetCB() {
                 @Override
                 public void event(int eventType, String responseString) {

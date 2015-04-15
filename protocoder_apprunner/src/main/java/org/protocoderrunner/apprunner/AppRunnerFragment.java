@@ -44,23 +44,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.protocoderrunner.R;
 import org.protocoderrunner.apprunner.api.PApp;
-import org.protocoderrunner.apprunner.api.PBoards;
-import org.protocoderrunner.apprunner.api.PConsole;
-import org.protocoderrunner.apprunner.api.PDashboard;
-import org.protocoderrunner.apprunner.api.PDevice;
-import org.protocoderrunner.apprunner.api.PFileIO;
-import org.protocoderrunner.apprunner.api.PMedia;
-import org.protocoderrunner.apprunner.api.PNetwork;
-import org.protocoderrunner.apprunner.api.PProtocoder;
-import org.protocoderrunner.apprunner.api.PSensors;
-import org.protocoderrunner.apprunner.api.PUI;
-import org.protocoderrunner.apprunner.api.PUtil;
 import org.protocoderrunner.apprunner.api.other.PLiveCodingFeedback;
-import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.events.Events;
-import org.protocoderrunner.network.IDEcommunication;
 import org.protocoderrunner.project.Project;
-import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.MLog;
 
 import de.greenrobot.event.EventBus;
@@ -144,7 +130,8 @@ public class AppRunnerFragment extends Fragment {
                     obj.put("type", "error");
                     obj.put("values", message);
                     MLog.d(TAG, "error " + obj.toString(2));
-                    IDEcommunication.getInstance(mActivity).send(obj);
+                    //TODO change to events
+                    // IDEcommunication.getInstance(mActivity).send(obj);
                 } catch (JSONException er1) {
                     er1.printStackTrace();
                 }
@@ -211,10 +198,13 @@ public class AppRunnerFragment extends Fragment {
 
         mAppRunner.interp.callJsFunction("onPause");
 
+        //TODO change to events
+        /*
         IDEcommunication.getInstance(mActivity).ready(false);
         if (fileObserver != null) {
             fileObserver.stopWatching();
         }
+        */
     }
 
     @Override
@@ -448,7 +438,8 @@ public class AppRunnerFragment extends Fragment {
                     try {
                         msg.put("action", action);
                         msg.put("type", "ide");
-                        IDEcommunication.getInstance(mActivity).send(msg);
+                        //TODO change to events
+                        //IDEcommunication.getInstance(mActivity).send(msg);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

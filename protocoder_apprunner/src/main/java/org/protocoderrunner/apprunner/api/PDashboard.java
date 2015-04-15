@@ -20,8 +20,6 @@
 
 package org.protocoderrunner.apprunner.api;
 
-import android.content.Context;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
@@ -38,7 +36,6 @@ import org.protocoderrunner.apprunner.api.dashboard.PDashboardPlot;
 import org.protocoderrunner.apprunner.api.dashboard.PDashboardSlider;
 import org.protocoderrunner.apprunner.api.dashboard.PDashboardText;
 import org.protocoderrunner.apprunner.api.dashboard.PDashboardVideoCamera;
-import org.protocoderrunner.network.CustomWebsocketServer;
 import org.protocoderrunner.utils.StrUtils;
 
 import java.net.UnknownHostException;
@@ -163,6 +160,7 @@ public class PDashboard extends PInterface {
         return pDashboardBackground;
     }
 
+    //TODO use events
     private void initKeyEvents(final jDashboardKeyPressed callbackfn) throws UnknownHostException, JSONException {
 
         String id = StrUtils.generateRandomString();
@@ -177,6 +175,7 @@ public class PDashboard extends PInterface {
                 .put("action", "add")
                 .put("values", values);
 
+       /*
         CustomWebsocketServer.getInstance(getContext()).send(msg);
         CustomWebsocketServer.getInstance(getContext()).addListener(id, new CustomWebsocketServer.WebSocketListener() {
 
@@ -195,6 +194,7 @@ public class PDashboard extends PInterface {
                 });
             }
         });
+        */
 
     }
 
@@ -211,6 +211,7 @@ public class PDashboard extends PInterface {
     }
 
 
+    //TODO use events
     @ProtoMethod(description = "show/hide the dashboard", example = "")
     @ProtoMethodParam(params = {"boolean"})
     public void show(boolean b) {
@@ -222,11 +223,12 @@ public class PDashboard extends PInterface {
             e1.printStackTrace();
         }
 
-        try {
-            CustomWebsocketServer.getInstance(getContext()).send(msg);
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
+        //TODO change to events
+        //try {
+            //CustomWebsocketServer.getInstance(getContext()).send(msg);
+        //} catch (UnknownHostException e) {
+        //    e.printStackTrace();
+        //}
 
     }
 

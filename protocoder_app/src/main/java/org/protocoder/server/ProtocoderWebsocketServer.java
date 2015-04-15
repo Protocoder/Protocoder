@@ -18,7 +18,7 @@
 * along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package org.protocoderrunner.network;
+package org.protocoder.server;
 
 import android.content.Context;
 
@@ -39,8 +39,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-public class CustomWebsocketServer extends WebSocketServer {
-    private static CustomWebsocketServer inst;
+public class ProtocoderWebsocketServer extends WebSocketServer {
+    private static ProtocoderWebsocketServer inst;
     private static int counter = 0;
     private static final String TAG = "WebSocketServer";
     private static Context ctx;
@@ -55,30 +55,30 @@ public class CustomWebsocketServer extends WebSocketServer {
     }
 
     // Singleton (one app view, different URLs)
-    public static CustomWebsocketServer getInstance(Context aCtx, int port, Draft d) throws UnknownHostException {
+    public static ProtocoderWebsocketServer getInstance(Context aCtx, int port, Draft d) throws UnknownHostException {
         if (inst == null) {
-            inst = new CustomWebsocketServer(aCtx, port, d);
+            inst = new ProtocoderWebsocketServer(aCtx, port, d);
             inst.start();
         }
         return inst;
     }
 
     // Singleton (one app view, different URLs)
-    public static CustomWebsocketServer getInstance(Context aCtx) throws UnknownHostException {
+    public static ProtocoderWebsocketServer getInstance(Context aCtx) throws UnknownHostException {
         if (inst == null) {
-            inst = new CustomWebsocketServer(aCtx, AppSettings.WEBSOCKET_PORT, new Draft_17());
+            inst = new ProtocoderWebsocketServer(aCtx, AppSettings.WEBSOCKET_PORT, new Draft_17());
             inst.start();
         }
         return inst;
     }
 
-    public CustomWebsocketServer(Context aCtx, int port, Draft d) throws UnknownHostException {
+    public ProtocoderWebsocketServer(Context aCtx, int port, Draft d) throws UnknownHostException {
         super(new InetSocketAddress(port), Collections.singletonList(d));
         ctx = aCtx;
         MLog.d(TAG, "Launched websocket server at on port " + aCtx);
     }
 
-    public CustomWebsocketServer(InetSocketAddress address, Draft d) {
+    public ProtocoderWebsocketServer(InetSocketAddress address, Draft d) {
         super(address, Collections.singletonList(d));
     }
 

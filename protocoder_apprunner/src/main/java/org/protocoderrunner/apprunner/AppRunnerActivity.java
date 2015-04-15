@@ -37,7 +37,6 @@ import android.nfc.tech.NfcF;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
@@ -59,7 +58,6 @@ import org.protocoderrunner.apprunner.api.sensors.PNFC;
 import org.protocoderrunner.apprunner.api.widgets.PPadView;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.events.Events;
-import org.protocoderrunner.network.IDEcommunication;
 import org.protocoderrunner.project.Project;
 import org.protocoderrunner.utils.AndroidUtils;
 import org.protocoderrunner.utils.MLog;
@@ -180,7 +178,8 @@ public class AppRunnerActivity extends BaseActivity {
             // ft.addToBackStack(null);
             ft.commit();
 
-            IDEcommunication.getInstance(this).ready(true);
+            //TODO change to events
+            //IDEcommunication.getInstance(this).ready(true);
         }
 
     }
@@ -239,7 +238,8 @@ public class AppRunnerActivity extends BaseActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        IDEcommunication.getInstance(this).ready(false);
+        //TODO change to events
+        //IDEcommunication.getInstance(this).ready(false);
     }
 
     @Override

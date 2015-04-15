@@ -18,7 +18,7 @@
 * along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package org.protocoder.appApi;
+package org.protocoder;
 
 import android.content.Context;
 import android.content.SharedPreferences;

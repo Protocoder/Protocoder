@@ -20,14 +20,10 @@
 
 package org.protocoderrunner.apprunner.api.dashboard;
 
-import android.content.Context;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.network.CustomWebsocketServer;
-import org.protocoderrunner.network.CustomWebsocketServer.WebSocketListener;
 import org.protocoderrunner.utils.StrUtils;
 
 import java.net.UnknownHostException;
@@ -64,6 +60,8 @@ public class PDashboardCustomWidget extends PInterface {
                 .put("action", "add")
                 .put("values", values);
 
+        //TODO change to events
+        /*
         CustomWebsocketServer.getInstance(getContext()).send(msg);
         CustomWebsocketServer.getInstance(getContext()).addListener(id, new WebSocketListener() {
 
@@ -78,6 +76,7 @@ public class PDashboardCustomWidget extends PInterface {
                 });
             }
         });
+        */
 
     }
 
@@ -93,6 +92,7 @@ public class PDashboardCustomWidget extends PInterface {
                 .put("action", "send")
                 .put("values", values);
 
-        CustomWebsocketServer.getInstance(getContext()).send(msg);
+        //TODO change to events
+        //CustomWebsocketServer.getInstance(getContext()).send(msg);
     }
 }

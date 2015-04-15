@@ -18,12 +18,12 @@
 * along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package org.protocoder.network;
+package org.protocoder.server;
 
 import android.content.Context;
 
-import org.protocoder.appApi.Protocoder;
-import org.protocoder.appApi.Settings;
+import org.protocoder.appinterpreter.AppRunnerCustom;
+import org.protocoder.UserSettings;
 import org.protocoderrunner.apprunner.api.network.PFtpServer;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.MLog;
@@ -37,25 +37,15 @@ public class ProtocoderFtpServer extends PFtpServer {
     private static ProtocoderFtpServer instance = null;
     private static boolean started = false;
 
-
-    public static ProtocoderFtpServer getInstance(Context aCtx, int port) {
-        MLog.d(TAG, "launching ftp server... " + instance);
-        if (instance == null) {
-            instance = new ProtocoderFtpServer(aCtx, port);
-        }
-
-        return instance;
-    }
-
-    public ProtocoderFtpServer(Context c, int port) {
+    public ProtocoderFtpServer(AppRunnerCustom appRunner, int port) {
         super(port, null);
         MLog.d(TAG, "" + port);
 
-        ctx = new WeakReference<Context>(c);
-        Settings settings = Protocoder.getInstance(ctx.get()).settings;
+        ctx = new WeakReference<Context>(appRunner.getAppContext());
+        UserSettings userSettings = appRunner.protocoderApp.userSettings;
 
-        MLog.d(TAG, "" + settings.getFtpUserName() + " " + settings.getFtpUserPassword());
-        addUser(settings.getFtpUserName(), settings.getFtpUserPassword(), ProjectManager.getInstance().getBaseDir(), true);
+        MLog.d(TAG, "" + userSettings.getFtpUserName() + " " + userSettings.getFtpUserPassword());
+        addUser(userSettings.getFtpUserName(), userSettings.getFtpUserPassword(), ProjectManager.getInstance().getBaseDir(), true);
     }
 
     public void stopServer() {
@@ -70,7 +60,6 @@ public class ProtocoderFtpServer extends PFtpServer {
     public void startServer() {
         if (!started) {
             start();
-            MLog.d(TAG, "start 4");
             started = true;
         }
     }

@@ -38,6 +38,8 @@
             </intent-filter>
 
         </activity>
+
+        <service android:name=".ProtocoderServerService"></service>
     </application>
 
 

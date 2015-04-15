@@ -20,13 +20,10 @@
 
 package org.protocoderrunner.apprunner.api.widgets;
 
-import android.content.Context;
-
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.network.IDEcommunication;
 
 public class PWebEditor extends PInterface {
 
@@ -55,6 +52,7 @@ public class PWebEditor extends PInterface {
     @ProtoMethod(description = "Execute custom js in the webIde", example = "")
     @ProtoMethodParam(params = {"jsText"})
     public void sendJs(String js) {
-        IDEcommunication.getInstance(getContext()).sendCustomJs(js);
+        //TODO change to events
+        //IDEcommunication.getInstance(getContext()).sendCustomJs(js);
     }
 }

@@ -20,14 +20,12 @@
 
 package org.protocoderrunner.apprunner.api.dashboard;
 
-import android.content.Context;
 import android.graphics.Color;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.network.CustomWebsocketServer;
 
 import java.net.UnknownHostException;
 
@@ -64,7 +62,8 @@ public class PDashboardBackground extends PInterface {
                 .put("action", "add")
                 .put("values", values);
 
-        CustomWebsocketServer.getInstance(getContext()).send(msg);
+        //TODO change to events
+        //CustomWebsocketServer.getInstance(getContext()).send(msg);
     }
 
 

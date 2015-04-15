@@ -18,7 +18,7 @@
 * along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package org.protocoder.network;
+package org.protocoder.server;
 
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -28,7 +28,8 @@ import android.widget.Toast;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.protocoder.appApi.EditorManager;
+import org.protocoder.EditorManager;
+import org.protocoder.ProtocoderAppHelper;
 import org.protocoderrunner.apidoc.APIManager;
 import org.protocoderrunner.apprunner.api.PApp;
 import org.protocoderrunner.apprunner.api.PBoards;
@@ -118,13 +119,11 @@ import java.util.Properties;
 
 import de.greenrobot.event.EventBus;
 
-/**
- * An example of subclassing NanoHTTPD to make mContext custom HTTP server.
- */
 public class ProtocoderHttpServer extends NanoHTTPD {
-    public static final String TAG = "myHTTPServer";
+    public static final String TAG = ProtocoderHttpServer.class.getSimpleName();
+
     private static ConnectedUser mConnectedUsers;
-    private final WeakReference<Context> ctx;
+    private final WeakReference<Context> mContext;
     private final String WEBAPP_DIR = "webide/";
     String projectURLPrefix = "/apps";
     public android.os.Handler mHandler = new android.os.Handler(Looper.getMainLooper());
@@ -159,32 +158,16 @@ public class ProtocoderHttpServer extends NanoHTTPD {
         }
     };
 
-    private static ProtocoderHttpServer instance;
-
-    public static ProtocoderHttpServer getInstance(Context aCtx, int port) {
-        MLog.d(TAG, "launching web server...");
-        if (instance == null) {
-            try {
-                MLog.d(TAG, "ok...");
-                instance = new ProtocoderHttpServer(aCtx, port);
-                mConnectedUsers = ConnectedUser.getInstance();
-            } catch (IOException e) {
-                MLog.d(TAG, "nop :(...");
-                e.printStackTrace();
-            }
-        }
-
-        return instance;
-    }
-
-    public ProtocoderHttpServer(Context aCtx, int port) throws IOException {
+    public ProtocoderHttpServer(Context context, int port) throws IOException {
         super(port);
-        ctx = new WeakReference<Context>(aCtx);
-        String ip = NetworkUtils.getLocalIpAddress(aCtx);
+        mContext = new WeakReference<Context>(context);
+        mConnectedUsers = ConnectedUser.getInstance();
+
+        String ip = NetworkUtils.getLocalIpAddress(context);
         if (ip == null) {
-            MLog.d(TAG, "No IP found. Please connect to a newwork and try again");
+            MLog.i(TAG, "No IP found. Please connect to a network and try again");
         } else {
-            MLog.d(TAG, "Launched server at http://" + ip.toString() + ":" + port);
+            MLog.i(TAG, "Launched server at http://" + ip.toString() + ":" + port);
         }
     }
 
@@ -205,7 +188,7 @@ public class ProtocoderHttpServer extends NanoHTTPD {
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(ctx.get(), "Connection from " + ip, Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext.get(), "Connection from " + ip, Toast.LENGTH_LONG).show();
                     }
                 });
 
@@ -317,6 +300,11 @@ public class ProtocoderHttpServer extends NanoHTTPD {
                     EventBus.getDefault().post(evt);
                     MLog.i(TAG, "Running...");
 
+                    Context applicationContext = mContext.get().getApplicationContext();
+
+                    ProtocoderAppHelper.launchScript(applicationContext, folder, name);
+
+
                     // execute app
                 } else if (cmd.equals("execute_code")) {
                     MLog.d(TAG, "--> execute code");
@@ -393,7 +381,7 @@ public class ProtocoderHttpServer extends NanoHTTPD {
                     ProjectEvent evt = new ProjectEvent(p, "new");
                     EventBus.getDefault().post(evt);
 
-                    Project newProject = ProjectManager.getInstance().addNewProject(ctx.get(), name, ProjectManager.FOLDER_USER_PROJECTS, name);
+                    Project newProject = ProjectManager.getInstance().addNewProject(mContext.get(), name, ProjectManager.FOLDER_USER_PROJECTS, name);
 
                     // remove app
                 } else if (cmd.equals("remove_app")) {
@@ -524,7 +512,7 @@ public class ProtocoderHttpServer extends NanoHTTPD {
         MLog.d(TAG, uri);
 
         // have the object build the directory structure, if needed.
-        AssetManager am = ctx.get().getAssets();
+        AssetManager am = mContext.get().getAssets();
         try {
             MLog.d(TAG, WEBAPP_DIR + uri);
             InputStream fi = am.open(WEBAPP_DIR + uri);
@@ -586,11 +574,11 @@ public class ProtocoderHttpServer extends NanoHTTPD {
             mime = NanoHTTPD.MIME_DEFAULT_BINARY;
         }
 
-        String currentEditor = EditorManager.getInstance().getCurrentEditor(ctx.get());
+        String currentEditor = EditorManager.getInstance().getCurrentEditor(mContext.get());
         if (currentEditor.equals(EditorManager.DEFAULT)) {
 
             // have the object build the directory structure, if needed.
-            AssetManager am = ctx.get().getAssets();
+            AssetManager am = mContext.get().getAssets();
             try {
                 MLog.d(TAG, WEBAPP_DIR + uri);
                 InputStream fi = am.open(WEBAPP_DIR + uri);
@@ -602,7 +590,7 @@ public class ProtocoderHttpServer extends NanoHTTPD {
                 res = new Response(HTTP_INTERNALERROR, "text/html", "ERROR: " + e.getMessage());
             }
         } else {
-            String path = EditorManager.getInstance().getUrlEditor(ctx.get()) + uri;
+            String path = EditorManager.getInstance().getUrlEditor(mContext.get()) + uri;
             try {
                 FileInputStream fi = new FileInputStream(path);
                 res = new Response(HTTP_OK, mime, fi);
@@ -617,8 +605,6 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 
     public void close() {
         stop();
-        instance = null;
-
     }
 
 }

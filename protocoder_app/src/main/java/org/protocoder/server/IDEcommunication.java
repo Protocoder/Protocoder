@@ -1,4 +1,4 @@
-package org.protocoderrunner.network;
+package org.protocoder.server;
 
 import android.content.Context;
 
@@ -17,20 +17,20 @@ public class IDEcommunication {
     private String TAG = "IDECommunication";
     private static IDEcommunication inst;
     public WeakReference<Context> a;
-    CustomWebsocketServer ws;
+    ProtocoderWebsocketServer ws;
 
     public IDEcommunication(Context appActivity) {
         this.a = new WeakReference<>(appActivity);
 
         try {
-            ws = CustomWebsocketServer.getInstance(a.get());
+            ws = ProtocoderWebsocketServer.getInstance(a.get());
             MLog.d(TAG, "websocket started");
         } catch (UnknownHostException e) {
             e.printStackTrace();
             MLog.d(TAG, "websocket :(");
         }
 
-        ws.addListener("protocoderApp", new CustomWebsocketServer.WebSocketListener() {
+        ws.addListener("protocoderApp", new ProtocoderWebsocketServer.WebSocketListener() {
             @Override
             public void onUpdated(JSONObject jsonObject) {
                 try {

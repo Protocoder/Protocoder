@@ -20,14 +20,11 @@
 
 package org.protocoderrunner.apprunner.api.dashboard;
 
-import android.content.Context;
-
+import org.java_websocket.WebSocketListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.network.CustomWebsocketServer;
-import org.protocoderrunner.network.CustomWebsocketServer.WebSocketListener;
 import org.protocoderrunner.utils.StrUtils;
 
 import java.net.UnknownHostException;
@@ -68,6 +65,8 @@ public class PDashboardButton extends PInterface {
                 .put("values", values);
 
 
+        //TODO change to events
+        /*
         CustomWebsocketServer.getInstance(getContext()).addListener(id, new WebSocketListener() {
             @Override
             public void onUpdated(JSONObject jsonObject) {
@@ -81,8 +80,9 @@ public class PDashboardButton extends PInterface {
             }
         });
 
-        CustomWebsocketServer.getInstance(getContext()).send(msg);
-
+        //TODO change to events
+        //CustomWebsocketServer.getInstance(getContext()).send(msg);
+        */
     }
 
     public void onClick(final jDashboardAddCB callbackfn) throws UnknownHostException {
@@ -101,6 +101,7 @@ public class PDashboardButton extends PInterface {
                 .put("action", "update")
                 .put("values", values);
 
-        CustomWebsocketServer.getInstance(getContext()).send(msg);
+        //TODO change to events
+        //CustomWebsocketServer.getInstance(getContext()).send(msg);
     }
 }

@@ -18,7 +18,7 @@
 * along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package org.protocoder.network;
+package org.protocoder.server;
 
 import android.os.AsyncTask;
 

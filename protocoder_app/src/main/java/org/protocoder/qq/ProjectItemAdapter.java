@@ -18,7 +18,7 @@
 * along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package org.protocoder.projectlist;
+package org.protocoder.qq;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -31,7 +31,6 @@ import java.util.ArrayList;
 public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.ViewHolder> {
     private static final String TAG = "ProjectItemAdapter";
     private final Context mContext;
-    private final int mIcon;
     private final ProjectListFragment mPlf;
 
     public ArrayList<Project> mProjects;
@@ -55,23 +54,13 @@ public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.
         this.mProjects = plf.mProjects;
         this.mProjectFolder = plf.mProjectFolder;
         this.mListMode = plf.mListMode;
-        this.mIcon = plf.icon;
     }
 
 
     // Create new views (invoked by the layout manager)
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent,
-                                         int viewType) {
-
-        //MLog.d(TAG, "view created");
-        // create mContext new view
-        //ProjectItem v = (ProjectItem) LayoutInflater.from(parent.getContext())
-        //        .inflate(R.layout.view_project_item, parent, false);
-        // set the view's size, margins, paddings and layout parameters
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         ProjectItem projectItem = new ProjectItem(mContext, mPlf, mListMode);
-
-
         ViewHolder vh = new ProjectItemAdapter.ViewHolder(projectItem);
 
         return vh;

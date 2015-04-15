@@ -244,7 +244,6 @@ public class MainActivity extends AppBaseActivity {
 
         //reinit listeners
         mStopServerReceiver = new BroadcastReceiver() {
-
             @Override
             public void onReceive(Context context, Intent intent) {
                 mProtocoder.app.killConnections();

@@ -25,8 +25,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
+import android.widget.FrameLayout;
 
+import org.protocoder.appinterpreter.AppRunnerCustom;
+import org.protocoder.appinterpreter.ProtocoderApp;
+import org.protocoder.qq.ProjectListFragment;
+import org.protocoderrunner.events.Events;
+import org.protocoderrunner.project.Project;
+import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.MLog;
 
 public class MainActivity extends ActionBarActivity {
@@ -39,15 +47,31 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //add script list fragment
+        FrameLayout fl = (FrameLayout) findViewById(R.id.fragmentScriptList);
+        ProjectListFragment listFragmentBase = ProjectListFragment.newInstance(ProjectManager.FOLDER_EXAMPLES, true);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.add(fl.getId(), listFragmentBase, String.valueOf(fl.getId()));
+        ft.commit();
+
+        if (savedInstanceState == null) {
+         //   addFragments();
+        } else {
+           // mProtocoder.protoScripts.reinitScriptList();
+        }
+
         //init appRunner
         appRunner = new AppRunnerCustom(this);
         appRunner.initDefaultObjects().initInterpreter();
         ProtocoderApp protocoderApp = new ProtocoderApp(appRunner);
         protocoderApp.network.checkVersion();
 
-        appRunner.interp.eval("device.vibrate(2000);");
+        appRunner.interp.eval("device.vibrate(1000);");
 
 
+
+        //execute commands from intents
+        //ie: adb shell am broadcast -a org.protocoder.intent.EXECUTE --es cmd "device.vibrate(100)"
         BroadcastReceiver recv = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -56,10 +80,19 @@ public class MainActivity extends ActionBarActivity {
                 appRunner.interp.eval(cmd);
             }
         };
+
         IntentFilter filterSend = new IntentFilter();
         filterSend.addAction("org.protocoder.intent.EXECUTE");
         registerReceiver(recv, filterSend);
 
+        startServers();
+    }
+
+    private void startServers() {
+        MLog.d(TAG, "starting servers");
+        Intent serverIntent = new Intent(this, ProtocoderServerService.class);
+        //serverIntent.putExtra(Project.FOLDER, folder);
+        startService(serverIntent);
     }
 
     @Override
@@ -84,6 +117,29 @@ public class MainActivity extends ActionBarActivity {
     protected void onDestroy() {
         super.onDestroy();
 
+    }
+
+    // TODO call intent and kill it in an appropiate way
+    public void onEventMainThread(Events.ProjectEvent evt) {
+        // Using transaction so the view blocks
+        MLog.d(TAG, "event -> " + evt.getAction());
+
+        if (evt.getAction() == "run") {
+            Project p = evt.getProject();
+            //mProtocoder.protoScripts.run(p.getFolder(), p.getName());
+        }
+    }
+
+
+    // execute lines
+    public void onEventMainThread(Events.ExecuteCodeEvent evt) {
+        String code = evt.getCode();
+        MLog.d(TAG, "event -> " + code);
+
+        //TODO apprunner
+        // if (debugApp) {
+        //     interp.eval(code);
+        // }
     }
 
 }

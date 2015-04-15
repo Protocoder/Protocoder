@@ -20,15 +20,12 @@
 
 package org.protocoderrunner.apprunner.api;
 
-import android.content.Context;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.network.CustomWebsocketServer;
 import org.protocoderrunner.utils.AndroidUtils;
 
 import java.net.UnknownHostException;
@@ -181,12 +178,15 @@ public class PConsole extends PInterface {
     }
 
 
+    //TODO migrate to events
     private void send(JSONObject msg) {
+        /*
         try {
             CustomWebsocketServer.getInstance(getContext()).send(msg);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
+        */
     }
 
     private String getCurrentTime() {

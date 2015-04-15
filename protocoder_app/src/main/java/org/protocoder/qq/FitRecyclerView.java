@@ -18,7 +18,7 @@
 * along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package org.protocoder.projectlist;
+package org.protocoder.qq;
 
 
 import android.content.Context;

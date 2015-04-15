@@ -18,7 +18,7 @@
 * along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package org.protocoder.projectlist;
+package org.protocoder.qq;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -36,8 +36,6 @@ import android.widget.LinearLayout;
 
 import org.protocoder.MainActivity;
 import org.protocoder.R;
-import org.protocoder.appApi.Protocoder;
-import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.base.BaseFragment;
 import org.protocoderrunner.events.Events.ProjectEvent;
 import org.protocoderrunner.project.Project;
@@ -56,8 +54,6 @@ public class ProjectListFragment extends BaseFragment {
     protected FitRecyclerView mGrid;
     public String mProjectFolder;
     boolean mListMode;
-    public int color;
-    public int icon;
     public boolean orderByName;
     public int num = 0;
     public static int totalNum = 0;
@@ -75,8 +71,6 @@ public class ProjectListFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
 
         this.mProjectFolder = getArguments().getString("folderName");
-        this.color = getArguments().getInt("color");
-        this.icon = getArguments().getInt("icon");
         this.orderByName = getArguments().getBoolean("orderByName");
 
         mProjects = ProjectManager.getInstance().list(this.mProjectFolder, this.orderByName);
@@ -84,10 +78,11 @@ public class ProjectListFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        //this.icon = getArguments().getString("icon");
-
         mContext = (Context) getActivity();
-        mListMode = Protocoder.getInstance((BaseActivity) getActivity()).settings.getListPreference();
+
+        //TODO make it work again
+        //mListMode = Protocoder.getInstance((BaseActivity) getActivity()).settings.getListPreference();
+        mListMode = false;
 
         View v;
         if (mListMode) {
@@ -100,9 +95,6 @@ public class ProjectListFragment extends BaseFragment {
         // mGrid.setHasFixedSize(true);
 
         mGrid.setItemAnimator(new DefaultItemAnimator());
-
-        //mLayoutManager = new GridLayoutManager(mContext, 1);
-        //mGrid.setLayoutManager(mLayoutManager);
 
         // set the empty state
         mEmptyGrid = (LinearLayout) v.findViewById(R.id.empty_grid_view);
@@ -132,13 +124,11 @@ public class ProjectListFragment extends BaseFragment {
 
     }
 
-    public static ProjectListFragment newInstance(int icon, String folderName, int color, boolean orderByName) {
+    public static ProjectListFragment newInstance(String folderName, boolean orderByName) {
         ProjectListFragment myFragment = new ProjectListFragment();
 
         Bundle args = new Bundle();
-        args.putInt("icon", icon);
         args.putString("folderName", folderName);
-        args.putInt("color", color);
         args.putBoolean("orderByName", orderByName);
         myFragment.setArguments(args);
 
@@ -245,9 +235,10 @@ public class ProjectListFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
 
-        if (!AndroidUtils.isWear(getActivity())) {
-            ((MainActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        }
+        //TODO reenable
+        //if (!AndroidUtils.isWear(getActivity())) {
+        //    ((MainActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        //}
     }
 
     @Override

@@ -20,15 +20,12 @@
 
 package org.protocoderrunner.apprunner.api.dashboard;
 
-import android.content.Context;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.network.CustomWebsocketServer;
 import org.protocoderrunner.utils.StrUtils;
 
 import java.net.UnknownHostException;
@@ -61,7 +58,8 @@ public class PDashboardImage extends PInterface {
                 .put("action", "add")
                 .put("values", values);
 
-        CustomWebsocketServer.getInstance(getContext()).send(msg);
+        //TODO change to events
+        //CustomWebsocketServer.getInstance(getContext()).send(msg);
     }
 
 
@@ -79,6 +77,7 @@ public class PDashboardImage extends PInterface {
                 .put("action", "changeImage")
                 .put("values", values);
 
-        CustomWebsocketServer.getInstance(getContext()).send(msg);
+        //TODO change to events
+        //CustomWebsocketServer.getInstance(getContext()).send(msg);
     }
 }
