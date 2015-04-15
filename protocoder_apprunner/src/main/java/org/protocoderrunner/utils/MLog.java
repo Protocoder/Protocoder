@@ -25,7 +25,6 @@ import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.protocoderrunner.network.CustomWebsocketServer;
 
 import java.net.UnknownHostException;
 
@@ -71,29 +70,26 @@ public class MLog {
             final StackTraceElement[] elements = th.getStackTrace();
 
             callerClassName = elements[2].getClassName();
-            callerMethodName = elements[2].getMethodName() + " >>>";
+            callerMethodName = elements[2].getMethodName();
         }
 
         if (device) {
+            String logMsg = "[" + tag + " (" + callerMethodName + ")] " + msg;
             switch (type) {
                 case LOG_D:
-                    Log.d(tag, "[[ " + tag + " ]] " + callerMethodName + " " + msg);
-
+                    Log.d(tag, logMsg);
                     break;
 
                 case LOG_E:
-                    Log.e(tag, "[[ " + tag + " ]] " + callerMethodName + " " + msg);
-
+                    Log.e(tag, logMsg);
                     break;
 
                 case LOG_I:
-                    Log.i(tag, "[[ " + tag + " ]] " + callerMethodName + " " + msg);
-
+                    Log.i(tag, logMsg);
                     break;
 
                 case LOG_W:
-                    Log.w(tag, "[[ " +tag + " ]] " + callerMethodName + " " + msg);
-
+                    Log.w(tag, logMsg);
                     break;
 
                 default:
@@ -123,6 +119,8 @@ public class MLog {
         }
 
 
+        //TODO change to events
+        /*
         CustomWebsocketServer ws = null;
         try {
             ws = CustomWebsocketServer.getInstance(c);
@@ -130,6 +128,7 @@ public class MLog {
             e.printStackTrace();
         }
         ws.send(jsonMsg);
+        */
     }
 
 }
