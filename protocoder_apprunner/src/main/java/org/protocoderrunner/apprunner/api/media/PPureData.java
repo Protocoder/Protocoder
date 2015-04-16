@@ -266,6 +266,7 @@ public class PPureData extends PInterface {
     public void stop() {
         receiver.release();
         PdBase.release();
+        getContext().unbindService(AudioServicePd.pdConnection);
     }
 
 
