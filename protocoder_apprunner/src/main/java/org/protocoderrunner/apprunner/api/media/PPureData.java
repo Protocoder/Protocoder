@@ -203,15 +203,15 @@ public class PPureData extends PInterface {
     }
 
     @ProtoMethod(description = "Sends a message to PdLib", example = "")
-    @ProtoMethodParam(params = {"message", "value"})
-    public void sendMessage(String message, String value) {
-        if (value.isEmpty()) {
-            PdBase.sendBang(message);
-        } else if (value.matches("[0-9]+")) {
-            PdBase.sendFloat(message, Float.parseFloat(value));
-        } else {
-            PdBase.sendSymbol(message, value);
-        }
+    @ProtoMethodParam(params = {"recv", "value"})
+    public void sendMessage(String recv, String value) {
+        PdBase.sendMessage(recv, value);
+    }
+
+    @ProtoMethod(description = "Sends a symbol to PdLib", example = "")
+    @ProtoMethodParam(params = {"recv", "value"})
+    public void sendSymbol(String recv, String value) {
+        PdBase.sendSymbol(recv, value);
     }
 
 
