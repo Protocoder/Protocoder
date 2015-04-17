@@ -408,14 +408,13 @@ public class PNetwork extends PInterface {
                         response.getEntity().getContent().close();
                         throw new IOException(statusLine.getReasonPhrase());
                     }
-                    MLog.d(TAG, "lalal1");
-
+                    MLog.d(TAG, "downloading ");
 
                     mHandler.post(new Runnable() {
 
                         @Override
                         public void run() {
-                            MLog.d(TAG, "lalal2 " + statusLine + " " + responseString);
+                            MLog.d(TAG, "passing data to ui thread " + statusLine + " " + responseString);
                             callbackfn.event(statusLine.getStatusCode(), responseString);
                         }
                     });

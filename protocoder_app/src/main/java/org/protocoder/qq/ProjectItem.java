@@ -56,7 +56,7 @@ public class ProjectItem extends LinearLayout {
 
     private static final String TAG = "ProjectItem";
     private final Drawable bg;
-    private final ProjectListFragment mPlf;
+    //private final ProjectListFragment mPlf;
     private View mItemView;
     // private Context c;
     private final Context c;
@@ -67,10 +67,10 @@ public class ProjectItem extends LinearLayout {
     private TextView textViewIcon;
     private ImageView mMenuButton;
 
-    public ProjectItem(Context context, ProjectListFragment plf, boolean listMode) {
+    public ProjectItem(Context context, /* ProjectListFragment plf,*/ boolean listMode) {
         super(context);
         this.c = context;
-        this.mPlf = plf;
+        //this.mPlf = plf;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         if (listMode) {
@@ -245,7 +245,7 @@ public class ProjectItem extends LinearLayout {
                         public void onClick(DialogInterface dialog, int which) {
                             switch (which) {
                                 case DialogInterface.BUTTON_POSITIVE:
-                                    mPlf.removeItem(mProject);
+                                    //mPlf.removeItem(mProject);
 
                                     break;
 

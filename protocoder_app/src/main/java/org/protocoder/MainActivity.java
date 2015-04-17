@@ -45,68 +45,92 @@ public class MainActivity extends ActionBarActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     protected AppRunnerCustom appRunner;
+    private ProjectListFragment mListFragmentBase;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        /*
+         * Setup the ui
+         */
+        addProjectListFragment(savedInstanceState);
+        addProjectFolderChooser();
 
-        final String[] arraySpinner = new String[]{
-                "Projects", "Examples",
-        };
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, arraySpinner);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                MLog.d(TAG, "clicked on " + arraySpinner[position]);
-            }
-
-        });
-
-
-        //add script list fragment
-        FrameLayout fl = (FrameLayout) findViewById(R.id.fragmentScriptList);
-        ProjectListFragment listFragmentBase = ProjectListFragment.newInstance(ProjectManager.FOLDER_EXAMPLES, true);
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(fl.getId(), listFragmentBase, String.valueOf(fl.getId()));
-        ft.commit();
-
-        if (savedInstanceState == null) {
-         //   addFragments();
-        } else {
-           // mProtocoder.protoScripts.reinitScriptList();
-        }
-
-        //init appRunner
+        /*
+         * init custom appRunner
+         */
         appRunner = new AppRunnerCustom(this);
         appRunner.initDefaultObjects().initInterpreter();
         ProtocoderApp protocoderApp = new ProtocoderApp(appRunner);
         protocoderApp.network.checkVersion();
-
         appRunner.interp.eval("device.vibrate(1000);");
 
-
-
-        //execute commands from intents
-        //ie: adb shell am broadcast -a org.protocoder.intent.EXECUTE --es cmd "device.vibrate(100)"
-        BroadcastReceiver recv = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String cmd = intent.getStringExtra("cmd");
-                MLog.d(TAG, "executing >> " + cmd);
-                appRunner.interp.eval(cmd);
-            }
-        };
-
-        IntentFilter filterSend = new IntentFilter();
-        filterSend.addAction("org.protocoder.intent.EXECUTE");
-        registerReceiver(recv, filterSend);
-
+        /*
+         * Servers
+         */
+        startBroadCastReceiver();
         startServers();
+    }
+
+
+    //This broadcast will receive JS commands if is in debug mode, useful to debug the app through adb
+    private void startBroadCastReceiver() {
+        if (ProtocoderAppSettings.DEBUG) {
+            //execute commands from intents
+            //ie: adb shell am broadcast -a org.protocoder.intent.EXECUTE --es cmd "device.vibrate(100)"
+            BroadcastReceiver recv = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    String cmd = intent.getStringExtra("cmd");
+                    MLog.d(TAG, "executing >> " + cmd);
+                    appRunner.interp.eval(cmd);
+                }
+            };
+
+            IntentFilter filterSend = new IntentFilter();
+            filterSend.addAction("org.protocoder.intent.EXECUTE");
+            registerReceiver(recv, filterSend);
+        }
+    }
+
+    //Project folder chooser, ATM just a spinner
+    private void addProjectFolderChooser() {
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        final String[] arraySpinner = new String[]{
+                "projects", "examples",
+        };
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_dropdown_item_1line, arraySpinner);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                MLog.d(TAG, "clicked on " + arraySpinner[position]);
+                mListFragmentBase.loadFolder(arraySpinner[position]);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    //add the project list fragment
+    private void addProjectListFragment(Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+            //add script list fragment
+            FrameLayout fl = (FrameLayout) findViewById(R.id.fragmentScriptList);
+            mListFragmentBase = ProjectListFragment.newInstance(ProjectManager.FOLDER_EXAMPLES, true);
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.add(fl.getId(), mListFragmentBase, String.valueOf(fl.getId()));
+            ft.commit();
+        } else {
+            // mProtocoder.protoScripts.reinitScriptList();
+        }
+
     }
 
     private void startServers() {

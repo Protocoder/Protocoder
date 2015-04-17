@@ -25,18 +25,20 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import org.protocoderrunner.project.Project;
+import org.protocoderrunner.project.ProjectManager;
 
 import java.util.ArrayList;
 
 public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.ViewHolder> {
     private static final String TAG = "ProjectItemAdapter";
     private final Context mContext;
-    private final ProjectListFragment mPlf;
 
-    public ArrayList<Project> mProjects;
-    private final String mProjectFolder;
+    public ArrayList<Project> mProjectList = new ArrayList<>();
     private final boolean mListMode;
 
+    /*
+     * ViewHolder holds the view that the adapter will use
+     */
     public class ViewHolder extends RecyclerView.ViewHolder {
         private final ProjectItem mView;
         private final int position;
@@ -48,19 +50,69 @@ public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.
         }
     }
 
-    public ProjectItemAdapter(Context c, ProjectListFragment plf) {
+
+    /*
+     * ProjectItemAdapter
+     */
+    public ProjectItemAdapter(Context c) {
         mContext = c;
-        this.mPlf = plf;
-        this.mProjects = plf.mProjects;
-        this.mProjectFolder = plf.mProjectFolder;
-        this.mListMode = plf.mListMode;
+        this.mListMode = false;
+    }
+
+    public void setArray( ArrayList<Project> projectList) {
+        this.mProjectList = projectList;
+    }
+
+    public void add(Project project) {
+        mProjectList.add(project);
+        notifyItemInserted(mProjectList.size());
+    }
+
+    public void remove(Project p) {
+        ProjectManager.getInstance().deleteProject(p);
+
+        int id = findAppPosByName(p.getName());
+        mProjectList.remove(id);
+        notifyItemRemoved(id);
+    }
+
+    public int findAppIdByName(String appName) {
+        int id = -1;
+
+        for (int i = 0; i < mProjectList.size(); i++) {
+            String name = mProjectList.get(i).getName();
+            if (name.equals(appName)) {
+                id = i;
+                break;
+            }
+        }
+
+        return id;
+    }
+
+    public int findAppPosByName(String appName) {
+        int pos = -1;
+
+        // MLog.d(TAG, "size " + mProjects.size());
+        for (int i = 0; i < mProjectList.size(); i++) {
+            String name = mProjectList.get(i).getName();
+            // MLog.d(TAG, "name " + name);
+
+            if (name.equals(appName)) {
+                pos = i; //(int) mProjectAdapter.getItemId(i);
+
+                break;
+            }
+        }
+
+        return pos;
     }
 
 
     // Create new views (invoked by the layout manager)
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        ProjectItem projectItem = new ProjectItem(mContext, mPlf, mListMode);
+        ProjectItem projectItem = new ProjectItem(mContext,/* mPlf, */ mListMode);
         ViewHolder vh = new ProjectItemAdapter.ViewHolder(projectItem);
 
         return vh;
@@ -69,23 +121,13 @@ public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.
     // Replace the contents of mContext view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-
-        Project p = mProjects.get(position);
+        Project p = mProjectList.get(position);
         holder.mView.setProject(p);
-
-//
-//        if (getCount() - 1 == position) {
-//            customView.setPadding(0, 0, 0, 100);
-//        } else {
-//            customView.setPadding(0, 0, 0, 0);
-//        }
-
     }
-
 
     @Override
     public int getItemCount() {
-        return mProjects.size();
+        return mProjectList.size();
     }
 
 }
