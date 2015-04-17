@@ -23,7 +23,6 @@ package org.protocoderrunner.apprunner.api.widgets;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -33,7 +32,6 @@ import android.widget.TextView;
 import org.protocoderrunner.R;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.utils.MLog;
 
 public class PWindow extends RelativeLayout implements PViewInterface {
 
@@ -63,8 +61,7 @@ public class PWindow extends RelativeLayout implements PViewInterface {
 
         //setOnTouchListener(this);
 
-        mBar.setOnTouchListener(onMoveListener);
-
+        WidgetHelper.setMovable(mBar, mWindow, null);
     }
 
 
@@ -130,45 +127,5 @@ public class PWindow extends RelativeLayout implements PViewInterface {
         return mWindow;
     }
 
-
-    OnTouchListener onMoveListener = new OnTouchListener() {
-
-        public int x_init;
-        public int y_init;
-
-        @Override
-        public boolean onTouch(View v, MotionEvent e) {
-
-            //FixedLayout.LayoutParams layoutParams = (Rel.LayoutParams) v.getLayoutParams();
-
-            int action = e.getActionMasked();
-
-            switch (action) {
-
-                case MotionEvent.ACTION_DOWN:
-                    //DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
-                    //v.startDrag(null, shadowBuilder, v, 0);
-                    //v.setVisibility(View.INVISIBLE);
-                    x_init = (int) e.getRawX() - (int) mWindow.getX();
-                    MLog.network(getContext(), TAG, "" + x_init + " " + (int) e.getRawX() + " " + (int) mWindow.getX() + " " + (int) mWindow.getLeft());
-                    y_init = (int) e.getRawY() - (int) mWindow.getY();
-
-                    break;
-
-                case MotionEvent.ACTION_MOVE:
-
-                    int x_cord = (int) e.getRawX();
-                    int y_cord = (int) e.getRawY();
-
-                    mWindow.setX(x_cord - x_init);
-                    mWindow.setY(y_cord - y_init);
-
-                    break;
-            }
-
-            return true;
-        }
-
-    };
 
 }

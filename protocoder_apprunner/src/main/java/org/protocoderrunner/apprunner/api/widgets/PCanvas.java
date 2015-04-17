@@ -41,6 +41,8 @@ import android.graphics.SweepGradient;
 import android.graphics.Typeface;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
@@ -59,7 +61,7 @@ import static android.graphics.Shader.TileMode;
 
 public class PCanvas extends View implements PViewInterface {
 
-    private static final String TAG = "PCanvasView";
+    private static final String TAG = PCanvas.class.getSimpleName();
 
     public PorterDuff.Mode FILTER_ADD = PorterDuff.Mode.ADD;
     public PorterDuff.Mode FILTER_XOR = PorterDuff.Mode.XOR;
@@ -547,6 +549,15 @@ public class PCanvas extends View implements PViewInterface {
         return this;
     }
 
+    @ProtoMethod(description = "Sets the filling color", example = "")
+    @ProtoMethodParam(params = {"hex"})
+    public PCanvas fill(String hex) {
+        mPaintFill.setStyle(Paint.Style.FILL);
+        mPaintFill.setColor(Color.parseColor(hex));
+        fillOn = true;
+
+        return this;
+    }
 
     @ProtoMethod(description = "Removes the filling color", example = "")
     @ProtoMethodParam(params = {})
@@ -617,6 +628,27 @@ public class PCanvas extends View implements PViewInterface {
     public PCanvas textSize(int size) {
         mPaintFill.setTextSize(size);
         mPaintStroke.setTextSize(size);
+
+        return this;
+    }
+
+    public PCanvas textType() {
+        mPaintFill.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+        mPaintStroke.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+
+        return this;
+    }
+
+    public PCanvas textAlign(Paint.Align alignment) {
+        mPaintFill.setTextAlign(alignment);
+        mPaintStroke.setTextAlign(alignment);
+
+        return this;
+    }
+
+    public PCanvas textSpacing(float spacing) {
+        //mPaintFill.setLetterSpacing(spacing);
+        //mPaintStroke.setLetterSpacing(spacing);
 
         return this;
     }
@@ -864,6 +896,21 @@ public class PCanvas extends View implements PViewInterface {
         Layer(Bitmap bmp) {
             this.bmp = bmp;
         }
+    }
+
+    //WARNING this method is experimental, be careful!
+    public synchronized void size (int w, int h) {
+//        this.getLayoutParams().width = w;
+//        this.getLayoutParams().height = h;
+
+        ViewGroup.LayoutParams params = this.getLayoutParams();
+        params.width = w;
+        params.height = h;
+        mWidth = w;
+        mHeight = h;
+        this.requestLayout();
+        currentLayer = -1;
+        initLayers();
     }
 
 }

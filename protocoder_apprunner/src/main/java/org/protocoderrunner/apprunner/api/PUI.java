@@ -92,6 +92,7 @@ import org.protocoderrunner.apprunner.api.widgets.PUIGeneric;
 import org.protocoderrunner.apprunner.api.widgets.PVideo;
 import org.protocoderrunner.apprunner.api.widgets.PWebView;
 import org.protocoderrunner.apprunner.api.widgets.PWindow;
+import org.protocoderrunner.apprunner.api.widgets.WidgetHelper;
 import org.protocoderrunner.utils.AndroidUtils;
 import org.protocoderrunner.views.TouchAreaView;
 
@@ -397,6 +398,14 @@ public class PUI extends PUIGeneric {
             }
         });
 
+    }
+
+    public void movable(View viewHandler, View viewContainer, WidgetHelper.MoveCallback callback) {
+        WidgetHelper.setMovable(viewHandler, viewContainer, callback);
+    }
+
+    public void removeMovable(View viewHandler) {
+        WidgetHelper.removeMovable(viewHandler);
     }
 
 
