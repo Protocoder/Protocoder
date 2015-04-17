@@ -128,7 +128,7 @@ public class PCanvas extends View implements PViewInterface {
 
 
     public void init() {
-        MLog.d(TAG, "init");
+        //MLog.d(TAG, "init");
         WhatIsRunning.getInstance().add(this);
 
         mPaintFill = new Paint();
@@ -142,7 +142,7 @@ public class PCanvas extends View implements PViewInterface {
 
     public void initLayers() {
         //initLayers
-        MLog.d(TAG, "initLayers");
+        //MLog.d(TAG, "initLayers");
 
         mLayerFifo = new Vector<Layer>();
 
@@ -154,13 +154,13 @@ public class PCanvas extends View implements PViewInterface {
         mCanvas = new Canvas(mCurrentBmp);
         draw(mCanvas);
         viewIsInit = true;
-        MLog.d(TAG, "viewIsInit " + viewIsInit);
+        //MLog.d(TAG, "viewIsInit " + viewIsInit);
     }
 
 
     public PCanvas(Context context) {
         super(context);
-        MLog.d(TAG, "onCreate");
+        //MLog.d(TAG, "onCreate");
 
         this.context = context;
         init();
@@ -170,7 +170,7 @@ public class PCanvas extends View implements PViewInterface {
 
     public PCanvas(Context context, int w, int h) {
         super(context);
-        MLog.d(TAG, "onCreate");
+        //MLog.d(TAG, "onCreate");
         mWidth = w;
         mHeight = h;
 
@@ -183,7 +183,7 @@ public class PCanvas extends View implements PViewInterface {
     @Override
     protected synchronized void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        MLog.d(TAG, "onMeasure");
+        //MLog.d(TAG, "onMeasure");
 
         setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
     }
@@ -191,7 +191,7 @@ public class PCanvas extends View implements PViewInterface {
     //on draw
     @Override
     protected synchronized void onDraw(Canvas c) {
-        MLog.d(TAG, "onDraw " + viewIsInit);
+        //MLog.d(TAG, "onDraw " + viewIsInit);
         if (viewIsInit) {
             super.onDraw(c);
 
@@ -231,7 +231,7 @@ public class PCanvas extends View implements PViewInterface {
             loop = null;
         }
 
-        PUtil util = new PUtil((Activity) context);
+        PUtil util = new PUtil(context);
         loop = util.loop(ms, new PLooper.LooperCB() {
             @Override
             public void event() {
@@ -268,15 +268,13 @@ public class PCanvas extends View implements PViewInterface {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
 
-        MLog.d(TAG, "onAttachedToWindow");
-
-
+        //.d(TAG, "onAttachedToWindow");
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        MLog.d(TAG, "onSizeChanged " + getWidth() + " " + getHeight());
+        //MLog.d(TAG, "onSizeChanged " + getWidth() + " " + getHeight());
 
         //enable this
         //Bitmap.Config conf = Bitmap.Config.ARGB_8888;
@@ -292,14 +290,14 @@ public class PCanvas extends View implements PViewInterface {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        MLog.d(TAG, "onLayout");
+        //MLog.d(TAG, "onLayout");
 
         //init();
     }
 
     @Override
     protected void onDetachedFromWindow() {
-        MLog.d(TAG, "onDetachedFromwindow");
+        //MLog.d(TAG, "onDetachedFromwindow");
 
         stop();
         super.onDetachedFromWindow();
@@ -850,7 +848,7 @@ public class PCanvas extends View implements PViewInterface {
     }
 
     private Layer createNewLayer() {
-        MLog.d(TAG, "createNewLayer of " + mWidth + " " + mHeight);
+        //MLog.d(TAG, "createNewLayer of " + mWidth + " " + mHeight);
         Bitmap.Config conf = Bitmap.Config.ARGB_8888;
         Bitmap _bmp = Bitmap.createBitmap(mWidth, mHeight, conf);
         Layer layer = new Layer(_bmp);
