@@ -63,6 +63,7 @@ public class PLooper {
         };
 
         rl.add(task);
+        WhatIsRunning.getInstance().add(this);
     }
 
     public PLooper onLoop(LooperCB callbackfn) {
