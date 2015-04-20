@@ -93,12 +93,11 @@ dependencies {
     compile files('libs/httpclient-cache-4.3.4.jar')
     compile files('libs/httpcore-4.3.2.jar')
     compile files('libs/httpmime-4.3.4.jar')
-    compile 'de.greenrobot:eventbus:2.2.1'
+    compile 'de.greenrobot:eventbus:2.4.0'
     compile files('libs/ftpserver-core-1.0.6.jar')
     compile files('libs/mina-core-2.0.4.jar')
 
-    //compile files('libs/js.jar') //mozilla rhino
-    compile 'io.apigee:rhino:1.7R5pre2'
+    compile 'org.mozilla:rhino:1.7.6'
 
     //network
     compile files('libs/java_websocket.jar')
