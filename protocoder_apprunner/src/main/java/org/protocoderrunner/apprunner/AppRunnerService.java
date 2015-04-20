@@ -74,9 +74,7 @@ public class AppRunnerService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // Can be called twice
-        interp = new AppRunnerInterpreter(this);
-        interp.createInterpreter(false);
-
+        interp = new AppRunnerInterpreter();
         pApp = new PApp(this);
         //pApp.initForParentFragment(this);
         pBoards = new PBoards(this);
@@ -97,18 +95,18 @@ public class AppRunnerService extends Service {
         //pUi.initForParentFragment(this);
         pUtil = new PUtil(this);
 
-        interp.interpreter.addObjectToInterface("app", pApp);
-        interp.interpreter.addObjectToInterface("boards", pBoards);
-        interp.interpreter.addObjectToInterface("console", pConsole);
-        interp.interpreter.addObjectToInterface("dashboard", pDashboard);
-        interp.interpreter.addObjectToInterface("device", pDevice);
-        interp.interpreter.addObjectToInterface("fileio", pFileIO);
-        interp.interpreter.addObjectToInterface("media", pMedia);
-        interp.interpreter.addObjectToInterface("network", pNetwork);
-        interp.interpreter.addObjectToInterface("protocoder", pProtocoder);
-        interp.interpreter.addObjectToInterface("sensors", pSensors);
-        interp.interpreter.addObjectToInterface("ui", pUi);
-        interp.interpreter.addObjectToInterface("util", pUtil);
+        interp.addJavaObjectToJs("app", pApp);
+        interp.addJavaObjectToJs("boards", pBoards);
+        interp.addJavaObjectToJs("console", pConsole);
+        interp.addJavaObjectToJs("dashboard", pDashboard);
+        interp.addJavaObjectToJs("device", pDevice);
+        interp.addJavaObjectToJs("fileio", pFileIO);
+        interp.addJavaObjectToJs("media", pMedia);
+        interp.addJavaObjectToJs("network", pNetwork);
+        interp.addJavaObjectToJs("protocoder", pProtocoder);
+        interp.addJavaObjectToJs("sensors", pSensors);
+        interp.addJavaObjectToJs("ui", pUi);
+        interp.addJavaObjectToJs("util", pUtil);
 
         mainLayout = initLayout();
 
@@ -122,7 +120,7 @@ public class AppRunnerService extends Service {
         AppRunnerSettings.get().project = currentProject;
         String script = ProjectManager.getInstance().getCode(currentProject);
 
-        interp.evalFromService(script);
+        interp.eval(script, currentProject.getName());
 
         //audio
         //AudioManager audio = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
@@ -309,7 +307,7 @@ public class AppRunnerService extends Service {
         String code = evt.getCode(); // .trim();
         MLog.d(TAG, "event -> q " + code);
 
-        interp.evalFromService(code);
+        interp.eval(code);
     }
 
 }

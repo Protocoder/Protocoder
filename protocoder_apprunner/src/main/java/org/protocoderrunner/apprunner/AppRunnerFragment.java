@@ -178,24 +178,20 @@ public class AppRunnerFragment extends Fragment {
         pUi.initForParentFragment(this);
         pUtil = new PUtil(mActivity);
 
-
-        //create mContext new interpreter and add the objects to it
-        interp = new AppRunnerInterpreter(mActivity);
-        interp.createInterpreter(true);
-        interp.interpreter.addObjectToInterface("app", pApp);
-        interp.interpreter.addObjectToInterface("boards", pBoards);
-        interp.interpreter.addObjectToInterface("console", pConsole);
-        interp.interpreter.addObjectToInterface("dashboard", pDashboard);
-        interp.interpreter.addObjectToInterface("device", pDevice);
-        interp.interpreter.addObjectToInterface("fileio", pFileIO);
-        interp.interpreter.addObjectToInterface("media", pMedia);
-        interp.interpreter.addObjectToInterface("network", pNetwork);
-        interp.interpreter.addObjectToInterface("protocoder", pProtocoder);
-        interp.interpreter.addObjectToInterface("sensors", pSensors);
-        interp.interpreter.addObjectToInterface("ui", pUi);
-        interp.interpreter.addObjectToInterface("util", pUtil);
-
-        AppRunnerSettings.get().interp = interp;
+        //create a new interpreter and add the objects to it
+        interp = new AppRunnerInterpreter();
+        interp.addJavaObjectToJs("app", pApp);
+        interp.addJavaObjectToJs("boards", pBoards);
+        interp.addJavaObjectToJs("console", pConsole);
+        interp.addJavaObjectToJs("dashboard", pDashboard);
+        interp.addJavaObjectToJs("device", pDevice);
+        interp.addJavaObjectToJs("fileio", pFileIO);
+        interp.addJavaObjectToJs("media", pMedia);
+        interp.addJavaObjectToJs("network", pNetwork);
+        interp.addJavaObjectToJs("protocoder", pProtocoder);
+        interp.addJavaObjectToJs("sensors", pSensors);
+        interp.addJavaObjectToJs("ui", pUi);
+        interp.addJavaObjectToJs("util", pUtil);
     }
 
     @Override
@@ -246,7 +242,7 @@ public class AppRunnerFragment extends Fragment {
 
         // load the libraries
         MLog.d(TAG, "loaded preloaded script" + mIntentPrefixScript);
-        interp.eval(AppRunnerInterpreter.SCRIPT_PREFIX);
+        //interp.eval(AppRunnerInterpreter.SCRIPT_PREFIX);
         if (!mIntentPrefixScript.isEmpty()) interp.eval(mIntentPrefixScript);
 
         // run the script
@@ -260,15 +256,11 @@ public class AppRunnerFragment extends Fragment {
 
         //script postfix
         if (!mIntentPostfixScript.isEmpty()) interp.eval(mIntentPostfixScript);
-        interp.eval(AppRunnerInterpreter.SCRIPT_POSTFIX);
+        //interp.eval(AppRunnerInterpreter.SCRIPT_POSTFIX);
 
         //call the javascript method setup
         interp.callJsFunction("setup");
 
-        // TODO fix actionbar color
-        //if (mActivity.mActionBarSet == false) {
-        //    mActivity.setToolBar(null, , getResources().getColor(R.color.white));
-        //}
         // Call the onCreate JavaScript function.
         interp.callJsFunction("onCreate", savedInstanceState);
 
@@ -348,6 +340,7 @@ public class AppRunnerFragment extends Fragment {
         MLog.d(TAG, "onDestroy");
 
         interp.callJsFunction("onDestroy");
+        interp.stop();
 
         interp = null;
     }
