@@ -35,10 +35,12 @@ import android.widget.Button;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.utils.MLog;
 
 public class PButton extends Button implements PViewInterface, PViewMethodsInterface {
+    private static final String TAG = PButton.class.getSimpleName();
 
-   // private int currentColor;
+    // private int currentColor;
    // private Paint paint;
 
     public PButton(Context context) {
