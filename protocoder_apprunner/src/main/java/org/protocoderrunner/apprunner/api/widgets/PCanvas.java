@@ -111,6 +111,8 @@ public class PCanvas extends View implements PViewInterface {
     private int mWidth;
     private int mHeight;
 
+    private final Rect textBounds = new Rect();
+
 
     public interface PCanvasInterfaceDraw {
         void onDraw(Canvas c);
@@ -120,7 +122,7 @@ public class PCanvas extends View implements PViewInterface {
         void onTouch(float x, float y);
     }
 
-    private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    //private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Canvas mCanvas;
     private Bitmap mCurrentBmp;
     private Vector<Layer> mLayerFifo;
@@ -486,6 +488,14 @@ public class PCanvas extends View implements PViewInterface {
         return this;
     }
 
+    public void drawTextCentered(String text){
+        int cx = mCanvas.getWidth() / 2;
+        int cy = mCanvas.getHeight() / 2;
+
+        mPaintFill.getTextBounds(text, 0, text.length(), textBounds);
+        mCanvas.drawText(text, cx - textBounds.exactCenterX(), cy - textBounds.exactCenterY(), mPaintFill);
+    }
+
 
     @ProtoMethod(description = "Load an image", example = "")
     @ProtoMethodParam(params = {"imagePath"})
@@ -587,6 +597,16 @@ public class PCanvas extends View implements PViewInterface {
         return this;
     }
 
+    @ProtoMethod(description = "Sets the stroke color", example = "")
+    @ProtoMethodParam(params = {"hex"})
+    public PCanvas stroke(String c) {
+        mPaintStroke.setStyle(Paint.Style.STROKE);
+        mPaintStroke.setColor(Color.parseColor(c));
+        strokeOn = true;
+
+        return this;
+    }
+
 
     @ProtoMethod(description = "Removes the stroke color", example = "")
     @ProtoMethodParam(params = {})
@@ -611,6 +631,14 @@ public class PCanvas extends View implements PViewInterface {
 
         return this;
     }
+
+//    @ProtoMethod(description = "Sets a stroke join", example = "")
+//    @ProtoMethodParam(params = {"join"})
+//    public PCanvas strokeJoin(Paint.Join join) {
+//        mPaintStroke.setStrokeJoin(Paint.Join.ROUND);
+//
+//        return this;
+//    }
 
 
     @ProtoMethod(description = "Sets a given font", example = "")
@@ -899,7 +927,8 @@ public class PCanvas extends View implements PViewInterface {
     }
 
     //WARNING this method is experimental, be careful!
-    public synchronized void size (int w, int h) {
+    //stretching parameter resize the textures
+    public synchronized void size (int w, int h, boolean stretching) {
 //        this.getLayoutParams().width = w;
 //        this.getLayoutParams().height = h;
 
@@ -909,8 +938,12 @@ public class PCanvas extends View implements PViewInterface {
         mWidth = w;
         mHeight = h;
         this.requestLayout();
-        currentLayer = -1;
-        initLayers();
+
+        //reinit textures
+        if (stretching) {
+            currentLayer = -1;
+            initLayers();
+        }
     }
 
 }
