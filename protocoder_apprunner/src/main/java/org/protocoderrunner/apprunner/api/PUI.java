@@ -94,6 +94,7 @@ import org.protocoderrunner.apprunner.api.widgets.PWebView;
 import org.protocoderrunner.apprunner.api.widgets.PWindow;
 import org.protocoderrunner.apprunner.api.widgets.WidgetHelper;
 import org.protocoderrunner.utils.AndroidUtils;
+import org.protocoderrunner.utils.MLog;
 import org.protocoderrunner.views.TouchAreaView;
 
 import java.io.File;
@@ -366,8 +367,12 @@ public class PUI extends PUIGeneric {
     }
 
 
+    public interface DraggableCallback {
+        void event(int x, int y);
+    }
+
     // http://stackoverflow.com/questions/16557076/how-to-smoothly-move-mContext-image-view-with-users-finger-on-android-emulator
-    public void draggable(View v) {
+    public void draggable(View v, final DraggableCallback callback) {
         v.setOnTouchListener(new OnTouchListener() {
             PointF downPT = new PointF(); // Record Mouse Position When Pressed
             // Down
@@ -379,9 +384,14 @@ public class PUI extends PUIGeneric {
                 switch (eid) {
                     case MotionEvent.ACTION_MOVE:
                         PointF mv = new PointF(event.getX() - downPT.x, event.getY() - downPT.y);
-                        v.setX((int) (startPT.x + mv.x));
-                        v.setY((int) (startPT.y + mv.y));
+                        int posX = (int) (startPT.x + mv.x);
+                        int posY = (int) (startPT.y + mv.y);
+                        v.setX(posX);
+                        v.setY(posY);
                         startPT = new PointF(v.getX(), v.getY());
+
+                        if (callback != null) callback.event(posX, posY);
+
                         break;
                     case MotionEvent.ACTION_DOWN:
                         downPT.x = event.getX();
@@ -408,15 +418,38 @@ public class PUI extends PUIGeneric {
         WidgetHelper.removeMovable(viewHandler);
     }
 
+    interface TouchCallback {
+        void event(boolean touch, float rawX, float rawY);
+    }
+
+    public void onTouch(View view, final TouchCallback callback) {
+        view.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int action = event.getActionMasked();
+
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        callback.event(true, event.getX(), event.getY());
+                        break;
+
+                    case MotionEvent.ACTION_MOVE:
+                        callback.event(true, event.getX(), event.getY());
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        callback.event(false, event.getX(), event.getY());
+                        break;
+                }
+                return true;
+            }
+        });
+    }
 
     @ProtoMethod(description = "Makes the current view draggable or cancel the drag depending on the boolean state", example = "")
     @ProtoMethodParam(params = {"View", "boolean"})
-    public void draggable(View v, boolean b) {
-        if (b) {
-            this.draggable(v);
-        } else {
-            v.setOnTouchListener(null);
-        }
+    public void removeDraggable(View v) {
+        v.setOnTouchListener(null);
     }
 
 
@@ -690,6 +723,12 @@ public class PUI extends PUIGeneric {
         });
     }
 
+    @ProtoMethod(description = "Changes the background color using grayscale", example = "")
+    @ProtoMethodParam(params = {"gray"})
+    public void backgroundColor(int gray) {
+        initializeLayout();
+        holderLayout.setBackgroundColor(Color.rgb(gray, gray, gray));
+    }
 
     @ProtoMethod(description = "Changes the background color using RGB", example = "")
     @ProtoMethodParam(params = {"r", "g", "b"})
