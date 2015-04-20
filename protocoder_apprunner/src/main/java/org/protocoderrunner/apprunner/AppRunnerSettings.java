@@ -28,7 +28,6 @@ import java.io.File;
 public class AppRunnerSettings {
 
     private static AppRunnerSettings instance;
-    public AppRunnerInterpreter interp;
     public Project project;
     public boolean hasUi = false;
     public boolean hasCustomJSInterpreter = true;
@@ -39,15 +38,6 @@ public class AppRunnerSettings {
             instance = new AppRunnerSettings();
 
         return instance;
-    }
-
-    public Scriptable newArray() {
-        return interp.interpreter.mainScriptContext.newArray(interp.interpreter.scope, 0);
-    }
-
-
-    public Scriptable newArray(File[] files) {
-        return interp.interpreter.mainScriptContext.newArray(interp.interpreter.scope, files);
     }
 
 }
