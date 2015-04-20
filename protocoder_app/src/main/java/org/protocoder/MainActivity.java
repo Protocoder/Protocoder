@@ -76,7 +76,6 @@ public class MainActivity extends AppBaseActivity {
         super.onCreate(savedInstanceState);
         mContext = this;
 
-
         //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
         //    Window w = getWindow(); // in Activity's onCreate() for instance
         //    w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
@@ -95,7 +94,6 @@ public class MainActivity extends AppBaseActivity {
        /*
         *  Views
         */
-
         if (savedInstanceState == null) {
             addFragments();
         } else {
