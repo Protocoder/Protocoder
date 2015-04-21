@@ -33,7 +33,8 @@ import java.io.IOException;
 
 public class PAudioPlayer {
 
-    private final String TAG = "PAudioPlayer";
+    private final String TAG = PAudioPlayer.class.getSimpleName();
+    private boolean mReusePlayer = true;
     private MediaPlayer mMediaPlayer;
     private OnFinishCB mOnFinishCallbackfn;
 
@@ -45,9 +46,10 @@ public class PAudioPlayer {
         void event();
     }
 
-    public PAudioPlayer(String url) {
+    public PAudioPlayer(String url, boolean reusePlayer) {
 
         WhatIsRunning.getInstance().add(this);
+        mReusePlayer = reusePlayer;
 
         mMediaPlayer = new MediaPlayer();
         mMediaPlayer.setLooping(false);
@@ -77,7 +79,12 @@ public class PAudioPlayer {
                 if (mOnFinishCallbackfn != null) {
                     mOnFinishCallbackfn.event();
                 }
-                //mMediaPlayer.reset();
+
+                if (!mReusePlayer) {
+                    mMediaPlayer.reset();
+                    mMediaPlayer.release();
+                    mMediaPlayer = null;
+                }
             }
         });
 

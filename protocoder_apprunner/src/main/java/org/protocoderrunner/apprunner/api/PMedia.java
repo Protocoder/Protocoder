@@ -74,7 +74,15 @@ public class PMedia extends PInterface {
     @ProtoMethod(description = "Play a sound file giving its filename", example = "media.playSound(fileName);")
     @ProtoMethodParam(params = {"fileName"})
     public PAudioPlayer playSound(String url) {
-        PAudioPlayer pAudioPlayer = new PAudioPlayer(url);
+        PAudioPlayer pAudioPlayer = new PAudioPlayer(url, false);
+
+        return pAudioPlayer;
+    }
+
+    @ProtoMethod(description = "Play a sound file giving its filename. The second parameter indicates if the player can be reused or not.", example = "media.playSound(fileName);")
+    @ProtoMethodParam(params = {"fileName", "autoFinish"})
+    public PAudioPlayer playSound(String url, boolean reuse) {
+        PAudioPlayer pAudioPlayer = new PAudioPlayer(url, reuse);
 
         return pAudioPlayer;
     }
