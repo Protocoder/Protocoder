@@ -1,4 +1,4 @@
-package org.protocoder;
+package org.protocoder.server;
 
 import android.app.AlarmManager;
 import android.app.NotificationManager;
@@ -14,12 +14,12 @@ import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
-import org.protocoder.server.ProtocoderFtpServer;
-import org.protocoder.server.ProtocoderHttpServer;
-import org.protocoder.server.ProtocoderWebsocketServer;
+import org.protocoder.ProtocoderAppHelper;
+import org.protocoder.ProtocoderAppSettings;
 import org.protocoderrunner.R;
 import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.events.Events;
+import org.protocoderrunner.project.Project;
 import org.protocoderrunner.utils.MLog;
 
 import java.io.IOException;
@@ -156,15 +156,35 @@ public class ProtocoderServerService extends Service {
     /*
     * Events
     *
+    * - Start app
     * - Stop service
-    *
     *
     */
 
 
+    // TODO call intent and kill it in an appropiate way
+    public void onEventMainThread(Events.ProjectEvent evt) {
+        // Using transaction so the view blocks
+        MLog.d(TAG, "event -> " + evt.getAction());
+
+        String action = evt.getAction();
+        if (action.equals(Events.PROJECT_RUN)) {
+            Project p = evt.getProject();
+            ProtocoderAppHelper.launchScript(getApplicationContext(), p.getFolder(), p.getName());
+        } else if (action.equals(Events.PROJECT_SAVE)) {
+            //Project p = evt.getProject();
+            //mProtocoder.protoScripts.refresh(p.getFolder(), p.getName());
+        } else if (action.equals(Events.PROJECT_NEW)) {
+            //MLog.d(TAG, "creating new project " + evt.getProject().getName());
+            //mProtocoder.protoScripts.createProject("projects", evt.getProject().getName());
+        } else if (action.equals(Events.PROJECT_UPDATE)) {
+            //mProtocoder.protoScripts.listRefresh();
+        }
+    }
+
     //stop service
     public void onEventMainThread(Events.SelectedProjectEvent evt) {
-        stopSelf();
+       // stopSelf();
     }
 
 

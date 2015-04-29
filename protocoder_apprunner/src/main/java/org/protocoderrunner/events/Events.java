@@ -24,6 +24,11 @@ import org.protocoderrunner.project.Project;
 import org.protocoderrunner.project.ProjectManager;
 
 public class Events {
+    public static final java.lang.String PROJECT_RUN = "run";
+    public static final String PROJECT_SAVE = "save";
+    public static final String PROJECT_NEW = "new";
+    public static final String PROJECT_UPDATE = "update";
+
     public static class ProjectEvent {
         private Project project;
         private String name;

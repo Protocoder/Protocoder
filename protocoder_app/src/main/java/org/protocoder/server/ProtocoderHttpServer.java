@@ -296,14 +296,9 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 
                     Project p = ProjectManager.getInstance().get(folder, name);
                     ProjectManager.getInstance().setRemoteIP(obj.getString("remoteIP"));
-                    ProjectEvent evt = new ProjectEvent(p, "run");
+
+                    ProjectEvent evt = new ProjectEvent(p, Events.PROJECT_RUN);
                     EventBus.getDefault().post(evt);
-                    MLog.i(TAG, "Running...");
-
-                    Context applicationContext = mContext.get().getApplicationContext();
-
-                    ProtocoderAppHelper.launchScript(applicationContext, folder, name);
-
 
                     // execute app
                 } else if (cmd.equals("execute_code")) {

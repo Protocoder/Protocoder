@@ -27,25 +27,32 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.support.v7.internal.widget.AdapterViewCompat;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.FrameLayout;
-import android.widget.Spinner;
 
 import org.protocoder.appinterpreter.AppRunnerCustom;
 import org.protocoder.appinterpreter.ProtocoderApp;
+import org.protocoder.qq.FolderChooserFragment;
 import org.protocoder.qq.ProjectListFragment;
+import org.protocoder.server.ProtocoderServerService;
 import org.protocoderrunner.events.Events;
-import org.protocoderrunner.project.Project;
 import org.protocoderrunner.project.ProjectManager;
+import org.protocoderrunner.utils.AndroidUtils;
 import org.protocoderrunner.utils.MLog;
 
 public class MainActivity extends ActionBarActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     protected AppRunnerCustom appRunner;
+
+    //ui
+    private Toolbar mToolbar;
     private ProjectListFragment mListFragmentBase;
+    private FolderChooserFragment mFolderChooserFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,8 +62,9 @@ public class MainActivity extends ActionBarActivity {
         /*
          * Setup the ui
          */
+        setupToolbar();
+        addProjectFolderChooser(savedInstanceState);
         addProjectListFragment(savedInstanceState);
-        addProjectFolderChooser();
 
         /*
          * init custom appRunner
@@ -95,27 +103,26 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    private void setupToolbar() {
+        // Create the action bar programmatically
+        if (!AndroidUtils.isWear(this)) {
+            mToolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(mToolbar);
+        }
+    }
+
     //Project folder chooser, ATM just a spinner
-    private void addProjectFolderChooser() {
-        Spinner spinner = (Spinner) findViewById(R.id.spinner);
-        final String[] arraySpinner = new String[]{
-                "projects", "examples",
-        };
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_dropdown_item_1line, arraySpinner);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                MLog.d(TAG, "clicked on " + arraySpinner[position]);
-                mListFragmentBase.loadFolder(arraySpinner[position]);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+    private void addProjectFolderChooser(Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+            //add script list fragment
+            FrameLayout fl = (FrameLayout) findViewById(R.id.fragmentFolderChooser);
+            mFolderChooserFragment = FolderChooserFragment.newInstance(ProjectManager.FOLDER_EXAMPLES, true);
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.add(fl.getId(), mFolderChooserFragment, String.valueOf(fl.getId()));
+            ft.commit();
+        } else {
+            // mProtocoder.protoScripts.reinitScriptList();
+        }
     }
 
     //add the project list fragment
@@ -141,6 +148,35 @@ public class MainActivity extends ActionBarActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_activity_menu, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        AdapterViewCompat.AdapterContextMenuInfo info = (AdapterViewCompat.AdapterContextMenuInfo) item.getMenuInfo();
+
+        int itemId = item.getItemId();
+        if (itemId == android.R.id.home) {
+            return true;
+        } else if (itemId == R.id.menu_new) {
+            //createProjectDialog();
+            return true;
+        } else if (itemId == R.id.menu_help) {
+            //this.showHelp(true);
+            return true;
+        } else if (itemId == R.id.menu_settings) {
+            //Protocoder.getInstance(this).app.showSettings(true);
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
     }
@@ -150,31 +186,18 @@ public class MainActivity extends ActionBarActivity {
     protected void onResume() {
         super.onResume();
 
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
     }
-
-    // TODO call intent and kill it in an appropiate way
-    public void onEventMainThread(Events.ProjectEvent evt) {
-        // Using transaction so the view blocks
-        MLog.d(TAG, "event -> " + evt.getAction());
-
-        if (evt.getAction() == "run") {
-            Project p = evt.getProject();
-            //mProtocoder.protoScripts.run(p.getFolder(), p.getName());
-        }
-    }
-
 
     // execute lines
     public void onEventMainThread(Events.ExecuteCodeEvent evt) {

@@ -39,7 +39,7 @@
 
         </activity>
 
-        <service android:name=".ProtocoderServerService"></service>
+        <service android:name=".server.ProtocoderServerService"></service>
     </application>
 
 

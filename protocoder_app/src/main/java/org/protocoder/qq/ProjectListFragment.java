@@ -45,7 +45,7 @@ import java.util.ArrayList;
 @SuppressLint("NewApi")
 public class ProjectListFragment extends BaseFragment {
 
-    private String TAG = "ProjectListFragment";
+    private String TAG = ProjectListFragment.class.getSimpleName();
     private Context mContext;
 
     protected FitRecyclerView mGrid;
@@ -234,7 +234,9 @@ public class ProjectListFragment extends BaseFragment {
      */
     public void onEventMainThread(ProjectEvent evt) {
         if (evt.getAction() == "run") {
-            projectRefresh(evt.getProject().getName());
+            Project p = evt.getProject();
+            projectRefresh(p.getName());
+            MLog.d(TAG, "Run feedback" + p.getName());
         }
     }
 

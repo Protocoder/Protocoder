@@ -14,20 +14,19 @@
         android:layout_width="match_parent"
     ></include>
 
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_below="@id/toolbar"
-        android:layout_width="match_parent"
+    <FrameLayout
+        android:id="@+id/fragmentFolderChooser"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-      />
-
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/toolbar"/>
 
     <FrameLayout
         android:id="@+id/fragmentScriptList"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/spinner"/>
+        android:layout_below="@+id/fragmentFolderChooser"/>
 
 
     <LinearLayout

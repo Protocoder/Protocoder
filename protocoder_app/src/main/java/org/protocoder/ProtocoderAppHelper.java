@@ -29,7 +29,6 @@ import org.protocoderrunner.project.Project;
 
 public class ProtocoderAppHelper {
 
-
     public static void launchScript(Context context, String folder, String name) {
         if (name.toLowerCase().endsWith("service")) {
             Intent intent = new Intent(context, AppRunnerService.class);
