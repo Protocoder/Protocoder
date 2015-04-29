@@ -39,6 +39,7 @@ import org.protocoderrunner.apprunner.api.media.PAudioPlayer;
 import org.protocoderrunner.apprunner.api.media.PAudioRecorder;
 import org.protocoderrunner.apprunner.api.media.PMidi;
 import org.protocoderrunner.apprunner.api.media.PPureData;
+import org.protocoderrunner.apprunner.api.media.PWave;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.media.Audio;
 import org.protocoderrunner.media.AudioServicePd;
@@ -313,6 +314,11 @@ public class PMedia extends PInterface {
         IntentFilter filter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
         headsetPluggedReceiver = new HeadSetReceiver();
         getContext().registerReceiver(headsetPluggedReceiver, filter);
+    }
+
+    public PWave createWave() {
+        PWave pWave = new PWave();
+        return pWave;
     }
 
     private class HeadSetReceiver extends BroadcastReceiver {
