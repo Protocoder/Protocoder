@@ -78,6 +78,8 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.activation.DataHandler;
 import javax.mail.Message;
@@ -93,7 +95,8 @@ import javax.mail.util.ByteArrayDataSource;
 
 public class PNetwork extends PInterface {
 
-    private final String TAG = "PNetwork";
+    private final String TAG = PNetwork.class.getSimpleName();
+
     public PBluetooth bluetooth = null;
     private PWebSocketServer PWebsockerServer;
 
@@ -666,16 +669,37 @@ public class PNetwork extends PInterface {
 
     }
 
+    public interface PingCallback {
+        void event(float ms);
+    }
+
 
     @ProtoMethod(description = "Ping mContext Ip address", example = "")
-    @ProtoMethodParam(params = {"ip", "function(result)"})
-    public ExecuteCmd ping(final String where, final ExecuteCmd.ExecuteCommandCB callbackfn) {
-//        mHandler.post(new Runnable() {
-//            @Override
-//            public void run() {
-        return new ExecuteCmd("/system/bin/ping -c 8 " + where, callbackfn);
-        //       }
-        //   });
+    @ProtoMethodParam(params = {"ip", "function(time)"})
+    public void ping(final String where, final PingCallback callbackfn) {
+       mHandler.post(new Runnable() {
+           @Override
+           public void run() {
+               final Pattern pattern = Pattern.compile("time=(\\d.+)\\s*ms");
+               final Matcher[] m = {null};
+
+               new ExecuteCmd("/system/bin/ping -c 8 " + where, new ExecuteCmd.ExecuteCommandCB() {
+                   @Override
+                   public void event(String buffer) {
+                       //MLog.d(TAG, pattern.toString() + "" + buffer);
+
+                       m[0] = pattern.matcher(buffer);
+                       if (m[0].find()) {
+                           callbackfn.event(Float.parseFloat(m[0].group(1)));
+                       } else {
+                           callbackfn.event(-1);
+                           //MLog.d(TAG, "" + -1);
+                       }
+
+                   }
+               }).start();
+           }
+       });
     }
 
 
