@@ -139,7 +139,6 @@ public class MainActivity extends ActionBarActivity {
         } else {
             // mProtocoder.protoScripts.reinitScriptList();
         }
-
     }
 
     private void showIntroduction(Bundle savedInstanceState) {
@@ -198,12 +197,9 @@ public class MainActivity extends ActionBarActivity {
         super.onSaveInstanceState(outState);
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
-
-
     }
 
     @Override
