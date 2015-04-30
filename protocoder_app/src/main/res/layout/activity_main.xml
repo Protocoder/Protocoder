@@ -67,6 +67,13 @@
         android:layout_below="@+id/toolbar"/>
 
     <FrameLayout
+        android:id="@+id/fragmentIntroduction"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/toolbar"/>
+
+    <FrameLayout
         android:id="@+id/fragmentLogOverlay"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

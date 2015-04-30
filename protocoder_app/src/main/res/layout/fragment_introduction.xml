@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragmentHelp"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/blacktransparent"
+    android:orientation="vertical" >
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/page_one"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+            <TextView
+                android:text="PAGE ONE IN"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="#fff"
+                android:textSize="24dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/page_two"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+            <TextView
+                android:text="PAGE TWO IN"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="#fff"
+                android:textSize="24dp"/>
+        </LinearLayout>
+
+    </android.support.v4.view.ViewPager>
+
+
+</RelativeLayout>

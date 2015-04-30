@@ -37,6 +37,7 @@ import android.widget.FrameLayout;
 import org.protocoder.appinterpreter.AppRunnerCustom;
 import org.protocoder.appinterpreter.ProtocoderApp;
 import org.protocoder.qq.FolderChooserFragment;
+import org.protocoder.qq.IntroductionFragment;
 import org.protocoder.qq.ProjectListFragment;
 import org.protocoder.server.ProtocoderServerService;
 import org.protocoderrunner.events.Events;
@@ -65,6 +66,7 @@ public class MainActivity extends ActionBarActivity {
         setupToolbar();
         addProjectFolderChooser(savedInstanceState);
         addProjectListFragment(savedInstanceState);
+        showIntroduction(savedInstanceState);
 
         /*
          * init custom appRunner
@@ -138,6 +140,21 @@ public class MainActivity extends ActionBarActivity {
             // mProtocoder.protoScripts.reinitScriptList();
         }
 
+    }
+
+    private void showIntroduction(Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+            //add script list fragment
+            FrameLayout fl = (FrameLayout) findViewById(R.id.fragmentIntroduction);
+
+            IntroductionFragment introductionFragment = IntroductionFragment.newInstance();
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.add(fl.getId(), introductionFragment, String.valueOf(fl.getId()));
+            ft.commit();
+
+        } else {
+            // mProtocoder.protoScripts.reinitScriptList();
+        }
     }
 
     private void startServers() {
