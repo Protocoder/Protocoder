@@ -12,8 +12,6 @@
 *
 */
 
-
-util.delay(5000, function) {
+util.loop(5000, function() {
 	device.vibrate(500);
-
 }).start();
