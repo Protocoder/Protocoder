@@ -66,7 +66,7 @@ public class PListAdapter extends BaseAdapter {
             customView = new PListItem(mContext);
 
             customView.setText(items.get(position).getName());
-            customView.setImage(R.drawable.app_icon);
+            customView.setImage(R.drawable.protocoder_icon);
 
             //TODO activate this
             ImageView imageView = null; //(ImageView) customView.findViewById(R.id.card_menu_button);

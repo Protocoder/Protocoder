@@ -56,10 +56,10 @@ public class ProtocoderServerService extends Service {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, stopIntent, 0);
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.app_icon)
+                .setSmallIcon(R.drawable.protocoder_icon)
                 .setContentTitle(scriptName).setContentText("Running service: " + scriptFolder + " > " + scriptName)
                 .setOngoing(false)
-                .addAction(R.drawable.protocoder_icon, "stop", pendingIntent)
+                .addAction(R.drawable.ic_action_stop, "stop", pendingIntent)
                 .setDeleteIntent(pendingIntent);
 
         // Creates an explicit intent for an Activity in your app

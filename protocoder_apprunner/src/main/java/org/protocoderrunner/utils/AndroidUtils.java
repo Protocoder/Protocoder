@@ -211,7 +211,7 @@ public class AndroidUtils {
 
             ViewOutlineProvider viewOutlineProvider = null;
 
-            MLog.d("qq", "is android L");
+            //MLog.d("qq", "is android L");
             if (type == CLIP_RECT) {
 
                 viewOutlineProvider = new ViewOutlineProvider() {

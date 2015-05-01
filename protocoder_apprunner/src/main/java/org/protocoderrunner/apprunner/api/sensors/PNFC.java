@@ -18,13 +18,13 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Locale;
 
-public class PNFC extends PInterface {
+public class PNfc extends PInterface {
 
     public static String nfcMsg = null;
     private NdefMessage messageToWrite;
     private onNFCCB onNFCfn;
 
-    public PNFC(AppRunner appRunner) {
+    public PNfc(AppRunner appRunner) {
         super(appRunner);
     }
 
@@ -37,15 +37,14 @@ public class PNFC extends PInterface {
 
     @ProtoMethod(description = "Gives back data when mContext NFC tag is approached", example = "")
     @ProtoMethodParam(params = {"function(id, data)"})
-    public void onData(final onNFCCB fn) {
+    public void onNewData(final onNFCCB fn) {
 
-//TODO
-//        getActivity().addNFCReadListener(new onNFCListener() {
-//            @Override
-//            public void onNewTag(String id, String data) {
-//                onNFCfn.event(id, data);
-//            }
-//        });
+        getActivity().addNFCReadListener(new onNFCListener() {
+            @Override
+            public void onNewTag(String id, String data) {
+                onNFCfn.event(id, data);
+            }
+        });
 
         getActivity().initializeNFC();
 
@@ -60,18 +59,16 @@ public class PNFC extends PInterface {
 
     @ProtoMethod(description = "Write into mContext NFC tag the given text", example = "")
     @ProtoMethodParam(params = {"function()"})
-    public void writeNfc(String data, final writeNFCCB fn) {
-        PNFC.nfcMsg = data;
+    public void write(String data, final writeNFCCB fn) {
+        PNfc.nfcMsg = data;
         getActivity().initializeNFC();
 
-//TODO
-//        getActivity().addNFCWrittenListener(new onNFCWrittenListener() {
-//
-//            @Override
-//            public void onNewTag() {
-//                fn.event(true);
-//            }
-//        });
+        getActivity().addNFCWrittenListener(new onNFCWrittenListener() {
+            @Override
+            public void onNewTag() {
+                fn.event(true);
+            }
+        });
 
         // Construct the data to write to the tag
         // Should be of the form [relay/group]-[rid/gid]-[cmd]
@@ -130,41 +127,24 @@ public class PNFC extends PInterface {
 
                 // Make sure the tag is writable
                 if (!ndef.isWritable()) {
-                    // DialogUtils.displayErrorDialog(mainScriptContext,
-                    // R.string.nfcReadOnlyErrorTitle,
-                    // R.string.nfcReadOnlyError);
                     return false;
                 }
 
                 // Check if there's enough space on the tag for the message
                 int size = message.toByteArray().length;
                 if (ndef.getMaxSize() < size) {
-                    // DialogUtils.displayErrorDialog(mainScriptContext,
-                    // R.string.nfcBadSpaceErrorTitle,
-                    // R.string.nfcBadSpaceError);
                     return false;
                 }
 
                 try {
                     // Write the data to the tag
                     ndef.writeNdefMessage(message);
-
-                    // DialogUtils.displayInfoDialog(mainScriptContext,
-                    // R.string.nfcWrittenTitle, R.string.nfcWritten);
                     return true;
                 } catch (TagLostException tle) {
-                    // DialogUtils.displayErrorDialog(mainScriptContext,
-                    // R.string.nfcTagLostErrorTitle, R.string.nfcTagLostError);
                     return false;
                 } catch (IOException ioe) {
-                    // DialogUtils.displayErrorDialog(mainScriptContext,
-                    // R.string.nfcFormattingErrorTitle,
-                    // R.string.nfcFormattingError);
                     return false;
                 } catch (FormatException fe) {
-                    // DialogUtils.displayErrorDialog(mainScriptContext,
-                    // R.string.nfcFormattingErrorTitle,
-                    // R.string.nfcFormattingError);
                     return false;
                 }
                 // If the tag is not formatted, format it with the message
@@ -174,36 +154,19 @@ public class PNFC extends PInterface {
                     try {
                         format.connect();
                         format.format(message);
-
-                        // DialogUtils.displayInfoDialog(mainScriptContext,
-                        // R.string.nfcWrittenTitle, R.string.nfcWritten);
                         return true;
                     } catch (TagLostException tle) {
-                        // DialogUtils
-                        // .displayErrorDialog(mainScriptContext,
-                        // R.string.nfcTagLostErrorTitle,
-                        // R.string.nfcTagLostError);
                         return false;
                     } catch (IOException ioe) {
-                        // DialogUtils.displayErrorDialog(mainScriptContext,
-                        // R.string.nfcFormattingErrorTitle,
-                        // R.string.nfcFormattingError);
                         return false;
                     } catch (FormatException fe) {
-                        // DialogUtils.displayErrorDialog(mainScriptContext,
-                        // R.string.nfcFormattingErrorTitle,
-                        // R.string.nfcFormattingError);
                         return false;
                     }
                 } else {
-                    // DialogUtils.displayErrorDialog(mainScriptContext,
-                    // R.string.nfcNoNdefErrorTitle, R.string.nfcNoNdefError);
                     return false;
                 }
             }
         } catch (Exception e) {
-            // DialogUtils.displayErrorDialog(mainScriptContext,
-            // R.string.nfcUnknownErrorTitle, R.string.nfcUnknownError);
         }
 
         return false;

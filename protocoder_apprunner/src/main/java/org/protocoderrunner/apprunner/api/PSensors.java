@@ -20,15 +20,15 @@
 
 package org.protocoderrunner.apprunner.api;
 
-import android.content.Context;
-
 import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.apprunner.AppRunnerFragment;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.sensors.PAccelerometer;
 import org.protocoderrunner.apprunner.api.sensors.PGPS;
 import org.protocoderrunner.apprunner.api.sensors.PGyroscope;
 import org.protocoderrunner.apprunner.api.sensors.PLightIntensity;
 import org.protocoderrunner.apprunner.api.sensors.PMagnetic;
+import org.protocoderrunner.apprunner.api.sensors.PNfc;
 import org.protocoderrunner.apprunner.api.sensors.POrientation;
 import org.protocoderrunner.apprunner.api.sensors.PPressure;
 import org.protocoderrunner.apprunner.api.sensors.PProximity;
@@ -46,6 +46,7 @@ public class PSensors extends PInterface {
     public final PPressure pressure;
     public final PProximity proximity;
     public final PStep stepDetector;
+    public PNfc nfc;
 
     public PSensors(AppRunner appRunner) {
         super(appRunner);
@@ -60,7 +61,14 @@ public class PSensors extends PInterface {
         pressure = new PPressure(appRunner);
         proximity = new PProximity(appRunner);
         stepDetector = new PStep(appRunner);
+    }
 
+    @Override
+    public void initForParentFragment(AppRunnerFragment fragment) {
+        super.initForParentFragment(fragment);
+
+        nfc = new PNfc(getAppRunner());
+        nfc.initForParentFragment(getFragment());
     }
 
     @Override

@@ -20,7 +20,7 @@ public class AppRunnerCustom extends AppRunner {
 
     public AppRunnerCustom initInterpreter() {
         super.initInterpreter();
-        interp.interpreter.addObjectToInterface("protocoderApp", protocoderApp);
+        interp.addJavaObjectToJs("protocoderApp", protocoderApp);
 
         return this;
     }

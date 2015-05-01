@@ -61,7 +61,7 @@ public class PPlotView extends View implements PViewInterface {
     private float mHeight;
     private int mNumPoints;
     private final int mCurrentPosition = 0;
-    private int mDefinition = 2;
+    private int mDefinition = 1;
     private float mMinBoundary;
     private float mMaxBoundary;
     private boolean mReady = false;
@@ -355,7 +355,7 @@ public class PPlotView extends View implements PViewInterface {
 
         MLog.d(TAG, p.plotValues.size() + " " + values.length);
 
-        for (int i = 0; i < values.length; i++) {
+        for (int i = 0; i < p.plotValues.size(); i++) {
             p.plotValues.set(i, values[i]);
             // p.plotValues.clear();
             // p.plotValues.set

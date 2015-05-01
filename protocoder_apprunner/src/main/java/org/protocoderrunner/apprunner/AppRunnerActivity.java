@@ -54,7 +54,7 @@ import org.protocoderrunner.apprunner.api.PDevice;
 import org.protocoderrunner.apprunner.api.PMedia;
 import org.protocoderrunner.apprunner.api.PUI;
 import org.protocoderrunner.apprunner.api.network.PBluetooth;
-import org.protocoderrunner.apprunner.api.sensors.PNFC;
+import org.protocoderrunner.apprunner.api.sensors.PNfc;
 import org.protocoderrunner.apprunner.api.widgets.PPadView;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.events.Events;
@@ -74,8 +74,8 @@ public class AppRunnerActivity extends BaseActivity {
     private BroadcastReceiver mIntentReceiver;
 
     private PDevice.onSmsReceivedListener onSmsReceivedListener;
-    private PNFC.onNFCListener onNFCListener;
-    private PNFC.onNFCWrittenListener onNFCWrittenListener;
+    private PNfc.onNFCListener onNFCListener;
+    private PNfc.onNFCWrittenListener onNFCWrittenListener;
     private PBluetooth.onBluetoothListener onBluetoothListener;
     private PMedia.onVoiceRecognitionListener onVoiceRecognitionListener;
 
@@ -346,6 +346,7 @@ public class AppRunnerActivity extends BaseActivity {
             mPendingIntent = PendingIntent.getActivity(this, 0,
                     new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 
+
             // Setup an intent filter for all MIME based dispatches
             IntentFilter ndef = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
             try {
@@ -375,13 +376,13 @@ public class AppRunnerActivity extends BaseActivity {
 
             String nfcID = StrUtils.bytetostring(tag.getId());
 
-            // if there is mContext message waiting to be written
-            if (PNFC.nfcMsg != null) {
-                MLog.d(TAG, "->" + PNFC.nfcMsg);
-                PNFC.writeTag(this, tag, PNFC.nfcMsg);
+            // if there is a message waiting to be written
+            if (PNfc.nfcMsg != null) {
+                MLog.d(TAG, "->" + PNfc.nfcMsg);
+                PNfc.writeTag(this, tag, PNfc.nfcMsg);
                 onNFCWrittenListener.onNewTag();
                 onNFCWrittenListener = null;
-                PNFC.nfcMsg = null;
+                PNfc.nfcMsg = null;
 
                 // read the nfc tag info
             } else {
@@ -556,11 +557,11 @@ public class AppRunnerActivity extends BaseActivity {
         onSmsReceivedListener = onSmsReceivedListener2;
     }
 
-    public void addNFCReadListener(PNFC.onNFCListener onNFCListener2) {
+    public void addNFCReadListener(PNfc.onNFCListener onNFCListener2) {
         onNFCListener = onNFCListener2;
     }
 
-    public void addNFCWrittenListener(PNFC.onNFCWrittenListener onNFCWrittenListener2) {
+    public void addNFCWrittenListener(PNfc.onNFCWrittenListener onNFCWrittenListener2) {
         onNFCWrittenListener = onNFCWrittenListener2;
     }
 

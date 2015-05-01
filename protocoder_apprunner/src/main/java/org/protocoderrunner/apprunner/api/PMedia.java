@@ -39,6 +39,7 @@ import org.protocoderrunner.apprunner.api.media.PAudioPlayer;
 import org.protocoderrunner.apprunner.api.media.PAudioRecorder;
 import org.protocoderrunner.apprunner.api.media.PMidi;
 import org.protocoderrunner.apprunner.api.media.PPureData;
+import org.protocoderrunner.apprunner.api.media.PWave;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.media.Audio;
 import org.protocoderrunner.media.AudioServicePd;
@@ -72,7 +73,15 @@ public class PMedia extends PInterface {
     @ProtoMethod(description = "Play a sound file giving its filename", example = "media.playSound(fileName);")
     @ProtoMethodParam(params = {"fileName"})
     public PAudioPlayer playSound(String url) {
-        PAudioPlayer pAudioPlayer = new PAudioPlayer(getAppRunner(), url);
+        PAudioPlayer pAudioPlayer = new PAudioPlayer(getAppRunner(), url, false);
+
+        return pAudioPlayer;
+    }
+
+    @ProtoMethod(description = "Play a sound file giving its filename. The second parameter indicates if the player can be reused or not.", example = "media.playSound(fileName);")
+    @ProtoMethodParam(params = {"fileName", "autoFinish"})
+    public PAudioPlayer playSound(String url, boolean reuse) {
+        PAudioPlayer pAudioPlayer = new PAudioPlayer(getAppRunner(), url, reuse);
 
         return pAudioPlayer;
     }
@@ -302,6 +311,11 @@ public class PMedia extends PInterface {
         IntentFilter filter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
         headsetPluggedReceiver = new HeadSetReceiver();
         getContext().registerReceiver(headsetPluggedReceiver, filter);
+    }
+
+    public PWave createWave() {
+        PWave pWave = new PWave(getAppRunner());
+        return pWave;
     }
 
     private class HeadSetReceiver extends BroadcastReceiver {

@@ -33,7 +33,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class ExecuteCmd extends PInterface {
+public class ExecuteCmd {
 
     private static final String TAG = "ExecuteCmd";
 
@@ -47,8 +47,7 @@ public class ExecuteCmd extends PInterface {
     private Handler mHandler;
     private Thread mThread;
 
-    public ExecuteCmd(AppRunner appRunner, final String cmd, final ExecuteCommandCB callbackfn) {
-        super(appRunner);
+    public ExecuteCmd(final String cmd, final ExecuteCommandCB callbackfn) {
         this.cmd = cmd;
         this.callbackfn = callbackfn;
     }

@@ -24,7 +24,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
@@ -32,13 +31,11 @@ import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
-import org.protocoderrunner.media.Audio;
 import org.protocoderrunner.media.AudioServicePd;
 import org.protocoderrunner.utils.MLog;
 import org.puredata.android.service.PdService;
 import org.puredata.android.utils.PdUiDispatcher;
 import org.puredata.core.PdBase;
-import org.puredata.core.utils.PdDispatcher;
 
 import java.io.File;
 import java.util.Arrays;
@@ -46,6 +43,8 @@ import java.util.Arrays;
 public class PPureData extends PInterface {
 
     private String TAG = "PPureData";
+    private PdPatchCallback mCallbackfn;
+    private PdUiDispatcher receiver;
 
     public PPureData(AppRunner appRunner) {
         super(appRunner);
@@ -54,55 +53,51 @@ public class PPureData extends PInterface {
 
 
     // --------- initPDPatch ---------//
-    public interface initPDPatchCB {
+    public interface PdPatchCallback {
         void event(PDReturn o);
     }
 
     class PDReturn {
-        String type;
-        protected String source;
-        protected Object data;
+        public String type;
+        public String source;
+        public Object value;
 
     }
 
     public void initPatch(String fileName) {
         // create and install the dispatcher
-        PdDispatcher dispatcher = new PdUiDispatcher() {
+//        PdDispatcher dispatcher = new PdUiDispatcher() {
+//
+//            @Override
+//            public void print(String s) {
+//                Log.i("Pd print", s);
+//            }
+//
+//        };
 
-            @Override
-            public void print(String s) {
-                Log.i("Pd print", s);
+        receiver = new PdUiDispatcher() {
+
+            public void sendBack(final PDReturn o) {
+
+                if (mCallbackfn != null) {
+                    //mHandler.post(new Runnable() {
+                    //    @Override
+                    //    public void run() {
+                    mCallbackfn.event(o);
+                    //    }
+                    //});
+                }
+
             }
 
-        };
-
-        PdBase.setReceiver(dispatcher);
-        PdBase.subscribe("android");
-
-        String filePath = getAppRunner().project.getStoragePath() + File.separator + fileName;
-        AudioServicePd.file = filePath;
-
-        Intent intent = new Intent(getContext(), PdService.class);
-        (getContext()).bindService(intent, AudioServicePd.pdConnection, Context.BIND_AUTO_CREATE);
-
-        initSystemServices();
-
-        getAppRunner().whatIsRunning.add(AudioServicePd.pdConnection);
-    }
-
-    public PPureData onNewData(final initPDPatchCB callbackfn) {
-
-        PdUiDispatcher receiver = new PdUiDispatcher() {
-
             @Override
             public void print(String s) {
-                MLog.d(TAG, "pd >>" + s);
+                MLog.d(TAG, "pd >> " + s);
 
-                PDReturn o = new PDReturn();
+                final PDReturn o = new PDReturn();
                 o.type = "print";
-                o.data = s;
-
-                callbackfn.event(o);
+                o.value = s;
+                sendBack(o);
             }
 
             @Override
@@ -113,7 +108,7 @@ public class PPureData extends PInterface {
                 o.type = "bang";
                 o.source = source;
 
-                callbackfn.event(o);
+                sendBack(o);
             }
 
             @Override
@@ -123,9 +118,9 @@ public class PPureData extends PInterface {
                 PDReturn o = new PDReturn();
                 o.type = "float";
                 o.source = source;
-                o.data = x;
+                o.value = x;
 
-                callbackfn.event(o);
+                sendBack(o);
             }
 
             @Override
@@ -140,9 +135,9 @@ public class PPureData extends PInterface {
                 PDReturn o = new PDReturn();
                 o.type = "list";
                 o.source = source;
-                o.data = jsonArray;
+                o.value = jsonArray;
 
-                callbackfn.event(o);
+                sendBack(o);
             }
 
             @Override
@@ -157,9 +152,9 @@ public class PPureData extends PInterface {
                 PDReturn o = new PDReturn();
                 o.type = "message";
                 o.source = source;
-                o.data = jsonArray;
+                o.value = jsonArray;
 
-                callbackfn.event(o);
+                sendBack(o);
             }
 
             @Override
@@ -169,32 +164,53 @@ public class PPureData extends PInterface {
                 PDReturn o = new PDReturn();
                 o.type = "symbol";
                 o.source = source;
-                o.data = symbol;
+                o.value = symbol;
 
-                callbackfn.event(o);
+                sendBack(o);
             }
 
         };
 
+        //PdBase.setReceiver(dispatcher);
+        PdBase.subscribe("android");
+        PdBase.setReceiver(receiver);
 
-        //PdBase.setReceiver(receiver);
-        // start pure data sound engine
+        String filePath = getAppRunner().project.getStoragePath() + File.separator + fileName;
+        AudioServicePd.file = filePath;
 
+        Intent intent = new Intent(getContext(), PdService.class);
+        (getContext()).bindService(intent, AudioServicePd.pdConnection, Context.BIND_AUTO_CREATE);
+
+        initSystemServices();
+
+        getAppRunner().whatIsRunning.add(this);
+        getAppRunner().whatIsRunning.add(AudioServicePd.pdConnection);
+    }
+
+    public PPureData onNewData(final PdPatchCallback callbackfn) {
+        mCallbackfn = callbackfn;
 
         return this;
     }
 
+    public void listenTo(String m) {
+        receiver.addListener(m, null);
+    }
+
+    public void removeListener(String m) {
+        receiver.removeListener(m, null);
+    }
 
     @ProtoMethod(description = "Sends a message to PdLib", example = "")
-    @ProtoMethodParam(params = {"message", "value"})
-    public void sendMessage(String message, String value) {
-        if (value.isEmpty()) {
-            PdBase.sendBang(message);
-        } else if (value.matches("[0-9]+")) {
-            PdBase.sendFloat(message, Float.parseFloat(value));
-        } else {
-            PdBase.sendSymbol(message, value);
-        }
+    @ProtoMethodParam(params = {"recv", "value"})
+    public void sendMessage(String recv, String value) {
+        PdBase.sendMessage(recv, value);
+    }
+
+    @ProtoMethod(description = "Sends a symbol to PdLib", example = "")
+    @ProtoMethodParam(params = {"recv", "value"})
+    public void sendSymbol(String recv, String value) {
+        PdBase.sendSymbol(recv, value);
     }
 
 
@@ -247,7 +263,9 @@ public class PPureData extends PInterface {
     }
 
     public void stop() {
+        receiver.release();
         PdBase.release();
+        getContext().unbindService(AudioServicePd.pdConnection);
     }
 
 

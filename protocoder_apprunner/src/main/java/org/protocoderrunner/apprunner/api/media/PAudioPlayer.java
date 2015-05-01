@@ -34,7 +34,8 @@ import java.io.IOException;
 
 public class PAudioPlayer extends PInterface {
 
-    private final String TAG = "PAudioPlayer";
+    private final String TAG = PAudioPlayer.class.getSimpleName();
+    private boolean mReusePlayer = true;
     private MediaPlayer mMediaPlayer;
     private OnFinishCB mOnFinishCallbackfn;
 
@@ -46,8 +47,11 @@ public class PAudioPlayer extends PInterface {
         void event();
     }
 
-    public PAudioPlayer(AppRunner appRunner, String url) {
+    public PAudioPlayer(AppRunner appRunner, String url, boolean reusePlayer) {
         super(appRunner);
+        getAppRunner().whatIsRunning.add(this);
+
+        mReusePlayer = reusePlayer;
 
         mMediaPlayer = new MediaPlayer();
         mMediaPlayer.setLooping(false);
@@ -77,7 +81,12 @@ public class PAudioPlayer extends PInterface {
                 if (mOnFinishCallbackfn != null) {
                     mOnFinishCallbackfn.event();
                 }
-                //mMediaPlayer.reset();
+
+                if (!mReusePlayer) {
+                    mMediaPlayer.reset();
+                    mMediaPlayer.release();
+                    mMediaPlayer = null;
+                }
             }
         });
 
@@ -101,7 +110,6 @@ public class PAudioPlayer extends PInterface {
             e.printStackTrace();
         }
         //mMediaPlayer.setVolume(100, 100);
-
     }
 
 

@@ -40,6 +40,8 @@ import android.graphics.SweepGradient;
 import android.graphics.Typeface;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
@@ -60,9 +62,8 @@ import static android.graphics.Shader.TileMode;
 public class PCanvas extends View implements PViewInterface {
 
     private static final String TAG = PCanvas.class.getSimpleName();
-
     private AppRunner mAppRunner;
-    private final Context mContext;
+    private Context mContext;
 
     public PorterDuff.Mode FILTER_ADD = PorterDuff.Mode.ADD;
     public PorterDuff.Mode FILTER_XOR = PorterDuff.Mode.XOR;
@@ -111,6 +112,8 @@ public class PCanvas extends View implements PViewInterface {
     private int mWidth;
     private int mHeight;
 
+    private final Rect textBounds = new Rect();
+
 
     public PCanvas(AppRunner appRunner) {
         super(appRunner.getAppContext());
@@ -142,7 +145,7 @@ public class PCanvas extends View implements PViewInterface {
         void onTouch(float x, float y);
     }
 
-    private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    //private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Canvas mCanvas;
     private Bitmap mCurrentBmp;
     private Vector<Layer> mLayerFifo;
@@ -161,12 +164,11 @@ public class PCanvas extends View implements PViewInterface {
         mPaintStroke.setAntiAlias(true);
 
         mPaintBackground = new Paint();
-
     }
 
     public void initLayers() {
         //initLayers
-        MLog.d(TAG, "initLayers");
+        //MLog.d(TAG, "initLayers");
 
         mLayerFifo = new Vector<Layer>();
 
@@ -178,14 +180,14 @@ public class PCanvas extends View implements PViewInterface {
         mCanvas = new Canvas(mCurrentBmp);
         draw(mCanvas);
         viewIsInit = true;
-        MLog.d(TAG, "viewIsInit " + viewIsInit);
+        //MLog.d(TAG, "viewIsInit " + viewIsInit);
     }
 
 
     @Override
     protected synchronized void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        MLog.d(TAG, "onMeasure");
+        //MLog.d(TAG, "onMeasure");
 
         setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
     }
@@ -193,7 +195,7 @@ public class PCanvas extends View implements PViewInterface {
     //on draw
     @Override
     protected synchronized void onDraw(Canvas c) {
-        MLog.d(TAG, "onDraw " + viewIsInit);
+        //MLog.d(TAG, "onDraw " + viewIsInit);
         if (viewIsInit) {
             super.onDraw(c);
 
@@ -234,6 +236,7 @@ public class PCanvas extends View implements PViewInterface {
         }
 
         PUtil util = new PUtil(mAppRunner);
+
         loop = util.loop(ms, new PLooper.LooperCB() {
             @Override
             public void event() {
@@ -270,15 +273,13 @@ public class PCanvas extends View implements PViewInterface {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
 
-        MLog.d(TAG, "onAttachedToWindow");
-
-
+        //.d(TAG, "onAttachedToWindow");
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        MLog.d(TAG, "onSizeChanged " + getWidth() + " " + getHeight());
+        //MLog.d(TAG, "onSizeChanged " + getWidth() + " " + getHeight());
 
         //enable this
         //Bitmap.Config conf = Bitmap.Config.ARGB_8888;
@@ -294,14 +295,14 @@ public class PCanvas extends View implements PViewInterface {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        MLog.d(TAG, "onLayout");
+        //MLog.d(TAG, "onLayout");
 
         //init();
     }
 
     @Override
     protected void onDetachedFromWindow() {
-        MLog.d(TAG, "onDetachedFromwindow");
+        //MLog.d(TAG, "onDetachedFromwindow");
 
         stop();
         super.onDetachedFromWindow();
@@ -488,6 +489,14 @@ public class PCanvas extends View implements PViewInterface {
         return this;
     }
 
+    public void drawTextCentered(String text){
+        int cx = mCanvas.getWidth() / 2;
+        int cy = mCanvas.getHeight() / 2;
+
+        mPaintFill.getTextBounds(text, 0, text.length(), textBounds);
+        mCanvas.drawText(text, cx - textBounds.exactCenterX(), cy - textBounds.exactCenterY(), mPaintFill);
+    }
+
 
     @ProtoMethod(description = "Load an image", example = "")
     @ProtoMethodParam(params = {"imagePath"})
@@ -551,6 +560,15 @@ public class PCanvas extends View implements PViewInterface {
         return this;
     }
 
+    @ProtoMethod(description = "Sets the filling color", example = "")
+    @ProtoMethodParam(params = {"hex"})
+    public PCanvas fill(String hex) {
+        mPaintFill.setStyle(Paint.Style.FILL);
+        mPaintFill.setColor(Color.parseColor(hex));
+        fillOn = true;
+
+        return this;
+    }
 
     @ProtoMethod(description = "Removes the filling color", example = "")
     @ProtoMethodParam(params = {})
@@ -575,6 +593,16 @@ public class PCanvas extends View implements PViewInterface {
     @ProtoMethodParam(params = {"r", "g", "b"})
     public PCanvas stroke(int r, int g, int b) {
         stroke(r, g, b, 255);
+        strokeOn = true;
+
+        return this;
+    }
+
+    @ProtoMethod(description = "Sets the stroke color", example = "")
+    @ProtoMethodParam(params = {"hex"})
+    public PCanvas stroke(String c) {
+        mPaintStroke.setStyle(Paint.Style.STROKE);
+        mPaintStroke.setColor(Color.parseColor(c));
         strokeOn = true;
 
         return this;
@@ -605,6 +633,14 @@ public class PCanvas extends View implements PViewInterface {
         return this;
     }
 
+//    @ProtoMethod(description = "Sets a stroke join", example = "")
+//    @ProtoMethodParam(params = {"join"})
+//    public PCanvas strokeJoin(Paint.Join join) {
+//        mPaintStroke.setStrokeJoin(Paint.Join.ROUND);
+//
+//        return this;
+//    }
+
 
     @ProtoMethod(description = "Sets a given font", example = "")
     @ProtoMethodParam(params = {"typeface"})
@@ -621,6 +657,27 @@ public class PCanvas extends View implements PViewInterface {
     public PCanvas textSize(int size) {
         mPaintFill.setTextSize(size);
         mPaintStroke.setTextSize(size);
+
+        return this;
+    }
+
+    public PCanvas textType() {
+        mPaintFill.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+        mPaintStroke.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+
+        return this;
+    }
+
+    public PCanvas textAlign(Paint.Align alignment) {
+        mPaintFill.setTextAlign(alignment);
+        mPaintStroke.setTextAlign(alignment);
+
+        return this;
+    }
+
+    public PCanvas textSpacing(float spacing) {
+        //mPaintFill.setLetterSpacing(spacing);
+        //mPaintStroke.setLetterSpacing(spacing);
 
         return this;
     }
@@ -852,7 +909,7 @@ public class PCanvas extends View implements PViewInterface {
     }
 
     private Layer createNewLayer() {
-        MLog.d(TAG, "createNewLayer of " + mWidth + " " + mHeight);
+        //MLog.d(TAG, "createNewLayer of " + mWidth + " " + mHeight);
         Bitmap.Config conf = Bitmap.Config.ARGB_8888;
         Bitmap _bmp = Bitmap.createBitmap(mWidth, mHeight, conf);
         Layer layer = new Layer(_bmp);
@@ -867,6 +924,26 @@ public class PCanvas extends View implements PViewInterface {
 
         Layer(Bitmap bmp) {
             this.bmp = bmp;
+        }
+    }
+
+    //WARNING this method is experimental, be careful!
+    //stretching parameter resize the textures
+    public synchronized void size (int w, int h, boolean stretching) {
+//        this.getLayoutParams().width = w;
+//        this.getLayoutParams().height = h;
+
+        ViewGroup.LayoutParams params = this.getLayoutParams();
+        params.width = w;
+        params.height = h;
+        mWidth = w;
+        mHeight = h;
+        this.requestLayout();
+
+        //reinit textures
+        if (stretching) {
+            currentLayer = -1;
+            initLayers();
         }
     }
 

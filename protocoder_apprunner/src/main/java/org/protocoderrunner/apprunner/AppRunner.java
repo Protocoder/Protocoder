@@ -125,26 +125,25 @@ public class AppRunner {
     public AppRunner initInterpreter() {
 
         //create mContext new interpreter and add the objects to it
-        interp = new AppRunnerInterpreter(mContext);
-        interp.createInterpreter();
-        interp.interpreter.addObjectToInterface("app", pApp);
-        interp.interpreter.addObjectToInterface("boards", pBoards);
-        interp.interpreter.addObjectToInterface("console", pConsole);
-        interp.interpreter.addObjectToInterface("dashboard", pDashboard);
-        interp.interpreter.addObjectToInterface("device", pDevice);
-        interp.interpreter.addObjectToInterface("fileio", pFileIO);
-        interp.interpreter.addObjectToInterface("media", pMedia);
-        interp.interpreter.addObjectToInterface("network", pNetwork);
-        interp.interpreter.addObjectToInterface("protocoder", pProtocoder);
-        interp.interpreter.addObjectToInterface("sensors", pSensors);
-        interp.interpreter.addObjectToInterface("ui", pUi);
-        interp.interpreter.addObjectToInterface("util", pUtil);
+        interp = new AppRunnerInterpreter();
+        interp.addJavaObjectToJs("app", pApp);
+        interp.addJavaObjectToJs("boards", pBoards);
+        interp.addJavaObjectToJs("console", pConsole);
+        interp.addJavaObjectToJs("dashboard", pDashboard);
+        interp.addJavaObjectToJs("device", pDevice);
+        interp.addJavaObjectToJs("fileio", pFileIO);
+        interp.addJavaObjectToJs("media", pMedia);
+        interp.addJavaObjectToJs("network", pNetwork);
+        interp.addJavaObjectToJs("protocoder", pProtocoder);
+        interp.addJavaObjectToJs("sensors", pSensors);
+        interp.addJavaObjectToJs("ui", pUi);
+        interp.addJavaObjectToJs("util", pUtil);
 
         return this;
     }
 
     public void addObject(String name, Object object) {
-        interp.interpreter.addObjectToInterface(name, object);
+        interp.addJavaObjectToJs(name, object);
     }
 
     public AppRunner loadProject() {
@@ -165,7 +164,6 @@ public class AppRunner {
     public AppRunner initProject() {
 
         // preloaded script
-        evaluate(AppRunnerInterpreter.SCRIPT_PREFIX, "");
         if (!mIntentPrefixScript.isEmpty()) evaluate(mIntentPrefixScript, "");
 
         // run the script
@@ -179,7 +177,6 @@ public class AppRunner {
 
         //script postfix
         if (!mIntentPostfixScript.isEmpty()) evaluate(mIntentPostfixScript, "");
-        evaluate(AppRunnerInterpreter.SCRIPT_POSTFIX, "");
 
         //call the javascript method setup
         interp.callJsFunction("setup");
@@ -188,11 +185,7 @@ public class AppRunner {
     }
 
     public void evaluate(String script, String projectName) {
-        if (hasUserInterface) {
-            interp.eval(script, projectName);
-        } else {
-            interp.evalFromService(script);
-        }
+        interp.eval(script, projectName);
     }
 
 
@@ -201,18 +194,16 @@ public class AppRunner {
     }
 
     public Scriptable newArray() {
-        return interp.interpreter.mainScriptContext.newArray(interp.interpreter.scope, 0);
+        return interp.newArray();
     }
 
-
     public Scriptable newArray(File[] files) {
-        return interp.interpreter.mainScriptContext.newArray(interp.interpreter.scope, files);
+        return interp.newArray(files);
     }
 
 
     public void byebye() {
         interp = null;
-
     }
 
 }

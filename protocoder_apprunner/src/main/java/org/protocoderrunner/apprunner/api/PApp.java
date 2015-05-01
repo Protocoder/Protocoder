@@ -55,11 +55,8 @@ public class PApp extends PInterface {
 
     public interface onAppStatus {
         public void onStart();
-
         public void onPause();
-
         public void onResume();
-
         public void onStop();
     }
 
@@ -144,7 +141,7 @@ public class PApp extends PInterface {
     public void notification(int id, String title, String description) {
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getContext())
-                .setSmallIcon(R.drawable.app_icon).setContentTitle(title).setContentText(description);
+                .setSmallIcon(R.drawable.protocoder_icon).setContentTitle(title).setContentText(description);
         // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(getContext(), AppRunnerActivity.class);
 
@@ -234,7 +231,7 @@ public class PApp extends PInterface {
     @ProtoMethodParam(params = {"cmd", "function(data)"})
     public ExecuteCmd executeCommand(final String cmd, final ExecuteCmd.ExecuteCommandCB callbackfn) {
 
-        return new ExecuteCmd(getAppRunner(), cmd, callbackfn);
+        return new ExecuteCmd(cmd, callbackfn);
     }
 
 
