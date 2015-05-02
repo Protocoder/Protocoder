@@ -67,7 +67,7 @@ public class WelcomeActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        // do something here
+        MLog.d(TAG, "onPause");
     }
 
     @Override
@@ -84,9 +84,9 @@ public class WelcomeActivity extends BaseActivity {
         final ProgressDialog progress = new ProgressDialog(this);
         progress.setTitle("Installing examples");
         progress.setMessage("You can start creating with Protocoder in just a second");
-        progress.show();
         progress.setCancelable(false);
         progress.setCanceledOnTouchOutside(false);
+        progress.show();
 
         //create folder structure
         new File(AppSettings.getFolderPath(AppSettings.USER_PROJECTS_FOLDER)).mkdirs();
@@ -95,11 +95,11 @@ public class WelcomeActivity extends BaseActivity {
         new File(AppSettings.getBaseLibrariesDir()).mkdirs();
 
         // install examples
-        ProtocoderAppHelper.installExamples(this, AppSettings.EXAMPLES_FOLDER, new ProtocoderAppHelper.InstallListener() {
+        ProtocoderAppHelper.installExamples(getApplicationContext(), AppSettings.EXAMPLES_FOLDER, new ProtocoderAppHelper.InstallListener() {
             @Override
             public void onReady() {
                 progress.dismiss();
-                // Write mContext shared pref to never come back here
+                // Write a shared pref to never come back here
                 SharedPreferences userDetails = getSharedPreferences("org.protocoder", MODE_PRIVATE);
                 userDetails.edit().putBoolean(getResources().getString(R.string.pref_is_first_launch), false).commit();
                 // Start the activity

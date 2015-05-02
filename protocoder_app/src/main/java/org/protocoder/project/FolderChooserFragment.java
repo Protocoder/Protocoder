@@ -33,7 +33,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
+import org.protocoder.AppSettings;
+import org.protocoder.ProjectManager;
+import org.protocoder.ProtocoderAppHelper;
 import org.protocoder.R;
+import org.protocoderrunner.apprunner.project.Project;
 import org.protocoderrunner.base.BaseFragment;
 import org.protocoderrunner.utils.MLog;
 
@@ -102,20 +106,18 @@ public class FolderChooserFragment extends BaseFragment {
 
 
         ArrayList<FolderData> folders = new ArrayList<FolderData>();
-        // Populate colors into the array
-        folders.add(new FolderData(FolderData.TYPE_TITLE, "Projects"));
-        folders.add(new FolderData(FolderData.TYPE_FOLDER_NAME, "MyProjects"));
-        folders.add(new FolderData(FolderData.TYPE_FOLDER_NAME, "OtherProjects"));
-        folders.add(new FolderData(FolderData.TYPE_TITLE, "Examples"));
-        folders.add(new FolderData(FolderData.TYPE_FOLDER_NAME, "Basics"));
-        folders.add(new FolderData(FolderData.TYPE_FOLDER_NAME, "User Interface"));
-        folders.add(new FolderData(FolderData.TYPE_FOLDER_NAME, "PureData"));
-        folders.add(new FolderData(FolderData.TYPE_FOLDER_NAME, "Processing"));
-        folders.add(new FolderData(FolderData.TYPE_FOLDER_NAME, "Network"));
-        folders.add(new FolderData(FolderData.TYPE_FOLDER_NAME, "Microcontrollers"));
-        folders.add(new FolderData(FolderData.TYPE_FOLDER_NAME, "lalal"));
-        folders.add(new FolderData(FolderData.TYPE_FOLDER_NAME, "Tutorials"));
 
+        ArrayList<Project> projects = ProtocoderAppHelper.list(AppSettings.USER_PROJECTS_FOLDER, true);
+        folders.add(new FolderData(FolderData.TYPE_TITLE, "Projects"));
+        for (Project project : projects) {
+            folders.add(new FolderData(FolderData.TYPE_FOLDER_NAME, project.getName()));
+        }
+
+        ArrayList<Project> examples = ProtocoderAppHelper.list(AppSettings.EXAMPLES_FOLDER, true);
+        folders.add(new FolderData(FolderData.TYPE_TITLE, "Examples"));
+        for (Project example : examples) {
+            folders.add(new FolderData(FolderData.TYPE_FOLDER_NAME, example.getName()));
+        }
 
         // Attach the adapter
         mRecyclerView = (RecyclerView) v.findViewById(R.id.folderList);

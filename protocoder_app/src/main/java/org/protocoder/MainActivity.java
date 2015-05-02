@@ -117,7 +117,7 @@ public class MainActivity extends ActionBarActivity {
     //Project folder chooser
     private void addProjectFolderChooser(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
-            mFolderChooserFragment = FolderChooserFragment.newInstance(ProjectManager.FOLDER_EXAMPLES, true);
+            mFolderChooserFragment = FolderChooserFragment.newInstance(AppSettings.EXAMPLES_FOLDER, true);
             addFragment(mFolderChooserFragment, R.id.fragmentFolderChooser);
         }
     }
@@ -125,7 +125,7 @@ public class MainActivity extends ActionBarActivity {
     //add the project list fragment
     private void addProjectListFragment(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
-            mListFragmentBase = ProjectListFragment.newInstance(ProjectManager.FOLDER_EXAMPLES, true);
+            mListFragmentBase = ProjectListFragment.newInstance(AppSettings.EXAMPLES_FOLDER, true);
             addFragment(mListFragmentBase, R.id.fragmentScriptList);
         } else {
             // mProtocoder.protoScripts.reinitScriptList();

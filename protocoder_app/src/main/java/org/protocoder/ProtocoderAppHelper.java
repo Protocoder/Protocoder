@@ -61,7 +61,7 @@ public class ProtocoderAppHelper {
             public void run() {
                 File dir = new File(AppSettings.getBaseDir() + assetsName);
                 FileIO.deleteDir(dir);
-                FileIO.copyFileOrDir(c.getApplicationContext(), assetsName);
+                FileIO.copyFileOrDir(c, assetsName);
                 l.onReady();
             }
         }).start();

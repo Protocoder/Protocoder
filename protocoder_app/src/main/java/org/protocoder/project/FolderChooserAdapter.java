@@ -46,12 +46,10 @@ public class FolderChooserAdapter extends RecyclerView.Adapter<FolderChooserAdap
             switch (viewType) {
                 case FolderData.TYPE_TITLE:
                     textView = (TextView) v.findViewById(R.id.textType);
-                    MLog.d(TAG, "viewholder title " + textView);
 
                     break;
                 case (FolderData.TYPE_FOLDER_NAME):
                     textView = (TextView) v.findViewById(R.id.textFolder);
-                    MLog.d(TAG, "onCreateViewHolder name " + textView);
 
                     break;
             }
@@ -64,23 +62,16 @@ public class FolderChooserAdapter extends RecyclerView.Adapter<FolderChooserAdap
 
     @Override
     public int getItemViewType(int position) {
-        MLog.d(TAG, "getItemViewType");
 
         return mDataSet.get(position).item_type;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        MLog.d(TAG, "onCreateViewHolder");
-
         LinearLayout t = null;
         if (viewType == FolderData.TYPE_TITLE) {
-            MLog.d(TAG, "onCreateViewHolder title");
-
             t = (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.view_folderchooser_title, parent, false);
         }  else if (viewType == FolderData.TYPE_FOLDER_NAME) {
-            MLog.d(TAG, "onCreateViewHolder name");
-
             t = (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.view_folderchooser_folder, parent, false);
         }
         return new ViewHolder(viewType, t);
@@ -88,15 +79,8 @@ public class FolderChooserAdapter extends RecyclerView.Adapter<FolderChooserAdap
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        MLog.d(TAG, "onBindViewHolder");
-
         int type = mDataSet.get(position).item_type;
-        MLog.d(TAG, "" + position + " " + type);
-
         String name = mDataSet.get(position).name;
-        MLog.d(TAG, name);
-        MLog.d(TAG, "" + holder);
-        MLog.d(TAG, "" + holder.textView);
 
         switch (type) {
             case FolderData.TYPE_TITLE:
@@ -114,10 +98,7 @@ public class FolderChooserAdapter extends RecyclerView.Adapter<FolderChooserAdap
 
     @Override
     public int getItemCount() {
-        MLog.d(TAG, "getItemCount");
-
         return mDataSet.size();
     }
-
 
 }

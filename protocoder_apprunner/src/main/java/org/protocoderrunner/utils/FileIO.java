@@ -31,6 +31,7 @@ import net.lingala.zip4j.model.ZipParameters;
 import net.lingala.zip4j.util.Zip4jConstants;
 
 import org.apache.commons.io.FileUtils;
+import org.protocoderrunner.apprunner.AppRunnerSettings;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -223,8 +224,7 @@ public class FileIO {
             if (assets.length == 0) {
                 copyFile(c, path);
             } else {
-                //TODO reenable this
-                String fullPath = null; //ProjectManager.getInstance().getBaseDir() + path;
+                String fullPath = AppRunnerSettings.getBaseDir() + path;
                 File dir = new File(fullPath);
                 if (!dir.exists()) {
                     dir.mkdir();
@@ -234,7 +234,7 @@ public class FileIO {
                 }
             }
         } catch (IOException ex) {
-            Log.e("tag", "I/O Exception", ex);
+            Log.e(TAG, ex.toString());
         }
     }
 
@@ -246,7 +246,7 @@ public class FileIO {
         try {
             in = assetManager.open(filename);
             //TODO reenable this
-            String newFileName = null; //ProjectManager.getInstance().getBaseDir() + filename;
+            String newFileName = AppRunnerSettings.getBaseDir() + filename;
             out = new FileOutputStream(newFileName);
 
             byte[] buffer = new byte[1024];

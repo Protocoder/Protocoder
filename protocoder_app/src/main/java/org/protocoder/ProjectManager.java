@@ -44,7 +44,6 @@ import java.util.Arrays;
 
 public class ProjectManager extends AppRunnerProjectManager {
 
-    public static final String FOLDER_EXAMPLES = "examples";
     private static String PROTOCODER_EXTENSION = ".proto";
 
     private Project currentProject;
