@@ -18,10 +18,10 @@
 * along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package org.protocoderrunner.events;
+package org.protocoder;
 
-import org.protocoderrunner.project.Project;
-import org.protocoderrunner.project.ProjectManager;
+import org.protocoderrunner.apprunner.project.Project;
+import org.protocoderrunner.apprunner.project.AppRunnerProjectManager;
 
 public class Events {
     public static final java.lang.String PROJECT_RUN = "run";
@@ -34,9 +34,9 @@ public class Events {
         private String name;
         private String action;
 
-        public ProjectEvent(Project aProject, String anAction) {
-            project = aProject;
-            action = anAction;
+        public ProjectEvent(Project project, String action) {
+            this.project = project;
+            this.action = action;
         }
 
         public ProjectEvent(Project aProject, String aName, String anAction) {
@@ -49,27 +49,8 @@ public class Events {
             return action;
         }
 
-        public void setAction(String newAction) {
-            action = newAction;
-        }
-
         public Project getProject() {
-            if (project == null) {
-                project = ProjectManager.getInstance().get(project.getFolder(), project.getName());
-            }
             return project;
-        }
-    }
-
-    public static class ExecuteCodeEvent {
-        private String code;
-
-        public ExecuteCodeEvent(String code) {
-            this.code = code;
-        }
-
-        public String getCode() {
-            return code;
         }
     }
 
@@ -85,7 +66,6 @@ public class Events {
         public String getMessage() {
             return msg;
         }
-
         public String getTag() {
             return tag;
         }

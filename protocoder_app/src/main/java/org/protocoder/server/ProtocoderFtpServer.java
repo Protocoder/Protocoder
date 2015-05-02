@@ -22,10 +22,11 @@ package org.protocoder.server;
 
 import android.content.Context;
 
+import org.protocoder.AppSettings;
 import org.protocoder.appinterpreter.AppRunnerCustom;
 import org.protocoder.UserSettings;
 import org.protocoderrunner.apprunner.api.network.PFtpServer;
-import org.protocoderrunner.project.ProjectManager;
+import org.protocoderrunner.apprunner.project.AppRunnerProjectManager;
 import org.protocoderrunner.utils.MLog;
 
 import java.lang.ref.WeakReference;
@@ -45,7 +46,7 @@ public class ProtocoderFtpServer extends PFtpServer {
         UserSettings userSettings = appRunner.protocoderApp.userSettings;
 
         MLog.d(TAG, "" + userSettings.getFtpUserName() + " " + userSettings.getFtpUserPassword());
-        addUser(userSettings.getFtpUserName(), userSettings.getFtpUserPassword(), ProjectManager.getInstance().getBaseDir(), true);
+        addUser(userSettings.getFtpUserName(), userSettings.getFtpUserPassword(), AppSettings.getBaseDir(), true);
     }
 
     public void stopServer() {

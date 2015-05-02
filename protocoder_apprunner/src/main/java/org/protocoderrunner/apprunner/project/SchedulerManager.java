@@ -18,7 +18,7 @@
 * along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package org.protocoderrunner.project;
+package org.protocoderrunner.apprunner.project;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;

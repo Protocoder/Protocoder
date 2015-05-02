@@ -18,7 +18,7 @@
 * along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package org.protocoderrunner.project;
+package org.protocoder;
 
 import android.content.Context;
 import android.os.Environment;
@@ -26,7 +26,9 @@ import android.os.Environment;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.protocoderrunner.AppSettings;
+import org.protocoder.project.FolderData;
+import org.protocoderrunner.apprunner.project.AppRunnerProjectManager;
+import org.protocoderrunner.apprunner.project.Project;
 import org.protocoderrunner.utils.FileIO;
 import org.protocoderrunner.utils.MLog;
 
@@ -40,26 +42,20 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class ProjectManager {
+public class ProjectManager extends AppRunnerProjectManager {
 
-    private static final String TAG = "ProjectManager";
-    public static String MAIN_FILE_NAME = "main.js";
     public static final String FOLDER_EXAMPLES = "examples";
-    public static final String FOLDER_USER_PROJECTS = "projects";
-    public static final String FOLDER_MYSCRIPT = "myscript";
     private static String PROTOCODER_EXTENSION = ".proto";
 
     private Project currentProject;
     private String remoteIP;
 
-    private static ProjectManager instance;
+    public ProjectManager(Context context, Project p) {
+        super(context, p);
+    }
 
-    public static ProjectManager getInstance() {
-        if (instance == null) {
-            instance = new ProjectManager();
-        }
-
-        return instance;
+    public ProjectManager(Context context) {
+        super(context, null);
     }
 
     public String getBackupFolderUrl() {
@@ -73,14 +69,8 @@ public class ProjectManager {
     public String getBaseDir() {
         String baseDir;
 
-        //if (AppSettings.STANDALONE == true) {
-            //baseDir = AppRunnerContext.get().getAppContext().getFilesDir().getPath()
-            //        + File.separator;
-
-        //} else {
-            baseDir = Environment.getExternalStorageDirectory().getAbsolutePath()
-                    + File.separator + AppSettings.APP_FOLDER + File.separator;
-        //}
+        baseDir = Environment.getExternalStorageDirectory().getAbsolutePath()
+                + File.separator + AppSettings.PROTOCODER_FOLDER + File.separator;
 
         return baseDir;
     }
@@ -95,12 +85,12 @@ public class ProjectManager {
         File f = new File(givenName + ProjectManager.PROTOCODER_EXTENSION);
         int num = 1;
         while (f.exists()) {
-            f = new File(givenName + "_" + num++ + ProjectManager.PROTOCODER_EXTENSION);
+            f = new File(givenName + "_" + num++ + PROTOCODER_EXTENSION);
         }
 
         //compress
         try {
-            FileIO.zipFolder(p.getStoragePath(), f.getAbsolutePath());
+            FileIO.zipFolder(getProjectPath(), f.getAbsolutePath());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -110,14 +100,13 @@ public class ProjectManager {
     }
 
     public boolean isProjectExisting(String folder, String name) {
-        ArrayList<Project> projects = list(folder, false);
+        ArrayList<Project> projects = ProtocoderAppHelper.list(folder, false);
 
         for (int i = 0; i < projects.size(); i++) {
             if (projects.get(i).getName().equals(name)) {
                 return true;
             }
         }
-
 
         return false;
     }
@@ -136,34 +125,15 @@ public class ProjectManager {
         return true;
     }
 
-    public interface InstallListener {
-        void onReady();
-    }
-
-    public void install(final Context c, final String assetsName, final InstallListener l) {
-
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                File dir = new File(getBaseDir() + "/" + assetsName);
-                FileIO.deleteDir(dir);
-                FileIO.copyFileOrDir(c.getApplicationContext(), assetsName);
-                l.onReady();
-            }
-        }).start();
-    }
-
     // Get code from assets
     public String getCodeFromAssets(Context c, Project p) {
-        return FileIO.readAssetFile(c, p.folder + File.separator +
-                p.name + File.separator + MAIN_FILE_NAME);
+        return FileIO.readAssetFile(c, getProjectPath() + File.separator + MAIN_FILENAME);
     }
 
     // Get code from sdcard
-    public String getCode(Project p) {
+    public String getCode() {
         String out = null;
-        File f = new File(p.getStoragePath() + File.separator + MAIN_FILE_NAME);
+        File f = new File(getProjectPath() + MAIN_FILENAME);
         try {
             InputStream in = new FileInputStream(f);
             ByteArrayOutputStream buf = new ByteArrayOutputStream();
@@ -185,10 +155,8 @@ public class ProjectManager {
         return out;
     }
 
-    public void writeNewCode(Project p, String code, String fileName) {
-        String path = p.getStoragePath() + File.separator + fileName;
-        MLog.d(TAG, "--> " + fileName + " " + path);
-        writeNewFile(path, code);
+    public void writeNewCode(String code, String fileName) {
+        writeNewFile(getProjectPath() + fileName, code);
     }
 
     public void writeNewFile(String file, String code) {
@@ -203,10 +171,9 @@ public class ProjectManager {
             fo.write(data);
             fo.flush();
             fo.close();
-            MLog.d(TAG, "--> saved");
 
         } catch (FileNotFoundException ex) {
-            MLog.e("ProjectManager", ex.toString());
+            MLog.e(TAG, ex.toString());
         } catch (IOException e) {
             e.printStackTrace();
             // Log.e("Project", e.toString());
@@ -224,44 +191,6 @@ public class ProjectManager {
         return json;
     }
 
-    public ArrayList<Project> list(String folder, boolean orderByName) {
-        ArrayList<Project> projects = new ArrayList<Project>();
-        File dir = null;
-
-        dir = new File(getProjectFolderUrl(folder));
-        if (!dir.exists()) {
-            dir.mkdir();
-        }
-
-        File[] all_projects = dir.listFiles();
-
-        if (orderByName) {
-            Arrays.sort(all_projects);
-        }
-
-        for (File file : all_projects) {
-            String projectURL = file.getAbsolutePath();
-            String projectName = file.getName();
-
-            boolean containsReadme = false;
-            boolean containsTutorial = false;
-            projects.add(new Project(folder, projectName, containsReadme, containsTutorial));
-        }
-
-        return projects;
-    }
-
-    public Project get(String folder, String name) {
-        ArrayList<Project> projects = list(folder, false);
-        for (Project project : projects) {
-            if (name.equals(project.getName())) {
-                setCurrentProject(project);
-                return project;
-            }
-        }
-        return null;
-    }
-
     public Project addNewProject(Context c, String newProjectName, String folder, String fileName) {
         String newTemplateCode = FileIO.readAssetFile(c, "templates/new.js");
 
@@ -274,10 +203,10 @@ public class ProjectManager {
         return newProject;
     }
 
-    public ArrayList<File> listFilesInProject(Project p) {
+    public ArrayList<File> listFilesInProject() {
         ArrayList<File> files = new ArrayList<File>();
 
-        File f = new File(p.getStoragePath());
+        File f = new File(getProjectPath());
         File file[] = f.listFiles();
 
         for (File element : file) {
@@ -289,7 +218,7 @@ public class ProjectManager {
 
     public JSONArray listFilesInProjectJSON(Project p) {
 
-        File f = new File(p.getStoragePath());
+        File f = new File(getProjectPath());
         File file[] = f.listFiles();
         MLog.d("Files", "Size: " + file.length);
 
@@ -311,17 +240,7 @@ public class ProjectManager {
         return array;
     }
 
-    // TODO fix this hack
-    public String getProjectURL(Project p) {
-        return getProjectFolderUrl(p.folder) + "/" + p.getName();
-    }
-
-    public void setCurrentProject(Project project) {
-        currentProject = project;
-    }
-
     public Project getCurrentProject() {
-
         return currentProject;
     }
 
@@ -339,8 +258,8 @@ public class ProjectManager {
         return url;
     }
 
-    public void deleteProject(Project p) {
-        File dir = new File(p.getStoragePath());
+    public void deleteProject() {
+        File dir = new File(getProjectPath());
 
         if (dir.isDirectory()) {
             String[] children = dir.list();

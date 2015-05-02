@@ -23,8 +23,8 @@ import android.os.Bundle;
 
 import org.protocoder.R;
 import org.protocoder.fragments.EditorFragment;
-import org.protocoderrunner.project.Project;
-import org.protocoderrunner.project.ProjectManager;
+import org.protocoderrunner.apprunner.project.Project;
+import org.protocoderrunner.apprunner.project.ProjectManager;
 
 public class Editor {
 

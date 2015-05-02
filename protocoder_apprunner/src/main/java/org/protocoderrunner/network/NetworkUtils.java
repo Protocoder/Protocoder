@@ -51,7 +51,7 @@ import java.util.Enumeration;
 
 public class NetworkUtils {
 
-    private static final String TAG = "NetworkUtils";
+    private static final String TAG = NetworkUtils.class.getSimpleName();
 
     // usually, subclasses of AsyncTask are declared inside the activity class.
     // that way, you can easily modify the UI thread from here
@@ -67,7 +67,7 @@ public class NetworkUtils {
 
         public DownloadTask(AppRunner appRunner, String fileName) {
             this.context = appRunner.getAppContext();
-            path = appRunner.project.getStoragePath() + File.separator + fileName;
+            path = fileName;
         }
 
         @Override

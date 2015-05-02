@@ -41,9 +41,6 @@ import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.other.PEvents;
 import org.protocoderrunner.apprunner.api.other.PLiveCodingFeedback;
-import org.protocoderrunner.project.Project;
-import org.protocoderrunner.project.ProjectManager;
-import org.protocoderrunner.project.SchedulerManager;
 import org.protocoderrunner.utils.ExecuteCmd;
 import org.protocoderrunner.utils.FileIO;
 
@@ -74,25 +71,25 @@ public class PApp extends PInterface {
     //	return (AppRunnerFragment) mContext;
     //}
 
-    //TODO
+    //TODO reenable this
     @ProtoMethod(description = "", example = "")
     public void delayedAlarm(int delay, boolean alarmRepeat, boolean wakeUpScreen) {
-        Project p = ProjectManager.getInstance().getCurrentProject();
-        SchedulerManager.getInstance(getContext()).setAlarmDelayed(p, delay, alarmRepeat, wakeUpScreen);
+        //Project p = ProjectManager.getInstance().getCurrentProject();
+        //SchedulerManager.getInstance(getContext()).setAlarmDelayed(p, delay, alarmRepeat, wakeUpScreen);
     }
 
-    //TODO
+    //TODO reenable this
     @ProtoMethod(description = "", example = "")
     public void delayedAlarm(int hour, int minute, int second, boolean wakeUpScreen) {
-        Project p = ProjectManager.getInstance().getCurrentProject();
-        SchedulerManager.getInstance(getContext()).setAlarm(p, hour, minute, second, wakeUpScreen);
+        //Project p = ProjectManager.getInstance().getCurrentProject();
+        //SchedulerManager.getInstance(getContext()).setAlarm(p, hour, minute, second, wakeUpScreen);
     }
 
-    //TODO
+    //TODO reenable this
     @ProtoMethod(description = "", example = "")
     public void exactAlarm(int hour, int minute, int second, boolean wakeUpScreen) {
-        Project p = ProjectManager.getInstance().getCurrentProject();
-        SchedulerManager.getInstance(getContext()).setAlarm(p, hour, minute, second, wakeUpScreen);
+        //Project p = ProjectManager.getInstance().getCurrentProject();
+        //SchedulerManager.getInstance(getContext()).setAlarm(p, hour, minute, second, wakeUpScreen);
     }
 
 
@@ -186,16 +183,17 @@ public class PApp extends PInterface {
     }
 
 
+    //TODO reenable this
     @ProtoMethod(description = "get the current project HTTP URL", example = "")
     public String servingUrl() {
-        String url = ProjectManager.getInstance().getCurrentProject().getServingURL();
+        String url = null; //ProjectManager.getInstance().getCurrentProject().getServingURL();
         return url;
     }
 
-
+    //TODO reenable this
     @ProtoMethod(description = "get the current project path", example = "")
     public String path() {
-        String url = ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/";
+        String url = null; //ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/";
         return url;
     }
 
@@ -278,11 +276,11 @@ public class PApp extends PInterface {
 //        mContext.startActivity(intent);
 //    }
 
-
+    //TODO reenable this
     @ProtoMethod(description = "opens a file with a given app provided as package name ", example = "")
     @ProtoMethodParam(params = {"fileName", "packageName"})
     public void openWithApp(final String src, String packageName) {
-        final String projectPath = ProjectManager.getInstance().getCurrentProject().getStoragePath();
+        final String projectPath = null; //ProjectManager.getInstance().getCurrentProject().getStoragePath();
 
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setDataAndType(Uri.parse("file://" + projectPath + "/" + src), packageName);

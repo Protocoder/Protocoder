@@ -20,7 +20,6 @@
 
 package org.protocoderrunner.apprunner;
 
-import android.app.Activity;
 import android.content.Context;
 
 import org.mozilla.javascript.Scriptable;
@@ -37,8 +36,8 @@ import org.protocoderrunner.apprunner.api.PSensors;
 import org.protocoderrunner.apprunner.api.PUI;
 import org.protocoderrunner.apprunner.api.PUtil;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
-import org.protocoderrunner.project.Project;
-import org.protocoderrunner.project.ProjectManager;
+import org.protocoderrunner.apprunner.project.Project;
+import org.protocoderrunner.apprunner.project.AppRunnerProjectManager;
 
 import java.io.File;
 
@@ -48,21 +47,23 @@ public class AppRunner {
 
     private static AppRunner instance;
     private final Context mContext;
+    public AppRunnerProjectManager mProjectManager;
     public Project project;
     public boolean hasUserInterface = false;
     public WhatIsRunning whatIsRunning;
 
     //public boolean hasCustomJSInterpreter = true;
 
-
     //Project properties
     public Project mCurrentProject;
+
     public String mProjectName;
     public String mProjectFolder;
     private String mScript;
     public String mIntentPrefixScript = "";
     public String mIntentCode = "";
     public String mIntentPostfixScript = "";
+
     public boolean mIsProjectLoaded = false;
 
     //Interpreter
@@ -81,7 +82,6 @@ public class AppRunner {
     public PSensors pSensors;
     public PUI pUi;
     public PUtil pUtil;
-
 
     public AppRunner(Context context) {
         this.mContext = context;
@@ -153,11 +153,8 @@ public class AppRunner {
         //load project checking if we got the folder and name in the intent
         mIsProjectLoaded = !mProjectName.isEmpty() && !mProjectFolder.isEmpty();
         if (mIsProjectLoaded) {
-            mCurrentProject = ProjectManager.getInstance().get(mProjectFolder, mProjectName);
-            ProjectManager.getInstance().setCurrentProject(mCurrentProject);
-
-            // Get the script code
-            mScript = ProjectManager.getInstance().getCode(mCurrentProject);
+            mCurrentProject = new Project(mProjectFolder, mProjectName);
+            mProjectManager = new AppRunnerProjectManager(mContext, mCurrentProject);
         }
 
         return this;
@@ -202,7 +199,6 @@ public class AppRunner {
     public Scriptable newArray(File[] files) {
         return interp.newArray(files);
     }
-
 
     public void byebye() {
         interp = null;

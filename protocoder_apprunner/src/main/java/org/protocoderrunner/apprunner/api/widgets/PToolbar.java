@@ -110,7 +110,7 @@ public class PToolbar extends PInterface {
     @ProtoMethod(description = "Sets an image rather than text as toolbar title", example = "")
     @ProtoMethodParam(params = {"imageName"})
     public PToolbar imageIcon(String imagePath) {
-        Bitmap myBitmap = BitmapFactory.decodeFile(mAppRunner.project.getStoragePath() + imagePath);
+        Bitmap myBitmap = BitmapFactory.decodeFile(mAppRunner.mProjectManager.getProjectPath() + imagePath);
         Drawable icon = new BitmapDrawable(mAppRunner.getAppContext().getResources(), myBitmap);
 
         mToolbar.setIcon(icon);

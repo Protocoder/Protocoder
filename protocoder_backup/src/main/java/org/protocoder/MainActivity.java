@@ -53,8 +53,8 @@ import org.protocoder.appApi.Protocoder;
 import org.protocoderrunner.events.Events;
 import org.protocoderrunner.events.Events.ProjectEvent;
 import org.protocoderrunner.network.IDEcommunication;
-import org.protocoderrunner.project.Project;
-import org.protocoderrunner.project.ProjectManager;
+import org.protocoderrunner.apprunner.project.Project;
+import org.protocoderrunner.apprunner.project.ProjectManager;
 import org.protocoderrunner.utils.AndroidUtils;
 import org.protocoderrunner.utils.MLog;
 

@@ -18,22 +18,39 @@
 * along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package org.protocoderrunner.base;
+package org.protocoderrunner.apprunner;
 
-import android.app.Application;
+import org.protocoderrunner.apprunner.project.Project;
 
-public class BaseMainApp extends Application {
+public class AppRunnerEvents {
+    public static final String PROJECT_RUN = "run";
 
-    public BaseMainApp() {
+    public static class ProjectEvent {
+        private Project project;
+        private String action;
 
+        public ProjectEvent(Project project, String action) {
+            this.project = project;
+            this.action = action;
+        }
+
+        public String getAction() {
+            return action;
+        }
+
+        public Project getProject() {
+            return project;
+        }
     }
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
-        // Copy all example apps to the base directory
-        //TODO reenable this
-        //FileIO.copyAssetFolder(getAssets(), "ExampleApps", ProjectManager.getInstance().getBaseDir());
+    public static class ExecuteCodeEvent {
+        private String code;
+        public ExecuteCodeEvent(String code) {
+            this.code = code;
+        }
+        public String getCode() {
+            return code;
+        }
     }
+
 }

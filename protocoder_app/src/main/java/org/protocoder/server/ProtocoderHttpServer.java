@@ -28,8 +28,7 @@ import android.widget.Toast;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.protocoder.EditorManager;
-import org.protocoder.ProtocoderAppHelper;
+import org.protocoder.WebEditorManager;
 import org.protocoderrunner.apidoc.APIManager;
 import org.protocoderrunner.apprunner.api.PApp;
 import org.protocoderrunner.apprunner.api.PBoards;
@@ -97,12 +96,12 @@ import org.protocoderrunner.apprunner.api.widgets.PVideo;
 import org.protocoderrunner.apprunner.api.widgets.PWebEditor;
 import org.protocoderrunner.apprunner.api.widgets.PWebView;
 import org.protocoderrunner.apprunner.api.widgets.PWindow;
-import org.protocoderrunner.events.Events;
-import org.protocoderrunner.events.Events.ProjectEvent;
+import org.protocoder.Events;
+import org.protocoder.Events.ProjectEvent;
 import org.protocoderrunner.network.NanoHTTPD;
 import org.protocoderrunner.network.NetworkUtils;
-import org.protocoderrunner.project.Project;
-import org.protocoderrunner.project.ProjectManager;
+import org.protocoderrunner.apprunner.project.Project;
+import org.protocoderrunner.apprunner.project.AppRunnerProjectManager;
 import org.protocoderrunner.utils.FileIO;
 import org.protocoderrunner.utils.MLog;
 
@@ -196,40 +195,40 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 
             if (uri.startsWith(projectURLPrefix)) {
 
-                // checking if we are inside the directory so we sandbox the app
-                // TODO its pretty hack so this deserves coding it again
-                Project p = ProjectManager.getInstance().getCurrentProject();
-
-                String projectFolder = "/" + p.getFolder() + "/" + p.getName();
-                // MLog.d("qq", "project folder is " + projectFolder);
-                if (uri.replace(projectURLPrefix, "").contains(projectFolder)) {
-                    // MLog.d("qq", "inside project");
-                    return serveFile(uri.substring(uri.lastIndexOf('/') + 1, uri.length()), header,
-                            new File(p.getStoragePath()), false);
-                } else {
-                    // MLog.d("qq", "outside project");
-                    new Response(HTTP_NOTFOUND, MIME_HTML, "resource not found");
-                }
+//                // checking if we are inside the directory so we sandbox the app
+//                // TODO its pretty hack so this deserves to code it again
+//                Project p = AppRunnerProjectManager.getInstance().getCurrentProject();
+//
+//                String projectFolder = "/" + p.getFolder() + "/" + p.getName();
+//                // MLog.d("qq", "project folder is " + projectFolder);
+//                if (uri.replace(projectURLPrefix, "").contains(projectFolder)) {
+//                    // MLog.d("qq", "inside project");
+//                    return serveFile(uri.substring(uri.lastIndexOf('/') + 1, uri.length()), header,
+//                            new File(p.getStoragePath()), false);
+//                } else {
+//                    // MLog.d("qq", "outside project");
+//                    new Response(HTTP_NOTFOUND, MIME_HTML, "resource not found");
+//                }
 
             }
 
             // file upload
             if (!files.isEmpty()) {
 
-                String name = parms.getProperty("name").toString();
-                String folder = parms.getProperty("fileType").toString();
-
-                Project p = ProjectManager.getInstance().get(folder, name);
-
-                File src = new File(files.getProperty("pic").toString());
-                File dst = new File(p.getStoragePath() + "/" + parms.getProperty("pic").toString());
-
-                FileIO.copyFile(src, dst);
-
-                JSONObject data = new JSONObject();
-                data.put("result", "OK");
-
-                return new Response("200", MIME_TYPES.get("txt"), data.toString());
+//                String name = parms.getProperty("name").toString();
+//                String folder = parms.getProperty("fileType").toString();
+//
+//                Project p = AppRunnerProjectManager.getInstance().get(folder, name);
+//
+//                File src = new File(files.getProperty("pic").toString());
+//                File dst = new File(p.getStoragePath() + "/" + parms.getProperty("pic").toString());
+//
+//                FileIO.copyFile(src, dst);
+//
+//                JSONObject data = new JSONObject();
+//                data.put("result", "OK");
+//
+//                return new Response("200", MIME_TYPES.get("txt"), data.toString());
 
             }
 
@@ -260,134 +259,129 @@ public class ProtocoderHttpServer extends NanoHTTPD {
                 String cmd = obj.getString("cmd");
                 // fetch code
                 if (cmd.equals("fetch_code")) {
-                    MLog.d(TAG, "--> fetch code");
-                    name = obj.getString("name");
-                    folder = obj.getString("type");
-
-                    Project p = ProjectManager.getInstance().get(folder, name);
-
-                    // TODO add type
-                    data.put("code", ProjectManager.getInstance().getCode(p));
+//                    MLog.d(TAG, "--> fetch code");
+//                    name = obj.getString("name");
+//                    folder = obj.getString("type");
+//
+//                    Project p = AppRunnerProjectManager.getInstance().get(folder, name);
+//
+//                    // TODO add type
+//                    data.put("code", AppRunnerProjectManager.getInstance().getCode(p));
 
                     // list apps
                 } else if (cmd.equals("list_apps")) {
-                    MLog.d(TAG, "--> list apps");
-
-                    folder = obj.getString("filter");
-
-                    ArrayList<Project> projects = null;
-                    if (folder.equals(ProjectManager.FOLDER_EXAMPLES)) {
-                        projects = ProjectManager.getInstance().list(folder, true);
-                    } else {
-                        projects = ProjectManager.getInstance().list(folder, false);
-                    }
-                    JSONArray projectsArray = new JSONArray();
-                    for (Project project : projects) {
-                        projectsArray.put(ProjectManager.getInstance().toJson(project));
-                    }
-                    data.put("projects", projectsArray);
+//                    MLog.d(TAG, "--> list apps");
+//
+//                    folder = obj.getString("filter");
+//
+//                    ArrayList<Project> projects = null;
+//                    if (folder.equals(AppRunnerProjectManager.FOLDER_EXAMPLES)) {
+//                        projects = AppRunnerProjectManager.getInstance().list(folder, true);
+//                    } else {
+//                        projects = AppRunnerProjectManager.getInstance().list(folder, false);
+//                    }
+//                    JSONArray projectsArray = new JSONArray();
+//                    for (Project project : projects) {
+//                        projectsArray.put(AppRunnerProjectManager.getInstance().toJson(project));
+//                    }
+//                    data.put("projects", projectsArray);
 
                     // run app
                 } else if (cmd.equals("run_app")) {
-                    MLog.d(TAG, "--> run app");
-
-                    name = obj.getString("name");
-                    folder = obj.getString("type");
-
-                    Project p = ProjectManager.getInstance().get(folder, name);
-                    ProjectManager.getInstance().setRemoteIP(obj.getString("remoteIP"));
-
-                    ProjectEvent evt = new ProjectEvent(p, Events.PROJECT_RUN);
-                    EventBus.getDefault().post(evt);
+//                    MLog.d(TAG, "--> run app");
+//
+//                    name = obj.getString("name");
+//                    folder = obj.getString("type");
+//
+//                    Project p = AppRunnerProjectManager.getInstance().get(folder, name);
+//                    AppRunnerProjectManager.getInstance().setRemoteIP(obj.getString("remoteIP"));
+//
+//                    ProjectEvent evt = new ProjectEvent(p, Events.PROJECT_RUN);
+//                    EventBus.getDefault().post(evt);
 
                     // execute app
                 } else if (cmd.equals("execute_code")) {
-                    MLog.d(TAG, "--> execute code");
-
-                    // Save and run
-                    String code = parms.get("codeToSend").toString();
-
-                    Events.ExecuteCodeEvent evt = new Events.ExecuteCodeEvent(code);
-                    EventBus.getDefault().post(evt);
-                    MLog.i(TAG, "Execute...");
+//                    MLog.d(TAG, "--> execute code");
+//
+//                    // Save and run
+//                    String code = parms.get("codeToSend").toString();
+//
+//                    Events.ExecuteCodeEvent evt = new Events.ExecuteCodeEvent(code);
+//                    EventBus.getDefault().post(evt);
+//                    MLog.i(TAG, "Execute...");
 
                     // save_code
                 } else if (cmd.equals("push_code")) {
-                    MLog.d(TAG, "--> push code " + method + " " + header);
-                    name = parms.get("name").toString();
-                    String fileName = parms.get("fileName").toString();
-                    newCode = parms.get("code").toString();
-                    MLog.d(TAG, "fileName -> " + fileName);
-                    // MLog.d(TAG, "code -> " + newCode);
-
-                    folder = parms.get("type").toString();
-
-                    // add type
-                    Project p = ProjectManager.getInstance().get(folder, name);
-                    ProjectManager.getInstance().writeNewCode(p, newCode, fileName);
-                    data.put("project", ProjectManager.getInstance().toJson(p));
-                    ProjectEvent evt = new ProjectEvent(p, "save");
-                    EventBus.getDefault().post(evt);
-
-                    MLog.i(TAG, "Saved");
+//                    MLog.d(TAG, "--> push code " + method + " " + header);
+//                    name = parms.get("name").toString();
+//                    String fileName = parms.get("fileName").toString();
+//                    newCode = parms.get("code").toString();
+//                    MLog.d(TAG, "fileName -> " + fileName);
+//                    // MLog.d(TAG, "code -> " + newCode);
+//
+//                    folder = parms.get("type").toString();
+//
+//                    // add type
+//                    Project p = AppRunnerProjectManager.getInstance().get(folder, name);
+//                    AppRunnerProjectManager.getInstance().writeNewCode(p, newCode, fileName);
+//                    data.put("project", AppRunnerProjectManager.getInstance().toJson(p));
+//                    ProjectEvent evt = new ProjectEvent(p, "save");
+//                    EventBus.getDefault().post(evt);
+//
+//                    MLog.i(TAG, "Saved");
 
                 // hack, this should be changed
                 } else if (cmd.equals("push_code_and_run")) {
-                    MLog.d(TAG, "--> push code " + method + " " + header);
-                    name = parms.get("name").toString();
-                    String fileName = parms.get("fileName").toString();
-                    newCode = parms.get("code").toString();
-                    // MLog.d(TAG, "code -> " + newCode);
-                    folder = parms.get("type").toString();
-
-                    // add type
-                    Project p = ProjectManager.getInstance().get(folder, name);
-                    MLog.d(TAG, "qqm" + p.getName() + " " + p.getFolder() + " " + fileName + " " + newCode);
-
-                    ProjectManager.getInstance().writeNewCode(p, newCode, fileName);
-                    data.put("project", ProjectManager.getInstance().toJson(p));
-                    ProjectEvent evt = new ProjectEvent(p, "save");
-                    EventBus.getDefault().post(evt);
-
-                    MLog.i(TAG, "Saved");
-
-                   // ProjectManager.getInstance().setRemoteIP(parms.get("remoteIP").toString());
-                    //ProjectEvent evt2 = new ProjectEvent(p, "run");
-                    //EventBus.getDefault().post(evt2);
-                    //MLog.i(TAG, "Running...");
+//                    MLog.d(TAG, "--> push code " + method + " " + header);
+//                    name = parms.get("name").toString();
+//                    String fileName = parms.get("fileName").toString();
+//                    newCode = parms.get("code").toString();
+//                    // MLog.d(TAG, "code -> " + newCode);
+//                    folder = parms.get("type").toString();
+//
+//                    // add type
+//                    Project p = AppRunnerProjectManager.getInstance().get(folder, name);
+//                    MLog.d(TAG, "qqm" + p.getName() + " " + p.getFolder() + " " + fileName + " " + newCode);
+//
+//                    AppRunnerProjectManager.getInstance().writeNewCode(p, newCode, fileName);
+//                    data.put("project", AppRunnerProjectManager.getInstance().toJson(p));
+//                    ProjectEvent evt = new ProjectEvent(p, "save");
+//                    EventBus.getDefault().post(evt);
+//
+//                    MLog.i(TAG, "Saved");
 
                     // list files in project
                 } else if (cmd.equals("list_files_in_project")) {
-                    MLog.d(TAG, "--> create new project");
-                    name = obj.getString("name");
-                    folder = obj.getString("type");
-
-                    Project p = new Project(folder, name);
-                    JSONArray array = ProjectManager.getInstance().listFilesInProjectJSON(p);
-                    data.put("files", array);
+//                    MLog.d(TAG, "--> create new project");
+//                    name = obj.getString("name");
+//                    folder = obj.getString("type");
+//
+//                    Project p = new Project(folder, name);
+//                    JSONArray array = AppRunnerProjectManager.getInstance().listFilesInProjectJSON(p);
+//                    data.put("files", array);
                     // ProjectEvent evt = new ProjectEvent(p, "new");
                     // EventBus.getDefault().post(evt);
 
                 } else if (cmd.equals("create_new_project")) {
-                    MLog.d(TAG, "--> create new project");
-
-                    name = obj.getString("name");
-                    Project p = new Project(ProjectManager.FOLDER_USER_PROJECTS, name);
-                    ProjectEvent evt = new ProjectEvent(p, "new");
-                    EventBus.getDefault().post(evt);
-
-                    Project newProject = ProjectManager.getInstance().addNewProject(mContext.get(), name, ProjectManager.FOLDER_USER_PROJECTS, name);
+//                    MLog.d(TAG, "--> create new project");
+//
+//                    name = obj.getString("name");
+//                    Project p = new Project(AppRunnerProjectManager.FOLDER_USER_PROJECTS, name);
+//                    ProjectEvent evt = new ProjectEvent(p, "new");
+//                    EventBus.getDefault().post(evt);
+//
+//                    Project newProject = AppRunnerProjectManager.getInstance().addNewProject(mContext.get(), name, AppRunnerProjectManager.FOLDER_USER_PROJECTS, name);
 
                     // remove app
                 } else if (cmd.equals("remove_app")) {
-                    MLog.d(TAG, "--> remove app");
-                    name = obj.getString("name");
-                    folder = obj.getString("type");
-
-                    Project p = new Project(folder, name);
-                    ProjectManager.getInstance().deleteProject(p);
-                    ProjectEvent evt = new ProjectEvent(p, "update");
-                    EventBus.getDefault().post(evt);
+//                    MLog.d(TAG, "--> remove app");
+//                    name = obj.getString("name");
+//                    folder = obj.getString("type");
+//
+//                    Project p = new Project(folder, name);
+//                    AppRunnerProjectManager.getInstance().deleteProject(p);
+//                    ProjectEvent evt = new ProjectEvent(p, "update");
+//                    EventBus.getDefault().post(evt);
 
                     // rename app
                 } else if (cmd.equals("rename_app")) {
@@ -569,8 +563,8 @@ public class ProtocoderHttpServer extends NanoHTTPD {
             mime = NanoHTTPD.MIME_DEFAULT_BINARY;
         }
 
-        String currentEditor = EditorManager.getInstance().getCurrentEditor(mContext.get());
-        if (currentEditor.equals(EditorManager.DEFAULT)) {
+        String currentEditor = WebEditorManager.getInstance().getCurrentEditor(mContext.get());
+        if (currentEditor.equals(WebEditorManager.DEFAULT)) {
 
             // have the object build the directory structure, if needed.
             AssetManager am = mContext.get().getAssets();
@@ -585,7 +579,7 @@ public class ProtocoderHttpServer extends NanoHTTPD {
                 res = new Response(HTTP_INTERNALERROR, "text/html", "ERROR: " + e.getMessage());
             }
         } else {
-            String path = EditorManager.getInstance().getUrlEditor(mContext.get()) + uri;
+            String path = WebEditorManager.getInstance().getUrlEditor(mContext.get()) + uri;
             try {
                 FileInputStream fi = new FileInputStream(path);
                 res = new Response(HTTP_OK, mime, fi);

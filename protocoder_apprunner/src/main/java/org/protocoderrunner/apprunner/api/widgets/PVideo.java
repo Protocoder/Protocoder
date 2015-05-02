@@ -98,13 +98,11 @@ public class PVideo extends CustomVideoTextureView implements PViewInterface {
         super.stop();
     }
 
-
     @ProtoMethod(description = "Loads a videoFile", example = "")
     @ProtoMethodParam(params = {"fileName"})
     public void load(String videoFile) {
-        super.loadExternalVideo(mAppRunner.project.getStoragePath() + File.separator + videoFile);
+        super.loadExternalVideo(mAppRunner.mProjectManager.getProjectPath() + videoFile);
     }
-
 
     // --------- onUpdate ---------//
     public interface OnUpdateCB {

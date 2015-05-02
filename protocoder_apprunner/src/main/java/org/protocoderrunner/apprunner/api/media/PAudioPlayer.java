@@ -92,7 +92,7 @@ public class PAudioPlayer extends PInterface {
 
         try {
             if (url.startsWith("http://") == false) {
-                url = getAppRunner().project.getStoragePath() + File.separator + url;
+                url = getAppRunner().mProjectManager.getProjectPath() + url;
             }
 
             mMediaPlayer.setDataSource(url);

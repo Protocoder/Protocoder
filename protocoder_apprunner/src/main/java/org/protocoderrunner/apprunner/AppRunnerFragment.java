@@ -44,20 +44,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.protocoderrunner.R;
 import org.protocoderrunner.apprunner.api.PApp;
-import org.protocoderrunner.apprunner.api.PBoards;
-import org.protocoderrunner.apprunner.api.PConsole;
-import org.protocoderrunner.apprunner.api.PDashboard;
-import org.protocoderrunner.apprunner.api.PDevice;
-import org.protocoderrunner.apprunner.api.PFileIO;
-import org.protocoderrunner.apprunner.api.PMedia;
-import org.protocoderrunner.apprunner.api.PNetwork;
-import org.protocoderrunner.apprunner.api.PProtocoder;
-import org.protocoderrunner.apprunner.api.PSensors;
-import org.protocoderrunner.apprunner.api.PUI;
-import org.protocoderrunner.apprunner.api.PUtil;
 import org.protocoderrunner.apprunner.api.other.PLiveCodingFeedback;
-import org.protocoderrunner.events.Events;
-import org.protocoderrunner.project.Project;
+import org.protocoderrunner.apprunner.project.Project;
 import org.protocoderrunner.utils.MLog;
 
 import de.greenrobot.event.EventBus;
@@ -67,7 +55,6 @@ public class AppRunnerFragment extends Fragment {
 
     private static final String TAG = AppRunnerFragment.class.getSimpleName();
 
-    //
     private AppRunner mAppRunner;
     private AppRunnerActivity mActivity;
     private FileObserver fileObserver;
@@ -431,7 +418,7 @@ public class AppRunnerFragment extends Fragment {
         if (mAppRunner.mIsProjectLoaded) {
 
             // set up mContext file observer to watch this directory on sd card
-            fileObserver = new FileObserver(mAppRunner.mCurrentProject.getStoragePath(), FileObserver.CREATE | FileObserver.DELETE) {
+            fileObserver = new FileObserver(mAppRunner.mProjectManager.getProjectPath(), FileObserver.CREATE | FileObserver.DELETE) {
 
                 @Override
                 public void onEvent(int event, String file) {
@@ -464,7 +451,7 @@ public class AppRunnerFragment extends Fragment {
     }
 
     // execute lines
-    public void onEventMainThread(Events.ExecuteCodeEvent evt) {
+    public void onEventMainThread(AppRunnerEvents.ExecuteCodeEvent evt) {
         String code = evt.getCode(); // .trim();
         MLog.d(TAG, "event -> " + code);
 

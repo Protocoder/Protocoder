@@ -48,7 +48,6 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import org.protocoderrunner.AppSettings;
 import org.protocoderrunner.R;
 import org.protocoderrunner.apprunner.api.PDevice;
 import org.protocoderrunner.apprunner.api.PMedia;
@@ -57,8 +56,7 @@ import org.protocoderrunner.apprunner.api.network.PBluetooth;
 import org.protocoderrunner.apprunner.api.sensors.PNfc;
 import org.protocoderrunner.apprunner.api.widgets.PPadView;
 import org.protocoderrunner.base.BaseActivity;
-import org.protocoderrunner.events.Events;
-import org.protocoderrunner.project.Project;
+import org.protocoderrunner.apprunner.project.Project;
 import org.protocoderrunner.utils.AndroidUtils;
 import org.protocoderrunner.utils.MLog;
 import org.protocoderrunner.utils.StrUtils;
@@ -90,8 +88,6 @@ public class AppRunnerActivity extends BaseActivity {
     public boolean keyBackEnabled = true;
     private Toolbar mToolbar;
     private ActionBar mActionbar;
-
-    private Project mProject = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,30 +124,29 @@ public class AppRunnerActivity extends BaseActivity {
             boolean settingScreenAlwaysOn = false;
             boolean settingWakeUpScreen = false;
 
-            if (mProject == null) {
+            // get projects intent
+            //settings
+            settingScreenAlwaysOn = intent.getBooleanExtra(Project.SETTINGS_SCREEN_ALWAYS_ON, false);
+            settingWakeUpScreen = intent.getBooleanExtra(Project.SETTINGS_SCREEN_WAKEUP, false);
 
-                mProject = new Project();
+            //project info
+            String name = intent.getStringExtra(Project.NAME);
+            String folder = intent.getStringExtra(Project.FOLDER);
 
-                // get projects intent
-                //settings
-                settingScreenAlwaysOn = intent.getBooleanExtra(Project.SETTINGS_SCREEN_ALWAYS_ON, false);
-                settingWakeUpScreen = intent.getBooleanExtra(Project.SETTINGS_SCREEN_WAKEUP, false);
+            Project mProject = new Project(folder, name);
 
-                //project info
-                mProject.name = intent.getStringExtra(Project.NAME);
-                mProject.folder = intent.getStringExtra(Project.FOLDER);
-                mProject.prefix = intent.getStringExtra(Project.PREFIX);
-                mProject.code = intent.getStringExtra(Project.CODE);
-                mProject.postfix = intent.getStringExtra(Project.POSTFIX);
-            }
+            String prefix = intent.getStringExtra(Project.PREFIX);
+            String code = intent.getStringExtra(Project.CODE);
+            String postfix = intent.getStringExtra(Project.POSTFIX);
 
+            //send bundle to
             Bundle bundle = new Bundle();
-            bundle.putString(Project.NAME, mProject.name);
-            bundle.putString(Project.FOLDER, mProject.folder);
+            bundle.putString(Project.NAME, mProject.getName());
+            bundle.putString(Project.FOLDER, mProject.getFolder());
             //bundle.putInt(Project.COLOR, intent.getIntExtra("color", 0));
-            bundle.putString(Project.PREFIX, mProject.prefix);
-            bundle.putString(Project.CODE, mProject.code);
-            bundle.putString(Project.POSTFIX, mProject.postfix);
+            bundle.putString(Project.PREFIX, prefix);
+            bundle.putString(Project.CODE, code);
+            bundle.putString(Project.POSTFIX, postfix);
 
             //MLog.d(TAG, "load " + projectName + " in " + projectFolder);
 
@@ -247,7 +242,7 @@ public class AppRunnerActivity extends BaseActivity {
         super.onRestoreInstanceState(savedInstanceState);
     }
 
-    public void onEventMainThread(Events.ProjectEvent evt) {
+    public void onEventMainThread(AppRunnerEvents.ProjectEvent evt) {
         MLog.d(TAG, "event -> " + evt.getAction());
 
         if (evt.getAction() == "run") {
@@ -261,10 +256,12 @@ public class AppRunnerActivity extends BaseActivity {
 
         if(mActionbar != null) {
             // home clickable if is running inside protocoderapp
-            if (AppSettings.STANDALONE == false) {
-                //mToolbar.setDisplayHomeAsUpEnabled(true);
-                setToolbarBack();
-            }
+
+            //TODO reenable this
+            //if (AppRunnerSettings.STANDALONE == false) {
+                ////mToolbar.setDisplayHomeAsUpEnabled(true);
+            //    setToolbarBack();
+           //}
 
             // set color
             if (colorBg != null) {
@@ -628,10 +625,6 @@ public class AppRunnerActivity extends BaseActivity {
 
         return r;
 
-    }
-
-    public void setProject(Project project) {
-        this.mProject = project;
     }
 
 }

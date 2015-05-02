@@ -668,9 +668,7 @@ public class PUIGeneric extends PInterface {
 
         // Add image asynchronously
         new SetImageTask(ib, false).execute(
-                getAppRunner().project.getStoragePath()
-                        + File.separator
-                        + imgNotPressed);
+                getAppRunner().mProjectManager.getProjectPath() + imgNotPressed);
 
         // Add the view
         addViewAbsolute(ib, x, y, w, h);

@@ -32,9 +32,7 @@ import org.protocoderrunner.apprunner.api.PProtocoder;
 import org.protocoderrunner.apprunner.api.PSensors;
 import org.protocoderrunner.apprunner.api.PUI;
 import org.protocoderrunner.apprunner.api.PUtil;
-import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
-import org.protocoderrunner.events.Events;
-import org.protocoderrunner.project.Project;
+import org.protocoderrunner.apprunner.project.Project;
 import org.protocoderrunner.utils.MLog;
 
 //stopService 
@@ -254,9 +252,9 @@ public class AppRunnerService extends Service {
 
 
     // execute lines
-    public void onEventMainThread(Events.ExecuteCodeEvent evt) {
+    public void onEventMainThread(AppRunnerEvents.ExecuteCodeEvent evt) {
         String code = evt.getCode(); // .trim();
-        MLog.d(TAG, "event -> q " + code);
+        MLog.d(TAG, "event -> " + code);
 
         mAppRunner.evaluate(code, "");
     }

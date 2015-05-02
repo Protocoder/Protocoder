@@ -41,19 +41,14 @@ import android.graphics.Typeface;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.api.PUtil;
 import org.protocoderrunner.apprunner.api.other.PLooper;
-import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
-import org.protocoderrunner.project.ProjectManager;
-import org.protocoderrunner.utils.Image;
 import org.protocoderrunner.utils.MLog;
 
-import java.io.File;
 import java.util.Vector;
 
 import static android.graphics.Shader.TileMode;
@@ -501,7 +496,8 @@ public class PCanvas extends View implements PViewInterface {
     @ProtoMethod(description = "Load an image", example = "")
     @ProtoMethodParam(params = {"imagePath"})
     public Bitmap loadImage(String imagePath) {
-        return Image.loadBitmap(ProjectManager.getInstance().getCurrentProject().getStoragePath() + File.separator + imagePath);
+        //TODO reenable this
+        return null; //Image.loadBitmap(ProjectManager.getInstance().getCurrentProject().getStoragePath() + File.separator + imagePath);
     }
 
 

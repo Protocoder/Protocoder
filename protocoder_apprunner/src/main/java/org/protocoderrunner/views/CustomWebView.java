@@ -56,7 +56,7 @@ public class CustomWebView extends WebView {
     }
 
     public void loadHTMLFile(String fileName) {
-        String path = mAppRunner.project.getStoragePath() + File.separator + fileName;
+        String path = mAppRunner.mProjectManager.getProjectPath() + fileName;
         loadUrl("file://" + path);
     }
 

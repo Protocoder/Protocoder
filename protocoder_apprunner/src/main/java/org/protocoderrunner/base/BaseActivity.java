@@ -22,8 +22,6 @@ package org.protocoderrunner.base;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
@@ -31,12 +29,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 
-import org.protocoderrunner.AppSettings;
+import org.protocoderrunner.apprunner.AppRunnerSettings;
 import org.protocoderrunner.media.Audio;
 import org.protocoderrunner.utils.MLog;
 
@@ -98,8 +95,7 @@ public class BaseActivity extends ActionBarActivity {
 
     public void showHomeBar(boolean b) {
 
-        if (Build.VERSION.SDK_INT > AppSettings.MIN_SUPPORTED_VERSION) {
-
+        if (Build.VERSION.SDK_INT > AppRunnerSettings.MIN_SUPPORTED_VERSION) {
             if (b == true) {
                 getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
             } else {
@@ -190,10 +186,8 @@ public class BaseActivity extends ActionBarActivity {
     // override home buttons
     @Override
     public void onAttachedToWindow() {
-        if (AppSettings.OVERRIDE_HOME_BUTTONS) {
-            //this.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD);
-            super.onAttachedToWindow();
-        }
+        //this.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD);
+        super.onAttachedToWindow();
     }
 
     /**
@@ -221,16 +215,16 @@ public class BaseActivity extends ActionBarActivity {
 
         MLog.d(TAG, "" + keyCode);
 
-        if (AppSettings.OVERRIDE_VOLUME_BUTTONS
-                && (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP)) {
-
-            return true;
-        }
-
-        if (keyCode == KeyEvent.KEYCODE_BACK && AppSettings.CLOSE_WITH_BACK) {
-            finish();
-            return true;
-        }
+        //TODO reenable this
+//        if (AppRunnerSettings.OVERRIDE_VOLUME_BUTTONS
+//                && (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP)) {
+//            return true;
+//        }
+//
+//        if (keyCode == KeyEvent.KEYCODE_BACK && AppRunnerSettings.CLOSE_WITH_BACK) {
+//            finish();
+//            return true;
+//        }
 
         return super.onKeyDown(keyCode, event);
     }

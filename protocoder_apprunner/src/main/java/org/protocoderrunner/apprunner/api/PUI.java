@@ -55,11 +55,11 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.mozilla.javascript.NativeArray;
-import org.protocoderrunner.AppSettings;
 import org.protocoderrunner.R;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.apprunner.AppRunnerSettings;
 import org.protocoderrunner.apprunner.api.media.PCamera;
 import org.protocoderrunner.apprunner.api.other.PAnimation;
 import org.protocoderrunner.apprunner.api.other.PProcessing;
@@ -250,16 +250,16 @@ public class PUI extends PUIGeneric {
     @ProtoMethod(description = "Moves a view to a position using a normal transition", example = "")
     @ProtoMethodParam(params = {"View", "x", "y"})
     public void move(View v, float x, float y) {
-        v.animate().x(x).setDuration(AppSettings.animGeneralSpeed);
-        v.animate().y(y).setDuration(AppSettings.animGeneralSpeed);
+        v.animate().x(x).setDuration(AppRunnerSettings.animGeneralSpeed);
+        v.animate().y(y).setDuration(AppRunnerSettings.animGeneralSpeed);
     }
 
 
     @ProtoMethod(description = "Moves a view by given units from the current position using a normal transition", example = "")
     @ProtoMethodParam(params = {"View", "x", "y"})
     public void moveBy(View v, float x, float y) {
-        v.animate().xBy(x).setDuration(AppSettings.animGeneralSpeed);
-        v.animate().yBy(y).setDuration(AppSettings.animGeneralSpeed);
+        v.animate().xBy(x).setDuration(AppRunnerSettings.animGeneralSpeed);
+        v.animate().yBy(y).setDuration(AppRunnerSettings.animGeneralSpeed);
     }
 
 
@@ -452,7 +452,7 @@ public class PUI extends PUIGeneric {
     @ProtoMethod(description = "Change the animation speed for the default animations", example = "")
     @ProtoMethodParam(params = {"View"})
     public void animSpeed(int speed) {
-        AppSettings.animGeneralSpeed = speed;
+        AppRunnerSettings.animGeneralSpeed = speed;
     }
 
 
@@ -461,10 +461,10 @@ public class PUI extends PUIGeneric {
     public void jump(View v) {
 
         ValueAnimator w = ObjectAnimator.ofFloat(v, "scaleX", 1f, 0.9f, 1.2f, 1f);
-        w.setDuration(AppSettings.animGeneralSpeed);
+        w.setDuration(AppRunnerSettings.animGeneralSpeed);
 
         ValueAnimator h = ObjectAnimator.ofFloat(v, "scaleY", 1f, 0.9f, 1.2f, 1f);
-        h.setDuration(AppSettings.animGeneralSpeed);
+        h.setDuration(AppRunnerSettings.animGeneralSpeed);
 
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.play(w).with(h);
@@ -476,7 +476,7 @@ public class PUI extends PUIGeneric {
     @ProtoMethodParam(params = {"View", "num"})
     public void blink(View v, int num) {
         ObjectAnimator anim = ObjectAnimator.ofFloat(v, "alpha", 1f, 0f, 1f);
-        anim.setDuration(AppSettings.animGeneralSpeed);
+        anim.setDuration(AppRunnerSettings.animGeneralSpeed);
         anim.setInterpolator(new CycleInterpolator(1));
         anim.setRepeatCount(num);
         anim.start();
@@ -500,7 +500,7 @@ public class PUI extends PUIGeneric {
     @ProtoMethod(description = "Rotates the view in the x axis", example = "")
     @ProtoMethodParam(params = {"View", "x"})
     public ViewPropertyAnimator rotate(View v, float x, final AnimFinishCB cb) {
-        return v.animate().rotation(x).setDuration(AppSettings.animGeneralSpeed).setListener(new AnimatorListenerAdapter() {
+        return v.animate().rotation(x).setDuration(AppRunnerSettings.animGeneralSpeed).setListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
@@ -513,7 +513,7 @@ public class PUI extends PUIGeneric {
     @ProtoMethod(description = "Rotates the view in the x axis by given degrees", example = "")
     @ProtoMethodParam(params = {"View", "x"})
     public void rotateBy(View v, float x) {
-        v.animate().rotationBy(x).setDuration(AppSettings.animGeneralSpeed);
+        v.animate().rotationBy(x).setDuration(AppRunnerSettings.animGeneralSpeed);
     }
 
 
@@ -527,43 +527,43 @@ public class PUI extends PUIGeneric {
     @ProtoMethod(description = "Rotates the view in the x, y, z axis", example = "")
     @ProtoMethodParam(params = {"View", "x", "y", "z"})
     public void rotate(View v, float x, float y, float z) {
-        v.animate().rotation(x).setDuration(AppSettings.animGeneralSpeed);
+        v.animate().rotation(x).setDuration(AppRunnerSettings.animGeneralSpeed);
         // looks weird but it works more consistent
-        v.animate().rotationX(y).setDuration(AppSettings.animGeneralSpeed);
-        v.animate().rotationY(z).setDuration(AppSettings.animGeneralSpeed);
+        v.animate().rotationX(y).setDuration(AppRunnerSettings.animGeneralSpeed);
+        v.animate().rotationY(z).setDuration(AppRunnerSettings.animGeneralSpeed);
     }
 
 
     @ProtoMethod(description = "Rotates the view in the x, y, z axis by given degrees", example = "")
     @ProtoMethodParam(params = {"View", "x", "y", "z"})
     public void rotateBy(View v, float x, float y, float z) {
-        v.animate().rotationBy(x).setDuration(AppSettings.animGeneralSpeed);
+        v.animate().rotationBy(x).setDuration(AppRunnerSettings.animGeneralSpeed);
         // looks weird but it works more consistent
-        v.animate().rotationXBy(y).setDuration(AppSettings.animGeneralSpeed);
-        v.animate().rotationYBy(z).setDuration(AppSettings.animGeneralSpeed);
+        v.animate().rotationXBy(y).setDuration(AppRunnerSettings.animGeneralSpeed);
+        v.animate().rotationYBy(z).setDuration(AppRunnerSettings.animGeneralSpeed);
     }
 
 
     @ProtoMethod(description = "Changes the alpha of a view", example = "")
     @ProtoMethodParam(params = {"View", "float={0,1}"})
     public void alpha(View v, float alpha) {
-        v.animate().alpha(alpha).setDuration(AppSettings.animGeneralSpeed);
+        v.animate().alpha(alpha).setDuration(AppRunnerSettings.animGeneralSpeed);
     }
 
 
     @ProtoMethod(description = "Scales a view with animation to a given size", example = "")
     @ProtoMethodParam(params = {"View", "x", "y"})
     public void scale(View v, float x, float y) {
-        v.animate().scaleX(x).setDuration(AppSettings.animGeneralSpeed);
-        v.animate().scaleY(y).setDuration(AppSettings.animGeneralSpeed);
+        v.animate().scaleX(x).setDuration(AppRunnerSettings.animGeneralSpeed);
+        v.animate().scaleY(y).setDuration(AppRunnerSettings.animGeneralSpeed);
     }
 
 
     @ProtoMethod(description = "Scales a view with animation by a given size", example = "")
     @ProtoMethodParam(params = {"View", "x", "y"})
     public void scaleBy(View v, float x, float y) {
-        v.animate().scaleXBy(x).setDuration(AppSettings.animGeneralSpeed);
-        v.animate().scaleYBy(y).setDuration(AppSettings.animGeneralSpeed);
+        v.animate().scaleXBy(x).setDuration(AppRunnerSettings.animGeneralSpeed);
+        v.animate().scaleYBy(y).setDuration(AppRunnerSettings.animGeneralSpeed);
     }
 
     //TODO doesnt work always
@@ -749,9 +749,7 @@ public class PUI extends PUIGeneric {
 
         // Add the bg image asynchronously from the sdcard
         new SetBgImageTask(bgImageView, false).execute(
-                getAppRunner().project.getStoragePath()
-                        + File.separator
-                        + imagePath);
+                getAppRunner().mProjectManager.getProjectPath() + imagePath);
 	}
 
     @ProtoMethod(description = "Sets an image as tiled background", example = "")
@@ -761,9 +759,7 @@ public class PUI extends PUIGeneric {
 
         // Add the bg image asynchronously
         new SetBgImageTask(bgImageView, true).execute(
-                getAppRunner().project.getStoragePath()
-                        + File.separator
-                        + imagePath);
+                getAppRunner().mProjectManager.getProjectPath() + imagePath);
 	}
 
 
@@ -1312,13 +1308,13 @@ public class PUI extends PUIGeneric {
     @ProtoMethod(description = "Takes a screenshot of the whole app and stores it to a given file name", example = "")
     @ProtoMethodParam(params = {"imageName"})
     public void takeScreenshot(String imagePath) {
-        AndroidUtils.takeScreenshot(getAppRunner().project.getStoragePath(), imagePath, uiAbsoluteLayout);
+        AndroidUtils.takeScreenshot(getAppRunner().mProjectManager.getProjectPath(), imagePath, uiAbsoluteLayout);
     }
 
     @ProtoMethod(description = "Takes a screenshot of a view and save it to an image", example = "")
     @ProtoMethodParam(params = {"view", "imageName"})
     public void takeViewScreenshot(View v, String imagePath) {
-        AndroidUtils.takeScreenshotView(getAppRunner().project.getStoragePath(), imagePath, v);
+        AndroidUtils.takeScreenshotView(getAppRunner().mProjectManager.getProjectPath(), imagePath, v);
     }
 
     @ProtoMethod(description = "Takes a screenshot of a view", example = "")

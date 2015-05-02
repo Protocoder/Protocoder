@@ -209,7 +209,7 @@ public class PUtil extends PInterface {
     @ProtoMethod(description = "Loads a font", example = "")
     @ProtoMethodParam(params = {"fontFile"})
     public Typeface loadFont(String fontName) {
-        return Typeface.createFromFile(getAppRunner().project.getStoragePath() + File.separator + fontName);
+        return Typeface.createFromFile(getAppRunner().mProjectManager.getProjectPath() + fontName);
     }
 
 

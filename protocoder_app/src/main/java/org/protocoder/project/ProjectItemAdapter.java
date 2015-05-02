@@ -24,8 +24,8 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
-import org.protocoderrunner.project.Project;
-import org.protocoderrunner.project.ProjectManager;
+import org.protocoder.ProjectManager;
+import org.protocoderrunner.apprunner.project.Project;
 
 import java.util.ArrayList;
 
@@ -69,7 +69,8 @@ public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.
     }
 
     public void remove(Project p) {
-        ProjectManager.getInstance().deleteProject(p);
+        ProjectManager projectManager = new ProjectManager(mContext, p);
+        projectManager.deleteProject();
 
         int id = findAppPosByName(p.getName());
         mProjectList.remove(id);

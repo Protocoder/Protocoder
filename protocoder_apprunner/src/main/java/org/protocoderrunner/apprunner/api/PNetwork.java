@@ -63,7 +63,6 @@ import org.protocoderrunner.network.NetworkUtils;
 import org.protocoderrunner.network.NetworkUtils.DownloadTask.DownloadListener;
 import org.protocoderrunner.network.OSC;
 import org.protocoderrunner.network.ServiceDiscovery;
-import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.ExecuteCmd;
 import org.protocoderrunner.utils.MLog;
 
@@ -480,7 +479,8 @@ public class PNetwork extends PInterface {
 
             // create the multipart
             if (type.contains("file")) {
-                File f = new File(ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/" + content);
+                //TODO reenable this
+                File f = null; //new File(ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/" + content);
                 ContentBody cbFile = new FileBody(f);
                 entity.addPart(name, cbFile);
             } else if (type.contains("text")) { // Normal string data

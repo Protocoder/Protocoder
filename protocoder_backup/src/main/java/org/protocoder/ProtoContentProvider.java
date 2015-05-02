@@ -8,8 +8,8 @@ import android.database.MatrixCursor;
 import android.net.Uri;
 import android.util.Log;
 
-import org.protocoderrunner.project.Project;
-import org.protocoderrunner.project.ProjectManager;
+import org.protocoderrunner.apprunner.project.Project;
+import org.protocoderrunner.apprunner.project.ProjectManager;
 
 import java.util.ArrayList;
 

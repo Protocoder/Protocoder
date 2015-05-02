@@ -18,7 +18,7 @@
 * along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package org.protocoder.activities;
+package org.protocoder;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -27,56 +27,43 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
-import org.protocoder.MainActivity;
-import org.protocoder.R;
-import org.protocoder.appApi.Protocoder;
-import org.protocoderrunner.project.ProjectManager;
-import org.protocoderrunner.project.ProjectManager.InstallListener;
+import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.utils.MLog;
 import org.protocoderrunner.utils.StrUtils;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
 @SuppressLint("NewApi")
-public class WelcomeActivity extends AppBaseActivity {
+public class WelcomeActivity extends BaseActivity {
 
     private static final String TAG = "WelcomeActivity";
 
-    /**
-     * Called when the activity is first created.
-     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_welcome);
-        setToolbar();
+        //setToolbar();
         //setToolbarBack();
 
-        // Set copyright
-        TextView copyright = (TextView) findViewById(R.id.copyright);
-        copyright.setText(readFile(R.raw.copyright_notice));
+        //TextView copyright = (TextView) findViewById(R.id.copyright);
+        //copyright.setText(readFile(R.raw.copyright_notice));
 
         // first time id
-        Protocoder.getInstance(this).settings.setId(StrUtils.generateRandomString());
+        UserSettings userSettings = new UserSettings(this);
+        userSettings.setId(StrUtils.generateRandomString());
     }
 
-    /**
-     * onResume
-     */
     @Override
     protected void onResume() {
         super.onResume();
         MLog.d(TAG, "onResume");
     }
 
-    /**
-     * onPause
-     */
     @Override
     protected void onPause() {
         super.onPause();
@@ -101,9 +88,14 @@ public class WelcomeActivity extends AppBaseActivity {
         progress.setCancelable(false);
         progress.setCanceledOnTouchOutside(false);
 
-        // install examples
-        ProjectManager.getInstance().install(this, ProjectManager.getInstance().FOLDER_EXAMPLES, new InstallListener() {
+        //create folder structure
+        new File(AppSettings.getFolderPath(AppSettings.USER_PROJECTS_FOLDER)).mkdirs();
+        new File(AppSettings.getFolderPath(AppSettings.EXAMPLES_FOLDER)).mkdirs();
+        new File(AppSettings.getBaseWebEditorsDir()).mkdirs();
+        new File(AppSettings.getBaseLibrariesDir()).mkdirs();
 
+        // install examples
+        ProtocoderAppHelper.installExamples(this, AppSettings.EXAMPLES_FOLDER, new ProtocoderAppHelper.InstallListener() {
             @Override
             public void onReady() {
                 progress.dismiss();
@@ -120,12 +112,6 @@ public class WelcomeActivity extends AppBaseActivity {
     }
 
     //TODO remove and use fileIO methods
-
-    /**
-     * Returns mContext string from mContext txt file resource
-     *
-     * @return
-     */
     private String readFile(int resource) {
         InputStream inputStream = getResources().openRawResource(resource);
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -138,7 +124,6 @@ public class WelcomeActivity extends AppBaseActivity {
             }
             inputStream.close();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return byteArrayOutputStream.toString();

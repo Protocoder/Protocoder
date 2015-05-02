@@ -33,11 +33,12 @@ import android.view.ViewGroup;
 import android.view.animation.CycleInterpolator;
 import android.widget.LinearLayout;
 
+import org.protocoder.ProtocoderAppHelper;
 import org.protocoder.R;
 import org.protocoderrunner.base.BaseFragment;
-import org.protocoderrunner.events.Events.ProjectEvent;
-import org.protocoderrunner.project.Project;
-import org.protocoderrunner.project.ProjectManager;
+import org.protocoder.Events.ProjectEvent;
+import org.protocoderrunner.apprunner.project.Project;
+import org.protocoderrunner.apprunner.project.AppRunnerProjectManager;
 import org.protocoderrunner.utils.MLog;
 
 import java.util.ArrayList;
@@ -71,10 +72,9 @@ public class ProjectListFragment extends BaseFragment {
 
         mProjectFolder = getArguments().getString("folderName");
         //mProjectFolder = "projects";
-        MLog.d(TAG, "qq " + mProjectFolder);
+        MLog.d(TAG, "showing " + mProjectFolder);
         mOrderByName = getArguments().getBoolean("orderByName");
         mProjectAdapter = new ProjectItemAdapter(getActivity()); //, this);
-
     }
 
     @Override
@@ -187,7 +187,7 @@ public class ProjectListFragment extends BaseFragment {
 
         mProjectFolder = folder;
 
-        mListProjects = ProjectManager.getInstance().list(mProjectFolder, mOrderByName);
+        mListProjects = ProtocoderAppHelper.list(mProjectFolder, mOrderByName);
         mProjectAdapter.setArray(mListProjects);
         mGrid.setAdapter(mProjectAdapter);
         notifyAddedProject();
@@ -209,7 +209,8 @@ public class ProjectListFragment extends BaseFragment {
 
     public void resetHighlighting() {
         for (int i = 0; i < mListProjects.size(); i++) {
-            mListProjects.get(i).selected = false;
+            //TODO reenable this
+            //mListProjects.get(i).selected = false;
         }
 
         for (int i = 0; i < mGrid.getChildCount(); i++) {
@@ -223,7 +224,8 @@ public class ProjectListFragment extends BaseFragment {
     public View highlight(String projectName, boolean b) {
         View v = mGrid.findViewWithTag(projectName);
         v.setSelected(b);
-        mProjectAdapter.mProjectList.get(mProjectAdapter.findAppIdByName(projectName)).selected = true;
+        //TODO reenable this
+        //mProjectAdapter.mProjectList.get(mProjectAdapter.findAppIdByName(projectName)).selected = true;
         v.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
 
         return v;

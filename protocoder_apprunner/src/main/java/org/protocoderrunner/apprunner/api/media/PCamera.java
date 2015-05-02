@@ -52,7 +52,7 @@ public class PCamera extends CameraNew implements PViewInterface {
     // @APIRequires()
     public void takePicture(String file, final TakePictureCB callbackfn) {
 
-        takePic(mAppRunner.project.getStoragePath() + File.separator + file);
+        takePic(mAppRunner.mProjectManager.getProjectPath() + file);
         addListener(new CameraListener() {
 
             @Override
@@ -108,7 +108,7 @@ public class PCamera extends CameraNew implements PViewInterface {
     @ProtoMethod(description = "Records a video in fileName", example = "")
     @ProtoMethodParam(params = {"fileName"})
     public void recordVideo(String file) {
-        recordVideo(mAppRunner.project.getStoragePath() + File.separator + file);
+        recordVideo(mAppRunner.mProjectManager.getProjectPath() + file);
     }
 
 

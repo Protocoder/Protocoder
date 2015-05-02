@@ -5,8 +5,7 @@ import android.os.Bundle;
 import org.protocoderrunner.apprunner.AppRunnerContext;
 import org.protocoderrunner.AppSettings;
 import org.protocoderrunner.apprunner.AppRunnerActivity;
-import org.protocoderrunner.project.Project;
-import org.protocoderrunner.project.ProjectManager;
+import org.protocoderrunner.apprunner.project.AppRunnerProjectManager;
 
 
 /**
@@ -22,14 +21,15 @@ public class MainActivity extends AppRunnerActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         // Get and store the application context
-        AppRunnerContext.get().init(getApplicationContext());
+        //AppRunnerContext.get().init(getApplicationContext());
 
+        //TODO reenable this
         // Enable the standalone mode
-        AppSettings.STANDALONE = true;
+        //AppSettings.STANDALONE = true;
 
         // Create a new project and inject it to the base class
-        Project project = new Project(PROJECT_FOLDER, PROJECT_NAME);
-        setProject(project);
+        //Project project = new Project(PROJECT_FOLDER, PROJECT_NAME);
+        //setProject(project);
 
         // Copy the project files from assets to internal storage
         installMyScript();
@@ -48,12 +48,12 @@ public class MainActivity extends AppRunnerActivity {
 
     // Copy the project files from assets to internal storage
     private void installMyScript() {
-        ProjectManager.getInstance().install(this,
-            ProjectManager.getInstance().FOLDER_MYSCRIPT,
-            new ProjectManager.InstallListener() {
-                @Override
-                public void onReady() {
-                }
-            });
+        AppRunnerProjectManager.getInstance().installExamples(this,
+                AppRunnerProjectManager.getInstance().FOLDER_MYSCRIPT,
+                new AppRunnerProjectManager.InstallListener() {
+                    @Override
+                    public void onReady() {
+                    }
+                });
     }
 }

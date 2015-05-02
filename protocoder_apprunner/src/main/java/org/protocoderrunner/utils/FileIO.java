@@ -31,8 +31,6 @@ import net.lingala.zip4j.model.ZipParameters;
 import net.lingala.zip4j.util.Zip4jConstants;
 
 import org.apache.commons.io.FileUtils;
-import org.protocoderrunner.apprunner.AppRunner;
-import org.protocoderrunner.project.ProjectManager;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -225,7 +223,8 @@ public class FileIO {
             if (assets.length == 0) {
                 copyFile(c, path);
             } else {
-                String fullPath = ProjectManager.getInstance().getBaseDir() + path;
+                //TODO reenable this
+                String fullPath = null; //ProjectManager.getInstance().getBaseDir() + path;
                 File dir = new File(fullPath);
                 if (!dir.exists()) {
                     dir.mkdir();
@@ -246,7 +245,8 @@ public class FileIO {
         OutputStream out = null;
         try {
             in = assetManager.open(filename);
-            String newFileName = ProjectManager.getInstance().getBaseDir() + filename;
+            //TODO reenable this
+            String newFileName = null; //ProjectManager.getInstance().getBaseDir() + filename;
             out = new FileOutputStream(newFileName);
 
             byte[] buffer = new byte[1024];
@@ -337,7 +337,8 @@ public class FileIO {
      * Method borrowed from Processing PApplet.java
      */
     public static File saveFile(String where) {
-        return new File(ProjectManager.getInstance().getCurrentProject().getStoragePath() + File.separator + where);
+        //TODO reenable this
+        return null; //new File(ProjectManager.getInstance().getCurrentProject().getStoragePath() + File.separator + where);
     }
 
     /*
@@ -599,7 +600,8 @@ public class FileIO {
     }
 
     public static File[] listFiles(String url, final String extension) {
-        File f = new File(ProjectManager.getInstance().getCurrentProject().getStoragePath() + File.separator + url + File.separator);
+        //TODO reenable this
+        File f = null; //new File(ProjectManager.getInstance().getCurrentProject().getStoragePath() + File.separator + url + File.separator);
 
         return f.listFiles(new FilenameFilter() {
 
@@ -624,8 +626,8 @@ public class FileIO {
 
     public static void appendStrings(String fileName, String[] lines) {
         try {
-            String fileUrl = ProjectManager.getInstance().getCurrentProject().getStoragePath() + File.separator
-                    + fileName;
+            //TODO reenable this
+            String fileUrl = null; //ProjectManager.getInstance().getCurrentProject().getStoragePath() + File.separator + fileName;
             File f = new File(fileUrl);
             if (!f.exists()) {
                 f.createNewFile();

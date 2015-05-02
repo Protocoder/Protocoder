@@ -40,8 +40,7 @@ import org.protocoder.appinterpreter.ProtocoderApp;
 import org.protocoder.project.FolderChooserFragment;
 import org.protocoder.project.ProjectListFragment;
 import org.protocoder.server.ProtocoderServerService;
-import org.protocoderrunner.events.Events;
-import org.protocoderrunner.project.ProjectManager;
+import org.protocoderrunner.apprunner.AppRunnerEvents;
 import org.protocoderrunner.utils.AndroidUtils;
 import org.protocoderrunner.utils.MLog;
 
@@ -77,7 +76,7 @@ public class MainActivity extends ActionBarActivity {
         appRunner.initDefaultObjects().initInterpreter();
         ProtocoderApp protocoderApp = new ProtocoderApp(appRunner);
         protocoderApp.network.checkVersion();
-        appRunner.interp.eval("device.vibrate(1000);");
+        appRunner.interp.eval("device.vibrate(100);");
 
         /*
          * Servers
@@ -115,7 +114,7 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-    //Project folder chooser, ATM just a spinner
+    //Project folder chooser
     private void addProjectFolderChooser(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
             mFolderChooserFragment = FolderChooserFragment.newInstance(ProjectManager.FOLDER_EXAMPLES, true);
@@ -208,7 +207,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     // execute lines
-    public void onEventMainThread(Events.ExecuteCodeEvent evt) {
+    public void onEventMainThread(AppRunnerEvents.ExecuteCodeEvent evt) {
         String code = evt.getCode();
         MLog.d(TAG, "event -> " + code);
 

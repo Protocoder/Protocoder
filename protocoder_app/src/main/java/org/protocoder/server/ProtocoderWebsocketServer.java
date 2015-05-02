@@ -29,7 +29,7 @@ import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.protocoderrunner.AppSettings;
+import org.protocoder.AppSettings;
 import org.protocoderrunner.utils.MLog;
 
 import java.net.InetSocketAddress;

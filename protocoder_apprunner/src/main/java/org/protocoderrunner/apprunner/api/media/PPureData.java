@@ -175,7 +175,7 @@ public class PPureData extends PInterface {
         PdBase.subscribe("android");
         PdBase.setReceiver(receiver);
 
-        String filePath = getAppRunner().project.getStoragePath() + File.separator + fileName;
+        String filePath = getAppRunner().mProjectManager.getProjectPath() + fileName;
         AudioServicePd.file = filePath;
 
         Intent intent = new Intent(getContext(), PdService.class);

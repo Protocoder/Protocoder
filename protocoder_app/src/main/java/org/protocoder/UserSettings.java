@@ -38,8 +38,7 @@ public class UserSettings {
 
     //---------------- save / load methods
     public void setId(String id) {
-        mSharedPrefs.edit().putString("pref_id", id);
-        mSharedPrefs.edit().commit();
+        mSharedPrefs.edit().putString("pref_id", id).commit();
     }
 
     public String getId() {

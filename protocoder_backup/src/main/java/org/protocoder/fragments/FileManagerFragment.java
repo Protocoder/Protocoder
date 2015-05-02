@@ -49,8 +49,8 @@ import android.widget.Toast;
 
 import org.protocoder.R;
 import org.protocoderrunner.base.BaseFragment;
-import org.protocoderrunner.project.Project;
-import org.protocoderrunner.project.ProjectManager;
+import org.protocoderrunner.apprunner.project.Project;
+import org.protocoderrunner.apprunner.project.ProjectManager;
 
 import java.io.File;
 import java.lang.ref.WeakReference;

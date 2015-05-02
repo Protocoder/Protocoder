@@ -20,7 +20,6 @@
 
 package org.protocoderrunner.apprunner.api.other;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -29,7 +28,6 @@ import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.project.ProjectManager;
 
 import java.util.ArrayList;
 
@@ -48,10 +46,10 @@ public class PSqLite extends PInterface {
     @ProtoMethod(description = "Open a SQLite ", example = "")
     @ProtoMethodParam(params = {"dirName"})
     public void open(String dbName) {
-        db = getContext().openOrCreateDatabase(
-                ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/" + dbName, getContext().MODE_PRIVATE,
-                null);
-
+        //TODO reenable this
+        //db = getContext().openOrCreateDatabase(
+        //        ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/" + dbName, getContext().MODE_PRIVATE,
+        //        null);
     }
 
 

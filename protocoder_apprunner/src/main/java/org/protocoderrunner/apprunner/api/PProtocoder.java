@@ -47,7 +47,6 @@ import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.other.ApplicationInfo;
 import org.protocoderrunner.apprunner.api.widgets.PWebEditor;
-import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.MLog;
 
 import java.io.FileOutputStream;
@@ -252,7 +251,8 @@ public class PProtocoder extends PInterface {
 
     @ProtoMethod(description = "Install a Proto app programatically", example = "")
     public void installProtoApp(String src, boolean b) {
-        final String projectPath = ProjectManager.getInstance().getCurrentProject().getStoragePath();
+        //TODO reenable this
+        final String projectPath = null; //ProjectManager.getInstance().getCurrentProject().getStoragePath();
 
         Intent intent = new Intent();
         intent.setComponent(new ComponentName("org.protocoder", "org.protocoder.ProtoAppInstallerActivity"));

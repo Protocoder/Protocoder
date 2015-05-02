@@ -22,10 +22,8 @@ package org.protocoder;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 
-import org.protocoderrunner.AppSettings;
 import org.protocoderrunner.utils.FileIO;
 import org.protocoderrunner.utils.MLog;
 
@@ -33,16 +31,16 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class EditorManager {
+public class WebEditorManager {
 
     private static final String TAG = "EditorManager";
     public static final String DEFAULT = "default";
 
-    private static EditorManager instance;
+    private static WebEditorManager instance;
 
-    public static EditorManager getInstance() {
+    public static WebEditorManager getInstance() {
         if (instance == null) {
-            instance = new EditorManager();
+            instance = new WebEditorManager();
         }
 
         return instance;
@@ -64,7 +62,7 @@ public class EditorManager {
         Arrays.sort(all_projects);
 
         for (File file : all_projects) {
-            if (file.getName().equals(AppSettings.CUSTOM_WEBEDITOR) == false) {
+            if (file.getName().equals(AppSettings.APP_FOLDER_CUSTOM_WEBEDITOR) == false) {
                 //MLog.d(TAG, file.getName());
                 editors.add(file.getName());
             }
@@ -83,9 +81,7 @@ public class EditorManager {
     }
 
     public String getBaseDir() {
-        String baseDir = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + AppSettings.APP_FOLDER + File.separator + AppSettings.CUSTOM_WEBEDITOR + File.separator;
-
-        return baseDir;
+        return AppSettings.getBaseWebEditorsDir();
     }
 
 

@@ -48,8 +48,8 @@ import org.protocoder.appApi.EditorManager;
 import org.protocoder.appApi.Protocoder;
 import org.protocoder.appApi.Settings;
 import org.protocoderrunner.base.BaseNotification;
-import org.protocoderrunner.project.ProjectManager;
-import org.protocoderrunner.project.ProjectManager.InstallListener;
+import org.protocoderrunner.apprunner.project.ProjectManager;
+import org.protocoderrunner.apprunner.project.ProjectManager.InstallListener;
 import org.protocoderrunner.utils.MLog;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)

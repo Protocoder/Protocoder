@@ -38,13 +38,12 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewOutlineProvider;
 
-import org.protocoderrunner.AppSettings;
 import org.protocoderrunner.R;
+import org.protocoderrunner.apprunner.AppRunnerSettings;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -270,7 +269,7 @@ public class AndroidUtils {
 
 
     public static boolean isVersionMinSupported() {
-        return AppSettings.MIN_SUPPORTED_VERSION > Build.VERSION.SDK_INT;
+        return AppRunnerSettings.MIN_SUPPORTED_VERSION > Build.VERSION.SDK_INT;
     }
 
     public static int calculateColor(float fraction, int startValue, int endValue) {

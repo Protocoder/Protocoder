@@ -18,11 +18,22 @@
 * along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package org.protocoderrunner;
+package org.protocoder;
 
+import android.content.Context;
 import android.os.Build;
+import android.os.Environment;
 
-public class AppSettings {
+import org.protocoder.project.FolderData;
+import org.protocoderrunner.apprunner.AppRunnerSettings;
+import org.protocoderrunner.apprunner.project.Project;
+import org.protocoderrunner.utils.FileIO;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+public class AppSettings extends AppRunnerSettings {
 
 	// == APP SETTINGS ==========
 	public final static boolean DEBUG = true;
@@ -37,25 +48,17 @@ public class AppSettings {
 	public static boolean STANDALONE = false;
     public static int MIN_SUPPORTED_VERSION = Build.VERSION_CODES.ICE_CREAM_SANDWICH;
 
-    public final static String APP_FOLDER = "protocoder";
-    public static final String CUSTOM_WEBEDITOR = "webeditors";
+    public static final String APP_FOLDER_CUSTOM_WEBEDITOR = "webeditors";
 
     public final static int WEBSOCKET_PORT = 8587;
     public final static int HTTP_PORT = 8585;
     public static int FTP_PORT = 8589;
 
-
-    public static String serverAddress = "";
-    public static int animGeneralSpeed = 500;
     public String id;
 
-    private static AppSettings instance;
 
-    public static AppSettings get() {
-        if (instance == null)
-            instance = new AppSettings();
-        return instance;
+    public static String getBaseWebEditorsDir() {
+        return getBaseDir() + APP_FOLDER_CUSTOM_WEBEDITOR + File.separator;
     }
-
 
 }

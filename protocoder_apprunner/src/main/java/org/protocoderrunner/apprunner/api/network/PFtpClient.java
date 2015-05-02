@@ -1,7 +1,5 @@
 package org.protocoderrunner.apprunner.api.network;
 
-import android.content.Context;
-
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
@@ -10,8 +8,6 @@ import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
-import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.MLog;
 
 import java.io.FileInputStream;
@@ -173,7 +169,8 @@ public class PFtpClient extends PInterface {
             @Override
             public void run() {
                 boolean status = false;
-                String desFilePath = ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/" + destiny;
+                //TODO reenable this
+                String desFilePath = null; //ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/" + destiny;
 
                 try {
                     FileOutputStream desFileStream = new FileOutputStream(desFilePath);
@@ -200,7 +197,8 @@ public class PFtpClient extends PInterface {
     public void upload(final String source, final String desFileName, String desDirectory, final UploadCb callback) {
         boolean status = false;
 
-        final String srcFilePath = ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/" + source;
+        //TODO reenable this
+        final String srcFilePath = null; //ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/" + source;
 
         Thread t = new Thread(new Runnable() {
             @Override

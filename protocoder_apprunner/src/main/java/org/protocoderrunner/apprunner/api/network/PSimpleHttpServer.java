@@ -20,7 +20,6 @@
 
 package org.protocoderrunner.apprunner.api.network;
 
-import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -30,26 +29,22 @@ import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.network.NanoHTTPD;
 import org.protocoderrunner.network.NetworkUtils;
-import org.protocoderrunner.project.Project;
-import org.protocoderrunner.project.ProjectManager;
+import org.protocoderrunner.apprunner.project.Project;
 import org.protocoderrunner.utils.FileIO;
 import org.protocoderrunner.utils.MLog;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-/**
- * An example of subclassing NanoHTTPD to make mContext custom HTTP server.
- */
 public class PSimpleHttpServer extends NanoHTTPD {
     public static final String TAG = "ProtocoderHttpServer";
     public Handler mHandler = new Handler(Looper.getMainLooper());
 
-    private Context mContext;
+    private AppRunner mAppRunner;
+    private final String mProjectFolder;
 
     private static final Map<String, String> MIME_TYPES = new HashMap<String, String>() {
         {
@@ -80,7 +75,7 @@ public class PSimpleHttpServer extends NanoHTTPD {
         }
     };
     private HttpCB mCallback = null;
-    private final Project p;
+    private final Project p = null;
 
 
     public interface HttpCB {
@@ -89,10 +84,10 @@ public class PSimpleHttpServer extends NanoHTTPD {
 
     public PSimpleHttpServer(AppRunner appRunner, int port) throws IOException {
         super(port);
-        p = ProjectManager.getInstance().getCurrentProject();
 
-        mContext = appRunner.getAppContext();
-        String ip = NetworkUtils.getLocalIpAddress(mContext);
+        mAppRunner = appRunner;
+        mProjectFolder = mAppRunner.mProjectManager.getProjectPath();
+        String ip = NetworkUtils.getLocalIpAddress(mAppRunner.getAppContext());
         if (ip == null) {
             MLog.d(TAG, "No IP found. Please connect to a newwork and try again");
         } else {
@@ -139,9 +134,8 @@ public class PSimpleHttpServer extends NanoHTTPD {
 
                 // file upload
                 if (!files.isEmpty()) {
-
                     File src = new File(files.getProperty("pic").toString());
-                    File dst = new File(p.getStoragePath() + "/" + parms.getProperty("pic").toString());
+                    File dst = new File(mProjectFolder + parms.getProperty("pic").toString());
 
                     FileIO.copyFile(src, dst);
 
@@ -154,11 +148,8 @@ public class PSimpleHttpServer extends NanoHTTPD {
                 } else {
                     MLog.d(TAG, "received String" + uri + " " + method + " " + header + " " + " " + parms + " " + files);
 
-                    String projectFolder = p.getStoragePath();
-
-
                     res[0] = serveFile(uri.substring(uri.lastIndexOf('/') + 1, uri.length()), header,
-                            new File(p.getStoragePath()), false);
+                            new File(mProjectFolder), false);
 
                 }
 

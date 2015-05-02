@@ -18,16 +18,13 @@
 * along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package org.protocoder.activities;
+package org.protocoder;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import org.protocoder.MainActivity;
-import org.protocoder.R;
-import org.protocoder.appApi.Protocoder;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.utils.MLog;
 import org.protocoderrunner.utils.StrUtils;
@@ -52,14 +49,14 @@ public class LauncherActivity extends BaseActivity {
         Intent i = getIntent();
         boolean wasCrash = i.getBooleanExtra("wasCrash", false);
         if (wasCrash) {
-            MLog.d(TAG, "lalall");
             Toast.makeText(this, "The script crashed :(", Toast.LENGTH_LONG).show();
         }
 
         if (firstLaunch) {
             intent = new Intent(this, WelcomeActivity.class);
-            Protocoder.getInstance(this).settings.setId(StrUtils.generateRandomString());
-            Protocoder.getInstance(this).settings.setConnectionAlert(true);
+            UserSettings userSettings = new UserSettings(this);
+            userSettings.setId(StrUtils.generateRandomString());
+            userSettings.setConnectionAlert(true);
         } else {
             intent = new Intent(this, MainActivity.class);
            // intent.putExtras();
