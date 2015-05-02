@@ -95,6 +95,8 @@ public class AppRunner {
     }
 
     public AppRunner initDefaultObjects(AppRunnerFragment appRunnerFragment) {
+        hasUserInterface = true;
+
         //instantiate the objects that can be accessed from the interpreter
 
         //the reason to call initForParentFragment is because the class depends on the fragment ui.

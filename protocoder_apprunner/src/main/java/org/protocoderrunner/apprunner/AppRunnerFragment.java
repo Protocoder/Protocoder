@@ -93,7 +93,7 @@ public class AppRunnerFragment extends Fragment {
         mActivity = (AppRunnerActivity) getActivity();
 
         mAppRunner = new AppRunner(activity);
-        mAppRunner.hasUserInterface = true;
+        mAppRunner.initDefaultObjects(this);
 
         //get parameters and set them in the AppRunner
         Bundle bundle = getArguments();
@@ -103,7 +103,8 @@ public class AppRunnerFragment extends Fragment {
         mAppRunner.mIntentCode = bundle.getString(Project.CODE, "");
         mAppRunner.mIntentPostfixScript = bundle.getString(Project.POSTFIX, "");
 
-        mAppRunner.initInterpreter().loadProject();
+        mAppRunner.initInterpreter();
+        mAppRunner.loadProject();
     }
 
     @Override
