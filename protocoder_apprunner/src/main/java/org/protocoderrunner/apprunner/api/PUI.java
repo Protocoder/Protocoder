@@ -27,7 +27,6 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
@@ -65,7 +64,6 @@ import org.protocoderrunner.apprunner.api.media.PCamera;
 import org.protocoderrunner.apprunner.api.other.PAnimation;
 import org.protocoderrunner.apprunner.api.other.PProcessing;
 import org.protocoderrunner.apprunner.api.other.PosVector;
-import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.apprunner.api.widgets.PAbsoluteLayout;
 import org.protocoderrunner.apprunner.api.widgets.PButton;
 import org.protocoderrunner.apprunner.api.widgets.PCanvas;
@@ -94,7 +92,6 @@ import org.protocoderrunner.apprunner.api.widgets.PWebView;
 import org.protocoderrunner.apprunner.api.widgets.PWindow;
 import org.protocoderrunner.apprunner.api.widgets.WidgetHelper;
 import org.protocoderrunner.utils.AndroidUtils;
-import org.protocoderrunner.utils.MLog;
 import org.protocoderrunner.views.TouchAreaView;
 
 import java.io.File;
@@ -1161,11 +1158,10 @@ public class PUI extends PUIGeneric {
     @ProtoMethod(description = "Adds a webview", example = "")
     @ProtoMethodParam(params = {"x", "y", "w", "h"})
     public PWebView addWebView(int x, int y, int w, int h) {
-        PWebView webView = newWebview();
+        PWebView webView = newWebView();
         addViewAbsolute(webView, x, y, w, h);
 
         return webView;
-
     }
 
     @ProtoMethod(description = "Add camera view", example = "")

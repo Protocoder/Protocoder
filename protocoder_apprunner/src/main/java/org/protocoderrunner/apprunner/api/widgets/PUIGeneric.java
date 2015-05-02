@@ -840,7 +840,7 @@ public class PUIGeneric extends PInterface {
 
     @ProtoMethod(description = "Creates a new web view", example = "")
     @ProtoMethodParam(params = {""})
-    public PWebView newWebview() {
+    public PWebView newWebView() {
         initializeLayout();
         PWebView webView = new PWebView(getAppRunner());
 
