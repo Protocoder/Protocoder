@@ -18,7 +18,7 @@
 * along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package org.protocoder.qq;
+package org.protocoder.project;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

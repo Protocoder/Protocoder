@@ -25,6 +25,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.internal.widget.AdapterViewCompat;
@@ -36,14 +37,15 @@ import android.widget.FrameLayout;
 
 import org.protocoder.appinterpreter.AppRunnerCustom;
 import org.protocoder.appinterpreter.ProtocoderApp;
-import org.protocoder.qq.FolderChooserFragment;
-import org.protocoder.qq.IntroductionFragment;
-import org.protocoder.qq.ProjectListFragment;
+import org.protocoder.project.FolderChooserFragment;
+import org.protocoder.project.ProjectListFragment;
 import org.protocoder.server.ProtocoderServerService;
 import org.protocoderrunner.events.Events;
 import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.AndroidUtils;
 import org.protocoderrunner.utils.MLog;
+
+import de.greenrobot.event.EventBus;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -66,7 +68,7 @@ public class MainActivity extends ActionBarActivity {
         setupToolbar();
         addProjectFolderChooser(savedInstanceState);
         addProjectListFragment(savedInstanceState);
-        showIntroduction(savedInstanceState);
+        //showIntroduction(savedInstanceState);
 
         /*
          * init custom appRunner
@@ -116,26 +118,16 @@ public class MainActivity extends ActionBarActivity {
     //Project folder chooser, ATM just a spinner
     private void addProjectFolderChooser(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
-            //add script list fragment
-            FrameLayout fl = (FrameLayout) findViewById(R.id.fragmentFolderChooser);
             mFolderChooserFragment = FolderChooserFragment.newInstance(ProjectManager.FOLDER_EXAMPLES, true);
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.add(fl.getId(), mFolderChooserFragment, String.valueOf(fl.getId()));
-            ft.commit();
-        } else {
-            // mProtocoder.protoScripts.reinitScriptList();
+            addFragment(mFolderChooserFragment, R.id.fragmentFolderChooser);
         }
     }
 
     //add the project list fragment
     private void addProjectListFragment(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
-            //add script list fragment
-            FrameLayout fl = (FrameLayout) findViewById(R.id.fragmentScriptList);
             mListFragmentBase = ProjectListFragment.newInstance(ProjectManager.FOLDER_EXAMPLES, true);
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.add(fl.getId(), mListFragmentBase, String.valueOf(fl.getId()));
-            ft.commit();
+            addFragment(mListFragmentBase, R.id.fragmentScriptList);
         } else {
             // mProtocoder.protoScripts.reinitScriptList();
         }
@@ -143,17 +135,18 @@ public class MainActivity extends ActionBarActivity {
 
     private void showIntroduction(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
-            //add script list fragment
-            FrameLayout fl = (FrameLayout) findViewById(R.id.fragmentIntroduction);
-
             IntroductionFragment introductionFragment = IntroductionFragment.newInstance();
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.add(fl.getId(), introductionFragment, String.valueOf(fl.getId()));
-            ft.commit();
-
+            addFragment(introductionFragment, R.id.fragmentIntroduction);
         } else {
             // mProtocoder.protoScripts.reinitScriptList();
         }
+    }
+
+    private void addFragment(Fragment f, int id) {
+        FrameLayout fl = (FrameLayout) findViewById(id);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.add(fl.getId(), f, String.valueOf(fl.getId()));
+        ft.commit();
     }
 
     private void startServers() {
@@ -200,11 +193,13 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        EventBus.getDefault().register(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -217,10 +212,9 @@ public class MainActivity extends ActionBarActivity {
         String code = evt.getCode();
         MLog.d(TAG, "event -> " + code);
 
-        //TODO apprunner
-        // if (debugApp) {
-        //     interp.eval(code);
-        // }
+        if (ProtocoderAppSettings.DEBUG) {
+             appRunner.interp.eval(code);
+        }
     }
 
 }

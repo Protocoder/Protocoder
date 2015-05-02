@@ -148,7 +148,6 @@ public class ProtocoderServerService extends Service {
         MLog.d(TAG, "destroyed");
 
         unregisterReceiver(mReceiver);
-
         EventBus.getDefault().unregister(this);
     }
 

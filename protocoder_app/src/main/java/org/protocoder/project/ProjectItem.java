@@ -18,7 +18,7 @@
 * along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package org.protocoder.qq;
+package org.protocoder.project;
 
 import android.animation.Animator;
 import android.animation.AnimatorInflater;

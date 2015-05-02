@@ -18,34 +18,26 @@
 * along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package org.protocoder.qq;
+package org.protocoder.project;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.CycleInterpolator;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
+import android.widget.Button;
 import android.widget.Spinner;
 
 import org.protocoder.R;
 import org.protocoderrunner.base.BaseFragment;
-import org.protocoderrunner.events.Events.ProjectEvent;
-import org.protocoderrunner.project.Project;
-import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.utils.MLog;
 
 import java.util.ArrayList;
-
-import de.greenrobot.event.EventBus;
 
 @SuppressLint("NewApi")
 public class FolderChooserFragment extends BaseFragment {
@@ -53,7 +45,7 @@ public class FolderChooserFragment extends BaseFragment {
     private String TAG = FolderChooserFragment.class.getSimpleName();
     private Context mContext;
 
-
+    RecyclerView mRecyclerView;
 
     public FolderChooserFragment() {
     }
@@ -94,6 +86,44 @@ public class FolderChooserFragment extends BaseFragment {
 
             }
         });
+
+
+        Button btn = (Button) v.findViewById(R.id.selectFolderButton);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mRecyclerView.getVisibility() == View.VISIBLE) {
+                    mRecyclerView.setVisibility(View.GONE);
+                } else {
+                    mRecyclerView.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+
+        ArrayList<FolderData> folders = new ArrayList<FolderData>();
+        // Populate colors into the array
+        folders.add(new FolderData(FolderData.TYPE_TITLE, "Projects"));
+        folders.add(new FolderData(FolderData.TYPE_FOLDER_NAME, "MyProjects"));
+        folders.add(new FolderData(FolderData.TYPE_FOLDER_NAME, "OtherProjects"));
+        folders.add(new FolderData(FolderData.TYPE_TITLE, "Examples"));
+        folders.add(new FolderData(FolderData.TYPE_FOLDER_NAME, "Basics"));
+        folders.add(new FolderData(FolderData.TYPE_FOLDER_NAME, "User Interface"));
+        folders.add(new FolderData(FolderData.TYPE_FOLDER_NAME, "PureData"));
+        folders.add(new FolderData(FolderData.TYPE_FOLDER_NAME, "Processing"));
+        folders.add(new FolderData(FolderData.TYPE_FOLDER_NAME, "Network"));
+        folders.add(new FolderData(FolderData.TYPE_FOLDER_NAME, "Microcontrollers"));
+        folders.add(new FolderData(FolderData.TYPE_FOLDER_NAME, "lalal"));
+        folders.add(new FolderData(FolderData.TYPE_FOLDER_NAME, "Tutorials"));
+
+
+        // Attach the adapter
+        mRecyclerView = (RecyclerView) v.findViewById(R.id.folderList);
+        mRecyclerView.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(linearLayoutManager);
+        FolderChooserAdapter folderChooserAdapter = new FolderChooserAdapter(folders);
+        mRecyclerView.setAdapter(folderChooserAdapter);
 
         return v;
     }
