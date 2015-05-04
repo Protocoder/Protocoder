@@ -45,7 +45,7 @@ public class AppRunnerProjectManager {
     }
 
     public String getProjectPath() {
-        return AppRunnerSettings.getFolderPath(currentProject.getFolder());
+        return AppRunnerSettings.getFolderPath(currentProject.folder);
     }
 
     // Get code from sdcard

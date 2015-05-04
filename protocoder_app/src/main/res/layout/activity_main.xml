@@ -7,19 +7,38 @@
         android:gravity="bottom"
     >
 
-    <include layout="@layout/toolbar"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_height="wrap_content"
+    <LinearLayout
+        android:id="@+id/header"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-    ></include>
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="left|top"
+        android:gravity="center">
+
+        <include layout="@layout/toolbar"
+             android:layout_alignParentRight="true"
+             android:layout_alignParentTop="true"
+             android:layout_height="wrap_content"
+             android:layout_width="match_parent"
+            ></include>
+
+        <Button
+            android:id="@+id/selectFolderButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CurrentFolder"
+            android:layout_gravity="center_horizontal"
+            />
+    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/fragmentScriptList"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/fragmentFolderChooser"/>
+        android:layout_below="@+id/header"
+        />
 
     <LinearLayout
         android:id="@+id/ip_container"
@@ -53,10 +72,11 @@
 
     <FrameLayout
         android:id="@+id/fragmentFolderChooser"
+        android:background="@color/transparent"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/toolbar"/>
+        android:layout_below="@+id/header"/>
 
     <FrameLayout
         android:id="@+id/fragmentEditor"

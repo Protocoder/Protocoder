@@ -130,7 +130,6 @@ public class ProjectItem extends LinearLayout {
 
                 Handler handler = new Handler();
                 handler.postDelayed(r, 50);
-
             }
         });
 

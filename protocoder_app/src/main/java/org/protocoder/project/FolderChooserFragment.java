@@ -24,20 +24,14 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.Spinner;
 
 import org.protocoder.AppSettings;
-import org.protocoder.ProjectManager;
 import org.protocoder.ProtocoderAppHelper;
 import org.protocoder.R;
-import org.protocoderrunner.apprunner.project.Project;
+import org.protocoderrunner.apprunner.project.Folder;
 import org.protocoderrunner.base.BaseFragment;
 import org.protocoderrunner.utils.MLog;
 
@@ -49,7 +43,8 @@ public class FolderChooserFragment extends BaseFragment {
     private String TAG = FolderChooserFragment.class.getSimpleName();
     private Context mContext;
 
-    RecyclerView mRecyclerView;
+    ResizableRecyclerView mRecyclerView;
+    boolean state = false;
 
     public FolderChooserFragment() {
     }
@@ -65,66 +60,29 @@ public class FolderChooserFragment extends BaseFragment {
 
         View v = inflater.inflate(R.layout.fragment_project_chooser, container, false);
 
-        Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
-        final String[] arraySpinner = new String[]{
-                "projects", "examples",
-        };
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(mContext,
-                android.R.layout.simple_dropdown_item_1line, arraySpinner);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                MLog.d(TAG, "clicked on " + arraySpinner[position]);
+        //this goes to the adapter
+        ArrayList<FolderAdapterData> foldersForAdapter = new ArrayList<FolderAdapterData>();
 
-                //send event
-
-                //ProjectEvent evt = new ProjectEvent(p, "run");
-                //EventBus.getDefault().post(evt);
-
-                //mListFragmentBase.loadFolder(arraySpinner[position]);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-
-        Button btn = (Button) v.findViewById(R.id.selectFolderButton);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mRecyclerView.getVisibility() == View.VISIBLE) {
-                    mRecyclerView.setVisibility(View.GONE);
-                } else {
-                    mRecyclerView.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-
-
-        ArrayList<FolderData> folders = new ArrayList<FolderData>();
-
-        ArrayList<Project> projects = ProtocoderAppHelper.list(AppSettings.USER_PROJECTS_FOLDER, true);
-        folders.add(new FolderData(FolderData.TYPE_TITLE, "Projects"));
-        for (Project project : projects) {
-            folders.add(new FolderData(FolderData.TYPE_FOLDER_NAME, project.getName()));
+        //get the user folder
+        ArrayList<Folder> folders = ProtocoderAppHelper.listFolders(AppSettings.USER_PROJECTS_FOLDER, true);
+        foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_TITLE, AppSettings.USER_PROJECTS_FOLDER, "User Projects"));
+        for (Folder folder : folders) {
+            foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_FOLDER_NAME, AppSettings.USER_PROJECTS_FOLDER, folder.getName()));
         }
 
-        ArrayList<Project> examples = ProtocoderAppHelper.list(AppSettings.EXAMPLES_FOLDER, true);
-        folders.add(new FolderData(FolderData.TYPE_TITLE, "Examples"));
-        for (Project example : examples) {
-            folders.add(new FolderData(FolderData.TYPE_FOLDER_NAME, example.getName()));
+        //get the examples folder
+        ArrayList<Folder> examples = ProtocoderAppHelper.listFolders(AppSettings.EXAMPLES_FOLDER, true);
+        foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_TITLE, AppSettings.EXAMPLES_FOLDER, "Examples"));
+        for (Folder folder : examples) {
+            foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_FOLDER_NAME,  AppSettings.EXAMPLES_FOLDER, folder.getName()));
         }
 
-        // Attach the adapter
-        mRecyclerView = (RecyclerView) v.findViewById(R.id.folderList);
+        // Attach the adapter with the folders data
+        mRecyclerView = (ResizableRecyclerView) v.findViewById(R.id.folderList);
         mRecyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(linearLayoutManager);
-        FolderChooserAdapter folderChooserAdapter = new FolderChooserAdapter(folders);
+        FolderChooserAdapter folderChooserAdapter = new FolderChooserAdapter(foldersForAdapter);
         mRecyclerView.setAdapter(folderChooserAdapter);
 
         return v;

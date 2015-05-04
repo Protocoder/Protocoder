@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<org.protocoder.project.MyRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     android:id="@+id/myrelativelayout"
+     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/transparent" >
-
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_below="@id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"/>
+    android:background="@color/transparent"
+    android:animateLayoutChanges="true">
 
     <LinearLayout
         android:id="@+id/folderSelector"
@@ -17,27 +12,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_gravity="left|top">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Folder"
-            android:id="@+id/textView"
-            android:layout_weight="1"
-            />
+        android:layout_gravity="left|top"
+        android:gravity="center"
+        android:visibility="gone">
 
         <Button
             android:id="@+id/selectFolderButton"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="CurrentFolder"
-            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
             />
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
+    <org.protocoder.project.ResizableRecyclerView
         android:id="@+id/folderList"
         android:layout_below="@id/folderSelector"
         android:layout_width="match_parent"
@@ -45,7 +33,7 @@
         android:background="@color/black"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:visibility="gone">
-    </android.support.v7.widget.RecyclerView>
+        android:visibility="visible">
+    </org.protocoder.project.ResizableRecyclerView>
 
-</RelativeLayout>
+</org.protocoder.project.MyRelativeLayout>

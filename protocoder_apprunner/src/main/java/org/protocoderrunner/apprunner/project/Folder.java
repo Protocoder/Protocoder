@@ -1,9 +1,9 @@
 /*
 * Part of Protocoder http://www.protocoder.org
-* A prototyping platform for Android devices
+* A prototyping platform for Android devices 
 *
 * Copyright (C) 2013 Victor Diaz Barrales victormdb@gmail.com
-*
+* 
 * Protocoder is free software: you can redistribute it and/or modify
 * it under the terms of the GNU Lesser General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
@@ -13,22 +13,29 @@
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-*
+* 
 * You should have received a copy of the GNU Lesser General Public License
 * along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package org.protocoder.project;
+package org.protocoderrunner.apprunner.project;
 
-public class FolderData {
-    static final int TYPE_TITLE = 0;
-    static final int TYPE_FOLDER_NAME = 1;
+public class Folder {
 
-    int item_type;
-    String name;
+    private String name;
+    private String folder;
 
-    public FolderData(int item_type, String name) {
-        this.item_type = item_type;
-        this.name = name;
+    public Folder(String folder, String projectName) {
+        this.folder = folder;
+        this.name = projectName;
     }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public String getFolder() {
+        return this.folder;
+    }
+
 }

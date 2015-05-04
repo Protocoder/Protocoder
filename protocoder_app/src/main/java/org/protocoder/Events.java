@@ -21,7 +21,8 @@
 package org.protocoder;
 
 import org.protocoderrunner.apprunner.project.Project;
-import org.protocoderrunner.apprunner.project.AppRunnerProjectManager;
+
+import java.io.File;
 
 public class Events {
     public static final java.lang.String PROJECT_RUN = "run";
@@ -86,6 +87,20 @@ public class Events {
 
         public String getName() {
             return this.name;
+        }
+    }
+
+    public static class FolderChosen {
+        private final String parent;
+        private final String name;
+
+        public FolderChosen(String folder, String name) {
+            this.parent = folder;
+            this.name = name;
+        }
+
+        public String getFullFolder() {
+            return this.parent + File.separator + this.name;
         }
     }
 }

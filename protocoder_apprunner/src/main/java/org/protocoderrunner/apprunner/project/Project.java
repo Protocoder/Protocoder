@@ -34,8 +34,8 @@ public class Project {
     public static final String SETTINGS_SCREEN_ALWAYS_ON = "settings_screenOn";
     public static final String SETTINGS_SCREEN_WAKEUP = "settings_wakeUpScreen";
 
-    private String name;
-    private String folder;
+    public String name;
+    public String folder;
     private String type;
 
     public Project(String folder, String projectName) {
@@ -50,10 +50,5 @@ public class Project {
     public String getFolder() {
         return this.folder;
     }
-
-
-
-
-
 
 }

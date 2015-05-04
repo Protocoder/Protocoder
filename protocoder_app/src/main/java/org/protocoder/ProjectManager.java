@@ -26,7 +26,6 @@ import android.os.Environment;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.protocoder.project.FolderData;
 import org.protocoderrunner.apprunner.project.AppRunnerProjectManager;
 import org.protocoderrunner.apprunner.project.Project;
 import org.protocoderrunner.utils.FileIO;
@@ -40,7 +39,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class ProjectManager extends AppRunnerProjectManager {
 
@@ -99,7 +97,7 @@ public class ProjectManager extends AppRunnerProjectManager {
     }
 
     public boolean isProjectExisting(String folder, String name) {
-        ArrayList<Project> projects = ProtocoderAppHelper.list(folder, false);
+        ArrayList<Project> projects = ProtocoderAppHelper.listProjects(folder, false);
 
         for (int i = 0; i < projects.size(); i++) {
             if (projects.get(i).getName().equals(name)) {

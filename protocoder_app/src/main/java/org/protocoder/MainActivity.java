@@ -26,6 +26,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.internal.widget.AdapterViewCompat;
@@ -33,11 +34,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 
+import org.mozilla.javascript.tools.debugger.Main;
 import org.protocoder.appinterpreter.AppRunnerCustom;
 import org.protocoder.appinterpreter.ProtocoderApp;
 import org.protocoder.project.FolderChooserFragment;
+import org.protocoder.project.MyDialog;
 import org.protocoder.project.ProjectListFragment;
 import org.protocoder.server.ProtocoderServerService;
 import org.protocoderrunner.apprunner.AppRunnerEvents;
@@ -65,9 +70,19 @@ public class MainActivity extends ActionBarActivity {
          * Setup the ui
          */
         setupToolbar();
-        addProjectFolderChooser(savedInstanceState);
+        //addProjectFolderChooser(savedInstanceState);
         addProjectListFragment(savedInstanceState);
         //showIntroduction(savedInstanceState);
+
+        Button btn = (Button) findViewById(R.id.selectFolderButton);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MyDialog myDialog = MyDialog.newInstance();
+                getSupportFragmentManager().beginTransaction().add(myDialog, "lalal").commit();
+            }
+        });
+
 
         /*
          * init custom appRunner
@@ -125,7 +140,7 @@ public class MainActivity extends ActionBarActivity {
     //add the project list fragment
     private void addProjectListFragment(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
-            mListFragmentBase = ProjectListFragment.newInstance(AppSettings.EXAMPLES_FOLDER, true);
+            mListFragmentBase = ProjectListFragment.newInstance("examples/Media", true);
             addFragment(mListFragmentBase, R.id.fragmentScriptList);
         } else {
             // mProtocoder.protoScripts.reinitScriptList();
@@ -215,5 +230,15 @@ public class MainActivity extends ActionBarActivity {
              appRunner.interp.eval(code);
         }
     }
+
+    //folder choose
+    public void onEventMainThread(Events.FolderChosen evt) {
+        MLog.d(TAG, "< Event (folderChosen)");
+        String folder = evt.getFullFolder();
+        mListFragmentBase.loadFolder(folder);
+        //MLog.d(TAG, "event -> " + code);
+
+    }
+
 
 }

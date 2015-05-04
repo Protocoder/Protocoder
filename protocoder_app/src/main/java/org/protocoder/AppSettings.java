@@ -20,18 +20,11 @@
 
 package org.protocoder;
 
-import android.content.Context;
 import android.os.Build;
-import android.os.Environment;
 
-import org.protocoder.project.FolderData;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
-import org.protocoderrunner.apprunner.project.Project;
-import org.protocoderrunner.utils.FileIO;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class AppSettings extends AppRunnerSettings {
 

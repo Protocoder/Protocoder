@@ -27,15 +27,18 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.protocoder.Events;
 import org.protocoder.R;
 import org.protocoderrunner.utils.MLog;
 
 import java.util.ArrayList;
 
+import de.greenrobot.event.EventBus;
+
 public class FolderChooserAdapter extends RecyclerView.Adapter<FolderChooserAdapter.ViewHolder> {
 
     private static final String TAG = FolderChooserAdapter.class.getSimpleName();
-    private final ArrayList<FolderData> mDataSet;
+    private final ArrayList<FolderAdapterData> mDataSet;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView textView;
@@ -44,11 +47,11 @@ public class FolderChooserAdapter extends RecyclerView.Adapter<FolderChooserAdap
             super(v);
 
             switch (viewType) {
-                case FolderData.TYPE_TITLE:
+                case FolderAdapterData.TYPE_TITLE:
                     textView = (TextView) v.findViewById(R.id.textType);
 
                     break;
-                case (FolderData.TYPE_FOLDER_NAME):
+                case (FolderAdapterData.TYPE_FOLDER_NAME):
                     textView = (TextView) v.findViewById(R.id.textFolder);
 
                     break;
@@ -56,7 +59,7 @@ public class FolderChooserAdapter extends RecyclerView.Adapter<FolderChooserAdap
         }
     }
 
-    public FolderChooserAdapter(ArrayList<FolderData> folders) {
+    public FolderChooserAdapter(ArrayList<FolderAdapterData> folders) {
         mDataSet = folders;
     }
 
@@ -69,9 +72,9 @@ public class FolderChooserAdapter extends RecyclerView.Adapter<FolderChooserAdap
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LinearLayout t = null;
-        if (viewType == FolderData.TYPE_TITLE) {
+        if (viewType == FolderAdapterData.TYPE_TITLE) {
             t = (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.view_folderchooser_title, parent, false);
-        }  else if (viewType == FolderData.TYPE_FOLDER_NAME) {
+        }  else if (viewType == FolderAdapterData.TYPE_FOLDER_NAME) {
             t = (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.view_folderchooser_folder, parent, false);
         }
         return new ViewHolder(viewType, t);
@@ -80,17 +83,21 @@ public class FolderChooserAdapter extends RecyclerView.Adapter<FolderChooserAdap
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         int type = mDataSet.get(position).item_type;
-        String name = mDataSet.get(position).name;
+        final String name = mDataSet.get(position).name;
+        final String folder = mDataSet.get(position).parentFolder;
 
         switch (type) {
-            case FolderData.TYPE_TITLE:
+            case FolderAdapterData.TYPE_TITLE:
                 holder.textView.setText(name);
-            case FolderData.TYPE_FOLDER_NAME:
+            case FolderAdapterData.TYPE_FOLDER_NAME:
                 holder.textView.setText(name);
                 holder.textView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        MLog.d(TAG, "clicked " + holder.textView.getText());
+                        MLog.d(TAG, "> Event (folderChosen) " + folder + "/" + name);
+
+                        Events.FolderChosen ev = new Events.FolderChosen(folder, name);
+                        EventBus.getDefault().post(ev);
                     }
                 });
         }

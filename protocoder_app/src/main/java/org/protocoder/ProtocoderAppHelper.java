@@ -25,8 +25,10 @@ import android.content.Intent;
 
 import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.apprunner.AppRunnerService;
+import org.protocoderrunner.apprunner.project.Folder;
 import org.protocoderrunner.apprunner.project.Project;
 import org.protocoderrunner.utils.FileIO;
+import org.protocoderrunner.utils.MLog;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -67,7 +69,30 @@ public class ProtocoderAppHelper {
         }).start();
     }
 
-    public static ArrayList<Project> list(String folder, boolean orderByName) {
+    public static ArrayList<Folder> listFolders(String folder, boolean orderByName) {
+        ArrayList<Folder> folders = new ArrayList<Folder>();
+        File dir = new File(AppSettings.getFolderPath(folder));
+
+        if (!dir.exists()) {
+            dir.mkdir();
+        }
+
+        File[] all_projects = dir.listFiles();
+
+        if (orderByName) {
+            Arrays.sort(all_projects);
+        }
+
+        for (File file : all_projects) {
+            String projectURL = file.getAbsolutePath();
+            String projectName = file.getName();
+            folders.add(new Folder(folder, projectName));
+        }
+
+        return folders;
+    }
+
+    public static ArrayList<Project> listProjects(String folder, boolean orderByName) {
         ArrayList<Project> projects = new ArrayList<Project>();
         File dir = new File(AppSettings.getFolderPath(folder));
 

@@ -38,7 +38,6 @@ import org.protocoder.R;
 import org.protocoderrunner.base.BaseFragment;
 import org.protocoder.Events.ProjectEvent;
 import org.protocoderrunner.apprunner.project.Project;
-import org.protocoderrunner.apprunner.project.AppRunnerProjectManager;
 import org.protocoderrunner.utils.MLog;
 
 import java.util.ArrayList;
@@ -187,7 +186,7 @@ public class ProjectListFragment extends BaseFragment {
 
         mProjectFolder = folder;
 
-        mListProjects = ProtocoderAppHelper.list(mProjectFolder, mOrderByName);
+        mListProjects = ProtocoderAppHelper.listProjects(mProjectFolder, mOrderByName);
         mProjectAdapter.setArray(mListProjects);
         mGrid.setAdapter(mProjectAdapter);
         notifyAddedProject();
@@ -238,7 +237,7 @@ public class ProjectListFragment extends BaseFragment {
         if (evt.getAction() == "run") {
             Project p = evt.getProject();
             projectRefresh(p.getName());
-            MLog.d(TAG, "Run feedback" + p.getName());
+            MLog.d(TAG, "> Event (Run project feedback)" + p.getName());
         }
     }
 
