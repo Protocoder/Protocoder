@@ -74,8 +74,8 @@
     <string name="setting_show_webserver"></string>
     <string name="setting_show_websocket_title">Websocket port</string>
     <string name="setting_show_websocket"></string>
-    <string name="setting_id_title"> Device ID </string>
-    <string name="setting_id_description">This ID is generated the first time you install the app. You can always change it!</string>
+    <string name="setting_device_id_title"> Device ID </string>
+    <string name="setting_device_id_description">This ID is generated the first time you install the app. You can always change it!</string>
 
 
     <string name="licenses_activity_name">Licenses</string>
