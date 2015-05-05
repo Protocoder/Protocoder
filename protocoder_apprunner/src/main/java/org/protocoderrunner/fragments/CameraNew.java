@@ -22,7 +22,6 @@ package org.protocoderrunner.fragments;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -50,7 +49,6 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import org.protocoderrunner.apprunner.AppRunner;
-import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.utils.MLog;
 import org.protocoderrunner.utils.TimeUtils;
 

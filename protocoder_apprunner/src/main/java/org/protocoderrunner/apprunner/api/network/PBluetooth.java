@@ -23,7 +23,6 @@ package org.protocoderrunner.apprunner.api.network;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
-import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
@@ -32,9 +31,7 @@ import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.apprunner.api.PUI;
 import org.protocoderrunner.apprunner.api.other.ProtocoderNativeArray;
-import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.network.bt.SimpleBT;
 import org.protocoderrunner.utils.MLog;
 

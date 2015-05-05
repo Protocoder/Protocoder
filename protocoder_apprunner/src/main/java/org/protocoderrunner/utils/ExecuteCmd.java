@@ -25,9 +25,6 @@ import android.os.Looper;
 import android.os.Message;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
-import org.protocoderrunner.apprunner.AppRunner;
-import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 
 import java.io.BufferedReader;
 import java.io.IOException;

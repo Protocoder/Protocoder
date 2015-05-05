@@ -6,8 +6,6 @@ import android.media.AudioTrack;
 
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
-import org.protocoderrunner.utils.MLog;
 
 public class PWave extends PInterface {
 

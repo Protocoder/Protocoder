@@ -22,7 +22,6 @@ package org.protocoderrunner.apprunner.api;
 
 import android.animation.TimeInterpolator;
 import android.animation.ValueAnimator;
-import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -46,10 +45,8 @@ import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.other.PLooper;
 import org.protocoderrunner.apprunner.api.other.SignalUtils;
-import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.utils.MLog;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 

@@ -20,7 +20,6 @@
 
 package org.protocoderrunner.apprunner.api.dashboard;
 
-import org.java_websocket.WebSocketListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.protocoderrunner.apprunner.AppRunner;

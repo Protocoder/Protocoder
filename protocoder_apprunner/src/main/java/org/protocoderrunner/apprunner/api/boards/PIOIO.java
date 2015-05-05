@@ -20,13 +20,10 @@
 
 package org.protocoderrunner.apprunner.api.boards;
 
-import android.content.Context;
-
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.hardware.HardwareCallback;
 import org.protocoderrunner.hardware.IOIOBoard;
 import org.protocoderrunner.utils.MLog;

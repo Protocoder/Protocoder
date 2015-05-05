@@ -14,11 +14,11 @@ import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
+import org.protocoder.Events;
 import org.protocoder.ProtocoderAppHelper;
 import org.protocoder.ProtocoderAppSettings;
 import org.protocoderrunner.R;
 import org.protocoderrunner.apprunner.AppRunnerActivity;
-import org.protocoder.Events;
 import org.protocoderrunner.apprunner.project.Project;
 import org.protocoderrunner.utils.MLog;
 

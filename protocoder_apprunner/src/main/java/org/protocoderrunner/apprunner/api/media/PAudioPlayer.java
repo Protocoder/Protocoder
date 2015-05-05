@@ -27,9 +27,7 @@ import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 
-import java.io.File;
 import java.io.IOException;
 
 public class PAudioPlayer extends PInterface {

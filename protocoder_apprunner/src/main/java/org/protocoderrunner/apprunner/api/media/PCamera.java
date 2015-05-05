@@ -22,12 +22,9 @@ package org.protocoderrunner.apprunner.api.media;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.api.widgets.PViewInterface;
 import org.protocoderrunner.fragments.CameraNew;
-
-import java.io.File;
 
 public class PCamera extends CameraNew implements PViewInterface {
 

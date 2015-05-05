@@ -33,11 +33,11 @@ import android.view.ViewGroup;
 import android.view.animation.CycleInterpolator;
 import android.widget.LinearLayout;
 
+import org.protocoder.Events.ProjectEvent;
 import org.protocoder.ProtocoderAppHelper;
 import org.protocoder.R;
-import org.protocoderrunner.base.BaseFragment;
-import org.protocoder.Events.ProjectEvent;
 import org.protocoderrunner.apprunner.project.Project;
+import org.protocoderrunner.base.BaseFragment;
 import org.protocoderrunner.utils.MLog;
 
 import java.util.ArrayList;

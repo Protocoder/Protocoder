@@ -20,8 +20,6 @@
 
 package org.protocoderrunner.apprunner.api;
 
-import android.content.Context;
-
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;

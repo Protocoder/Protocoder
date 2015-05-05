@@ -40,7 +40,6 @@ import org.protocoderrunner.apprunner.api.media.PAudioRecorder;
 import org.protocoderrunner.apprunner.api.media.PMidi;
 import org.protocoderrunner.apprunner.api.media.PPureData;
 import org.protocoderrunner.apprunner.api.media.PWave;
-import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.media.Audio;
 import org.protocoderrunner.media.AudioServicePd;
 import org.protocoderrunner.utils.AndroidUtils;

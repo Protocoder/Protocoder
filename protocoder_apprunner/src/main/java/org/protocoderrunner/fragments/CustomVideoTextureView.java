@@ -34,8 +34,6 @@ import android.os.Handler;
 import android.view.Surface;
 import android.view.TextureView;
 
-import org.protocoderrunner.utils.MLog;
-
 import java.io.IOException;
 
 @SuppressLint("NewApi")

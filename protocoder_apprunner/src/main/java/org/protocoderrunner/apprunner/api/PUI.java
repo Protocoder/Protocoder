@@ -94,8 +94,6 @@ import org.protocoderrunner.apprunner.api.widgets.WidgetHelper;
 import org.protocoderrunner.utils.AndroidUtils;
 import org.protocoderrunner.views.TouchAreaView;
 
-import java.io.File;
-
 import processing.core.PApplet;
 
 import static android.view.ScaleGestureDetector.OnScaleGestureListener;

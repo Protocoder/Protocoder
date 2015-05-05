@@ -21,18 +21,14 @@
 package org.protocoderrunner.apprunner.api.media;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.media.MediaRecorder;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
-
-import java.io.File;
 
 public class PAudioRecorder extends PInterface {
 

@@ -30,8 +30,6 @@ import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
 
-import java.io.File;
-
 public class PImageView extends ImageView implements PViewInterface {
 
     private final AppRunner mAppRunner;

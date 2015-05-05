@@ -21,21 +21,14 @@
 package org.protocoderrunner.apprunner.api.widgets;
 
 import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.StateListDrawable;
-import android.graphics.drawable.shapes.RoundRectShape;
 import android.text.Html;
 import android.view.View;
 import android.widget.Button;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.utils.MLog;
 
 public class PButton extends Button implements PViewInterface, PViewMethodsInterface {
     private static final String TAG = PButton.class.getSimpleName();

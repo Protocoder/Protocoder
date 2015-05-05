@@ -20,8 +20,6 @@
 
 package org.protocoderrunner.apprunner.api.other;
 
-import android.content.Context;
-
 import org.mozilla.javascript.NativeObject;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;

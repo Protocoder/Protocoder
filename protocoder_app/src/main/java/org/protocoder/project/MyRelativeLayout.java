@@ -23,22 +23,11 @@ package org.protocoder.project;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.graphics.BitmapShader;
 import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
-import android.graphics.Xfermode;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.Button;
 import android.widget.RelativeLayout;
-
-import org.protocoder.R;
-import org.protocoderrunner.utils.MLog;
 
 public class MyRelativeLayout extends RelativeLayout {
     private static final String TAG = MyRelativeLayout.class.getSimpleName();

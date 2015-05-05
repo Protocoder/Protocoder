@@ -25,15 +25,12 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 
-import org.protocoderrunner.R;
 import org.protocoderrunner.apprunner.AppRunnerFragment;
 import org.protocoderrunner.utils.MLog;
 import org.puredata.android.io.AudioParameters;
 import org.puredata.android.service.PdService;
 import org.puredata.core.PdBase;
-import org.puredata.core.utils.IoUtils;
 
-import java.io.File;
 import java.io.IOException;
 
 public class AudioServicePd {

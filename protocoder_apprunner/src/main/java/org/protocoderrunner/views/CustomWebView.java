@@ -27,8 +27,6 @@ import android.webkit.WebView;
 
 import org.protocoderrunner.apprunner.AppRunner;
 
-import java.io.File;
-
 /*
  * http://stackoverflow.com/questions/13257990/android-webview-inside-scrollview-scrolls-only-scrollview
  */

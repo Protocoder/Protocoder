@@ -20,14 +20,10 @@
 
 package org.protocoderrunner.apprunner.api.widgets;
 
-import android.content.Context;
-
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.fragments.CustomVideoTextureView;
-
-import java.io.File;
 
 public class PVideo extends CustomVideoTextureView implements PViewInterface {
 

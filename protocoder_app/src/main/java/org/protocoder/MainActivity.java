@@ -26,9 +26,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.internal.widget.AdapterViewCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -38,7 +36,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
-import org.mozilla.javascript.tools.debugger.Main;
 import org.protocoder.appinterpreter.AppRunnerCustom;
 import org.protocoder.appinterpreter.ProtocoderApp;
 import org.protocoder.project.FolderChooserFragment;

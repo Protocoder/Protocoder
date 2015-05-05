@@ -36,8 +36,8 @@ import org.protocoderrunner.apprunner.api.PSensors;
 import org.protocoderrunner.apprunner.api.PUI;
 import org.protocoderrunner.apprunner.api.PUtil;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
-import org.protocoderrunner.apprunner.project.Project;
 import org.protocoderrunner.apprunner.project.AppRunnerProjectManager;
+import org.protocoderrunner.apprunner.project.Project;
 import org.protocoderrunner.utils.MLog;
 
 import java.io.File;

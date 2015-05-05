@@ -24,8 +24,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import org.protocoderrunner.apprunner.AppRunner;
-
 
 public class UserSettings {
 

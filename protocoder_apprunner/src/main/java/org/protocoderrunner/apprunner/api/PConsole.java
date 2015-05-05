@@ -28,7 +28,6 @@ import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.utils.AndroidUtils;
 
-import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;

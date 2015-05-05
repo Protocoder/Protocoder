@@ -21,16 +21,12 @@
 package org.protocoderrunner.apprunner.api.network;
 
 
-import android.content.Context;
-
 import org.mozilla.javascript.NativeArray;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
-import org.protocoderrunner.apprunner.AppRunnerFragment;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.PUI;
-import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.network.bt.SimpleBT;
 
 public class PBluetoothClient extends PInterface {

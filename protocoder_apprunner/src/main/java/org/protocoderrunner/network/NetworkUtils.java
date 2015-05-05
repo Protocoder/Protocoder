@@ -34,7 +34,6 @@ import android.util.Log;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.utils.MLog;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;

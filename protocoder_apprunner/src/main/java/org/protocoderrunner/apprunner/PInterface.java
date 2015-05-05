@@ -24,8 +24,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
-import java.lang.ref.WeakReference;
-
 public class PInterface {
 
     protected String TAG = getClass().getSimpleName();

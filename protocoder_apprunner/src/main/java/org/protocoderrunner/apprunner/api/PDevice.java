@@ -27,7 +27,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Vibrator;
@@ -35,11 +34,8 @@ import android.provider.Settings.Secure;
 import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
-import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.widget.TableRow;
-import android.widget.TextView;
 
 import com.google.gson.Gson;
 
@@ -47,7 +43,6 @@ import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.utils.AndroidUtils;
 import org.protocoderrunner.utils.Intents;
 

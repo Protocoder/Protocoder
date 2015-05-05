@@ -26,7 +26,6 @@ import android.os.Looper;
 import android.widget.Toast;
 
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.protocoder.WebEditorManager;
 import org.protocoderrunner.apidoc.APIManager;
@@ -96,13 +95,9 @@ import org.protocoderrunner.apprunner.api.widgets.PVideo;
 import org.protocoderrunner.apprunner.api.widgets.PWebEditor;
 import org.protocoderrunner.apprunner.api.widgets.PWebView;
 import org.protocoderrunner.apprunner.api.widgets.PWindow;
-import org.protocoder.Events;
-import org.protocoder.Events.ProjectEvent;
+import org.protocoderrunner.apprunner.project.Project;
 import org.protocoderrunner.network.NanoHTTPD;
 import org.protocoderrunner.network.NetworkUtils;
-import org.protocoderrunner.apprunner.project.Project;
-import org.protocoderrunner.apprunner.project.AppRunnerProjectManager;
-import org.protocoderrunner.utils.FileIO;
 import org.protocoderrunner.utils.MLog;
 
 import java.io.File;
@@ -111,12 +106,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
-import de.greenrobot.event.EventBus;
 
 public class ProtocoderHttpServer extends NanoHTTPD {
     public static final String TAG = ProtocoderHttpServer.class.getSimpleName();

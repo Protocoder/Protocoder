@@ -1,6 +1,5 @@
 package org.protocoderrunner.apprunner.api.media;
 
-import android.content.Context;
 import android.hardware.usb.UsbDevice;
 import android.os.Handler;
 import android.os.Handler.Callback;
@@ -9,7 +8,6 @@ import android.widget.Toast;
 
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.PInterface;
-import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 
 import java.util.Arrays;
 
