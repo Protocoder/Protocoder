@@ -78,10 +78,10 @@ dependencies {
 
     //compile fileTree(dir: 'libs', include: ['*.jar'])
     //android support
-    compile "com.android.support:appcompat-v7:21.0.+"
-    compile 'com.android.support:recyclerview-v7:21.0+'
-    compile 'com.android.support:cardview-v7:21.0+'
-    compile 'com.android.support:palette-v7:21.0+'
+    compile "com.android.support:appcompat-v7:22.1.+"
+    compile 'com.android.support:recyclerview-v7:22.1+'
+    compile 'com.android.support:cardview-v7:22.1+'
+    compile 'com.android.support:palette-v7:22.1+'
 
     //some of the apache libs collide with the ones in Android, better to include them as jars
     compile files('libs/commons-lang3-3.1.jar')

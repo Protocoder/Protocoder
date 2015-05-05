@@ -61,7 +61,7 @@ public class ProtocoderAppHelper {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                File dir = new File(AppSettings.getBaseDir() + assetsName);
+                File dir = new File(ProtocoderAppSettings.getBaseDir() + assetsName);
                 FileIO.deleteDir(dir);
                 FileIO.copyFileOrDir(c, assetsName);
                 l.onReady();
@@ -71,7 +71,7 @@ public class ProtocoderAppHelper {
 
     public static ArrayList<Folder> listFolders(String folder, boolean orderByName) {
         ArrayList<Folder> folders = new ArrayList<Folder>();
-        File dir = new File(AppSettings.getFolderPath(folder));
+        File dir = new File(ProtocoderAppSettings.getFolderPath(folder));
 
         if (!dir.exists()) {
             dir.mkdir();
@@ -94,7 +94,7 @@ public class ProtocoderAppHelper {
 
     public static ArrayList<Project> listProjects(String folder, boolean orderByName) {
         ArrayList<Project> projects = new ArrayList<Project>();
-        File dir = new File(AppSettings.getFolderPath(folder));
+        File dir = new File(ProtocoderAppSettings.getFolderPath(folder));
 
         if (!dir.exists()) {
             dir.mkdir();

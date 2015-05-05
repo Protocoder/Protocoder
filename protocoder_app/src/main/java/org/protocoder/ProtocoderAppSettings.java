@@ -20,24 +20,27 @@
 
 package org.protocoder;
 
-public class ProtocoderAppSettings {
+import android.os.Build;
+
+import org.protocoderrunner.apprunner.AppRunnerSettings;
+
+import java.io.File;
+
+public class ProtocoderAppSettings extends AppRunnerSettings {
 
 	// == PROTOCODER APP SETTINGS ==========
 	public final static boolean DEBUG = true;
-    public final static String APP_FOLDER = "protocodersandbox";
-    public final String CUSTOM_WEBEDITOR = "webeditors";
+    public static final String APP_FOLDER_CUSTOM_WEBEDITOR = "webeditors";
 
-    public final int WEBSOCKET_PORT = 8587;
-    public final int HTTP_PORT = 8585;
+    public static int MIN_SUPPORTED_VERSION = Build.VERSION_CODES.ICE_CREAM_SANDWICH;
+
+    public static final int WEBSOCKET_PORT = 8587;
+    public static final int HTTP_PORT = 8585;
     public final int FTP_PORT = 8589;
 
     private static ProtocoderAppSettings instance;
 
-    public static ProtocoderAppSettings get() {
-        if (instance == null)
-            instance = new ProtocoderAppSettings();
-        return instance;
+    public static String getBaseWebEditorsDir() {
+        return getBaseDir() + APP_FOLDER_CUSTOM_WEBEDITOR + File.separator;
     }
-
-
 }

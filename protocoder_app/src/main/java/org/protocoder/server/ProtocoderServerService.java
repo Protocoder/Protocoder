@@ -128,10 +128,8 @@ public class ProtocoderServerService extends Service {
         super.onCreate();
         MLog.d(TAG, "created");
 
-        ProtocoderAppSettings protocoderAppSettings = ProtocoderAppSettings.get();
-
         try {
-            protocoderHttpServer = new ProtocoderHttpServer(this, protocoderAppSettings.HTTP_PORT);
+            protocoderHttpServer = new ProtocoderHttpServer(this, ProtocoderAppSettings.HTTP_PORT);
         } catch (IOException e) {
             MLog.e(TAG, "http server not initialized");
             e.printStackTrace();

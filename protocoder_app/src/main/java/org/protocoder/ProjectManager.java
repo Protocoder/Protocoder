@@ -67,7 +67,7 @@ public class ProjectManager extends AppRunnerProjectManager {
         String baseDir;
 
         baseDir = Environment.getExternalStorageDirectory().getAbsolutePath()
-                + File.separator + AppSettings.PROTOCODER_FOLDER + File.separator;
+                + File.separator + ProtocoderAppSettings.PROTOCODER_FOLDER + File.separator;
 
         return baseDir;
     }
@@ -242,7 +242,7 @@ public class ProjectManager extends AppRunnerProjectManager {
     }
 
     public void setRemoteIP(String remoteIP) {
-        this.remoteIP = remoteIP + ":" + AppSettings.HTTP_PORT;
+        this.remoteIP = remoteIP + ":" + ProtocoderAppSettings.HTTP_PORT;
     }
 
     public String getRemoteIP() {

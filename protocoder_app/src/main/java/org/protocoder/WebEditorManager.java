@@ -62,7 +62,7 @@ public class WebEditorManager {
         Arrays.sort(all_projects);
 
         for (File file : all_projects) {
-            if (file.getName().equals(AppSettings.APP_FOLDER_CUSTOM_WEBEDITOR) == false) {
+            if (file.getName().equals(ProtocoderAppSettings.APP_FOLDER_CUSTOM_WEBEDITOR) == false) {
                 //MLog.d(TAG, file.getName());
                 editors.add(file.getName());
             }
@@ -81,7 +81,7 @@ public class WebEditorManager {
     }
 
     public String getBaseDir() {
-        return AppSettings.getBaseWebEditorsDir();
+        return ProtocoderAppSettings.getBaseWebEditorsDir();
     }
 
 

@@ -29,7 +29,7 @@ import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.protocoder.AppSettings;
+import org.protocoder.ProtocoderAppSettings;
 import org.protocoderrunner.utils.MLog;
 
 import java.net.InetSocketAddress;
@@ -66,7 +66,7 @@ public class ProtocoderWebsocketServer extends WebSocketServer {
     // Singleton (one app view, different URLs)
     public static ProtocoderWebsocketServer getInstance(Context aCtx) throws UnknownHostException {
         if (inst == null) {
-            inst = new ProtocoderWebsocketServer(aCtx, AppSettings.WEBSOCKET_PORT, new Draft_17());
+            inst = new ProtocoderWebsocketServer(aCtx, ProtocoderAppSettings.WEBSOCKET_PORT, new Draft_17());
             inst.start();
         }
         return inst;

@@ -28,12 +28,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.protocoder.AppSettings;
 import org.protocoder.ProtocoderAppHelper;
+import org.protocoder.ProtocoderAppSettings;
 import org.protocoder.R;
 import org.protocoderrunner.apprunner.project.Folder;
 import org.protocoderrunner.base.BaseFragment;
-import org.protocoderrunner.utils.MLog;
 
 import java.util.ArrayList;
 
@@ -64,17 +63,17 @@ public class FolderChooserFragment extends BaseFragment {
         ArrayList<FolderAdapterData> foldersForAdapter = new ArrayList<FolderAdapterData>();
 
         //get the user folder
-        ArrayList<Folder> folders = ProtocoderAppHelper.listFolders(AppSettings.USER_PROJECTS_FOLDER, true);
-        foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_TITLE, AppSettings.USER_PROJECTS_FOLDER, "User Projects"));
+        ArrayList<Folder> folders = ProtocoderAppHelper.listFolders(ProtocoderAppSettings.USER_PROJECTS_FOLDER, true);
+        foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_TITLE, ProtocoderAppSettings.USER_PROJECTS_FOLDER, "User Projects"));
         for (Folder folder : folders) {
-            foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_FOLDER_NAME, AppSettings.USER_PROJECTS_FOLDER, folder.getName()));
+            foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_FOLDER_NAME, ProtocoderAppSettings.USER_PROJECTS_FOLDER, folder.getName()));
         }
 
         //get the examples folder
-        ArrayList<Folder> examples = ProtocoderAppHelper.listFolders(AppSettings.EXAMPLES_FOLDER, true);
-        foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_TITLE, AppSettings.EXAMPLES_FOLDER, "Examples"));
+        ArrayList<Folder> examples = ProtocoderAppHelper.listFolders(ProtocoderAppSettings.EXAMPLES_FOLDER, true);
+        foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_TITLE, ProtocoderAppSettings.EXAMPLES_FOLDER, "Examples"));
         for (Folder folder : examples) {
-            foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_FOLDER_NAME,  AppSettings.EXAMPLES_FOLDER, folder.getName()));
+            foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_FOLDER_NAME,  ProtocoderAppSettings.EXAMPLES_FOLDER, folder.getName()));
         }
 
         // Attach the adapter with the folders data

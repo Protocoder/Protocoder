@@ -132,7 +132,7 @@ public class MainActivity extends ActionBarActivity {
     //Project folder chooser
     private void addProjectFolderChooser(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
-            mFolderChooserFragment = FolderChooserFragment.newInstance(AppSettings.EXAMPLES_FOLDER, true);
+            mFolderChooserFragment = FolderChooserFragment.newInstance(ProtocoderAppSettings.EXAMPLES_FOLDER, true);
             addFragment(mFolderChooserFragment, R.id.fragmentFolderChooser);
         }
     }

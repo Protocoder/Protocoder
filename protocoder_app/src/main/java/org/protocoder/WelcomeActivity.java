@@ -89,13 +89,13 @@ public class WelcomeActivity extends BaseActivity {
         progress.show();
 
         //create folder structure
-        new File(AppSettings.getFolderPath(AppSettings.USER_PROJECTS_FOLDER)).mkdirs();
-        new File(AppSettings.getFolderPath(AppSettings.EXAMPLES_FOLDER)).mkdirs();
-        new File(AppSettings.getBaseWebEditorsDir()).mkdirs();
-        new File(AppSettings.getBaseLibrariesDir()).mkdirs();
+        new File(ProtocoderAppSettings.getFolderPath(ProtocoderAppSettings.USER_PROJECTS_FOLDER)).mkdirs();
+        new File(ProtocoderAppSettings.getFolderPath(ProtocoderAppSettings.EXAMPLES_FOLDER)).mkdirs();
+        new File(ProtocoderAppSettings.getBaseWebEditorsDir()).mkdirs();
+        new File(ProtocoderAppSettings.getBaseLibrariesDir()).mkdirs();
 
         // install examples
-        ProtocoderAppHelper.installExamples(getApplicationContext(), AppSettings.EXAMPLES_FOLDER, new ProtocoderAppHelper.InstallListener() {
+        ProtocoderAppHelper.installExamples(getApplicationContext(), ProtocoderAppSettings.EXAMPLES_FOLDER, new ProtocoderAppHelper.InstallListener() {
             @Override
             public void onReady() {
                 progress.dismiss();
