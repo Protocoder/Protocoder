@@ -20,6 +20,8 @@
 
 package org.protocoderrunner.apprunner.project;
 
+import java.io.File;
+
 public class Project {
 
     // we need this to serialize the data using intent bundles
@@ -51,4 +53,7 @@ public class Project {
         return this.folder;
     }
 
+    public String getFullFolder() {
+        return this.folder + File.separator + this.name;
+    }
 }

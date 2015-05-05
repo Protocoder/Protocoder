@@ -162,7 +162,6 @@ public class AppRunnerActivity extends BaseActivity {
             //set screen always on if so
             setScreenAlwaysOn(settingScreenAlwaysOn);
 
-
             mAppRunnerFragment = AppRunnerFragment.newInstance(bundle);
 
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();

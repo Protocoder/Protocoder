@@ -38,6 +38,7 @@ import org.protocoderrunner.apprunner.api.PUtil;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.apprunner.project.Project;
 import org.protocoderrunner.apprunner.project.AppRunnerProjectManager;
+import org.protocoderrunner.utils.MLog;
 
 import java.io.File;
 
@@ -155,6 +156,9 @@ public class AppRunner {
         if (mIsProjectLoaded) {
             mCurrentProject = new Project(mProjectFolder, mProjectName);
             mProjectManager = new AppRunnerProjectManager(mContext, mCurrentProject);
+            mScript = mProjectManager.getCode(mCurrentProject);
+
+            MLog.d(TAG, "project loaded for " + mProjectFolder + " " + mProjectName + " " + mScript);
         }
 
         return this;

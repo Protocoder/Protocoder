@@ -24,6 +24,7 @@ import android.content.Context;
 
 import org.protocoderrunner.apprunner.AppRunnerSettings;
 import org.protocoderrunner.utils.FileIO;
+import org.protocoderrunner.utils.MLog;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -45,7 +46,7 @@ public class AppRunnerProjectManager {
     }
 
     public String getProjectPath() {
-        return AppRunnerSettings.getFolderPath(currentProject.folder);
+        return AppRunnerSettings.getFolderPath(currentProject.getFullFolder());
     }
 
     // Get code from sdcard
@@ -53,6 +54,8 @@ public class AppRunnerProjectManager {
         if (true) {
             String out = null;
             File f = new File(getProjectPath() + File.separator + MAIN_FILENAME);
+            MLog.d(TAG, f.getAbsolutePath());
+
             try {
                 InputStream in = new FileInputStream(f);
                 ByteArrayOutputStream buf = new ByteArrayOutputStream();
