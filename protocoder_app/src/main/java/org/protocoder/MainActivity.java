@@ -46,12 +46,13 @@ import org.protocoder.project.MyDialog;
 import org.protocoder.project.ProjectListFragment;
 import org.protocoder.server.ProtocoderServerService;
 import org.protocoderrunner.apprunner.AppRunnerEvents;
+import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.utils.AndroidUtils;
 import org.protocoderrunner.utils.MLog;
 
 import de.greenrobot.event.EventBus;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends BaseActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     protected AppRunnerCustom appRunner;

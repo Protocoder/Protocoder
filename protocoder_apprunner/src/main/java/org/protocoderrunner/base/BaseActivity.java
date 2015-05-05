@@ -29,6 +29,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -40,7 +41,7 @@ import org.protocoderrunner.utils.MLog;
 import java.util.ArrayList;
 
 @SuppressLint("NewApi")
-public class BaseActivity extends ActionBarActivity {
+public class BaseActivity extends AppCompatActivity {
 
     private static final String TAG = "BaseActivity";
     public boolean actionBarAllowed = true;

@@ -165,6 +165,7 @@ public class PUtil extends PInterface {
     }
 
 
+    //TODO include the new support lib v22 interpolations
     @ProtoMethod(description = "Animate a variable from min to max in a specified time using 'bounce', 'linear', 'decelerate', 'anticipate', 'aovershoot', 'accelerate' type  ", example = "")
     @ProtoMethodParam(params = {"type", "min", "max", "time", "function(val)"})
     public ValueAnimator anim(String type, float min, float max, int time, final AnimCB callback) {

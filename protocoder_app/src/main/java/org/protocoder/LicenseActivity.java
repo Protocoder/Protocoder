@@ -29,12 +29,13 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import org.protocoder.R;
+import org.protocoderrunner.base.BaseActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class LicenseActivity extends ActionBarActivity {
+public class LicenseActivity extends BaseActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

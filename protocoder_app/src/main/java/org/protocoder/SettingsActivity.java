@@ -24,7 +24,9 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 
-public class SettingsActivity extends ActionBarActivity {
+import org.protocoderrunner.base.BaseActivity;
+
+public class SettingsActivity extends BaseActivity {
 
     @SuppressLint("NewApi")
     @Override
