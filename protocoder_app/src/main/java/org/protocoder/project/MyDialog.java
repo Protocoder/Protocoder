@@ -40,8 +40,8 @@ public class MyDialog extends DialogFragment {
         Rect displayRectangle = new Rect();
         window.getDecorView().getWindowVisibleDisplayFrame(displayRectangle);
 
-        int w = (int) (displayRectangle.width() * 0.8);
-        int h = (int) (displayRectangle.height() * 0.7);
+        int w = (int) (displayRectangle.width() * 0.9);
+        int h = (int) (displayRectangle.height() * 0.9);
         window.setLayout(w, h);
 
         // after that, setting values for x and y works "naturally"
@@ -49,7 +49,7 @@ public class MyDialog extends DialogFragment {
         //params.x = 280;
         //params.y = 280;
         //params.height = 200;
-        params.dimAmount = 0f;
+        //params.dimAmount = 0f;
 
 
         window.setAttributes(params);
