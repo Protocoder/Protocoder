@@ -39,22 +39,4 @@ public class SettingsActivity extends BaseActivity {
         getFragmentManager().beginTransaction().replace(R.id.pref_container, new SettingsFragment()).commit();
     }
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//
-//            case android.R.id.home:
-//                // Up button pressed
-//                Intent intentHome = new Intent(this, MainActivity.class);
-//                intentHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                startActivity(intentHome);
-//                overridePendingTransition(R.anim.splash_slide_in_anim_reverse_set, R.anim.splash_slide_out_anim_reverse_set);
-//                finish();
-//                return true;
-//            default:
-//                return super.onOptionsItemSelected(item);
-//        }
-//
-//    }
-
 }
