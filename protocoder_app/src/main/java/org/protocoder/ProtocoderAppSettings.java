@@ -24,7 +24,7 @@ public class ProtocoderAppSettings {
 
 	// == PROTOCODER APP SETTINGS ==========
 	public final static boolean DEBUG = true;
-    public final static String APP_FOLDER = "protocoder";
+    public final static String APP_FOLDER = "protocodersandbox";
     public final String CUSTOM_WEBEDITOR = "webeditors";
 
     public final int WEBSOCKET_PORT = 8587;

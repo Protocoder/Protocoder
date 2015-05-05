@@ -5,11 +5,11 @@ android {
     buildToolsVersion '21.1.1'
 
     defaultConfig {
-        applicationId "org.protocoder.extended"
+        applicationId "org.protocoder.extended.sandbox"
         minSdkVersion 15
-        targetSdkVersion 21
+        targetSdkVersion 25
         versionCode 18
-        versionName "0.11.0"
+        versionName "0.19.0"
 
         compileOptions {
             sourceCompatibility JavaVersion.VERSION_1_7
@@ -41,14 +41,14 @@ android {
 
     productFlavors {
         normal {
-            applicationId "org.protocoder.normal"
-            versionName "0.10.0_normal"
+            applicationId "org.protocoder.normal.sandbox"
+            versionName "0.19.0_normal"
             resValue "string", "releaseMode", "normal"
 
         }
         extended {
-            applicationId "org.protocoder.extended"
-            versionName "0.10.0_extended"
+            applicationId "org.protocoder.extended.sandbox"
+            versionName "0.19.0_extended"
             resValue "string", "releaseMode", "all_features"
         }
     }
