@@ -30,15 +30,12 @@ import org.protocoderrunner.apprunner.project.Project;
 import java.util.ArrayList;
 
 public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.ViewHolder> {
-    private static final String TAG = "ProjectItemAdapter";
+    private static final String TAG = ProjectItemAdapter.class.getSimpleName();
     private final Context mContext;
 
     public ArrayList<Project> mProjectList = new ArrayList<>();
     private final boolean mListMode;
 
-    /*
-     * ViewHolder holds the view that the adapter will use
-     */
     public class ViewHolder extends RecyclerView.ViewHolder {
         private final ProjectItem mView;
         private final int position;

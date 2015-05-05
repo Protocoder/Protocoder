@@ -20,10 +20,8 @@
 
 package org.protocoder.project;
 
-import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
@@ -36,6 +34,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -67,7 +66,7 @@ public class ProjectItem extends LinearLayout {
     private TextView textViewIcon;
     private ImageView mMenuButton;
 
-    public ProjectItem(Context context, /* ProjectListFragment plf,*/ boolean listMode) {
+    public ProjectItem(Context context, boolean listMode) {
         super(context);
         this.c = context;
         //this.mPlf = plf;
@@ -89,32 +88,9 @@ public class ProjectItem extends LinearLayout {
             public void onClick(View v) {
                 // MLog.d(TAG, " " + position + " " + getPosition());
 
-
                 AnimatorSet animSpin;
                 animSpin = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(), R.animator.flip_up);
                 animSpin.setTarget(v);
-                animSpin.addListener(new Animator.AnimatorListener() {
-
-                    @Override
-                    public void onAnimationStart(Animator animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animator animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationCancel(Animator animation) {
-
-                    }
-                });
                 animSpin.start();
 
                 Runnable r = new Runnable() {
@@ -144,8 +120,6 @@ public class ProjectItem extends LinearLayout {
 
     public void setText(String text) {
         this.t = text;
-
-        // TextUtils.changeFont(c.get(), textView, Fonts.MENU_TITLE);
         textViewName.setText(text);
         textViewIcon.setText(text.substring(0, 1).toUpperCase()); //"< " + text.substring(0, 1).toUpperCase() + " >");
     }
@@ -228,11 +202,12 @@ public class ProjectItem extends LinearLayout {
                 int itemId = menuItem.getItemId();
 
                 if (itemId == R.id.menu_project_list_run) {
-                    //TODO make it work again
-                    //Protocoder.getInstance(c).protoScripts.run(mProject.getFolder(), mProject.getName());
+                    EventBus.getDefault().post(new Events.ProjectEvent(mProject, "run"));
                     return true;
                 } else if (itemId == R.id.menu_project_list_edit) {
                     //TODO make it work again
+                    EventBus.getDefault().post(new Events.ProjectEvent(mProject, "edit"));
+
                     //Protocoder.getInstance(c).app.editor.show(true, mProject.getFolder(), mProject.getName());
                     return true;
                 } else if (itemId == R.id.menu_project_list_delete) {
@@ -244,6 +219,7 @@ public class ProjectItem extends LinearLayout {
                         public void onClick(DialogInterface dialog, int which) {
                             switch (which) {
                                 case DialogInterface.BUTTON_POSITIVE:
+                                    EventBus.getDefault().post(new Events.ProjectEvent(mProject, "delete"));
                                     //mPlf.removeItem(mProject);
 
                                     break;

@@ -18,7 +18,7 @@
 * along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package org.protocoder.fragments;
+package org.protocoder.editor;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -40,11 +40,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import org.apache.commons.lang3.StringUtils;
+import org.protocoder.Events;
+import org.protocoder.ProjectManager;
 import org.protocoder.R;
 import org.protocoderrunner.base.BaseFragment;
-import org.protocoderrunner.events.Events;
 import org.protocoderrunner.apprunner.project.Project;
-import org.protocoderrunner.apprunner.project.ProjectManager;
 import org.protocoderrunner.utils.Fonts;
 import org.protocoderrunner.utils.MLog;
 import org.protocoderrunner.utils.TextUtils;
@@ -56,11 +56,10 @@ public class EditorFragment extends BaseFragment {
 
     public interface EditorFragmentListener {
         void onLoad();
-
         void onLineTouched();
     }
 
-    protected static final String TAG = "EditorFragment";
+    protected static final String TAG = EditorFragment.class.getSimpleName();
 
     // TODO change this dirty hack
     private static final int MENU_RUN = 8;
@@ -79,6 +78,7 @@ public class EditorFragment extends BaseFragment {
     private boolean bFiles = true;
     private boolean bAPI = true;
 
+    private ProjectManager mProjectManager;
     private FileManagerFragment fileFragment;
     private FragmentTransaction ft;
 
@@ -91,6 +91,7 @@ public class EditorFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mProjectManager = new ProjectManager(getActivity());
     }
 
     @Override
@@ -128,7 +129,7 @@ public class EditorFragment extends BaseFragment {
             String projectFolder = bundle.getString(Project.FOLDER);
             MLog.d("mm", projectName);
             if (projectName != "") {
-                loadProject(ProjectManager.getInstance().get(projectFolder, projectName));
+                loadProject(new Project(projectFolder, projectName));
             }
         }
 
@@ -278,7 +279,7 @@ public class EditorFragment extends BaseFragment {
     public void loadProject(Project project) {
         currentProject = project;
         if (project != null) {
-            edit.setText(ProjectManager.getInstance().getCode(project));
+            edit.setText(mProjectManager.getCode(project));
         } else {
             edit.setText("Project loading failed");
         }
@@ -296,7 +297,8 @@ public class EditorFragment extends BaseFragment {
     }
 
     public void save() {
-        ProjectManager.getInstance().writeNewCode(currentProject, getCode(), "main.js");
+        //TODO reenable this
+        //mProjectManager.writeNewCode(currentProject, getCode(), "main.js");
         Toast.makeText(getActivity(), "Saving " + currentProject.getName() + "...", Toast.LENGTH_SHORT).show();
 
     }

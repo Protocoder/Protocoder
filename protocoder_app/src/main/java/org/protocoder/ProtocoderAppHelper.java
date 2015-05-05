@@ -23,6 +23,7 @@ package org.protocoder;
 import android.content.Context;
 import android.content.Intent;
 
+import org.protocoder.editor.EditorActivity;
 import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.apprunner.AppRunnerService;
 import org.protocoderrunner.apprunner.project.Folder;
@@ -35,17 +36,17 @@ import java.util.Arrays;
 
 public class ProtocoderAppHelper {
 
-    public static void launchScript(Context context, String folder, String name) {
-        if (name.toLowerCase().endsWith("service")) {
+    public static void launchScript(Context context, Project p) {
+        if (p.getName().toLowerCase().endsWith("service")) {
             Intent intent = new Intent(context, AppRunnerService.class);
-            intent.putExtra(Project.FOLDER, folder);
-            intent.putExtra(Project.NAME, name);
+            intent.putExtra(Project.FOLDER, p.getFolder());
+            intent.putExtra(Project.NAME, p.getName());
             context.startService(intent);
         } else {
             Intent intent = new Intent(context, AppRunnerActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra(Project.FOLDER, folder);
-            intent.putExtra(Project.NAME, name);
+            intent.putExtra(Project.FOLDER, p.getFolder());
+            intent.putExtra(Project.NAME, p.getName());
             context.startActivity(intent);
         }
     }
@@ -55,6 +56,11 @@ public class ProtocoderAppHelper {
         context.startActivity(intent);
     }
 
+    public static void launchEditor(Context context, Project project) {
+        Intent intent = new Intent(context, EditorActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
 
 
     public interface InstallListener {

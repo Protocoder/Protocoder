@@ -13,6 +13,7 @@
         android:icon="@drawable/protocoder_icon"
         android:label="@string/app_name"
         android:allowBackup="true"
+        android:theme = "@style/Theme.AppCompat"
         tools:replace="android:allowBackup">
 
         <activity
@@ -61,6 +62,11 @@
         </activity>
         <activity
             android:name=".SettingsActivity"
+            android:theme="@style/ProtocoderAppTheme"
+            android:label="@string/settings_activity_name" >
+        </activity>
+        <activity
+            android:name=".editor.EditorActivity"
             android:theme="@style/ProtocoderAppTheme"
             android:label="@string/settings_activity_name" >
         </activity>

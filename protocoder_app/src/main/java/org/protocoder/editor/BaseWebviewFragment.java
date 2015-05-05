@@ -18,7 +18,7 @@
 * along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package org.protocoder.fragments;
+package org.protocoder.editor;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;

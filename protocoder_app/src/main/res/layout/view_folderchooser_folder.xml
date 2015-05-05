@@ -7,9 +7,11 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Folder"
-        android:textColor="@color/mwmgray"
+        android:fontFamily="sans-serif-light"
+        android:textSize="20sp"
+        android:textColor="@color/white"
         android:padding="5dp"
+        android:paddingLeft="15dp"
         android:id="@+id/textFolder"/>
 </LinearLayout>

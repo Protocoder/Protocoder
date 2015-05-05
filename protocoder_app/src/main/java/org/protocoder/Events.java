@@ -29,6 +29,7 @@ public class Events {
     public static final String PROJECT_SAVE = "save";
     public static final String PROJECT_NEW = "new";
     public static final String PROJECT_UPDATE = "update";
+    public static final String PROJECT_EDIT = "edit";
 
     public static class ProjectEvent {
         private Project project;

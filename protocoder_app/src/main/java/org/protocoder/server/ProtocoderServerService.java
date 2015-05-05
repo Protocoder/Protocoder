@@ -159,15 +159,12 @@ public class ProtocoderServerService extends Service {
     */
 
 
-    // TODO call intent and kill it in an appropiate way
     public void onEventMainThread(Events.ProjectEvent evt) {
-        // Using transaction so the view blocks
         MLog.d(TAG, "event -> " + evt.getAction());
 
         String action = evt.getAction();
         if (action.equals(Events.PROJECT_RUN)) {
-            Project p = evt.getProject();
-            ProtocoderAppHelper.launchScript(getApplicationContext(), p.getFolder(), p.getName());
+            ProtocoderAppHelper.launchScript(getApplicationContext(), evt.getProject());
         } else if (action.equals(Events.PROJECT_SAVE)) {
             //Project p = evt.getProject();
             //mProtocoder.protoScripts.refresh(p.getFolder(), p.getName());
@@ -176,6 +173,8 @@ public class ProtocoderServerService extends Service {
             //mProtocoder.protoScripts.createProject("projects", evt.getProject().getName());
         } else if (action.equals(Events.PROJECT_UPDATE)) {
             //mProtocoder.protoScripts.listRefresh();
+        } else if (action.equals(Events.PROJECT_EDIT)) {
+            ProtocoderAppHelper.launchEditor(getApplicationContext(), evt.getProject());
         }
     }
 

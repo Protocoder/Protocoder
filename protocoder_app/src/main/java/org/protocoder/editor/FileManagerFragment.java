@@ -18,7 +18,7 @@
 * along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package org.protocoder.fragments;
+package org.protocoder.editor;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -47,10 +47,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.protocoder.ProjectManager;
 import org.protocoder.R;
 import org.protocoderrunner.base.BaseFragment;
 import org.protocoderrunner.apprunner.project.Project;
-import org.protocoderrunner.apprunner.project.ProjectManager;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -64,6 +64,7 @@ public class FileManagerFragment extends BaseFragment {
     protected ListView llFileView;
     private String name;
     private String folder;
+    private ProjectManager mProjectManager;
 
     public FileManagerFragment() {
     }
@@ -71,6 +72,7 @@ public class FileManagerFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mProjectManager = new ProjectManager(getActivity());
 
         Bundle bundle = getArguments();
 
@@ -87,8 +89,10 @@ public class FileManagerFragment extends BaseFragment {
 
         // Get ListView and set adapter
         llFileView = (ListView) v.findViewById(R.id.llFile);
-        Project p = ProjectManager.getInstance().get(folder, name);
-        files = ProjectManager.getInstance().listFilesInProject(p);
+        Project p = new Project(folder, name);
+
+        //TODO reenable this
+        //files = mProjectManager.listFilesInProject(p);
 
         // get files
         projectAdapter = new FileAdapter(getActivity(), folder, files);
