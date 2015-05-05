@@ -18,7 +18,7 @@
 * along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package org.protocoder.fragments;
+package org.protocoder;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
@@ -42,14 +42,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
-import org.protocoder.R;
-import org.protocoder.activities.LicenseActivity;
-import org.protocoder.appApi.EditorManager;
-import org.protocoder.appApi.Protocoder;
-import org.protocoder.appApi.Settings;
 import org.protocoderrunner.base.BaseNotification;
-import org.protocoderrunner.apprunner.project.ProjectManager;
-import org.protocoderrunner.apprunner.project.ProjectManager.InstallListener;
 import org.protocoderrunner.utils.MLog;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
@@ -58,11 +51,12 @@ public class SettingsFragment extends PreferenceFragment {
     protected static final String TAG = "PrefsFragment";
     private Context mContext;
     private SharedPreferences mPrefs;
-    private Settings mSettings;
+    private UserSettings mSettings;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mSettings = new UserSettings(getActivity());
 
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.preferences);
@@ -74,7 +68,6 @@ public class SettingsFragment extends PreferenceFragment {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         mContext = getActivity();
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        mSettings = Protocoder.getInstance(mContext).settings;
 
         TwoStatePreference qq = new TwoStatePreference(getActivity()) {
             @Override
@@ -132,8 +125,8 @@ public class SettingsFragment extends PreferenceFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         progress.show();
 
-                        ProjectManager.getInstance().install(getActivity(), ProjectManager.FOLDER_EXAMPLES,
-                                new InstallListener() {
+                        ProtocoderAppHelper.installExamples(getActivity(), ProtocoderAppSettings.EXAMPLES_FOLDER,
+                                new ProtocoderAppHelper.InstallListener() {
 
                                     @Override
                                     public void onReady() {
@@ -239,7 +232,7 @@ public class SettingsFragment extends PreferenceFragment {
 
         //load webIDE
         final ListPreference loadEditorPreference = (ListPreference) findPreference("pref_change_editor");
-        String[] editors = EditorManager.getInstance().listEditors();
+        String[] editors = WebEditorManager.getInstance().listEditors();
         loadEditorPreference.setEntries(editors);
         loadEditorPreference.setEntryValues(editors);
         loadEditorPreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {

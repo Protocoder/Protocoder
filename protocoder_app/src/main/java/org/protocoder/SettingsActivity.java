@@ -18,15 +18,13 @@
 * along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package org.protocoder.activities;
+package org.protocoder;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 
-import org.protocoder.R;
-import org.protocoder.fragments.SettingsFragment;
-
-public class SetPreferenceActivity extends AppBaseActivity {
+public class SettingsActivity extends ActionBarActivity {
 
     @SuppressLint("NewApi")
     @Override
@@ -34,8 +32,8 @@ public class SetPreferenceActivity extends AppBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preferences);
 
-        setToolbar();
-        setToolbarBack();
+        //setToolbar();
+        //setToolbarBack();
 
         getFragmentManager().beginTransaction().replace(R.id.pref_container, new SettingsFragment()).commit();
     }

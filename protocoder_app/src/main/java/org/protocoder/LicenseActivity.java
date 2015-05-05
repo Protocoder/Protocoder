@@ -18,11 +18,13 @@
 * along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package org.protocoder.activities;
+package org.protocoder;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -32,15 +34,15 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class LicenseActivity extends AppBaseActivity {
+public class LicenseActivity extends ActionBarActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_license);
 
-        setToolbar();
-        setToolbarBack();
+        //setToolbar();
+        //setToolbarBack();
 
         //final ProgressDialog progressDialog = new ProgressDialog(this);
         //progressDialog.setTitle("");
@@ -86,34 +88,6 @@ public class LicenseActivity extends AppBaseActivity {
         });
         t.start();
     }
-
-    //@Override
-    //public boolean onCreateOptionsMenu(Menu menu) {
-    // Inflate the menu; this adds items to the action bar if it is present.
-    // getMenuInflater().inflate(R.menu.license, menu);
-    //	return true;
-    //
-    // }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-
-            case android.R.id.home:
-                // Up button pressed
-                Intent intentHome = new Intent(this, SetPreferenceActivity.class);
-                intentHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intentHome);
-                // overridePendingTransition(R.anim.splash_slide_in_anim_reverse_set, R.anim.splash_slide_out_anim_reverse_set);
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-
-    }
-
 
     private String readFile(int resource) {
         InputStream inputStream = getResources().openRawResource(resource);

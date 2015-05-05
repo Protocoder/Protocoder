@@ -192,7 +192,7 @@ public class MainActivity extends ActionBarActivity {
             //this.showHelp(true);
             return true;
         } else if (itemId == R.id.menu_settings) {
-            //Protocoder.getInstance(this).app.showSettings(true);
+            ProtocoderAppHelper.launchSettings(this);
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -237,7 +237,6 @@ public class MainActivity extends ActionBarActivity {
         String folder = evt.getFullFolder();
         mListFragmentBase.loadFolder(folder);
         //MLog.d(TAG, "event -> " + code);
-
     }
 
 

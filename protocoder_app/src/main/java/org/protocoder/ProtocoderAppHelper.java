@@ -28,7 +28,6 @@ import org.protocoderrunner.apprunner.AppRunnerService;
 import org.protocoderrunner.apprunner.project.Folder;
 import org.protocoderrunner.apprunner.project.Project;
 import org.protocoderrunner.utils.FileIO;
-import org.protocoderrunner.utils.MLog;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -50,6 +49,12 @@ public class ProtocoderAppHelper {
             context.startActivity(intent);
         }
     }
+
+    public static void launchSettings(Context context) {
+        Intent intent = new Intent(context, SettingsActivity.class);
+        context.startActivity(intent);
+    }
+
 
 
     public interface InstallListener {

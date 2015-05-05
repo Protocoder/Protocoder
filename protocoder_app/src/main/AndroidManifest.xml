@@ -51,14 +51,18 @@
             <intent-filter>
                 <action android:name="org.protocoder.intent.EXECUTE"></action>
             </intent-filter>
-
         </activity>
 
         <activity
             android:name=".WelcomeActivity"
             android:theme="@style/ProtocoderAppTheme"
-            android:label="@string/welcome_activity_name" >
+            android:label="@string/welcome_activity_name"
             android:noHistory="true" >
+        </activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:theme="@style/ProtocoderAppTheme"
+            android:label="@string/settings_activity_name" >
         </activity>
 
         <service android:name=".server.ProtocoderServerService"></service>
