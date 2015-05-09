@@ -142,6 +142,14 @@ public class PBluetoothClient extends PInterface {
         }
     }
 
+    @ProtoMethod(description = "Send bluetooth serial message", example = "")
+    @ProtoMethodParam(params = {"int"})
+    public void sendInt(int num) {
+        if (simpleBT.isConnected()) {
+            simpleBT.sendInt(num);
+        }
+    }
+
     @ProtoMethod(description = "Disconnect the bluetooth", example = "")
     @ProtoMethodParam(params = {""})
     public void disconnect() {

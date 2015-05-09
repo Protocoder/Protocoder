@@ -56,7 +56,6 @@ android {
     }
 }
 
-
 repositories {
 
     maven {
@@ -65,6 +64,10 @@ repositories {
     maven {
         url 'https://oss.sonatype.org/content/repositories/snapshots/'
     }
+//
+//    maven {
+//        url "https://repo.eclipse.org/content/repositories/paho-releases/"
+//    }
 
     mavenCentral()
 
@@ -106,6 +109,14 @@ dependencies {
     compile files('libs/activation.jar') //part of mail
     compile files('libs/additionnal.jar') //part of mail
     compile 'de.sciss:netutil:1.0.0'
+
+    //compile 'org.eclipse.paho:mqtt-client:1.0.1'
+    //compile 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.0.2'
+    //compile 'paho-releases.org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.0.1'
+    //compile 'paho-releases.org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.0.1'
+
+    compile 'org.fusesource.mqtt-client:mqtt-client:1.10'
+
 
     //media
     compile files('libs/osmbonuspack_v4.5.jar')

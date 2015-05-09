@@ -169,6 +169,20 @@ public class BluetoothSerialService {
         r.write(out);
     }
 
+    //write data
+    public void writeInt(int out) {
+        ConnectedThread r;
+        // Synchronize mContext copy of the ConnectedThread
+        synchronized (this) {
+            if (mState != STATE_CONNECTED) {
+                return;
+            }
+            r = mConnectedThread;
+        }
+        // Perform the write unsynchronized
+        r.writeInt(out);
+    }
+
     //notify not connected
     private void connectionFailed() {
         setState(STATE_NONE);
@@ -322,6 +336,14 @@ public class BluetoothSerialService {
          * @param buffer The bytes to write
          */
         public void write(byte[] buffer) {
+            try {
+                mmOutStream.write(buffer);
+            } catch (IOException e) {
+                Log.e(TAG, "Exception during write", e);
+            }
+        }
+
+        public void writeInt(int buffer) {
             try {
                 mmOutStream.write(buffer);
             } catch (IOException e) {

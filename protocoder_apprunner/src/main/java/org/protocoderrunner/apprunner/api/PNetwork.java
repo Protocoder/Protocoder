@@ -53,8 +53,10 @@ import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunnerFragment;
 import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.network.PBluetooth;
+import org.protocoderrunner.apprunner.api.network.PBluetoothLe;
 import org.protocoderrunner.apprunner.api.network.PFtpClient;
 import org.protocoderrunner.apprunner.api.network.PFtpServer;
+import org.protocoderrunner.apprunner.api.network.PMqtt;
 import org.protocoderrunner.apprunner.api.network.PSocketIOClient;
 import org.protocoderrunner.apprunner.api.network.PWebSocketClient;
 import org.protocoderrunner.apprunner.api.network.PWebSocketServer;
@@ -718,6 +720,27 @@ public class PNetwork extends PInterface {
         PFtpClient ftpClient = new PFtpClient(getContext());
 
         return ftpClient;
+    }
+    @ProtoMethod(description = "Initialize Bluetooth Low Energy System")
+    @ProtoMethodParam(params = {})
+    public PBluetoothLe startBLE() {
+
+        //PNetwork p=null;
+        //p.startBLE();
+
+        Log.i("PROTOBLE","STARTING BLE");
+        PBluetoothLe pBluetoothLe = new PBluetoothLe(getContext());
+
+        return pBluetoothLe;
+    }
+
+
+    @ProtoMethod(description = "Connect to a MQTT service", example = "")
+    @ProtoMethodParam(params = {})
+    public PMqtt createMqttClient() {
+        PMqtt pMqtt = new PMqtt(getContext());
+
+        return pMqtt;
     }
 
 
