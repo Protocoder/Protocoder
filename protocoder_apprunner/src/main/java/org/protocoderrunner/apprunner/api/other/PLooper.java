@@ -101,7 +101,6 @@ public class PLooper {
         handler.removeCallbacks(task);
 
         return this;
-
     }
 
     @ProtoMethod(description = "Start the looper", example = "")
