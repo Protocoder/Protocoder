@@ -785,7 +785,6 @@ public class PUIGeneric extends PInterface {
             }
         }
 
-        //MLog.network(mContext, "qq", "" + gridLayout);
         return gridLayout;
     }
 
