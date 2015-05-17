@@ -21,7 +21,7 @@
 package org.protocoderrunner.views;
 
 /*
- * Taken from processing.org source code 
+ * Borrowed from processing.org source code
  * 
  */
 
