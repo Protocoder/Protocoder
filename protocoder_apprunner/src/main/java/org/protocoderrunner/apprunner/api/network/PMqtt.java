@@ -43,9 +43,9 @@ public class PMqtt extends PInterface {
 
     private final String TAG = PMqtt.class.getSimpleName();
 
-    String content      = "Message from MqttPublishSample";
-    String host         = "messagesight.demos.ibm.com";
-    int port            = 1883;
+    //String content      = "Message from MqttPublishSample";
+    //String host         = "messagesight.demos.ibm.com";
+    //int port            = 1883;
     String clientId     = "ProtoClient";
     private MQTT mMqtt;
     private CallbackConnection mConnection;
@@ -63,7 +63,7 @@ public class PMqtt extends PInterface {
         void event(boolean mConnected);
     }
 
-    public PMqtt connect(final ConnectCallback callback) {
+    public PMqtt connect(String host, int port, final ConnectCallback callback) {
         MLog.d(TAG, "connect 1");
         mMqtt = new MQTT();
 
