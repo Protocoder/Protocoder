@@ -250,7 +250,6 @@ public class PSerial extends PInterface {
         }
     }
 
-
     //@ProtoMethod(description = "resumes serial")
     public void resume() {
 
