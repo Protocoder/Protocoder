@@ -163,27 +163,11 @@ public class ProjectManager {
 
     // Get code from sdcard
     public String getCode(Project p) {
-        String out = null;
-        File f = new File(p.getStoragePath() + File.separator + MAIN_FILE_NAME);
-        try {
-            InputStream in = new FileInputStream(f);
-            ByteArrayOutputStream buf = new ByteArrayOutputStream();
-            int i;
-            try {
-                i = in.read();
-                while (i != -1) {
-                    buf.write(i);
-                    i = in.read();
-                }
-                in.close();
-            } catch (IOException ex) {
-            }
-            out = buf.toString();
-        } catch (IOException e) {
-            e.printStackTrace();
-            // Log.e("Project", e.toString());
-        }
-        return out;
+
+        String path = p.getStoragePath() + File.separator + MAIN_FILE_NAME;
+
+        return FileIO.loadCodeFromFile(path);
+
     }
 
     public void writeNewCode(Project p, String code, String fileName) {

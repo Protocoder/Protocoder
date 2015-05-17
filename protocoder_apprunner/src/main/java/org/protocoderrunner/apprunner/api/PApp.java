@@ -46,6 +46,7 @@ import org.protocoderrunner.project.ProjectManager;
 import org.protocoderrunner.project.SchedulerManager;
 import org.protocoderrunner.utils.ExecuteCmd;
 import org.protocoderrunner.utils.FileIO;
+import org.protocoderrunner.utils.MLog;
 
 import java.io.File;
 
@@ -119,7 +120,9 @@ public class PApp extends PInterface {
     @ProtoMethod(description = "loads and external file containing code", example = "")
     @ProtoMethodParam(params = {"fileName"})
     public void load(String filename) {
-        String code = FileIO.loadFile(path() + File.separator + filename);
+        String code = FileIO.loadCodeFromFile(path() + File.separator + filename);
+
+        //MLog.d(TAG, code);
 
         getActivity().mAppRunnerFragment.interp.eval(code);
     }
