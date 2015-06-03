@@ -170,7 +170,7 @@ public class BluetoothSerialService {
     }
 
     //write data
-    public void writeInt(int out) {
+    public void write(int out) {
         ConnectedThread r;
         // Synchronize mContext copy of the ConnectedThread
         synchronized (this) {
