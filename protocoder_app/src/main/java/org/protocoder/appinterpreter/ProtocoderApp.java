@@ -20,7 +20,7 @@
 package org.protocoder.appinterpreter;
 
 import org.protocoder.UserSettings;
-import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.AppRunner;
 
 public class ProtocoderApp {
 

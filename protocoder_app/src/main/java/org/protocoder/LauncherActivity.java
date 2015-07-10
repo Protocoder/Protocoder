@@ -26,7 +26,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import org.protocoderrunner.base.BaseActivity;
-import org.protocoderrunner.utils.StrUtils;
+import org.protocoderrunner.base.utils.StrUtils;
 
 public class LauncherActivity extends BaseActivity {
 

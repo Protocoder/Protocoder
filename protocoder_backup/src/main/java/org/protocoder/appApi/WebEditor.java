@@ -20,8 +20,8 @@
 
 package org.protocoder.appApi;
 
-import org.protocoderrunner.apprunner.api.PConsole;
-import org.protocoderrunner.apprunner.api.PDashboard;
+import org.protocoderrunner.api.PConsole;
+import org.protocoderrunner.api.PDashboard;
 
 public class WebEditor {
 

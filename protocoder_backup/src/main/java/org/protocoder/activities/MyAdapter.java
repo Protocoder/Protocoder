@@ -27,7 +27,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.protocoder.R;
-import org.protocoderrunner.utils.MLog;
+import org.protocoderrunner.base.utils.MLog;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private static final String TAG = "MyAdapter";

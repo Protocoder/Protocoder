@@ -33,7 +33,7 @@ import android.webkit.WebView;
 
 import org.protocoder.R;
 import org.protocoderrunner.base.BaseFragment;
-import org.protocoderrunner.utils.MLog;
+import org.protocoderrunner.base.utils.MLog;
 
 @SuppressLint({"NewApi", "ValidFragment"})
 public class BaseWebviewFragment extends BaseFragment {

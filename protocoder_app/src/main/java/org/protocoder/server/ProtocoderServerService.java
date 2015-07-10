@@ -18,9 +18,8 @@ import org.protocoder.Events;
 import org.protocoder.ProtocoderAppHelper;
 import org.protocoder.ProtocoderAppSettings;
 import org.protocoderrunner.R;
-import org.protocoderrunner.apprunner.AppRunnerActivity;
-import org.protocoderrunner.apprunner.project.Project;
-import org.protocoderrunner.utils.MLog;
+import org.protocoderrunner.AppRunnerActivity;
+import org.protocoderrunner.base.utils.MLog;
 
 import java.io.IOException;
 

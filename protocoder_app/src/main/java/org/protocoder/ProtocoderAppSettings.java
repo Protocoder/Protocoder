@@ -22,7 +22,7 @@ package org.protocoder;
 
 import android.os.Build;
 
-import org.protocoderrunner.apprunner.AppRunnerSettings;
+import org.protocoderrunner.AppRunnerSettings;
 
 import java.io.File;
 

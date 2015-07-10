@@ -41,10 +41,10 @@ import org.protocoder.server.ProtocoderFtpServer;
 import org.protocoder.server.ProtocoderHttpServer;
 import org.protocoder.views.Overlay;
 import org.protocoderrunner.AppSettings;
-import org.protocoderrunner.network.CustomWebsocketServer;
-import org.protocoderrunner.network.IDEcommunication;
-import org.protocoderrunner.network.NetworkUtils;
-import org.protocoderrunner.utils.AndroidUtils;
+import org.protocoderrunner.base.network.CustomWebsocketServer;
+import org.protocoderrunner.base.network.IDEcommunication;
+import org.protocoderrunner.base.network.NetworkUtils;
+import org.protocoderrunner.base.utils.AndroidUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.net.UnknownHostException;

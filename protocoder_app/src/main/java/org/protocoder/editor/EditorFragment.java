@@ -44,10 +44,10 @@ import org.protocoder.Events;
 import org.protocoder.ProjectManager;
 import org.protocoder.R;
 import org.protocoderrunner.base.BaseFragment;
-import org.protocoderrunner.apprunner.project.Project;
-import org.protocoderrunner.utils.Fonts;
-import org.protocoderrunner.utils.MLog;
-import org.protocoderrunner.utils.TextUtils;
+import org.protocoderrunner.project.Project;
+import org.protocoderrunner.base.utils.Fonts;
+import org.protocoderrunner.base.utils.MLog;
+import org.protocoderrunner.base.utils.TextUtils;
 
 import de.greenrobot.event.EventBus;
 

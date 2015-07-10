@@ -24,7 +24,7 @@ import com.google.gson.Gson;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.utils.MLog;
+import org.protocoderrunner.base.utils.MLog;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;

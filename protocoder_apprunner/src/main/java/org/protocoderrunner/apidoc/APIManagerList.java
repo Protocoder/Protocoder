@@ -20,7 +20,7 @@
 
 package org.protocoderrunner.apidoc;
 
-import org.protocoderrunner.utils.MLog;
+import org.protocoderrunner.base.utils.MLog;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;

@@ -33,9 +33,9 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 
-import org.protocoderrunner.apprunner.AppRunnerSettings;
-import org.protocoderrunner.media.Audio;
-import org.protocoderrunner.utils.MLog;
+import org.protocoderrunner.AppRunnerSettings;
+import org.protocoderrunner.base.media.Audio;
+import org.protocoderrunner.base.utils.MLog;
 
 import java.util.ArrayList;
 

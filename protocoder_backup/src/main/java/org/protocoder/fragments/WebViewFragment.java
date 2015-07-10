@@ -43,7 +43,7 @@ import android.widget.FrameLayout;
 import android.widget.VideoView;
 
 import org.protocoder.R;
-import org.protocoderrunner.utils.MLog;
+import org.protocoderrunner.base.utils.MLog;
 
 public class WebViewFragment extends BaseWebviewFragment {
 

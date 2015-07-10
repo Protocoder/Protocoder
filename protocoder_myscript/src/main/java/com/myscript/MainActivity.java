@@ -4,8 +4,8 @@ import android.os.Bundle;
 
 import org.protocoderrunner.apprunner.AppRunnerContext;
 import org.protocoderrunner.AppSettings;
-import org.protocoderrunner.apprunner.AppRunnerActivity;
-import org.protocoderrunner.apprunner.project.AppRunnerProjectManager;
+import org.protocoderrunner.AppRunnerActivity;
+import org.protocoderrunner.project.AppRunnerProjectManager;
 
 
 /**

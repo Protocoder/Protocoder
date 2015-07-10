@@ -29,8 +29,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import org.protocoderrunner.base.BaseActivity;
-import org.protocoderrunner.utils.MLog;
-import org.protocoderrunner.utils.StrUtils;
+import org.protocoderrunner.base.utils.MLog;
+import org.protocoderrunner.base.utils.StrUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

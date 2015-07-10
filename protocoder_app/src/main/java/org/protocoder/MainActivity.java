@@ -42,10 +42,10 @@ import org.protocoder.project.FolderChooserFragment;
 import org.protocoder.project.MyDialog;
 import org.protocoder.project.ProjectListFragment;
 import org.protocoder.server.ProtocoderServerService;
-import org.protocoderrunner.apprunner.AppRunnerEvents;
+import org.protocoderrunner.AppRunnerEvents;
 import org.protocoderrunner.base.BaseActivity;
-import org.protocoderrunner.utils.AndroidUtils;
-import org.protocoderrunner.utils.MLog;
+import org.protocoderrunner.base.utils.AndroidUtils;
+import org.protocoderrunner.base.utils.MLog;
 
 import de.greenrobot.event.EventBus;
 

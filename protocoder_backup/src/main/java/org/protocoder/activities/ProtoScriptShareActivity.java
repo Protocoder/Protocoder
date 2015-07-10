@@ -26,7 +26,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import org.protocoder.R;
-import org.protocoderrunner.utils.MLog;
+import org.protocoderrunner.base.utils.MLog;
 
 @SuppressLint("NewApi")
 public class ProtoScriptShareActivity extends AppBaseActivity {

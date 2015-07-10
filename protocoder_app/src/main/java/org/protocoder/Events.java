@@ -20,7 +20,7 @@
 
 package org.protocoder;
 
-import org.protocoderrunner.apprunner.project.Project;
+import org.protocoderrunner.project.Project;
 
 import java.io.File;
 

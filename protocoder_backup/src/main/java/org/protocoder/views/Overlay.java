@@ -21,7 +21,7 @@
 package org.protocoder.views;
 
 import org.protocoderrunner.apprunner.AppRunner;
-import org.protocoderrunner.apprunner.api.widgets.PCanvas;
+import org.protocoderrunner.api.widgets.PCanvas;
 
 
 public class Overlay extends PCanvas {

@@ -46,8 +46,8 @@ import android.widget.TextView;
 
 import org.protocoder.Events;
 import org.protocoder.R;
-import org.protocoderrunner.apprunner.project.Project;
-import org.protocoderrunner.utils.MLog;
+import org.protocoderrunner.project.Project;
+import org.protocoderrunner.base.utils.MLog;
 
 import de.greenrobot.event.EventBus;
 

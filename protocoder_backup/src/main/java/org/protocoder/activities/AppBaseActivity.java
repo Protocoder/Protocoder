@@ -27,9 +27,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import org.protocoder.R;
-import org.protocoderrunner.apprunner.api.other.PLooper;
+import org.protocoderrunner.api.other.PLooper;
 import org.protocoderrunner.base.BaseActivity;
-import org.protocoderrunner.utils.AndroidUtils;
+import org.protocoderrunner.base.utils.AndroidUtils;
 
 @SuppressLint("NewApi")
 public class AppBaseActivity extends BaseActivity {

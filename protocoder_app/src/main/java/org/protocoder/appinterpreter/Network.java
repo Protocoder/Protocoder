@@ -20,8 +20,8 @@
 
 package org.protocoder.appinterpreter;
 
-import org.protocoderrunner.apprunner.api.PNetwork;
-import org.protocoderrunner.apprunner.api.PUI;
+import org.protocoderrunner.api.PNetwork;
+import org.protocoderrunner.api.PUI;
 
 
 public class Network {

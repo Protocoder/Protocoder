@@ -29,7 +29,7 @@ import android.widget.TextView;
 
 import org.protocoder.Events;
 import org.protocoder.R;
-import org.protocoderrunner.utils.MLog;
+import org.protocoderrunner.base.utils.MLog;
 
 import java.util.ArrayList;
 

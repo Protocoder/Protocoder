@@ -12,7 +12,7 @@ import android.view.WindowManager;
 
 import org.protocoder.Events;
 import org.protocoder.R;
-import org.protocoderrunner.utils.MLog;
+import org.protocoderrunner.base.utils.MLog;
 
 import de.greenrobot.event.EventBus;
 

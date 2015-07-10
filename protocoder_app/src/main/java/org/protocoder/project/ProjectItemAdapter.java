@@ -25,7 +25,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import org.protocoder.ProjectManager;
-import org.protocoderrunner.apprunner.project.Project;
+import org.protocoderrunner.project.Project;
 
 import java.util.ArrayList;
 

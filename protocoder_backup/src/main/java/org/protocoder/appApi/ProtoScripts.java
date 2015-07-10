@@ -39,11 +39,11 @@ import org.protocoder.projectlist.ProjectsPagerAdapter;
 import org.protocoder.projectlist.ZoomOutPageTransformer;
 import org.protocoderrunner.apprunner.AppRunnerActivity;
 import org.protocoderrunner.apprunner.AppRunnerService;
-import org.protocoderrunner.apprunner.api.PUtil;
-import org.protocoderrunner.apprunner.project.Project;
-import org.protocoderrunner.apprunner.project.ProjectManager;
-import org.protocoderrunner.utils.AndroidUtils;
-import org.protocoderrunner.utils.MLog;
+import org.protocoderrunner.api.PUtil;
+import org.protocoderrunner.project.Project;
+import org.protocoderrunner.project.ProjectManager;
+import org.protocoderrunner.base.utils.AndroidUtils;
+import org.protocoderrunner.base.utils.MLog;
 
 import java.io.File;
 

@@ -36,9 +36,9 @@ import android.widget.LinearLayout;
 import org.protocoder.Events.ProjectEvent;
 import org.protocoder.ProtocoderAppHelper;
 import org.protocoder.R;
-import org.protocoderrunner.apprunner.project.Project;
+import org.protocoderrunner.project.Project;
 import org.protocoderrunner.base.BaseFragment;
-import org.protocoderrunner.utils.MLog;
+import org.protocoderrunner.base.utils.MLog;
 
 import java.util.ArrayList;
 

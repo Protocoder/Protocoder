@@ -43,7 +43,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 
 import org.protocoderrunner.base.BaseNotification;
-import org.protocoderrunner.utils.MLog;
+import org.protocoderrunner.base.utils.MLog;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class SettingsFragment extends PreferenceFragment {

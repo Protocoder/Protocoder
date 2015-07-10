@@ -2,7 +2,7 @@ package org.protocoder.appinterpreter;
 
 import android.content.Context;
 
-import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.AppRunner;
 
 
 public class AppRunnerCustom extends AppRunner {

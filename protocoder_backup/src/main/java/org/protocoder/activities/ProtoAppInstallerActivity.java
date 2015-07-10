@@ -31,8 +31,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.protocoder.R;
-import org.protocoderrunner.apprunner.project.ProjectManager;
-import org.protocoderrunner.utils.MLog;
+import org.protocoderrunner.project.ProjectManager;
+import org.protocoderrunner.base.utils.MLog;
 
 import java.io.File;
 

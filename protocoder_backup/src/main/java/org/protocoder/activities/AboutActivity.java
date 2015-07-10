@@ -24,7 +24,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import org.protocoder.R;
-import org.protocoderrunner.utils.MLog;
+import org.protocoderrunner.base.utils.MLog;
 
 @SuppressLint("NewApi")
 public class AboutActivity extends AppBaseActivity {
