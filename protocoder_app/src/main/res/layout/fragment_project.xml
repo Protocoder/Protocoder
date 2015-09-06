@@ -52,13 +52,10 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="10dp"
-            android:shadowColor="#ffffff"
-            android:shadowDx="2"
-            android:shadowDy="2"
             android:shadowRadius="2"
             android:text="@string/projects_zero"
-            android:textColor="@color/mwmgray"
-            android:textSize="16sp" />
+            android:textColor="@color/white"
+            android:textSize="18sp" />
     </LinearLayout>
 
 </FrameLayout>

@@ -14,7 +14,8 @@
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
-        <!-- All customizations that are NOT specific to mContext particular API-level can go here. -->
+
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
     <style name="PagerTitleStripText">

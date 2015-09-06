@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <org.protocoder.project.MyRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-     android:id="@+id/myrelativelayout"
-     android:layout_width="match_parent"
+    android:id="@+id/myrelativelayout"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/transparent"
     android:animateLayoutChanges="true">
@@ -30,7 +30,7 @@
         android:layout_below="@id/folderSelector"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/black"
+        android:background="@color/transparent"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:visibility="visible">

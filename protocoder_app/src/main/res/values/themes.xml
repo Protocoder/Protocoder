@@ -2,9 +2,23 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- ProtocoderThemeApp -->
-    <style name="ProtocoderAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="ProtocoderAppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:actionBarStyle">@style/ProtocoderAppTheme.ActionBarStyle</item>
-        <item name="android:windowBackground">@color/white</item>
+        <item name="android:windowBackground">@drawable/protocoder_background</item>
+
+    </style>
+
+    <style name="ProtocoderAppTheme" parent="ProtocoderAppTheme.Base">
+
+    <!-- colorPrimary is used for the default action bar background -->
+        <item name="colorPrimary">@color/mwmblue</item>
+
+        <!-- colorPrimaryDark is used for the status bar -->
+        <item name="colorPrimaryDark">@color/mwmgreen</item>
+
+        <!-- colorAccent is used as the default value for colorControlActivated
+             which is used to tint widgets -->
+        <item name="colorAccent">@color/mwmorange</item>
 
         <!-- Here we setting appcompat’s actionBarStyle -->
         <!--<item name="actionBarStyle">@style/MyActionBarStyle</item>-->

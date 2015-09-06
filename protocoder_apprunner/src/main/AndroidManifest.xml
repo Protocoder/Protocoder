@@ -59,6 +59,7 @@
 
         <activity
             android:name=".AppRunnerActivity"
+            android:process=".AppRunnerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@style/ProtocoderAppRunnerTheme"
             android:label="@string/runner_name"
@@ -69,7 +70,7 @@
                 <action android:name="org.protocoderrunner.apprunner.AppRunnerActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
-                <!--
+                <!--how tool
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="file" />

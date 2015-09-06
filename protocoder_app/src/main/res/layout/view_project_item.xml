@@ -89,12 +89,8 @@
             android:gravity="center"
             android:lines="2"
             android:maxLines="2"
-            android:shadowColor="#88FFFFFF"
-            android:shadowDx="0"
-            android:shadowDy="1"
-            android:shadowRadius="0.1"
             android:text="Title"
-            android:textColor="#666666"
+            android:textColor="@color/white"
             android:textSize="13sp"
             android:typeface="normal" />
 

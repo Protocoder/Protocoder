@@ -5,6 +5,7 @@
         android:layout_height="fill_parent"
         android:focusableInTouchMode="true"
         android:gravity="bottom"
+        android:background="@drawable/protocoder_background"
     >
 
     <LinearLayout

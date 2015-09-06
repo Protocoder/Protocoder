@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="protocoder_gradient_begin">#415A71</color>
+    <color name="protocoder_gradient_end">#716938</color>
+    <color name="blacktransparent20">#20000000</color>
+
+
+    <!-- legacy stuff -->
     <color name="red">#ff0000</color>
     <color name="green">#00ff00</color>
     <color name="blue">#0000ff</color>

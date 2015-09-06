@@ -17,7 +17,7 @@
             android:dither="true"
             android:shape="rectangle" >
             <corners android:radius="2dp" />
-            <solid android:color="#55dddddd" />
+            <stroke android:color="#ffffffff" />
         </shape>
     </item>
 
@@ -27,7 +27,7 @@
             android:dither="true"
             android:shape="rectangle" >
             <corners android:radius="2dp" />
-            <solid android:color="#55ffffff" />
+            <solid android:color="#22000000" />
             <padding
                 android:bottom="4dp"
                 android:left="4dp"
