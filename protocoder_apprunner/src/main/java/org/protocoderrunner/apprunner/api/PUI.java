@@ -852,7 +852,7 @@ public class PUI extends PUIGeneric {
     }
 
 
-    //TODO removed old one this is mContext place holder
+    //TODO removed old one this is a place holder
     //
     //@APIMethod(description = "Knob", example = "")
     //@APIParam(params = { "function(progress)" })

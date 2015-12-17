@@ -31,6 +31,7 @@ import org.protocoderrunner.apprunner.PInterface;
 import org.protocoderrunner.apprunner.api.PUI;
 import org.protocoderrunner.apprunner.api.other.WhatIsRunning;
 import org.protocoderrunner.network.bt.SimpleBT;
+import org.protocoderrunner.utils.MLog;
 
 public class PBluetoothClient extends PInterface {
 
@@ -76,7 +77,7 @@ public class PBluetoothClient extends PInterface {
         mFragment.pUi.popupChoice("Connect to device", arrayStrings, new PUI.choiceDialogCB() {
             @Override
             public void event(String string) {
-                connectSerial(string.split(" ")[1], callbackfn);
+                connectSerial(string.split(" +")[1], callbackfn);
             }
         });
         listen();
