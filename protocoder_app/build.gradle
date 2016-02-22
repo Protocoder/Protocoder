@@ -1,4 +1,4 @@
-apply plugin: 'android'
+apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 21
@@ -10,6 +10,7 @@ android {
         targetSdkVersion 25
         versionCode 18
         versionName "0.19.0"
+        multiDexEnabled true
 
         compileOptions {
             sourceCompatibility JavaVersion.VERSION_1_7
