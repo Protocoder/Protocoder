@@ -69,8 +69,7 @@ public class PSerial extends PInterface {
     public interface OnNewDataCallback {
         void event(String responseString);
     }
-
-
+    
     @ProtoMethod(description = "starts serial", example = "")
     public void start(int bauds, final OnStartCallback callbackConnected) {
         getAppRunner().whatIsRunning.add(this);
@@ -216,7 +215,6 @@ public class PSerial extends PInterface {
         startIoManager();
     }
 
-
     @ProtoMethod(description = "stop serial", example = "")
     @ProtoMethodParam(params = {})
     public void stop() {
@@ -237,7 +235,6 @@ public class PSerial extends PInterface {
         }
     }
 
-
     @ProtoMethod(description = "sends commands to the serial")
     @ProtoMethodParam(params = {"data"})
     public void write(String data) {
@@ -250,12 +247,10 @@ public class PSerial extends PInterface {
         }
     }
 
-
     //@ProtoMethod(description = "resumes serial")
     public void resume() {
 
     }
-
 
     //@ProtoMethod(description = "pause serial")
     public void pause() {
