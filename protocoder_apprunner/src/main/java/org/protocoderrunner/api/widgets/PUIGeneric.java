@@ -783,7 +783,6 @@ public class PUIGeneric extends PInterface {
             }
         }
 
-        //MLog.network(mContext, "qq", "" + gridLayout);
         return gridLayout;
     }
 
@@ -823,8 +822,7 @@ public class PUIGeneric extends PInterface {
 
         return video;
     }
-
-
+    
     @ProtoMethod(description = "Creates a new drawing canvas", example = "")
     @ProtoMethodParam(params = {"width", "height"})
     public PCanvas newCanvas(int w, int h) {
@@ -834,7 +832,6 @@ public class PUIGeneric extends PInterface {
         return canvasView;
     }
 
-
     @ProtoMethod(description = "Creates a new web view", example = "")
     @ProtoMethodParam(params = {""})
     public PWebView newWebView() {
@@ -843,7 +840,6 @@ public class PUIGeneric extends PInterface {
 
         return webView;
     }
-
 
     @ProtoMethod(description = "Creates a new camera view", example = "")
     @ProtoMethodParam(params = {"type={0,1}"})
