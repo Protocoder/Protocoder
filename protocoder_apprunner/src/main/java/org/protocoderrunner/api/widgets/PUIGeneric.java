@@ -48,10 +48,6 @@ import com.larvalabs.svgandroid.SVGBuilder;
 
 import org.json.JSONArray;
 import org.mozilla.javascript.NativeArray;
-import org.osmdroid.events.DelayedMapListener;
-import org.osmdroid.events.MapListener;
-import org.osmdroid.events.ScrollEvent;
-import org.osmdroid.events.ZoomEvent;
 import org.protocoderrunner.R;
 import org.protocoderrunner.apidoc.annotation.ProtoField;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
@@ -793,8 +789,10 @@ public class PUIGeneric extends PInterface {
     @ProtoMethodParam(params = {""})
     public PMap newMap() {
         initializeLayout();
-        PMap mapView = new PMap(getContext(), 256);
 
+        PMap mapView = new PMap(getAppRunner(), 256);
+
+        /*
         mapView.setMapListener(new DelayedMapListener(new MapListener() {
             @Override
             public boolean onZoom(final ZoomEvent e) {
@@ -809,6 +807,7 @@ public class PUIGeneric extends PInterface {
                 return true;
             }
         }, 1000));
+        */
 
         return mapView;
     }

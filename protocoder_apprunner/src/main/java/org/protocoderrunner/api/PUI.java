@@ -1183,7 +1183,8 @@ public class PUI extends PUIGeneric {
     public PMap addMap(int x, int y, int w, int h) {
         PMap mapView = newMap();
 
-        addViewAbsolute(mapView, x, y, w, h);
+        //TODO
+        // addViewAbsolute(mapView, x, y, w, h);
         return mapView;
     }
 

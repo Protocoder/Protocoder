@@ -67,7 +67,7 @@ public class PBluetoothClient extends PInterface {
         getAppRunner().pUi.popupChoice("Connect to device", arrayStrings, new PUI.choiceDialogCB() {
             @Override
             public void event(String string) {
-                connectSerial(string.split(" ")[1], callbackfn);
+                connectSerial(string.split(" +")[1], callbackfn);
             }
         });
         listen();

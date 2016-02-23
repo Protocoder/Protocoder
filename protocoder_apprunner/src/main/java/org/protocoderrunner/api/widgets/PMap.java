@@ -1,9 +1,9 @@
 /*
 * Part of Protocoder http://www.protocoder.org
-* A prototyping platform for Android devices 
+* A prototyping platform for Android devices
 *
 * Copyright (C) 2013 Victor Diaz Barrales victormdb@gmail.com
-* 
+*
 * Protocoder is free software: you can redistribute it and/or modify
 * it under the terms of the GNU Lesser General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
@@ -13,23 +13,20 @@
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU Lesser General Public License
 * along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
 */
 
 package org.protocoderrunner.api.widgets;
 
-import org.protocoderrunner.base.utils.MLog;
+public class PMap {
+    public PMap(Object obj, int p) {
 
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Point;
-import android.graphics.drawable.Drawable;
-import org.protocoderrunner.R;
-import org.protocoderrunner.apidoc.annotation.ProtoMethod;
-import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+    }
+}
 
+/*
 public class PMap extends MapView {
 
     final String TAG = PMap.class.getSimpleName();
@@ -43,9 +40,9 @@ public class PMap extends MapView {
 
     private Context c;
 
-    public <T> PMap(Context c, int pixelTileSize) {
-        super(c, pixelTileSize);
-        this.c = c;
+    public <T> PMap(AppRunner appRunner, int pixelTileSize) {
+        super(appRunner, pixelTileSize);
+        this.c = appRunner.getAppContext();
 
         // Create the mapview with the custom tile provider array
         this.mapView = this;
@@ -291,7 +288,7 @@ public class PMap extends MapView {
         mapView.setUseDataConnection(b);
     }
 
-    /******** OSMbonus methods ************/
+    // OSMbonus methods
     public void getRoadPath(double lat1, double lon1, double lat2, double lon2) {
         RoadManager roadManager = new OSRMRoadManager();
 
@@ -377,3 +374,4 @@ public class PMap extends MapView {
 //        return true;
 //    }
 }
+*/
