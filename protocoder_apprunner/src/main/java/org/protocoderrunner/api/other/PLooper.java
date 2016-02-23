@@ -33,7 +33,6 @@ public class PLooper {
     private final Handler handler;
     ArrayList<Runnable> rl = new ArrayList<Runnable>();
 
-
     public int speed;
     boolean paused = false;
 
@@ -85,7 +84,6 @@ public class PLooper {
         return this;
     }
 
-
     @ProtoMethod(description = "Pause the looper", example = "")
     @ProtoMethodParam(params = {"boolean"})
     public PLooper pause(boolean b) {
@@ -97,13 +95,11 @@ public class PLooper {
         return this;
     }
 
-
     @ProtoMethod(description = "Stop the looper", example = "")
     public PLooper stop() {
         handler.removeCallbacks(task);
 
         return this;
-
     }
 
     @ProtoMethod(description = "Start the looper", example = "")
