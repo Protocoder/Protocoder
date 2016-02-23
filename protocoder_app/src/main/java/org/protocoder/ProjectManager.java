@@ -128,28 +128,11 @@ public class ProjectManager extends AppRunnerProjectManager {
     }
 
     // Get code from sdcard
-    public String getCode() {
-        String out = null;
-        File f = new File(getProjectPath() + MAIN_FILENAME);
-        try {
-            InputStream in = new FileInputStream(f);
-            ByteArrayOutputStream buf = new ByteArrayOutputStream();
-            int i;
-            try {
-                i = in.read();
-                while (i != -1) {
-                    buf.write(i);
-                    i = in.read();
-                }
-                in.close();
-            } catch (IOException ex) {
-            }
-            out = buf.toString();
-        } catch (IOException e) {
-            e.printStackTrace();
-            // Log.e("Project", e.toString());
-        }
-        return out;
+    public String getCode(Project p) {
+        String path = p.getFullFolder() + File.separator + MAIN_FILENAME;
+
+        return FileIO.loadCodeFromFile(path);
+
     }
 
     public void writeNewCode(String code, String fileName) {

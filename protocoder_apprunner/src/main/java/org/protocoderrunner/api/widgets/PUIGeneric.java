@@ -822,7 +822,7 @@ public class PUIGeneric extends PInterface {
 
         return video;
     }
-    
+
     @ProtoMethod(description = "Creates a new drawing canvas", example = "")
     @ProtoMethodParam(params = {"width", "height"})
     public PCanvas newCanvas(int w, int h) {

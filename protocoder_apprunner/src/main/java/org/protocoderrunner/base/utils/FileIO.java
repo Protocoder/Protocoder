@@ -436,6 +436,31 @@ public class FileIO {
         return null;
     }
 
+    public static String loadCodeFromFile(String path) {
+
+        String out = null;
+        File f = new File(path);
+        try {
+            InputStream in = new FileInputStream(f);
+            ByteArrayOutputStream buf = new ByteArrayOutputStream();
+            int i;
+            try {
+                i = in.read();
+                while (i != -1) {
+                    buf.write(i);
+                    i = in.read();
+                }
+
+                in.close();
+            } catch (IOException ex) {
+            }
+            out = buf.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return out;
+    }
+
     /*
      * Method borrowed from Processing PApplet.java
      */

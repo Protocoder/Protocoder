@@ -92,13 +92,11 @@ public class PApp extends PInterface {
         //SchedulerManager.getInstance(getContext()).setAlarm(p, hour, minute, second, wakeUpScreen);
     }
 
-
     @ProtoMethod(description = "", example = "")
     @ProtoMethodParam(params = {"type", "data"})
     public void getSharedData(String type, String data) {
 
     }
-
 
     @ProtoMethod(description = "close the running script", example = "")
     public void close() {
@@ -117,7 +115,7 @@ public class PApp extends PInterface {
     @ProtoMethod(description = "loads and external file containing code", example = "")
     @ProtoMethodParam(params = {"fileName"})
     public void load(String filename) {
-        String code = FileIO.loadFile(path() + File.separator + filename);
+        String code = FileIO.loadCodeFromFile(path() + File.separator + filename);
 
         getAppRunner().interp.eval(code);
     }
