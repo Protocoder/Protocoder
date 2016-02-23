@@ -49,11 +49,11 @@ local.properties
 .gradle/
 build/
 
-#mac shit 
+#mac stuff
 .DS_Store
 .settings
 
-# Windows shit
+# Windows stuff
 Thumbs.db
 
 DesktopApp/ 
@@ -63,8 +63,7 @@ AndroidApp/protocoder/tool_verify_signature.sh
 AndroidApp/protocoder/key_release.keystore
 
 
-# JS shit
+# JS stuff
 node_modules
 protocoder/protocoder_app/manifest-merger-extended-release-report.txt
-
 protocoder/protocoder_app/manifest-merger-normal-release-report.txt
