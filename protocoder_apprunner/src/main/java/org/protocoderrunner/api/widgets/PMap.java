@@ -20,39 +20,19 @@
 
 package org.protocoderrunner.api.widgets;
 
+import org.protocoderrunner.base.utils.MLog;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
-
-import org.osmdroid.DefaultResourceProxyImpl;
-import org.osmdroid.api.IMapController;
-import org.osmdroid.events.DelayedMapListener;
-import org.osmdroid.events.MapListener;
-import org.osmdroid.events.ScrollEvent;
-import org.osmdroid.events.ZoomEvent;
-import org.osmdroid.tileprovider.MapTileProviderBasic;
-import org.osmdroid.tileprovider.tilesource.ITileSource;
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
-import org.osmdroid.tileprovider.tilesource.XYTileSource;
-import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.ItemizedIconOverlay;
-import org.osmdroid.views.overlay.OverlayItem;
-import org.osmdroid.views.overlay.OverlayItem.HotspotPlace;
-import org.osmdroid.views.overlay.PathOverlay;
-import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import org.protocoderrunner.R;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.base.utils.MLog;
-
-import java.util.ArrayList;
 
 public class PMap extends MapView {
 
-    final String TAG = "MapView";
+    final String TAG = PMap.class.getSimpleName();
 
     private final IMapController mapController;
     private final MapView mapView;
@@ -63,8 +43,8 @@ public class PMap extends MapView {
 
     private Context c;
 
-    public <T> PMap(Context c, int val) {
-        super(c, val);
+    public <T> PMap(Context c, int pixelTileSize) {
+        super(c, pixelTileSize);
         this.c = c;
 
         // Create the mapview with the custom tile provider array
@@ -86,7 +66,7 @@ public class PMap extends MapView {
                     }
                 }, new DefaultResourceProxyImpl(c.getApplicationContext()));
 
-        mapView.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
+        mapView.setTileSource(TileSourceFactory.MAPNIK);
 
         mapView.setMultiTouchControls(true);
         mapController = mapView.getController();
@@ -101,7 +81,7 @@ public class PMap extends MapView {
         mapView.setMapListener(new DelayedMapListener(new MapListener() {
             @Override
             public boolean onScroll(ScrollEvent event) {
-                Log.d(TAG, "qqqqqq");
+                //Log.d(TAG, "qqqqqq");
 
                 //mapView.getBoundingBox().getCenter();
 
@@ -110,7 +90,7 @@ public class PMap extends MapView {
 
             @Override
             public boolean onZoom(ZoomEvent event) {
-                Log.d(TAG, "qqqqqq");
+                //Log.d(TAG, "qqqqqq");
 
                 //mapView.getBoundingBox().getCenter();
 
@@ -157,18 +137,31 @@ public class PMap extends MapView {
 
 
     @ProtoMethod(description = "Set a new tile source such as mapbox and others", example = "")
-    @ProtoMethodParam(params = {"url"})
-    public MapView tileSource(String url) {
+    @ProtoMethodParam(params = {"name", "url"})
+    public MapView tileSource(String name, String url) {
 
         String[] tileSourcesUrl = new String[1];
         tileSourcesUrl[0] = url;
         MapTileProviderBasic tileProvider = new MapTileProviderBasic(c);
-        ITileSource tileSource = new XYTileSource("Test", null, 3, 10, 256, ".png", tileSourcesUrl);
+        ITileSource tileSource = new XYTileSource(name, null, 3, 10, 256, ".png", tileSourcesUrl);
 
         tileProvider.setTileSource(tileSource);
         mapView.setTileSource(tileSource);
 
         return this;
+    }
+
+    public MapView tileSource(String type) {
+        OnlineTileSourceBase source;
+        if (type.equals("mapquest")) {
+            source = TileSourceFactory.MAPQUESTOSM;
+        } else {
+            source = TileSourceFactory.MAPNIK;
+        }
+
+        mapView.setTileSource(source);
+
+        return mapView;
     }
 
 
@@ -294,6 +287,75 @@ public class PMap extends MapView {
         return mapView.getProjection().toPixels(point, null);
     }
 
+    public void online(boolean b) {
+        mapView.setUseDataConnection(b);
+    }
+
+    /******** OSMbonus methods ************/
+    public void getRoadPath(double lat1, double lon1, double lat2, double lon2) {
+        RoadManager roadManager = new OSRMRoadManager();
+
+        ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
+        waypoints.add(new GeoPoint(lat1, lon1));
+        waypoints.add(new GeoPoint(lat2, lon2));
+
+        Road road = roadManager.getRoad(waypoints);
+        Polyline roadOverlay = RoadManager.buildRoadOverlay(road, c);
+        roadOverlay.setWidth(2);
+        mapView.getOverlays().add(roadOverlay);
+        mapView.invalidate();
+    }
+
+    public void addGroundOverlay(double lat, double lon) {
+        GroundOverlay myGroundOverlay = new GroundOverlay(c);
+        myGroundOverlay.setPosition(new GeoPoint(lat, lon));
+        myGroundOverlay.setImage(getResources().getDrawable(R.drawable.protocoder_icon).mutate());
+        myGroundOverlay.setDimensions(2000.0f);
+        mapView.getOverlays().add(myGroundOverlay);
+        mapView.invalidate();
+    }
+
+    public Marker addMarker2(double lat, double lon) {
+        Marker m = new Marker(mapView);
+        m.setPosition(new GeoPoint(lat, lon));
+        m.setIcon(getResources().getDrawable(R.drawable.marker));
+        m.setTitle("Step ");
+        m.setSnippet("lallall");
+        m.setSubDescription("tiroraru");
+        m.setImage(getResources().getDrawable(R.drawable.protocoder_icon));
+        mapView.getOverlays().add(m);
+        mapView.invalidate();
+        return m;
+    }
+
+    public GeoPoint createPoint(double lat, double lon) {
+        return new GeoPoint(lat, lon);
+    }
+
+    public void loadKml(final String url, final boolean center) {
+        final KmlDocument kmlDocument = new KmlDocument();
+
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                kmlDocument.parseKMLUrl(url);
+
+                mapView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        FolderOverlay kmlOverlay = (FolderOverlay) kmlDocument.mKmlRoot.buildOverlay(mapView, null, null, kmlDocument);
+                        mapView.getOverlays().add(kmlOverlay);
+                        mapView.invalidate();
+                        //if (center) mapView.zoomToBoundingBox(kmlDocument.mKmlRoot.getBoundingBox());
+
+                    }
+                });
+            }
+        });
+        t.start();
+
+
+    }
 
 //    @Override
 //    public boolean onTouchEvent(MotionEvent ev) {

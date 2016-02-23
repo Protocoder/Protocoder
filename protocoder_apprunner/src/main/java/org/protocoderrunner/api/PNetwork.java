@@ -48,6 +48,8 @@ import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
+import org.protocoderrunner.api.network.PBluetoothLe;
+import org.protocoderrunner.api.network.PMqtt;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.AppRunner;
@@ -720,6 +722,27 @@ public class PNetwork extends PInterface {
         return ftpClient;
     }
 
+    /*
+    @ProtoMethod(description = "Initialize Bluetooth Low Energy System")
+    @ProtoMethodParam(params = {})
+    public PBluetoothLe startBLE() {
+        //PNetwork p=null;
+        //p.startBLE();
+
+        Log.i("PROTOBLE","STARTING BLE");
+        PBluetoothLe pBluetoothLe = new PBluetoothLe(getContext());
+
+        return pBluetoothLe;
+    }
+    */
+
+    @ProtoMethod(description = "Connect to a MQTT service", example = "")
+    @ProtoMethodParam(params = {})
+    public PMqtt createMqttClient() {
+        PMqtt pMqtt = new PMqtt(getAppRunner());
+
+        return pMqtt;
+    }
 
     public void stop() {
 

@@ -823,6 +823,7 @@ public class PUIGeneric extends PInterface {
         return video;
     }
 
+
     @ProtoMethod(description = "Creates a new drawing canvas", example = "")
     @ProtoMethodParam(params = {"width", "height"})
     public PCanvas newCanvas(int w, int h) {
@@ -840,6 +841,7 @@ public class PUIGeneric extends PInterface {
 
         return webView;
     }
+
 
     @ProtoMethod(description = "Creates a new camera view", example = "")
     @ProtoMethodParam(params = {"type={0,1}"})

@@ -188,7 +188,10 @@ public class SimpleBT implements WhatIsRunningInterface {
 
     public void send(String string) {
         mBluetoothService.write(string.getBytes());
+    }
 
+    public void sendInt(int num) {
+        mBluetoothService.writeInt(num);
     }
 
     public void disconnect() {

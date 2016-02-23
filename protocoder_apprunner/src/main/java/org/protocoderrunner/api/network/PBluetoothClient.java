@@ -20,7 +20,6 @@
 
 package org.protocoderrunner.api.network;
 
-
 import org.mozilla.javascript.NativeArray;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
@@ -30,7 +29,6 @@ import org.protocoderrunner.api.PUI;
 import org.protocoderrunner.base.network.bt.SimpleBT;
 
 public class PBluetoothClient extends PInterface {
-
 
     private final PBluetooth mPBluetooth;
     private SimpleBT simpleBT;
@@ -132,6 +130,14 @@ public class PBluetoothClient extends PInterface {
     public void send(String string) {
         if (simpleBT.isConnected()) {
             simpleBT.send(string);
+        }
+    }
+
+    @ProtoMethod(description = "Send bluetooth serial message", example = "")
+    @ProtoMethodParam(params = {"int"})
+    public void sendInt(int num) {
+        if (simpleBT.isConnected()) {
+            simpleBT.sendInt(num);
         }
     }
 
