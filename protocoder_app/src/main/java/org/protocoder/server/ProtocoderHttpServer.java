@@ -1,9 +1,9 @@
 /*
 * Part of Protocoder http://www.protocoder.org
-* A prototyping platform for Android devices 
+* A prototyping platform for Android devices
 *
 * Copyright (C) 2013 Victor Diaz Barrales victormdb@gmail.com
-* 
+*
 * Protocoder is free software: you can redistribute it and/or modify
 * it under the terms of the GNU Lesser General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU Lesser General Public License
 * along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
 */
@@ -27,7 +27,7 @@ import android.widget.Toast;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONObject;
-import org.protocoder.WebEditorManager;
+import org.protocoder.settings.WebEditorManager;
 import org.protocoderrunner.apidoc.APIManager;
 import org.protocoderrunner.api.PApp;
 import org.protocoderrunner.api.PBoards;
@@ -57,7 +57,6 @@ import org.protocoderrunner.api.dashboard.PDashboardVideoCamera;
 import org.protocoderrunner.api.media.PCamera;
 import org.protocoderrunner.api.media.PMidi;
 import org.protocoderrunner.api.media.PPureData;
-import org.protocoderrunner.api.network.PSimpleHttpServer;
 import org.protocoderrunner.api.network.PSocketIOClient;
 import org.protocoderrunner.api.other.PDeviceEditor;
 import org.protocoderrunner.api.other.PEvents;
@@ -95,7 +94,7 @@ import org.protocoderrunner.api.widgets.PVideo;
 import org.protocoderrunner.api.widgets.PWebEditor;
 import org.protocoderrunner.api.widgets.PWebView;
 import org.protocoderrunner.api.widgets.PWindow;
-import org.protocoderrunner.project.Project;
+import org.protocoderrunner.models.Project;
 import org.protocoderrunner.base.network.NanoHTTPD;
 import org.protocoderrunner.base.network.NetworkUtils;
 import org.protocoderrunner.base.utils.MLog;
@@ -182,16 +181,15 @@ public class ProtocoderHttpServer extends NanoHTTPD {
                         Toast.makeText(mContext.get(), "Connection from " + ip, Toast.LENGTH_LONG).show();
                     }
                 });
-
             }
 
             if (uri.startsWith(projectURLPrefix)) {
 
 //                // checking if we are inside the directory so we sandbox the app
 //                // TODO its pretty hack so this deserves to code it again
-//                Project p = AppRunnerProjectManager.getInstance().getCurrentProject();
+//                Project p = AppRunnerHelper.getInstance().getCurrentProject();
 //
-//                String projectFolder = "/" + p.getFolder() + "/" + p.getName();
+//                String projectFolder = "/" + p.getPath() + "/" + p.getName();
 //                // MLog.d("qq", "project folder is " + projectFolder);
 //                if (uri.replace(projectURLPrefix, "").contains(projectFolder)) {
 //                    // MLog.d("qq", "inside project");
@@ -201,7 +199,6 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 //                    // MLog.d("qq", "outside project");
 //                    new Response(HTTP_NOTFOUND, MIME_HTML, "resource not found");
 //                }
-
             }
 
             // file upload
@@ -210,7 +207,7 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 //                String name = parms.getProperty("name").toString();
 //                String folder = parms.getProperty("fileType").toString();
 //
-//                Project p = AppRunnerProjectManager.getInstance().get(folder, name);
+//                Project p = AppRunnerHelper.getInstance().get(folder, name);
 //
 //                File src = new File(files.getProperty("pic").toString());
 //                File dst = new File(p.getStoragePath() + "/" + parms.getProperty("pic").toString());
@@ -255,10 +252,10 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 //                    name = obj.getString("name");
 //                    folder = obj.getString("type");
 //
-//                    Project p = AppRunnerProjectManager.getInstance().get(folder, name);
+//                    Project p = AppRunnerHelper.getInstance().get(folder, name);
 //
 //                    // TODO add type
-//                    data.put("code", AppRunnerProjectManager.getInstance().getCode(p));
+//                    data.put("code", AppRunnerHelper.getInstance().getCode(p));
 
                     // list apps
                 } else if (cmd.equals("list_apps")) {
@@ -267,14 +264,14 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 //                    folder = obj.getString("filter");
 //
 //                    ArrayList<Project> projects = null;
-//                    if (folder.equals(AppRunnerProjectManager.FOLDER_EXAMPLES)) {
-//                        projects = AppRunnerProjectManager.getInstance().list(folder, true);
+//                    if (folder.equals(AppRunnerHelper.FOLDER_EXAMPLES)) {
+//                        projects = AppRunnerHelper.getInstance().list(folder, true);
 //                    } else {
-//                        projects = AppRunnerProjectManager.getInstance().list(folder, false);
+//                        projects = AppRunnerHelper.getInstance().list(folder, false);
 //                    }
 //                    JSONArray projectsArray = new JSONArray();
 //                    for (Project project : projects) {
-//                        projectsArray.put(AppRunnerProjectManager.getInstance().toJson(project));
+//                        projectsArray.put(AppRunnerHelper.getInstance().toJson(project));
 //                    }
 //                    data.put("projects", projectsArray);
 
@@ -285,8 +282,8 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 //                    name = obj.getString("name");
 //                    folder = obj.getString("type");
 //
-//                    Project p = AppRunnerProjectManager.getInstance().get(folder, name);
-//                    AppRunnerProjectManager.getInstance().setRemoteIP(obj.getString("remoteIP"));
+//                    Project p = AppRunnerHelper.getInstance().get(folder, name);
+//                    AppRunnerHelper.getInstance().setRemoteIP(obj.getString("remoteIP"));
 //
 //                    ProjectEvent evt = new ProjectEvent(p, Events.PROJECT_RUN);
 //                    EventBus.getDefault().post(evt);
@@ -314,9 +311,9 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 //                    folder = parms.get("type").toString();
 //
 //                    // add type
-//                    Project p = AppRunnerProjectManager.getInstance().get(folder, name);
-//                    AppRunnerProjectManager.getInstance().writeNewCode(p, newCode, fileName);
-//                    data.put("project", AppRunnerProjectManager.getInstance().toJson(p));
+//                    Project p = AppRunnerHelper.getInstance().get(folder, name);
+//                    AppRunnerHelper.getInstance().writeNewCode(p, newCode, fileName);
+//                    data.put("project", AppRunnerHelper.getInstance().toJson(p));
 //                    ProjectEvent evt = new ProjectEvent(p, "save");
 //                    EventBus.getDefault().post(evt);
 //
@@ -332,11 +329,11 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 //                    folder = parms.get("type").toString();
 //
 //                    // add type
-//                    Project p = AppRunnerProjectManager.getInstance().get(folder, name);
-//                    MLog.d(TAG, "qqm" + p.getName() + " " + p.getFolder() + " " + fileName + " " + newCode);
+//                    Project p = AppRunnerHelper.getInstance().get(folder, name);
+//                    MLog.d(TAG, "qqm" + p.getName() + " " + p.getPath() + " " + fileName + " " + newCode);
 //
-//                    AppRunnerProjectManager.getInstance().writeNewCode(p, newCode, fileName);
-//                    data.put("project", AppRunnerProjectManager.getInstance().toJson(p));
+//                    AppRunnerHelper.getInstance().writeNewCode(p, newCode, fileName);
+//                    data.put("project", AppRunnerHelper.getInstance().toJson(p));
 //                    ProjectEvent evt = new ProjectEvent(p, "save");
 //                    EventBus.getDefault().post(evt);
 //
@@ -349,7 +346,7 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 //                    folder = obj.getString("type");
 //
 //                    Project p = new Project(folder, name);
-//                    JSONArray array = AppRunnerProjectManager.getInstance().listFilesInProjectJSON(p);
+//                    JSONArray array = AppRunnerHelper.getInstance().listFilesInProjectJSON(p);
 //                    data.put("files", array);
                     // ProjectEvent evt = new ProjectEvent(p, "new");
                     // EventBus.getDefault().post(evt);
@@ -358,11 +355,11 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 //                    MLog.d(TAG, "--> create new project");
 //
 //                    name = obj.getString("name");
-//                    Project p = new Project(AppRunnerProjectManager.FOLDER_USER_PROJECTS, name);
+//                    Project p = new Project(AppRunnerHelper.FOLDER_USER_PROJECTS, name);
 //                    ProjectEvent evt = new ProjectEvent(p, "new");
 //                    EventBus.getDefault().post(evt);
 //
-//                    Project newProject = AppRunnerProjectManager.getInstance().addNewProject(mContext.get(), name, AppRunnerProjectManager.FOLDER_USER_PROJECTS, name);
+//                    Project newProject = AppRunnerHelper.getInstance().addNewProject(mContext.get(), name, AppRunnerHelper.FOLDER_USER_PROJECTS, name);
 
                     // remove app
                 } else if (cmd.equals("remove_app")) {
@@ -371,7 +368,7 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 //                    folder = obj.getString("type");
 //
 //                    Project p = new Project(folder, name);
-//                    AppRunnerProjectManager.getInstance().deleteProject(p);
+//                    AppRunnerHelper.getInstance().deleteProject(p);
 //                    ProjectEvent evt = new ProjectEvent(p, "update");
 //                    EventBus.getDefault().post(evt);
 
@@ -412,7 +409,7 @@ public class ProtocoderHttpServer extends NanoHTTPD {
                     APIManager.getInstance().addClass(PProcessing.class, false);
                     APIManager.getInstance().addClass(PLiveCodingFeedback.class, false);
                     APIManager.getInstance().addClass(PPureData.class, false);
-                    APIManager.getInstance().addClass(PSimpleHttpServer.class, false);
+                    //APIManager.getInstance().addClass(PSimpleHttpServer.class, false);
                     APIManager.getInstance().addClass(PSocketIOClient.class, false);
                     APIManager.getInstance().addClass(PSqLite.class, false);
                     APIManager.getInstance().addClass(PVideo.class, false);
@@ -516,7 +513,6 @@ public class ProtocoderHttpServer extends NanoHTTPD {
         }
 
         return res;
-
     }
 
     private Response sendWebAppFile(String uri, String method, Properties header, Properties parms, Properties files) {
@@ -581,7 +577,6 @@ public class ProtocoderHttpServer extends NanoHTTPD {
         }
 
         return res;
-
     }
 
     public void close() {

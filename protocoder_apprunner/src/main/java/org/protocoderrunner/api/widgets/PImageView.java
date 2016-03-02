@@ -53,7 +53,7 @@ public class PImageView extends ImageView implements PViewInterface {
 
             // Add the image
             new PUIGeneric.SetImageTask(this, false).execute(
-                    mAppRunner.mProjectManager.getProjectPath() + imagePath);
+                    mAppRunner.project.getFullPath() + imagePath);
         }
 
         return this;
@@ -75,7 +75,7 @@ public class PImageView extends ImageView implements PViewInterface {
 
             // Add the image
             new PUIGeneric.SetImageTask(this, true).execute(
-                    mAppRunner.mProjectManager.getProjectPath() + imagePath);
+                    mAppRunner.project.getFullPath() + imagePath);
         }
 
         return this;

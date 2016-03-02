@@ -36,8 +36,7 @@ import org.protocoderrunner.api.PSensors;
 import org.protocoderrunner.api.PUI;
 import org.protocoderrunner.api.PUtil;
 import org.protocoderrunner.api.other.WhatIsRunning;
-import org.protocoderrunner.project.AppRunnerProjectManager;
-import org.protocoderrunner.project.Project;
+import org.protocoderrunner.models.Project;
 import org.protocoderrunner.base.utils.MLog;
 
 import java.io.File;
@@ -48,7 +47,6 @@ public class AppRunner {
 
     private static AppRunner instance;
     private final Context mContext;
-    public AppRunnerProjectManager mProjectManager;
     public Project project;
     public boolean hasUserInterface = false;
     public WhatIsRunning whatIsRunning;
@@ -155,8 +153,7 @@ public class AppRunner {
         mIsProjectLoaded = !mProjectName.isEmpty() && !mProjectFolder.isEmpty();
         if (mIsProjectLoaded) {
             mCurrentProject = new Project(mProjectFolder, mProjectName);
-            mProjectManager = new AppRunnerProjectManager(mContext, mCurrentProject);
-            mScript = mProjectManager.getCode(mCurrentProject);
+            mScript = AppRunnerHelper.getCode(mContext, mCurrentProject);
 
             MLog.d(TAG, "project loaded for " + mProjectFolder + " " + mProjectName + " " + mScript);
         }

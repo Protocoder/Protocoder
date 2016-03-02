@@ -19,7 +19,6 @@ import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import org.protocoderrunner.R;
 import org.protocoderrunner.api.PApp;
 import org.protocoderrunner.api.PBoards;
 import org.protocoderrunner.api.PConsole;
@@ -32,7 +31,7 @@ import org.protocoderrunner.api.PProtocoder;
 import org.protocoderrunner.api.PSensors;
 import org.protocoderrunner.api.PUI;
 import org.protocoderrunner.api.PUtil;
-import org.protocoderrunner.project.Project;
+import org.protocoderrunner.models.Project;
 import org.protocoderrunner.base.utils.MLog;
 
 //stopService 

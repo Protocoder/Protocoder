@@ -58,7 +58,7 @@ import org.protocoderrunner.PInterface;
 import org.protocoderrunner.api.media.PCamera;
 import org.protocoderrunner.api.other.ProtocoderNativeObject;
 import org.protocoderrunner.api.widgets.PPadView.TouchEvent;
-import org.protocoderrunner.base.fragments.CameraNew;
+import org.protocoderrunner.base.gui.CameraNew;
 import org.protocoderrunner.base.utils.AndroidUtils;
 import org.protocoderrunner.base.utils.FileIO;
 import org.protocoderrunner.base.utils.Image;
@@ -663,7 +663,7 @@ public class PUIGeneric extends PInterface {
 
         // Add image asynchronously
         new SetImageTask(ib, false).execute(
-                getAppRunner().mProjectManager.getProjectPath() + imgNotPressed);
+                getAppRunner().project.getFullPath() + imgNotPressed);
 
         // Add the view
         addViewAbsolute(ib, x, y, w, h);

@@ -40,15 +40,13 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.protocoderrunner.R;
 import org.protocoderrunner.api.PApp;
 import org.protocoderrunner.api.other.PLiveCodingFeedback;
-import org.protocoderrunner.project.Project;
 import org.protocoderrunner.base.utils.MLog;
-
-import de.greenrobot.event.EventBus;
+import org.protocoderrunner.models.Project;
 
 @SuppressLint("NewApi")
 public class AppRunnerFragment extends Fragment {
@@ -330,7 +328,7 @@ public class AppRunnerFragment extends Fragment {
 //
 //			bundle.putString(Project.NAME, mCurrentProject.getName());
 //			//bundle.putString(, mCurrentProject.getStoragePath());
-//			bundle.putInt(Project.TYPE, mCurrentProject.getFolder());
+//			bundle.putInt(Project.TYPE, mCurrentProject.getPath());
 //			editorFragment.setArguments(bundle);
 //			editorFragment.addListener(new EditorFragmentListener() {
 //
@@ -418,7 +416,7 @@ public class AppRunnerFragment extends Fragment {
         if (mAppRunner.mIsProjectLoaded) {
 
             // set up mContext file observer to watch this directory on sd card
-            fileObserver = new FileObserver(mAppRunner.mProjectManager.getProjectPath(), FileObserver.CREATE | FileObserver.DELETE) {
+            fileObserver = new FileObserver(mAppRunner.project.getFullPath(), FileObserver.CREATE | FileObserver.DELETE) {
 
                 @Override
                 public void onEvent(int event, String file) {
@@ -447,7 +445,6 @@ public class AppRunnerFragment extends Fragment {
                 }
             };
         }
-
     }
 
     // execute lines

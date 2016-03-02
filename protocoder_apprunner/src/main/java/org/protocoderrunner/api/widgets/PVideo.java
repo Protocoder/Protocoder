@@ -23,7 +23,7 @@ package org.protocoderrunner.api.widgets;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.base.fragments.CustomVideoTextureView;
+import org.protocoderrunner.base.gui.CustomVideoTextureView;
 
 public class PVideo extends CustomVideoTextureView implements PViewInterface {
 
@@ -97,7 +97,7 @@ public class PVideo extends CustomVideoTextureView implements PViewInterface {
     @ProtoMethod(description = "Loads a videoFile", example = "")
     @ProtoMethodParam(params = {"fileName"})
     public void load(String videoFile) {
-        super.loadExternalVideo(mAppRunner.mProjectManager.getProjectPath() + videoFile);
+        super.loadExternalVideo(mAppRunner.project.getFullPath() + videoFile);
     }
 
     // --------- onUpdate ---------//

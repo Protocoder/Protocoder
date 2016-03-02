@@ -48,22 +48,20 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import org.protocoderrunner.R;
+import org.greenrobot.eventbus.EventBus;
 import org.protocoderrunner.api.PDevice;
 import org.protocoderrunner.api.PMedia;
 import org.protocoderrunner.api.PUI;
 import org.protocoderrunner.api.network.PBluetooth;
 import org.protocoderrunner.api.sensors.PNfc;
 import org.protocoderrunner.api.widgets.PPadView;
-import org.protocoderrunner.project.Project;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.base.utils.AndroidUtils;
 import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.base.utils.StrUtils;
+import org.protocoderrunner.models.Project;
 
 import java.util.ArrayList;
-
-import de.greenrobot.event.EventBus;
 
 public class AppRunnerActivity extends BaseActivity {
 
@@ -142,7 +140,7 @@ public class AppRunnerActivity extends BaseActivity {
             //send bundle to
             Bundle bundle = new Bundle();
             bundle.putString(Project.NAME, mProject.getName());
-            bundle.putString(Project.FOLDER, mProject.getFolder());
+            bundle.putString(Project.FOLDER, mProject.getPath());
             //bundle.putInt(Project.COLOR, intent.getIntExtra("color", 0));
             bundle.putString(Project.PREFIX, prefix);
             bundle.putString(Project.CODE, code);
@@ -241,15 +239,6 @@ public class AppRunnerActivity extends BaseActivity {
         super.onRestoreInstanceState(savedInstanceState);
     }
 
-    public void onEventMainThread(AppRunnerEvents.ProjectEvent evt) {
-        MLog.d(TAG, "event -> " + evt.getAction());
-
-        if (evt.getAction() == "run") {
-            finish();
-        }
-    }
-
-
     public void setToolBar(String name, Integer colorBg, Integer colorText) {
         mActionBarSet = true;
 
@@ -297,7 +286,6 @@ public class AppRunnerActivity extends BaseActivity {
                 }
             });
         }
-
     }
 
     /*

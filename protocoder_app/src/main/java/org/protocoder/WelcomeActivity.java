@@ -28,6 +28,9 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 
+import org.protocoder.helpers.ProtoSettingsHelper;
+import org.protocoder.settings.ProtocoderSettings;
+import org.protocoder.settings.UserSettings;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.base.utils.StrUtils;
@@ -89,13 +92,13 @@ public class WelcomeActivity extends BaseActivity {
         progress.show();
 
         //create folder structure
-        new File(ProtocoderAppSettings.getFolderPath(ProtocoderAppSettings.USER_PROJECTS_FOLDER)).mkdirs();
-        new File(ProtocoderAppSettings.getFolderPath(ProtocoderAppSettings.EXAMPLES_FOLDER)).mkdirs();
-        new File(ProtocoderAppSettings.getBaseWebEditorsDir()).mkdirs();
-        new File(ProtocoderAppSettings.getBaseLibrariesDir()).mkdirs();
+        new File(ProtocoderSettings.getFolderPath(ProtocoderSettings.USER_PROJECTS_FOLDER)).mkdirs();
+        new File(ProtocoderSettings.getFolderPath(ProtocoderSettings.EXAMPLES_FOLDER)).mkdirs();
+        new File(ProtocoderSettings.getBaseWebEditorsDir()).mkdirs();
+        new File(ProtocoderSettings.getBaseLibrariesDir()).mkdirs();
 
         // install examples
-        ProtocoderAppHelper.installExamples(getApplicationContext(), ProtocoderAppSettings.EXAMPLES_FOLDER, new ProtocoderAppHelper.InstallListener() {
+        ProtoSettingsHelper.installExamples(getApplicationContext(), ProtocoderSettings.EXAMPLES_FOLDER, new ProtoSettingsHelper.InstallListener() {
             @Override
             public void onReady() {
                 progress.dismiss();

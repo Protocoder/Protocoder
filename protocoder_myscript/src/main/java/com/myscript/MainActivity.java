@@ -5,7 +5,7 @@ import android.os.Bundle;
 import org.protocoderrunner.apprunner.AppRunnerContext;
 import org.protocoderrunner.AppSettings;
 import org.protocoderrunner.AppRunnerActivity;
-import org.protocoderrunner.project.AppRunnerProjectManager;
+import org.protocoderrunner.AppRunnerHelper;
 
 
 /**
@@ -48,9 +48,9 @@ public class MainActivity extends AppRunnerActivity {
 
     // Copy the project files from assets to internal storage
     private void installMyScript() {
-        AppRunnerProjectManager.getInstance().installExamples(this,
-                AppRunnerProjectManager.getInstance().FOLDER_MYSCRIPT,
-                new AppRunnerProjectManager.InstallListener() {
+        AppRunnerHelper.getInstance().installExamples(this,
+                AppRunnerHelper.getInstance().FOLDER_MYSCRIPT,
+                new AppRunnerHelper.InstallListener() {
                     @Override
                     public void onReady() {
                     }

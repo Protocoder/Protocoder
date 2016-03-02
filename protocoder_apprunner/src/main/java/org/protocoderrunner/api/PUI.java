@@ -747,7 +747,7 @@ public class PUI extends PUIGeneric {
 
         // Add the bg image asynchronously from the sdcard
         new SetBgImageTask(bgImageView, false).execute(
-                getAppRunner().mProjectManager.getProjectPath() + imagePath);
+                getAppRunner().project.getFullPath() + imagePath);
 	}
 
     @ProtoMethod(description = "Sets an image as tiled background", example = "")
@@ -757,7 +757,7 @@ public class PUI extends PUIGeneric {
 
         // Add the bg image asynchronously
         new SetBgImageTask(bgImageView, true).execute(
-                getAppRunner().mProjectManager.getProjectPath() + imagePath);
+                getAppRunner().project.getFullPath() + imagePath);
 	}
 
 
@@ -1307,13 +1307,13 @@ public class PUI extends PUIGeneric {
     @ProtoMethod(description = "Takes a screenshot of the whole app and stores it to a given file name", example = "")
     @ProtoMethodParam(params = {"imageName"})
     public void takeScreenshot(String imagePath) {
-        AndroidUtils.takeScreenshot(getAppRunner().mProjectManager.getProjectPath(), imagePath, uiAbsoluteLayout);
+        AndroidUtils.takeScreenshot(getAppRunner().project.getFullPath(), imagePath, uiAbsoluteLayout);
     }
 
     @ProtoMethod(description = "Takes a screenshot of a view and save it to an image", example = "")
     @ProtoMethodParam(params = {"view", "imageName"})
     public void takeViewScreenshot(View v, String imagePath) {
-        AndroidUtils.takeScreenshotView(getAppRunner().mProjectManager.getProjectPath(), imagePath, v);
+        AndroidUtils.takeScreenshotView(getAppRunner().project.getFullPath(), imagePath, v);
     }
 
     @ProtoMethod(description = "Takes a screenshot of a view", example = "")

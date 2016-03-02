@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.protocoder.project.MyRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<org.protocoder.gui._components.WTFRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/myrelativelayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/transparent"
+    android:background="@color/license_darkgrey"
     android:animateLayoutChanges="true">
 
     <LinearLayout
@@ -25,7 +25,7 @@
             />
     </LinearLayout>
 
-    <org.protocoder.project.ResizableRecyclerView
+    <org.protocoder.gui._components.ResizableRecyclerView
         android:id="@+id/folderList"
         android:layout_below="@id/folderSelector"
         android:layout_width="match_parent"
@@ -34,6 +34,6 @@
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:visibility="visible">
-    </org.protocoder.project.ResizableRecyclerView>
+    </org.protocoder.gui._components.ResizableRecyclerView>
 
-</org.protocoder.project.MyRelativeLayout>
+</org.protocoder.gui._components.WTFRelativeLayout>

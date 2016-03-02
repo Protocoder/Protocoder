@@ -61,12 +61,12 @@
             android:noHistory="true" >
         </activity>
         <activity
-            android:name=".SettingsActivity"
+            android:name=".gui.settings.SettingsActivity"
             android:theme="@style/ProtocoderAppTheme"
             android:label="@string/settings_activity_name" >
         </activity>
         <activity
-            android:name=".editor.EditorActivity"
+            android:name=".gui.editor.EditorActivity"
             android:theme="@style/ProtocoderAppTheme"
             android:label="@string/settings_activity_name" >
         </activity>

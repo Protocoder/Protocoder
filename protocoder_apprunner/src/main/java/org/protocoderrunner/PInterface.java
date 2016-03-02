@@ -28,13 +28,12 @@ public class PInterface {
 
     protected String TAG = getClass().getSimpleName();
 
-    private AppRunner mAppRunner;
-    public Handler mHandler = new Handler(Looper.getMainLooper());
-
-    private Context mContext;
-    private AppRunnerFragment mFragment;
-    private AppRunnerService mService;
-    private AppRunnerActivity mActivity;
+    private AppRunner           mAppRunner;
+    public Handler              mHandler = new Handler(Looper.getMainLooper());
+    private Context             mContext;
+    private AppRunnerFragment   mFragment;
+    private AppRunnerService    mService;
+    private AppRunnerActivity   mActivity;
 
     public PInterface(AppRunner appRunner) {
         super();
@@ -44,8 +43,7 @@ public class PInterface {
         appRunner.whatIsRunning.add(this);
     }
 
-    public void destroy() {
-    }
+    public void destroy() { }
 
     public void initForParentFragment(AppRunnerFragment fragment) {
         if (fragment != null) {
@@ -69,6 +67,7 @@ public class PInterface {
     public AppRunnerFragment getFragment() {
         return mFragment;
     }
+
     public AppRunnerService getService() {
         return mService;
     }

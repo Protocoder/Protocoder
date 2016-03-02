@@ -31,31 +31,34 @@ import org.protocoderrunner.AppRunner;
 import org.protocoderrunner.PInterface;
 import org.protocoderrunner.api.other.PSqLite;
 import org.protocoderrunner.base.utils.FileIO;
+import org.protocoderrunner.models.Project;
 
 import java.io.File;
 import java.io.IOException;
 
 public class PFileIO extends PInterface {
 
+    private final Project mCurrentProject;
     String TAG = "PFileIO";
     private FileObserver fileObserver;
 
     public PFileIO(AppRunner appRunner) {
         super(appRunner);
+        mCurrentProject = getAppRunner().project;
     }
 
 
     @ProtoMethod(description = "Create a directory", example = "")
     @ProtoMethodParam(params = {"dirName"})
     public void createDir(String name) {
-        File file = new File(getAppRunner().mProjectManager.getProjectPath() + name);
+        File file = new File(mCurrentProject.getFullPath() + name);
         file.mkdirs();
     }
 
     @ProtoMethod(description = "Delete a filename", example = "")
     @ProtoMethodParam(params = {"fileName"})
     public void delete(String name) {
-        FileIO.deleteFileDir(getAppRunner().mProjectManager.getProjectPath(), name);
+        FileIO.deleteFileDir(mCurrentProject.getFullPath(), name);
     }
 
 
@@ -64,7 +67,7 @@ public class PFileIO extends PInterface {
     public int type(String name) {
         int ret = 0;
 
-        File file = new File(getAppRunner().mProjectManager.getProjectPath() + name);
+        File file = new File(mCurrentProject.getFullPath() + name);
 
         if (!file.exists()) ret = -1;
         else if (file.isFile()) ret = 1;
@@ -77,8 +80,8 @@ public class PFileIO extends PInterface {
     @ProtoMethod(description = "Move a file to a directory", example = "")
     @ProtoMethodParam(params = {"name", "destination"})
     public void moveFileToDir(String name, String to) {
-        File fromFile = new File(getAppRunner().mProjectManager.getProjectPath() + name);
-        File dir = new File(getAppRunner().mProjectManager.getProjectPath() + to);
+        File fromFile = new File(mCurrentProject.getFullPath() + name);
+        File dir = new File(mCurrentProject.getFullPath() + to);
 
         dir.mkdirs();
         try {
@@ -92,8 +95,8 @@ public class PFileIO extends PInterface {
     @ProtoMethod(description = "Move a directory to another directory", example = "")
     @ProtoMethodParam(params = {"name", "destination"})
     public void moveDirToDir(String name, String to) {
-        File fromDir = new File(getAppRunner().mProjectManager.getProjectPath() + name);
-        File dir = new File(getAppRunner().mProjectManager.getProjectPath() + to);
+        File fromDir = new File(mCurrentProject.getFullPath() + name);
+        File dir = new File(mCurrentProject.getFullPath() + to);
 
         dir.mkdirs();
         try {
@@ -107,8 +110,8 @@ public class PFileIO extends PInterface {
     @ProtoMethod(description = "Copy a file or directory", example = "")
     @ProtoMethodParam(params = {"name", "destination"})
     public void copyFileToDir(String name, String to) {
-        File file = new File(getAppRunner().mProjectManager.getProjectPath() + name);
-        File dir = new File(getAppRunner().mProjectManager.getProjectPath() + to);
+        File file = new File(mCurrentProject.getFullPath() + name);
+        File dir = new File(mCurrentProject.getFullPath() + to);
         dir.mkdirs();
 
         try {
@@ -122,8 +125,8 @@ public class PFileIO extends PInterface {
     @ProtoMethod(description = "Copy a file or directory", example = "")
     @ProtoMethodParam(params = {"name", "destination"})
     public void copyDirToDir(String name, String to) {
-        File file = new File(getAppRunner().mProjectManager.getProjectPath() + name);
-        File dir = new File(getAppRunner().mProjectManager.getProjectPath() + to);
+        File file = new File(mCurrentProject.getFullPath() + name);
+        File dir = new File(mCurrentProject.getFullPath() + to);
         dir.mkdirs();
 
         try {
@@ -141,7 +144,7 @@ public class PFileIO extends PInterface {
         //File file = new File(AppRunnerSettings.get().project.getStoragePath() + File.separator + name);
         //file.mkdirs();
 
-        File origin = new File(getAppRunner().mProjectManager.getProjectPath() + oldName);
+        File origin = new File(mCurrentProject.getFullPath() + oldName);
         String path = origin.getParentFile().toString();
 
         origin.renameTo(new File(path + File.separator + newName));
@@ -175,7 +178,7 @@ public class PFileIO extends PInterface {
     @ProtoMethod(description = "Move a file or directory", example = "")
     @ProtoMethodParam(params = {"name", "destination"})
     public void createEmptyFile(String name) {
-        File file = new File(getAppRunner().mProjectManager.getProjectPath() + name);
+        File file = new File(mCurrentProject.getFullPath() + name);
         try {
             file.createNewFile();
         } catch (IOException e) {
@@ -217,7 +220,7 @@ public class PFileIO extends PInterface {
     @ProtoMethod(description = "Load the Strings of a text file into an array", example = "")
     @ProtoMethodParam(params = {"fileName"})
     public String[] loadStrings(String fileName) {
-        return FileIO.loadStrings(getAppRunner().mProjectManager.getProjectPath() + fileName);
+        return FileIO.loadStrings(mCurrentProject.getFullPath() + fileName);
     }
 
 
@@ -258,7 +261,7 @@ public class PFileIO extends PInterface {
     @ProtoMethod(description = "Zip a file/folder into a zip", example = "")
     @ProtoMethodParam(params = {"folder", "filename"})
     public void zip(String path, final String fDestiny, final addZipUnzipCB callbackfn) {
-        final String fOrigin = getAppRunner().mProjectManager.getProjectPath();
+        final String fOrigin = mCurrentProject.getFullPath();
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -277,7 +280,7 @@ public class PFileIO extends PInterface {
     @ProtoMethod(description = "Unzip a file into a folder", example = "")
     @ProtoMethodParam(params = {"zipFile", "folder"})
     public void unzip(final String src, final String dst, final addZipUnzipCB callbackfn) {
-        final String projectPath = getAppRunner().mProjectManager.getProjectPath();
+        final String projectPath = mCurrentProject.getFullPath();
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -299,7 +302,7 @@ public class PFileIO extends PInterface {
     @ProtoMethodParam(params = {"path", "function(action, file"})
     public void observeFolder(String path, final FileObserverCB callback) {
 
-        fileObserver = new FileObserver(getAppRunner().mProjectManager.getProjectPath() + path, FileObserver.CREATE | FileObserver.MODIFY | FileObserver.DELETE) {
+        fileObserver = new FileObserver(mCurrentProject.getFullPath() + path, FileObserver.CREATE | FileObserver.MODIFY | FileObserver.DELETE) {
 
             @Override
             public void onEvent(int event, String file) {

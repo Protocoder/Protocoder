@@ -24,7 +24,7 @@ import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.AppRunner;
 import org.protocoderrunner.api.widgets.PViewInterface;
-import org.protocoderrunner.base.fragments.CameraNew;
+import org.protocoderrunner.base.gui.CameraNew;
 
 public class PCamera extends CameraNew implements PViewInterface {
 
@@ -49,7 +49,7 @@ public class PCamera extends CameraNew implements PViewInterface {
     // @APIRequires()
     public void takePicture(String file, final TakePictureCB callbackfn) {
 
-        takePic(mAppRunner.mProjectManager.getProjectPath() + file);
+        takePic(mAppRunner.project.getFullPath() + file);
         addListener(new CameraListener() {
 
             @Override
@@ -105,7 +105,7 @@ public class PCamera extends CameraNew implements PViewInterface {
     @ProtoMethod(description = "Records a video in fileName", example = "")
     @ProtoMethodParam(params = {"fileName"})
     public void recordVideo(String file) {
-        recordVideo(mAppRunner.mProjectManager.getProjectPath() + file);
+        recordVideo(mAppRunner.project.getFullPath() + file);
     }
 
 

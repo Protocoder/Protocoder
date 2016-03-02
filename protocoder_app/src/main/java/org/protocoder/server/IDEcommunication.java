@@ -2,15 +2,14 @@ package org.protocoder.server;
 
 import android.content.Context;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.protocoder.Events;
+import org.protocoder.events.Events;
 import org.protocoderrunner.base.utils.MLog;
 
 import java.lang.ref.WeakReference;
 import java.net.UnknownHostException;
-
-import de.greenrobot.event.EventBus;
 
 public class IDEcommunication {
 

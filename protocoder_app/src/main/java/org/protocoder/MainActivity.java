@@ -30,62 +30,62 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.protocoder.appinterpreter.AppRunnerCustom;
 import org.protocoder.appinterpreter.ProtocoderApp;
-import org.protocoder.project.FolderChooserFragment;
-import org.protocoder.project.MyDialog;
-import org.protocoder.project.ProjectListFragment;
+import org.protocoder.events.Events;
+import org.protocoder.events.EventsProxy;
+import org.protocoder.gui.IntroductionFragment;
+import org.protocoder.gui.folderchooser.FolderChooserDialog;
+import org.protocoder.gui.folderchooser.FolderChooserFragment;
+import org.protocoder.gui.projectlist.ProjectListFragment;
+import org.protocoder.helpers.ProtoAppHelper;
+import org.protocoder.server.ProtocoderHttpServer2;
 import org.protocoder.server.ProtocoderServerService;
-import org.protocoderrunner.AppRunnerEvents;
+import org.protocoder.settings.ProtocoderSettings;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.base.utils.AndroidUtils;
 import org.protocoderrunner.base.utils.MLog;
 
-import de.greenrobot.event.EventBus;
+import java.io.IOException;
 
 public class MainActivity extends BaseActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    protected AppRunnerCustom appRunner;
 
-    //ui
+    // custom app runner
+    protected AppRunnerCustom appRunner;
+    EventsProxy eventsReceiver;
+
+    // ui
     private Toolbar mToolbar;
     private ProjectListFragment mListFragmentBase;
     private FolderChooserFragment mFolderChooserFragment;
 
+    private ProtocoderHttpServer2 protocoderHttpServer2;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        getWindow().getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-
-
+        /*
+         * Init the event proxy
+         */
+        eventsReceiver = new EventsProxy();
 
         /*
          * Setup the ui
          */
-        setupToolbar();
+        setContentView(R.layout.activity_main);
+        setupActivity();
         addProjectFolderChooser(savedInstanceState);
         addProjectListFragment(savedInstanceState);
         //showIntroduction(savedInstanceState);
-
-        Button btn = (Button) findViewById(R.id.selectFolderButton);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MyDialog myDialog = MyDialog.newInstance();
-                getSupportFragmentManager().beginTransaction().add(myDialog, "lalal").commit();
-            }
-        });
-
 
         /*
          * init custom appRunner
@@ -99,48 +99,122 @@ public class MainActivity extends BaseActivity {
         /*
          * Servers
          */
-        startBroadCastReceiver();
-        startServers();
+        //startServers();
+
+
+        /*
+        * Testing area
+        */
+        // list projects
+        // run project
+        // list running projects
+        // start servers
+        // stop servers
+        //
+
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
 
-    //This broadcast will receive JS commands if is in debug mode, useful to debug the app through adb
-    private void startBroadCastReceiver() {
-        if (ProtocoderAppSettings.DEBUG) {
-            //execute commands from intents
-            //ie: adb shell am broadcast -a org.protocoder.intent.EXECUTE --es cmd "device.vibrate(100)"
-            BroadcastReceiver recv = new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    String cmd = intent.getStringExtra("cmd");
-                    MLog.d(TAG, "executing >> " + cmd);
-                    appRunner.interp.eval(cmd);
-                }
-            };
+    @Override
+    protected void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+        startBroadCastReceiver();
 
-            IntentFilter filterSend = new IntentFilter();
-            filterSend.addAction("org.protocoder.intent.EXECUTE");
-            registerReceiver(recv, filterSend);
+        try {
+            protocoderHttpServer2 = new ProtocoderHttpServer2(this, ProtocoderSettings.HTTP_PORT);
+        } catch (IOException e) {
+            MLog.e(TAG, "http server not initialized");
+            e.printStackTrace();
         }
     }
 
-    private void setupToolbar() {
+    @Override
+    protected void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
+        protocoderHttpServer2.close();
+        unregisterReceiver(adbBroadcastReceiver);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    /*
+     * This broadcast will receive JS commands if is in debug mode, useful to debug the app through adb
+     */
+    BroadcastReceiver adbBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String cmd = intent.getStringExtra("cmd");
+            MLog.d(TAG, "executing >> " + cmd);
+            appRunner.interp.eval(cmd);
+        }
+    };
+
+    private void startBroadCastReceiver() {
+        if (ProtocoderSettings.DEBUG) {
+            //execute commands from intents
+            //ie: adb shell am broadcast -a org.protocoder.intent.EXECUTE --es cmd "device.vibrate(100)"
+
+            IntentFilter filterSend = new IntentFilter();
+            filterSend.addAction("org.protocoder.intent.EXECUTE");
+            registerReceiver(adbBroadcastReceiver, filterSend);
+        }
+    }
+
+    /*
+     * Server
+     */
+    private void startServers() {
+        MLog.d(TAG, "starting servers");
+        Intent serverIntent = new Intent(this, ProtocoderServerService.class);
+        //serverIntent.putExtra(Project.FOLDER, folder);
+        startService(serverIntent);
+    }
+
+    /*
+    * UI Stuff
+    */
+    private void setupActivity() {
+        // Make the app take as much space as it can
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+
         // Create the action bar programmatically
         if (!AndroidUtils.isWear(this)) {
             mToolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(mToolbar);
         }
+
+        // project folder menu
+        Button btn = (Button) findViewById(R.id.selectFolderButton);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FolderChooserDialog myDialog = FolderChooserDialog.newInstance();
+                getSupportFragmentManager().beginTransaction().add(myDialog, "12345").commit();
+            }
+        });
+
     }
 
-    //Project folder chooser
+    // Project folder chooser
     private void addProjectFolderChooser(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
-            mFolderChooserFragment = FolderChooserFragment.newInstance(ProtocoderAppSettings.EXAMPLES_FOLDER, true);
+            mFolderChooserFragment = FolderChooserFragment.newInstance(ProtocoderSettings.EXAMPLES_FOLDER, true);
             addFragment(mFolderChooserFragment, R.id.fragmentFolderChooser);
         }
     }
 
-    //add the project list fragment
+    // add the project list fragment
     private void addProjectListFragment(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
             mListFragmentBase = ProjectListFragment.newInstance("examples/Media", true);
@@ -166,12 +240,6 @@ public class MainActivity extends BaseActivity {
         ft.commit();
     }
 
-    private void startServers() {
-        MLog.d(TAG, "starting servers");
-        Intent serverIntent = new Intent(this, ProtocoderServerService.class);
-        //serverIntent.putExtra(Project.FOLDER, folder);
-        startService(serverIntent);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -197,7 +265,7 @@ public class MainActivity extends BaseActivity {
             //this.showHelp(true);
             return true;
         } else if (itemId == R.id.menu_settings) {
-            ProtocoderAppHelper.launchSettings(this);
+            ProtoAppHelper.launchSettings(this);
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -205,45 +273,31 @@ public class MainActivity extends BaseActivity {
     }
     */
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
     // execute lines
-    public void onEventMainThread(AppRunnerEvents.ExecuteCodeEvent evt) {
-        String code = evt.getCode();
+    @Subscribe
+    public void onEventMainThread(Events.ExecuteCodeEvent e) {
+        String code = e.getCode();
         MLog.d(TAG, "event -> " + code);
 
-        if (ProtocoderAppSettings.DEBUG) {
+        if (ProtocoderSettings.DEBUG) {
              appRunner.interp.eval(code);
         }
     }
 
-    //folder choose
-    public void onEventMainThread(Events.FolderChosen evt) {
+    // folder choose
+    @Subscribe
+    public void onEventMainThread(Events.FolderChosen e) {
         MLog.d(TAG, "< Event (folderChosen)");
-        String folder = evt.getFullFolder();
+        String folder = e.getFullFolder();
         mListFragmentBase.loadFolder(folder);
         //MLog.d(TAG, "event -> " + code);
     }
 
+    // Run project
+    @Subscribe
+    public void onEventMainThread(Events.ProjectEvent e) {
+        MLog.d(TAG, e.getClass().getSimpleName() + " -> " + e.getAction());
+        ProtoAppHelper.launchScript(this, e.getProject());
+    }
 
 }

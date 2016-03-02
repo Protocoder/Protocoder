@@ -20,28 +20,7 @@
 
 package org.protocoderrunner;
 
-import org.protocoderrunner.project.Project;
-
 public class AppRunnerEvents {
-    public static final String PROJECT_RUN = "run";
-
-    public static class ProjectEvent {
-        private Project project;
-        private String action;
-
-        public ProjectEvent(Project project, String action) {
-            this.project = project;
-            this.action = action;
-        }
-
-        public String getAction() {
-            return action;
-        }
-
-        public Project getProject() {
-            return project;
-        }
-    }
 
     public static class ExecuteCodeEvent {
         private String code;

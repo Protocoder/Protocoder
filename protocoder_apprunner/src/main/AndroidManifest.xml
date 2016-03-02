@@ -60,7 +60,7 @@
 
         <activity
             android:name=".AppRunnerActivity"
-            android:process=".AppRunnerActivity"
+            android:process=":AppRunnerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@style/ProtocoderAppRunnerTheme"
             android:label="@string/runner_name"
@@ -90,6 +90,7 @@
 
         <service
             android:name=".AppRunnerService"
+            android:process=":AppRunnerService"
             android:icon="@drawable/icon"
             android:label="AppRunnerService" >
         </service>

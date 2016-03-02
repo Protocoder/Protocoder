@@ -28,7 +28,7 @@ import java.io.File;
 public class AppRunnerSettings {
 
     public final static String PROTOCODER_FOLDER = "protocodersandbox";
-    public static final String USER_PROJECTS_FOLDER = "user_projects";
+    public static final String USER_PROJECTS_FOLDER = "projects";
     public static final String EXAMPLES_FOLDER = "examples";
     public static final String LIBRARIES_FOLDER = "libraries";
 

@@ -48,7 +48,6 @@ import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
-import org.protocoderrunner.api.network.PBluetoothLe;
 import org.protocoderrunner.api.network.PMqtt;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
@@ -57,7 +56,6 @@ import org.protocoderrunner.PInterface;
 import org.protocoderrunner.api.network.PBluetooth;
 import org.protocoderrunner.api.network.PFtpClient;
 import org.protocoderrunner.api.network.PFtpServer;
-import org.protocoderrunner.api.network.PSimpleHttpServer;
 import org.protocoderrunner.api.network.PSocketIOClient;
 import org.protocoderrunner.api.network.PWebSocketClient;
 import org.protocoderrunner.api.network.PWebSocketServer;
@@ -519,20 +517,20 @@ public class PNetwork extends PInterface {
     //
     //}
 
-
-    @ProtoMethod(description = "Simple http server, serving the content of the project folder", example = "")
-    @ProtoMethodParam(params = {"port", "function(responseString)"})
-    public PSimpleHttpServer createSimpleHttpServer(int port) {
-        PSimpleHttpServer httpServer = null;
-        try {
-            httpServer = new PSimpleHttpServer(getAppRunner(), port);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return httpServer;
-    }
-
+//
+//    @ProtoMethod(description = "Simple http server, serving the content of the project folder", example = "")
+//    @ProtoMethodParam(params = {"port", "function(responseString)"})
+//    public PSimpleHttpServer createSimpleHttpServer(int port) {
+//        PSimpleHttpServer httpServer = null;
+//        try {
+//            httpServer = new PSimpleHttpServer(getAppRunner(), port);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return httpServer;
+//    }
+//
 
 
 //       public PBluetooth createBluetoothSerialServer() {

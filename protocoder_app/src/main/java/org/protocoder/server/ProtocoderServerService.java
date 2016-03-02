@@ -14,16 +14,15 @@ import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
-import org.protocoder.Events;
-import org.protocoder.ProtocoderAppHelper;
-import org.protocoder.ProtocoderAppSettings;
-import org.protocoderrunner.R;
+import org.greenrobot.eventbus.EventBus;
+import org.protocoder.events.Events;
+import org.protocoder.helpers.ProtoAppHelper;
+import org.protocoder.settings.ProtocoderSettings;
 import org.protocoderrunner.AppRunnerActivity;
+import org.protocoderrunner.R;
 import org.protocoderrunner.base.utils.MLog;
 
 import java.io.IOException;
-
-import de.greenrobot.event.EventBus;
 
 public class ProtocoderServerService extends Service {
 
@@ -35,7 +34,7 @@ public class ProtocoderServerService extends Service {
     private NotificationManager mNotifManager;
     private PendingIntent mRestartPendingIntent;
     private Toast mToast;
-    private ProtocoderHttpServer protocoderHttpServer;
+    private ProtocoderHttpServer2 protocoderHttpServer2;
     private ProtocoderFtpServer protocoderFtpServer;
     private ProtocoderWebsocketServer protocoderWebsockets;
 
@@ -128,7 +127,7 @@ public class ProtocoderServerService extends Service {
         MLog.d(TAG, "created");
 
         try {
-            protocoderHttpServer = new ProtocoderHttpServer(this, ProtocoderAppSettings.HTTP_PORT);
+            protocoderHttpServer2 = new ProtocoderHttpServer2(this, ProtocoderSettings.HTTP_PORT);
         } catch (IOException e) {
             MLog.e(TAG, "http server not initialized");
             e.printStackTrace();
@@ -163,17 +162,17 @@ public class ProtocoderServerService extends Service {
 
         String action = evt.getAction();
         if (action.equals(Events.PROJECT_RUN)) {
-            ProtocoderAppHelper.launchScript(getApplicationContext(), evt.getProject());
+            ProtoAppHelper.launchScript(getApplicationContext(), evt.getProject());
         } else if (action.equals(Events.PROJECT_SAVE)) {
             //Project p = evt.getProject();
-            //mProtocoder.protoScripts.refresh(p.getFolder(), p.getName());
+            //mProtocoder.protoScripts.refresh(p.getPath(), p.getName());
         } else if (action.equals(Events.PROJECT_NEW)) {
             //MLog.d(TAG, "creating new project " + evt.getProject().getName());
             //mProtocoder.protoScripts.createProject("projects", evt.getProject().getName());
         } else if (action.equals(Events.PROJECT_UPDATE)) {
             //mProtocoder.protoScripts.listRefresh();
         } else if (action.equals(Events.PROJECT_EDIT)) {
-            ProtocoderAppHelper.launchEditor(getApplicationContext(), evt.getProject());
+            ProtoAppHelper.launchEditor(getApplicationContext(), evt.getProject());
         }
     }
 
