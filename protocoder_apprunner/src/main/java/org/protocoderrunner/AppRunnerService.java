@@ -74,12 +74,11 @@ public class AppRunnerService extends Service {
         mAppRunner = new AppRunner(this);
         mAppRunner.hasUserInterface = false;
 
-        mAppRunner.mProjectName = intent.getStringExtra(Project.NAME);
-        mAppRunner.mProjectFolder = intent.getStringExtra(Project.FOLDER);
+        mAppRunner.loadProject(intent.getStringExtra(Project.NAME), intent.getStringExtra(Project.FOLDER));
         //  mAppRunner.mIntentPrefixScript = intent.getString(Project.PREFIX, "");
-        //  mAppRunner.mIntentCode = intent.getString(Project.CODE, "");
+        //  mAppRunner.mIntentCode = intent.getString(Project.INTENTCODE, "");
         //  mAppRunner.mIntentPostfixScript = intent.getString(Project.POSTFIX, "");
-        mAppRunner.initInterpreter().loadProject().initProject();
+        mAppRunner.initInterpreter().initProject();
 
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 
@@ -109,7 +108,7 @@ public class AppRunnerService extends Service {
         mNotifManager = (NotificationManager) AppRunnerService.this.getSystemService(Context.NOTIFICATION_SERVICE);
 
         int notificationId = (int) Math.ceil(100000 * Math.random());
-        createNotification(notificationId, mAppRunner.mProjectFolder, mAppRunner.mProjectName);
+        createNotification(notificationId, mAppRunner.project.getPath(), mAppRunner.project.getName());
 
 
         //just in case it crash

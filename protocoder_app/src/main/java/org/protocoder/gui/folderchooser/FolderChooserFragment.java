@@ -98,6 +98,11 @@ public class FolderChooserFragment extends BaseFragment {
         super.onResume();
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
     public static FolderChooserFragment newInstance(String folderName, boolean orderByName) {
         FolderChooserFragment myFragment = new FolderChooserFragment();
 

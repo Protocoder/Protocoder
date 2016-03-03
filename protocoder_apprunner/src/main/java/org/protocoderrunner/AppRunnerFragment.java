@@ -40,7 +40,6 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.protocoderrunner.api.PApp;
@@ -82,14 +81,12 @@ public class AppRunnerFragment extends Fragment {
 
         //get parameters and set them in the AppRunner
         Bundle bundle = getArguments();
-        mAppRunner.mProjectName = bundle.getString(Project.NAME, "");
-        mAppRunner.mProjectFolder = bundle.getString(Project.FOLDER, "");
+        mAppRunner.loadProject(bundle.getString(Project.FOLDER, ""), bundle.getString(Project.NAME, ""));
         mAppRunner.mIntentPrefixScript = bundle.getString(Project.PREFIX, "");
-        mAppRunner.mIntentCode = bundle.getString(Project.CODE, "");
+        mAppRunner.mIntentCode = bundle.getString(Project.INTENTCODE, "");
         mAppRunner.mIntentPostfixScript = bundle.getString(Project.POSTFIX, "");
 
         mAppRunner.initInterpreter();
-        mAppRunner.loadProject();
     }
 
     @Override
@@ -107,10 +104,10 @@ public class AppRunnerFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         String toolbarName = "";
-        if (mAppRunner.mProjectFolder.equals("examples")) {
-            toolbarName = "example > " + mAppRunner.mProjectName;
+        if (mAppRunner.project.getPath().equals("examples")) {
+            toolbarName = "example > " + mAppRunner.project.getName();
         } else {
-            toolbarName = mAppRunner.mProjectName;
+            toolbarName = mAppRunner.project.getName();
         }
         mActivity.setToolBar(toolbarName, null, null);
 
@@ -175,7 +172,7 @@ public class AppRunnerFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        EventBus.getDefault().register(this);
+        // EventBus.getDefault().register(this);
 
         if (onAppStatusListener != null) {
             onAppStatusListener.onResume();
@@ -191,7 +188,7 @@ public class AppRunnerFragment extends Fragment {
     public void onPause() {
         super.onPause();
 
-        EventBus.getDefault().unregister(this);
+        // EventBus.getDefault().unregister(this);
 
         mAppRunner.interp.callJsFunction("onPause");
 
@@ -415,7 +412,13 @@ public class AppRunnerFragment extends Fragment {
 
         if (mAppRunner.mIsProjectLoaded) {
 
-            // set up mContext file observer to watch this directory on sd card
+            MLog.d(TAG, "fileObserver -> ");
+
+            MLog.d(TAG, "qq1: " + mAppRunner);
+            MLog.d(TAG, "qq2: " + mAppRunner.project);
+            MLog.d(TAG, "qq3: " + mAppRunner.project.getFullPath());
+
+            // set up a file observer to watch this directory on sd card
             fileObserver = new FileObserver(mAppRunner.project.getFullPath(), FileObserver.CREATE | FileObserver.DELETE) {
 
                 @Override
@@ -447,6 +450,7 @@ public class AppRunnerFragment extends Fragment {
         }
     }
 
+    /*
     // execute lines
     public void onEventMainThread(AppRunnerEvents.ExecuteCodeEvent evt) {
         String code = evt.getCode(); // .trim();
@@ -457,6 +461,7 @@ public class AppRunnerFragment extends Fragment {
         }
         mAppRunner.interp.eval(code);
     }
+    */
 
     public PLiveCodingFeedback liveCodingFeedback() {
         return liveCoding;

@@ -23,6 +23,7 @@ package org.protocoder.helpers;
 import android.content.Context;
 import android.content.Intent;
 
+import org.protocoder.gui.LicenseActivity;
 import org.protocoder.gui.editor.EditorActivity;
 import org.protocoder.gui.settings.SettingsActivity;
 import org.protocoderrunner.AppRunnerActivity;
@@ -31,7 +32,11 @@ import org.protocoderrunner.models.Project;
 
 public class ProtoAppHelper {
 
+    private static final String TAG = ProtoAppHelper.class.getSimpleName();
+
     public static void launchScript(Context context, Project p) {
+        //MLog.d(TAG, "intent launch -> " + p.getName() + " " + p.getPath());
+
         if (p.getName().toLowerCase().endsWith("service")) {
             Intent intent = new Intent(context, AppRunnerService.class);
             intent.putExtra(Project.FOLDER, p.getPath());
@@ -57,5 +62,9 @@ public class ProtoAppHelper {
         context.startActivity(intent);
     }
 
-
+    public static void launchLicense(Context context) {
+        Intent intent = new Intent(context, LicenseActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
 }

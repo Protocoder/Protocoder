@@ -33,7 +33,10 @@ import android.view.ViewGroup;
 import android.view.animation.CycleInterpolator;
 import android.widget.LinearLayout;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.protocoder.R;
+import org.protocoder.events.Events;
 import org.protocoder.events.Events.ProjectEvent;
 import org.protocoder.gui._components.FitRecyclerView;
 import org.protocoder.helpers.ProtoScriptHelper;
@@ -52,6 +55,8 @@ public class ProjectListFragment extends BaseFragment {
     protected FitRecyclerView mGrid;
     private GridLayoutManager mLayoutManager;
     private LinearLayout mEmptyGrid;
+    // private Animation mAnim;
+
 
     public ArrayList<Project> mListProjects = null;
     public ProjectItemAdapter mProjectAdapter;
@@ -70,7 +75,7 @@ public class ProjectListFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mProjectFolder = getArguments().getString("folderName");
+        mProjectFolder = getArguments().getString("folderName", "");
         //mProjectFolder = "projects";
         MLog.d(TAG, "showing " + mProjectFolder);
         mOrderByName = getArguments().getBoolean("orderByName");
@@ -79,7 +84,7 @@ public class ProjectListFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mContext = (Context) getActivity();
+        mContext = getActivity();
         //TODO make it work again
         //mListMode = Protocoder.getInstance((BaseActivity) getActivity()).settings.getListPreference();
         mListMode = false;
@@ -90,6 +95,9 @@ public class ProjectListFragment extends BaseFragment {
         } else {
             v = inflater.inflate(R.layout.fragment_project, container, false);
         }
+
+        // mAnim = AnimationUtils.loadAnimation(getContext(), R.anim.fav_grid_anim);
+
         // Get GridView and set adapter
         mGrid = (FitRecyclerView) v.findViewById(R.id.gridprojects);
         // mGrid.setHasFixedSize(true);
@@ -100,7 +108,9 @@ public class ProjectListFragment extends BaseFragment {
         checkEmptyState();
         registerForContextMenu(mGrid);
 
-        loadFolder(mProjectFolder);
+        if (mProjectFolder != "") {
+            loadFolder(mProjectFolder);
+        }
 
         return v;
     }
@@ -115,11 +125,18 @@ public class ProjectListFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        EventBus.getDefault().register(this);
 
         //TODO reenable
         //if (!AndroidUtils.isWear(getActivity())) {
         //    ((MainActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         //}
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
     }
 
     public static ProjectListFragment newInstance(String folderName, boolean orderByName) {
@@ -190,6 +207,9 @@ public class ProjectListFragment extends BaseFragment {
         mListProjects = ProtoScriptHelper.listProjects(mProjectFolder, mOrderByName);
         mProjectAdapter.setArray(mListProjects);
         mGrid.setAdapter(mProjectAdapter);
+        // mGrid.clearAnimation();
+        // mGrid.startAnimation(mAnim);
+
         notifyAddedProject();
 
         MLog.d(TAG, "loading " + mProjectFolder);
@@ -234,6 +254,9 @@ public class ProjectListFragment extends BaseFragment {
     /*
      * Events
      */
+
+    //run project
+    @Subscribe
     public void onEventMainThread(ProjectEvent evt) {
         if (evt.getAction() == "run") {
             Project p = evt.getProject();
@@ -241,5 +264,14 @@ public class ProjectListFragment extends BaseFragment {
             MLog.d(TAG, "> Event (Run project feedback)" + p.getName());
         }
     }
+
+    // folder choose
+    @Subscribe
+    public void onEventMainThread(Events.FolderChosen e) {
+        MLog.d(TAG, "< Event (folderChosen)");
+        String folder = e.getFullFolder();
+        loadFolder(folder);
+    }
+
 
 }

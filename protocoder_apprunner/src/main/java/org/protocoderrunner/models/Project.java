@@ -30,15 +30,17 @@ public class Project {
     public static final String NAME = "projectName";
     public static final String URL = "projectUrl";
     public static final String PREFIX = "prefix";
-    public static final String CODE = "code";
+    public static final String INTENTCODE = "code";
     public static final String POSTFIX = "postfix";
 
     public static final String SETTINGS_SCREEN_ALWAYS_ON = "settings_screenOn";
     public static final String SETTINGS_SCREEN_WAKEUP = "settings_wakeUpScreen";
 
+    /*
+     * this will get serialized
+    */
     public String name;
     public String folder;
-    private String type;
 
     public Project(String folder, String projectName) {
         this.folder = folder;

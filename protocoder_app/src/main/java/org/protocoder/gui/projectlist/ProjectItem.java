@@ -173,7 +173,6 @@ public class ProjectItem extends LinearLayout {
             }
         });
 
-
         //imageView.setOnCreateContextMenuListener();
         mMenuButton.setOnClickListener(new OnClickListener() {
             @Override

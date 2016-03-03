@@ -23,9 +23,7 @@ package org.protocoder.helpers;
 import android.content.Context;
 import android.os.Environment;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.protocoder.server.model.ProtoFile;
 import org.protocoder.settings.ProtocoderSettings;
 import org.protocoderrunner.base.utils.FileIO;
 import org.protocoderrunner.base.utils.MLog;
@@ -154,6 +152,40 @@ public class ProtoScriptHelper {
         return folders;
     }
 
+    // List folders in a tree structure
+    public static ArrayList<ProtoFile> listFilesInFolder(String folder, int levels) {
+        ArrayList<ProtoFile> foldersArray = new ArrayList<ProtoFile>();
+        File dir = new File(ProtocoderSettings.getFolderPath(folder));
+
+        fileWalker(foldersArray, dir, levels);
+
+        return foldersArray;
+    }
+
+    private static void fileWalker(ArrayList<ProtoFile> tree, File dir, int levels) {
+        File[] all_projects = dir.listFiles();
+
+        for (File f : all_projects) {
+
+            ProtoFile protoFile = new ProtoFile();
+
+            if (f.isDirectory()) {
+                protoFile.type = "folder";
+                protoFile.files = new ArrayList<ProtoFile>();
+            } else {
+                protoFile.type = "file";
+                protoFile.fileSizeKb = f.length() / 1024;
+            }
+            protoFile.name = f.getName();
+            protoFile.path = f.getAbsolutePath();
+
+            if (f.isDirectory() && levels > 0) fileWalker(protoFile.files, f, levels - 1);
+
+            tree.add(protoFile);
+        }
+    }
+
+
     // List projects
     public static ArrayList<Project> listProjects(String folder, boolean orderByName) {
         ArrayList<Project> projects = new ArrayList<Project>();
@@ -178,7 +210,6 @@ public class ProtoScriptHelper {
 
         return projects;
     }
-
 
     public static String exportProjectAsProtoFile(Project p) {
 
@@ -229,56 +260,24 @@ public class ProtoScriptHelper {
 
 
 
-
-    public static JSONObject toJson(Project p) {
-        JSONObject json = new JSONObject();
-        try {
-            json.put("name", p.getName());
-            json.put("folder", p.getPath());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return json;
-    }
-
-
-    public static ArrayList<File> listFilesInProject(Project p) {
-        ArrayList<File> files = new ArrayList<File>();
-
+    public static ArrayList<ProtoFile> listFilesInProject(Project p) {
         File f = new File(p.getFullPath());
         File file[] = f.listFiles();
 
+        ArrayList<ProtoFile> protoFiles = new ArrayList<>();
+
         for (File element : file) {
-            files.add(element);
+            ProtoFile protoFile = new ProtoFile();
+            protoFile.name = element.getName();
+            protoFile.fileSizeKb = element.length() / 1024;
+            protoFile.path = element.getPath();
+            protoFile.type = "file";
+
+            protoFiles.add(protoFile);
         }
 
-        return files;
+        return protoFiles;
     }
-
-    public static JSONArray listFilesInProjectJSON(Project p) {
-
-        File f = new File(p.getFullPath());
-        File file[] = f.listFiles();
-        MLog.d("Files", "Size: " + file.length);
-
-        JSONArray array = new JSONArray();
-        for (File element : file) {
-
-            JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.put("file_name", element.getName());
-                jsonObject.put("file_size", element.length() / 1024);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            array.put(jsonObject);
-            MLog.d("Files", "FileName:" + element.getName());
-        }
-
-        return array;
-    }
-
 
 
 }

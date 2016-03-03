@@ -15,11 +15,11 @@ import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.protocoder.events.Events;
 import org.protocoder.helpers.ProtoAppHelper;
 import org.protocoder.settings.ProtocoderSettings;
 import org.protocoderrunner.AppRunnerActivity;
-import org.protocoderrunner.R;
 import org.protocoderrunner.base.utils.MLog;
 
 import java.io.IOException;
@@ -34,6 +34,10 @@ public class ProtocoderServerService extends Service {
     private NotificationManager mNotifManager;
     private PendingIntent mRestartPendingIntent;
     private Toast mToast;
+
+    /*
+     * Servers
+     */
     private ProtocoderHttpServer2 protocoderHttpServer2;
     private ProtocoderFtpServer protocoderFtpServer;
     private ProtocoderWebsocketServer protocoderWebsockets;
@@ -44,6 +48,77 @@ public class ProtocoderServerService extends Service {
         return Service.START_STICKY;
     }
 
+    BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(SERVICE_CLOSE)) {
+                ProtocoderServerService.this.stopSelf();
+                mNotifManager.cancel(NOTIFICATION_SERVER_ID);
+            }
+        }
+    };
+
+    Thread.UncaughtExceptionHandler handler = new Thread.UncaughtExceptionHandler() {
+        @Override
+        public void uncaughtException(Thread thread, Throwable ex) {
+            new Thread() {
+                @Override
+                public void run() {
+                    Looper.prepare();
+                    Toast.makeText(ProtocoderServerService.this, "lalll", Toast.LENGTH_LONG);
+                    Looper.loop();
+                }
+            }.start();
+            //          handlerToast.post(runnable);
+
+            AlarmManager mgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mRestartPendingIntent);
+            mNotifManager.cancelAll();
+
+            android.os.Process.killProcess(android.os.Process.myPid());
+            System.exit(10);
+
+            throw new RuntimeException(ex);
+        }
+    };
+
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        // TODO for communication return IBinder implementation
+        return null;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        MLog.d(TAG, "service created");
+
+        try {
+            protocoderHttpServer2 = new ProtocoderHttpServer2(this, ProtocoderSettings.HTTP_PORT);
+        } catch (IOException e) {
+            MLog.e(TAG, "http server not initialized");
+            e.printStackTrace();
+        }
+
+        //protocoderFtpServer = new ProtocoderFtpServer(this);
+        //protocoderWebsockets = new ProtocoderWebsocketServer(this);
+
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        MLog.d(TAG, "service destroyed");
+
+        unregisterReceiver(mReceiver);
+        EventBus.getDefault().unregister(this);
+    }
+
+    /*
+     * Notification that show if the server is ON
+     */
     private void createNotification(String scriptFolder, String scriptName) {
         //create pending intent that will be triggered if the notification is clicked
         IntentFilter filter = new IntentFilter();
@@ -54,10 +129,10 @@ public class ProtocoderServerService extends Service {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, stopIntent, 0);
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.protocoder_icon)
+                .setSmallIcon(org.protocoderrunner.R.drawable.protocoder_icon)
                 .setContentTitle(scriptName).setContentText("Running service: " + scriptFolder + " > " + scriptName)
                 .setOngoing(false)
-                .addAction(R.drawable.ic_action_stop, "stop", pendingIntent)
+                .addAction(org.protocoderrunner.R.drawable.ic_action_stop, "stop", pendingIntent)
                 .setDeleteIntent(pendingIntent);
 
         // Creates an explicit intent for an Activity in your app
@@ -78,76 +153,6 @@ public class ProtocoderServerService extends Service {
         Thread.setDefaultUncaughtExceptionHandler(handler);
     }
 
-
-    BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(SERVICE_CLOSE)) {
-                ProtocoderServerService.this.stopSelf();
-                mNotifManager.cancel(NOTIFICATION_SERVER_ID);
-            }
-        }
-    };
-
-
-    Thread.UncaughtExceptionHandler handler = new Thread.UncaughtExceptionHandler() {
-        @Override
-        public void uncaughtException(Thread thread, Throwable ex) {
-        new Thread() {
-            @Override
-            public void run() {
-                Looper.prepare();
-                Toast.makeText(ProtocoderServerService.this, "lalll", Toast.LENGTH_LONG);
-                Looper.loop();
-            }
-        }.start();
-        //          handlerToast.post(runnable);
-
-        AlarmManager mgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mRestartPendingIntent);
-        mNotifManager.cancelAll();
-
-        android.os.Process.killProcess(android.os.Process.myPid());
-        System.exit(10);
-
-        throw new RuntimeException(ex);
-        }
-    };
-
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        // TODO for communication return IBinder implementation
-        return null;
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        MLog.d(TAG, "created");
-
-        try {
-            protocoderHttpServer2 = new ProtocoderHttpServer2(this, ProtocoderSettings.HTTP_PORT);
-        } catch (IOException e) {
-            MLog.e(TAG, "http server not initialized");
-            e.printStackTrace();
-        }
-        //protocoderFtpServer = new ProtocoderFtpServer(this);
-        //protocoderWebsockets = new ProtocoderWebsocketServer(this);
-
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        MLog.d(TAG, "destroyed");
-
-        unregisterReceiver(mReceiver);
-        EventBus.getDefault().unregister(this);
-    }
-
-
     /*
     * Events
     *
@@ -156,7 +161,7 @@ public class ProtocoderServerService extends Service {
     *
     */
 
-
+    @Subscribe
     public void onEventMainThread(Events.ProjectEvent evt) {
         MLog.d(TAG, "event -> " + evt.getAction());
 
@@ -177,6 +182,7 @@ public class ProtocoderServerService extends Service {
     }
 
     //stop service
+    @Subscribe
     public void onEventMainThread(Events.SelectedProjectEvent evt) {
        // stopSelf();
     }

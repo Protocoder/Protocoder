@@ -23,6 +23,7 @@ package org.protocoderrunner;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -48,7 +49,6 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import org.greenrobot.eventbus.EventBus;
 import org.protocoderrunner.api.PDevice;
 import org.protocoderrunner.api.PMedia;
 import org.protocoderrunner.api.PUI;
@@ -67,41 +67,56 @@ public class AppRunnerActivity extends BaseActivity {
 
     private static final String TAG = "AppRunnerActivity";
 
+    Context mContext;
+    public AppRunnerFragment    mAppRunnerFragment;
+
     private BroadcastReceiver mIntentReceiver;
 
-    private PDevice.onSmsReceivedListener onSmsReceivedListener;
-    private PNfc.onNFCListener onNFCListener;
-    private PNfc.onNFCWrittenListener onNFCWrittenListener;
-    private PBluetooth.onBluetoothListener onBluetoothListener;
-    private PMedia.onVoiceRecognitionListener onVoiceRecognitionListener;
-
-    public AppRunnerFragment mAppRunnerFragment;
-    public boolean mActionBarSet;
+    /*
+    * Events
+     */
+    private PDevice.onSmsReceivedListener       onSmsReceivedListener;
+    private PNfc.onNFCListener                  onNFCListener;
+    private PNfc.onNFCWrittenListener           onNFCWrittenListener;
+    private PBluetooth.onBluetoothListener      onBluetoothListener;
+    private PMedia.onVoiceRecognitionListener   onVoiceRecognitionListener;
 
     //ui fragment dependent
     public static final int VOICE_RECOGNITION_REQUEST_CODE = 55;
 
-    private PUI.onKeyListener onKeyListener;
-    public boolean keyVolumeEnabled = true;
-    public boolean keyBackEnabled = true;
-    private Toolbar mToolbar;
-    private ActionBar mActionbar;
+    /*
+    * Keyboard handling
+     */
+    private PUI.onKeyListener   onKeyListener;
+    public boolean              keyVolumeEnabled = true;
+    public boolean              keyBackEnabled = true;
+
+    /*
+    * UI stuff
+     */
+    private Toolbar     mToolbar;
+    private ActionBar   mActionbar;
+    public boolean      mActionBarSet;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = this;
 
-        setContentView(R.layout.activity_apprunner_host);
+        /*
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+            public void uncaughtException(Thread paramThread, Throwable paramThrowable) {
+                MLog.e("Error" + Thread.currentThread().getStackTrace()[2],paramThrowable.getLocalizedMessage());
+                Toast.makeText(mContext, "Error :(", Toast.LENGTH_LONG).show();
+                finish();
+            }
+        });
+        */
 
-        if (!AndroidUtils.isWear(this)) {
-            mToolbar = (Toolbar) findViewById(R.id.toolbar);
-            setSupportActionBar(mToolbar);
-            mActionbar = getSupportActionBar();
-        }
-
-        FrameLayout fl = (FrameLayout) findViewById(R.id.apprunner_fragment);
-
-        // Read in the script given in the intent.
+        /*
+         * Read in the script given in the intent.
+          */
         Intent intent = getIntent();
         if (null != intent) {
             boolean isService = intent.getBooleanExtra("isService", false);
@@ -119,34 +134,38 @@ public class AppRunnerActivity extends BaseActivity {
             // if mProject == null , Protocoder is running in "standard" mode
             // if mProject != null , Protocoder is running in "standalone" mode
 
-            boolean settingScreenAlwaysOn = false;
-            boolean settingWakeUpScreen = false;
+            boolean settingScreenAlwaysOn   = false;
+            boolean settingWakeUpScreen     = false;
 
             // get projects intent
             //settings
-            settingScreenAlwaysOn = intent.getBooleanExtra(Project.SETTINGS_SCREEN_ALWAYS_ON, false);
-            settingWakeUpScreen = intent.getBooleanExtra(Project.SETTINGS_SCREEN_WAKEUP, false);
+            settingScreenAlwaysOn   = intent.getBooleanExtra(Project.SETTINGS_SCREEN_ALWAYS_ON, false);
+            settingWakeUpScreen     = intent.getBooleanExtra(Project.SETTINGS_SCREEN_WAKEUP, false);
 
-            //project info
-            String name = intent.getStringExtra(Project.NAME);
-            String folder = intent.getStringExtra(Project.FOLDER);
-
-            Project mProject = new Project(folder, name);
-
-            String prefix = intent.getStringExtra(Project.PREFIX);
-            String code = intent.getStringExtra(Project.CODE);
-            String postfix = intent.getStringExtra(Project.POSTFIX);
+            String prefix   = intent.getStringExtra(Project.PREFIX);
+            String code     = intent.getStringExtra(Project.INTENTCODE);
+            String postfix  = intent.getStringExtra(Project.POSTFIX);
 
             //send bundle to
             Bundle bundle = new Bundle();
-            bundle.putString(Project.NAME, mProject.getName());
-            bundle.putString(Project.FOLDER, mProject.getPath());
-            //bundle.putInt(Project.COLOR, intent.getIntExtra("color", 0));
+            bundle.putString(Project.NAME, intent.getStringExtra(Project.NAME));
+            bundle.putString(Project.FOLDER, intent.getStringExtra(Project.FOLDER));
             bundle.putString(Project.PREFIX, prefix);
-            bundle.putString(Project.CODE, code);
+            bundle.putString(Project.INTENTCODE, code);
             bundle.putString(Project.POSTFIX, postfix);
 
-            //MLog.d(TAG, "load " + projectName + " in " + projectFolder);
+            /*
+             * Set the Activity UI
+             */
+            setContentView(R.layout.activity_apprunner_host);
+
+            if (!AndroidUtils.isWear(this)) {
+                mToolbar = (Toolbar) findViewById(R.id.toolbar);
+                setSupportActionBar(mToolbar);
+                mActionbar = getSupportActionBar();
+            }
+
+            FrameLayout fl = (FrameLayout) findViewById(R.id.apprunner_fragment);
 
             // wake up if intent says so
             if (settingWakeUpScreen) {
@@ -157,14 +176,15 @@ public class AppRunnerActivity extends BaseActivity {
                         | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
             }
 
-            //set screen always on if so
             setScreenAlwaysOn(settingScreenAlwaysOn);
 
+            /*
+             * Everything will be handled to the AppRunnerFragment
+             */
             mAppRunnerFragment = AppRunnerFragment.newInstance(bundle);
 
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.add(fl.getId(), mAppRunnerFragment, String.valueOf(fl.getId()));
-
             // ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             // ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
             // ft.addToBackStack(null);
@@ -180,7 +200,7 @@ public class AppRunnerActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
 
-        EventBus.getDefault().register(this);
+        // EventBus.getDefault().register(this);
 
         if (nfcSupported) {
             mAdapter.enableForegroundDispatch(this, mPendingIntent, null, null);
@@ -214,7 +234,7 @@ public class AppRunnerActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
 
-        EventBus.getDefault().unregister(this);
+        // EventBus.getDefault().unregister(this);
 
         if (nfcSupported) {
             mAdapter.disableForegroundDispatch(this);

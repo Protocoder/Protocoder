@@ -40,7 +40,7 @@ public class FolderChooserDialog extends DialogFragment {
         Rect displayRectangle = new Rect();
         window.getDecorView().getWindowVisibleDisplayFrame(displayRectangle);
 
-        int w = (int) (displayRectangle.width() * 0.9);
+        int w = (int) (displayRectangle.width() * 0.95);
         int h = (int) (displayRectangle.height() * 0.9);
         window.setLayout(w, h);
 

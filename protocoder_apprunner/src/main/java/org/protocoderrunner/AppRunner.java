@@ -37,7 +37,6 @@ import org.protocoderrunner.api.PUI;
 import org.protocoderrunner.api.PUtil;
 import org.protocoderrunner.api.other.WhatIsRunning;
 import org.protocoderrunner.models.Project;
-import org.protocoderrunner.base.utils.MLog;
 
 import java.io.File;
 
@@ -56,8 +55,6 @@ public class AppRunner {
     //Project properties
     public Project mCurrentProject;
 
-    public String mProjectName;
-    public String mProjectFolder;
     private String mScript;
     public String mIntentPrefixScript = "";
     public String mIntentCode = "";
@@ -147,16 +144,9 @@ public class AppRunner {
         interp.addJavaObjectToJs(name, object);
     }
 
-    public AppRunner loadProject() {
-
-        //load project checking if we got the folder and name in the intent
-        mIsProjectLoaded = !mProjectName.isEmpty() && !mProjectFolder.isEmpty();
-        if (mIsProjectLoaded) {
-            mCurrentProject = new Project(mProjectFolder, mProjectName);
-            mScript = AppRunnerHelper.getCode(mContext, mCurrentProject);
-
-            MLog.d(TAG, "project loaded for " + mProjectFolder + " " + mProjectName + " " + mScript);
-        }
+    public AppRunner loadProject(String folder, String name) {
+        project = new Project(folder, name);
+        mScript = AppRunnerHelper.getCode(mContext, project);
 
         return this;
     }
@@ -168,7 +158,7 @@ public class AppRunner {
 
         // run the script
         if (null != mScript) {
-            evaluate(mScript, mProjectName);
+            evaluate(mScript, project.getName());
         }
         //can accept intent code if no project is loaded
         if (!mIsProjectLoaded) {

@@ -34,6 +34,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.protocoder.appinterpreter.AppRunnerCustom;
@@ -45,14 +48,20 @@ import org.protocoder.gui.folderchooser.FolderChooserDialog;
 import org.protocoder.gui.folderchooser.FolderChooserFragment;
 import org.protocoder.gui.projectlist.ProjectListFragment;
 import org.protocoder.helpers.ProtoAppHelper;
+import org.protocoder.helpers.ProtoScriptHelper;
 import org.protocoder.server.ProtocoderHttpServer2;
 import org.protocoder.server.ProtocoderServerService;
+import org.protocoder.server.model.ProtoFileCode;
+import org.protocoder.server.model.NetworkExchangeObject;
+import org.protocoder.server.model.ProtoFile;
 import org.protocoder.settings.ProtocoderSettings;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.base.utils.AndroidUtils;
 import org.protocoderrunner.base.utils.MLog;
+import org.protocoderrunner.models.Project;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class MainActivity extends BaseActivity {
 
@@ -66,6 +75,7 @@ public class MainActivity extends BaseActivity {
     private Toolbar mToolbar;
     private ProjectListFragment mListFragmentBase;
     private FolderChooserFragment mFolderChooserFragment;
+    private Button btnFolderChooser;
 
     private ProtocoderHttpServer2 protocoderHttpServer2;
 
@@ -99,18 +109,94 @@ public class MainActivity extends BaseActivity {
         /*
          * Servers
          */
-        //startServers();
 
 
         /*
-        * Testing area
+        * Poor man testing area
         */
-        // list projects
+        /*
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+            public void uncaughtException(Thread paramThread, Throwable paramThrowable) {
+                MLog.e("Error"+Thread.currentThread().getStackTrace()[2],paramThrowable.getLocalizedMessage());
+            }
+        });
+        */
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        // gson serialization
+        if (false) {
+            NetworkExchangeObject networkExchangeObject = new NetworkExchangeObject();
+            networkExchangeObject.action = "run";
+            networkExchangeObject.project = new Project("name", "folder");
+
+            ProtoFileCode codefile = new ProtoFileCode("name", "path", "code");
+            networkExchangeObject.files.add(codefile);
+            networkExchangeObject.files.add(codefile);
+
+            String json = gson.toJson(networkExchangeObject);
+            MLog.d(TAG, json);
+
+            // gson deserialization
+            NetworkExchangeObject n1 = gson.fromJson(json, NetworkExchangeObject.class);
+            MLog.d(TAG, n1.project.getName() + " " + n1.project.getPath());
+        }
+
+        // list examples folders
+        if (false) {
+            ArrayList<ProtoFile> files = ProtoScriptHelper.listFilesInFolder("./examples", 0);
+            String jsonFiles = gson.toJson(files);
+            MLog.d(TAG, "list examples folders -> " + jsonFiles);
+        }
+
+        // list all examples 30min
+        if (false) {
+            ArrayList<ProtoFile> files1 = ProtoScriptHelper.listFilesInFolder("./examples", 1);
+            String jsonFiles1 = gson.toJson(files1);
+            MLog.d(TAG, "list all examples -> " + jsonFiles1);
+        }
+
+        // list all files with 10 levels
+        if (false) {
+            ArrayList<ProtoFile> files2 = ProtoScriptHelper.listFilesInFolder(".", 10);
+            String jsonFiles2 = gson.toJson(files2);
+            MLog.d(TAG, "list all files with 10 levels -> " + jsonFiles2);
+        }
+
         // run project
-        // list running projects
-        // start servers
-        // stop servers
-        //
+        if (false) {
+            ProtoAppHelper.launchScript(this, new Project("examples/Media", "Sound"));
+        }
+
+        // run settings
+        if (false) {
+            ProtoAppHelper.launchSettings(this);
+        }
+
+        // run settings
+        if (false) {
+            ProtoAppHelper.launchLicense(this);
+        }
+
+        // run editor
+        if (false) {
+            ProtoAppHelper.launchEditor(this, new Project("examples/Media", "Sound"));
+        }
+
+        // stop project 1h
+        if (true) {
+            startServers();
+        }
+
+        // start servers 1h
+        if (true) {
+
+        }
+
+        // stop servers 1h
+
+        // list running projects 1h
+
 
     }
 
@@ -179,6 +265,16 @@ public class MainActivity extends BaseActivity {
         startService(serverIntent);
     }
 
+    // A method to find height of the status bar
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
+
     /*
     * UI Stuff
     */
@@ -192,11 +288,14 @@ public class MainActivity extends BaseActivity {
         if (!AndroidUtils.isWear(this)) {
             mToolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(mToolbar);
+
+            // Set the padding to match the Status Bar height
+            mToolbar.setPadding(0, getStatusBarHeight(), 0, 0);
         }
 
         // project folder menu
-        Button btn = (Button) findViewById(R.id.selectFolderButton);
-        btn.setOnClickListener(new View.OnClickListener() {
+        btnFolderChooser = (Button) findViewById(R.id.selectFolderButton);
+        btnFolderChooser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FolderChooserDialog myDialog = FolderChooserDialog.newInstance();
@@ -217,11 +316,14 @@ public class MainActivity extends BaseActivity {
     // add the project list fragment
     private void addProjectListFragment(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
-            mListFragmentBase = ProjectListFragment.newInstance("examples/Media", true);
+            mListFragmentBase = ProjectListFragment.newInstance("", true);
+
             addFragment(mListFragmentBase, R.id.fragmentScriptList);
         } else {
             // mProtocoder.protoScripts.reinitScriptList();
         }
+
+        EventBus.getDefault().post(new Events.FolderChosen("Examples", "Media"));
     }
 
     private void showIntroduction(Bundle savedInstanceState) {
@@ -289,8 +391,7 @@ public class MainActivity extends BaseActivity {
     public void onEventMainThread(Events.FolderChosen e) {
         MLog.d(TAG, "< Event (folderChosen)");
         String folder = e.getFullFolder();
-        mListFragmentBase.loadFolder(folder);
-        //MLog.d(TAG, "event -> " + code);
+        btnFolderChooser.setText(folder);
     }
 
     // Run project

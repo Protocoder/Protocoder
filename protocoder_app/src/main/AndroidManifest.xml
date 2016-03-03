@@ -70,6 +70,11 @@
             android:theme="@style/ProtocoderAppTheme"
             android:label="@string/settings_activity_name" >
         </activity>
+        <activity
+            android:name=".gui.LicenseActivity"
+            android:theme="@style/ProtocoderAppTheme"
+            android:label="License" >
+        </activity>
 
         <service android:name=".server.ProtocoderServerService"></service>
     </application>
