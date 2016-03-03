@@ -156,9 +156,7 @@ public class ProjectItem extends LinearLayout {
 
         // Attach the canvas to the ImageView
         imageView.setImageDrawable(new BitmapDrawable(getResources(), tempBitmap));
-
     }
-
 
     public void setMenu() {
         // MLog.d("TAG", "setting menu for " + mProject.getName());
