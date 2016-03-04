@@ -113,7 +113,7 @@ dependencies {
     compile files('libs/additionnal.jar') //part of mail
     compile 'de.sciss:netutil:1.0.0'                            // ok
     compile 'org.fusesource.mqtt-client:mqtt-client:1.10'       // ok
-    // compile 'org.nanohttpd:nanohttpd:2.2.0'
+    compile 'org.nanohttpd:nanohttpd:2.2.0'
 
     //media
     compile files('libs/pdcore.jar')
