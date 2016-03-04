@@ -132,6 +132,7 @@ public class ProtoScriptHelper {
     public static ArrayList<Folder> listFolders(String folder, boolean orderByName) {
         ArrayList<Folder> folders = new ArrayList<Folder>();
         File dir = new File(ProtocoderSettings.getFolderPath(folder));
+        MLog.d(TAG, "path ->" + dir.getAbsolutePath() + " " + dir.exists());
 
         if (!dir.exists()) {
             dir.mkdir();

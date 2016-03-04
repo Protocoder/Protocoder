@@ -43,7 +43,7 @@ public class LauncherActivity extends BaseActivity {
         SharedPreferences userDetails = getSharedPreferences("org.protocoder", MODE_PRIVATE);
         firstLaunch = userDetails.getBoolean(getResources().getString(R.string.pref_is_first_launch), true);
 
-        //uncomment to avoid first launch
+        // uncomment to avoid first launch
         //userDetails.edit().putBoolean(getResources().getString(R.string.pref_is_first_launch), false).commit();
 
         Intent i = getIntent();
@@ -52,7 +52,7 @@ public class LauncherActivity extends BaseActivity {
             Toast.makeText(this, "The script crashed :(", Toast.LENGTH_LONG).show();
         }
 
-        if (firstLaunch) {
+        if (false) {
             intent = new Intent(this, WelcomeActivity.class);
             UserSettings userSettings = new UserSettings(this);
             userSettings.setId(StrUtils.generateRandomString());
@@ -65,7 +65,6 @@ public class LauncherActivity extends BaseActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         startActivity(intent);
         finish();
-
     }
 
     @Override

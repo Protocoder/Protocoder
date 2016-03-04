@@ -2,8 +2,6 @@ package com.myscript;
 
 import android.os.Bundle;
 
-import org.protocoderrunner.apprunner.AppRunnerContext;
-import org.protocoderrunner.AppSettings;
 import org.protocoderrunner.AppRunnerActivity;
 import org.protocoderrunner.AppRunnerHelper;
 

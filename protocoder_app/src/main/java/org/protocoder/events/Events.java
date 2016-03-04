@@ -128,4 +128,22 @@ public class Events {
 
         public String getWhat() { return what; }
     }
+
+    public static class Connection {
+        private final String type;
+        private final String address;
+
+        public Connection(String type, String address) {
+            this.type = type;
+            this.address = address;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public String getAddress() {
+            return address;
+        }
+    }
 }

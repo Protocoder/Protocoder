@@ -23,18 +23,19 @@ package org.protocoder.server;
 import android.content.Context;
 import android.content.res.AssetManager;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.greenrobot.eventbus.EventBus;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.protocoder.events.Events;
 import org.protocoder.helpers.ProtoScriptHelper;
+import org.protocoder.server.networkexchangeobjects.NEOProject;
+import org.protocoder.server.model.ProtoFile;
 import org.protocoder.settings.ProtocoderSettings;
 import org.protocoder.settings.WebEditorManager;
 import org.protocoderrunner.base.network.NanoHTTPD;
 import org.protocoderrunner.base.utils.MLog;
-import org.protocoderrunner.models.Folder;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -49,7 +50,6 @@ import java.util.Properties;
 
 public class ProtocoderHttpServer2 extends NanoHTTPD {
     public static final String TAG = ProtocoderHttpServer2.class.getSimpleName();
-    private String STATUS_OK = "200";
 
     private static final Map<String, String> MIME_TYPES = new HashMap<String, String>() {
         {
@@ -81,13 +81,16 @@ public class ProtocoderHttpServer2 extends NanoHTTPD {
         }
     };
 
+    private final Gson gson;
     private final WeakReference<Context> mContext;
-    private String WEBAPP_DIR = "mm";
+    private String WEBAPP_DIR = "webide/";
 
 
     public ProtocoderHttpServer2(Context context, int port) throws IOException {
         super(port);
         mContext = new WeakReference<Context>(context);
+
+        gson = new GsonBuilder().create();
     }
 
     class ServeParams {
@@ -99,14 +102,17 @@ public class ProtocoderHttpServer2 extends NanoHTTPD {
     }
 
     @Override
-    public Response serve(String uri, String method, Properties header, Properties parmas, Properties files) {
+    public Response serve(String uri, String method, Properties header, Properties params, Properties files) {
         //repacking response, this will do a smooth transition after upgrading to the new HTTPD
         ServeParams serveParams = new ServeParams();
         serveParams.uri = uri;
         serveParams.method = method;
         serveParams.header = header;
-        serveParams.params = parmas;
+        serveParams.params = params;
         serveParams.files = files;
+
+        MLog.d(TAG, "uri -> " + serveParams.uri);
+        MLog.d(TAG, "params -> " + serveParams.params);
 
         Response res = null;
 
@@ -114,12 +120,18 @@ public class ProtocoderHttpServer2 extends NanoHTTPD {
             // file upload
 
             // web api
-            if        (true) res = project_list_all(serveParams);
-            //else if   ("") readFile(serveParams);
-            //else if   ("") runApp(serveParams);
-            //else if   ("") stopApp(serveParams);
-            //else if   () new_project(serveParams);
-            //else if   () save_files(serveParams);
+            if (serveParams.uri.equals("/api")) {
+                String p = serveParams.params.toString();
+                NEOProject neo = gson.fromJson(p, NEOProject.class);
+                MLog.d(TAG, "CMD -> " + neo.cmd);
+
+                if      (neo.cmd.equals("list_projects")) res = project_list_all(serveParams);
+                //else if (neo.cmd.equals("")) readFile(serveParams);
+                //else if (neo.cmd.equals("")) runApp(serveParams);
+                //else if (neo.cmd.equals("")) stopApp(serveParams);
+                //else if (neo.cmd.equals("")) new_project(serveParams);
+                //else if (neo.cmd.equals("")) save_files(serveParams);
+            } else res = sendWebAppFile(serveParams);
 
         } catch(Exception ioe) {
             MLog.w(TAG, ioe.toString());
@@ -136,30 +148,26 @@ public class ProtocoderHttpServer2 extends NanoHTTPD {
     }
 
     public Response project_list_all(ServeParams serveParams) {
-        JSONObject data = new JSONObject(serveParams.params);
 
-        try {
-            ArrayList<Folder> folders = ProtoScriptHelper.listFolders(ProtocoderSettings.EXAMPLES_FOLDER, true);
-            JSONArray jsonArray = new JSONArray(folders);
-            data.put("examples", folders);
+        Gson gson = new GsonBuilder().create();
+        ArrayList<ProtoFile> files = ProtoScriptHelper.listFilesInFolder("./examples", 1);
+        String jsonFiles = gson.toJson(files);
+        MLog.d(TAG, "list examples folders -> " + jsonFiles);
 
-            MLog.d(TAG, data.toString(2));
-            EventBus.getDefault().post(new Events.HTTPServerEvent("project_list_all"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        EventBus.getDefault().post(new Events.HTTPServerEvent("project_list_all"));
 
-        return new Response(STATUS_OK, MIME_TYPES.get("json"), data.toString());
+        return new Response(HTTP_OK, MIME_TYPES.get("json"), jsonFiles.toString());
     }
 
 
 
-    private Response sendWebAppFile(String uri, String method, Properties header, Properties parms, Properties files) {
-        org.protocoderrunner.base.network.NanoHTTPD.Response res = null;
+    private Response sendWebAppFile(ServeParams serveParams) {
+        Response res = null;
+        String uri = serveParams.uri;
 
-        MLog.d(TAG, "" + method + " '" + uri + " " + /* header + */" " + parms);
+        MLog.d(TAG, "" + serveParams.method + " '" + serveParams.uri + " " + /* header + */" " + serveParams.params);
 
-        String escapedCode = parms.getProperty("code");
+        String escapedCode = serveParams.params.getProperty("code");
         String unescapedCode = StringEscapeUtils.unescapeEcmaScript(escapedCode);
         MLog.d("HTTP Code", "" + escapedCode);
         MLog.d("HTTP Code", "" + unescapedCode);
@@ -187,36 +195,37 @@ public class ProtocoderHttpServer2 extends NanoHTTPD {
             mime = MIME_TYPES.get(uri.substring(dot + 1).toLowerCase());
         }
         if (mime == null) {
-            mime = org.protocoderrunner.base.network.NanoHTTPD.MIME_DEFAULT_BINARY;
+            mime = NanoHTTPD.MIME_DEFAULT_BINARY;
         }
 
+        /*
+         * return a default webeditor or a custom one
+         */
         String currentEditor = WebEditorManager.getInstance().getCurrentEditor(mContext.get());
         if (currentEditor.equals(WebEditorManager.DEFAULT)) {
-
             // have the object build the directory structure, if needed.
             AssetManager am = mContext.get().getAssets();
             try {
                 MLog.d(TAG, WEBAPP_DIR + uri);
                 InputStream fi = am.open(WEBAPP_DIR + uri);
 
-                res = new org.protocoderrunner.base.network.NanoHTTPD.Response(HTTP_OK, mime, fi);
+                res = new NanoHTTPD.Response(HTTP_OK, mime, fi);
             } catch (IOException e) {
                 e.printStackTrace();
                 MLog.d(TAG, e.getStackTrace().toString());
-                res = new org.protocoderrunner.base.network.NanoHTTPD.Response(HTTP_INTERNALERROR, "text/html", "ERROR: " + e.getMessage());
+                res = new NanoHTTPD.Response(HTTP_INTERNALERROR, "text/html", "ERROR: " + e.getMessage());
             }
         } else {
             String path = WebEditorManager.getInstance().getUrlEditor(mContext.get()) + uri;
             try {
                 FileInputStream fi = new FileInputStream(path);
-                res = new org.protocoderrunner.base.network.NanoHTTPD.Response(HTTP_OK, mime, fi);
+                res = new NanoHTTPD.Response(HTTP_OK, mime, fi);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
         }
 
         return res;
-
     }
 
     public void close() {

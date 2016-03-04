@@ -1,6 +1,7 @@
 package org.protocoder.server;
 
 import android.app.AlarmManager;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -9,6 +10,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.os.FileObserver;
 import android.os.IBinder;
 import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
@@ -16,10 +19,15 @@ import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.protocoder.MainActivity;
+import org.protocoder.R;
 import org.protocoder.events.Events;
+import org.protocoder.events.EventsProxy;
 import org.protocoder.helpers.ProtoAppHelper;
 import org.protocoder.settings.ProtocoderSettings;
 import org.protocoderrunner.AppRunnerActivity;
+import org.protocoderrunner.base.network.NetworkUtils;
+import org.protocoderrunner.base.utils.AndroidUtils;
 import org.protocoderrunner.base.utils.MLog;
 
 import java.io.IOException;
@@ -35,6 +43,8 @@ public class ProtocoderServerService extends Service {
     private PendingIntent mRestartPendingIntent;
     private Toast mToast;
 
+    private EventsProxy mEventsProxy;
+
     /*
      * Servers
      */
@@ -48,7 +58,8 @@ public class ProtocoderServerService extends Service {
         return Service.START_STICKY;
     }
 
-    BroadcastReceiver mReceiver = new BroadcastReceiver() {
+    /*
+    BroadcastReceiver mNotificationReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(SERVICE_CLOSE)) {
@@ -57,6 +68,7 @@ public class ProtocoderServerService extends Service {
             }
         }
     };
+    */
 
     Thread.UncaughtExceptionHandler handler = new Thread.UncaughtExceptionHandler() {
         @Override
@@ -85,7 +97,6 @@ public class ProtocoderServerService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        // TODO for communication return IBinder implementation
         return null;
     }
 
@@ -93,6 +104,28 @@ public class ProtocoderServerService extends Service {
     public void onCreate() {
         super.onCreate();
         MLog.d(TAG, "service created");
+
+        /*
+         * Init the event proxy
+         */
+        mEventsProxy = new EventsProxy();
+
+        EventBus.getDefault().register(this);
+
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                .setSmallIcon(org.protocoderrunner.R.drawable.protocoder_icon)
+                .setContentTitle("Protocoder").setContentText("Running service ")
+                .setOngoing(false)
+                .addAction(org.protocoderrunner.R.drawable.ic_action_stop, "stop", pendingIntent)
+                .setDeleteIntent(pendingIntent)
+                .setContentInfo("qq");
+
+        Notification notification = builder.build();
+
+        startForeground(232345, notification);
 
         try {
             protocoderHttpServer2 = new ProtocoderHttpServer2(this, ProtocoderSettings.HTTP_PORT);
@@ -104,39 +137,84 @@ public class ProtocoderServerService extends Service {
         //protocoderFtpServer = new ProtocoderFtpServer(this);
         //protocoderWebsockets = new ProtocoderWebsocketServer(this);
 
-        EventBus.getDefault().register(this);
+
+        registerReceiver(connectivityChangeReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        fileObserver.startWatching();
+
+        //createNotification();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         MLog.d(TAG, "service destroyed");
+        protocoderHttpServer2.stop();
 
-        unregisterReceiver(mReceiver);
+        // unregisterReceiver(mNotificationReceiver);
+
+        unregisterReceiver(connectivityChangeReceiver);
+        fileObserver.stopWatching();
+
         EventBus.getDefault().unregister(this);
     }
 
     /*
+     * Network Connectivity listener
+     */
+    BroadcastReceiver connectivityChangeReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            AndroidUtils.debugIntent("connectivityChangerReceiver", intent);
+
+            // check if there is mContext WIFI connection or we can connect via USB
+            if (NetworkUtils.getLocalIpAddress(ProtocoderServerService.this).equals("-1")) {
+                MLog.d(TAG, "No WIFI, still you can hack via USB using the adb command");
+                EventBus.getDefault().post(new Events.Connection("none", ""));
+
+            } else {
+                MLog.d(TAG, "Hack via your browser @ http://" + NetworkUtils.getLocalIpAddress(ProtocoderServerService.this) + ":" + ProtocoderSettings.HTTP_PORT);
+                String ip = NetworkUtils.getLocalIpAddress(ProtocoderServerService.this) + ":" + ProtocoderSettings.HTTP_PORT;
+                EventBus.getDefault().post(new Events.Connection("wifi", ip));
+            }
+        }
+    };
+
+    /*
+     * FileObserver to notify when projects are added or removed
+     */
+    FileObserver fileObserver = new FileObserver(ProtocoderSettings.getBaseDir(), FileObserver.CREATE| FileObserver.DELETE) {
+
+        @Override
+        public void onEvent(int event, String file) {
+            if ((FileObserver.CREATE & event) != 0) {
+                MLog.d(TAG, "File created [" + ProtocoderSettings.getBaseDir() + "/" + file + "]");
+            } else if ((FileObserver.DELETE & event) != 0) {
+                MLog.d(TAG, "File deleted [" + ProtocoderSettings.getBaseDir() + "/" + file + "]");
+            }
+        }
+    };
+
+    /*
      * Notification that show if the server is ON
      */
-    private void createNotification(String scriptFolder, String scriptName) {
+    private void createNotification() {
         //create pending intent that will be triggered if the notification is clicked
         IntentFilter filter = new IntentFilter();
         filter.addAction(SERVICE_CLOSE);
-        registerReceiver(mReceiver, filter);
+        // registerReceiver(mNotificationReceiver, filter);
 
         Intent stopIntent = new Intent(SERVICE_CLOSE);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, stopIntent, 0);
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(org.protocoderrunner.R.drawable.protocoder_icon)
-                .setContentTitle(scriptName).setContentText("Running service: " + scriptFolder + " > " + scriptName)
+                .setContentTitle("Protocoder").setContentText("Running service ")
                 .setOngoing(false)
                 .addAction(org.protocoderrunner.R.drawable.ic_action_stop, "stop", pendingIntent)
                 .setDeleteIntent(pendingIntent);
 
         // Creates an explicit intent for an Activity in your app
-        Intent resultIntent = new Intent(this, AppRunnerActivity.class);
+        Intent resultIntent = new Intent(this, MainActivity.class);
 
         // The stack builder object will contain an artificial back stack for
         // navigating backward from the Activity leads out your application to the Home screen.
@@ -162,12 +240,12 @@ public class ProtocoderServerService extends Service {
     */
 
     @Subscribe
-    public void onEventMainThread(Events.ProjectEvent evt) {
-        MLog.d(TAG, "event -> " + evt.getAction());
+    public void onEventMainThread(Events.ProjectEvent e) {
+        MLog.d(TAG, "event -> " + e.getAction());
 
-        String action = evt.getAction();
+        String action = e.getAction();
         if (action.equals(Events.PROJECT_RUN)) {
-            ProtoAppHelper.launchScript(getApplicationContext(), evt.getProject());
+            ProtoAppHelper.launchScript(getApplicationContext(), e.getProject());
         } else if (action.equals(Events.PROJECT_SAVE)) {
             //Project p = evt.getProject();
             //mProtocoder.protoScripts.refresh(p.getPath(), p.getName());
@@ -177,13 +255,13 @@ public class ProtocoderServerService extends Service {
         } else if (action.equals(Events.PROJECT_UPDATE)) {
             //mProtocoder.protoScripts.listRefresh();
         } else if (action.equals(Events.PROJECT_EDIT)) {
-            ProtoAppHelper.launchEditor(getApplicationContext(), evt.getProject());
+            ProtoAppHelper.launchEditor(getApplicationContext(), e.getProject());
         }
     }
 
     //stop service
     @Subscribe
-    public void onEventMainThread(Events.SelectedProjectEvent evt) {
+    public void onEventMainThread(Events.SelectedProjectEvent e) {
        // stopSelf();
     }
 

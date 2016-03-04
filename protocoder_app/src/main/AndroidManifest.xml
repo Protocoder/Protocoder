@@ -76,7 +76,10 @@
             android:label="License" >
         </activity>
 
-        <service android:name=".server.ProtocoderServerService"></service>
+        <service
+            android:name=".server.ProtocoderServerService"
+            android:exported="false">
+        </service>
     </application>
 
 

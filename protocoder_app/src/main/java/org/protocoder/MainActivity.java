@@ -33,6 +33,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -42,25 +43,22 @@ import org.greenrobot.eventbus.Subscribe;
 import org.protocoder.appinterpreter.AppRunnerCustom;
 import org.protocoder.appinterpreter.ProtocoderApp;
 import org.protocoder.events.Events;
-import org.protocoder.events.EventsProxy;
 import org.protocoder.gui.IntroductionFragment;
 import org.protocoder.gui.folderchooser.FolderChooserDialog;
 import org.protocoder.gui.folderchooser.FolderChooserFragment;
 import org.protocoder.gui.projectlist.ProjectListFragment;
 import org.protocoder.helpers.ProtoAppHelper;
 import org.protocoder.helpers.ProtoScriptHelper;
-import org.protocoder.server.ProtocoderHttpServer2;
 import org.protocoder.server.ProtocoderServerService;
-import org.protocoder.server.model.ProtoFileCode;
-import org.protocoder.server.model.NetworkExchangeObject;
+import org.protocoder.server.networkexchangeobjects.NEOProject;
 import org.protocoder.server.model.ProtoFile;
+import org.protocoder.server.model.ProtoFileCode;
 import org.protocoder.settings.ProtocoderSettings;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.base.utils.AndroidUtils;
 import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.models.Project;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainActivity extends BaseActivity {
@@ -69,24 +67,19 @@ public class MainActivity extends BaseActivity {
 
     // custom app runner
     protected AppRunnerCustom appRunner;
-    EventsProxy eventsReceiver;
 
     // ui
     private Toolbar mToolbar;
     private ProjectListFragment mListFragmentBase;
     private FolderChooserFragment mFolderChooserFragment;
-    private Button btnFolderChooser;
+    private TextView mTxtIp;
 
-    private ProtocoderHttpServer2 protocoderHttpServer2;
+    private Button btnFolderChooser;
+    private Intent mServerIntent;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        /*
-         * Init the event proxy
-         */
-        eventsReceiver = new EventsProxy();
 
         /*
          * Setup the ui
@@ -126,8 +119,8 @@ public class MainActivity extends BaseActivity {
 
         // gson serialization
         if (false) {
-            NetworkExchangeObject networkExchangeObject = new NetworkExchangeObject();
-            networkExchangeObject.action = "run";
+            NEOProject networkExchangeObject = new NEOProject();
+            networkExchangeObject.cmd = "run";
             networkExchangeObject.project = new Project("name", "folder");
 
             ProtoFileCode codefile = new ProtoFileCode("name", "path", "code");
@@ -138,13 +131,13 @@ public class MainActivity extends BaseActivity {
             MLog.d(TAG, json);
 
             // gson deserialization
-            NetworkExchangeObject n1 = gson.fromJson(json, NetworkExchangeObject.class);
+            NEOProject n1 = gson.fromJson(json, NEOProject.class);
             MLog.d(TAG, n1.project.getName() + " " + n1.project.getPath());
         }
 
-        // list examples folders
+        // list examples & projects subfolders
         if (false) {
-            ArrayList<ProtoFile> files = ProtoScriptHelper.listFilesInFolder("./examples", 0);
+            ArrayList<ProtoFile> files = ProtoScriptHelper.listFilesInFolder("./", 0);
             String jsonFiles = gson.toJson(files);
             MLog.d(TAG, "list examples folders -> " + jsonFiles);
         }
@@ -183,14 +176,14 @@ public class MainActivity extends BaseActivity {
             ProtoAppHelper.launchEditor(this, new Project("examples/Media", "Sound"));
         }
 
-        // stop project 1h
+        // start servers
         if (true) {
             startServers();
         }
 
-        // start servers 1h
-        if (true) {
-
+        // stop servers 1h
+        if (false) {
+            stopServers();
         }
 
         // stop servers 1h
@@ -210,26 +203,21 @@ public class MainActivity extends BaseActivity {
         super.onResume();
         EventBus.getDefault().register(this);
         startBroadCastReceiver();
-
-        try {
-            protocoderHttpServer2 = new ProtocoderHttpServer2(this, ProtocoderSettings.HTTP_PORT);
-        } catch (IOException e) {
-            MLog.e(TAG, "http server not initialized");
-            e.printStackTrace();
-        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         EventBus.getDefault().unregister(this);
-        protocoderHttpServer2.close();
+
         unregisterReceiver(adbBroadcastReceiver);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        stopServers();
     }
 
     /*
@@ -260,9 +248,13 @@ public class MainActivity extends BaseActivity {
      */
     private void startServers() {
         MLog.d(TAG, "starting servers");
-        Intent serverIntent = new Intent(this, ProtocoderServerService.class);
+        mServerIntent = new Intent(this, ProtocoderServerService.class);
         //serverIntent.putExtra(Project.FOLDER, folder);
-        startService(serverIntent);
+        startService(mServerIntent);
+    }
+
+    private void stopServers() {
+        stopService(mServerIntent);
     }
 
     // A method to find height of the status bar
@@ -302,6 +294,8 @@ public class MainActivity extends BaseActivity {
                 getSupportFragmentManager().beginTransaction().add(myDialog, "12345").commit();
             }
         });
+
+        mTxtIp = (TextView) findViewById(R.id.ip);
 
     }
 
@@ -399,6 +393,17 @@ public class MainActivity extends BaseActivity {
     public void onEventMainThread(Events.ProjectEvent e) {
         MLog.d(TAG, e.getClass().getSimpleName() + " -> " + e.getAction());
         ProtoAppHelper.launchScript(this, e.getProject());
+    }
+
+    // network notification
+    @Subscribe
+    public void onEventMainThread(Events.Connection e) {
+        String type = e.getType();
+        String address = e.getAddress();
+        mTxtIp.setText(type + " " + address);
+
+        MLog.d(TAG, " got event "); // No WIFI, still you can hack via USB using the adb command");
+        //MLog.d(TAG, "Hack via your browser @ http://" + NetworkUtils.getLocalIpAddress(ProtocoderServerService.this) + ":" + ProtocoderSettings.HTTP_PORT);
     }
 
 }
