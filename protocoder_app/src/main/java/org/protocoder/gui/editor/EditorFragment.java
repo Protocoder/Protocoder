@@ -21,6 +21,7 @@
 package org.protocoder.gui.editor;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GestureDetectorCompat;
@@ -35,8 +36,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.HorizontalScrollView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import org.apache.commons.lang3.StringUtils;
@@ -55,11 +59,13 @@ import org.protocoderrunner.models.Project;
 public class EditorFragment extends BaseFragment {
 
     public interface EditorFragmentListener {
+
         void onLoad();
         void onLineTouched();
     }
-
     protected static final String TAG = EditorFragment.class.getSimpleName();
+
+    private Context mContext;
 
     // TODO change this dirty hack
     private static final int MENU_RUN = 8;
@@ -69,21 +75,30 @@ public class EditorFragment extends BaseFragment {
     private static final int MENU_API = 12;
 
     private float currentSize;
-    EditText edit;
+    private EditText mEdit;
+    private HorizontalScrollView mExtraKeyBar;
     private View v;
     private Project currentProject;
     private EditorFragmentListener listener;
+
+    private FileManagerFragment fileFragment;
+    private FragmentTransaction ft;
+    private BaseWebviewFragment webviewFragment;
 
     private Menu menu;
     private boolean bFiles = true;
     private boolean bAPI = true;
 
-    private FileManagerFragment fileFragment;
-    private FragmentTransaction ft;
-
-    private BaseWebviewFragment webviewFragment;
+    private Project mProject;
+    private String mScript;
 
     public EditorFragment() {
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
     }
 
     @Override
@@ -95,18 +110,18 @@ public class EditorFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         v = inflater.inflate(R.layout.fragment_editor, container, false);
-        edit = (EditText) v.findViewById(R.id.editText1);
+        mEdit = (EditText) v.findViewById(R.id.editText1);
 
-        TextUtils.changeFont(getActivity(), edit, Fonts.CODE);
+        TextUtils.changeFont(getActivity(), mEdit, Fonts.CODE);
 
-        currentSize = edit.getTextSize();
+        currentSize = mEdit.getTextSize();
         Button btnIncreaseSize = (Button) v.findViewById(R.id.increaseSize);
         btnIncreaseSize.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 currentSize += 1;
-                edit.setTextSize(currentSize);
+                mEdit.setTextSize(currentSize);
             }
         });
 
@@ -116,29 +131,36 @@ public class EditorFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 currentSize -= 1;
-                edit.setTextSize(currentSize);
+                mEdit.setTextSize(currentSize);
             }
         });
 
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            String projectName = bundle.getString(Project.NAME);
-            String projectFolder = bundle.getString(Project.FOLDER);
-            MLog.d("mm", projectName);
-            if (projectName != "") {
-                loadProject(new Project(projectFolder, projectName));
-            }
-        }
+        mExtraKeyBar = (HorizontalScrollView) v.findViewById(R.id.extraKeyBar);
 
-        edit.setOnClickListener(new View.OnClickListener() {
+        mEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MLog.d(TAG, "" + getCurrentCursorLine(edit.getEditableText()));
+                MLog.d(TAG, "" + getCurrentCursorLine(mEdit.getEditableText()));
                 if (listener != null) {
                     listener.onLineTouched();
                 }
             }
 
+        });
+
+        final RelativeLayout rootView = (RelativeLayout) v.findViewById(R.id.rootEditor);
+        rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                int heightDiff = rootView.getRootView().getHeight() - rootView.getHeight();
+                MLog.d(TAG, "" + heightDiff);
+
+                if (heightDiff > 300) {
+                    mExtraKeyBar.setVisibility(View.VISIBLE);
+                } else {
+                    mExtraKeyBar.setVisibility(View.GONE);
+                }
+            }
         });
 
         // Set actionbar override
@@ -181,11 +203,22 @@ public class EditorFragment extends BaseFragment {
             }
         });
 
+        /* get the code file */
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            loadProject(new Project(bundle.getString(Project.FOLDER, ""), bundle.getString(Project.NAME, "")));
+        }
+
         return v;
     }
 
     public static EditorFragment newInstance() {
+        return newInstance(null);
+    }
+
+    public static EditorFragment newInstance(Bundle bundle) {
         EditorFragment myFragment = new EditorFragment();
+        myFragment.setArguments(bundle);
 
         return myFragment;
     }
@@ -276,18 +309,18 @@ public class EditorFragment extends BaseFragment {
     public void loadProject(Project project) {
         currentProject = project;
         if (project != null) {
-            edit.setText(ProtoScriptHelper.getCode(project));
+            mEdit.setText(ProtoScriptHelper.getCode(project));
         } else {
-            edit.setText("Project loading failed");
+            mEdit.setText("Project loading failed");
         }
     }
 
     public void setText(String text) {
-        edit.setText(text);
+        mEdit.setText(text);
     }
 
     public void run() {
-        EventBus.getDefault().post(new Events.ProjectEvent(currentProject, "run"));
+        EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_RUN, currentProject));
     }
 
     public void save() {
@@ -315,7 +348,7 @@ public class EditorFragment extends BaseFragment {
     }
 
     public String getCode() {
-        return edit.getText().toString();
+        return mEdit.getText().toString();
     }
 
     public void showAPI(boolean b) {
@@ -332,10 +365,10 @@ public class EditorFragment extends BaseFragment {
             webviewFragment.setArguments(bundle);
             ft.add(R.id.fragmentWebview, webviewFragment).addToBackStack(null);
 
-            edit.animate().translationX(-50).setDuration(500);
+            mEdit.animate().translationX(-50).setDuration(500);
             // fileFragment.getView().animate().translationX(-200).setDuration(500).start();
         } else {
-            edit.animate().translationX(0).setDuration(500);
+            mEdit.animate().translationX(0).setDuration(500);
             // fileFragment.getView().animate().translationX(0).setDuration(500).start();
             ft.remove(webviewFragment);
             // ft.hide(fileFragment);
@@ -358,10 +391,10 @@ public class EditorFragment extends BaseFragment {
             fileFragment.setArguments(bundle);
             ft.add(R.id.fragmentFileManager, fileFragment).addToBackStack("q");
 
-            edit.animate().translationX(-50).setDuration(500);
+            mEdit.animate().translationX(-50).setDuration(500);
             // fileFragment.getView().animate().translationX(-200).setDuration(500).start();
         } else {
-            edit.animate().translationX(0).setDuration(500);
+            mEdit.animate().translationX(0).setDuration(500);
             // fileFragment.getView().animate().translationX(0).setDuration(500).start();
             // ft.remove(fileFragment);
             // ft.hide(fileFragment);

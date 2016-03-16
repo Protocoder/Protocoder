@@ -1,105 +1,173 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/contentHolder"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:focusableInTouchMode="true"
-        android:gravity="bottom"
-        android:background="@drawable/protocoder_background"
-    >
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start">
 
-    <LinearLayout
-        android:id="@+id/header"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_gravity="left|top"
-        android:gravity="center">
+    <!-- main -->
+    <RelativeLayout
+            android:id="@+id/contentHolder"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:focusableInTouchMode="true"
+            android:gravity="bottom"
+            android:background="@drawable/protocoder_background"
+        >
 
-        <include layout="@layout/toolbar"
-             android:layout_alignParentRight="true"
-             android:layout_alignParentTop="true"
-             android:layout_height="wrap_content"
-             android:layout_width="match_parent"
-            ></include>
-
-        <Button
-            android:id="@+id/selectFolderButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="CurrentFolder"
-            android:layout_gravity="center_horizontal"
-            />
-    </LinearLayout>
-
-    <FrameLayout
-        android:id="@+id/fragmentScriptList"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/header"
-        />
-
-    <LinearLayout
-        android:id="@+id/ip_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:orientation="vertical" >
-
-        <FrameLayout
+        <LinearLayout
+            android:id="@+id/header"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/ip_bg_solid" >
+            android:layout_alignParentTop="true"
+            android:layout_gravity="left|top"
+            android:gravity="center">
 
-            <!-- 48dp margin bottom -->
-            <TextView
-                android:id="@+id/ip"
-                style="@android:style/TextAppearance.Medium"
+            <include layout="@layout/toolbar"
+                 android:layout_alignParentRight="true"
+                 android:layout_alignParentTop="true"
+                 android:layout_height="wrap_content"
+                 android:layout_width="match_parent"
+                />
+
+            <Button
+                android:id="@+id/selectFolderButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CurrentFolder"
+                android:layout_gravity="center_horizontal"
+                />
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/fragmentScriptList"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/header"
+            />
+
+        <LinearLayout
+            android:id="@+id/ip_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:orientation="vertical"
+            android:background="@drawable/ip_bg_solid">
+
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:padding="15dp"
-                android:textColor="#ffffff"
-                android:textSize="14sp"
-                android:textStyle="italic"
-                android:layout_marginBottom="0dp"
-                android:visibility="visible" />
+                android:animateLayoutChanges="true">
+
+                <!-- 48dp margin bottom -->
+
+                <Button
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="C"
+                    android:id="@+id/button11"
+                    android:layout_gravity="left|top" />
+
+                <TextView
+                    android:id="@+id/ip"
+                    style="@android:style/TextAppearance.Medium"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="15dp"
+                    android:textColor="#ffffff"
+                    android:textSize="14sp"
+                    android:textStyle="italic"
+                    android:visibility="visible"
+                    android:layout_gravity="center"
+                    android:layout_alignParentTop="true"
+                    android:layout_toRightOf="@+id/button11"
+                    android:layout_toLeftOf="@+id/button12"
+                    android:layout_toStartOf="@+id/button12"
+                    android:layout_width="wrap_content"
+                    />
+
+                <Button
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="/?"
+                    android:id="@+id/button12"
+                    android:layout_gravity="right|center_vertical"
+                    android:layout_alignBottom="@+id/ip"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="llala"
+                    android:id="@+id/button13"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:visibility="gone"
+                    android:layout_below="@id/button12"/>
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/fragmentFolderChooser"
+            android:background="@color/transparent"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/header"
+            android:visibility="gone" />
+
+        <FrameLayout
+            android:id="@+id/fragmentEditor"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:visibility="gone"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/toolbar"/>
+
+        <FrameLayout
+            android:id="@+id/fragmentIntroduction"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_alignParentRight="true"
+            android:visibility="gone"
+            android:layout_below="@+id/toolbar"/>
+
+        <FrameLayout
+            android:id="@+id/fragmentLogOverlay"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:visibility="gone"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true" >
         </FrameLayout>
-    </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/fragmentFolderChooser"
-        android:background="@color/transparent"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/header"
-        android:visibility="gone" />
+    </RelativeLayout>
 
-    <FrameLayout
-        android:id="@+id/fragmentEditor"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/toolbar"/>
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true">
 
-    <FrameLayout
-        android:id="@+id/fragmentIntroduction"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/toolbar"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="hola"/>
+    </android.support.design.widget.NavigationView>
 
-    <FrameLayout
-        android:id="@+id/fragmentLogOverlay"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true" >
-    </FrameLayout>
 
-</RelativeLayout>
+</android.support.v4.widget.DrawerLayout>

@@ -26,6 +26,10 @@
     <string name="start_the_server">Connect to a WIFI and start the server to edit via web-IDE</string>
     <string name="new_project_name_hint">Project name</string>
 
+    <!-- app drawer -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
     <!-- Menu items -->
     <string name="menu_label_new">New</string>
     <string name="menu_label_about">About</string>

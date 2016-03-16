@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/nn"
+    android:id="@+id/rootEditor"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@color/blacktransparent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:animateLayoutChanges="true">
 
     <ScrollView
         android:id="@+id/scrollView1"
@@ -54,12 +55,13 @@
         android:text="+" />
 
     <HorizontalScrollView
+        android:id="@+id/extraKeyBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/horizontalScrollView"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:visibility="gone">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -109,7 +111,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true" >
+        android:layout_alignParentTop="true"
+        android:visibility="gone">
 
     </FrameLayout>
 
@@ -118,7 +121,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true" >
+        android:layout_alignParentTop="true"
+        android:visibility="gone">
 
     </FrameLayout>
 
