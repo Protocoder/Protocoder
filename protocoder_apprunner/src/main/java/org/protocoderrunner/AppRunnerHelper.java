@@ -40,7 +40,7 @@ public class AppRunnerHelper {
     private Project currentProject;
 
     public static String getProjectPath(Project p) {
-        return AppRunnerSettings.getFolderPath(p.getFullPath());
+        return AppRunnerSettings.getFolderPath(p.getSandboxPath());
     }
 
     // Get code from sdcard

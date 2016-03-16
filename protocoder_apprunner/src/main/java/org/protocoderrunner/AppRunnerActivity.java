@@ -49,6 +49,8 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.protocoderrunner.api.PDevice;
 import org.protocoderrunner.api.PMedia;
 import org.protocoderrunner.api.PUI;
@@ -59,6 +61,7 @@ import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.base.utils.AndroidUtils;
 import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.base.utils.StrUtils;
+import org.protocoderrunner.events.Events;
 import org.protocoderrunner.models.Project;
 
 import java.util.ArrayList;
@@ -200,7 +203,7 @@ public class AppRunnerActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
 
-        // EventBus.getDefault().register(this);
+        EventBus.getDefault().register(this);
 
         if (nfcSupported) {
             mAdapter.enableForegroundDispatch(this, mPendingIntent, null, null);
@@ -228,18 +231,20 @@ public class AppRunnerActivity extends BaseActivity {
 
 
         this.registerReceiver(mIntentReceiver, intentFilter);
+        startStopActivityBroadcastReceiver();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 
-        // EventBus.getDefault().unregister(this);
+        EventBus.getDefault().unregister(this);
 
         if (nfcSupported) {
             mAdapter.disableForegroundDispatch(this);
         }
         this.unregisterReceiver(this.mIntentReceiver);
+        unregisterReceiver(stopActivitiyBroadcastReceiver);
     }
 
     @Override
@@ -633,5 +638,35 @@ public class AppRunnerActivity extends BaseActivity {
         return r;
 
     }
+
+    /**
+     * Activity dependent events
+     */
+
+    // folder choose
+    @Subscribe
+    public void onEventMainThread(Events.ProjectEvent e) {
+        MLog.d(TAG, "");
+
+    }
+
+    /**
+     * Receiving order to close the activity
+     */
+    public void startStopActivityBroadcastReceiver() {
+
+        IntentFilter filterSend = new IntentFilter();
+        filterSend.addAction("org.protocoderrunner.intent.CLOSE");
+        registerReceiver(stopActivitiyBroadcastReceiver, filterSend);
+
+    }
+
+    BroadcastReceiver stopActivitiyBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            MLog.d(TAG, "stop_all 2");
+            finish();
+        }
+    };
 
 }

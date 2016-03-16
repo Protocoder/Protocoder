@@ -46,14 +46,12 @@ public class AppRunner {
 
     private static AppRunner instance;
     private final Context mContext;
-    public Project project;
     public boolean hasUserInterface = false;
     public WhatIsRunning whatIsRunning;
-
     //public boolean hasCustomJSInterpreter = true;
 
     //Project properties
-    public Project mCurrentProject;
+    private Project mProject;
 
     private String mScript;
     public String mIntentPrefixScript = "";
@@ -145,8 +143,8 @@ public class AppRunner {
     }
 
     public AppRunner loadProject(String folder, String name) {
-        project = new Project(folder, name);
-        mScript = AppRunnerHelper.getCode(mContext, project);
+        mProject = new Project(folder, name);
+        mScript = AppRunnerHelper.getCode(mContext, mProject);
 
         return this;
     }
@@ -158,7 +156,7 @@ public class AppRunner {
 
         // run the script
         if (null != mScript) {
-            evaluate(mScript, project.getName());
+            evaluate(mScript, mProject.getName());
         }
         //can accept intent code if no project is loaded
         if (!mIsProjectLoaded) {
@@ -178,7 +176,6 @@ public class AppRunner {
         interp.eval(script, projectName);
     }
 
-
     public Context getAppContext() {
         return mContext.getApplicationContext();
     }
@@ -193,6 +190,10 @@ public class AppRunner {
 
     public void byebye() {
         interp = null;
+    }
+
+    public Project getProject() {
+        return mProject;
     }
 
 }

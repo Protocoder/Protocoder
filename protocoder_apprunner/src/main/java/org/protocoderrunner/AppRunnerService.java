@@ -108,7 +108,7 @@ public class AppRunnerService extends Service {
         mNotifManager = (NotificationManager) AppRunnerService.this.getSystemService(Context.NOTIFICATION_SERVICE);
 
         int notificationId = (int) Math.ceil(100000 * Math.random());
-        createNotification(notificationId, mAppRunner.project.getPath(), mAppRunner.project.getName());
+        createNotification(notificationId, mAppRunner.getProject().getPath(), mAppRunner.getProject().getName());
 
 
         //just in case it crash

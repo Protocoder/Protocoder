@@ -54,6 +54,7 @@ public class AppRunnerFragment extends Fragment {
 
     private AppRunner mAppRunner;
     private AppRunnerActivity mActivity;
+    private Context mContext;
     private FileObserver fileObserver;
 
     // listeners in the main activity that will pass the info to the API classes
@@ -71,12 +72,14 @@ public class AppRunnerFragment extends Fragment {
 
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        this.mContext = context;
 
         mActivity = (AppRunnerActivity) getActivity();
 
-        mAppRunner = new AppRunner(activity);
+        mAppRunner = new AppRunner(mContext);
         mAppRunner.initDefaultObjects(this);
 
         //get parameters and set them in the AppRunner
@@ -104,10 +107,10 @@ public class AppRunnerFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         String toolbarName = "";
-        if (mAppRunner.project.getPath().equals("examples")) {
-            toolbarName = "example > " + mAppRunner.project.getName();
+        if (mAppRunner.getProject().getPath().equals("examples")) {
+            toolbarName = "example > " + mAppRunner.getProject().getName();
         } else {
-            toolbarName = mAppRunner.project.getName();
+            toolbarName = mAppRunner.getProject().getName();
         }
         mActivity.setToolBar(toolbarName, null, null);
 
@@ -139,7 +142,7 @@ public class AppRunnerFragment extends Fragment {
         mAppRunner.interp.callJsFunction("onCreate", savedInstanceState);
 
         //audio
-        AudioManager audio = (AudioManager) mActivity.getSystemService(Context.AUDIO_SERVICE);
+        AudioManager audio = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         int currentVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
         mActivity.setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
@@ -251,21 +254,21 @@ public class AppRunnerFragment extends Fragment {
         LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 
         // add main layout
-        mainLayout = new RelativeLayout(mActivity);
+        mainLayout = new RelativeLayout(mContext);
         mainLayout.setLayoutParams(layoutParams);
         mainLayout.setGravity(Gravity.BOTTOM);
         // mainLayout.setBackgroundColor(getResources().getColor(R.color.transparent));
         mainLayout.setBackgroundColor(getResources().getColor(R.color.white));
 
         // set the parent
-        parentScriptedLayout = new RelativeLayout(mActivity);
+        parentScriptedLayout = new RelativeLayout(mContext);
         parentScriptedLayout.setLayoutParams(layoutParams);
         parentScriptedLayout.setGravity(Gravity.BOTTOM);
         parentScriptedLayout.setBackgroundColor(getResources().getColor(R.color.transparent));
         mainLayout.addView(parentScriptedLayout);
 
         // editor layout
-        editorLayout = new FrameLayout(mActivity);
+        editorLayout = new FrameLayout(mContext);
         FrameLayout.LayoutParams editorParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT,
                 LayoutParams.MATCH_PARENT);
         editorLayout.setLayoutParams(editorParams);
@@ -273,7 +276,7 @@ public class AppRunnerFragment extends Fragment {
         mainLayout.addView(editorLayout);
 
         // console layout
-        consoleRLayout = new RelativeLayout(mActivity);
+        consoleRLayout = new RelativeLayout(mContext);
         RelativeLayout.LayoutParams consoleLayoutParams = new RelativeLayout.LayoutParams(
                 LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.apprunner_console));
         consoleLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
@@ -285,7 +288,7 @@ public class AppRunnerFragment extends Fragment {
         mainLayout.addView(consoleRLayout);
 
         // Create the text view to add to the console layout
-        consoleText = new TextView(mActivity);
+        consoleText = new TextView(mContext);
         LayoutParams consoleTextParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         consoleText.setBackgroundColor(getResources().getColor(R.color.transparent));
         consoleText.setTextColor(getResources().getColor(R.color.white));
@@ -295,7 +298,7 @@ public class AppRunnerFragment extends Fragment {
         consoleRLayout.addView(consoleText);
 
         //add a close button
-        Button closeBtn = new Button(mActivity);
+        Button closeBtn = new Button(mContext);
         closeBtn.setText("x");
         closeBtn.setPadding(5, 5, 5, 5);
         closeBtn.setOnClickListener(new View.OnClickListener() {
@@ -311,7 +314,7 @@ public class AppRunnerFragment extends Fragment {
         consoleRLayout.addView(closeBtn);
 
 
-        liveCoding = new PLiveCodingFeedback(mActivity);
+        liveCoding = new PLiveCodingFeedback(mContext);
         mainLayout.addView(liveCoding.add());
 
         return mainLayout;
@@ -415,11 +418,11 @@ public class AppRunnerFragment extends Fragment {
             MLog.d(TAG, "fileObserver -> ");
 
             MLog.d(TAG, "qq1: " + mAppRunner);
-            MLog.d(TAG, "qq2: " + mAppRunner.project);
-            MLog.d(TAG, "qq3: " + mAppRunner.project.getFullPath());
+            MLog.d(TAG, "qq2: " + mAppRunner.getProject());
+            MLog.d(TAG, "qq3: " + mAppRunner.getProject().getSandboxPath());
 
             // set up a file observer to watch this directory on sd card
-            fileObserver = new FileObserver(mAppRunner.project.getFullPath(), FileObserver.CREATE | FileObserver.DELETE) {
+            fileObserver = new FileObserver(mAppRunner.getProject().getFullPath(), FileObserver.CREATE | FileObserver.DELETE) {
 
                 @Override
                 public void onEvent(int event, String file) {
