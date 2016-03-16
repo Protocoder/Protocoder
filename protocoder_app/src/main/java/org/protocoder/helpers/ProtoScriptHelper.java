@@ -20,6 +20,7 @@
 
 package org.protocoder.helpers;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.os.Environment;
 
@@ -31,11 +32,13 @@ import org.protocoderrunner.models.Folder;
 import org.protocoderrunner.models.Project;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class ProtoScriptHelper {
 
@@ -73,7 +76,7 @@ public class ProtoScriptHelper {
     }
 
     // Create Project
-    public static Project createNewProject(Context c, String newProjectName, String folder, String fileName) {
+    public static Project createNewProject(Context c, String folder, String newProjectName) {
         String newTemplateCode = FileIO.readAssetFile(c, "templates/new.js");
 
         if (newTemplateCode == null) {
@@ -99,7 +102,9 @@ public class ProtoScriptHelper {
     }
 
     // Write a file with code
-    public static void writeCode(String code, String filename) {
+    public static void saveCode(String relativePath, String code) {
+
+        String filename = getAbsolutePathFromRelative(relativePath);
 
         File f = new File(filename);
 
@@ -121,12 +126,19 @@ public class ProtoScriptHelper {
         }
     }
 
+
     // Get code from sdcard
     public static String getCode(Project p) {
-        String path = p.getFullPath() + File.separator + ProtocoderSettings.MAIN_FILENAME;
+        return getCode(p, ProtocoderSettings.MAIN_FILENAME);
+    }
+
+    public static String getCode(Project p, String name) {
+        String path = p.getFullPath() + File.separator + name;
 
         return FileIO.loadCodeFromFile(path);
     }
+
+
 
     // List folders
     public static ArrayList<Folder> listFolders(String folder, boolean orderByName) {
@@ -155,16 +167,27 @@ public class ProtoScriptHelper {
 
     // List folders in a tree structure
     public static ArrayList<ProtoFile> listFilesInFolder(String folder, int levels) {
+        return listFilesInFolder(folder, levels, "*");
+    }
+
+    public static ArrayList<ProtoFile> listFilesInFolder(String folder, int levels, String extensionFilter) {
         ArrayList<ProtoFile> foldersArray = new ArrayList<ProtoFile>();
         File dir = new File(ProtocoderSettings.getFolderPath(folder));
 
-        fileWalker(foldersArray, dir, levels);
+        fileWalker(foldersArray, dir, levels, extensionFilter);
 
         return foldersArray;
     }
 
-    private static void fileWalker(ArrayList<ProtoFile> tree, File dir, int levels) {
-        File[] all_projects = dir.listFiles();
+    private static void fileWalker(ArrayList<ProtoFile> tree, File dir, int levels, final String extensionFilter) {
+        File[] all_projects = dir.listFiles(new FileFilter() {
+            @Override
+            public boolean accept(File pathname) {
+                if (extensionFilter == "*") return true;
+
+                return pathname.getName().endsWith(extensionFilter);
+            }
+        });
 
         for (File f : all_projects) {
 
@@ -175,17 +198,27 @@ public class ProtoScriptHelper {
                 protoFile.files = new ArrayList<ProtoFile>();
             } else {
                 protoFile.type = "file";
-                protoFile.fileSizeKb = f.length() / 1024;
+                protoFile.fileSize = f.length();
             }
             protoFile.name = f.getName();
-            protoFile.path = f.getAbsolutePath();
+            protoFile.path = ProtoScriptHelper.getRelativePathFromAbsolute(f.getAbsolutePath());
 
-            if (f.isDirectory() && levels > 0) fileWalker(protoFile.files, f, levels - 1);
+            if (f.isDirectory() && levels > 0) fileWalker(protoFile.files, f, levels - 1, extensionFilter);
 
             tree.add(protoFile);
         }
     }
 
+    public static String getRelativePathFromAbsolute(String path) {
+        // get relative uri
+        String[] splitted = path.split(ProtocoderSettings.getBaseDir());
+        return splitted[1];
+    }
+
+    public static String getAbsolutePathFromRelative(String relativePath) {
+        String absolutePath = ProtocoderSettings.getBaseDir() + relativePath;
+        return absolutePath;
+    }
 
     // List projects
     public static ArrayList<Project> listProjects(String folder, boolean orderByName) {
@@ -227,7 +260,7 @@ public class ProtoScriptHelper {
 
         //compress
         try {
-            FileIO.zipFolder(p.getFullPath(), f.getAbsolutePath());
+            FileIO.zipFolder(p.getSandboxPath(), f.getAbsolutePath());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -260,9 +293,8 @@ public class ProtoScriptHelper {
     // }
 
 
-
     public static ArrayList<ProtoFile> listFilesInProject(Project p) {
-        File f = new File(p.getFullPath());
+        File f = new File(p.getSandboxPath());
         File file[] = f.listFiles();
 
         ArrayList<ProtoFile> protoFiles = new ArrayList<>();
@@ -270,7 +302,7 @@ public class ProtoScriptHelper {
         for (File element : file) {
             ProtoFile protoFile = new ProtoFile();
             protoFile.name = element.getName();
-            protoFile.fileSizeKb = element.length() / 1024;
+            protoFile.fileSize = element.length();
             protoFile.path = element.getPath();
             protoFile.type = "file";
 
@@ -280,5 +312,15 @@ public class ProtoScriptHelper {
         return protoFiles;
     }
 
+
+    public void listProcesses(Context context) {
+        ActivityManager actvityManager = (ActivityManager)
+                context.getSystemService( context.ACTIVITY_SERVICE );
+        List<ActivityManager.RunningAppProcessInfo> procInfos = actvityManager.getRunningAppProcesses();
+
+        for(ActivityManager.RunningAppProcessInfo runningProInfo:procInfos) {
+            MLog.d("Running Processes", "()()"+runningProInfo.processName);
+        }
+    }
 
 }

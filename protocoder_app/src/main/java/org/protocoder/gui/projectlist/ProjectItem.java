@@ -96,7 +96,7 @@ public class ProjectItem extends LinearLayout {
                     @Override
                     public void run() {
 
-                        Events.ProjectEvent evt = new Events.ProjectEvent(mProject, "run");
+                        Events.ProjectEvent evt = new Events.ProjectEvent(Events.PROJECT_RUN, mProject);
                         EventBus.getDefault().post(evt);
                         // getActivity().overridePendingTransition(R.anim.splash_slide_in_anim_set,
                         //        R.anim.splash_slide_out_anim_set);
@@ -198,13 +198,10 @@ public class ProjectItem extends LinearLayout {
                 int itemId = menuItem.getItemId();
 
                 if (itemId == R.id.menu_project_list_run) {
-                    EventBus.getDefault().post(new Events.ProjectEvent(mProject, "run"));
+                    EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_RUN, mProject));
                     return true;
                 } else if (itemId == R.id.menu_project_list_edit) {
-                    //TODO make it work again
-                    EventBus.getDefault().post(new Events.ProjectEvent(mProject, "edit"));
-
-                    //Protocoder.getInstance(c).app.editor.show(true, mProject.getPath(), mProject.getName());
+                    EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_EDIT, mProject));
                     return true;
                 } else if (itemId == R.id.menu_project_list_delete) {
                     //TODO make it work again
@@ -215,7 +212,7 @@ public class ProjectItem extends LinearLayout {
                         public void onClick(DialogInterface dialog, int which) {
                             switch (which) {
                                 case DialogInterface.BUTTON_POSITIVE:
-                                    EventBus.getDefault().post(new Events.ProjectEvent(mProject, "delete"));
+                                    EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_DELETE, mProject));
                                     //mPlf.removeItem(mProject);
 
                                     break;

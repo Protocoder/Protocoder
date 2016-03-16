@@ -56,9 +56,11 @@ public class ProtoAppHelper {
         context.startActivity(intent);
     }
 
-    public static void launchEditor(Context context, Project project) {
+    public static void launchEditor(Context context, Project p) {
         Intent intent = new Intent(context, EditorActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(Project.FOLDER, p.getPath());
+        intent.putExtra(Project.NAME, p.getName());
         context.startActivity(intent);
     }
 

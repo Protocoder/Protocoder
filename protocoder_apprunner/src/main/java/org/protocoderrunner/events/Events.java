@@ -18,7 +18,7 @@
 * along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package org.protocoder.events;
+package org.protocoderrunner.events;
 
 import org.protocoderrunner.models.Project;
 

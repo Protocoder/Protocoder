@@ -9,7 +9,8 @@ public class ProtoFile {
     public String name;
     public String path;
     public String type;
-    public Long fileSizeKb = null;
+    public String code = null;
+    public Long fileSize = null;
     public ArrayList<ProtoFile> files = null;
 
     public ProtoFile(String name, String path) {

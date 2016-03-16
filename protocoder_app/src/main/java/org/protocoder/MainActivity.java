@@ -25,11 +25,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -50,9 +55,8 @@ import org.protocoder.gui.projectlist.ProjectListFragment;
 import org.protocoder.helpers.ProtoAppHelper;
 import org.protocoder.helpers.ProtoScriptHelper;
 import org.protocoder.server.ProtocoderServerService;
-import org.protocoder.server.networkexchangeobjects.NEOProject;
 import org.protocoder.server.model.ProtoFile;
-import org.protocoder.server.model.ProtoFileCode;
+import org.protocoder.server.networkexchangeobjects.NEOProject;
 import org.protocoder.settings.ProtocoderSettings;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.base.utils.AndroidUtils;
@@ -61,7 +65,8 @@ import org.protocoderrunner.models.Project;
 
 import java.util.ArrayList;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -123,7 +128,8 @@ public class MainActivity extends BaseActivity {
             networkExchangeObject.cmd = "run";
             networkExchangeObject.project = new Project("name", "folder");
 
-            ProtoFileCode codefile = new ProtoFileCode("name", "path", "code");
+            ProtoFile codefile = new ProtoFile("name", "path");
+            codefile.code = "qq";
             networkExchangeObject.files.add(codefile);
             networkExchangeObject.files.add(codefile);
 
@@ -185,8 +191,6 @@ public class MainActivity extends BaseActivity {
         if (false) {
             stopServers();
         }
-
-        // stop servers 1h
 
         // list running projects 1h
 
@@ -285,6 +289,16 @@ public class MainActivity extends BaseActivity {
             mToolbar.setPadding(0, getStatusBarHeight(), 0, 0);
         }
 
+        // set the folder choosing drawer
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
         // project folder menu
         btnFolderChooser = (Button) findViewById(R.id.selectFolderButton);
         btnFolderChooser.setOnClickListener(new View.OnClickListener() {
@@ -296,7 +310,18 @@ public class MainActivity extends BaseActivity {
         });
 
         mTxtIp = (TextView) findViewById(R.id.ip);
+        Button btnIp = (Button) findViewById(R.id.button11);
+        btnIp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleView(findViewById(R.id.button13));
+            }
+        });
+    }
 
+    public void toggleView(View v) {
+        if (v.getVisibility() == View.VISIBLE) v.setVisibility(View.GONE);
+        else v.setVisibility(View.VISIBLE);
     }
 
     // Project folder chooser
@@ -406,4 +431,21 @@ public class MainActivity extends BaseActivity {
         //MLog.d(TAG, "Hack via your browser @ http://" + NetworkUtils.getLocalIpAddress(ProtocoderServerService.this) + ":" + ProtocoderSettings.HTTP_PORT);
     }
 
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+
+        return true;
+    }
 }

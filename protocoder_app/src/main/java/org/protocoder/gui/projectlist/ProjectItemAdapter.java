@@ -66,7 +66,7 @@ public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.
     }
 
     public void remove(Project p) {
-        ProtoScriptHelper.deleteFolder(p.getFullPath());
+        ProtoScriptHelper.deleteFolder(p.getSandboxPath());
 
         int id = findAppPosByName(p.getName());
         mProjectList.remove(id);

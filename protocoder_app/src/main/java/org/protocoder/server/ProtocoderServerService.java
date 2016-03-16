@@ -20,7 +20,6 @@ import android.widget.Toast;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.protocoder.MainActivity;
-import org.protocoder.R;
 import org.protocoder.events.Events;
 import org.protocoder.events.EventsProxy;
 import org.protocoder.helpers.ProtoAppHelper;
@@ -29,8 +28,6 @@ import org.protocoderrunner.AppRunnerActivity;
 import org.protocoderrunner.base.network.NetworkUtils;
 import org.protocoderrunner.base.utils.AndroidUtils;
 import org.protocoderrunner.base.utils.MLog;
-
-import java.io.IOException;
 
 public class ProtocoderServerService extends Service {
 
@@ -48,7 +45,7 @@ public class ProtocoderServerService extends Service {
     /*
      * Servers
      */
-    private ProtocoderHttpServer2 protocoderHttpServer2;
+    private ProtocoderHttpServer protocoderHttpServer2;
     private ProtocoderFtpServer protocoderFtpServer;
     private ProtocoderWebsocketServer protocoderWebsockets;
 
@@ -127,12 +124,14 @@ public class ProtocoderServerService extends Service {
 
         startForeground(232345, notification);
 
-        try {
-            protocoderHttpServer2 = new ProtocoderHttpServer2(this, ProtocoderSettings.HTTP_PORT);
-        } catch (IOException e) {
-            MLog.e(TAG, "http server not initialized");
-            e.printStackTrace();
-        }
+        //try {
+            //ServerRunner.run(ProtocoderHttpServer.class);
+            protocoderHttpServer2 = new ProtocoderHttpServer(this, ProtocoderSettings.HTTP_PORT);
+            // ServerRunner.executeInstance(protocoderHttpServer2);
+        //} catch (IOException e) {
+        //    MLog.e(TAG, "http server not initialized");
+        //    e.printStackTrace();
+        //}
 
         //protocoderFtpServer = new ProtocoderFtpServer(this);
         //protocoderWebsockets = new ProtocoderWebsocketServer(this);
@@ -148,6 +147,7 @@ public class ProtocoderServerService extends Service {
     public void onDestroy() {
         super.onDestroy();
         MLog.d(TAG, "service destroyed");
+        mEventsProxy.stop();
         protocoderHttpServer2.stop();
 
         // unregisterReceiver(mNotificationReceiver);
@@ -245,7 +245,13 @@ public class ProtocoderServerService extends Service {
 
         String action = e.getAction();
         if (action.equals(Events.PROJECT_RUN)) {
+            MLog.d(TAG, "run 1");
+
             ProtoAppHelper.launchScript(getApplicationContext(), e.getProject());
+        } else if (action.equals(Events.PROJECT_STOP_ALL)) {
+            MLog.d(TAG, "stop_all 1");
+            Intent i = new Intent("org.protocoderrunner.intent.CLOSE");
+            sendBroadcast(i);
         } else if (action.equals(Events.PROJECT_SAVE)) {
             //Project p = evt.getProject();
             //mProtocoder.protoScripts.refresh(p.getPath(), p.getName());
