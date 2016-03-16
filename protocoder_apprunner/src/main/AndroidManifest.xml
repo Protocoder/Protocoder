@@ -79,12 +79,16 @@
                 <data android:pathPattern=".*\\.mwm" />
                 <data android:host="*" />
                 -->
-
             </intent-filter>
 
-            <!-- Add mContext technology filter -->
+            <!-- nfc filter -->
             <intent-filter>
                 <action android:name="android.nfc.action.TECH_DISCOVERED" />
+            </intent-filter>
+
+            <!-- intent to close the runner -->
+            <intent-filter>
+                <action android:name="org.protocoderrunner.intent.CLOSE"></action>
             </intent-filter>
         </activity>
 

@@ -80,6 +80,12 @@
             android:name=".server.ProtocoderServerService"
             android:exported="false">
         </service>
+
+        <provider
+            android:name=".ProtoContentProvider2"
+            android:authorities="org.protocoder.contentprovider2"
+            android:exported="true"/>
+
     </application>
 
 
