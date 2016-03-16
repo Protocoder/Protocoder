@@ -64,7 +64,6 @@ public class PWebView extends CustomWebView implements PViewInterface {
         WebViewClient webViewClient = new CustomWebViewClient();
         this.setWebViewClient(webViewClient);
         this.addJavascriptInterface(new PApp(mAppRunner), "app");
-
     }
 
     private class CustomWebViewClient extends WebViewClient {

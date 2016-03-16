@@ -33,18 +33,16 @@ import android.provider.MediaStore.MediaColumns;
 import android.support.v4.app.NotificationCompat;
 
 import org.mozilla.javascript.NativeObject;
-import org.protocoderrunner.R;
-import org.protocoderrunner.apidoc.annotation.ProtoMethod;
-import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.AppRunner;
 import org.protocoderrunner.AppRunnerActivity;
 import org.protocoderrunner.PInterface;
+import org.protocoderrunner.R;
 import org.protocoderrunner.api.other.PEvents;
 import org.protocoderrunner.api.other.PLiveCodingFeedback;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.base.utils.ExecuteCmd;
 import org.protocoderrunner.base.utils.FileIO;
-
-import java.io.File;
 
 public class PApp extends PInterface {
 
@@ -62,7 +60,6 @@ public class PApp extends PInterface {
 
         pevents = new PEvents(appRunner);
     }
-
 
     //TODO reenable this
     //
@@ -115,7 +112,7 @@ public class PApp extends PInterface {
     @ProtoMethod(description = "loads and external file containing code", example = "")
     @ProtoMethodParam(params = {"fileName"})
     public void load(String filename) {
-        String code = FileIO.loadCodeFromFile(path() + File.separator + filename);
+        String code = FileIO.loadCodeFromFile(getAppRunner().getProject().getFullPathForFile(filename));
 
         getAppRunner().interp.eval(code);
     }
@@ -188,10 +185,15 @@ public class PApp extends PInterface {
         return url;
     }
 
-    //TODO reenable this
     @ProtoMethod(description = "get the current project path", example = "")
     public String path() {
-        String url = null; //ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/";
+        String url = getAppRunner().getProject().getSandboxPath();
+        return url;
+    }
+
+    @ProtoMethod(description = "get the current project path", example = "")
+    public String realpath() {
+        String url = getAppRunner().getProject().getFullPath();
         return url;
     }
 

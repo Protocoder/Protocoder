@@ -280,10 +280,9 @@ public class FileIO {
         }
     }
 
-    public static void deleteFileDir(String path, String name) {
-        String fullPath = path + "/" + name;
-        MLog.d(TAG, "deleting directory " + fullPath);
-        File dir = new File(fullPath);
+    public static void deleteFileDir(String path) {
+        MLog.d(TAG, "deleting directory " + path);
+        File dir = new File(path);
 
         if (dir.isDirectory()) {
             try {
@@ -301,7 +300,7 @@ public class FileIO {
         } else {
             dir.delete();
         }
-        MLog.d(TAG, "deleting directory done" + name);
+        MLog.d(TAG, "deleting directory done" + path);
     }
 
     public static void deleteDir(File dir) {
@@ -337,8 +336,7 @@ public class FileIO {
      * Method borrowed from Processing PApplet.java
      */
     public static File saveFile(String where) {
-        //TODO reenable this
-        return null; //new File(ProjectManager.getInstance().getCurrentProject().getStoragePath() + File.separator + where);
+        return new File(where);
     }
 
     /*
@@ -562,8 +560,8 @@ public class FileIO {
 
     static public void unZipFile(String src, String dst) throws ZipException {
         ZipFile zipFile = new ZipFile(src);
+        MLog.d(TAG, "--------------> " + src + " " + dst);
         zipFile.extractAll(dst);
-
     }
 
     static public void extractZip(String zipFile, String location) throws IOException {

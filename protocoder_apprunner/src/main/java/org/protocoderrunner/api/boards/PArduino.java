@@ -292,7 +292,7 @@ public class PArduino extends PInterface {
     public void upload(Boards board, String fileName, final uploadCB callbackfn) {
         if (mPhysicaloid.isOpened()) {
             // Build the absolute path
-            String filePath = getAppRunner().project.getFullPath() + fileName;
+            String filePath = getAppRunner().getProject().getFullPathForFile(fileName);
 
             callbackfn.event(0);
             // Check if the fileName includes the .hex extension

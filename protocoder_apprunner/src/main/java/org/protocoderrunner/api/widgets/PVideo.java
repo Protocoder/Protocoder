@@ -36,7 +36,6 @@ public class PVideo extends CustomVideoTextureView implements PViewInterface {
         super(appRunner.getAppContext());
         this.mAppRunner = appRunner;
 
-
         addListener(new CustomVideoTextureView.VideoListener() {
             @Override
             public void onTimeUpdate(int ms, int totalDuration) {
@@ -64,7 +63,6 @@ public class PVideo extends CustomVideoTextureView implements PViewInterface {
         });
 
         init();
-
     }
 
     @Override
@@ -97,7 +95,7 @@ public class PVideo extends CustomVideoTextureView implements PViewInterface {
     @ProtoMethod(description = "Loads a videoFile", example = "")
     @ProtoMethodParam(params = {"fileName"})
     public void load(String videoFile) {
-        super.loadExternalVideo(mAppRunner.project.getFullPath() + videoFile);
+        super.loadExternalVideo(mAppRunner.getProject().getFullPathForFile(videoFile));
     }
 
     // --------- onUpdate ---------//
@@ -115,14 +113,11 @@ public class PVideo extends CustomVideoTextureView implements PViewInterface {
         void event();
     }
 
-
     @ProtoMethod(description = "Callback that triggers when the video is loaded", example = "")
     @ProtoMethodParam(params = {"function()"})
     public void onLoaded(final OnReadyCB callbackfn) {
         mCallbackOnReady = callbackfn;
-
     }
-
 
     @ProtoMethod(description = "Callback that triggers when the video playing is finished", example = "")
     @ProtoMethodParam(params = {"function()"})
@@ -130,13 +125,11 @@ public class PVideo extends CustomVideoTextureView implements PViewInterface {
         mCallbackOnFinish = callback;
     }
 
-
     @ProtoMethod(description = "Callback that gives information of the current video position", example = "")
     @ProtoMethodParam(params = {"function(milliseconds, totalDuration)"})
     public void onUpdate(final OnUpdateCB callbackfn) {
         mCallbackUpdate = callbackfn;
     }
-
 
     @ProtoMethod(description = "Sets the video volume", example = "")
     @ProtoMethodParam(params = {"volume"})
@@ -179,18 +172,15 @@ public class PVideo extends CustomVideoTextureView implements PViewInterface {
         return super.getCurrentPosition();
     }
 
-
     @ProtoMethod(description = "Fades in the audio in the given milliseconds", example = "")
     @ProtoMethodParam(params = {"milliseconds"})
     public void fadeAudioIn(int time) {
         super.fadeAudio(time, 1.0f);
     }
 
-
     @ProtoMethod(description = "Fades out the audio in the given milliseconds", example = "")
     @ProtoMethodParam(params = {"milliseconds"})
     public void fadeAudioOut(int time) {
         super.fadeAudio(time, 0.0f);
     }
-
 }

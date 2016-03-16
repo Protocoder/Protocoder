@@ -49,7 +49,7 @@ public class PCamera extends CameraNew implements PViewInterface {
     // @APIRequires()
     public void takePicture(String file, final TakePictureCB callbackfn) {
 
-        takePic(mAppRunner.project.getFullPath() + file);
+        takePic(mAppRunner.getProject().getFullPathForFile(file));
         addListener(new CameraListener() {
 
             @Override
@@ -87,7 +87,6 @@ public class PCamera extends CameraNew implements PViewInterface {
         super.setPreviewSize(w, h);
     }
 
-
     @ProtoMethodParam(params = {"width", "height"})
     @ProtoMethod(description = "Set the camera picture resolution", example = "camera.takePicture();")
     public void setPictureResolution(int w, int h) {
@@ -105,9 +104,8 @@ public class PCamera extends CameraNew implements PViewInterface {
     @ProtoMethod(description = "Records a video in fileName", example = "")
     @ProtoMethodParam(params = {"fileName"})
     public void recordVideo(String file) {
-        recordVideo(mAppRunner.project.getFullPath() + file);
+        recordVideo(mAppRunner.getProject().getFullPathForFile(file));
     }
-
 
     @ProtoMethod(description = "Stops recording the video", example = "")
     @ProtoMethodParam(params = {""})

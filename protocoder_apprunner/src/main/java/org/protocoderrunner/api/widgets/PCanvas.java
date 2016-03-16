@@ -109,25 +109,24 @@ public class PCanvas extends View implements PViewInterface {
 
     private final Rect textBounds = new Rect();
 
-
     public PCanvas(AppRunner appRunner) {
         super(appRunner.getAppContext());
         mAppRunner = appRunner;
+        this.mContext = appRunner.getAppContext();
         MLog.d(TAG, "onCreate");
 
-        this.mContext = appRunner.getAppContext();
         init();
         initLayers();
     }
 
-
     public PCanvas(AppRunner appRunner, int w, int h) {
         super(appRunner.getAppContext());
-        MLog.d(TAG, "onCreate");
+        this.mContext = appRunner.getAppContext();
+        mAppRunner = appRunner;
         mWidth = w;
         mHeight = h;
+        MLog.d(TAG, "onCreate " + mWidth + " " + mHeight);
 
-        this.mContext = appRunner.getAppContext();
         init();
         initLayers();
     }
@@ -147,7 +146,6 @@ public class PCanvas extends View implements PViewInterface {
     private PCanvasInterfaceDraw pCanvasInterfaceDraw;
     private PCanvasInterfaceTouch pCanvasInterfaceTouch;
     private int currentLayer = -1;
-
 
     public void init() {
         MLog.d(TAG, "init");
@@ -200,7 +198,6 @@ public class PCanvas extends View implements PViewInterface {
                     c.drawBitmap(layer.bmp, 0, 0, null);
                 }
             }
-
         }
     }
 
@@ -220,7 +217,6 @@ public class PCanvas extends View implements PViewInterface {
     public void onTouch(PCanvasInterfaceTouch pCanvasInterfaceTouch) {
         this.pCanvasInterfaceTouch = pCanvasInterfaceTouch;
     }
-
 
     @ProtoMethod(description = "Redraws the canvas in a given interval", example = "")
     @ProtoMethodParam(params = {"speed", "function()"})
@@ -243,7 +239,6 @@ public class PCanvas extends View implements PViewInterface {
         mAutoDraw = true;
     }
 
-
     @ProtoMethod(description = "Manually refresh the canvas", example = "")
     @ProtoMethodParam(params = {})
     public void refresh() {
@@ -252,7 +247,6 @@ public class PCanvas extends View implements PViewInterface {
         }
     }
 
-
     @ProtoMethod(description = "For each change in the canvas it will redraw it self. Have in mind that mainly to try out things as is not very fast.", example = "")
     @ProtoMethodParam(params = {"boolean"})
     public void autoDraw(boolean b) {
@@ -260,14 +254,12 @@ public class PCanvas extends View implements PViewInterface {
     }
 
     public Canvas getCanvas() {
-
         return mCanvas;
     }
 
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-
         //.d(TAG, "onAttachedToWindow");
     }
 

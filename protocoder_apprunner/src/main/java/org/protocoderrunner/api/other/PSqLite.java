@@ -46,12 +46,8 @@ public class PSqLite extends PInterface {
     @ProtoMethod(description = "Open a SQLite ", example = "")
     @ProtoMethodParam(params = {"dirName"})
     public void open(String dbName) {
-        //TODO reenable this
-        //db = getContext().openOrCreateDatabase(
-        //        ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/" + dbName, getContext().MODE_PRIVATE,
-        //        null);
+        db = getContext().openOrCreateDatabase(getAppRunner().getProject().getFullPathForFile(dbName), getContext().MODE_PRIVATE, null);
     }
-
 
     @ProtoMethod(description = "Executes a SQL sentence", example = "")
     @ProtoMethodParam(params = {"sql"})
@@ -73,21 +69,17 @@ public class PSqLite extends PInterface {
         return c;
     }
 
-
     @ProtoMethod(description = "Close the database connection", example = "")
     @ProtoMethodParam(params = {})
     public void close() {
         db.close();
     }
 
-
     @ProtoMethod(description = "Deletes a table in the database", example = "")
     @ProtoMethodParam(params = {"tableName"})
     public void delete(String table) {
         this.db.delete(table, null, null);
-
     }
-
 
     @ProtoMethod(description = "Exectutes SQL sentence in the database", example = "")
     @ProtoMethodParam(params = {"table", "fields"})
@@ -119,14 +111,12 @@ public class PSqLite extends PInterface {
     }
 
     public class DBDataType {
-
         String name;
         Object obj;
 
         public DBDataType(String name, Object obj) {
             this.name = name;
             this.obj = obj;
-
         }
     }
 

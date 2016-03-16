@@ -203,13 +203,11 @@ public class PUtil extends PInterface {
         return Color.parseColor(c);
     }
 
-
     @ProtoMethod(description = "Loads a font", example = "")
     @ProtoMethodParam(params = {"fontFile"})
     public Typeface loadFont(String fontName) {
-        return Typeface.createFromFile(getAppRunner().project.getFullPath() + fontName);
+        return Typeface.createFromFile(getAppRunner().getProject().getFullPath() + fontName);
     }
-
 
     @ProtoMethod(description = "Detect faces in a bitmap", example = "")
     @ProtoMethodParam(params = {"Bitmap", "numFaces"})
@@ -220,7 +218,6 @@ public class PUtil extends PInterface {
 
         return face_count;
     }
-
 
     @ProtoMethod(description = "Converts byte array to bmp", example = "")
     @ProtoMethodParam(params = {"encodedImage"})

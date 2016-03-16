@@ -57,7 +57,7 @@ public class PAudioRecorder extends PInterface {
         recorder.setAudioEncodingBitRate(16);
         recorder.setAudioSamplingRate(44100);
 
-        recorder.setOutputFile(getAppRunner().project.getFullPath() + fileName);
+        recorder.setOutputFile(getAppRunner().getProject().getFullPathForFile(fileName));
         try {
             recorder.prepare();
         } catch (Exception e) {

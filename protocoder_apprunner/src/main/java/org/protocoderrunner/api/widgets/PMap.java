@@ -20,32 +20,65 @@
 
 package org.protocoderrunner.api.widgets;
 
-public class PMap {
-    public PMap(Object obj, int p) {
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 
-    }
-}
+import org.osmdroid.api.IMapController;
+import org.osmdroid.bonuspack.kml.KmlDocument;
+import org.osmdroid.bonuspack.overlays.FolderOverlay;
+import org.osmdroid.bonuspack.overlays.GroundOverlay;
+import org.osmdroid.bonuspack.overlays.Marker;
+import org.osmdroid.bonuspack.overlays.Polyline;
+import org.osmdroid.bonuspack.routing.OSRMRoadManager;
+import org.osmdroid.bonuspack.routing.Road;
+import org.osmdroid.bonuspack.routing.RoadManager;
+import org.osmdroid.tileprovider.MapTileProviderBasic;
+import org.osmdroid.tileprovider.tilesource.ITileSource;
+import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.tileprovider.tilesource.XYTileSource;
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.ItemizedIconOverlay;
+import org.osmdroid.views.overlay.OverlayItem;
+import org.osmdroid.views.overlay.PathOverlay;
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
+import org.protocoderrunner.AppRunner;
+import org.protocoderrunner.R;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 
-/*
+import java.util.ArrayList;
+
 public class PMap extends MapView {
 
     final String TAG = PMap.class.getSimpleName();
 
-    private final IMapController mapController;
+    private final IMapController mapController = null;
     private final MapView mapView;
     MyLocationNewOverlay myLocationOverlay;
     ItemizedIconOverlay<OverlayItem> iconOverlay;
     private final boolean firstMarker = false;
-    private final ArrayList<OverlayItem> markerList;
+    private final ArrayList<OverlayItem> markerList = null;
 
     private Context c;
 
-    public <T> PMap(AppRunner appRunner, int pixelTileSize) {
-        super(appRunner, pixelTileSize);
+    public PMap(AppRunner appRunner, int pixelTileSize) {
+        super(appRunner.getAppContext());
         this.c = appRunner.getAppContext();
+        // super(appRunner, pixelTileSize);
 
         // Create the mapview with the custom tile provider array
         this.mapView = this;
+        mapView.setTileSource(TileSourceFactory.MAPQUESTOSM);
+        mapView.setTilesScaledToDpi(true);
+        mapView.setBuiltInZoomControls(true);
+        mapView.setMultiTouchControls(true);
+        mapView.setUseDataConnection(true);
+
+        /*
         markerList = new ArrayList<OverlayItem>();
         iconOverlay = new ItemizedIconOverlay<OverlayItem>(markerList, c.getResources().getDrawable(R.drawable.icon),
                 new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
@@ -62,8 +95,6 @@ public class PMap extends MapView {
                         return false;
                     }
                 }, new DefaultResourceProxyImpl(c.getApplicationContext()));
-
-        mapView.setTileSource(TileSourceFactory.MAPNIK);
 
         mapView.setMultiTouchControls(true);
         mapController = mapView.getController();
@@ -96,7 +127,7 @@ public class PMap extends MapView {
             }
         }, 500));
 
-
+        */
         // myLocationOverlay.enableMyLocation();
         // myLocationOverlay.setDrawAccuracyEnabled(true);
 
@@ -140,7 +171,7 @@ public class PMap extends MapView {
         String[] tileSourcesUrl = new String[1];
         tileSourcesUrl[0] = url;
         MapTileProviderBasic tileProvider = new MapTileProviderBasic(c);
-        ITileSource tileSource = new XYTileSource(name, null, 3, 10, 256, ".png", tileSourcesUrl);
+        ITileSource tileSource = new XYTileSource(name, 3, 10, 256, ".png", tileSourcesUrl);
 
         tileProvider.setTileSource(tileSource);
         mapView.setTileSource(tileSource);
@@ -169,13 +200,12 @@ public class PMap extends MapView {
         OverlayItem olItem = new OverlayItem(title, text, new GeoPoint(lat, lon));
         Drawable newMarker = c.getResources().getDrawable(R.drawable.marker);
         olItem.setMarker(newMarker);
-        olItem.setMarkerHotspot(HotspotPlace.BOTTOM_CENTER);
+        olItem.setMarkerHotspot(OverlayItem.HotspotPlace.BOTTOM_CENTER);
         markerList.add(olItem);
         iconOverlay.addItem(olItem);
         this.invalidate();
 
         return olItem;
-
     }
 
     @ProtoMethod(description = "Clear the map cache", example = "")
@@ -186,7 +216,6 @@ public class PMap extends MapView {
         return this;
     }
 
-
     @ProtoMethod(description = "Zoom in/out depending on the integer given", example = "")
     @ProtoMethodParam(params = {"zoomValue"})
     public MapView zoom(int z) {
@@ -194,7 +223,6 @@ public class PMap extends MapView {
 
         return this;
     }
-
 
     @ProtoMethod(description = "Show/hide the map controls", example = "")
     @ProtoMethodParam(params = {"boolean"})
@@ -204,14 +232,12 @@ public class PMap extends MapView {
         return this;
     }
 
-
     @ProtoMethod(description = "Enable/Disables the multitouch events in the map", example = "")
     @ProtoMethodParam(params = {"boolean"})
     public MapView multitouch(boolean b) {
         mapView.setMultiTouchControls(b);
         return this;
     }
-
 
     @ProtoMethod(description = "Enable/Disables the map following using the GPS", example = "")
     @ProtoMethodParam(params = {"boolean"})
@@ -225,7 +251,6 @@ public class PMap extends MapView {
         return this;
     }
 
-
     @ProtoMethod(description = "Move to a specified location", example = "")
     @ProtoMethodParam(params = {"latitude", "longitude"})
     public MapView moveTo(double lat, double lon) {
@@ -234,7 +259,6 @@ public class PMap extends MapView {
 
         return this;
     }
-
 
     @ProtoMethod(description = "Set the center of the map with the specified location", example = "")
     @ProtoMethodParam(params = {"latitude", "longitude"})
@@ -281,6 +305,7 @@ public class PMap extends MapView {
     @ProtoMethodParam(params = {"x", "y"})
     public Point getPixelsFromCoordinates(double lat, double lon) {
         GeoPoint point = new GeoPoint(lat, lon);
+
         return mapView.getProjection().toPixels(point, null);
     }
 
@@ -288,9 +313,11 @@ public class PMap extends MapView {
         mapView.setUseDataConnection(b);
     }
 
-    // OSMbonus methods
+    /*
+     * OSMbonus methods
+     */
     public void getRoadPath(double lat1, double lon1, double lat2, double lon2) {
-        RoadManager roadManager = new OSRMRoadManager();
+        RoadManager roadManager = new OSRMRoadManager(c);
 
         ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
         waypoints.add(new GeoPoint(lat1, lon1));
@@ -350,8 +377,6 @@ public class PMap extends MapView {
             }
         });
         t.start();
-
-
     }
 
 //    @Override
@@ -374,4 +399,3 @@ public class PMap extends MapView {
 //        return true;
 //    }
 }
-*/

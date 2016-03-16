@@ -20,6 +20,8 @@
 
 package org.protocoderrunner.models;
 
+import org.protocoderrunner.AppRunnerSettings;
+
 import java.io.File;
 
 public class Project {
@@ -42,6 +44,10 @@ public class Project {
     public String name;
     public String folder;
 
+    public Project() {
+
+    }
+
     public Project(String folder, String projectName) {
         this.folder = folder;
         this.name = projectName;
@@ -55,7 +61,15 @@ public class Project {
         return this.folder;
     }
 
-    public String getFullPath() {
+    public String getSandboxPath() {
         return this.folder + File.separator + this.name + File.separator;
+    }
+
+    public String getFullPath() {
+        return AppRunnerSettings.getBaseDir() + getSandboxPath();
+    }
+
+    public String getFullPathForFile(String fileName) {
+        return getFullPath() + fileName;
     }
 }

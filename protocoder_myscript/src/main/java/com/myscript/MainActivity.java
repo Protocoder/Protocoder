@@ -3,7 +3,6 @@ package com.myscript;
 import android.os.Bundle;
 
 import org.protocoderrunner.AppRunnerActivity;
-import org.protocoderrunner.AppRunnerHelper;
 
 
 /**
@@ -46,6 +45,7 @@ public class MainActivity extends AppRunnerActivity {
 
     // Copy the project files from assets to internal storage
     private void installMyScript() {
+        /*
         AppRunnerHelper.getInstance().installExamples(this,
                 AppRunnerHelper.getInstance().FOLDER_MYSCRIPT,
                 new AppRunnerHelper.InstallListener() {
@@ -53,5 +53,6 @@ public class MainActivity extends AppRunnerActivity {
                     public void onReady() {
                     }
                 });
+        */
     }
 }

@@ -22,17 +22,13 @@ package org.protocoderrunner.events;
 
 import org.protocoderrunner.models.Project;
 
-import java.io.File;
-
 public class Events {
-    public static final String PROJECT_RUN      = "run";
-    public static final String PROJECT_STOP     = "stop";
-    public static final String PROJECT_STOP_ALL = "stop_all";
-    public static final String PROJECT_SAVE     = "save";
-    public static final String PROJECT_NEW      = "new";
-    public static final String PROJECT_UPDATE   = "update";
-    public static final String PROJECT_EDIT     = "edit";
-    public static final String PROJECT_DELETE   = "delete";
+    public static final String KEY                  = "key";
+    public static final String SMS                  = "sms";
+    public static final String NFC_READ             = "nfc_read";
+    public static final String NFC_WRITTEN          = "nfc_written";
+    public static final String BLUETOOTH            = "bluetooth";
+    public static final String VOICE_RECOGNITION    = "voice_recognition";
 
 
     public static class ProjectEvent {
@@ -58,99 +54,4 @@ public class Events {
         }
     }
 
-    public static class ExecuteCodeEvent {
-        private String code;
-
-        public ExecuteCodeEvent(String code) {
-            this.code = code;
-        }
-
-        public String getCode() {
-            return code;
-        }
-    }
-
-    public static class LogEvent {
-        private String msg;
-        private String tag;
-
-        public LogEvent(final String aTag, final String aMsg) {
-            msg = aMsg;
-            tag = aTag;
-        }
-
-        public String getMessage() {
-            return msg;
-        }
-        public String getTag() {
-            return tag;
-        }
-    }
-
-    public static class SelectedProjectEvent {
-        private String folder;
-        private String name;
-
-        public SelectedProjectEvent(String folder, String name) {
-            this.folder = folder;
-            this.name = name;
-        }
-
-        public String getFolder() {
-            return this.folder;
-        }
-
-        public String getName() {
-            return this.name;
-        }
-    }
-
-    public static class FolderChosen {
-        private final String parent;
-        private final String name;
-
-        public FolderChosen(String folder, String name) {
-            this.parent = folder;
-            this.name = name;
-        }
-
-        public String getFullFolder() {
-            return this.parent + File.separator + this.name;
-        }
-    }
-
-    public static class HTTPServerEvent {
-
-        private final String what;
-        private final Project project;
-
-        public HTTPServerEvent(String what) {
-            this(what, null);
-        }
-
-        public HTTPServerEvent(String what, Project p) {
-            this.what = what;
-            this.project = p;
-        }
-
-        public String getWhat() { return what; }
-    }
-
-    public static class Connection {
-        private final String type;
-        private final String address;
-
-        public Connection(String type, String address) {
-            this.type = type;
-            this.address = address;
-        }
-
-        public String getType() {
-            return type;
-        }
-
-        public String getAddress() {
-            return address;
-        }
-    }
 }

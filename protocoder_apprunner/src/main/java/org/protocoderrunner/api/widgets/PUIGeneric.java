@@ -663,7 +663,7 @@ public class PUIGeneric extends PInterface {
 
         // Add image asynchronously
         new SetImageTask(ib, false).execute(
-                getAppRunner().project.getFullPath() + imgNotPressed);
+                getAppRunner().getProject().getFullPathForFile(imgNotPressed));
 
         // Add the view
         addViewAbsolute(ib, x, y, w, h);
@@ -741,7 +741,6 @@ public class PUIGeneric extends PInterface {
                     //imagebutton
                 } else if (type.equals("imagebutton")) {
                     PImageButton btn = new PImageButton(getAppRunner());
-
 
                     //toggle
                 } else if (type.equals("toggle")) {

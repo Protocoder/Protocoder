@@ -747,7 +747,7 @@ public class PUI extends PUIGeneric {
 
         // Add the bg image asynchronously from the sdcard
         new SetBgImageTask(bgImageView, false).execute(
-                getAppRunner().project.getFullPath() + imagePath);
+                getAppRunner().getProject().getFullPathForFile(imagePath));
 	}
 
     @ProtoMethod(description = "Sets an image as tiled background", example = "")
@@ -757,9 +757,8 @@ public class PUI extends PUIGeneric {
 
         // Add the bg image asynchronously
         new SetBgImageTask(bgImageView, true).execute(
-                getAppRunner().project.getFullPath() + imagePath);
+                getAppRunner().getProject().getFullPathForFile(imagePath));
 	}
-
 
     @ProtoMethod(description = "Creates an absolute layout ", example = "")
     @ProtoMethodParam(params = {"x", "y", "w", "h"})
@@ -770,7 +769,6 @@ public class PUI extends PUIGeneric {
         return al;
     }
 
-
     @ProtoMethod(description = "Creates a card ", example = "")
     @ProtoMethodParam(params = {"label"})
     public PCard addCard() {
@@ -779,7 +777,6 @@ public class PUI extends PUIGeneric {
 
         return c;
     }
-
 
     @ProtoMethod(description = "Adds a card that can hold views", example = "")
     @ProtoMethodParam(params = {"label", "x", "y", "w", "h"})
@@ -1183,8 +1180,7 @@ public class PUI extends PUIGeneric {
     public PMap addMap(int x, int y, int w, int h) {
         PMap mapView = newMap();
 
-        //TODO
-        // addViewAbsolute(mapView, x, y, w, h);
+        addViewAbsolute(mapView, x, y, w, h);
         return mapView;
     }
 
@@ -1293,7 +1289,7 @@ public class PUI extends PUIGeneric {
         builder.show();
     }
 
-    //    TODO it works but need mContext way to wait for it to be shown
+    //    TODO it works but need a way to wait for it to be shown
     public PPopupCustomFragment popupCustom() {
 
         PPopupCustomFragment pPopupCustomFragment = new PPopupCustomFragment();
@@ -1307,13 +1303,13 @@ public class PUI extends PUIGeneric {
     @ProtoMethod(description = "Takes a screenshot of the whole app and stores it to a given file name", example = "")
     @ProtoMethodParam(params = {"imageName"})
     public void takeScreenshot(String imagePath) {
-        AndroidUtils.takeScreenshot(getAppRunner().project.getFullPath(), imagePath, uiAbsoluteLayout);
+        AndroidUtils.takeScreenshot(getAppRunner().getProject().getFullPath(), imagePath, uiAbsoluteLayout);
     }
 
     @ProtoMethod(description = "Takes a screenshot of a view and save it to an image", example = "")
     @ProtoMethodParam(params = {"view", "imageName"})
     public void takeViewScreenshot(View v, String imagePath) {
-        AndroidUtils.takeScreenshotView(getAppRunner().project.getFullPath(), imagePath, v);
+        AndroidUtils.takeScreenshotView(getAppRunner().getProject().getFullPath(), imagePath, v);
     }
 
     @ProtoMethod(description = "Takes a screenshot of a view", example = "")
@@ -1407,7 +1403,6 @@ public class PUI extends PUIGeneric {
 
         public void onKeyUp(int keyCode);
     }
-
 
     public void stop() {
 
