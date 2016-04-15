@@ -272,7 +272,6 @@ public class ProtoScriptHelper {
         return f.getAbsolutePath();
     }
 
-
     public static boolean importProtoFile(String folder, String zipFilePath) {
 
         // TODO: Use thread
@@ -286,9 +285,6 @@ public class ProtoScriptHelper {
         }
         return true;
     }
-
-
-
 
     // Get code from assets
     // public static String getCodeFromAssets(Context c, Project p) {
