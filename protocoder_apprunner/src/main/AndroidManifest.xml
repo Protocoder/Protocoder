@@ -51,7 +51,6 @@
     <uses-permission android:name="android.permission.RECORD_VIDEO" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
-
     <application
         android:allowBackup="false"
         android:hardwareAccelerated="true">
@@ -60,7 +59,7 @@
 
         <activity
             android:name=".AppRunnerActivity"
-            android:process=":AppRunnerActivity"
+            android:process=":AppRunner"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@style/ProtocoderAppRunnerTheme"
             android:label="@string/runner_name"
@@ -94,12 +93,15 @@
 
         <service
             android:name=".AppRunnerService"
-            android:process=":AppRunnerService"
+            android:process=":AppRunner"
             android:icon="@drawable/icon"
             android:label="AppRunnerService" >
         </service>
         <service android:name=".base.hardware.IOIOBoardService" />
-        <service android:name="org.puredata.android.service.PdService" />
+        <service
+            android:name="org.puredata.android.service.PdService"
+            android:process=":AppRunner"
+            />
         <service android:name=".base.services.NotificationService"
                  android:label="@string/app_name"
                  android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">

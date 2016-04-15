@@ -23,12 +23,12 @@ package org.protocoderrunner.api.network;
 import org.mozilla.javascript.NativeArray;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.PInterface;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.api.ProtoBase;
 import org.protocoderrunner.api.PUI;
 import org.protocoderrunner.base.network.bt.SimpleBT;
 
-public class PBluetoothClient extends PInterface {
+public class PBluetoothClient extends ProtoBase {
 
     private final PBluetooth mPBluetooth;
     private SimpleBT simpleBT;
@@ -156,12 +156,11 @@ public class PBluetoothClient extends PInterface {
         return simpleBT.isConnected();
     }
 
-
-    public void stop() {
+    @Override
+    public void __stop() {
         if (simpleBT.isConnected()) {
             simpleBT.disconnect();
             simpleBT = null;
         }
-
     }
 }

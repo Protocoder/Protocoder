@@ -48,7 +48,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import org.protocoderrunner.AppRunner;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.base.utils.TimeUtils;
 

@@ -22,13 +22,13 @@ package org.protocoderrunner.api.dashboard;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.PInterface;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.api.ProtoBase;
 import org.protocoderrunner.base.utils.StrUtils;
 
 import java.net.UnknownHostException;
 
-public class PDashboardSlider extends PInterface {
+public class PDashboardSlider extends ProtoBase {
 
     private static final String TAG = "PDashboardSlider";
     String id;
@@ -111,6 +111,10 @@ public class PDashboardSlider extends PInterface {
         //TODO change to events
         //CustomWebsocketServer ws = CustomWebsocketServer.getInstance(getContext());
         //ws.send(msg);
+    }
+
+    @Override
+    public void __stop() {
 
     }
 }

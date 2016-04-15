@@ -54,4 +54,18 @@ public class Events {
         }
     }
 
+
+    public static class LogEvent {
+        private String log;
+
+        public LogEvent(String log) {
+            this.log = log;
+        }
+
+        public String getLog() {
+            return log;
+        }
+    }
+
+
 }

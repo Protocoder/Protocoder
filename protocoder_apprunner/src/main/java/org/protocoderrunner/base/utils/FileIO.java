@@ -31,7 +31,7 @@ import net.lingala.zip4j.model.ZipParameters;
 import net.lingala.zip4j.util.Zip4jConstants;
 
 import org.apache.commons.io.FileUtils;
-import org.protocoderrunner.AppRunnerSettings;
+import org.protocoderrunner.apprunner.AppRunnerSettings;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

@@ -229,7 +229,6 @@ public class OSC {
 
         public void stop() {
             disconnectOSC();
-
         }
     }
 

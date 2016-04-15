@@ -29,13 +29,13 @@ import org.java_websocket.drafts.Draft;
 import org.java_websocket.drafts.Draft_17;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
-import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.PInterface;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.api.ProtoBase;
 
 import java.net.InetSocketAddress;
 import java.util.Collections;
 
-public class PWebSocketServer extends PInterface {
+public class PWebSocketServer extends ProtoBase {
 
     public Handler mHandler = new Handler(Looper.getMainLooper());
     WebSocketServer websocketServer;
@@ -117,4 +117,8 @@ public class PWebSocketServer extends PInterface {
         return this;
     }
 
+    @Override
+    public void __stop() {
+
+    }
 }

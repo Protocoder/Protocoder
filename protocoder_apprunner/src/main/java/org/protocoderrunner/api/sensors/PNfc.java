@@ -11,14 +11,14 @@ import android.nfc.tech.NdefFormatable;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.PInterface;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.api.ProtoBase;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Locale;
 
-public class PNfc extends PInterface {
+public class PNfc extends ProtoBase {
 
     public static String nfcMsg = null;
     private NdefMessage messageToWrite;
@@ -27,13 +27,11 @@ public class PNfc extends PInterface {
     public PNfc(AppRunner appRunner) {
         super(appRunner);
     }
-
-
+    
     // --------- onNFC ---------//
     interface onNFCCB {
         void event(String id, String responseString);
     }
-
 
     @ProtoMethod(description = "Gives back data when mContext NFC tag is approached", example = "")
     @ProtoMethodParam(params = {"function(id, data)"})
@@ -55,7 +53,6 @@ public class PNfc extends PInterface {
     interface writeNFCCB {
         void event(boolean b);
     }
-
 
     @ProtoMethod(description = "Write into mContext NFC tag the given text", example = "")
     @ProtoMethodParam(params = {"function()"})
@@ -196,4 +193,8 @@ public class PNfc extends PInterface {
         messageToWrite = new NdefMessage(records);
     }
 
+    @Override
+    public void __stop() {
+
+    }
 }

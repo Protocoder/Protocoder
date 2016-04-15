@@ -50,7 +50,6 @@ public class AudioServicePd {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             pdService = ((PdService.PdBinder) service).getService();
-
             MLog.d(TAG, "service connected");
 
             try {

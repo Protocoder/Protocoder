@@ -23,11 +23,11 @@ package org.protocoderrunner.api.network;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.PInterface;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.api.ProtoBase;
 import org.protocoderrunner.base.network.bt.SimpleBT;
 
-public class PBluetoothServer extends PInterface {
+public class PBluetoothServer extends ProtoBase {
 
     private SimpleBT simpleBT;
     private boolean mBtStarted = false;
@@ -71,4 +71,8 @@ public class PBluetoothServer extends PInterface {
         return simpleBT.isConnected();
     }
 
+    @Override
+    public void __stop() {
+
+    }
 }

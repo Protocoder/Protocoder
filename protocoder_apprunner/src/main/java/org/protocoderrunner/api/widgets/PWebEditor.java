@@ -22,10 +22,10 @@ package org.protocoderrunner.api.widgets;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.PInterface;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.api.ProtoBase;
 
-public class PWebEditor extends PInterface {
+public class PWebEditor extends ProtoBase {
 
     public PWebEditor(AppRunner appRunner) {
         super(appRunner);
@@ -54,5 +54,10 @@ public class PWebEditor extends PInterface {
     public void sendJs(String js) {
         //TODO change to events
         //IDEcommunication.getInstance(getContext()).sendCustomJs(js);
+    }
+
+    @Override
+    public void __stop() {
+
     }
 }

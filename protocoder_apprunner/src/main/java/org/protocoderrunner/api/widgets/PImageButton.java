@@ -25,7 +25,7 @@ import android.graphics.PorterDuff;
 import android.view.MotionEvent;
 import android.view.View;
 
-import org.protocoderrunner.AppRunner;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.base.utils.MLog;
 
 public class PImageButton extends PImageView implements PViewInterface {

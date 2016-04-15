@@ -152,10 +152,15 @@ public class ProtoScriptHelper {
 
         File[] all_projects = dir.listFiles();
 
+        // if folder or not existing is empty return
+        if (all_projects == null) return null;
+
+        // order projects
         if (orderByName) {
             Arrays.sort(all_projects);
         }
 
+        // create returning structure
         for (File file : all_projects) {
             String projectURL = file.getAbsolutePath();
             String projectName = file.getName();

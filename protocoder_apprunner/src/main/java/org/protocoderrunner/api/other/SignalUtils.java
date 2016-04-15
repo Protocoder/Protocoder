@@ -22,11 +22,11 @@ package org.protocoderrunner.api.other;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.PInterface;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.api.ProtoBase;
 import org.protocoderrunner.base.utils.FFT;
 
-public class SignalUtils extends PInterface {
+public class SignalUtils extends ProtoBase {
 
     FFT fft;
     double im[];
@@ -81,4 +81,8 @@ public class SignalUtils extends PInterface {
 
     }
 
+    @Override
+    public void __stop() {
+
+    }
 }

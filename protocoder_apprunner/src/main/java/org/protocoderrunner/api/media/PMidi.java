@@ -6,14 +6,14 @@ import android.os.Handler.Callback;
 import android.os.Message;
 import android.widget.Toast;
 
-import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.PInterface;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.api.ProtoBase;
 
 import java.util.Arrays;
 
 import jp.kshoji.driver.midi.device.MidiInputDevice;
 
-public class PMidi extends PInterface {
+public class PMidi extends ProtoBase {
 
     private static final String TAG = "PMidi";
 
@@ -169,7 +169,9 @@ public class PMidi extends PInterface {
         return this;
     }
 
-    public void stop() {
+
+    @Override
+    public void __stop() {
         usbMidiDriver.close();
     }
 

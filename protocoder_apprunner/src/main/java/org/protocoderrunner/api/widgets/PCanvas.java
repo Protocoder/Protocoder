@@ -44,7 +44,7 @@ import android.view.ViewGroup;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.AppRunner;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.api.PUtil;
 import org.protocoderrunner.api.other.PLooper;
 import org.protocoderrunner.base.utils.MLog;

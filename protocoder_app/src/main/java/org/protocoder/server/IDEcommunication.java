@@ -6,21 +6,20 @@ import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.protocoder.events.Events;
-import org.protocoderrunner.base.utils.MLog;
 
 import java.lang.ref.WeakReference;
-import java.net.UnknownHostException;
 
 public class IDEcommunication {
 
     private String TAG = "IDECommunication";
     private static IDEcommunication inst;
     public WeakReference<Context> a;
-    ProtocoderWebsocketServer ws;
+    ProtocoderWebsocketServer ws = null;
 
     public IDEcommunication(Context appActivity) {
         this.a = new WeakReference<>(appActivity);
 
+        /*
         try {
             ws = ProtocoderWebsocketServer.getInstance(a.get());
             MLog.d(TAG, "websocket started");
@@ -28,6 +27,7 @@ public class IDEcommunication {
             e.printStackTrace();
             MLog.d(TAG, "websocket :(");
         }
+        */
 
         ws.addListener("protocoderApp", new ProtocoderWebsocketServer.WebSocketListener() {
             @Override
@@ -76,7 +76,7 @@ public class IDEcommunication {
             e1.printStackTrace();
         }
 
-        ws.send(msg);
+        ws.send(msg.toString());
     }
 
     public void sendCustomJs(String jsString) {
@@ -94,11 +94,11 @@ public class IDEcommunication {
             e1.printStackTrace();
         }
 
-        ws.send(msg);
+        ws.send(msg.toString());
     }
 
     public void send(JSONObject obj) {
-        ws.send(obj);
+        ws.send(obj.toString());
     }
 
 }

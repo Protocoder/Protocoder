@@ -20,9 +20,8 @@
 
 package org.protocoderrunner.api;
 
-import org.protocoderrunner.AppRunner;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.AppRunnerFragment;
-import org.protocoderrunner.PInterface;
 import org.protocoderrunner.api.sensors.PAccelerometer;
 import org.protocoderrunner.api.sensors.PGPS;
 import org.protocoderrunner.api.sensors.PGyroscope;
@@ -34,8 +33,7 @@ import org.protocoderrunner.api.sensors.PPressure;
 import org.protocoderrunner.api.sensors.PProximity;
 import org.protocoderrunner.api.sensors.PStep;
 
-public class PSensors extends PInterface {
-
+public class PSensors extends ProtoBase {
 
     public final PAccelerometer accelerometer;
     public final PGyroscope gyroscope;
@@ -72,8 +70,7 @@ public class PSensors extends PInterface {
     }
 
     @Override
-    public void destroy() {
+    public void __stop() {
 
     }
-
 }

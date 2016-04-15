@@ -31,10 +31,10 @@ import android.support.v7.app.ActionBar;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.PInterface;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.api.ProtoBase;
 
-public class PToolbar extends PInterface {
+public class PToolbar extends ProtoBase {
 
     private final AppRunner mAppRunner;
     private final ActionBar mToolbar;
@@ -117,4 +117,8 @@ public class PToolbar extends PInterface {
         return this;
     }
 
+    @Override
+    public void __stop() {
+
+    }
 }

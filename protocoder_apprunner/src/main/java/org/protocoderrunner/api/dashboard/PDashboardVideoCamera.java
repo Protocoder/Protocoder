@@ -23,13 +23,13 @@ package org.protocoderrunner.api.dashboard;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
-import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.PInterface;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.api.ProtoBase;
 import org.protocoderrunner.base.utils.StrUtils;
 
 import java.net.UnknownHostException;
 
-public class PDashboardVideoCamera extends PInterface {
+public class PDashboardVideoCamera extends ProtoBase {
 
     private static final String TAG = "PDashboardVideoCamera";
     String id;
@@ -78,5 +78,10 @@ public class PDashboardVideoCamera extends PInterface {
 
         //TODO change to events
         //CustomWebsocketServer.getInstance(getContext()).send(msg);
+    }
+
+    @Override
+    public void __stop() {
+
     }
 }

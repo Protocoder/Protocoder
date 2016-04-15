@@ -25,6 +25,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 
+import org.osmdroid.DefaultResourceProxyImpl;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.kml.KmlDocument;
 import org.osmdroid.bonuspack.overlays.FolderOverlay;
@@ -34,6 +35,10 @@ import org.osmdroid.bonuspack.overlays.Polyline;
 import org.osmdroid.bonuspack.routing.OSRMRoadManager;
 import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.bonuspack.routing.RoadManager;
+import org.osmdroid.events.DelayedMapListener;
+import org.osmdroid.events.MapListener;
+import org.osmdroid.events.ScrollEvent;
+import org.osmdroid.events.ZoomEvent;
 import org.osmdroid.tileprovider.MapTileProviderBasic;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
@@ -45,10 +50,11 @@ import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.PathOverlay;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
-import org.protocoderrunner.AppRunner;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.R;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.base.utils.MLog;
 
 import java.util.ArrayList;
 
@@ -56,29 +62,45 @@ public class PMap extends MapView {
 
     final String TAG = PMap.class.getSimpleName();
 
-    private final IMapController mapController = null;
+    private IMapController mapController = null;
     private final MapView mapView;
     MyLocationNewOverlay myLocationOverlay;
     ItemizedIconOverlay<OverlayItem> iconOverlay;
     private final boolean firstMarker = false;
-    private final ArrayList<OverlayItem> markerList = null;
+    private ArrayList<OverlayItem> markerList = null;
 
     private Context c;
 
-    public PMap(AppRunner appRunner, int pixelTileSize) {
+    public PMap(AppRunner appRunner) {
         super(appRunner.getAppContext());
         this.c = appRunner.getAppContext();
         // super(appRunner, pixelTileSize);
 
         // Create the mapview with the custom tile provider array
         this.mapView = this;
-        mapView.setTileSource(TileSourceFactory.MAPQUESTOSM);
+        mapView.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
         mapView.setTilesScaledToDpi(true);
         mapView.setBuiltInZoomControls(true);
         mapView.setMultiTouchControls(true);
         mapView.setUseDataConnection(true);
 
         /*
+        mapView.setMapListener(new DelayedMapListener(new MapListener() {
+            @Override
+            public boolean onZoom(final ZoomEvent e) {
+                // do something
+                MLog.d("map", "zoom " + e.getZoomLevel());
+                return true;
+            }
+
+            @Override
+            public boolean onScroll(final ScrollEvent e) {
+                Log.i("zoom", e.getX() + " " + e.getY());
+                return true;
+            }
+        }, 1000));
+        */
+
         markerList = new ArrayList<OverlayItem>();
         iconOverlay = new ItemizedIconOverlay<OverlayItem>(markerList, c.getResources().getDrawable(R.drawable.icon),
                 new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
@@ -127,7 +149,6 @@ public class PMap extends MapView {
             }
         }, 500));
 
-        */
         // myLocationOverlay.enableMyLocation();
         // myLocationOverlay.setDrawAccuracyEnabled(true);
 

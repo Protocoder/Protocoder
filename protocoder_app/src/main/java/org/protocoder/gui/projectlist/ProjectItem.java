@@ -52,7 +52,8 @@ import org.protocoderrunner.models.Project;
 
 public class ProjectItem extends LinearLayout {
 
-    private static final String TAG = "ProjectItem";
+    private static final String TAG = ProjectItem.class.getSimpleName();
+
     private final Drawable bg;
     //private final ProjectListFragment mPlf;
     private View mItemView;
@@ -142,7 +143,7 @@ public class ProjectItem extends LinearLayout {
         int x2 = 20;
         int y2 = 20;
 
-        // Create mContext new image bitmap and attach mContext brand new canvas to it
+        // Create mContext new image bitmap and attach a brand new canvas to it
         Bitmap tempBitmap = Bitmap.createBitmap(myBitmap.getWidth(), myBitmap.getHeight(), Bitmap.Config.RGB_565);
         Canvas tempCanvas = new Canvas(tempBitmap);
 
@@ -239,7 +240,7 @@ public class ProjectItem extends LinearLayout {
                     //Protocoder.getInstance(c).protoScripts.shareProtoFileDialog(mProject.getPath(), mProject.getName());
                     return true;
                 } else {
-                    return false;
+                    return true;
                 }
             }
         });

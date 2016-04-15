@@ -31,11 +31,11 @@ import org.protocoderrunner.api.PProtocoder;
 import org.protocoderrunner.api.PSensors;
 import org.protocoderrunner.api.PUI;
 import org.protocoderrunner.api.PUtil;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.apprunner.AppRunnerInterpreter;
+import org.protocoderrunner.events.AppRunnerEvents;
 import org.protocoderrunner.models.Project;
 import org.protocoderrunner.base.utils.MLog;
-
-//stopService 
-//stopSelf 
 
 public class AppRunnerService extends Service {
 
@@ -43,19 +43,6 @@ public class AppRunnerService extends Service {
     private AppRunnerInterpreter interp;
     private final String TAG = "AppRunnerService";
     private Project currentProject;
-
-    public PApp pApp;
-    public PBoards pBoards;
-    public PConsole pConsole;
-    public PDashboard pDashboard;
-    public PDevice pDevice;
-    public PFileIO pFileIO;
-    public PMedia pMedia;
-    public PNetwork pNetwork;
-    public PProtocoder pProtocoder;
-    public PSensors pSensors;
-    public PUI pUi;
-    public PUtil pUtil;
 
     private WindowManager windowManager;
     private RelativeLayout parentScriptedLayout;
@@ -222,7 +209,7 @@ public class AppRunnerService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        // TODO for communication return IBinder implementation
+
         return null;
     }
 
@@ -230,9 +217,7 @@ public class AppRunnerService extends Service {
     public void onCreate() {
         super.onCreate();
         MLog.d(TAG, "onCreate");
-        // interp.callJsFunction("onCreate");
-
-        // its called only once
+        interp.callJsFunction("onCreate");
     }
 
     @Override

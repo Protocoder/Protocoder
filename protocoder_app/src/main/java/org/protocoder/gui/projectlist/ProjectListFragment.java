@@ -96,8 +96,6 @@ public class ProjectListFragment extends BaseFragment {
             v = inflater.inflate(R.layout.fragment_project, container, false);
         }
 
-        // mAnim = AnimationUtils.loadAnimation(getContext(), R.anim.fav_grid_anim);
-
         // Get GridView and set adapter
         mGrid = (FitRecyclerView) v.findViewById(R.id.gridprojects);
         // mGrid.setHasFixedSize(true);
@@ -118,8 +116,6 @@ public class ProjectListFragment extends BaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        //setRetainInstance(true);
-
     }
 
     @Override
@@ -272,6 +268,5 @@ public class ProjectListFragment extends BaseFragment {
         String folder = e.getFullFolder();
         loadFolder(folder);
     }
-
-
+    
 }

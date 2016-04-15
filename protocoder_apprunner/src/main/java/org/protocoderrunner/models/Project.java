@@ -20,7 +20,7 @@
 
 package org.protocoderrunner.models;
 
-import org.protocoderrunner.AppRunnerSettings;
+import org.protocoderrunner.apprunner.AppRunnerSettings;
 
 import java.io.File;
 

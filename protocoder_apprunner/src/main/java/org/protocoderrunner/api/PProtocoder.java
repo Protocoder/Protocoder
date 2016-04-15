@@ -43,8 +43,7 @@ import org.protocoderrunner.apidoc.annotation.APIRequires;
 import org.protocoderrunner.apidoc.annotation.APIVersion;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.PInterface;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.api.other.ApplicationInfo;
 import org.protocoderrunner.api.widgets.PWebEditor;
 import org.protocoderrunner.base.utils.MLog;
@@ -59,7 +58,7 @@ import java.util.List;
  * once the script is done and won't be able to be used once the app is exported.
  *
  */
-public class PProtocoder extends PInterface {
+public class PProtocoder extends ProtoBase {
 
     public String id;
 
@@ -324,4 +323,8 @@ public class PProtocoder extends PInterface {
         }
     }
 
+    @Override
+    public void __stop() {
+        
+    }
 }

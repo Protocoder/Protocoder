@@ -29,12 +29,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 
-import org.protocoderrunner.AppRunnerSettings;
+import org.protocoderrunner.apprunner.AppRunnerSettings;
+import org.protocoderrunner.R;
 import org.protocoderrunner.base.media.Audio;
+import org.protocoderrunner.base.utils.AndroidUtils;
 import org.protocoderrunner.base.utils.MLog;
 
 import java.util.ArrayList;
@@ -42,8 +45,10 @@ import java.util.ArrayList;
 @SuppressLint("NewApi")
 public class BaseActivity extends AppCompatActivity {
 
-    private static final String TAG = "BaseActivity";
-    public boolean actionBarAllowed = true;
+    private static final String TAG = BaseActivity.class.getSimpleName();
+
+    protected Toolbar mToolbar;
+    public boolean isToolbarAllowed = true;
     private boolean lightsOutMode;
 
     @Override
@@ -67,8 +72,25 @@ public class BaseActivity extends AppCompatActivity {
 
     }
 
+    protected void setupActivity () {
+        // Make the app take as much space as it can
+
+        // getWindow().getDecorView().setSystemUiVisibility(
+        //         View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+        //                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+
+        // Create the action bar programmatically
+        if (!AndroidUtils.isWear(this)) {
+            mToolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(mToolbar);
+
+            // Set the padding to match the Status Bar height
+            mToolbar.setPadding(0, 0, 0, 0); // getStatusBarHeight(), 0, 0);
+        }
+
+    }
     public void setFullScreen() {
-        actionBarAllowed = true;
+        isToolbarAllowed = true;
         // activity in full screen
         //supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         // requestWindowFeature(Window.FEATURE_ACTION_BAR);
@@ -76,7 +98,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public void setImmersive() {
-        actionBarAllowed = false;
+        isToolbarAllowed = false;
         getSupportActionBar().hide();
         // activity in full screen
         //supportRequestWindowFeature(Window.FEATURE_NO_TITLE);

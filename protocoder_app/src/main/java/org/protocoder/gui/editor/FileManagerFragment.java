@@ -45,10 +45,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.protocoder.R;
+import org.protocoder.helpers.ProtoScriptHelper;
+import org.protocoder.server.model.ProtoFile;
 import org.protocoderrunner.base.BaseFragment;
+import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.models.Project;
 
 import java.io.File;
@@ -58,11 +60,13 @@ import java.util.ArrayList;
 @SuppressLint("NewApi")
 public class FileManagerFragment extends BaseFragment {
 
-    public ArrayList<File> files;
+    private static final String TAG = FileManagerFragment.class.getSimpleName();
+
+    private Menu mMenu;
+    public ArrayList<ProtoFile> files;
     protected FileAdapter projectAdapter;
     protected ListView llFileView;
-    private String name;
-    private String folder;
+    private Project mProject;
 
     public FileManagerFragment() {
     }
@@ -74,8 +78,7 @@ public class FileManagerFragment extends BaseFragment {
         Bundle bundle = getArguments();
 
         if (bundle != null) {
-            this.name = bundle.getString(Project.NAME);
-            this.folder = bundle.getString(Project.FOLDER);
+            mProject = new Project(bundle.getString(Project.FOLDER), bundle.getString(Project.NAME));
         }
     }
 
@@ -86,14 +89,15 @@ public class FileManagerFragment extends BaseFragment {
 
         // Get ListView and set adapter
         llFileView = (ListView) v.findViewById(R.id.llFile);
-        Project p = new Project(folder, name);
 
-        //TODO reenable this
-        //files = mProjectManager.listFilesInProject(p);
+        MLog.d(TAG, "Project " + mProject.getFullPath());
+
+        files = ProtoScriptHelper.listFilesInFolder(mProject.getSandboxPath(), 0);
 
         // get files
-        projectAdapter = new FileAdapter(getActivity(), folder, files);
+        projectAdapter = new FileAdapter(getActivity(), files);
         llFileView.setEmptyView(v.findViewById(R.id.empty_list_view));
+
         // set the emptystate
         llFileView.setAdapter(projectAdapter);
 
@@ -110,38 +114,25 @@ public class FileManagerFragment extends BaseFragment {
         return v;
     }
 
-    protected void deleteFile(int position) {
-
-        File dir = new File(files.get(position).getAbsolutePath());
-
-        if (dir.isDirectory()) {
-            String[] children = dir.list();
-            for (String element : children) {
-                new File(dir, element).delete();
-            }
-        }
-        dir.delete();
-
-        files.remove(position);
-
-        projectAdapter.notifyDataSetChanged();
-        llFileView.invalidateViews();
-    }
-
-    public void clear() {
-        llFileView.removeAllViews();
-        projectAdapter.notifyDataSetChanged();
-    }
-
-    public void notifyAddedProject() {
-
-        projectAdapter.notifyDataSetChanged();
-        llFileView.invalidateViews();
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
-    public View getView() {
-        return super.getView();
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+//		getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 
     @Override
@@ -154,6 +145,14 @@ public class FileManagerFragment extends BaseFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+
+        menu.add(1, 21, 0, "Add").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+    }
+
+    @Override
+    public void onDestroyOptionsMenu() {
+        mMenu.removeItem(21);
+        super.onDestroyOptionsMenu();
     }
 
     @Override
@@ -168,7 +167,7 @@ public class FileManagerFragment extends BaseFragment {
         AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
         final int index = info.position;
 
-        File file = files.get(index);
+        File file = new File(files.get(index).path);
 
         int itemId = item.getItemId();
         if (itemId == R.id.menu_project_list_run) {
@@ -205,26 +204,69 @@ public class FileManagerFragment extends BaseFragment {
         }
     }
 
+    /**
+     * Delete a file / folder
+     */
+    protected void deleteFile(int position) {
+
+        File dir = new File(files.get(position).path);
+
+        if (dir.isDirectory()) {
+            String[] children = dir.list();
+            for (String element : children) {
+                new File(dir, element).delete();
+            }
+        }
+        dir.delete();
+
+        files.remove(position);
+
+        projectAdapter.notifyDataSetChanged();
+        llFileView.invalidateViews();
+    }
+
+    public void clear() {
+        llFileView.removeAllViews();
+        projectAdapter.notifyDataSetChanged();
+    }
+
+    public void notifyAddedProject() {
+        projectAdapter.notifyDataSetChanged();
+        llFileView.invalidateViews();
+    }
+
+    @Override
+    public View getView() {
+        return super.getView();
+    }
+
     private void viewFile(int index) {
         MimeTypeMap myMime = MimeTypeMap.getSingleton();
 
-        Intent newIntent = new Intent(android.content.Intent.ACTION_VIEW);
+        Intent newIntent = new Intent(Intent.ACTION_VIEW);
 
-        // Intent newIntent = new Intent(Intent.ACTION_VIEW);
-        String mimeType = myMime.getMimeTypeFromExtension(fileExt(files.get(index).getName()).substring(1));
-        newIntent.setDataAndType(Uri.fromFile(files.get(index)), mimeType);
+        String fileExt = fileExt(files.get(index).name).substring(1);
+        String mimeType = myMime.getMimeTypeFromExtension(fileExt);
+
+        String path = ProtoScriptHelper.getAbsolutePathFromRelative(files.get(index).path);
+        Uri uri = Uri.fromFile(new File(path));
+
+        MLog.d(TAG, "Uri " + uri.toString() + " fileExtension " + fileExt + " mimeType " + mimeType);
+
+        /*
+
+        newIntent.setDataAndType(uri, mimeType);
         newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         try {
             getActivity().startActivity(newIntent);
         } catch (android.content.ActivityNotFoundException e) {
             Toast.makeText(getActivity(), "No handler for this type of file.", Toast.LENGTH_LONG).show();
         }
+        */
 
-        Intent myIntent = new Intent(Intent.ACTION_VIEW);
-        myIntent.setData(Uri.fromFile(files.get(index)));
-        Intent j = Intent.createChooser(myIntent, "Choose an application to open with:");
+        newIntent.setData(uri);
+        Intent j = Intent.createChooser(newIntent, "Choose an application to open with:");
         startActivity(j);
-
     }
 
     private String fileExt(String url) {
@@ -241,43 +283,19 @@ public class FileManagerFragment extends BaseFragment {
             if (ext.indexOf("/") > -1) {
                 ext = ext.substring(0, ext.indexOf("/"));
             }
+
             return ext.toLowerCase();
-
         }
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-//		getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
     }
 
     public class FileAdapter extends BaseAdapter {
         private final Context mContext;
 
-        ArrayList<File> files;
-        private final String projectFolder;
+        ArrayList<ProtoFile> files;
 
-        public FileAdapter(Context c, String projectFolder, ArrayList<File> files) {
+        public FileAdapter(Context c, ArrayList<ProtoFile> files) {
             mContext = c;
             this.files = files;
-            this.projectFolder = projectFolder;
         }
 
         @Override
@@ -295,27 +313,32 @@ public class FileManagerFragment extends BaseFragment {
             return position;
         }
 
+        private int getIcon(String type) {
+            return type.equals("folder") ? R.drawable.protocoder_script_example: R.drawable.protocoder_script_project;
+        }
+
         // create mContext new ImageView for each item referenced by the Adapter
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             final FileItem customView;
 
-            if (convertView == null) { // if it's not recycled, initialize some
-                // attributes
+            ProtoFile f = files.get(position);
+
+            // if it's not recycled, initialize some
+            if (convertView == null) {
                 customView = new FileItem(mContext);
-                customView.setImage(R.drawable.protocoder_script_project);
-
-                customView.setText(files.get(position).getName());
-
             } else {
                 customView = (FileItem) convertView;
-                customView.setText(files.get(position).getName());
             }
-            customView.setTag(files.get(position).getName());
+
+            customView.setImage(getIcon(f.type));
+            customView.setText(f.name);
+            customView.setTag(f.name);
 
             return customView;
         }
     }
+
 
     public class FileItem extends LinearLayout {
 
@@ -342,7 +365,7 @@ public class FileManagerFragment extends BaseFragment {
 
         public void setText(String text) {
             TextView textView = (TextView) v.get().findViewById(R.id.txt_file_name);
-            // TextUtils.changeFont(c.get(), textView, Fonts.MENU_TITLE);
+            // TextUtils.changeFont(c.get(), textView, ProtocoderFonts.MENU_TITLE);
             textView.setText(text);
         }
     }

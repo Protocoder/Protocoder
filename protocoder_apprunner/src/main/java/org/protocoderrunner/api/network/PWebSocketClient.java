@@ -28,13 +28,13 @@ import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
 import org.java_websocket.drafts.Draft_17;
 import org.java_websocket.handshake.ServerHandshake;
-import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.PInterface;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.api.ProtoBase;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 
-public class PWebSocketClient extends PInterface {
+public class PWebSocketClient extends ProtoBase {
 
     private static final String TAG = "PWebSocketClient";
     private Handler mHandler = new Handler(Looper.getMainLooper());
@@ -143,8 +143,8 @@ public class PWebSocketClient extends PInterface {
         return mIsConnected;
     }
 
-
-    public void stop() {
+    @Override
+    public void __stop() {
         mWebSocketClient.close();
     }
 }

@@ -71,6 +71,7 @@
     <string name="setting_reinstall_title">Reinstall examples</string>
     <string name="setting_reinstall_description">Ovewrite all the examples with the default ones</string>
     <string name="settings_activity_name">Settings</string>
+    <string name="editor_activity_name">Editor</string>
     <string name="setting_options_title">Normal</string>
     <string name="setting_show_notifications_title">Show notifications</string>
     <string name="setting_show_notifications_body">Display a persistent notification when the server is running</string>

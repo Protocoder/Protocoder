@@ -25,12 +25,12 @@ import android.media.MediaPlayer;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.PInterface;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.api.ProtoBase;
 
 import java.io.IOException;
 
-public class PAudioPlayer extends PInterface {
+public class PAudioPlayer extends ProtoBase {
 
     private final String TAG = PAudioPlayer.class.getSimpleName();
     private boolean mReusePlayer = true;
@@ -110,7 +110,6 @@ public class PAudioPlayer extends PInterface {
         //mMediaPlayer.setVolume(100, 100);
     }
 
-
     @ProtoMethod(description = "", example = "")
     @ProtoMethodParam(params = {""})
     public PAudioPlayer onFinish(PAudioPlayer.OnFinishCB callbackfn) {
@@ -118,7 +117,6 @@ public class PAudioPlayer extends PInterface {
 
         return this;
     }
-
 
     @ProtoMethod(description = "", example = "")
     @ProtoMethodParam(params = {""})
@@ -128,7 +126,6 @@ public class PAudioPlayer extends PInterface {
         return this;
     }
 
-
     @ProtoMethod(description = "", example = "")
     @ProtoMethodParam(params = {""})
     public PAudioPlayer seekTo(int ms) {
@@ -137,20 +134,17 @@ public class PAudioPlayer extends PInterface {
         return this;
     }
 
-
     @ProtoMethod(description = "", example = "")
     @ProtoMethodParam(params = {""})
     public boolean isLooping() {
         return mMediaPlayer.isLooping();
     }
 
-
     @ProtoMethod(description = "", example = "")
     @ProtoMethodParam(params = {""})
     public boolean isPlaying() {
         return mMediaPlayer.isPlaying();
     }
-
 
     @ProtoMethod(description = "", example = "")
     @ProtoMethodParam(params = {""})
@@ -160,7 +154,6 @@ public class PAudioPlayer extends PInterface {
         return this;
     }
 
-
     @ProtoMethod(description = "", example = "")
     @ProtoMethodParam(params = {""})
     public PAudioPlayer resume() {
@@ -169,20 +162,17 @@ public class PAudioPlayer extends PInterface {
         return this;
     }
 
-
     @ProtoMethod(description = "", example = "")
     @ProtoMethodParam(params = {""})
     public int position() {
         return mMediaPlayer.getCurrentPosition();
     }
 
-
     @ProtoMethod(description = "", example = "")
     @ProtoMethodParam(params = {""})
     public int duration() {
         return mMediaPlayer.getDuration();
     }
-
 
     @ProtoMethod(description = "", example = "")
     @ProtoMethodParam(params = {""})
@@ -191,7 +181,6 @@ public class PAudioPlayer extends PInterface {
 
         return this;
     }
-
 
     @ProtoMethod(description = "", example = "")
     @ProtoMethodParam(params = {""})
@@ -203,5 +192,8 @@ public class PAudioPlayer extends PInterface {
         return this;
     }
 
+    @Override
+    public void __stop() {
 
+    }
 }

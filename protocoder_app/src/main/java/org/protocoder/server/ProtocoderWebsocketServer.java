@@ -24,14 +24,13 @@ import android.content.Context;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.drafts.Draft;
-import org.java_websocket.drafts.Draft_17;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.protocoder.settings.ProtocoderSettings;
 import org.protocoderrunner.base.utils.MLog;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -40,54 +39,48 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ProtocoderWebsocketServer extends WebSocketServer {
-    private static ProtocoderWebsocketServer inst;
-    private static int counter = 0;
-    private static final String TAG = "WebSocketServer";
-    private static Context ctx;
+    private final String TAG = ProtocoderWebsocketServer.class.getSimpleName();
+    private Context mContext;
+
+    private int mPort;
+    private int mNumConnections = 0;
     private final List<WebSocket> connections = new ArrayList<WebSocket>();
-    private static HashMap<String, WebSocketListener> listeners = new HashMap<String, WebSocketListener>();
-    ;
+    private HashMap<String, WebSocketListener> listeners = new HashMap<String, WebSocketListener>();
 
     public interface WebSocketListener {
-
-        public void onUpdated(JSONObject jsonObject);
-
+        void onUpdated(JSONObject jsonObject);
     }
 
-    // Singleton (one app view, different URLs)
-    public static ProtocoderWebsocketServer getInstance(Context aCtx, int port, Draft d) throws UnknownHostException {
-        if (inst == null) {
-            inst = new ProtocoderWebsocketServer(aCtx, port, d);
-            inst.start();
-        }
-        return inst;
-    }
-
-    // Singleton (one app view, different URLs)
-    public static ProtocoderWebsocketServer getInstance(Context aCtx) throws UnknownHostException {
-        if (inst == null) {
-            inst = new ProtocoderWebsocketServer(aCtx, ProtocoderSettings.WEBSOCKET_PORT, new Draft_17());
-            inst.start();
-        }
-        return inst;
-    }
-
-    public ProtocoderWebsocketServer(Context aCtx, int port, Draft d) throws UnknownHostException {
-        super(new InetSocketAddress(port), Collections.singletonList(d));
-        ctx = aCtx;
-        MLog.d(TAG, "Launched websocket server at on port " + aCtx);
+    public ProtocoderWebsocketServer(Context c, int port) throws UnknownHostException {
+        super(new InetSocketAddress(port));
+        mPort = port;
+        mContext = c;
     }
 
     public ProtocoderWebsocketServer(InetSocketAddress address, Draft d) {
         super(address, Collections.singletonList(d));
     }
 
+    public void start() {
+        super.start();
+        MLog.d(TAG, "Launched websocket server at on port " + mPort);
+    }
+
+    public void stop() {
+        try {
+            super.stop();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onOpen(WebSocket aConn, ClientHandshake handshake) {
-        counter++;
-        MLog.d(TAG, "New websocket connection " + counter);
+        mNumConnections++;
+        MLog.d(TAG, "New websocket connection " + mNumConnections);
         connections.add(aConn);
-
     }
 
     @Override
@@ -102,14 +95,12 @@ public class ProtocoderWebsocketServer extends WebSocketServer {
         ex.printStackTrace();
     }
 
-    public void send(JSONObject obj) {
-
+    public void send(String json) {
         for (WebSocket sock : connections) {
             if (sock.isOpen()) {
-                sock.send(obj.toString());
+                sock.send(json);
             }
         }
-
     }
 
     @Override
@@ -135,34 +126,10 @@ public class ProtocoderWebsocketServer extends WebSocketServer {
 
     public void addListener(String name, WebSocketListener l) {
         listeners.put(name, l);
-
     }
 
     public void removeAllListeners() {
         listeners.clear();
-    }
-
-    public void send(String type, String action, String... values) {
-
-        // send device ip address
-        /*
-		 * JSONObject msg = new JSONObject(); try { msg.put("type", "device");
-		 * msg.put("action", "info");
-		 * 
-		 * JSONObject values = new JSONObject();; values.put("address_ip",
-		 * NetworkUtils.getLocalIpAddress().toString());
-		 * values.put("address_port", AppSettings.HTTP_PORT);
-		 * values.put("device_name", android.os.Build.MANUFACTURER +
-		 * android.os.Build.PRODUCT + " " + Build.MODEL); msg.put("values",
-		 * values);
-		 * 
-		 * } catch (JSONException e1) { e1.printStackTrace(); }
-		 * 
-		 * try { CustomWebsocketServer ws =
-		 * CustomWebsocketServer.getInstance(this); ws.send(msg); } catch
-		 * (UnknownHostException e) { e.printStackTrace(); }
-		 */
-
     }
 
     // handle message from the webapp

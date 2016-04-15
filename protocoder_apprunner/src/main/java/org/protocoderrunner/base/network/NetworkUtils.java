@@ -31,7 +31,7 @@ import android.os.PowerManager;
 import android.text.format.Formatter;
 import android.util.Log;
 
-import org.protocoderrunner.AppRunner;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.base.utils.MLog;
 
 import java.io.FileOutputStream;

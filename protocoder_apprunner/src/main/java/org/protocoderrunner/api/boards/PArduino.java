@@ -35,15 +35,15 @@ import com.physicaloid.lib.usb.driver.uart.UartConfig;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.PInterface;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.api.ProtoBase;
 import org.protocoderrunner.base.utils.MLog;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Iterator;
 
-public class PArduino extends PInterface {
+public class PArduino extends ProtoBase {
 
     private final String TAG = "PArduino";
     private Physicaloid mPhysicaloid;
@@ -479,7 +479,8 @@ public class PArduino extends PInterface {
         }
     }
 
-    public void stop() {
+    @Override
+    public void __stop() {
         close();
     }
 }

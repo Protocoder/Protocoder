@@ -26,12 +26,12 @@ import android.util.Log;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.PInterface;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.api.ProtoBase;
 
 import java.util.ArrayList;
 
-public class PSqLite extends PInterface {
+public class PSqLite extends ProtoBase {
 
     String TAG = "PSqlite";
     private SQLiteDatabase db;
@@ -120,4 +120,8 @@ public class PSqLite extends PInterface {
         }
     }
 
+    @Override
+    public void __stop() {
+
+    }
 }

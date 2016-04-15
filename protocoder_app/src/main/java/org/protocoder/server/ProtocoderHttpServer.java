@@ -238,7 +238,7 @@ public class ProtocoderHttpServer extends NanoHTTPD {
             NanoHTTPD.newFixedLengthResponse( Response.Status.NOT_FOUND, MIME_TYPES.get("txt"), "ERROR: " + e.getMessage());
         }
 
-        return res; //NanoHTTPD.newFixedLengthResponse(getStatus(), getMimeType(), inp, size);
+        return res; //NanoHTTPD.newFixedLengthResponse(getStatus(), getMimeType(), inp, fontSize);
     }
 
     /*

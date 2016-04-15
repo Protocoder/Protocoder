@@ -52,9 +52,9 @@ import org.protocoderrunner.R;
 import org.protocoderrunner.apidoc.annotation.ProtoField;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.AppRunner;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.AppRunnerFragment;
-import org.protocoderrunner.PInterface;
+import org.protocoderrunner.api.ProtoBase;
 import org.protocoderrunner.api.media.PCamera;
 import org.protocoderrunner.api.other.ProtocoderNativeObject;
 import org.protocoderrunner.api.widgets.PPadView.TouchEvent;
@@ -76,7 +76,7 @@ import java.util.Map;
 import static org.protocoderrunner.api.widgets.PSlider.addGenericSliderCB;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-public class PUIGeneric extends PInterface {
+public class PUIGeneric extends ProtoBase {
 
     String TAG = "PUIGeneric";
 
@@ -128,10 +128,10 @@ public class PUIGeneric extends PInterface {
 
     public void updateScreenSizes() {
         Point p = AndroidUtils.getScreenSize(getContext());
-        screenWidth = 500; //p.x;
-        screenHeight = 500; //p.y;
+        screenWidth = p.x;
+        screenHeight = p.y;
 
-        MLog.d("qq", " " + screenWidth + " " + screenHeight);
+        //MLog.d("qq", " " + screenWidth + " " + screenHeight);
 
         //if in immersive mode then add the navigation bar height
         if (isImmersiveMode) {
@@ -789,24 +789,7 @@ public class PUIGeneric extends PInterface {
     public PMap newMap() {
         initializeLayout();
 
-        PMap mapView = new PMap(getAppRunner(), 256);
-
-        /*
-        mapView.setMapListener(new DelayedMapListener(new MapListener() {
-            @Override
-            public boolean onZoom(final ZoomEvent e) {
-                // do something
-                MLog.d("map", "zoom " + e.getZoomLevel());
-                return true;
-            }
-
-            @Override
-            public boolean onScroll(final ScrollEvent e) {
-                Log.i("zoom", e.getX() + " " + e.getY());
-                return true;
-            }
-        }, 1000));
-        */
+        PMap mapView = new PMap(getAppRunner());
 
         return mapView;
     }
@@ -1006,4 +989,8 @@ public class PUIGeneric extends PInterface {
         }
     }
 
+    @Override
+    public void __stop() {
+
+    }
 }

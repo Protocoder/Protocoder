@@ -20,11 +20,6 @@
 
 package org.protocoderrunner.api.network;
 
-import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.PInterface;
-
-import android.content.Context;
-
 import org.fusesource.hawtbuf.Buffer;
 import org.fusesource.hawtbuf.UTF8Buffer;
 import org.fusesource.mqtt.client.Callback;
@@ -33,13 +28,13 @@ import org.fusesource.mqtt.client.Listener;
 import org.fusesource.mqtt.client.MQTT;
 import org.fusesource.mqtt.client.QoS;
 import org.fusesource.mqtt.client.Topic;
-import org.protocoderrunner.api.other.WhatIsRunning;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.api.ProtoBase;
 import org.protocoderrunner.base.utils.MLog;
-
 
 import java.net.URISyntaxException;
 
-public class PMqtt extends PInterface {
+public class PMqtt extends ProtoBase {
 
     private final String TAG = PMqtt.class.getSimpleName();
 
@@ -205,7 +200,9 @@ public class PMqtt extends PInterface {
         return this;
     }
 
-    public void stop() {
+
+    @Override
+    public void __stop() {
         disconnect();
     }
 

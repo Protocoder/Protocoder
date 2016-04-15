@@ -24,12 +24,12 @@ import android.graphics.Color;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.PInterface;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.api.ProtoBase;
 
 import java.net.UnknownHostException;
 
-public class PDashboardBackground extends PInterface {
+public class PDashboardBackground extends ProtoBase {
 
     private static final String TAG = "PDashboardBackground";
 
@@ -66,5 +66,8 @@ public class PDashboardBackground extends PInterface {
         //CustomWebsocketServer.getInstance(getContext()).send(msg);
     }
 
+    @Override
+    public void __stop() {
 
+    }
 }

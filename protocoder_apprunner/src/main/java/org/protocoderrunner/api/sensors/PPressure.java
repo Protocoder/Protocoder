@@ -27,7 +27,7 @@ import android.hardware.SensorManager;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.AppRunner;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.api.other.WhatIsRunningInterface;
 
 public class PPressure extends CustomSensorManager implements WhatIsRunningInterface {

@@ -58,8 +58,8 @@ import org.mozilla.javascript.NativeArray;
 import org.protocoderrunner.R;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.AppRunnerSettings;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.apprunner.AppRunnerSettings;
 import org.protocoderrunner.api.media.PCamera;
 import org.protocoderrunner.api.other.PAnimation;
 import org.protocoderrunner.api.other.PProcessing;
@@ -102,14 +102,13 @@ import static android.view.ScaleGestureDetector.OnScaleGestureListener;
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class PUI extends PUIGeneric {
 
-    String TAG = "PUI";
+    private final String TAG = PUI.class.getSimpleName();
 
     //key pressed callback
     private OnKeyDownCB mOnKeyDownfn;
     private OnKeyUpCB mOnKeyUpfn;
 
     private boolean keyInit = false;
-
 
     public PUI(AppRunner appRunner) {
         super(appRunner);
@@ -156,7 +155,6 @@ public class PUI extends PUIGeneric {
             // isImmersiveMode = true;
             getActivity().setImmersive();
             updateScreenSizes();
-            //do nothing
         } else {
 
         }
@@ -365,7 +363,7 @@ public class PUI extends PUIGeneric {
         void event(int x, int y);
     }
 
-    // http://stackoverflow.com/questions/16557076/how-to-smoothly-move-mContext-image-view-with-users-finger-on-android-emulator
+    // http://stackoverflow.com/questions/16557076/how-to-smoothly-move-a-image-view-with-users-finger-on-android-emulator
     public void draggable(View v, final DraggableCallback callback) {
         v.setOnTouchListener(new OnTouchListener() {
             PointF downPT = new PointF(); // Record Mouse Position When Pressed
@@ -839,7 +837,7 @@ public class PUI extends PUIGeneric {
     }
 
 
-    //TODO removed old one this is mContext place holder
+    //TODO removed old one this is a place holder
     //
     //@APIMethod(description = "Knob", example = "")
     //@APIParam(params = { "function(progress)" })
@@ -959,7 +957,6 @@ public class PUI extends PUIGeneric {
         return tb;
     }
 
-
     @ProtoMethod(description = "Adds a checkbox", example = "")
     @ProtoMethodParam(params = {"label", "x", "y", "w", "h", "checked", "function(checked)"})
     public PCheckBox addCheckbox(String label, int x, int y, int w, int h, boolean initstate) {
@@ -968,7 +965,6 @@ public class PUI extends PUIGeneric {
 
         return cb;
     }
-
 
     @ProtoMethod(description = "Adds a checkbox", example = "")
     @ProtoMethodParam(params = {"x", "y", "w", "h", "checked", "function(checked)"})
@@ -980,18 +976,15 @@ public class PUI extends PUIGeneric {
         return s;
     }
 
-
     @ProtoMethod(description = "Adds a radio button", example = "")
     @ProtoMethodParam(params = {"label", "x", "y", "w", "h", "checked", "function(checked)"})
     public PRadioButton addRadioButton(String label, int x, int y, int w, int h, boolean initstate,
                                        final addGenericRadioButtonCB callbackfn) {
-
         PRadioButton rb = newRadioButton(label, initstate, callbackfn);
         addViewAbsolute(rb, x, y, w, h);
 
         return rb;
     }
-
 
     @ProtoMethod(description = "Adds an image", example = "")
     @ProtoMethodParam(params = {"x", "y", "w", "h", "imagePath"})
@@ -1003,7 +996,6 @@ public class PUI extends PUIGeneric {
         return iv;
     }
 
-
     @ProtoMethod(description = "Adds an image", example = "")
     @ProtoMethodParam(params = {"x", "y", "w", "h", "imagePath"})
     public PImageView addImage(int x, int y, int w, int h) {
@@ -1013,7 +1005,6 @@ public class PUI extends PUIGeneric {
 
         return iv;
     }
-
 
     @ProtoMethod(description = "Adds an image", example = "")
     @ProtoMethodParam(params = {"x", "y", "imagePath"})
@@ -1025,7 +1016,6 @@ public class PUI extends PUIGeneric {
         return iv;
     }
 
-
     @ProtoMethod(description = "Adds a plot with a range", example = "")
     @ProtoMethodParam(params = {"x", "y", "w", "h", "min", "max"})
     public PPlotView addPlot(int x, int y, int w, int h, int min, int max) {
@@ -1034,7 +1024,6 @@ public class PUI extends PUIGeneric {
 
         return pPlotView;
     }
-
 
     @ProtoMethod(description = "Adds a checkbox", example = "")
     @ProtoMethodParam(params = {"x", "y", "w", "h", "imageName", "function()"})
@@ -1047,7 +1036,6 @@ public class PUI extends PUIGeneric {
         return newImageButton(x, y, w, h, imgNotPressed, imgPressed, false);
     }
 
-
     @ProtoMethod(description = "Adds a grid of elements given an array of strings", example = "")
     @ProtoMethodParam(params = {"type", "arrayStrings", "x", "y", "w", "h", "function(data)"})
     public PGrid addGridOf(String type, NativeArray array, int cols, int x, int y, int w, int h, final addGridOfCB callbackfn) {
@@ -1056,7 +1044,6 @@ public class PUI extends PUIGeneric {
 
         return grid;
     }
-
 
     @ProtoMethod(description = "Adds a canvas view", example = "")
     @ProtoMethodParam(params = {"x", "y", "w", "h"})
@@ -1068,7 +1055,6 @@ public class PUI extends PUIGeneric {
 
         return canvasView;
     }
-
 
     @ProtoMethod(description = "Adds a canvas view", example = "")
     @ProtoMethodParam(params = {"x", "y", "w", "h"})
@@ -1083,8 +1069,7 @@ public class PUI extends PUIGeneric {
     }
 
     //reenable again
-
-    @ProtoMethod(description = "Adds mContext processing view", example = "")
+    @ProtoMethod(description = "Adds a processing view", example = "")
     @ProtoMethodParam(params = {"x", "y", "w", "h", "mode={'p2d', 'p3d'"})
     public PApplet addProcessing(int x, int y, int w, int h, String mode) {
 
@@ -1111,7 +1096,7 @@ public class PUI extends PUIGeneric {
         // ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         // ft.setCustomAnimations(android.R.anim.fade_in,
         // android.R.anim.fade_out);
-        ft.addToBackStack(null);
+        // ft.addToBackStack(null);
         ft.commit();
 
         return p;
@@ -1145,7 +1130,6 @@ public class PUI extends PUIGeneric {
 //		return ef;
 //	}
 
-
     @ProtoMethod(description = "Adds a webview", example = "")
     @ProtoMethodParam(params = {"x", "y", "w", "h"})
     public PWebView addWebView(int x, int y, int w, int h) {
@@ -1174,7 +1158,6 @@ public class PUI extends PUIGeneric {
         return video;
     }
 
-
     @ProtoMethod(description = "Add a openstreetmap", example = "")
     @ProtoMethodParam(params = {"x", "y", "w", "h"})
     public PMap addMap(int x, int y, int w, int h) {
@@ -1184,12 +1167,10 @@ public class PUI extends PUIGeneric {
         return mapView;
     }
 
-
     // --------- yesno dialog ---------//
     public interface popupCB {
         void event(boolean b);
     }
-
 
     @ProtoMethod(description = "Shows a popup with a given text", example = "")
     @ProtoMethodParam(params = {"title", "message", "okButton", "cancelButton", "function(boolean)"})
@@ -1227,12 +1208,10 @@ public class PUI extends PUIGeneric {
         }
     }
 
-
     // --------- inputDialog ---------//
     interface inputDialogCB {
         void event(String text);
     }
-
 
     @ProtoMethod(description = "Shows an input dialog", example = "")
     @ProtoMethodParam(params = {"title", "function(text)"})
@@ -1263,12 +1242,10 @@ public class PUI extends PUIGeneric {
         builder.show();
     }
 
-
     // --------- choiceDialog ---------//
     public interface choiceDialogCB {
         void event(String string);
     }
-
 
     @ProtoMethod(description = "Shows a choice dialog using a given array of strings", example = "")
     @ProtoMethodParam(params = {"title", "arrayStrings", "function(text)"})
@@ -1319,7 +1296,7 @@ public class PUI extends PUIGeneric {
     }
 
     // it only works with absolute layout and only when
-    // mContext layout is been used
+    // a layout is been used
     @ProtoMethod(description = "Show the virtual keyboard", example = "")
     @ProtoMethodParam(params = {"boolean"})
     public void showVirtualKeys(boolean show) {

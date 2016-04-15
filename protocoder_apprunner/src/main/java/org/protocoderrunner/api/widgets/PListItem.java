@@ -68,7 +68,7 @@ public class PListItem extends LinearLayout {
         this.t = text;
         //TODO activate this
         TextView textView = null; //(TextView) v.get().findViewById(R.id.customViewText);
-        // TextUtils.changeFont(c.get(), textView, Fonts.MENU_TITLE);
+        // TextUtils.changeFont(c.get(), textView, ProtocoderFonts.MENU_TITLE);
         textView.setText(text);
     }
 

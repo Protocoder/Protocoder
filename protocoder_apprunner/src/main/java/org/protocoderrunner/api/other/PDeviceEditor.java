@@ -22,14 +22,13 @@ package org.protocoderrunner.api.other;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.PInterface;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.api.ProtoBase;
 
-public class PDeviceEditor extends PInterface {
+public class PDeviceEditor extends ProtoBase {
 
     public PDeviceEditor(AppRunner appRunner) {
         super(appRunner);
-
     }
 
     //TODO reenable this 
@@ -49,8 +48,10 @@ public class PDeviceEditor extends PInterface {
 
 
         //this.addFragment(editorFragment, EDITOR_ID, "editorFragment", true);
-
     }
 
+    @Override
+    public void __stop() {
 
+    }
 }

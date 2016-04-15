@@ -27,7 +27,7 @@ import android.hardware.SensorManager;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.AppRunner;
+import org.protocoderrunner.apprunner.AppRunner;
 
 public class CustomSensorManager {
 
@@ -86,9 +86,7 @@ public class CustomSensorManager {
         } else {
             this.speed = SensorManager.SENSOR_DELAY_NORMAL;
         }
-
     }
-
 
     public float maximum() {
         return sensor.getMaximumRange();
@@ -102,5 +100,7 @@ public class CustomSensorManager {
         return sensor.getResolution();
     }
 
-
+    public void __stop() {
+        stop();
+    }
 }

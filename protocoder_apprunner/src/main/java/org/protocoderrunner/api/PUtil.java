@@ -41,8 +41,7 @@ import android.view.animation.LinearInterpolator;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.PInterface;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.api.other.PLooper;
 import org.protocoderrunner.api.other.SignalUtils;
 import org.protocoderrunner.base.utils.MLog;
@@ -50,7 +49,7 @@ import org.protocoderrunner.base.utils.MLog;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class PUtil extends PInterface {
+public class PUtil extends ProtoBase {
 
     private final Handler handler;
     ArrayList<Runnable> rl = new ArrayList<Runnable>();
@@ -111,10 +110,6 @@ public class PUtil extends PInterface {
             handler.removeCallbacks(ir.next());
             // handler.post(ir.next());
         }
-    }
-
-    public void stop() {
-        stopAllTimers();
     }
 
     // http://stackoverflow.com/questions/4605527/converting-pixels-to-dp
@@ -239,4 +234,9 @@ public class PUtil extends PInterface {
         return new SignalUtils(getAppRunner(), n);
     }
 
+
+    @Override
+    public void __stop() {
+        stopAllTimers();
+    }
 }

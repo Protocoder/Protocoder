@@ -59,7 +59,6 @@ import org.protocoder.server.model.ProtoFile;
 import org.protocoder.server.networkexchangeobjects.NEOProject;
 import org.protocoder.settings.ProtocoderSettings;
 import org.protocoderrunner.base.BaseActivity;
-import org.protocoderrunner.base.utils.AndroidUtils;
 import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.models.Project;
 
@@ -103,7 +102,6 @@ public class MainActivity extends BaseActivity
         ProtocoderApp protocoderApp = new ProtocoderApp(appRunner);
         protocoderApp.network.checkVersion();
         appRunner.interp.eval("device.vibrate(100);");
-
         /*
          * Servers
          */
@@ -274,20 +272,9 @@ public class MainActivity extends BaseActivity
     /*
     * UI Stuff
     */
-    private void setupActivity() {
-        // Make the app take as much space as it can
-        getWindow().getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-
-        // Create the action bar programmatically
-        if (!AndroidUtils.isWear(this)) {
-            mToolbar = (Toolbar) findViewById(R.id.toolbar);
-            setSupportActionBar(mToolbar);
-
-            // Set the padding to match the Status Bar height
-            mToolbar.setPadding(0, getStatusBarHeight(), 0, 0);
-        }
+    @Override
+    protected void setupActivity() {
+        super.setupActivity();
 
         // set the folder choosing drawer
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -371,10 +358,9 @@ public class MainActivity extends BaseActivity
     }
 
     // TODO
-    /*
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        AdapterViewCompat.AdapterContextMenuInfo info = (AdapterViewCompat.AdapterContextMenuInfo) item.getMenuInfo();
+        //AdapterViewCompat.AdapterContextMenuInfo info = (AdapterViewCompat.AdapterContextMenuInfo) item.getMenuInfo();
 
         int itemId = item.getItemId();
         if (itemId == android.R.id.home) {
@@ -383,7 +369,7 @@ public class MainActivity extends BaseActivity
             //createProjectDialog();
             return true;
         } else if (itemId == R.id.menu_help) {
-            //this.showHelp(true);
+            ProtoAppHelper.launchLicense(this);
             return true;
         } else if (itemId == R.id.menu_settings) {
             ProtoAppHelper.launchSettings(this);
@@ -392,7 +378,6 @@ public class MainActivity extends BaseActivity
             return super.onOptionsItemSelected(item);
         }
     }
-    */
 
     // execute lines
     @Subscribe
@@ -411,13 +396,6 @@ public class MainActivity extends BaseActivity
         MLog.d(TAG, "< Event (folderChosen)");
         String folder = e.getFullFolder();
         btnFolderChooser.setText(folder);
-    }
-
-    // Run project
-    @Subscribe
-    public void onEventMainThread(Events.ProjectEvent e) {
-        MLog.d(TAG, e.getClass().getSimpleName() + " -> " + e.getAction());
-        ProtoAppHelper.launchScript(this, e.getProject());
     }
 
     // network notification

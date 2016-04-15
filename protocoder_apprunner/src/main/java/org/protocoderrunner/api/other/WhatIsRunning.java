@@ -20,37 +20,48 @@
 
 package org.protocoderrunner.api.other;
 
+import org.protocoderrunner.base.utils.MLog;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Vector;
 
 public class WhatIsRunning {
 
+    private static final String TAG = WhatIsRunning.class.getSimpleName();
     private WhatIsRunning instance;
-    Vector<Object> runners;
+    private Vector<Object> runners;
 
     public WhatIsRunning() {
         runners = new Vector<Object>();
     }
 
     public void stopAll() {
+
+        for (Object o : runners) {
+            MLog.d(TAG, "list " + o.getClass().getCanonicalName());
+
+        }
+
         for (Object o : runners) {
             Method method = null;
 
-            //MLog.d("name", o.getClass().getCanonicalName());
             try {
-                method = o.getClass().getMethod("stop");
+                method = o.getClass().getMethod("__stop");
             } catch (SecurityException e) {
             } catch (NoSuchMethodException e) {
             }
 
+            MLog.d(TAG, "stopping " + o.getClass().getCanonicalName() + " " + o + " " + method);
+
             try {
-                method.invoke(o);
+                //if (method !== null) {
+                    method.invoke(o);
+                //}
             } catch (IllegalArgumentException e) {
             } catch (IllegalAccessException e) {
             } catch (InvocationTargetException e) {
             }
-
         }
     }
 

@@ -57,7 +57,9 @@ import org.protocoderrunner.api.PUI;
 import org.protocoderrunner.api.network.PBluetooth;
 import org.protocoderrunner.api.sensors.PNfc;
 import org.protocoderrunner.api.widgets.PPadView;
+import org.protocoderrunner.apprunner.AppRunnerSettings;
 import org.protocoderrunner.base.BaseActivity;
+import org.protocoderrunner.base.gui.DebugFragment;
 import org.protocoderrunner.base.utils.AndroidUtils;
 import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.base.utils.StrUtils;
@@ -68,15 +70,15 @@ import java.util.ArrayList;
 
 public class AppRunnerActivity extends BaseActivity {
 
-    private static final String TAG = "AppRunnerActivity";
+    private static final String TAG = AppRunnerActivity.class.getSimpleName();
 
-    Context mContext;
-    public AppRunnerFragment    mAppRunnerFragment;
+    private Context mContext;
+    private AppRunnerFragment mAppRunnerFragment;
 
     private BroadcastReceiver mIntentReceiver;
 
     /*
-    * Events
+     * Events
      */
     private PDevice.onSmsReceivedListener       onSmsReceivedListener;
     private PNfc.onNFCListener                  onNFCListener;
@@ -84,23 +86,23 @@ public class AppRunnerActivity extends BaseActivity {
     private PBluetooth.onBluetoothListener      onBluetoothListener;
     private PMedia.onVoiceRecognitionListener   onVoiceRecognitionListener;
 
-    //ui fragment dependent
+    // ui fragment dependent
     public static final int VOICE_RECOGNITION_REQUEST_CODE = 55;
 
     /*
-    * Keyboard handling
+     * Keyboard handling
      */
     private PUI.onKeyListener   onKeyListener;
     public boolean              keyVolumeEnabled = true;
     public boolean              keyBackEnabled = true;
 
     /*
-    * UI stuff
+     * UI stuff
      */
-    private Toolbar     mToolbar;
-    private ActionBar   mActionbar;
-    public boolean      mActionBarSet;
-
+    private Toolbar         mToolbar;
+    private ActionBar       mActionbar;
+    public boolean          mActionBarSet;
+    private DebugFragment   mDebugFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,37 +121,28 @@ public class AppRunnerActivity extends BaseActivity {
 
         /*
          * Read in the script given in the intent.
-          */
+         */
         Intent intent = getIntent();
         if (null != intent) {
             boolean isService = intent.getBooleanExtra("isService", false);
 
+            // if is a service with start it and finish this activity
             if (isService) {
                 Intent i = new Intent(this, AppRunnerService.class);
                 i.putExtras(intent);
-                // potentially add data to the intent
-                // i.putExtra("KEY1", "Value to be used by the service");
                 this.startService(i);
                 finish();
             }
 
-            // NOTE:
-            // if mProject == null , Protocoder is running in "standard" mode
-            // if mProject != null , Protocoder is running in "standalone" mode
-
-            boolean settingScreenAlwaysOn   = false;
-            boolean settingWakeUpScreen     = false;
-
-            // get projects intent
-            //settings
-            settingScreenAlwaysOn   = intent.getBooleanExtra(Project.SETTINGS_SCREEN_ALWAYS_ON, false);
-            settingWakeUpScreen     = intent.getBooleanExtra(Project.SETTINGS_SCREEN_WAKEUP, false);
+            // settings
+            boolean settingScreenAlwaysOn   = intent.getBooleanExtra(Project.SETTINGS_SCREEN_ALWAYS_ON, false);
+            boolean settingWakeUpScreen     = intent.getBooleanExtra(Project.SETTINGS_SCREEN_WAKEUP, false);
 
             String prefix   = intent.getStringExtra(Project.PREFIX);
             String code     = intent.getStringExtra(Project.INTENTCODE);
             String postfix  = intent.getStringExtra(Project.POSTFIX);
 
-            //send bundle to
+            // send bundle to
             Bundle bundle = new Bundle();
             bundle.putString(Project.NAME, intent.getStringExtra(Project.NAME));
             bundle.putString(Project.FOLDER, intent.getStringExtra(Project.FOLDER));
@@ -162,13 +155,12 @@ public class AppRunnerActivity extends BaseActivity {
              */
             setContentView(R.layout.activity_apprunner_host);
 
+            // dont add the toolbar if we are in Android Wear
             if (!AndroidUtils.isWear(this)) {
                 mToolbar = (Toolbar) findViewById(R.id.toolbar);
                 setSupportActionBar(mToolbar);
                 mActionbar = getSupportActionBar();
             }
-
-            FrameLayout fl = (FrameLayout) findViewById(R.id.apprunner_fragment);
 
             // wake up if intent says so
             if (settingWakeUpScreen) {
@@ -185,13 +177,17 @@ public class AppRunnerActivity extends BaseActivity {
              * Everything will be handled to the AppRunnerFragment
              */
             mAppRunnerFragment = AppRunnerFragment.newInstance(bundle);
-
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            FrameLayout fl = (FrameLayout) findViewById(R.id.apprunner_fragment);
             ft.add(fl.getId(), mAppRunnerFragment, String.valueOf(fl.getId()));
-            // ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            // ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-            // ft.addToBackStack(null);
             ft.commit();
+
+            /*
+             * Add debug fragment
+             */
+            if (AppRunnerSettings.DEBUG) {
+                addDebugFragment();
+            }
 
             //TODO change to events
             //IDEcommunication.getInstance(this).ready(true);
@@ -217,7 +213,7 @@ public class AppRunnerActivity extends BaseActivity {
             public void onReceive(android.content.Context context, Intent intent) {
                 String msg = intent.getStringExtra("get_msg");
 
-                // Process the sms format and extract body &amp; phoneNumber
+                // Process the sms format and extract body and phone number
                 msg = msg.replace("\n", "");
                 String body = msg.substring(msg.lastIndexOf(":") + 1, msg.length());
                 String pNumber = msg.substring(0, msg.lastIndexOf(":"));
@@ -225,7 +221,6 @@ public class AppRunnerActivity extends BaseActivity {
                 if (onSmsReceivedListener != null) {
                     onSmsReceivedListener.onSmsReceived(pNumber, body);
                 }
-                // Add it to the list or do whatever you wish to
             }
         };
 
@@ -255,6 +250,7 @@ public class AppRunnerActivity extends BaseActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
+
         //TODO change to events
         //IDEcommunication.getInstance(this).ready(false);
     }
@@ -268,13 +264,6 @@ public class AppRunnerActivity extends BaseActivity {
         mActionBarSet = true;
 
         if(mActionbar != null) {
-            // home clickable if is running inside protocoderapp
-
-            //TODO reenable this
-            //if (AppRunnerSettings.STANDALONE == false) {
-                ////mToolbar.setDisplayHomeAsUpEnabled(true);
-            //    setToolbarBack();
-           //}
 
             // set color
             if (colorBg != null) {
@@ -311,6 +300,15 @@ public class AppRunnerActivity extends BaseActivity {
                 }
             });
         }
+    }
+
+    private void addDebugFragment() {
+        mDebugFragment = DebugFragment.newInstance();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        FrameLayout fl = (FrameLayout) findViewById(R.id.debug_fragment);
+        fl.setVisibility(View.VISIBLE);
+        ft.add(fl.getId(), mDebugFragment, String.valueOf(fl.getId()));
+        ft.commit();
     }
 
     /*
@@ -517,7 +515,6 @@ public class AppRunnerActivity extends BaseActivity {
 
     }
 
-
     public void showCodeExecuted() {
 
     }
@@ -647,18 +644,25 @@ public class AppRunnerActivity extends BaseActivity {
     @Subscribe
     public void onEventMainThread(Events.ProjectEvent e) {
         MLog.d(TAG, "");
+    }
 
+    @Subscribe
+    public void onEventMainThread(Events.LogEvent e) {
+        String logMsg = e.getLog();
+        MLog.d(TAG, logMsg);
+
+        Intent i = new Intent("org.protocoder.intent.CONSOLE");
+        i.putExtra("log", logMsg);
+        sendBroadcast(i);
     }
 
     /**
      * Receiving order to close the activity
      */
     public void startStopActivityBroadcastReceiver() {
-
         IntentFilter filterSend = new IntentFilter();
         filterSend.addAction("org.protocoderrunner.intent.CLOSE");
         registerReceiver(stopActivitiyBroadcastReceiver, filterSend);
-
     }
 
     BroadcastReceiver stopActivitiyBroadcastReceiver = new BroadcastReceiver() {

@@ -22,13 +22,13 @@ package org.protocoderrunner.api.dashboard;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.PInterface;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.api.ProtoBase;
 import org.protocoderrunner.base.utils.StrUtils;
 
 import java.net.UnknownHostException;
 
-public class PDashboardInput extends PInterface {
+public class PDashboardInput extends ProtoBase {
 
     private static final String TAG = "PDashboardInput";
     String id;
@@ -92,4 +92,8 @@ public class PDashboardInput extends PInterface {
         mCallback = callbackfn;
     }
 
+    @Override
+    public void __stop() {
+
+    }
 }

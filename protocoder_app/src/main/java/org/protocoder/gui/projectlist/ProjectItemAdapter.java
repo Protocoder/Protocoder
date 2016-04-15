@@ -43,11 +43,10 @@ public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.
         public ViewHolder(ProjectItem v) {
             super(v);
             mView = v;
-            position = getPosition();
+            position = getAdapterPosition();
         }
     }
-
-
+    
     /*
      * ProjectItemAdapter
      */
@@ -90,7 +89,7 @@ public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.
     public int findAppPosByName(String appName) {
         int pos = -1;
 
-        // MLog.d(TAG, "size " + mProjects.size());
+        // MLog.d(TAG, "fontSize " + mProjects.fontSize());
         for (int i = 0; i < mProjectList.size(); i++) {
             String name = mProjectList.get(i).getName();
             // MLog.d(TAG, "name " + name);

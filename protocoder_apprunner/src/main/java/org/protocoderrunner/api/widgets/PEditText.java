@@ -36,6 +36,18 @@ public class PEditText extends EditText implements PViewInterface {
         mInput = this;
     }
 
+    public void text(String... txt) {
+        String joinedText = "";
+        for (int i = 0; i < txt.length; i++) {
+            joinedText += txt[i];
+        }
+        this.setText(joinedText);
+    }
+
+    public String text() {
+        return this.getText().toString();
+    }
+
     // --------- getRequest ---------//
     public interface addGenericInputCB {
         void event(String txt);

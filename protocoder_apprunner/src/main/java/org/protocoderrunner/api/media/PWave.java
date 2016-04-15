@@ -4,10 +4,10 @@ import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
 
-import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.PInterface;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.api.ProtoBase;
 
-public class PWave extends PInterface {
+public class PWave extends ProtoBase {
 
     private String TAG = PWave.class.getSimpleName();
 
@@ -142,7 +142,9 @@ public class PWave extends PInterface {
 //            buffer[i] = (short)(samples[i] * Short.MAX_VALUE);;
 //    }
 
-    public void stop() {
+
+    @Override
+    public void __stop() {
         try {
             isRunning = false;
             t.join();

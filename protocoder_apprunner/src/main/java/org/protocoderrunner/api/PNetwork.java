@@ -27,6 +27,7 @@ import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -48,17 +49,16 @@ import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
-import org.protocoderrunner.api.network.PMqtt;
-import org.protocoderrunner.apidoc.annotation.ProtoMethod;
-import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.PInterface;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.api.network.PBluetooth;
 import org.protocoderrunner.api.network.PFtpClient;
 import org.protocoderrunner.api.network.PFtpServer;
+import org.protocoderrunner.api.network.PMqtt;
 import org.protocoderrunner.api.network.PSocketIOClient;
 import org.protocoderrunner.api.network.PWebSocketClient;
 import org.protocoderrunner.api.network.PWebSocketServer;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.base.network.NetworkUtils;
 import org.protocoderrunner.base.network.NetworkUtils.DownloadTask.DownloadListener;
 import org.protocoderrunner.base.network.OSC;
@@ -91,7 +91,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 
-public class PNetwork extends PInterface {
+public class PNetwork extends ProtoBase {
 
     private final String TAG = PNetwork.class.getSimpleName();
 
@@ -165,7 +165,6 @@ public class PNetwork extends PInterface {
 
     }
 
-
     @ProtoMethod(description = "Check if internet connection is available", example = "")
     @ProtoMethodParam(params = {""})
     public boolean isNetworkAvailable() {
@@ -175,20 +174,17 @@ public class PNetwork extends PInterface {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-
     @ProtoMethod(description = "Returns the current device Ip address", example = "")
     @ProtoMethodParam(params = {""})
     public String ipAddress() {
         return NetworkUtils.getLocalIpAddress(getContext());
     }
 
-
     @ProtoMethod(description = "Get the wifi ap information", example = "")
     @ProtoMethodParam(params = {""})
     public WifiInfo wifiInfo() {
         return NetworkUtils.getWifiInfo(getContext());
     }
-
 
     @ProtoMethod(description = "Starts an OSC server", example = "")
     @ProtoMethodParam(params = {"port", "function(jsonData)"})
@@ -202,7 +198,6 @@ public class PNetwork extends PInterface {
         return server;
     }
 
-
     @ProtoMethod(description = "Connects to a OSC server. Returns an object that allow sending messages", example = "")
     @ProtoMethodParam(params = {"address", "port"})
     public OSC.Client connectOSC(String address, int port) {
@@ -215,7 +210,6 @@ public class PNetwork extends PInterface {
 
 
     WifiManager.MulticastLock wifiLock;
-
 
     @ProtoMethod(description = "Enable multicast networking", example = "")
     @ProtoMethodParam(params = {"boolean"})
@@ -570,6 +564,30 @@ public class PNetwork extends PInterface {
         return wifiManager.isWifiEnabled();
     }
 
+    // http://stackoverflow.com/questions/3213205/how-to-detect-system-information-like-os-or-device-type
+    @ProtoMethod(description = "Get the network type", example = "")
+    @ProtoMethodParam(params = {})
+    public String getNetworkType() {
+        String type = "none";
+        TelephonyManager tm = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
+        switch (tm.getNetworkType()) {
+            case TelephonyManager.NETWORK_TYPE_HSPAP:
+                type = "4G";
+            break;
+            case TelephonyManager.NETWORK_TYPE_HSDPA:
+                type = "3G";
+                break;
+            case TelephonyManager.NETWORK_TYPE_GPRS:
+                type = "GPRS";
+                break;
+            case TelephonyManager.NETWORK_TYPE_EDGE:
+                type = "2G";
+                break;
+        }
+
+        return type;
+    }
+
     // http://stackoverflow.com/questions/8818290/how-to-connect-to-mContext-specific-wifi-network-in-android-programmatically
 
     @ProtoMethod(description = "Connect to mContext given Wifi network with mContext given 'wpa', 'wep', 'open' type and mContext password", example = "")
@@ -742,7 +760,9 @@ public class PNetwork extends PInterface {
         return pMqtt;
     }
 
-    public void stop() {
+
+    @Override
+    public void __stop() {
 
     }
 

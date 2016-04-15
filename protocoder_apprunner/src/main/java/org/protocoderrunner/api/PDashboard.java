@@ -24,8 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.PInterface;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.api.dashboard.PDashboardBackground;
 import org.protocoderrunner.api.dashboard.PDashboardButton;
 import org.protocoderrunner.api.dashboard.PDashboardCustomWidget;
@@ -40,7 +39,7 @@ import org.protocoderrunner.base.utils.StrUtils;
 
 import java.net.UnknownHostException;
 
-public class PDashboard extends PInterface {
+public class PDashboard extends ProtoBase {
 
     String TAG = "PDashboard";
 
@@ -60,7 +59,6 @@ public class PDashboard extends PInterface {
         return pWebAppPlot;
     }
 
-
     @ProtoMethod(description = "add a HTML content in the dashboard", example = "")
     @ProtoMethodParam(params = {"htmlFile", "x", "y"})
     public PDashboardHTML addHtml(String html, int x, int y) throws UnknownHostException, JSONException {
@@ -70,7 +68,6 @@ public class PDashboard extends PInterface {
 
         return pWebAppHTML;
     }
-
 
     @ProtoMethod(description = "add a button in the dashboard", example = "")
     @ProtoMethodParam(params = {"name", "x", "y", "w", "h", "function()"})
@@ -82,7 +79,6 @@ public class PDashboard extends PInterface {
         return pWebAppButton;
     }
 
-
     @ProtoMethod(description = "add a slider in the dashboard", example = "")
     @ProtoMethodParam(params = {"name", "x", "y", "w", "h", "min", "max", "function(num)"})
     public PDashboardSlider addSlider(String name, int x, int y, int w, int h, int min, int max) throws UnknownHostException, JSONException {
@@ -92,7 +88,6 @@ public class PDashboard extends PInterface {
 
         return pWebAppSlider;
     }
-
 
     @ProtoMethod(description = "add a input box in the dashboard", example = "")
     @ProtoMethodParam(params = {"name", "x", "y", "w", "h", "function(text)"})
@@ -105,7 +100,6 @@ public class PDashboard extends PInterface {
         return pWebAppInput;
     }
 
-
     @ProtoMethod(description = "add a text in the dashboard", example = "")
     @ProtoMethodParam(params = {"name", "x", "y", "size", "hexColor"})
     public PDashboardText addText(String name, int x, int y, int width, int height, int size, String color)
@@ -117,7 +111,6 @@ public class PDashboard extends PInterface {
         return pWebAppText;
     }
 
-
     @ProtoMethod(description = "add an image in the dashboard", example = "")
     @ProtoMethodParam(params = {"url", "x", "y", "w", "h"})
     public PDashboardImage addImage(String url, int x, int y, int w, int h) throws UnknownHostException, JSONException {
@@ -127,7 +120,6 @@ public class PDashboard extends PInterface {
 
         return pWebAppImage;
     }
-
 
     @ProtoMethod(description = "add a camera preview in the dashboard", example = "")
     @ProtoMethodParam(params = {"url", "x", "y", "w", "h"})
@@ -139,7 +131,6 @@ public class PDashboard extends PInterface {
         return pWebAppVideoCamera;
     }
 
-
     @ProtoMethod(description = "add a custom widget in the dashboard", example = "")
     @ProtoMethodParam(params = {"url", "x", "y", "w", "h", "function(obj)"})
     public PDashboardCustomWidget addCustomWidget(String url, int x, int y, int w, int h, PDashboardCustomWidget.jDashboardAddCB callback) throws UnknownHostException, JSONException {
@@ -149,7 +140,6 @@ public class PDashboard extends PInterface {
 
         return pWebAppCustom;
     }
-
 
     @ProtoMethod(description = "change the background color (HEX format) of the dashboard", example = "")
     @ProtoMethodParam(params = {"hexColor"})
@@ -203,13 +193,11 @@ public class PDashboard extends PInterface {
         void event(int val);
     }
 
-
     @ProtoMethod(description = "show/hide the dashboard", example = "")
     @ProtoMethodParam(params = {"boolean"})
     public void onKeyPressed(jDashboardKeyPressed callback) throws UnknownHostException, JSONException {
         initKeyEvents(callback);
     }
-
 
     //TODO use events
     @ProtoMethod(description = "show/hide the dashboard", example = "")
@@ -232,4 +220,8 @@ public class PDashboard extends PInterface {
 
     }
 
+    @Override
+    public void __stop() {
+        
+    }
 }

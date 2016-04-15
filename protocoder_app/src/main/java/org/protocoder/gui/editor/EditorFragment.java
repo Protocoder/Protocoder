@@ -23,16 +23,10 @@ package org.protocoder.gui.editor;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GestureDetectorCompat;
 import android.text.Editable;
 import android.text.Selection;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -40,6 +34,7 @@ import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -47,50 +42,36 @@ import org.apache.commons.lang3.StringUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.protocoder.R;
 import org.protocoder.events.Events;
-import org.protocoder.gui._components.BaseWebviewFragment;
 import org.protocoder.helpers.ProtoScriptHelper;
+import org.protocoder.settings.ProtocoderSettings;
 import org.protocoderrunner.base.BaseFragment;
-import org.protocoderrunner.base.utils.Fonts;
 import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.base.utils.TextUtils;
 import org.protocoderrunner.models.Project;
 
+import java.io.File;
+
 @SuppressLint("NewApi")
 public class EditorFragment extends BaseFragment {
 
-    public interface EditorFragmentListener {
+    protected static final String TAG = EditorFragment.class.getSimpleName();
 
+    public interface EditorFragmentListener {
         void onLoad();
         void onLineTouched();
     }
-    protected static final String TAG = EditorFragment.class.getSimpleName();
 
     private Context mContext;
 
-    // TODO change this dirty hack
-    private static final int MENU_RUN = 8;
-    private static final int MENU_SAVE = 9;
-    private static final int MENU_BACK = 10;
-    private static final int MENU_FILES = 11;
-    private static final int MENU_API = 12;
-
-    private float currentSize;
     private EditText mEdit;
     private HorizontalScrollView mExtraKeyBar;
     private View v;
-    private Project currentProject;
     private EditorFragmentListener listener;
 
-    private FileManagerFragment fileFragment;
-    private FragmentTransaction ft;
-    private BaseWebviewFragment webviewFragment;
+    // settings
+    private EditorSettings mEditorSettings = new EditorSettings();
 
-    private Menu menu;
-    private boolean bFiles = true;
-    private boolean bAPI = true;
-
-    private Project mProject;
-    private String mScript;
+    private Project mCurrentProject;
 
     public EditorFragment() {
     }
@@ -110,18 +91,58 @@ public class EditorFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         v = inflater.inflate(R.layout.fragment_editor, container, false);
+
         mEdit = (EditText) v.findViewById(R.id.editText1);
+        mEditorSettings.fontSize = mEdit.getTextSize();
 
-        TextUtils.changeFont(getActivity(), mEdit, Fonts.CODE);
+        // change font
+        TextUtils.changeFont(getActivity(), mEdit, mEditorSettings.font);
 
-        currentSize = mEdit.getTextSize();
+        bindUI();
+        setExtraKeysBar();
+
+        setHasOptionsMenu(true); // Set actionbar override
+
+        /* get the code file */
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            loadProject(new Project(bundle.getString(Project.FOLDER, ""), bundle.getString(Project.NAME, "")));
+        }
+
+        return v;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    /**
+     * Bind the UI
+     */
+    private void bindUI() {
         Button btnIncreaseSize = (Button) v.findViewById(R.id.increaseSize);
         btnIncreaseSize.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                currentSize += 1;
-                mEdit.setTextSize(currentSize);
+                mEditorSettings.fontSize += 1;
+                mEdit.setTextSize(mEditorSettings.fontSize);
             }
         });
 
@@ -130,17 +151,24 @@ public class EditorFragment extends BaseFragment {
 
             @Override
             public void onClick(View v) {
-                currentSize -= 1;
-                mEdit.setTextSize(currentSize);
+                mEditorSettings.fontSize -= 1;
+                mEdit.setTextSize(mEditorSettings.fontSize);
             }
         });
+    }
+
+    /**
+     * Set the extra keys bar
+     */
+    private void setExtraKeysBar() {
+        if (mEditorSettings.extraKeysBarEnabled == false) return;
 
         mExtraKeyBar = (HorizontalScrollView) v.findViewById(R.id.extraKeyBar);
 
         mEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MLog.d(TAG, "" + getCurrentCursorLine(mEdit.getEditableText()));
+                MLog.d(TAG, "line touched at " + getCurrentCursorLine(mEdit.getEditableText()));
                 if (listener != null) {
                     listener.onLineTouched();
                 }
@@ -148,12 +176,13 @@ public class EditorFragment extends BaseFragment {
 
         });
 
+        // detect if key board is open or close
         final RelativeLayout rootView = (RelativeLayout) v.findViewById(R.id.rootEditor);
         rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 int heightDiff = rootView.getRootView().getHeight() - rootView.getHeight();
-                MLog.d(TAG, "" + heightDiff);
+                // MLog.d(TAG, "" + heightDiff);
 
                 if (heightDiff > 300) {
                     mExtraKeyBar.setVisibility(View.VISIBLE);
@@ -163,53 +192,21 @@ public class EditorFragment extends BaseFragment {
             }
         });
 
-        // Set actionbar override
-        setHasOptionsMenu(true);
 
-        GestureDetectorCompat qq = new GestureDetectorCompat(getActivity(), new GestureDetector.OnGestureListener() {
+        // set all the extra buttons
+        LinearLayout extraKeyBarLl = (LinearLayout) v.findViewById(R.id.extraKeyBarLl);
+        for (int i = 0; i < extraKeyBarLl.getChildCount(); i++) {
+            final Button b = (Button) extraKeyBarLl.getChildAt(i);
 
-            @Override
-            public boolean onSingleTapUp(MotionEvent e) {
-                MLog.d(TAG, "singleTapUp");
-                return false;
-            }
+            b.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String t = b.getText().toString();
+                    mEdit.getText().insert(mEdit.getSelectionStart(), t);
+                }
+            });
 
-            @Override
-            public void onShowPress(MotionEvent e) {
-                MLog.d(TAG, "showPress");
-            }
-
-            @Override
-            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-                MLog.d(TAG, "onScroll");
-                return false;
-            }
-
-            @Override
-            public void onLongPress(MotionEvent e) {
-                MLog.d(TAG, "onLongPress");
-            }
-
-            @Override
-            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                MLog.d(TAG, "onFling");
-                return false;
-            }
-
-            @Override
-            public boolean onDown(MotionEvent e) {
-                MLog.d(TAG, "onDown");
-                return false;
-            }
-        });
-
-        /* get the code file */
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            loadProject(new Project(bundle.getString(Project.FOLDER, ""), bundle.getString(Project.NAME, "")));
         }
-
-        return v;
     }
 
     public static EditorFragment newInstance() {
@@ -229,29 +226,6 @@ public class EditorFragment extends BaseFragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-    }
-
-    @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
     }
@@ -261,53 +235,18 @@ public class EditorFragment extends BaseFragment {
         Toast.makeText(getActivity(), "HIDDEN? " + hidden, Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        this.menu = menu;
-        menu.clear();
-        menu.add(1, MENU_RUN, 0, "Run").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        menu.add(1, MENU_SAVE, 0, "Save").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        menu.add(1, MENU_FILES, 0, "Files").setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-        menu.add(1, MENU_API, 0, "API").setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-            case MENU_RUN:
-                save();
-                run();
-                return true;
-            case MENU_SAVE:
-                save();
-                return true;
-            case MENU_FILES:
-                MenuItem menuFiles = menu.findItem(MENU_FILES).setChecked(bFiles);
-                showFileManager(bFiles);
-                bFiles = !bFiles;
-
-                return true;
-
-            case MENU_API:
-                MenuItem menuApi = menu.findItem(MENU_API).setChecked(bFiles);
-                showAPI(bAPI);
-                bAPI = !bAPI;
-
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
+    /**
+     * Add a listner to know whe the cursor is
+     */
     public void addListener(EditorFragmentListener listener) {
         this.listener = listener;
     }
 
+    /**
+     * Load a project
+     */
     public void loadProject(Project project) {
-        currentProject = project;
+        mCurrentProject = project;
         if (project != null) {
             mEdit.setText(ProtoScriptHelper.getCode(project));
         } else {
@@ -315,91 +254,54 @@ public class EditorFragment extends BaseFragment {
         }
     }
 
-    public void setText(String text) {
-        mEdit.setText(text);
+    /**
+     * Save the current project
+     */
+    public void saveProject() {
+        ProtoScriptHelper.saveCode(mCurrentProject.getSandboxPath() + File.separator + ProtocoderSettings.MAIN_FILENAME, getCode());
+        Toast.makeText(getActivity(), "Saving " + mCurrentProject.getName() + "...", Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Run the current project
+     */
     public void run() {
-        EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_RUN, currentProject));
+        EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_RUN, mCurrentProject));
     }
 
-    public void save() {
-        //TODO reenable this
-        //mProjectManager.writeNewCode(currentProject, getCode(), "main.js");
-        Toast.makeText(getActivity(), "Saving " + currentProject.getName() + "...", Toast.LENGTH_SHORT).show();
-
-    }
-
+    /**
+     * Toggle edittext editable
+     */
+    // TODO
     public void toggleEditable(boolean b) {
 
     }
 
-    private int getCurrentCursorLine(Editable editable) {
+    /**
+     * Get current cursor line
+     */
+    public int getCurrentCursorLine(Editable editable) {
         int selectionStartPos = Selection.getSelectionStart(editable);
 
-        if (selectionStartPos < 0) {
-            // There is no selection, so return -1 like getSelectionStart() does
-            // when there is no seleciton.
-            return -1;
-        }
+        // no selection
+        if (selectionStartPos < 0) return -1;
 
         String preSelectionStartText = editable.toString().substring(0, selectionStartPos);
         return StringUtils.countMatches(preSelectionStartText, "\n");
     }
 
+    /**
+     * Get current code text
+     */
     public String getCode() {
         return mEdit.getText().toString();
     }
 
-    public void showAPI(boolean b) {
-
-        ft = getChildFragmentManager().beginTransaction();
-        ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_out_left,
-                R.anim.slide_out_left);
-
-        if (b) {
-
-            webviewFragment = new BaseWebviewFragment();
-            Bundle bundle = new Bundle();
-            bundle.putString("url", "http://localhost:8585/reference.html");
-            webviewFragment.setArguments(bundle);
-            ft.add(R.id.fragmentWebview, webviewFragment).addToBackStack(null);
-
-            mEdit.animate().translationX(-50).setDuration(500);
-            // fileFragment.getView().animate().translationX(-200).setDuration(500).start();
-        } else {
-            mEdit.animate().translationX(0).setDuration(500);
-            // fileFragment.getView().animate().translationX(0).setDuration(500).start();
-            ft.remove(webviewFragment);
-            // ft.hide(fileFragment);
-        }
-        ft.commit();
-
+    /**
+     * Set the code text
+     */
+    public void setCode(String text) {
+        mEdit.setText(text);
     }
 
-    public void showFileManager(boolean b) {
-
-        ft = getChildFragmentManager().beginTransaction();
-        ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_left);
-
-        if (b) {
-
-            fileFragment = new FileManagerFragment();
-            Bundle bundle = new Bundle();
-            bundle.putString(Project.NAME, currentProject.name);
-            bundle.putString(Project.FOLDER, currentProject.folder);
-            fileFragment.setArguments(bundle);
-            ft.add(R.id.fragmentFileManager, fileFragment).addToBackStack("q");
-
-            mEdit.animate().translationX(-50).setDuration(500);
-            // fileFragment.getView().animate().translationX(-200).setDuration(500).start();
-        } else {
-            mEdit.animate().translationX(0).setDuration(500);
-            // fileFragment.getView().animate().translationX(0).setDuration(500).start();
-            // ft.remove(fileFragment);
-            // ft.hide(fileFragment);
-        }
-        ft.commit();
-
-    }
 }

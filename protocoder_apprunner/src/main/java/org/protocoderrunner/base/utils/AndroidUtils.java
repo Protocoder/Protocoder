@@ -43,7 +43,7 @@ import android.view.View;
 import android.view.ViewOutlineProvider;
 
 import org.protocoderrunner.R;
-import org.protocoderrunner.AppRunnerSettings;
+import org.protocoderrunner.apprunner.AppRunnerSettings;
 
 import java.io.File;
 import java.io.FileNotFoundException;

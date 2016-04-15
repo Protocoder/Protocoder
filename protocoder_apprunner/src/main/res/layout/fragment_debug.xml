@@ -1,27 +1,26 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
-    
+    android:layout_height="fill_parent"
+    android:background="@color/white">
 
     <!-- console window -->
 
-    <ListView
-        android:id="@+id/logWindow"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/logwrapper"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/sendInput"
+        android:layout_above="@+id/sendblock"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/buttonslayout"
-        android:background="#888888"
+        android:background="#BBBBBB"
         android:orientation="vertical" >
 
-    </ListView>
+    </android.support.v7.widget.RecyclerView>
 
     <!-- send part -->
 
     <LinearLayout
-        android:id="@+id/sendInput"
+        android:id="@+id/sendblock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -29,7 +28,7 @@
         android:layout_alignParentRight="true" >
 
         <EditText
-            android:id="@+id/pdName"
+            android:id="@+id/cmd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -40,18 +39,20 @@
         </EditText>
 
         <Button
-            android:id="@+id/pdSend"
+            android:id="@+id/send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Send" />
     </LinearLayout>
 
     <ToggleButton
-        android:id="@+id/lockList"
+        android:id="@+id/toogleLockList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
+        android:textOff="lock"
+        android:textOn="unlock"
         android:src="@drawable/marker" />
 
 </RelativeLayout>

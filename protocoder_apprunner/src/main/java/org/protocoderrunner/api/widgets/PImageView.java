@@ -28,7 +28,7 @@ import android.widget.ImageView;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.AppRunner;
+import org.protocoderrunner.apprunner.AppRunner;
 
 public class PImageView extends ImageView implements PViewInterface {
 

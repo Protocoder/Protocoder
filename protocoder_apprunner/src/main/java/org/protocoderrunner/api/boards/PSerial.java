@@ -31,8 +31,8 @@ import com.hoho.android.usbserial.util.SerialInputOutputManager;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.PInterface;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.api.ProtoBase;
 import org.protocoderrunner.base.utils.MLog;
 
 import java.io.IOException;
@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class PSerial extends PInterface {
+public class PSerial extends ProtoBase {
 
     private String receivedData;
     private final String TAG = "PSerial";
@@ -257,4 +257,8 @@ public class PSerial extends PInterface {
 
     }
 
+    @Override
+    public void __stop() {
+        stop();
+    }
 }

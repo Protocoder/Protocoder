@@ -68,7 +68,7 @@
         <activity
             android:name=".gui.editor.EditorActivity"
             android:theme="@style/ProtocoderAppTheme"
-            android:label="@string/settings_activity_name" >
+            android:label="@string/editor_activity_name" >
         </activity>
         <activity
             android:name=".gui.LicenseActivity"
@@ -79,12 +79,20 @@
         <service
             android:name=".server.ProtocoderServerService"
             android:exported="false">
+
+            <intent-filter>
+                <action android:name="org.protocoder.intent.CONSOLE"></action>
+            </intent-filter>
         </service>
 
         <provider
             android:name=".ProtoContentProvider2"
             android:authorities="org.protocoder.contentprovider2"
-            android:exported="true"/>
+            android:exported="true"/><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
     </application>
 

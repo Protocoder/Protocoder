@@ -29,15 +29,15 @@ import android.widget.Toast;
 import org.mozilla.javascript.NativeArray;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.PInterface;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.api.ProtoBase;
 import org.protocoderrunner.api.other.ProtocoderNativeArray;
 import org.protocoderrunner.base.network.bt.SimpleBT;
 import org.protocoderrunner.base.utils.MLog;
 
 import java.util.Set;
 
-public class PBluetooth extends PInterface {
+public class PBluetooth extends ProtoBase {
     private scanBTNetworksCB onBluetoothfn;
     private SimpleBT simpleBT;
     private boolean mBtStarted = false;
@@ -190,14 +190,12 @@ public class PBluetooth extends PInterface {
         start();
         simpleBT.disable();
     }
-
-
-
-    public void stop() {
+    
+    @Override
+    public void __stop() {
         if (simpleBT.isConnected()) {
             simpleBT.disconnect();
         }
-
     }
 
 }

@@ -21,13 +21,13 @@
 package org.protocoderrunner.api.other;
 
 import org.mozilla.javascript.NativeObject;
-import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.PInterface;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.api.ProtoBase;
 import org.protocoderrunner.base.utils.StrUtils;
 
 import java.util.ArrayList;
 
-public class PEvents extends PInterface {
+public class PEvents extends ProtoBase {
     ArrayList<EventItem> eventsList;
 
     public interface EventCB {
@@ -78,7 +78,8 @@ public class PEvents extends PInterface {
         }
     }
 
-    public void stop() {
+    @Override
+    public void __stop() {
         for (int i = 0; i < eventsList.size(); i++) {
             eventsList.remove(i);
         }

@@ -22,8 +22,8 @@ package org.protocoderrunner.api.boards;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.PInterface;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.api.ProtoBase;
 import org.protocoderrunner.base.hardware.HardwareCallback;
 import org.protocoderrunner.base.hardware.IOIOBoard;
 import org.protocoderrunner.base.utils.MLog;
@@ -35,7 +35,7 @@ import ioio.lib.api.IOIO;
 import ioio.lib.api.PwmOutput;
 import ioio.lib.api.exception.ConnectionLostException;
 
-public class PIOIO extends PInterface implements HardwareCallback {
+public class PIOIO extends ProtoBase implements HardwareCallback {
 
     private final String TAG = "PIOIO";
 
@@ -164,4 +164,8 @@ public class PIOIO extends PInterface implements HardwareCallback {
 
     }
 
+    @Override
+    public void __stop() {
+        stop();
+    }
 }

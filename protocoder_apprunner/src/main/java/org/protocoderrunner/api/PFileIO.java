@@ -25,8 +25,7 @@ import android.os.FileObserver;
 import net.lingala.zip4j.exception.ZipException;
 
 import org.apache.commons.io.FileUtils;
-import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.PInterface;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.api.other.PSqLite;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
@@ -35,7 +34,7 @@ import org.protocoderrunner.base.utils.FileIO;
 import java.io.File;
 import java.io.IOException;
 
-public class PFileIO extends PInterface {
+public class PFileIO extends ProtoBase {
 
     final private String TAG = PFileIO.class.getSimpleName();
 
@@ -301,7 +300,8 @@ public class PFileIO extends PInterface {
         fileObserver.startWatching();
     }
 
-    public void stop() {
+    @Override
+    public void __stop() {
         if (fileObserver != null) {
             fileObserver.stopWatching();
             fileObserver = null;

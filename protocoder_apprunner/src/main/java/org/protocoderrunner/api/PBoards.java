@@ -22,17 +22,16 @@ package org.protocoderrunner.api;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.PInterface;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.api.boards.PArduino;
 import org.protocoderrunner.api.boards.PIOIO;
 import org.protocoderrunner.api.boards.PSerial;
 import org.protocoderrunner.base.hardware.AdkPort;
 import org.protocoderrunner.base.utils.MLog;
 
-public class PBoards extends PInterface {
+public class PBoards extends ProtoBase {
 
-    private final String TAG = "PBoards";
+    private final String TAG = PBoards.class.getSimpleName();
 
     public PBoards(AppRunner appRunner) {
         super(appRunner);
@@ -107,4 +106,8 @@ public class PBoards extends PInterface {
         return adk;
     }
 
+    @Override
+    public void __stop() {
+
+    }
 }

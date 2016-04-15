@@ -24,13 +24,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.PInterface;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.api.ProtoBase;
 import org.protocoderrunner.base.utils.StrUtils;
 
 import java.net.UnknownHostException;
 
-public class PDashboardImage extends PInterface {
+public class PDashboardImage extends ProtoBase {
 
     private static final String TAG = "PDashboardImage";
     String id;
@@ -79,5 +79,10 @@ public class PDashboardImage extends PInterface {
 
         //TODO change to events
         //CustomWebsocketServer.getInstance(getContext()).send(msg);
+    }
+
+    @Override
+    public void __stop() {
+
     }
 }

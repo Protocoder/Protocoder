@@ -26,12 +26,11 @@ import android.media.MediaRecorder;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.AppRunner;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.AppRunnerActivity;
-import org.protocoderrunner.PInterface;
+import org.protocoderrunner.api.ProtoBase;
 
-public class PAudioRecorder extends PInterface {
-
+public class PAudioRecorder extends ProtoBase {
 
     MediaRecorder recorder;
     ProgressDialog mProgressDialog;
@@ -40,7 +39,6 @@ public class PAudioRecorder extends PInterface {
     public PAudioRecorder(AppRunner appRunner) {
         super(appRunner);
     }
-
 
     @ProtoMethod(description = "Starts recording", example = "")
     @ProtoMethodParam(params = {"showProgressBoolean"})
@@ -92,7 +90,6 @@ public class PAudioRecorder extends PInterface {
         return this;
     }
 
-
     @ProtoMethod(description = "Stops recording", example = "")
     @ProtoMethodParam(params = {""})
     public void stopRecording() {
@@ -114,14 +111,16 @@ public class PAudioRecorder extends PInterface {
 
     }
 
-
     public void stop() {
         stopRecording();
     }
-
 
     public void startRecordingWithUi(AppRunnerActivity activity) {
         super.setActivity(activity);
     }
 
+    @Override
+    public void __stop() {
+        stopRecording();
+    }
 }

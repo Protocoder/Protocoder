@@ -5,67 +5,80 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.FileObserver;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.protocoder.MainActivity;
+import org.protocoder.appinterpreter.AppRunnerCustom;
 import org.protocoder.events.Events;
 import org.protocoder.events.EventsProxy;
 import org.protocoder.helpers.ProtoAppHelper;
 import org.protocoder.settings.ProtocoderSettings;
-import org.protocoderrunner.AppRunnerActivity;
+import org.protocoderrunner.api.PDevice;
 import org.protocoderrunner.base.network.NetworkUtils;
 import org.protocoderrunner.base.utils.AndroidUtils;
 import org.protocoderrunner.base.utils.MLog;
+
+import java.net.UnknownHostException;
+import java.util.HashMap;
 
 public class ProtocoderServerService extends Service {
 
     private final String TAG = ProtocoderServerService.class.getSimpleName();
 
-    private final int NOTIFICATION_SERVER_ID = 58592;
+    private final int NOTIFICATION_ID = 58592;
     private static final String SERVICE_CLOSE = "service_close";
 
     private NotificationManager mNotifManager;
     private PendingIntent mRestartPendingIntent;
     private Toast mToast;
-
     private EventsProxy mEventsProxy;
 
     /*
      * Servers
      */
-    private ProtocoderHttpServer protocoderHttpServer2;
+    private ProtocoderHttpServer protocoderHttpServer;
     private ProtocoderFtpServer protocoderFtpServer;
     private ProtocoderWebsocketServer protocoderWebsockets;
 
+    private Gson gson = new Gson();
+    private int counter = 0;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        MLog.d(TAG, "onStartCommand");
+
+        if (intent != null) {
+            AndroidUtils.debugIntent(TAG, intent);
+            if (intent.getAction() == SERVICE_CLOSE) stopSelf();
+        }
+
         return Service.START_STICKY;
     }
 
-    /*
     BroadcastReceiver mNotificationReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            MLog.d(TAG, "lalall");
+            MLog.d(TAG, "received action: " + intent.getAction());
             if (intent.getAction().equals(SERVICE_CLOSE)) {
-                ProtocoderServerService.this.stopSelf();
-                mNotifManager.cancel(NOTIFICATION_SERVER_ID);
+                //ProtocoderServerService.this.stopSelf();
+                //mNotifManager.cancel(NOTIFICATION_SERVER_ID);
             }
         }
     };
-    */
 
     Thread.UncaughtExceptionHandler handler = new Thread.UncaughtExceptionHandler() {
         @Override
@@ -100,7 +113,7 @@ public class ProtocoderServerService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        MLog.d(TAG, "service created");
+        MLog.d(TAG, "network service created");
 
         /*
          * Init the event proxy
@@ -109,38 +122,82 @@ public class ProtocoderServerService extends Service {
 
         EventBus.getDefault().register(this);
 
-        Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        Intent notificationIntent = new Intent(this, ProtocoderServerService.class).setAction(SERVICE_CLOSE);
+        PendingIntent pendingIntent = PendingIntent.getService(this, (int) System.currentTimeMillis(), notificationIntent, 0);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                 .setSmallIcon(org.protocoderrunner.R.drawable.protocoder_icon)
                 .setContentTitle("Protocoder").setContentText("Running service ")
                 .setOngoing(false)
                 .addAction(org.protocoderrunner.R.drawable.ic_action_stop, "stop", pendingIntent)
-                .setDeleteIntent(pendingIntent)
-                .setContentInfo("qq");
+                //.setDeleteIntent(pendingIntent)
+                .setContentInfo("1 Connection");
 
         Notification notification = builder.build();
 
-        startForeground(232345, notification);
+        startForeground(NOTIFICATION_ID, notification);
 
-        //try {
-            //ServerRunner.run(ProtocoderHttpServer.class);
-            protocoderHttpServer2 = new ProtocoderHttpServer(this, ProtocoderSettings.HTTP_PORT);
-            // ServerRunner.executeInstance(protocoderHttpServer2);
-        //} catch (IOException e) {
-        //    MLog.e(TAG, "http server not initialized");
-        //    e.printStackTrace();
-        //}
+        protocoderHttpServer = new ProtocoderHttpServer(this, ProtocoderSettings.HTTP_PORT);
+
+        try {
+            protocoderWebsockets = new ProtocoderWebsocketServer(this, ProtocoderSettings.WEBSOCKET_PORT);
+            protocoderWebsockets.start();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
 
         //protocoderFtpServer = new ProtocoderFtpServer(this);
-        //protocoderWebsockets = new ProtocoderWebsocketServer(this);
-
 
         registerReceiver(connectivityChangeReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         fileObserver.startWatching();
 
-        //createNotification();
+        // register log broadcast
+        IntentFilter filterSend = new IntentFilter();
+        filterSend.addAction("org.protocoder.intent.CONSOLE");
+        registerReceiver(logBroadcastReceiver, filterSend);
+
+        // register a broadcast to receive the notification commands
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(SERVICE_CLOSE);
+        registerReceiver(mNotificationReceiver, filter);
+
+        final AppRunnerCustom appRunner = new AppRunnerCustom(this).initDefaultObjects();
+
+        final Handler handler = new Handler();
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+
+                HashMap info = new HashMap();
+                info.put("action", "device");
+
+                info.put("battery level", appRunner.pDevice.battery());
+                info.put("memory", appRunner.pDevice.memory().summary());
+                info.put("brightness", appRunner.pDevice.brightness());
+                info.put("screenOn", appRunner.pDevice.isScreenOn());
+
+                PDevice.DeviceInfo deviceInfo = appRunner.pDevice.info();
+                info.put("type", appRunner.pDevice.type());
+                info.put("modelName", deviceInfo.model);
+                info.put("orientation", appRunner.pDevice.orientation());
+                info.put("manufacturer", deviceInfo.manufacturer);
+                info.put("screenResolution", deviceInfo.screenWidth + " x " + deviceInfo.screenHeight);
+                info.put("screen dpi", deviceInfo.screenDpi);
+
+                info.put("network vailable", appRunner.pNetwork.isNetworkAvailable());
+                info.put("wifi enabled", appRunner.pNetwork.isWifiEnabled());
+                info.put("network type", appRunner.pNetwork.getNetworkType());
+                info.put("ip", appRunner.pNetwork.ipAddress());
+                info.put("rssi", appRunner.pNetwork.wifiInfo().getRssi());
+                info.put("ssid", appRunner.pNetwork.wifiInfo().getSSID());
+
+                String jsonObject = gson.toJson(info);
+
+                protocoderWebsockets.send(jsonObject);
+                handler.postDelayed(this, 1000);
+            }
+        };
+        handler.postDelayed(r, 0);
     }
 
     @Override
@@ -148,11 +205,14 @@ public class ProtocoderServerService extends Service {
         super.onDestroy();
         MLog.d(TAG, "service destroyed");
         mEventsProxy.stop();
-        protocoderHttpServer2.stop();
+        protocoderHttpServer.stop();
+        protocoderWebsockets.stop();
 
         // unregisterReceiver(mNotificationReceiver);
 
         unregisterReceiver(connectivityChangeReceiver);
+        unregisterReceiver(mNotificationReceiver);
+        unregisterReceiver(logBroadcastReceiver);
         fileObserver.stopWatching();
 
         EventBus.getDefault().unregister(this);
@@ -198,6 +258,7 @@ public class ProtocoderServerService extends Service {
      * Notification that show if the server is ON
      */
     private void createNotification() {
+        /*
         //create pending intent that will be triggered if the notification is clicked
         IntentFilter filter = new IntentFilter();
         filter.addAction(SERVICE_CLOSE);
@@ -229,15 +290,33 @@ public class ProtocoderServerService extends Service {
         mNotificationManager.notify(NOTIFICATION_SERVER_ID, mBuilder.build());
 
         Thread.setDefaultUncaughtExceptionHandler(handler);
+        */
     }
 
-    /*
-    * Events
-    *
-    * - Start app
-    * - Stop service
-    *
-    */
+    /**
+     * Events
+     *
+     * - Start app
+     * - Stop service
+     *
+     */
+
+    /**
+     * send logs to WEBIDE
+     */
+    BroadcastReceiver logBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            MLog.d(TAG, intent.getAction());
+
+            HashMap hashMap = new HashMap();
+            hashMap.put("action", "console");
+            hashMap.put("log", intent.getStringExtra("log"));
+            String jsonObject = gson.toJson(hashMap);
+
+            protocoderWebsockets.send(jsonObject);
+        }
+    };
 
     @Subscribe
     public void onEventMainThread(Events.ProjectEvent e) {
@@ -245,8 +324,6 @@ public class ProtocoderServerService extends Service {
 
         String action = e.getAction();
         if (action.equals(Events.PROJECT_RUN)) {
-            MLog.d(TAG, "run 1");
-
             ProtoAppHelper.launchScript(getApplicationContext(), e.getProject());
         } else if (action.equals(Events.PROJECT_STOP_ALL)) {
             MLog.d(TAG, "stop_all 1");
@@ -261,6 +338,8 @@ public class ProtocoderServerService extends Service {
         } else if (action.equals(Events.PROJECT_UPDATE)) {
             //mProtocoder.protoScripts.listRefresh();
         } else if (action.equals(Events.PROJECT_EDIT)) {
+            MLog.d(TAG, "edit " + e.getProject().getName());
+
             ProtoAppHelper.launchEditor(getApplicationContext(), e.getProject());
         }
     }
@@ -268,8 +347,7 @@ public class ProtocoderServerService extends Service {
     //stop service
     @Subscribe
     public void onEventMainThread(Events.SelectedProjectEvent e) {
-       // stopSelf();
+        // stopSelf();
     }
-
 
 }

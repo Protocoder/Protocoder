@@ -28,15 +28,15 @@ import org.json.JSONObject;
 import org.mozilla.javascript.NativeArray;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.PInterface;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.api.ProtoBase;
 import org.protocoderrunner.base.utils.MLog;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-public class PSocketIOClient extends PInterface {
+public class PSocketIOClient extends ProtoBase {
 
     private String TAG = "PSocketIOClient";
     private SocketIOClient mSocketIOClient;
@@ -154,7 +154,8 @@ public class PSocketIOClient extends PInterface {
         return this;
     }
 
-    public void stop() {
+    @Override
+    public void __stop() {
         try {
             mSocketIOClient.disconnect();
         } catch (IOException e) {

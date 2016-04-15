@@ -25,8 +25,8 @@ import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.PInterface;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.api.ProtoBase;
 import org.protocoderrunner.base.utils.MLog;
 
 import java.io.FileInputStream;
@@ -36,7 +36,7 @@ import java.util.ArrayList;
 
 //current source :http://androiddev.orkitra.com/?p=28
 
-public class PFtpClient extends PInterface {
+public class PFtpClient extends ProtoBase {
 
     public static String workDir;
 
@@ -299,7 +299,8 @@ public class PFtpClient extends PInterface {
         t.start();
     }
 
-    public void stop() {
+    @Override
+    public void __stop() {
         disconnect(null);
     }
 }

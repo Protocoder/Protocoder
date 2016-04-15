@@ -25,13 +25,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 @SuppressLint("NewApi")
-public class BaseFragment extends Fragment {
+public abstract class BaseFragment extends Fragment {
 
-    private static final String TAG = "BaseFragment";
+    private static final String TAG = BaseFragment.class.getSimpleName();
 
     public interface FragmentListener {
         public void onReady();
-
         public void onFinish(boolean finished);
     }
 
@@ -40,7 +39,6 @@ public class BaseFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override

@@ -20,22 +20,20 @@
 
 package org.protocoderrunner.api.network;
 
-import android.bluetooth.BluetoothGattDescriptor;
-
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.os.Handler;
 
-import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.PInterface;
-import org.protocoderrunner.api.other.WhatIsRunning;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.api.ProtoBase;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.base.utils.MLog;
@@ -53,7 +51,7 @@ import java.util.UUID;
  * @version 1.0
  */
 @SuppressLint("NewApi")
-public class PBluetoothLe extends PInterface {
+public class PBluetoothLe extends ProtoBase {
 
     private List<BluetoothDevice> mDevices;
     private BluetoothDevice currentDevice;
@@ -204,7 +202,8 @@ public class PBluetoothLe extends PInterface {
         return this.currentDevice;
     }
 
-    public void stop() {
+    @Override
+    public void __stop() {
         if (connected) {
             mGatt.close();
         }

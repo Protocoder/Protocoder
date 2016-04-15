@@ -22,7 +22,7 @@ package org.protocoderrunner.api.media;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.AppRunner;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.api.widgets.PViewInterface;
 import org.protocoderrunner.base.gui.CameraNew;
 

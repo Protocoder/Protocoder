@@ -33,9 +33,8 @@ import android.provider.MediaStore.MediaColumns;
 import android.support.v4.app.NotificationCompat;
 
 import org.mozilla.javascript.NativeObject;
-import org.protocoderrunner.AppRunner;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.AppRunnerActivity;
-import org.protocoderrunner.PInterface;
 import org.protocoderrunner.R;
 import org.protocoderrunner.api.other.PEvents;
 import org.protocoderrunner.api.other.PLiveCodingFeedback;
@@ -44,7 +43,7 @@ import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.base.utils.ExecuteCmd;
 import org.protocoderrunner.base.utils.FileIO;
 
-public class PApp extends PInterface {
+public class PApp extends ProtoBase {
 
     PEvents pevents;
 
@@ -101,13 +100,11 @@ public class PApp extends PInterface {
     }
 
     @android.webkit.JavascriptInterface
-
     @ProtoMethod(description = "evaluate script", example = "")
     @ProtoMethodParam(params = {"code"})
     public void eval(String code) {
         getAppRunner().interp.eval(code);
     }
-
 
     @ProtoMethod(description = "loads and external file containing code", example = "")
     @ProtoMethodParam(params = {"fileName"})
@@ -127,7 +124,6 @@ public class PApp extends PInterface {
 
     //TODO way to cancel notification and come back to the script
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-
     @ProtoMethod(description = "", example = "")
     @ProtoMethodParam(params = {"id", "title", "description"})
     public void notification(int id, String title, String description) {
@@ -289,4 +285,8 @@ public class PApp extends PInterface {
         getContext().startActivity(intent);
     }
 
+    @Override
+    public void __stop() {
+
+    }
 }

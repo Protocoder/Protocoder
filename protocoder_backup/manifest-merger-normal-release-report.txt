@@ -210,7 +210,7 @@ action#org.protocoder.ProtoAppInstallerActivity
 ADDED from AndroidManifest.xml:109:17
 	android:name
 		ADDED from AndroidManifest.xml:109:25
-provider#org.protocoder.ProtoContentProvider
+provider#org.protocoder.ProtoContentProvider2
 ADDED from AndroidManifest.xml:118:9
 	android:exported
 		ADDED from AndroidManifest.xml:121:13

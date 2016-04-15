@@ -23,7 +23,6 @@ package org.protocoderrunner;
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.media.AudioManager;
 import android.os.Bundle;
@@ -44,6 +43,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.protocoderrunner.api.PApp;
 import org.protocoderrunner.api.other.PLiveCodingFeedback;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.apprunner.AppRunnerInterpreter;
 import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.models.Project;
 
@@ -141,15 +142,15 @@ public class AppRunnerFragment extends Fragment {
         // Call the onCreate JavaScript function.
         mAppRunner.interp.callJsFunction("onCreate", savedInstanceState);
 
-        //audio
+        // audio
         AudioManager audio = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         int currentVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
         mActivity.setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
-        //nfc
+        // nfc
         mActivity.initializeNFC();
 
-        //file observer will notifify project file changes
+        // file observer will notify project file changes
         startFileObserver();
 
         // send ready to the webIDE
@@ -230,16 +231,11 @@ public class AppRunnerFragment extends Fragment {
         super.onDetach();
         MLog.d(TAG, "onDetach");
 
-        //mContext = null;
-        //mActivity = null;
     }
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-
-        //menu.add("llala");
-
     }
 
     public void addOnAppStatusListener(PApp.onAppStatus onAppStatus) {
@@ -319,54 +315,6 @@ public class AppRunnerFragment extends Fragment {
 
         return mainLayout;
     }
-//
-//	public void showEditor(boolean b) {
-//
-//		if (b && editorFragment == null) {
-//			editorFragment = new EditorFragment(); // .newInstance(project);
-//			Bundle bundle = new Bundle();
-//
-//			bundle.putString(Project.NAME, mCurrentProject.getName());
-//			//bundle.putString(, mCurrentProject.getStoragePath());
-//			bundle.putInt(Project.TYPE, mCurrentProject.getPath());
-//			editorFragment.setArguments(bundle);
-//			editorFragment.addListener(new EditorFragmentListener() {
-//
-//				@Override
-//				public void onLoad() {
-//
-//				}
-//
-//				@Override
-//				public void onLineTouched() {
-//
-//				}
-//			});
-//
-//
-//            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//            ft.add(editorLayout.getId(), editorFragment, String.valueOf(editorLayout.getId()));
-//            // ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-//            // ft.setCustomAnimations(android.R.anim.fade_in,
-//            // android.R.anim.fade_out);
-//            ft.addToBackStack(null);
-//            ft.commit();
-//
-//			//this.addFragment(editorFragment, EDITOR_ID, "editorFragment", true);
-//
-//		} else {
-//
-//
-//			if (editorFragment != null && editorFragment.isVisible()) {
-//                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//                ft.remove(editorFragment);
-//                ft.commit();
-//                editorFragment = null;
-//            } else {
-//
-//			}
-//		}
-//	}
 
     public void showConsole(boolean visible) {
 
@@ -388,7 +336,7 @@ public class AppRunnerFragment extends Fragment {
 
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    consoleRLayout.setVisibility(View.VISIBLE);
+                    consoleRLayout.setVisibility(View.GONE);
                 }
 
                 @Override

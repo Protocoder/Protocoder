@@ -9,17 +9,15 @@
     >
 
     <android.support.v7.widget.Toolbar
-        android:layout_alignParentTop="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="0dp"
-        style="@style/ToolBarAppRunner.AppRunner"
         android:id="@+id/toolbar"
+        style="@style/ToolBarAppRunner.AppRunner"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
         android:minHeight="?attr/actionBarSize"
-        android:background="#FF444444">
+        android:background="#FF444444"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true">
     </android.support.v7.widget.Toolbar>
-    <!--style="@style/ToolBarStyle.Event"-->
-
 
     <!--<android.support.v7.widget.Toolbar-->
         <!--android:layout_alignParentRight="true"-->
@@ -33,12 +31,17 @@
 
     <FrameLayout
         android:id="@+id/apprunner_fragment"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_below="@id/toolbar"
-        android:layout_alignParentRight="true"/>
+        android:layout_alignParentRight="true">
+    </FrameLayout>
 
-        <!--android:layout_below="@id/my_awesome_toolbar"/>-->
-
+    <FrameLayout
+        android:id="@+id/debug_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone" />
 
 </RelativeLayout>

@@ -13,8 +13,7 @@ public class PProcessing extends PApplet {
     private PInterfaceDraw pfnDraw;
     private PInterfaceSetup pfnSetup;
     private String mode;
-
-
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

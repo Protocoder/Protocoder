@@ -27,9 +27,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Vibrator;
+import android.provider.Settings;
 import android.provider.Settings.Secure;
 import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.SmsManager;
@@ -39,14 +41,13 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.PInterface;
 import org.protocoderrunner.base.utils.AndroidUtils;
 import org.protocoderrunner.base.utils.Intents;
 
-public class PDevice extends PInterface {
+public class PDevice extends ProtoBase {
 
     private BroadcastReceiver batteryReceiver;
     private BroadcastReceiver onNotification;
@@ -92,6 +93,19 @@ public class PDevice extends PInterface {
         });
     }
 
+    @ProtoMethod(description = "Get the current brightness", example = "")
+    @ProtoMethodParam(params = {""})
+    public float brightness() {
+        int brightness = -1;
+
+        try {
+            brightness = Settings.System.getInt(getContext().getContentResolver(), Settings.System.SCREEN_BRIGHTNESS);
+        } catch (Settings.SettingNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return brightness;
+    }
 
     @ProtoMethod(description = "Set brightness", example = "")
     @ProtoMethodParam(params = {"brightness"})
@@ -99,26 +113,17 @@ public class PDevice extends PInterface {
         getActivity().setBrightness(val);
     }
 
-
     @ProtoMethod(description = "Set the global brightness from 0 to 255", example = "")
     @ProtoMethodParam(params = {"brightness"})
     public void globalBrightness(int b) {
         AndroidUtils.setGlobalBrightness(getContext(), b);
     }
 
-
-    @ProtoMethod(description = "Get the current brightness", example = "")
-    public float brightness() {
-        return getActivity().getCurrentBrightness();
-    }
-
-
     @ProtoMethod(description = "Set the screen always on", example = "")
     @ProtoMethodParam(params = {"boolean"})
     public void screenAlwaysOn(boolean b) {
         getActivity().setScreenAlwaysOn(b);
     }
-
 
     @ProtoMethod(description = "Check if the scrren is on", example = "")
     public boolean isScreenOn() {
@@ -138,12 +143,10 @@ public class PDevice extends PInterface {
         AndroidUtils.setScreenTimeout(getContext(), time);
     }
 
-
     @ProtoMethod(description = "Check if is in airplane mode", example = "")
     public boolean isAirplaneMode() {
         return AndroidUtils.isAirplaneMode(getContext());
     }
-
 
     @ProtoMethod(description = "Check what type of device is", example = "")
     @ProtoMethodParam(params = {""})
@@ -155,13 +158,11 @@ public class PDevice extends PInterface {
         }
     }
 
-
     @ProtoMethod(description = "Prevent the device suspend at any time. Good for long living operations.", example = "")
     @ProtoMethodParam(params = {"boolean"})
     public void wakeLock(boolean b) {
         AndroidUtils.setWakeLock(getContext(), b);
     }
-
 
     @ProtoMethod(description = "Launch an intent", example = "")
     @ProtoMethodParam(params = {"intent"})
@@ -170,13 +171,11 @@ public class PDevice extends PInterface {
         getContext().startActivity(market_intent);
     }
 
-
     @ProtoMethod(description = "Open the default e-mail app", example = "")
     @ProtoMethodParam(params = {"recipient", "subject", "message"})
     public void openEmailApp(String recipient, String subject, String msg) {
         Intents.sendEmail(getContext(), recipient, subject, msg);
     }
-
 
     @ProtoMethod(description = "Open the default Map app", example = "")
     @ProtoMethodParam(params = {"longitude", "latitude"})
@@ -184,12 +183,10 @@ public class PDevice extends PInterface {
         Intents.openMap(getContext(), longitude, latitude);
     }
 
-
     @ProtoMethod(description = "Open the phone dial", example = "")
     public void openDial() {
         Intents.openDial(getContext());
     }
-
 
     @ProtoMethod(description = "Call a given phone number", example = "")
     @ProtoMethodParam(params = {"number"})
@@ -197,13 +194,11 @@ public class PDevice extends PInterface {
         Intents.call(getContext(), number);
     }
 
-
     @ProtoMethod(description = "Open the default web browser with a given Url", example = "")
     @ProtoMethodParam(params = {"url"})
     public void openWebApp(String url) {
         Intents.openWeb(getContext(), url);
     }
-
 
     @ProtoMethod(description = "Open the search app with the given text", example = "")
     @ProtoMethodParam(params = {"text"})
@@ -222,7 +217,6 @@ public class PDevice extends PInterface {
         public boolean connected;
     }
 
-
     @ProtoMethod(description = "Copy the content into the clipboard", example = "")
     @ProtoMethodParam(params = {"label", "text"})
     public void copyToClipboard(String label, String text) {
@@ -230,14 +224,12 @@ public class PDevice extends PInterface {
         clipboard.setPrimaryClip(ClipData.newPlainText(label, text));
     }
 
-
     @ProtoMethod(description = "Get the content from the clipboard", example = "")
     @ProtoMethodParam(params = {"label", "text"})
     public String getFromClipboard(String label, String text) {
         ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
         return clipboard.getPrimaryClip().getItemAt(clipboard.getPrimaryClip().getItemCount()).getText().toString();
     }
-
 
     @ProtoMethod(description = "", example = "")
     @ProtoMethodParam(params = {""})
@@ -286,7 +278,6 @@ public class PDevice extends PInterface {
         getContext().registerReceiver(batteryReceiver, filter);
     }
 
-
     @ProtoMethod(description = "Get the current device battery level", example = "")
     @ProtoMethodParam(params = {""})
     public float battery() {
@@ -302,27 +293,52 @@ public class PDevice extends PInterface {
         return ((float) level / (float) scale) * 100.0f;
     }
 
-    class DeviceInfo {
-        public int screenDpi;
+    @ProtoMethod(description = "Get the current device orientation", example = "")
+    @ProtoMethodParam(params = {""})
+    public String orientation() {
+        int orientation = getContext().getResources().getConfiguration().orientation;
+        String orientationStr = "";
+
+        switch (orientation) {
+            case 1:
+                orientationStr = "portrait";
+                break;
+            case 2:
+                orientationStr = "landscape";
+                break;
+            default:
+                orientationStr = "unknown";
+        }
+
+        return orientationStr;
+    }
+
+    public class DeviceInfo {
         public String androidId;
-        public String imei;
-        public String versionRelease;
-        public String sdk;
         public String board;
         public String brand;
-        public String device;
-        public String host;
-        public String fingerPrint;
-        public String id;
         public String cpuAbi;
         public String cpuAbi2;
+        public String device;
+        public String display;
+        public String fingerPrint;
+        public String host;
+        public String id;
+        public String imei;
+        public boolean keyboardPresent;
+        public String manufacturer;
+        public String model;
+        public String os;
+        public int screenDpi;
+        public int screenWidth;
+        public int screenHeight;
+        public String sdk;
+        public String versionRelease;
 
         public String toJSON() {
             return new Gson().toJson(this);
         }
-
     }
-
 
     @ProtoMethod(description = "Get some device information", example = "")
     @ProtoMethodParam(params = {""})
@@ -330,21 +346,22 @@ public class PDevice extends PInterface {
         DeviceInfo deviceInfo = new DeviceInfo();
 
         // density dpi
-        DisplayMetrics metrics = new DisplayMetrics();
+        DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
 
-        //TODO reenable this
-        //contextUi.get().getWindowManager().getDefaultDisplay().getMetrics(metrics);
         deviceInfo.screenDpi = metrics.densityDpi;
+        deviceInfo.screenWidth = metrics.widthPixels;
+        deviceInfo.screenHeight = metrics.heightPixels;
 
         // id
         deviceInfo.androidId = Secure.getString(getContext().getContentResolver(), Secure.ANDROID_ID);
 
         // imei
         deviceInfo.imei = ((TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
-
+        deviceInfo.manufacturer = Build.MANUFACTURER;
+        deviceInfo.model = Build.MODEL;
+        deviceInfo.display = Build.DISPLAY;
         deviceInfo.versionRelease = Build.VERSION.RELEASE;
-        deviceInfo.versionRelease = Build.VERSION.INCREMENTAL;
-        deviceInfo.sdk = Build.VERSION.SDK;
+        deviceInfo.os = Build.VERSION.BASE_OS;
         deviceInfo.board = Build.BOARD;
         deviceInfo.brand = Build.BRAND;
         deviceInfo.device = Build.DEVICE;
@@ -353,16 +370,21 @@ public class PDevice extends PInterface {
         deviceInfo.id = Build.ID;
         deviceInfo.cpuAbi = Build.CPU_ABI;
         deviceInfo.cpuAbi2 = Build.CPU_ABI2;
+        deviceInfo.keyboardPresent = getContext().getResources().getConfiguration().keyboard != Configuration.KEYBOARD_NOKEYS;
+
 
         return deviceInfo;
     }
 
-    class Memory {
+    public class Memory {
         public long total;
         public long used;
         public long max;
-    }
 
+        public String summary() {
+            return used + " (" + max + ") " + "/ " + total;
+        }
+    }
 
     @ProtoMethod(description = "Get memory usage", example = "")
     @ProtoMethodParam(params = {""})
@@ -376,13 +398,11 @@ public class PDevice extends PInterface {
         return mem;
     }
 
-
     @ProtoMethod(description = "Check if the device has camera", example = "")
     public boolean hasCamera() {
         PackageManager pm = getContext().getPackageManager();
         return pm.hasSystemFeature(PackageManager.FEATURE_CAMERA);
     }
-
 
     @ProtoMethod(description = "Check if the device has front", example = "")
     public boolean hasFrontCamera() {
@@ -390,13 +410,11 @@ public class PDevice extends PInterface {
         return pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT);
     }
 
-
     @ProtoMethod(description = "Check if the device has camera flash", example = "")
     public boolean hasCameraFlash() {
         PackageManager pm = getContext().getPackageManager();
         return pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
     }
-
 
     @ProtoMethod(description = "Check if the device has bluetooth", example = "")
     public boolean hasBluetooth() {
@@ -404,13 +422,11 @@ public class PDevice extends PInterface {
         return pm.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH);
     }
 
-
     @ProtoMethod(description = "Check if the device has Bluetooth Low Energy", example = "")
     public boolean isBluetoothLEAvailable() {
         PackageManager pm = getContext().getPackageManager();
         return pm.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE);
     }
-
 
     @ProtoMethod(description = "Check if the device has microphone", example = "")
     public boolean hasMic() {
@@ -418,13 +434,11 @@ public class PDevice extends PInterface {
         return pm.hasSystemFeature(PackageManager.FEATURE_MICROPHONE);
     }
 
-
     @ProtoMethod(description = "Check if the device has wifi", example = "")
     public boolean hasWifi() {
         PackageManager pm = getContext().getPackageManager();
         return pm.hasSystemFeature(PackageManager.FEATURE_WIFI);
     }
-
 
     @ProtoMethod(description = "Check if the device has mobile communication", example = "")
     public boolean hasMobileCommunication() {
@@ -432,13 +446,11 @@ public class PDevice extends PInterface {
         return pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
     }
 
-
     @ProtoMethod(description = "Check if the device has accelerometer", example = "")
     public boolean hasAccelerometer() {
         PackageManager pm = getContext().getPackageManager();
         return pm.hasSystemFeature(PackageManager.FEATURE_SENSOR_ACCELEROMETER);
     }
-
 
     @ProtoMethod(description = "Check if the device has compass", example = "")
     public boolean isCompassAvailable() {
@@ -446,13 +458,11 @@ public class PDevice extends PInterface {
         return pm.hasSystemFeature(PackageManager.FEATURE_SENSOR_COMPASS);
     }
 
-
     @ProtoMethod(description = "Check if the device has gyroscope", example = "")
     public boolean hasGyroscope() {
         PackageManager pm = getContext().getPackageManager();
         return pm.hasSystemFeature(PackageManager.FEATURE_SENSOR_GYROSCOPE);
     }
-
 
     @ProtoMethod(description = "Check if the device has GPS", example = "")
     public boolean hasGPS() {
@@ -460,13 +470,11 @@ public class PDevice extends PInterface {
         return pm.hasSystemFeature(PackageManager.FEATURE_LOCATION_GPS);
     }
 
-
     @ProtoMethod(description = "Check if the device has light sensor", example = "")
     public boolean hasLightSensor() {
         PackageManager pm = getContext().getPackageManager();
         return pm.hasSystemFeature(PackageManager.FEATURE_SENSOR_LIGHT);
     }
-
 
     @ProtoMethod(description = "Check if the device has proximity sensor", example = "")
     public boolean hasProximitySensor() {
@@ -474,20 +482,17 @@ public class PDevice extends PInterface {
         return pm.hasSystemFeature(PackageManager.FEATURE_SENSOR_PROXIMITY);
     }
 
-
     @ProtoMethod(description = "Check if the device has step detector", example = "")
     public boolean hasStepDetector() {
         PackageManager pm = getContext().getPackageManager();
         return pm.hasSystemFeature(PackageManager.FEATURE_SENSOR_STEP_DETECTOR);
     }
 
-
     @ProtoMethod(description = "Check if the device has barometer", example = "")
     public boolean hasBarometer() {
         PackageManager pm = getContext().getPackageManager();
         return pm.hasSystemFeature(PackageManager.FEATURE_SENSOR_BAROMETER);
     }
-
 
     public interface OnNotificationCallback {
         public void event(String[] notification);
@@ -510,7 +515,8 @@ public class PDevice extends PInterface {
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(onNotification, new IntentFilter("Msg"));
     }
 
-    public void stop() {
+    @Override
+    public void __stop() {
         getContext().unregisterReceiver(batteryReceiver);
         getContext().unregisterReceiver(onNotification);
         batteryReceiver = null;

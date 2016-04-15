@@ -22,7 +22,7 @@ package org.protocoderrunner.api.widgets;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.AppRunner;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.base.gui.CustomVideoTextureView;
 
 public class PVideo extends CustomVideoTextureView implements PViewInterface {

@@ -33,8 +33,7 @@ import android.util.Log;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.PInterface;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.api.media.PAudioPlayer;
 import org.protocoderrunner.api.media.PAudioRecorder;
 import org.protocoderrunner.api.media.PMidi;
@@ -48,26 +47,24 @@ import org.protocoderrunner.base.utils.MLog;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class PMedia extends PInterface {
+public class PMedia extends ProtoBase {
 
     String TAG = "PMedia";
 
     private HeadSetReceiver headsetPluggedReceiver;
     private MicPluggedCB headsetCallbackfn;
+    PAudioPlayer player;
     PAudioRecorder rec;
+    boolean recording = false;
 
     public PMedia(AppRunner appRunner) {
         super(appRunner);
         rec = new PAudioRecorder(appRunner);
     }
 
-
     //public PAudioPlayer loadSound(String url, PAudioPlayer.LoadSoundCB callbackfn) {
     //	return loadPlayer(url, callbackfn);
     //}
-
-    PAudioPlayer player;
-
 
     @ProtoMethod(description = "Play a sound file giving its filename", example = "media.playSound(fileName);")
     @ProtoMethodParam(params = {"fileName"})
@@ -100,13 +97,11 @@ public class PMedia extends PInterface {
         audioManager.setSpeakerphoneOn(!b);
     }
 
-
     @ProtoMethod(description = "Enable sounds effects (default false)", example = "")
     @ProtoMethodParam(params = {"boolean"})
     public void enableSoundEffects(boolean b) {
         AndroidUtils.setEnableSoundEffects(getContext(), b);
     }
-
 
     @ProtoMethod(description = "Loads and initializes a PureData patch http://www.puredata.info using libpd", example = "")
     @ProtoMethodParam(params = {"fileName", "micChannels", "outputChannels", "sampleRate", "buffer"})
@@ -123,13 +118,18 @@ public class PMedia extends PInterface {
     @ProtoMethodParam(params = {"fileName"})
     public PPureData initPdPatch(String fileName) {
         PPureData pPureData = new PPureData(getAppRunner());
-        pPureData.initPatch(fileName);
+
+        String filePath = getAppRunner().getProject().getFullPathForFile(fileName);
+        MLog.d(TAG, filePath);
+
+        pPureData.path = filePath;
+
+        MLog.d(TAG, " "  + filePath);
+        // pPureData.initPatch(fileName);
+        pPureData.initPdService();
 
         return pPureData;
     }
-
-    boolean recording = false;
-
 
     @ProtoMethod(description = "Record a sound with the microphone", example = "")
     @ProtoMethodParam(params = {"fileName", "showProgressBoolean"})
@@ -143,7 +143,6 @@ public class PMedia extends PInterface {
             rec.startRecording(fileName, showProgress & getAppRunner().hasUserInterface);
         }
     }
-
 
     @ProtoMethod(description = "Record a sound with the microphone", example = "")
     @ProtoMethodParam(params = {"fileName", "showProgressBoolean"})
@@ -282,11 +281,6 @@ public class PMedia extends PInterface {
         public void onNewResult(String text);
     }
 
-    public void stop() {
-        getContext().unregisterReceiver(headsetPluggedReceiver);
-    }
-
-
     @ProtoMethod(description = "Start a connected midi device", example = "media.startVoiceRecognition(function(text) { console.log(text) } );")
     @ProtoMethodParam(params = {"function(recognizedText)"})
     public PMidi connectMidiDevice() {
@@ -336,5 +330,9 @@ public class PMedia extends PInterface {
         }
     }
 
+    @Override
+    public void __stop() {
+         getContext().unregisterReceiver(headsetPluggedReceiver);
+    }
 }
 

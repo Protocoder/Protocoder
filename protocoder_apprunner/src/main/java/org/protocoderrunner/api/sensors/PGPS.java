@@ -39,9 +39,8 @@ import android.provider.Settings;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.PInterface;
-import org.protocoderrunner.logger.L;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.api.ProtoBase;
 import org.protocoderrunner.base.utils.MLog;
 
 import java.io.IOException;
@@ -49,15 +48,14 @@ import java.util.List;
 import java.util.Locale;
 
 @TargetApi(Build.VERSION_CODES.GINGERBREAD)
-public class PGPS extends PInterface {
+public class PGPS extends ProtoBase {
 
+    protected static final String TAG = PGPS.class.getSimpleName();
 
     interface GPSListener {
         void event(double lat, double lon, double alt, float speed, float bearing);
     }
 
-
-    protected static final String TAG = "GPSManager";
     private final Context mContext;
     LocationManager locationManager;
     String provider;
@@ -121,7 +119,7 @@ public class PGPS extends PInterface {
 
             @Override
             public void onStatusChanged(String provider, int status, Bundle extras) {
-                L.d(TAG, "the gps status is: " + status);
+                MLog.d(TAG, "the gps status is: " + status);
 
                 // TODO add listener to see when the GPS is on or not
                 switch (status) {
@@ -276,4 +274,8 @@ public class PGPS extends PInterface {
         locationManager.removeUpdates(listener);
     }
 
+    @Override
+    public void __stop() {
+        stop();
+    }
 }

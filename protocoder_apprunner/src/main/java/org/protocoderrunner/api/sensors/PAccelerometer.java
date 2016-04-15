@@ -25,12 +25,11 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.api.other.WhatIsRunningInterface;
 
-public class PAccelerometer extends CustomSensorManager implements WhatIsRunningInterface {
+public class PAccelerometer extends CustomSensorManager {
 
     private AccelerometerChangeCB mCallbackAccelerometerChange;
     private AccelerometerForceCB mCallbackAccelerometerForce;
@@ -93,7 +92,6 @@ public class PAccelerometer extends CustomSensorManager implements WhatIsRunning
 
         isSupported = sensormanager.registerListener(listener, sensor, speed);
     }
-
 
     @ProtoMethod(description = "Start the accelerometer. Returns x, y, z", example = "")
     @ProtoMethodParam(params = {"function(x, y, z)"})

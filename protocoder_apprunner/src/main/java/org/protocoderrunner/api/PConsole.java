@@ -20,20 +20,21 @@
 
 package org.protocoderrunner.api;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.AppRunner;
-import org.protocoderrunner.PInterface;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.base.utils.AndroidUtils;
+import org.protocoderrunner.events.Events;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class PConsole extends PInterface {
+public class PConsole extends ProtoBase {
 
     String TAG = "PConsole";
     private boolean showTime = false;
@@ -53,20 +54,21 @@ public class PConsole extends PInterface {
         for (String output : outputs) {
             builder.append(" ").append(output);
         }
-
+        String log = builder.toString();
 
         JSONObject values = null;
         JSONObject msg = null;
         try {
-            values = new JSONObject().put("val", builder.toString());
+            values = new JSONObject().put("val", log);
             msg = new JSONObject().put("type", "console").put("action", "log").put("values", values);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         send(msg);
-    }
 
+        EventBus.getDefault().post(new Events.LogEvent(log));
+    }
 
     @ProtoMethod(description = "clear the webIde console", example = "")
     @ProtoMethodParam(params = {""})
@@ -79,7 +81,6 @@ public class PConsole extends PInterface {
         }
         send(msg);
     }
-
 
     @ProtoMethod(description = "show/hide the console", example = "")
     @ProtoMethodParam(params = {"boolean"})
@@ -94,7 +95,6 @@ public class PConsole extends PInterface {
         }
         send(msg);
     }
-
 
     @ProtoMethod(description = "Change the background color", example = "")
     @ProtoMethodParam(params = {"colorHex"})
@@ -112,7 +112,6 @@ public class PConsole extends PInterface {
 
         send(msg);
     }
-
 
     @ProtoMethod(description = "Log using a defined colorHex", example = "")
     @ProtoMethodParam(params = {"colorHex"})
@@ -132,7 +131,6 @@ public class PConsole extends PInterface {
         send(msg);
     }
 
-
     @ProtoMethod(description = "Changes the console text size", example = "")
     @ProtoMethodParam(params = {"size"})
     public void textSize(int textSize) {
@@ -149,7 +147,6 @@ public class PConsole extends PInterface {
         send(msg);
     }
 
-
     @ProtoMethod(description = "Changes the console text color", example = "")
     @ProtoMethodParam(params = {"colorHex"})
     public void textColor(String colorHex) {
@@ -165,17 +162,13 @@ public class PConsole extends PInterface {
         }
 
         send(msg);
-
     }
-
 
     @ProtoMethod(description = "Enable/Disable time in the log", example = "")
     @ProtoMethodParam(params = {"boolean"})
     public void showTime(boolean b) {
         showTime = b;
-
     }
-
 
     //TODO migrate to events
     private void send(JSONObject msg) {
@@ -201,5 +194,9 @@ public class PConsole extends PInterface {
         return time;
     }
 
+    @Override
+    public void __stop() {
+
+    }
 }
 
