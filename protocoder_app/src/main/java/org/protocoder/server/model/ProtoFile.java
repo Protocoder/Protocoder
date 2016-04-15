@@ -6,6 +6,7 @@ import java.util.ArrayList;
  * Created by victornomad on 3/03/16.
  */
 public class ProtoFile {
+    public String project_parent;
     public String name;
     public String path;
     public String type;

@@ -138,8 +138,6 @@ public class ProtoScriptHelper {
         return FileIO.loadCodeFromFile(path);
     }
 
-
-
     // List folders
     public static ArrayList<Folder> listFolders(String folder, boolean orderByName) {
         ArrayList<Folder> folders = new ArrayList<Folder>();
@@ -306,6 +304,7 @@ public class ProtoScriptHelper {
 
         for (File element : file) {
             ProtoFile protoFile = new ProtoFile();
+            protoFile.project_parent = p.getName();
             protoFile.name = element.getName();
             protoFile.fileSize = element.length();
             protoFile.path = element.getPath();

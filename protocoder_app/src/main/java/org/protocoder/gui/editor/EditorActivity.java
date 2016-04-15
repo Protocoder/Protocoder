@@ -28,7 +28,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.protocoder.R;
+import org.protocoder.events.Events;
 import org.protocoder.gui._components.BaseWebviewFragment;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.base.utils.MLog;
@@ -51,9 +54,9 @@ public class EditorActivity extends BaseActivity {
     private BaseWebviewFragment webviewFragment;
 
     // drawers
-    private boolean showFilesDrawer = true;
+    private boolean showFilesDrawer = false;
+    private boolean showAPIDrawer = false;
 
-    private boolean showAPIDrawer = true;
     private Project mCurrentProject;
 
     @SuppressLint("NewApi")
@@ -85,6 +88,18 @@ public class EditorActivity extends BaseActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
     protected void setupActivity() {
         super.setupActivity();
 
@@ -95,10 +110,10 @@ public class EditorActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         this.mMenu = menu;
         menu.clear();
-        menu.add(1, MENU_RUN, 0, "Run").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        menu.add(1, MENU_SAVE, 0, "Save").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        menu.add(1, MENU_FILES, 0, "Files").setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-        menu.add(1, MENU_API, 0, "API").setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        menu.add(1, MENU_RUN, 0, "R").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(1, MENU_SAVE, 0, "S").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(1, MENU_FILES, 0, "F").setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        menu.add(1, MENU_API, 0, "API").setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -108,28 +123,29 @@ public class EditorActivity extends BaseActivity {
         // Handle item selection
         switch (item.getItemId()) {
             case MENU_RUN:
-                editorFragment.saveProject();
+                editorFragment.saveFile();
                 editorFragment.run();
 
                 return true;
 
             case MENU_SAVE:
-                editorFragment.saveProject();
+                editorFragment.saveFile();
 
                 return true;
 
             case MENU_FILES:
                 MenuItem menuFiles = mMenu.findItem(MENU_FILES).setChecked(showFilesDrawer);
 
-                showFileManagerDrawer(showFilesDrawer);
                 showFilesDrawer = !showFilesDrawer;
+                showFileManagerDrawer(showFilesDrawer);
 
                 return true;
 
             case MENU_API:
                 MenuItem menuApi = mMenu.findItem(MENU_API).setChecked(showFilesDrawer);
-                showAPIDrawer(showAPIDrawer);
+
                 showAPIDrawer = !showAPIDrawer;
+                showAPIDrawer(showAPIDrawer);
 
                 return true;
 
@@ -177,10 +193,10 @@ public class EditorActivity extends BaseActivity {
 
             fileFragment.setArguments(bundle);
             ft.add(R.id.fragmentFileManager, fileFragment).addToBackStack(null);
-            editorFragment.getView().animate().translationX(-50).setDuration(500).start();
+            // editorFragment.getView().animate().translationX(-50).setDuration(500).start();
 
         } else {
-            editorFragment.getView().animate().translationX(0).setDuration(500).start();
+            // editorFragment.getView().animate().translationX(0).setDuration(500).start();
             ft.remove(fileFragment);
         }
 
@@ -200,5 +216,14 @@ public class EditorActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         MLog.d(TAG, "");
+    }
+
+    // load script
+    @Subscribe
+    public void onEventMainThread(Events.EditorEvent e) {
+        showFileManagerDrawer(false);
+
+        mToolbar.setTitle(e.getProject().getName());
+        mToolbar.setSubtitle(e.getProtofile().name);
     }
 }

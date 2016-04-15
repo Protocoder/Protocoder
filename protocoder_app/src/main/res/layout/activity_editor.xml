@@ -19,9 +19,11 @@
 
     <FrameLayout
         android:id="@+id/fragmentFileManager"
-        android:layout_below="@id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_width="200dp"
+        android:layout_height="match_parent"
+        android:layout_alignTop="@+id/pref_container"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
     </FrameLayout>
 
     <FrameLayout

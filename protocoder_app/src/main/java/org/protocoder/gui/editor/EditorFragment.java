@@ -25,8 +25,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Selection;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -40,38 +40,42 @@ import android.widget.Toast;
 
 import org.apache.commons.lang3.StringUtils;
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.protocoder.R;
 import org.protocoder.events.Events;
 import org.protocoder.helpers.ProtoScriptHelper;
-import org.protocoder.settings.ProtocoderSettings;
+import org.protocoder.server.model.ProtoFile;
 import org.protocoderrunner.base.BaseFragment;
 import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.base.utils.TextUtils;
 import org.protocoderrunner.models.Project;
 
 import java.io.File;
+import java.util.HashMap;
 
 @SuppressLint("NewApi")
 public class EditorFragment extends BaseFragment {
 
     protected static final String TAG = EditorFragment.class.getSimpleName();
-
     public interface EditorFragmentListener {
+
         void onLoad();
         void onLineTouched();
     }
-
     private Context mContext;
 
     private EditText mEdit;
+
     private HorizontalScrollView mExtraKeyBar;
     private View v;
     private EditorFragmentListener listener;
-
     // settings
     private EditorSettings mEditorSettings = new EditorSettings();
 
     private Project mCurrentProject;
+    private String mCurrentFile = "";
+
+    HashMap<String, String> openedFiles = new HashMap<>();
 
     public EditorFragment() {
     }
@@ -92,13 +96,13 @@ public class EditorFragment extends BaseFragment {
 
         v = inflater.inflate(R.layout.fragment_editor, container, false);
 
-        mEdit = (EditText) v.findViewById(R.id.editText1);
-        mEditorSettings.fontSize = mEdit.getTextSize();
+        bindUI();
 
-        // change font
+
+        // editor settings
+        mEditorSettings.fontSize = mEdit.getTextSize();
         TextUtils.changeFont(getActivity(), mEdit, mEditorSettings.font);
 
-        bindUI();
         setExtraKeysBar();
 
         setHasOptionsMenu(true); // Set actionbar override
@@ -118,13 +122,15 @@ public class EditorFragment extends BaseFragment {
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -136,6 +142,25 @@ public class EditorFragment extends BaseFragment {
      * Bind the UI
      */
     private void bindUI() {
+        mEdit = (EditText) v.findViewById(R.id.editText1);
+        mEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // update current code string
+                openedFiles.put(mCurrentFile, s.toString());
+            }
+        });
+
         Button btnIncreaseSize = (Button) v.findViewById(R.id.increaseSize);
         btnIncreaseSize.setOnClickListener(new OnClickListener() {
 
@@ -247,18 +272,35 @@ public class EditorFragment extends BaseFragment {
      */
     public void loadProject(Project project) {
         mCurrentProject = project;
-        if (project != null) {
-            mEdit.setText(ProtoScriptHelper.getCode(project));
-        } else {
+        EventBus.getDefault().post(new Events.EditorEvent(mCurrentProject, new ProtoFile("main.js","")));
+
+        loadFile("main.js");
+    }
+
+    public void loadFile(String fileName) {
+        if (mCurrentProject == null) {
             mEdit.setText("Project loading failed");
+            return;
         }
+
+        mCurrentFile = fileName;
+
+        String code = "";
+        if (openedFiles.containsKey(fileName)) {
+            code = openedFiles.get(fileName);
+        } else {
+            code = ProtoScriptHelper.getCode(mCurrentProject, fileName);
+            openedFiles.put(fileName, code);
+        }
+
+        mEdit.setText(code);
     }
 
     /**
      * Save the current project
      */
-    public void saveProject() {
-        ProtoScriptHelper.saveCode(mCurrentProject.getSandboxPath() + File.separator + ProtocoderSettings.MAIN_FILENAME, getCode());
+    public void saveFile() {
+        ProtoScriptHelper.saveCode(mCurrentProject.getSandboxPath() + File.separator + mCurrentFile, openedFiles.get(mCurrentFile));
         Toast.makeText(getActivity(), "Saving " + mCurrentProject.getName() + "...", Toast.LENGTH_SHORT).show();
     }
 
@@ -304,4 +346,10 @@ public class EditorFragment extends BaseFragment {
         mEdit.setText(text);
     }
 
+    // load file in editor
+    @Subscribe
+    public void onEventMainThread(Events.EditorEvent e) {
+        ProtoFile f = e.getProtofile();
+        loadFile(f.name);
+    }
 }

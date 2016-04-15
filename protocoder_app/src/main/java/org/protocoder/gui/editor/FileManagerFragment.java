@@ -46,7 +46,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
 import org.protocoder.R;
+import org.protocoder.events.Events;
 import org.protocoder.helpers.ProtoScriptHelper;
 import org.protocoder.server.model.ProtoFile;
 import org.protocoderrunner.base.BaseFragment;
@@ -322,7 +324,7 @@ public class FileManagerFragment extends BaseFragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             final FileItem customView;
 
-            ProtoFile f = files.get(position);
+            final ProtoFile f = files.get(position);
 
             // if it's not recycled, initialize some
             if (convertView == null) {
@@ -334,6 +336,13 @@ public class FileManagerFragment extends BaseFragment {
             customView.setImage(getIcon(f.type));
             customView.setText(f.name);
             customView.setTag(f.name);
+            customView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MLog.d(TAG, "" + f.name);
+                    EventBus.getDefault().post(new Events.EditorEvent(mProject, f));
+                }
+            });
 
             return customView;
         }

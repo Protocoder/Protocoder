@@ -20,6 +20,7 @@
 
 package org.protocoder.events;
 
+import org.protocoder.server.model.ProtoFile;
 import org.protocoderrunner.models.Project;
 
 import java.io.File;
@@ -151,6 +152,24 @@ public class Events {
 
         public String getAddress() {
             return address;
+        }
+    }
+
+    public static class EditorEvent {
+        private final Project project;
+        private final ProtoFile protofile;
+
+        public EditorEvent(Project mProject, ProtoFile f) {
+            this.project = mProject;
+            this.protofile = f;
+        }
+
+        public Project getProject() {
+            return project;
+        }
+
+        public ProtoFile getProtofile() {
+            return protofile;
         }
     }
 }
