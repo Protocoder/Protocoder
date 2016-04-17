@@ -32,7 +32,7 @@ import org.protocoderrunner.base.utils.StrUtils;
 public class LauncherActivity extends BaseActivity {
 
     Intent intent = null;
-    private String TAG = "LauncherActivity";
+    private String TAG = LauncherActivity.class.getSimpleName();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

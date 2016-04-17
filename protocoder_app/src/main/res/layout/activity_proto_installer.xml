@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/toolbar"
+    <include layout="@layout/toolbar2"
              android:layout_alignParentRight="true"
              android:layout_alignParentTop="true"
              android:layout_height="wrap_content"
@@ -17,7 +17,7 @@
         android:id="@+id/progressBar_installing"
         android:visibility="gone"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/toolbar"
+        android:layout_below="@id/toolbar2"
         android:layout_gravity="center" />
 
     <TextView

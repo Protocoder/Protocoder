@@ -7,7 +7,7 @@
     android:orientation="vertical" >
 
     <LinearLayout
-        android:id="@+id/toolbar"
+        android:id="@+id/toolbar2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="bottom"
@@ -35,7 +35,7 @@
         android:id="@+id/description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar"
+        android:layout_below="@id/toolbar2"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
         android:fontFamily="sans-serif-condensed"

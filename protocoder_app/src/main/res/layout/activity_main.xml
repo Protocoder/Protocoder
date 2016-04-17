@@ -27,7 +27,7 @@
             android:layout_gravity="left|top"
             android:gravity="center">
 
-            <include layout="@layout/toolbar"
+            <include layout="@layout/toolbar2"
                  android:layout_alignParentRight="true"
                  android:layout_alignParentTop="true"
                  android:layout_height="wrap_content"
@@ -135,7 +135,7 @@
             android:layout_height="fill_parent"
             android:visibility="gone"
             android:layout_alignParentRight="true"
-            android:layout_below="@+id/toolbar"/>
+            android:layout_below="@+id/toolbar2"/>
 
         <FrameLayout
             android:id="@+id/fragmentIntroduction"
@@ -143,7 +143,7 @@
             android:layout_height="fill_parent"
             android:layout_alignParentRight="true"
             android:visibility="gone"
-            android:layout_below="@+id/toolbar"/>
+            android:layout_below="@+id/toolbar2"/>
 
         <FrameLayout
             android:id="@+id/fragmentLogOverlay"
