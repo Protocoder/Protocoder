@@ -74,8 +74,6 @@ android {
     }
 }
 
-
-
 repositories {
     flatDir {
         dirs 'libs'
@@ -97,5 +95,4 @@ dependencies {
 
     compile(name: 'processing_fragmented', ext: 'aar')
     compile 'jp.kshoji:midi-driver:0.0.2-SNAPSHOT:@aar'
-    compile 'com.google.android.gms:play-services-appindexing:8.1.0'
 }

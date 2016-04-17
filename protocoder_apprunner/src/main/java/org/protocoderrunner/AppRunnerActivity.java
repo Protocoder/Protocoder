@@ -157,7 +157,7 @@ public class AppRunnerActivity extends BaseActivity {
 
             // dont add the toolbar if we are in Android Wear
             if (!AndroidUtils.isWear(this)) {
-                mToolbar = (Toolbar) findViewById(R.id.toolbar);
+                mToolbar = (Toolbar) findViewById(R.id.toolbar2);
                 setSupportActionBar(mToolbar);
                 mActionbar = getSupportActionBar();
             }

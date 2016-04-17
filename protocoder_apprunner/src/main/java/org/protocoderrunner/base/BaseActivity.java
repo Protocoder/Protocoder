@@ -81,7 +81,7 @@ public class BaseActivity extends AppCompatActivity {
 
         // Create the action bar programmatically
         if (!AndroidUtils.isWear(this)) {
-            mToolbar = (Toolbar) findViewById(R.id.toolbar);
+            mToolbar = (Toolbar) findViewById(R.id.toolbar2);
             setSupportActionBar(mToolbar);
 
             // Set the padding to match the Status Bar height
