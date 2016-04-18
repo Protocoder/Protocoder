@@ -31,8 +31,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import org.protocoder.helpers.ProtoSettingsHelper;
-import org.protocoder.settings.ProtocoderSettings;
-import org.protocoder.settings.UserSettings;
+import org.protocoder.gui.settings.ProtocoderSettings;
+import org.protocoder.gui.settings.UserSettings;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.base.utils.StrUtils;

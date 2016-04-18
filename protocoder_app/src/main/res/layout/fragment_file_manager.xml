@@ -3,7 +3,7 @@
     android:id="@+id/file_m"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/light_grey"
+    android:background="@color/transparent"
     android:orientation="vertical" >
 
     <LinearLayout
@@ -38,6 +38,7 @@
         android:layout_below="@id/toolbar2"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
+        android:textColor="#55FFFFFF"
         android:fontFamily="sans-serif-condensed"
         android:text="Files included in the project" />
 

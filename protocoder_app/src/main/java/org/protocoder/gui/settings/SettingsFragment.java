@@ -45,16 +45,13 @@ import android.widget.EditText;
 import org.protocoder.R;
 import org.protocoder.gui.LicenseActivity;
 import org.protocoder.helpers.ProtoSettingsHelper;
-import org.protocoder.settings.ProtocoderSettings;
-import org.protocoder.settings.UserSettings;
-import org.protocoder.settings.WebEditorManager;
 import org.protocoderrunner.base.BaseNotification;
 import org.protocoderrunner.base.utils.MLog;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class SettingsFragment extends PreferenceFragment {
 
-    protected static final String TAG = "PrefsFragment";
+    protected static final String TAG = SettingsFragment.class.getSimpleName();
     private Context mContext;
     private SharedPreferences mPrefs;
     private UserSettings mSettings;

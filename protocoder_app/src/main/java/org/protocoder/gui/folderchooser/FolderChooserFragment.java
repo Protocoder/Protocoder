@@ -27,12 +27,18 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.ToggleButton;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.protocoder.R;
+import org.protocoder.events.Events;
 import org.protocoder.gui._components.ResizableRecyclerView;
 import org.protocoder.helpers.ProtoScriptHelper;
-import org.protocoder.settings.ProtocoderSettings;
+import org.protocoder.gui.settings.ProtocoderSettings;
 import org.protocoderrunner.base.BaseFragment;
+import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.models.Folder;
 
 import java.util.ArrayList;
@@ -43,8 +49,11 @@ public class FolderChooserFragment extends BaseFragment {
     private String TAG = FolderChooserFragment.class.getSimpleName();
     private Context mContext;
 
-    ResizableRecyclerView mRecyclerView;
-    boolean state = false;
+    private ResizableRecyclerView mRecyclerView;
+    private ToggleButton toggleFolderChooser;
+    private ResizableRecyclerView folderList;
+    private String currentFolder;
+    private boolean isTablet;
 
     public FolderChooserFragment() {
     }
@@ -58,7 +67,37 @@ public class FolderChooserFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mContext = (Context) getActivity();
 
-        View v = inflater.inflate(R.layout.fragment_project_chooser, container, false);
+        isTablet = getArguments().getBoolean("isTablet");
+
+        final View v = inflater.inflate(R.layout.fragment_project_chooser, container, false);
+
+        // project folder menu
+        toggleFolderChooser = (ToggleButton) v.findViewById(R.id.selectFolderButton);
+        folderList = (ResizableRecyclerView) v.findViewById(R.id.folderList);
+        if (isTablet) {
+            toggleFolderChooser.setVisibility(View.GONE);
+            folderList.setVisibility(View.VISIBLE);
+        }
+
+        // default toggle text
+        toggleFolderChooser.setTextOn("Choose folder");
+        toggleFolderChooser.setTextOff("Choose folder");
+
+        toggleFolderChooser.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    folderList.setVisibility(View.VISIBLE);
+                } else {
+                    if (!isTablet) folderList.setVisibility(View.GONE);
+                    if (currentFolder == null) {
+                        toggleFolderChooser.setTextOff("Choose folder");
+                    } else {
+                        toggleFolderChooser.setTextOff(currentFolder);
+                    }
+                }
+            }
+        });
 
         //this goes to the adapter
         ArrayList<FolderAdapterData> foldersForAdapter = new ArrayList<FolderAdapterData>();
@@ -96,22 +135,33 @@ public class FolderChooserFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        EventBus.getDefault().register(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        EventBus.getDefault().unregister(this);
     }
 
-    public static FolderChooserFragment newInstance(String folderName, boolean orderByName) {
+    public static FolderChooserFragment newInstance(String folderName, boolean orderByName, boolean isTablet) {
         FolderChooserFragment myFragment = new FolderChooserFragment();
 
         Bundle args = new Bundle();
         args.putString("folderName", folderName);
         args.putBoolean("orderByName", orderByName);
+        args.putBoolean("isTablet", isTablet);
         myFragment.setArguments(args);
 
         return myFragment;
+    }
+
+    // folder choose
+    @Subscribe
+    public void onEventMainThread(Events.FolderChosen e) {
+        MLog.d(TAG, "< Event (folderChosen)");
+        currentFolder = e.getFullFolder();
+        toggleFolderChooser.performClick();
     }
 
 }

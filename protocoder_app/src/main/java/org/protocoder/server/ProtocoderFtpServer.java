@@ -22,8 +22,8 @@ package org.protocoder.server;
 
 import android.content.Context;
 
-import org.protocoder.settings.ProtocoderSettings;
-import org.protocoder.settings.UserSettings;
+import org.protocoder.gui.settings.ProtocoderSettings;
+import org.protocoder.gui.settings.UserSettings;
 import org.protocoder.appinterpreter.AppRunnerCustom;
 import org.protocoderrunner.api.network.PFtpServer;
 import org.protocoderrunner.base.utils.MLog;

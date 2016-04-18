@@ -57,7 +57,6 @@ public class ProjectListFragment extends BaseFragment {
     private LinearLayout mEmptyGrid;
     // private Animation mAnim;
 
-
     public ArrayList<Project> mListProjects = null;
     public ProjectItemAdapter mProjectAdapter;
 

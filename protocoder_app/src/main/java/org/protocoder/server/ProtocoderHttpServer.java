@@ -31,7 +31,7 @@ import org.protocoder.events.Events;
 import org.protocoder.helpers.ProtoScriptHelper;
 import org.protocoder.server.model.ProtoFile;
 import org.protocoder.server.networkexchangeobjects.NEOProject;
-import org.protocoder.settings.ProtocoderSettings;
+import org.protocoder.gui.settings.ProtocoderSettings;
 import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.models.Project;
 

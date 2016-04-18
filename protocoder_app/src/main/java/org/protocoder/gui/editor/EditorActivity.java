@@ -41,7 +41,6 @@ public class EditorActivity extends BaseActivity {
 
     private final String TAG = EditorActivity.class.getSimpleName();
 
-    // TODO change this dirty hack
     private Menu mMenu;
     private static final int MENU_RUN = 8;
     private static final int MENU_SAVE = 9;
@@ -58,15 +57,16 @@ public class EditorActivity extends BaseActivity {
     private boolean showAPIDrawer = false;
 
     private Project mCurrentProject;
+    private boolean isTablet;
 
     @SuppressLint("NewApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
-        setupActivity();
+        isTablet = getResources().getBoolean(R.bool.isTablet);
 
-        //setToolbarBack();
+        setupActivity();
 
         // Get the bundle and pass it to the fragment.
         Intent intent = getIntent();
@@ -85,6 +85,10 @@ public class EditorActivity extends BaseActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(fl.getId(), editorFragment, String.valueOf(fl.getId()));
         ft.commit();
+
+        MLog.d(TAG, "qq isTablet: " + isTablet);
+
+        showFileManagerDrawer(isTablet);
     }
 
     @Override
@@ -108,11 +112,12 @@ public class EditorActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         this.mMenu = menu;
         menu.clear();
         menu.add(1, MENU_RUN, 0, "R").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         menu.add(1, MENU_SAVE, 0, "S").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        menu.add(1, MENU_FILES, 0, "F").setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        if (!isTablet) menu.add(1, MENU_FILES, 0, "F").setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         menu.add(1, MENU_API, 0, "API").setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 
         return super.onCreateOptionsMenu(menu);
@@ -180,19 +185,25 @@ public class EditorActivity extends BaseActivity {
     }
 
     public void showFileManagerDrawer(boolean b) {
-
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_left);
 
         if (b) {
             fileFragment = new FileManagerFragment();
             Bundle bundle = new Bundle();
+            MLog.d(TAG, ft + " " + mCurrentProject + " (qq) ");
+            MLog.d(TAG, "fileFragment)" + fileFragment);
 
             bundle.putString(Project.NAME, mCurrentProject.name);
             bundle.putString(Project.FOLDER, mCurrentProject.folder);
 
             fileFragment.setArguments(bundle);
-            ft.add(R.id.fragmentFileManager, fileFragment).addToBackStack(null);
+
+            if (isTablet) {
+                ft.add(R.id.fragmentFileManager, fileFragment);
+            } else {
+                ft.add(R.id.fragmentFileManager, fileFragment).addToBackStack(null);
+            }
             // editorFragment.getView().animate().translationX(-50).setDuration(500).start();
 
         } else {
@@ -221,8 +232,9 @@ public class EditorActivity extends BaseActivity {
     // load script
     @Subscribe
     public void onEventMainThread(Events.EditorEvent e) {
-        showFileManagerDrawer(false);
-
+        if (!isTablet) {
+            showFileManagerDrawer(false);
+        }
         mToolbar.setTitle(e.getProject().getName());
         mToolbar.setSubtitle(e.getProtofile().name);
     }

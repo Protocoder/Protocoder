@@ -61,7 +61,7 @@ public class FolderChooserDialog extends DialogFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.dialogchooserfl, FolderChooserFragment.newInstance("", true));
+        fragmentTransaction.add(R.id.dialogchooserfl, FolderChooserFragment.newInstance("", true, false));
         fragmentTransaction.commit();
 
         super.onActivityCreated(savedInstanceState);

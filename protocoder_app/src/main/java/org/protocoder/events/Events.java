@@ -34,6 +34,8 @@ public class Events {
     public static final String PROJECT_UPDATE   = "update";
     public static final String PROJECT_EDIT     = "edit";
     public static final String PROJECT_DELETE   = "delete";
+    public static final String EDITOR_FILE_LOAD = "editor_file_loaded";
+    public static final String EDITOR_FILE_CHANGED   = "editor_file_changed";
 
 
     public static class ProjectEvent {
@@ -158,10 +160,16 @@ public class Events {
     public static class EditorEvent {
         private final Project project;
         private final ProtoFile protofile;
+        private final String action;
 
-        public EditorEvent(Project mProject, ProtoFile f) {
+        public EditorEvent(String action, Project mProject, ProtoFile f) {
+            this.action = action;
             this.project = mProject;
             this.protofile = f;
+        }
+
+        public String getAction() {
+            return action;
         }
 
         public Project getProject() {

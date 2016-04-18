@@ -10,8 +10,6 @@
         android:layout_width="match_parent">
     </include>
 
-
-
     <FrameLayout
         android:id="@+id/fragmentFileManager"
         android:layout_width="200dp"
@@ -25,8 +23,8 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@id/toolbar2"
-        android:layout_toRightOf="@+id/fragmentFileManager"
-        android:layout_toEndOf="@+id/fragmentFileManager">
+        android:layout_toRightOf="@id/fragmentFileManager"
+        android:layout_toEndOf="@id/fragmentFileManager">
     </FrameLayout>
 
     <FrameLayout

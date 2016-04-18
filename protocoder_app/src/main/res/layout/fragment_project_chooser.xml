@@ -1,39 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.protocoder.gui._components.WTFRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/myrelativelayout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/license_darkgrey"
-    android:animateLayoutChanges="true">
 
-    <LinearLayout
-        android:id="@+id/folderSelector"
-        android:orientation="horizontal"
+<!-- android:background="@color/license_darkgrey" -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/folderSelector"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:layout_gravity="left|top"
+    android:animateLayoutChanges="true"
+    android:gravity="center">
+
+    <ToggleButton
+        android:id="@+id/selectFolderButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_gravity="left|top"
-        android:gravity="center"
-        android:visibility="gone">
+        android:text="CurrentFolder"
+        android:visibility="visible"
+        android:background="@drawable/project_folder_toggle_button"
+        android:textColor="#88FFFFFF"
+        android:layout_gravity="center_vertical"
+        />
 
-        <Button
-            android:id="@+id/selectFolderButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="CurrentFolder"
-            android:layout_gravity="center_vertical"
-            />
-    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="#11FFFFFF" />
 
     <org.protocoder.gui._components.ResizableRecyclerView
         android:id="@+id/folderList"
-        android:layout_below="@id/folderSelector"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/transparent"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:visibility="visible">
+        android:visibility="gone">
     </org.protocoder.gui._components.ResizableRecyclerView>
+</LinearLayout>
 
-</org.protocoder.gui._components.WTFRelativeLayout>

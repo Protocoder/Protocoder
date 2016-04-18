@@ -22,7 +22,7 @@ package org.protocoder.helpers;
 
 import android.content.Context;
 
-import org.protocoder.settings.ProtocoderSettings;
+import org.protocoder.gui.settings.ProtocoderSettings;
 import org.protocoderrunner.base.utils.FileIO;
 
 import java.io.File;

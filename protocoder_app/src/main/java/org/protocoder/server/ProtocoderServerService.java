@@ -25,7 +25,7 @@ import org.protocoder.appinterpreter.AppRunnerCustom;
 import org.protocoder.events.Events;
 import org.protocoder.events.EventsProxy;
 import org.protocoder.helpers.ProtoAppHelper;
-import org.protocoder.settings.ProtocoderSettings;
+import org.protocoder.gui.settings.ProtocoderSettings;
 import org.protocoderrunner.api.PDevice;
 import org.protocoderrunner.base.network.NetworkUtils;
 import org.protocoderrunner.base.utils.AndroidUtils;

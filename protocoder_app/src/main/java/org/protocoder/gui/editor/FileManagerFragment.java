@@ -47,6 +47,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.protocoder.R;
 import org.protocoder.events.Events;
 import org.protocoder.helpers.ProtoScriptHelper;
@@ -58,6 +59,7 @@ import org.protocoderrunner.models.Project;
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 @SuppressLint("NewApi")
 public class FileManagerFragment extends BaseFragment {
@@ -66,6 +68,7 @@ public class FileManagerFragment extends BaseFragment {
 
     private Menu mMenu;
     public ArrayList<ProtoFile> files;
+    public HashMap<Integer, Boolean> filesModified;
     protected FileAdapter projectAdapter;
     protected ListView llFileView;
     private Project mProject;
@@ -95,9 +98,10 @@ public class FileManagerFragment extends BaseFragment {
         MLog.d(TAG, "Project " + mProject.getFullPath());
 
         files = ProtoScriptHelper.listFilesInFolder(mProject.getSandboxPath(), 0);
+        filesModified = new HashMap<>();
 
         // get files
-        projectAdapter = new FileAdapter(getActivity(), files);
+        projectAdapter = new FileAdapter(getActivity());
         llFileView.setEmptyView(v.findViewById(R.id.empty_list_view));
 
         // set the emptystate
@@ -122,14 +126,16 @@ public class FileManagerFragment extends BaseFragment {
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+//		getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-//		getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
+    public void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -293,11 +299,9 @@ public class FileManagerFragment extends BaseFragment {
     public class FileAdapter extends BaseAdapter {
         private final Context mContext;
 
-        ArrayList<ProtoFile> files;
 
-        public FileAdapter(Context c, ArrayList<ProtoFile> files) {
+        public FileAdapter(Context c) {
             mContext = c;
-            this.files = files;
         }
 
         @Override
@@ -334,13 +338,20 @@ public class FileManagerFragment extends BaseFragment {
             }
 
             customView.setImage(getIcon(f.type));
-            customView.setText(f.name);
+
+            String prefix = "";
+            if (filesModified.containsKey(position)) {
+                if (filesModified.get(position)) {
+                    prefix = "*";
+                }
+            }
+            customView.setText(prefix + f.name);
             customView.setTag(f.name);
             customView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     MLog.d(TAG, "" + f.name);
-                    EventBus.getDefault().post(new Events.EditorEvent(mProject, f));
+                    EventBus.getDefault().post(new Events.EditorEvent(Events.EDITOR_FILE_LOAD, mProject, f));
                 }
             });
 
@@ -376,6 +387,20 @@ public class FileManagerFragment extends BaseFragment {
             TextView textView = (TextView) v.get().findViewById(R.id.txt_file_name);
             // TextUtils.changeFont(c.get(), textView, ProtocoderFonts.MENU_TITLE);
             textView.setText(text);
+        }
+    }
+
+    // load file in editor
+    @Subscribe
+    public void onEventMainThread(Events.EditorEvent e) {
+        if (e.getAction().equals(Events.EDITOR_FILE_CHANGED)) {
+            ProtoFile f = e.getProtofile();
+            for (int i = 0; i < files.size(); i++) {
+                if (files.get(i).name == f.name) {
+                    filesModified.put(i, true);
+                }
+            }
+
         }
     }
 

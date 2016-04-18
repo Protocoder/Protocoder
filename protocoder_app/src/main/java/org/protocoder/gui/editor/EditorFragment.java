@@ -158,6 +158,9 @@ public class EditorFragment extends BaseFragment {
             public void afterTextChanged(Editable s) {
                 // update current code string
                 openedFiles.put(mCurrentFile, s.toString());
+
+                // notifiy that a file is changed
+                EventBus.getDefault().post(new Events.EditorEvent(Events.EDITOR_FILE_CHANGED, mCurrentProject, new ProtoFile(mCurrentFile, "")) );
             }
         });
 
@@ -272,7 +275,7 @@ public class EditorFragment extends BaseFragment {
      */
     public void loadProject(Project project) {
         mCurrentProject = project;
-        EventBus.getDefault().post(new Events.EditorEvent(mCurrentProject, new ProtoFile("main.js","")));
+        EventBus.getDefault().post(new Events.EditorEvent(Events.EDITOR_FILE_LOAD, mCurrentProject, new ProtoFile("main.js","")));
 
         loadFile("main.js");
     }
@@ -349,7 +352,9 @@ public class EditorFragment extends BaseFragment {
     // load file in editor
     @Subscribe
     public void onEventMainThread(Events.EditorEvent e) {
-        ProtoFile f = e.getProtofile();
-        loadFile(f.name);
+        if (e.getAction().equals(Events.EDITOR_FILE_LOAD)) {
+            ProtoFile f = e.getProtofile();
+            loadFile(f.name);
+        }
     }
 }

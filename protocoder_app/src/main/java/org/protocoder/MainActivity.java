@@ -25,12 +25,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -49,7 +45,6 @@ import org.protocoder.appinterpreter.AppRunnerCustom;
 import org.protocoder.appinterpreter.ProtocoderApp;
 import org.protocoder.events.Events;
 import org.protocoder.gui.IntroductionFragment;
-import org.protocoder.gui.folderchooser.FolderChooserDialog;
 import org.protocoder.gui.folderchooser.FolderChooserFragment;
 import org.protocoder.gui.projectlist.ProjectListFragment;
 import org.protocoder.helpers.ProtoAppHelper;
@@ -57,15 +52,14 @@ import org.protocoder.helpers.ProtoScriptHelper;
 import org.protocoder.server.ProtocoderServerService;
 import org.protocoder.server.model.ProtoFile;
 import org.protocoder.server.networkexchangeobjects.NEOProject;
-import org.protocoder.settings.ProtocoderSettings;
+import org.protocoder.gui.settings.ProtocoderSettings;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.models.Project;
 
 import java.util.ArrayList;
 
-public class MainActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends BaseActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -78,12 +72,15 @@ public class MainActivity extends BaseActivity
     private FolderChooserFragment mFolderChooserFragment;
     private TextView mTxtIp;
 
-    private Button btnFolderChooser;
     private Intent mServerIntent;
+    private boolean isTablet;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        isTablet = getResources().getBoolean(R.bool.isTablet);
+        MLog.d(TAG, "isTablet " + isTablet);
 
         /*
          * Setup the ui
@@ -276,25 +273,8 @@ public class MainActivity extends BaseActivity
     protected void setupActivity() {
         super.setupActivity();
 
-        // set the folder choosing drawer
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        // project folder menu
-        btnFolderChooser = (Button) findViewById(R.id.selectFolderButton);
-        btnFolderChooser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FolderChooserDialog myDialog = FolderChooserDialog.newInstance();
-                getSupportFragmentManager().beginTransaction().add(myDialog, "12345").commit();
-            }
-        });
+        // FolderChooserDialog myDialog = FolderChooserDialog.newInstance();
+        // getSupportFragmentManager().beginTransaction().add(myDialog, "12345").commit();
 
         mTxtIp = (TextView) findViewById(R.id.ip);
         Button btnIp = (Button) findViewById(R.id.button11);
@@ -314,7 +294,7 @@ public class MainActivity extends BaseActivity
     // Project folder chooser
     private void addProjectFolderChooser(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
-            mFolderChooserFragment = FolderChooserFragment.newInstance(ProtocoderSettings.EXAMPLES_FOLDER, true);
+            mFolderChooserFragment = FolderChooserFragment.newInstance(ProtocoderSettings.EXAMPLES_FOLDER, true, isTablet);
             addFragment(mFolderChooserFragment, R.id.fragmentFolderChooser);
         }
     }
@@ -390,14 +370,6 @@ public class MainActivity extends BaseActivity
         }
     }
 
-    // folder choose
-    @Subscribe
-    public void onEventMainThread(Events.FolderChosen e) {
-        MLog.d(TAG, "< Event (folderChosen)");
-        String folder = e.getFullFolder();
-        btnFolderChooser.setText(folder);
-    }
-
     // network notification
     @Subscribe
     public void onEventMainThread(Events.Connection e) {
@@ -409,21 +381,4 @@ public class MainActivity extends BaseActivity
         //MLog.d(TAG, "Hack via your browser @ http://" + NetworkUtils.getLocalIpAddress(ProtocoderServerService.this) + ":" + ProtocoderSettings.HTTP_PORT);
     }
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-
-        return true;
-    }
 }

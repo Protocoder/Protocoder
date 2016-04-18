@@ -18,7 +18,7 @@
 * along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package org.protocoder.settings;
+package org.protocoder.gui.settings;
 
 import android.content.Context;
 import android.content.SharedPreferences;

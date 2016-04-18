@@ -25,7 +25,7 @@ import android.content.Context;
 import android.os.Environment;
 
 import org.protocoder.server.model.ProtoFile;
-import org.protocoder.settings.ProtocoderSettings;
+import org.protocoder.gui.settings.ProtocoderSettings;
 import org.protocoderrunner.base.utils.FileIO;
 import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.models.Folder;
