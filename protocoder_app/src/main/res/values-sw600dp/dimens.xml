@@ -5,4 +5,11 @@
          screen margins) for sw600dp devices (e.g. 7" tablets) here.
     -->
 
+
+    <dimen name="main_cardview_radius">2dp</dimen>
+    <dimen name="main_cardview_horizontal_margin">50dp</dimen>
+
+    <dimen name="editor_cardview_radius">2dp</dimen>
+    <dimen name="editor_cardview_horizontal_margin">10dp</dimen>
+
 </resources>

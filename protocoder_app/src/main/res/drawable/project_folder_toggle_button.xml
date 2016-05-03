@@ -10,7 +10,7 @@
             android:insetBottom="2dp">
             <shape android:shape="rectangle">
                 <corners android:radius="2dp" />
-                <solid android:color="#22FFFFFF" />
+                <solid android:color="#55FFFFFF" />
             </shape>
         </inset>
     </item>
@@ -43,4 +43,22 @@
 
         </inset>
     </item>
+
+
+    <!-- activated state -->
+    <item android:state_activated="true">
+        <inset xmlns:android="http://schemas.android.com/apk/res/android"
+            android:insetLeft="2dp"
+            android:insetTop="2dp"
+            android:insetRight="2dp"
+            android:insetBottom="2dp">
+            <shape android:shape="rectangle">
+                <corners android:radius="2dp" />
+                <solid android:color="@color/blue" />
+            </shape>
+
+        </inset>
+    </item>
+
+
 </selector>

@@ -72,9 +72,9 @@ public class FolderChooserAdapter extends RecyclerView.Adapter<FolderChooserAdap
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LinearLayout t = null;
         if (viewType == FolderAdapterData.TYPE_TITLE) {
-            t = (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.view_folderchooser_title, parent, false);
+            t = (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.folderchooser_title_view, parent, false);
         }  else if (viewType == FolderAdapterData.TYPE_FOLDER_NAME) {
-            t = (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.view_folderchooser_folder, parent, false);
+            t = (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.folderchooser_folder_view, parent, false);
         }
         return new ViewHolder(viewType, t);
     }
@@ -88,6 +88,8 @@ public class FolderChooserAdapter extends RecyclerView.Adapter<FolderChooserAdap
         switch (type) {
             case FolderAdapterData.TYPE_TITLE:
                 holder.textView.setText(name);
+                holder.textView.setOnClickListener(null);
+                break;
             case FolderAdapterData.TYPE_FOLDER_NAME:
                 holder.textView.setText(name);
                 holder.textView.setOnClickListener(new View.OnClickListener() {
@@ -99,6 +101,7 @@ public class FolderChooserAdapter extends RecyclerView.Adapter<FolderChooserAdap
                         EventBus.getDefault().post(ev);
                     }
                 });
+                break;
         }
     }
 

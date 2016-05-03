@@ -39,6 +39,7 @@ import org.protocoder.R;
 import org.protocoder.events.Events;
 import org.protocoder.events.Events.ProjectEvent;
 import org.protocoder.gui._components.FitRecyclerView;
+import org.protocoder.gui.settings.UserSettings;
 import org.protocoder.helpers.ProtoScriptHelper;
 import org.protocoderrunner.base.BaseFragment;
 import org.protocoderrunner.base.utils.MLog;
@@ -78,21 +79,20 @@ public class ProjectListFragment extends BaseFragment {
         //mProjectFolder = "projects";
         MLog.d(TAG, "showing " + mProjectFolder);
         mOrderByName = getArguments().getBoolean("orderByName");
-        mProjectAdapter = new ProjectItemAdapter(getActivity()); //, this);
+        mListMode = new UserSettings(getContext()).getListPreference();
+
+        mProjectAdapter = new ProjectItemAdapter(getActivity(), mListMode);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mContext = getActivity();
-        //TODO make it work again
-        //mListMode = Protocoder.getInstance((BaseActivity) getActivity()).settings.getListPreference();
-        mListMode = false;
 
         View v;
         if (mListMode) {
-            v = inflater.inflate(R.layout.fragment_project_single, container, false);
+            v = inflater.inflate(R.layout.projectlist_list, container, false);
         } else {
-            v = inflater.inflate(R.layout.fragment_project, container, false);
+            v = inflater.inflate(R.layout.projectlist_grid, container, false);
         }
 
         // Get GridView and set adapter
@@ -222,9 +222,10 @@ public class ProjectListFragment extends BaseFragment {
         getItemView(projectName).animate().alpha(0).setDuration(500).setInterpolator(new CycleInterpolator(1));
     }
 
+    //TODO reenable this
+    /*
     public void resetHighlighting() {
         for (int i = 0; i < mListProjects.size(); i++) {
-            //TODO reenable this
             //mListProjects.get(i).selected = false;
         }
 
@@ -235,6 +236,7 @@ public class ProjectListFragment extends BaseFragment {
             }
         }
     }
+    */
 
     public View highlight(String projectName, boolean b) {
         View v = mGrid.findViewWithTag(projectName);

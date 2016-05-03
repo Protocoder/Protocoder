@@ -54,7 +54,7 @@ public class IntroductionFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mContext = (Context) getActivity();
 
-        View v = inflater.inflate(R.layout.fragment_introduction, container, false);
+        View v = inflater.inflate(R.layout.introduction_fragment, container, false);
 
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (ViewPager) v.findViewById(R.id.pager);

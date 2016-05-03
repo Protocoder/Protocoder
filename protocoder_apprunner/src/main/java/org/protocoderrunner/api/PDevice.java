@@ -51,6 +51,7 @@ public class PDevice extends ProtoBase {
 
     private BroadcastReceiver batteryReceiver;
     private BroadcastReceiver onNotification;
+    private BroadcastReceiver smsReceiver;
 
     public PDevice(AppRunner appRunner) {
         super(appRunner);
@@ -77,20 +78,27 @@ public class PDevice extends ProtoBase {
         void event(String number, String responseString);
     }
 
-    public interface onSmsReceivedListener {
-        public void onSmsReceived(String number, String msg);
-    }
-
     @ProtoMethod(description = "Gives back the number and sms of the sender", example = "")
     @ProtoMethodParam(params = {"function(number, message)"})
     public void onSmsReceived(final onSmsReceivedCB fn) {
-        getActivity().addOnSmsReceivedListener(new onSmsReceivedListener() {
+
+        // SMS receive
+        IntentFilter intentFilter = new IntentFilter("SmsMessage.intent.MAIN");
+        smsReceiver = new BroadcastReceiver() {
 
             @Override
-            public void onSmsReceived(String number, String msg) {
-                fn.event(number, msg);
+            public void onReceive(Context context, Intent intent) {
+                String msg = intent.getStringExtra("get_msg");
+
+                // Process the sms format and extract body and phone number
+                msg = msg.replace("\n", "");
+                String body = msg.substring(msg.lastIndexOf(":") + 1, msg.length());
+                String pNumber = msg.substring(0, msg.lastIndexOf(":"));
+
+                fn.event(pNumber, body);
             }
-        });
+        };
+        getContext().registerReceiver(smsReceiver, intentFilter);
     }
 
     @ProtoMethod(description = "Get the current brightness", example = "")
@@ -519,6 +527,8 @@ public class PDevice extends ProtoBase {
     public void __stop() {
         getContext().unregisterReceiver(batteryReceiver);
         getContext().unregisterReceiver(onNotification);
+        getContext().unregisterReceiver(smsReceiver);
+
         batteryReceiver = null;
         onNotification = null;
     }

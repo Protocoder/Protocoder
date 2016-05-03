@@ -26,17 +26,19 @@ import org.protocoderrunner.models.Project;
 import java.io.File;
 
 public class Events {
-    public static final String PROJECT_RUN      = "run";
-    public static final String PROJECT_STOP     = "stop";
-    public static final String PROJECT_STOP_ALL = "stop_all";
-    public static final String PROJECT_SAVE     = "save";
-    public static final String PROJECT_NEW      = "new";
-    public static final String PROJECT_UPDATE   = "update";
-    public static final String PROJECT_EDIT     = "edit";
-    public static final String PROJECT_DELETE   = "delete";
-    public static final String EDITOR_FILE_LOAD = "editor_file_loaded";
-    public static final String EDITOR_FILE_CHANGED   = "editor_file_changed";
-
+    public static final String PROJECT_RUN          = "run";
+    public static final String PROJECT_STOP         = "stop";
+    public static final String PROJECT_STOP_ALL     = "stop_all";
+    public static final String PROJECT_SAVE         = "save";
+    public static final String PROJECT_NEW          = "new";
+    public static final String PROJECT_UPDATE       = "update";
+    public static final String PROJECT_EDIT         = "edit";
+    public static final String PROJECT_DELETE       = "delete";
+    public static final String EDITOR_FILE_TO_LOAD  = "editor_file_to_load";
+    public static final String EDITOR_FILE_LOAD     = "editor_file_load";
+    public static final String EDITOR_FILE_CHANGED  = "editor_file_changed";
+    public static final String EDITOR_FILE_SAVE     = "editor_file_saved";
+    public static final String EDITOR_FILE_PREVIEW  = "editor_file_preview" ;
 
     public static class ProjectEvent {
         private Project project;
@@ -117,6 +119,14 @@ public class Events {
             this.name = name;
         }
 
+        public String getParent() {
+            return parent;
+        }
+
+        public String getName() {
+            return name;
+        }
+
         public String getFullFolder() {
             return this.parent + File.separator + this.name;
         }
@@ -161,11 +171,17 @@ public class Events {
         private final Project project;
         private final ProtoFile protofile;
         private final String action;
+        private final String previewType;
 
-        public EditorEvent(String action, Project mProject, ProtoFile f) {
+        public EditorEvent(String action, Project project, ProtoFile protofile, String previewType) {
             this.action = action;
-            this.project = mProject;
-            this.protofile = f;
+            this.project = project;
+            this.protofile = protofile;
+            this.previewType = previewType;
+        }
+
+        public EditorEvent(String action, Project project, ProtoFile protofile) {
+            this(action, project, protofile, null);
         }
 
         public String getAction() {
@@ -178,6 +194,10 @@ public class Events {
 
         public ProtoFile getProtofile() {
             return protofile;
+        }
+
+        public String getPreviewType() {
+            return previewType;
         }
     }
 }

@@ -268,8 +268,8 @@ public class SettingsFragment extends PreferenceFragment {
 
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
                 alertDialog.setTitle("FTP settings");
-                final View view = getActivity().getLayoutInflater().inflate(R.layout.view_ftp_settings_dialog, null);
-                //alertDialog.setView(R.layout.view_ftp_settings_dialog);
+                final View view = getActivity().getLayoutInflater().inflate(R.layout.preferences_ftp_dialog, null);
+                //alertDialog.setView(R.layout.preferences_ftp_dialog);
 
 
                 final EditText userName = (EditText) view.findViewById(R.id.ftp_username);

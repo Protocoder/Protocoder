@@ -98,7 +98,6 @@ import processing.core.PApplet;
 
 import static android.view.ScaleGestureDetector.OnScaleGestureListener;
 
-
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class PUI extends PUIGeneric {
 
@@ -161,7 +160,6 @@ public class PUI extends PUIGeneric {
 
     }
 
-
     @ProtoMethod(description = "Forces landscape mode in the app", example = "")
     @ProtoMethodParam(params = {"mode={'landscape', 'portrait', 'other'"})
     public void screenOrientation(String mode) {
@@ -174,13 +172,11 @@ public class PUI extends PUIGeneric {
         }
     }
 
-
     @ProtoMethod(description = "Shows a little popup with a given text", example = "")
     @ProtoMethodParam(params = {"text"})
     public void toast(String text) {
         Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
     }
-
 
     @ProtoMethod(description = "Shows a little popup with a given text during t time", example = "")
     @ProtoMethodParam(params = {"text", "duration"})
@@ -241,7 +237,6 @@ public class PUI extends PUIGeneric {
             v.setVisibility(View.GONE);
         }
     }
-
 
     @ProtoMethod(description = "Moves a view to a position using a normal transition", example = "")
     @ProtoMethodParam(params = {"View", "x", "y"})
@@ -765,15 +760,6 @@ public class PUI extends PUIGeneric {
         addViewAbsolute(al, x, y, w, h);
 
         return al;
-    }
-
-    @ProtoMethod(description = "Creates a card ", example = "")
-    @ProtoMethodParam(params = {"label"})
-    public PCard addCard() {
-        PCard c = newCard();
-        addViewLinear(c);
-
-        return c;
     }
 
     @ProtoMethod(description = "Adds a card that can hold views", example = "")

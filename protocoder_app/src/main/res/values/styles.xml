@@ -14,7 +14,6 @@
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
-
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
@@ -72,11 +71,9 @@
     <style name="TextAppearance.Widget.Event.Toolbar.Title.App" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <!--Any text styling can be done here-->
         <item name="android:textStyle">normal</item>
-        <item name="android:textSize">22sp</item>
         <item name="android:textColor">#55000000</item>
         <item name="android:fontFamily">monospace</item>
         <item name="android:textAllCaps">true</item>
     </style>
-
 
 </resources>

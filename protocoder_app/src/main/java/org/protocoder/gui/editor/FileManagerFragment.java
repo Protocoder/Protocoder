@@ -72,6 +72,7 @@ public class FileManagerFragment extends BaseFragment {
     protected FileAdapter projectAdapter;
     protected ListView llFileView;
     private Project mProject;
+    private int mCurrentSelected = -1;
 
     public FileManagerFragment() {
     }
@@ -90,7 +91,7 @@ public class FileManagerFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.fragment_file_manager, container, false);
+        View v = inflater.inflate(R.layout.filemanager_fragment, container, false);
 
         // Get ListView and set adapter
         llFileView = (ListView) v.findViewById(R.id.llFile);
@@ -107,7 +108,7 @@ public class FileManagerFragment extends BaseFragment {
         // set the emptystate
         llFileView.setAdapter(projectAdapter);
 
-        notifyAddedProject();
+        notifyDataFilesChanged();
         registerForContextMenu(llFileView);
 
         llFileView.setOnItemClickListener(new OnItemClickListener() {
@@ -118,6 +119,15 @@ public class FileManagerFragment extends BaseFragment {
         });
 
         return v;
+    }
+
+    public static FileManagerFragment newInstance() {
+        FileManagerFragment myFragment = new FileManagerFragment();
+
+        Bundle bundle = new Bundle();
+        myFragment.setArguments(bundle);
+
+        return myFragment;
     }
 
     @Override
@@ -238,7 +248,7 @@ public class FileManagerFragment extends BaseFragment {
         projectAdapter.notifyDataSetChanged();
     }
 
-    public void notifyAddedProject() {
+    public void notifyDataFilesChanged() {
         projectAdapter.notifyDataSetChanged();
         llFileView.invalidateViews();
     }
@@ -323,9 +333,9 @@ public class FileManagerFragment extends BaseFragment {
             return type.equals("folder") ? R.drawable.protocoder_script_example: R.drawable.protocoder_script_project;
         }
 
-        // create mContext new ImageView for each item referenced by the Adapter
+        // create a new ImageView for each item referenced by the Adapter
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             final FileItem customView;
 
             final ProtoFile f = files.get(position);
@@ -342,7 +352,7 @@ public class FileManagerFragment extends BaseFragment {
             String prefix = "";
             if (filesModified.containsKey(position)) {
                 if (filesModified.get(position)) {
-                    prefix = "*";
+                    prefix = "* ";
                 }
             }
             customView.setText(prefix + f.name);
@@ -351,9 +361,12 @@ public class FileManagerFragment extends BaseFragment {
                 @Override
                 public void onClick(View v) {
                     MLog.d(TAG, "" + f.name);
-                    EventBus.getDefault().post(new Events.EditorEvent(Events.EDITOR_FILE_LOAD, mProject, f));
+                    EventBus.getDefault().post(new Events.EditorEvent(Events.EDITOR_FILE_TO_LOAD, mProject, f));
+                    mCurrentSelected = position;
                 }
             });
+
+            if (position == mCurrentSelected) customView.setActivated(true);
 
             return customView;
         }
@@ -370,7 +383,7 @@ public class FileManagerFragment extends BaseFragment {
             super(context);
             this.c = context;
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            this.v = new WeakReference<View>(inflater.inflate(R.layout.view_file_item, this, true));
+            this.v = new WeakReference<View>(inflater.inflate(R.layout.filemanager_file_view, this, true));
         }
 
         public FileItem(Context context, AttributeSet attributeSet) {
@@ -394,11 +407,31 @@ public class FileManagerFragment extends BaseFragment {
     @Subscribe
     public void onEventMainThread(Events.EditorEvent e) {
         if (e.getAction().equals(Events.EDITOR_FILE_CHANGED)) {
+
             ProtoFile f = e.getProtofile();
+            MLog.d(TAG, "file changed: " + f.name);
+
             for (int i = 0; i < files.size(); i++) {
+
                 if (files.get(i).name == f.name) {
+                    MLog.d(TAG, "is modified: " + f.name);
                     filesModified.put(i, true);
+                    notifyDataFilesChanged();
                 }
+
+            }
+
+        } else if (e.getAction().equals(Events.EDITOR_FILE_SAVE)) {
+            ProtoFile f = e.getProtofile();
+
+            for (int i = 0; i < files.size(); i++) {
+
+                if (files.get(i).name == f.name) {
+                    MLog.d(TAG, "is removed: " + f.name);
+                    filesModified.remove(i);
+                    notifyDataFilesChanged();
+                }
+
             }
 
         }

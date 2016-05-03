@@ -26,6 +26,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -35,6 +36,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -45,14 +47,15 @@ import org.protocoder.appinterpreter.AppRunnerCustom;
 import org.protocoder.appinterpreter.ProtocoderApp;
 import org.protocoder.events.Events;
 import org.protocoder.gui.IntroductionFragment;
+import org.protocoder.gui._components.NewProjectDialogFragment;
 import org.protocoder.gui.folderchooser.FolderChooserFragment;
 import org.protocoder.gui.projectlist.ProjectListFragment;
+import org.protocoder.gui.settings.ProtocoderSettings;
 import org.protocoder.helpers.ProtoAppHelper;
 import org.protocoder.helpers.ProtoScriptHelper;
 import org.protocoder.server.ProtocoderServerService;
 import org.protocoder.server.model.ProtoFile;
 import org.protocoder.server.networkexchangeobjects.NEOProject;
-import org.protocoder.gui.settings.ProtocoderSettings;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.models.Project;
@@ -85,7 +88,7 @@ public class MainActivity extends BaseActivity {
         /*
          * Setup the ui
          */
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main_activity);
         setupActivity();
         addProjectFolderChooser(savedInstanceState);
         addProjectListFragment(savedInstanceState);
@@ -294,7 +297,7 @@ public class MainActivity extends BaseActivity {
     // Project folder chooser
     private void addProjectFolderChooser(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
-            mFolderChooserFragment = FolderChooserFragment.newInstance(ProtocoderSettings.EXAMPLES_FOLDER, true, isTablet);
+            mFolderChooserFragment = FolderChooserFragment.newInstance(ProtocoderSettings.EXAMPLES_FOLDER, true);
             addFragment(mFolderChooserFragment, R.id.fragmentFolderChooser);
         }
     }
@@ -346,7 +349,7 @@ public class MainActivity extends BaseActivity {
         if (itemId == android.R.id.home) {
             return true;
         } else if (itemId == R.id.menu_new) {
-            //createProjectDialog();
+            createProjectDialog();
             return true;
         } else if (itemId == R.id.menu_help) {
             ProtoAppHelper.launchLicense(this);
@@ -357,6 +360,20 @@ public class MainActivity extends BaseActivity {
         } else {
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void createProjectDialog() {
+        FragmentManager fm = getSupportFragmentManager();
+        NewProjectDialogFragment newProjectDialog = new NewProjectDialogFragment();
+        newProjectDialog.show(fm, "fragment_edit_name");
+
+        newProjectDialog.setListener(new NewProjectDialogFragment.NewProjectDialogListener() {
+            @Override
+            public void onFinishEditDialog(String inputText) {
+                Toast.makeText(MainActivity.this, "Creating " + inputText, Toast.LENGTH_SHORT).show();
+                ProtoScriptHelper.createNewProject(MainActivity.this, "", inputText);
+            }
+        });
     }
 
     // execute lines

@@ -14,7 +14,6 @@
     <style name="TextAppearance.Widget.Event.Toolbar.Title.AppRunner" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <!--Any text styling can be done here-->
         <item name="android:textStyle">normal</item>
-        <item name="android:textSize">18sp</item>
         <item name="android:textColor">#88FFFFFF</item>
         <item name="android:fontFamily">monospace</item>
         <item name="android:textAllCaps">false</item>

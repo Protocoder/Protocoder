@@ -29,10 +29,8 @@ import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PorterDuff;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
@@ -54,7 +52,6 @@ public class ProjectItem extends LinearLayout {
 
     private static final String TAG = ProjectItem.class.getSimpleName();
 
-    private final Drawable bg;
     //private final ProjectListFragment mPlf;
     private View mItemView;
     // private Context c;
@@ -73,13 +70,12 @@ public class ProjectItem extends LinearLayout {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         if (listMode) {
-            this.mItemView = inflater.inflate(R.layout.view_project_item_list, this, true);
+            this.mItemView = inflater.inflate(R.layout.projectlist_item_list, this, true);
         } else {
-            this.mItemView = inflater.inflate(R.layout.view_project_item, this, true);
+            this.mItemView = inflater.inflate(R.layout.projectlist_item_grid, this, true);
         }
 
         FrameLayout fl = (FrameLayout) findViewById(R.id.viewProjectItemBackground);
-        bg = fl.getBackground();
         textViewName = (TextView) mItemView.findViewById(R.id.customViewText);
         textViewIcon = (TextView) mItemView.findViewById(R.id.symbolTextC);
 
@@ -126,7 +122,7 @@ public class ProjectItem extends LinearLayout {
 
     public void reInit(String text, boolean selected) {
         setText(text);
-        setHighlighted(selected);
+        // TODO reenable this setHighlighted(selected);
     }
 
     public void drawText(ImageView imageView, String t2) {
@@ -248,6 +244,7 @@ public class ProjectItem extends LinearLayout {
 
     }
 
+    /*
     public Drawable getBg() {
         return bg;
     }
@@ -260,6 +257,7 @@ public class ProjectItem extends LinearLayout {
         }
         this.highlighted = highlighted;
     }
+    */
 
     public boolean isHighlighted() {
         return highlighted;

@@ -20,9 +20,7 @@
 
 package org.protocoderrunner.api.widgets;
 
-import android.animation.LayoutTransition;
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
@@ -38,7 +36,6 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
-import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.Space;
@@ -48,16 +45,16 @@ import com.larvalabs.svgandroid.SVGBuilder;
 
 import org.json.JSONArray;
 import org.mozilla.javascript.NativeArray;
-import org.protocoderrunner.R;
-import org.protocoderrunner.apidoc.annotation.ProtoField;
-import org.protocoderrunner.apidoc.annotation.ProtoMethod;
-import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.AppRunnerFragment;
+import org.protocoderrunner.R;
 import org.protocoderrunner.api.ProtoBase;
 import org.protocoderrunner.api.media.PCamera;
 import org.protocoderrunner.api.other.ProtocoderNativeObject;
 import org.protocoderrunner.api.widgets.PPadView.TouchEvent;
+import org.protocoderrunner.apidoc.annotation.ProtoField;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.base.gui.CameraNew;
 import org.protocoderrunner.base.utils.AndroidUtils;
 import org.protocoderrunner.base.utils.FileIO;
@@ -78,23 +75,21 @@ import static org.protocoderrunner.api.widgets.PSlider.addGenericSliderCB;
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class PUIGeneric extends ProtoBase {
 
-    String TAG = "PUIGeneric";
+    String TAG = PUIGeneric.class.getSimpleName();
 
     // layouts
     final static int MAXVIEW = 2000;
+
     View viewArray[] = new View[MAXVIEW];
     int viewCount = 0;
+
     boolean isMainLayoutSetup = false;
+
     protected PAbsoluteLayout uiAbsoluteLayout;
-    protected LinearLayout uiLinearLayout;
     protected RelativeLayout holderLayout;
     protected PImageView bgImageView;
 
     // properties
-    public int canvasWidth;
-    public int canvasHeight;
-    public int cw;
-    public int ch;
     private PScrollView sv;
     public int screenWidth;
     public int screenHeight;
@@ -102,18 +97,17 @@ public class PUIGeneric extends ProtoBase {
     public int sh;
     public boolean isFullscreenMode = false;
     public boolean isImmersiveMode = false;
+
     protected int theme;
+
     protected boolean absoluteLayout = true;
     protected boolean isScrollLayout = true;
-
-    private Context mContext;
 
     @ProtoField(description = "Toolbar", example = "")
     public PToolbar toolbar;
 
     public PUIGeneric(AppRunner appRunner) {
         super(appRunner);
-        this.mContext = appRunner.getAppContext();
     }
 
     @Override
@@ -123,10 +117,11 @@ public class PUIGeneric extends ProtoBase {
         if (fragment != null) {
             toolbar = new PToolbar(getAppRunner(), getActivity().getSupportActionBar());
         }
-     //   updateScreenSizes();
+
+        updateScreenSizes();
     }
 
-    public void updateScreenSizes() {
+    private void updateScreenSizes() {
         Point p = AndroidUtils.getScreenSize(getContext());
         screenWidth = p.x;
         screenHeight = p.y;
@@ -142,8 +137,14 @@ public class PUIGeneric extends ProtoBase {
         sh = screenHeight;
     }
 
+    /**
+     * This method creates the basic layout where the user created views will lay out
+     */
     protected void initializeLayout() {
         if (!isMainLayoutSetup) {
+
+
+
             LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 
             // this is the structure of the layout
@@ -174,23 +175,11 @@ public class PUIGeneric extends ProtoBase {
                 uiAbsoluteLayout.setLayoutParams(layoutParams);
                 uiAbsoluteLayout.setBackgroundColor(getContext().getResources().getColor(R.color.transparent));
                 sv.addView(uiAbsoluteLayout);
-            } else {
-                uiLinearLayout = new LinearLayout(getContext());
-                uiLinearLayout.setLayoutParams(layoutParams);
-                uiLinearLayout.setOrientation(LinearLayout.VERTICAL);
-                uiLinearLayout.setBackgroundColor(getContext().getResources().getColor(R.color.transparent));
-                uiLinearLayout.setLayoutTransition(new LayoutTransition());
-                sv.addView(uiLinearLayout);
-                holderLayout.setPadding(AndroidUtils.pixelsToDp(getContext(), 5), 0, AndroidUtils.pixelsToDp(getContext(), 5), 0);
             }
 
             // background image
             bgImageView = new PImageView(getAppRunner());
             holderLayout.addView(bgImageView, layoutParams);
-
-            // set the layout
-
-            //mFragment.initLayout(); old init
 
             if (getFragment() != null) {
                 getFragment().addScriptedLayout(holderLayout);
@@ -209,7 +198,6 @@ public class PUIGeneric extends ProtoBase {
     public void setAbsoluteLayout(boolean absoluteLayout) {
         this.absoluteLayout = absoluteLayout;
     }
-
 
     @ProtoMethod(description = "Allows the main interface to scroll", example = "")
     @ProtoMethodParam(params = {"boolean"})
@@ -249,11 +237,6 @@ public class PUIGeneric extends ProtoBase {
         uiAbsoluteLayout.addView(v, x, y, w, h);
     }
 
-    protected void addViewLinear(View v) {
-        addViewGeneric(v);
-        uiLinearLayout.addView(v);
-    }
-
     protected void addViewGeneric(View v) {
         v.setAlpha(0);
         v.setRotationX(-30);
@@ -263,7 +246,6 @@ public class PUIGeneric extends ProtoBase {
 
     public void removeAll() {
         uiAbsoluteLayout.removeAllViews();
-        uiLinearLayout.removeAllViews();
     }
 
 
@@ -293,7 +275,6 @@ public class PUIGeneric extends ProtoBase {
         return al;
     }
 
-
     @ProtoMethod(description = "Creates a card view holder", example = "")
     @ProtoMethodParam(params = {""})
     public PCard newCard() {
@@ -303,7 +284,6 @@ public class PUIGeneric extends ProtoBase {
         return card;
     }
 
-
     @ProtoMethod(description = "Creates a new window", example = "")
     @ProtoMethodParam(params = {""})
     public PWindow newWindow() {
@@ -312,7 +292,6 @@ public class PUIGeneric extends ProtoBase {
         PWindow w = new PWindow(getContext());
         return w;
     }
-
 
     @ProtoMethod(description = "Creates a new button", example = "")
     @ProtoMethodParam(params = {"label", "function()"})
@@ -330,7 +309,6 @@ public class PUIGeneric extends ProtoBase {
     public interface addGenericTouchAreaCB {
         void event(boolean touching, float x, float y);
     }
-
 
     @ProtoMethod(description = "Creates a new touch area", example = "")
     @ProtoMethodParam(params = {"boolean", "function(touching, x, y)"})
@@ -363,7 +341,6 @@ public class PUIGeneric extends ProtoBase {
     }
 
     PadXYReturn[] q2;
-
 
     @ProtoMethod(description = "Creates a new touch pad", example = "")
     @ProtoMethodParam(params = {"function(data)"})
@@ -424,7 +401,6 @@ public class PUIGeneric extends ProtoBase {
 
     }
 
-
     @ProtoMethod(description = "Creates a new slider", example = "")
     @ProtoMethodParam(params = {"max", "progress", "function(progress)"})
     public PSlider newSlider(float min, float max) {
@@ -442,7 +418,6 @@ public class PUIGeneric extends ProtoBase {
     public interface addGenericSpinnerCB {
         void event(String result);
     }
-
 
     @ProtoMethod(description = "Creates a new choice box", example = "")
     @ProtoMethodParam(params = {"array", "function(selected)"})
@@ -470,7 +445,6 @@ public class PUIGeneric extends ProtoBase {
         return spinner;
     }
 
-
     @ProtoMethod(description = "Creates a progress bar of n units", example = "")
     @ProtoMethodParam(params = {"units"})
     public PProgressBar newProgress(int max) {
@@ -481,7 +455,6 @@ public class PUIGeneric extends ProtoBase {
 
         return pb;
     }
-
 
     @ProtoMethod(description = "Creates a new text", example = "")
     @ProtoMethodParam(params = {"text"})
@@ -496,7 +469,6 @@ public class PUIGeneric extends ProtoBase {
 
         return tv;
     }
-
 
     @ProtoMethod(description = "Creates a new input", example = "")
     @ProtoMethodParam(params = {"label, function(data)"})
@@ -514,12 +486,10 @@ public class PUIGeneric extends ProtoBase {
         return et;
     }
 
-
     // --------- getRequest ---------//
     public interface NewGenericNumberPickerCB {
         void event(int val);
     }
-
 
     @ProtoMethod(description = "Creates a new number picker", example = "")
     @ProtoMethodParam(params = {"from", "to", "function(data)"})
@@ -538,7 +508,6 @@ public class PUIGeneric extends ProtoBase {
         return pNumberPicker;
     }
 
-
     @ProtoMethod(description = "Creates a new toggle", example = "")
     @ProtoMethodParam(params = {"name", "boolean", "function(b)"})
     public PToggleButton newToggle(final String label, boolean initstate) {
@@ -550,7 +519,6 @@ public class PUIGeneric extends ProtoBase {
 
         return tb;
     }
-
 
     @ProtoMethod(description = "Creates a new checkbox", example = "")
     @ProtoMethodParam(params = {"name", "boolean", "function(boolean)"})
@@ -569,7 +537,6 @@ public class PUIGeneric extends ProtoBase {
         return cb;
 
     }
-
 
     @ProtoMethod(description = "Creates a new switch", example = "")
     @ProtoMethodParam(params = {"boolean", "function(b)"})
@@ -617,7 +584,6 @@ public class PUIGeneric extends ProtoBase {
         return rb;
     }
 
-
     @ProtoMethod(description = "Creates a new image view", example = "")
     @ProtoMethodParam(params = {"imageName"})
     public PImageView newImage(String imagePath) {
@@ -633,7 +599,6 @@ public class PUIGeneric extends ProtoBase {
 
     }
 
-
     @ProtoMethod(description = "Creates a new plot", example = "")
     @ProtoMethodParam(params = {"min", "max"})
     public PPlotView newPlot(int min, int max) {
@@ -643,7 +608,6 @@ public class PUIGeneric extends ProtoBase {
 
         return jPlotView;
     }
-
 
     @ProtoMethod(description = "Creates a new image button", example = "")
     @ProtoMethodParam(params = {"x", "y", "w", "h", "imgNameNotPressed", "imgNamePressed", "hideBackground", "function()"})
@@ -669,7 +633,6 @@ public class PUIGeneric extends ProtoBase {
         addViewAbsolute(ib, x, y, w, h);
 
         return ib;
-
     }
 
     // --------- getRequest ---------//
@@ -788,12 +751,10 @@ public class PUIGeneric extends ProtoBase {
     @ProtoMethodParam(params = {""})
     public PMap newMap() {
         initializeLayout();
-
         PMap mapView = new PMap(getAppRunner());
 
         return mapView;
     }
-
 
     @ProtoMethod(description = "Adds a video view and starts playing the fileName", example = "")
     @ProtoMethodParam(params = {"fileName"})
@@ -803,7 +764,6 @@ public class PUIGeneric extends ProtoBase {
 
         return video;
     }
-
 
     @ProtoMethod(description = "Creates a new drawing canvas", example = "")
     @ProtoMethodParam(params = {"width", "height"})
@@ -822,7 +782,6 @@ public class PUIGeneric extends ProtoBase {
 
         return webView;
     }
-
 
     @ProtoMethod(description = "Creates a new camera view", example = "")
     @ProtoMethodParam(params = {"type={0,1}"})

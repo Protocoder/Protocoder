@@ -220,14 +220,12 @@ public class PApp extends ProtoBase {
         });
     }
 
-
     @ProtoMethod(description = "execute a shell command", example = "")
     @ProtoMethodParam(params = {"cmd", "function(data)"})
     public ExecuteCmd executeCommand(final String cmd, final ExecuteCmd.ExecuteCommandCB callbackfn) {
 
         return new ExecuteCmd(cmd, callbackfn);
     }
-
 
     @ProtoMethod(description = "shows mContext feedback overlay with the live-executed code", example = "")
     @ProtoMethodParam(params = {})
@@ -238,20 +236,17 @@ public class PApp extends ProtoBase {
         return l;
     }
 
-
     @ProtoMethod(description = "sends a name event with a json object", example = "")
     @ProtoMethodParam(params = {"name", "jsonObject"})
     public void sendEvent(String name, Object obj) {
         pevents.sendEvent(name, (NativeObject) obj);
     }
 
-
     @ProtoMethod(description = "receives a named event with a json object", example = "")
     @ProtoMethodParam(params = {"name", "function(name, jsonObject)"})
     public String listenEvent(String name, PEvents.EventCB callback) {
         return pevents.add(name, callback);
     }
-
 
     @ProtoMethod(description = "receives a named event with a json object", example = "")
     @ProtoMethodParam(params = {"name", "function(name, jsonObject)"})

@@ -35,12 +35,18 @@ public class MLog {
     private static final int LOG_W = 3;
     private static final int LOG_V = 4;
 
+    public static boolean showClass = false;
+    public static boolean showMethod = true;
     public static boolean network = false;
     public static boolean device = true;
     public static boolean verbose = true;
 
     public static void d(final String tag, final String msg) {
         generic(LOG_D, tag, msg);
+    }
+
+    public static void d(String msg) {
+        d("", msg);
     }
 
     public static void e(String tag, String msg) {
@@ -67,8 +73,8 @@ public class MLog {
             final Throwable th = new Throwable();
             final StackTraceElement[] elements = th.getStackTrace();
 
-            callerClassName = elements[2].getClassName();
-            callerMethodName = elements[2].getMethodName();
+            if (showClass) callerClassName = elements[2].getClassName();
+            if (showMethod) callerMethodName = elements[2].getMethodName();
         }
 
         if (device) {

@@ -20,6 +20,7 @@
 
 package org.protocoderrunner;
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -27,8 +28,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
-import android.graphics.drawable.ColorDrawable;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
@@ -38,29 +37,24 @@ import android.nfc.tech.NfcF;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.protocoderrunner.api.PDevice;
 import org.protocoderrunner.api.PMedia;
 import org.protocoderrunner.api.PUI;
 import org.protocoderrunner.api.network.PBluetooth;
 import org.protocoderrunner.api.sensors.PNfc;
-import org.protocoderrunner.api.widgets.PPadView;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.base.gui.DebugFragment;
-import org.protocoderrunner.base.utils.AndroidUtils;
 import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.base.utils.StrUtils;
 import org.protocoderrunner.events.Events;
@@ -75,12 +69,9 @@ public class AppRunnerActivity extends BaseActivity {
     private Context mContext;
     private AppRunnerFragment mAppRunnerFragment;
 
-    private BroadcastReceiver mIntentReceiver;
-
     /*
      * Events
      */
-    private PDevice.onSmsReceivedListener       onSmsReceivedListener;
     private PNfc.onNFCListener                  onNFCListener;
     private PNfc.onNFCWrittenListener           onNFCWrittenListener;
     private PBluetooth.onBluetoothListener      onBluetoothListener;
@@ -99,99 +90,80 @@ public class AppRunnerActivity extends BaseActivity {
     /*
      * UI stuff
      */
-    private Toolbar         mToolbar;
-    private ActionBar       mActionbar;
-    public boolean          mActionBarSet;
     private DebugFragment   mDebugFragment;
+    private RelativeLayout consoleRLayout;
+    private TextView consoleText;
+
+    // project settings
+    private boolean mSettingScreenAlwaysOn;
+    private boolean mSettingWakeUpScreen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
 
-        /*
-        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-            public void uncaughtException(Thread paramThread, Throwable paramThrowable) {
-                MLog.e("Error" + Thread.currentThread().getStackTrace()[2],paramThrowable.getLocalizedMessage());
-                Toast.makeText(mContext, "Error :(", Toast.LENGTH_LONG).show();
-                finish();
-            }
-        });
-        */
-
-        /*
-         * Read in the script given in the intent.
-         */
         Intent intent = getIntent();
-        if (null != intent) {
-            boolean isService = intent.getBooleanExtra("isService", false);
 
-            // if is a service with start it and finish this activity
-            if (isService) {
-                Intent i = new Intent(this, AppRunnerService.class);
-                i.putExtras(intent);
-                this.startService(i);
-                finish();
-            }
+        // if intent is empty => finish
+        if (intent == null) finish();
 
-            // settings
-            boolean settingScreenAlwaysOn   = intent.getBooleanExtra(Project.SETTINGS_SCREEN_ALWAYS_ON, false);
-            boolean settingWakeUpScreen     = intent.getBooleanExtra(Project.SETTINGS_SCREEN_WAKEUP, false);
-
-            String prefix   = intent.getStringExtra(Project.PREFIX);
-            String code     = intent.getStringExtra(Project.INTENTCODE);
-            String postfix  = intent.getStringExtra(Project.POSTFIX);
-
-            // send bundle to
-            Bundle bundle = new Bundle();
-            bundle.putString(Project.NAME, intent.getStringExtra(Project.NAME));
-            bundle.putString(Project.FOLDER, intent.getStringExtra(Project.FOLDER));
-            bundle.putString(Project.PREFIX, prefix);
-            bundle.putString(Project.INTENTCODE, code);
-            bundle.putString(Project.POSTFIX, postfix);
-
-            /*
-             * Set the Activity UI
-             */
-            setContentView(R.layout.activity_apprunner_host);
-
-            // dont add the toolbar if we are in Android Wear
-            if (!AndroidUtils.isWear(this)) {
-                mToolbar = (Toolbar) findViewById(R.id.toolbar2);
-                setSupportActionBar(mToolbar);
-                mActionbar = getSupportActionBar();
-            }
-
-            // wake up if intent says so
-            if (settingWakeUpScreen) {
-                final Window win = getWindow();
-                win.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-                        | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
-                win.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-                        | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-            }
-
-            setScreenAlwaysOn(settingScreenAlwaysOn);
-
-            /*
-             * Everything will be handled to the AppRunnerFragment
-             */
-            mAppRunnerFragment = AppRunnerFragment.newInstance(bundle);
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            FrameLayout fl = (FrameLayout) findViewById(R.id.apprunner_fragment);
-            ft.add(fl.getId(), mAppRunnerFragment, String.valueOf(fl.getId()));
-            ft.commit();
-
-            /*
-             * Add debug fragment
-             */
-            if (AppRunnerSettings.DEBUG) {
-                addDebugFragment();
-            }
-
-            //TODO change to events
-            //IDEcommunication.getInstance(this).ready(true);
+        // if is a service with start it and finish this activity
+        if (intent.getBooleanExtra("isService", false)) {
+            Intent i = new Intent(this, AppRunnerService.class);
+            i.putExtras(intent);
+            this.startService(i);
+            finish();
         }
+
+        // settings
+        mSettingScreenAlwaysOn   = intent.getBooleanExtra(Project.SETTINGS_SCREEN_ALWAYS_ON, false);
+        mSettingWakeUpScreen     = intent.getBooleanExtra(Project.SETTINGS_SCREEN_WAKEUP, false);
+
+        // the actual code
+        String prefix   = intent.getStringExtra(Project.PREFIX);
+        String code     = intent.getStringExtra(Project.INTENTCODE);
+        String postfix  = intent.getStringExtra(Project.POSTFIX);
+
+        // send bundle to the fragment
+        Bundle bundle = new Bundle();
+        bundle.putString(Project.NAME, intent.getStringExtra(Project.NAME));
+        bundle.putString(Project.FOLDER, intent.getStringExtra(Project.FOLDER));
+        bundle.putString(Project.PREFIX, prefix);
+        bundle.putString(Project.INTENTCODE, code);
+        bundle.putString(Project.POSTFIX, postfix);
+
+        // Set the Activity UI
+        setContentView(R.layout.apprunner_activity);
+        setupActivity();
+
+        // add AppRunnerFragment
+        mAppRunnerFragment = AppRunnerFragment.newInstance(bundle);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        FrameLayout fl = (FrameLayout) findViewById(R.id.apprunner_fragment);
+        ft.add(fl.getId(), mAppRunnerFragment, String.valueOf(fl.getId()));
+        ft.commit();
+
+        // Add debug fragment
+        if (AppRunnerSettings.DEBUG) addDebugFragment();
+
+        //TODO change to events
+        //IDEcommunication.getInstance(this).ready(true);
+    }
+
+    @Override
+    protected void setupActivity() {
+        super.setupActivity();
+
+        // wake up the device if intent says so
+        if (mSettingWakeUpScreen) {
+            final Window win = getWindow();
+            win.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                    | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+            win.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                    | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        }
+        setScreenAlwaysOn(mSettingScreenAlwaysOn);
 
     }
 
@@ -201,31 +173,10 @@ public class AppRunnerActivity extends BaseActivity {
 
         EventBus.getDefault().register(this);
 
-        if (nfcSupported) {
-            mAdapter.enableForegroundDispatch(this, mPendingIntent, null, null);
-        }
+        // NFC
+        if (nfcSupported) mAdapter.enableForegroundDispatch(this, mPendingIntent, null, null);
 
-        // sms receive
-        IntentFilter intentFilter = new IntentFilter("SmsMessage.intent.MAIN");
-        mIntentReceiver = new BroadcastReceiver() {
-
-            @Override
-            public void onReceive(android.content.Context context, Intent intent) {
-                String msg = intent.getStringExtra("get_msg");
-
-                // Process the sms format and extract body and phone number
-                msg = msg.replace("\n", "");
-                String body = msg.substring(msg.lastIndexOf(":") + 1, msg.length());
-                String pNumber = msg.substring(0, msg.lastIndexOf(":"));
-
-                if (onSmsReceivedListener != null) {
-                    onSmsReceivedListener.onSmsReceived(pNumber, body);
-                }
-            }
-        };
-
-
-        this.registerReceiver(mIntentReceiver, intentFilter);
+        // broadcast to start/stop the activity
         startStopActivityBroadcastReceiver();
     }
 
@@ -235,10 +186,7 @@ public class AppRunnerActivity extends BaseActivity {
 
         EventBus.getDefault().unregister(this);
 
-        if (nfcSupported) {
-            mAdapter.disableForegroundDispatch(this);
-        }
-        this.unregisterReceiver(this.mIntentReceiver);
+        if (nfcSupported) mAdapter.disableForegroundDispatch(this);
         unregisterReceiver(stopActivitiyBroadcastReceiver);
     }
 
@@ -251,55 +199,13 @@ public class AppRunnerActivity extends BaseActivity {
     public void onDestroy() {
         super.onDestroy();
 
-        //TODO change to events
+        // TODO change to events
         //IDEcommunication.getInstance(this).ready(false);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-    }
-
-    public void setToolBar(String name, Integer colorBg, Integer colorText) {
-        mActionBarSet = true;
-
-        if(mActionbar != null) {
-
-            // set color
-            if (colorBg != null) {
-                ColorDrawable d = new ColorDrawable();
-                d.setColor(colorBg);
-                mActionbar.setBackgroundDrawable(d);
-            }
-
-            // title
-            if (name != null) {
-                mActionbar.setTitle(name);
-            }
-            // set title color
-            if (colorText != null) {
-                int titleId = Resources.getSystem().getIdentifier("action_bar_title", "id", "android");
-                TextView textTitleView = (TextView) findViewById(titleId);
-
-                // apparently android-l doesnt have that resource
-                if (textTitleView != null) {
-                    textTitleView.setTextColor(colorText);
-                }
-            }
-        }
-    }
-
-    public void setToolbarBack() {
-
-        if (null != mToolbar) {
-            mToolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
-            mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    finish();
-                }
-            });
-        }
     }
 
     private void addDebugFragment() {
@@ -311,12 +217,10 @@ public class AppRunnerActivity extends BaseActivity {
         ft.commit();
     }
 
-    /*
-     * NFC
+    /**
+     * NFC stuf
 	 */
-
     private NfcAdapter mAdapter;
-
     private PendingIntent mPendingIntent;
     private IntentFilter[] mFilters;
     private String[][] mTechLists;
@@ -334,25 +238,12 @@ public class AppRunnerActivity extends BaseActivity {
                 return;
             }
 
-            // cuando esta en foreground
-            MLog.d(TAG, "Starting NFC");
+            // when is in foreground
+            MLog.d(TAG, "starting NFC");
             mAdapter = NfcAdapter.getDefaultAdapter(this);
-			/*
-			 * mAdapter.setNdefPushMessageCallback(new
-			 * NfcAdapter.CreateNdefMessageCallback() {
-			 *
-			 * @Override public NdefMessage createNdefMessage(NfcEvent event) {
-			 * // TODO Auto-generated method stub return null; } }, this, null);
-			 */
 
-            // Create mContext generic PendingIntent that will be deliver to this
-            // activity.
-            // The NFC stack will fill in the intent with the details of the
-            // discovered tag before
-            // delivering to this activity.
-            mPendingIntent = PendingIntent.getActivity(this, 0,
-                    new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
-
+            // PedingIntent will be delivered to this activity
+            mPendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 
             // Setup an intent filter for all MIME based dispatches
             IntentFilter ndef = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
@@ -361,26 +252,26 @@ public class AppRunnerActivity extends BaseActivity {
             } catch (IntentFilter.MalformedMimeTypeException e) {
                 throw new RuntimeException("fail", e);
             }
-            mFilters = new IntentFilter[]{ndef,};
+            mFilters = new IntentFilter[]{ ndef, };
 
-            // Setup mContext tech list for all NfcF tags
+            // Setup a tech list for all NfcF tags
             mTechLists = new String[][]{new String[]{NfcF.class.getName()}};
             nfcInit = true;
         }
     }
 
 
+    /**
+     * Listen to NFC incomming data
+     */
     @Override
     public void onNewIntent(Intent intent) {
         MLog.d(TAG, "New intent " + intent);
 
         if (intent.getAction() != null) {
             MLog.d(TAG, "Discovered tag with intent: " + intent);
-            // mText.setText("Discovered tag " + ++mCount + " with intent: " +
-            // intent);
 
             Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-
             String nfcID = StrUtils.bytetostring(tag.getId());
 
             // if there is a message waiting to be written
@@ -391,9 +282,8 @@ public class AppRunnerActivity extends BaseActivity {
                 onNFCWrittenListener = null;
                 PNfc.nfcMsg = null;
 
-                // read the nfc tag info
+            // read the nfc tag info
             } else {
-
                 // get NDEF tag details
                 Ndef ndefTag = Ndef.get(tag);
                 if (ndefTag == null) {
@@ -422,58 +312,42 @@ public class AppRunnerActivity extends BaseActivity {
 
                     }
                     nfcMessage = recPayloads[0];
-
                 }
-
                 onNFCListener.onNewTag(nfcID, nfcMessage);
             }
-
         }
-
     }
 
+    /**
+     * key listeners
+     */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (onKeyListener != null) {
-            onKeyListener.onKeyDown(keyCode);
-        }
-
-        if (checkBackKey(keyCode) || checkVolumeKeys(keyCode)) {
-            return super.onKeyDown(keyCode, event);
-        }
+        if (onKeyListener != null) onKeyListener.onKeyDown(keyCode);
+        if (checkBackKey(keyCode) || checkVolumeKeys(keyCode)) return super.onKeyDown(keyCode, event);
 
         return true;
-        //return super.onKeyDown(keyCode, event);
     }
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if (onKeyListener != null) {
-            onKeyListener.onKeyUp(keyCode);
-        }
-
-        if (checkBackKey(keyCode) || checkVolumeKeys(keyCode)) {
-            return super.onKeyUp(keyCode, event);
-        }
+        if (onKeyListener != null) onKeyListener.onKeyUp(keyCode);
+        if (checkBackKey(keyCode) || checkVolumeKeys(keyCode)) return super.onKeyUp(keyCode, event);
 
         return true;
     }
 
-
+    /**
+     * Menu
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        //interp.callJsFunction("onOptionsItemSelected", item);
         switch (item.getItemId()) {
             case android.R.id.home:
-                // Up button pressed
-                //Intent intentHome = new Intent(this, AppRunnerActivity.class);
-                //intentHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                //startActivity(intentHome);
-
                 overridePendingTransition(R.anim.splash_slide_in_anim_reverse_set, R.anim.splash_slide_out_anim_reverse_set);
                 finish();
-
                 return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -497,143 +371,79 @@ public class AppRunnerActivity extends BaseActivity {
             onVoiceRecognitionListener.onNewResult(matches.get(0));
 
             //TODO disabled
-        } else if (requestCode == 22 && resultCode == Activity.RESULT_OK) {
-            String result = data.getStringExtra("json");
-            //mAppRunnerFragment.interp.callJsFunction("onResult", result);
         }
 
         if (onBluetoothListener != null) {
             onBluetoothListener.onActivityResult(requestCode, resultCode, data);
         }
 
-
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    public void addOnKeyListener(PUI.onKeyListener onKeyListener2) { onKeyListener = onKeyListener2; }
 
-    public void onResult(String result) {
+    public void addNFCReadListener(PNfc.onNFCListener onNFCListener2) { onNFCListener = onNFCListener2; }
 
-    }
+    public void addNFCWrittenListener(PNfc.onNFCWrittenListener onNFCWrittenListener2) { onNFCWrittenListener = onNFCWrittenListener2; }
 
-    public void showCodeExecuted() {
+    public void addBluetoothListener(PBluetooth.onBluetoothListener onBluetoothListener2) { onBluetoothListener = onBluetoothListener2; }
 
-    }
-
-    @Override
-    public boolean onGenericMotionEvent(MotionEvent event) {
-
-        int action = event.getAction();
-        int actionCode = event.getActionMasked();
-
-        ArrayList<PPadView.TouchEvent> t = new ArrayList<PPadView.TouchEvent>();
-
-        // check finger if down or up
-        if (actionCode == MotionEvent.ACTION_POINTER_DOWN || actionCode == MotionEvent.ACTION_POINTER_UP) {
-
-        }
-
-        if (event.getSource() == MotionEvent.TOOL_TYPE_MOUSE) {
-            // if (event.getButtonState() == ac) {
-
-            // }
-        }
-
-        // get positions per finger
-        for (int i = 0; i < event.getPointerCount(); i++) {
-            // TouchEvent o = new TouchEvent("finger", event.getPointerId(i),
-            // action, (int) event.getX(),
-            // (int) event.getY());
-            // t.add(o);
-        }
-
-        //
-        // FINGER 1 UP x y
-        // FINGER 2 MOVE x y
-        // MOUSE 3 MOVE x y
-
-        // return touching;
-        return super.onGenericMotionEvent(event);
-    }
-
-    public void addOnKeyListener(PUI.onKeyListener onKeyListener2) {
-        onKeyListener = onKeyListener2;
-    }
-
-    public void addOnSmsReceivedListener(PDevice.onSmsReceivedListener onSmsReceivedListener2) {
-        onSmsReceivedListener = onSmsReceivedListener2;
-    }
-
-    public void addNFCReadListener(PNfc.onNFCListener onNFCListener2) {
-        onNFCListener = onNFCListener2;
-    }
-
-    public void addNFCWrittenListener(PNfc.onNFCWrittenListener onNFCWrittenListener2) {
-        onNFCWrittenListener = onNFCWrittenListener2;
-    }
-
-    public void addBluetoothListener(PBluetooth.onBluetoothListener onBluetoothListener2) {
-        onBluetoothListener = onBluetoothListener2;
-    }
-
-    public void addVoiceRecognitionListener(PMedia.onVoiceRecognitionListener onVoiceRecognitionListener2) {
-        onVoiceRecognitionListener = onVoiceRecognitionListener2;
-    }
-
-
-/*
-    @Override
-    public boolean onKeyMultiple(int keyCode, int repeatCount, KeyEvent event) {
-        if (event.getAction() == KeyEvent.ACTION_DOWN)
-        if (onKeyListener != null) {
-            onKeyListener.onKeyDown(keyCode);
-        }
-
-        if (checkBackKey(keyCode) || checkVolumeKeys(keyCode)) {
-            return super.onKeyDown(keyCode, event);
-        }
-
-        return true;
-
-        //return super.onKeyMultiple(keyCode, repeatCount, event);
-
-    }
-*/
-
-
-//    @Override
-//    public boolean dispatchGenericMotionEvent(MotionEvent ev) {
-//
-//        MLog.d(TAG, "action " + ev.getAction());
-//        if (onKeyListener != null) {
-//            onKeyListener.onKeyDown(ev.getAction());
-//        }
-//
-//        return super.dispatchGenericMotionEvent(ev);
-//    }
+    public void addVoiceRecognitionListener(PMedia.onVoiceRecognitionListener onVoiceRecognitionListener2) { onVoiceRecognitionListener = onVoiceRecognitionListener2; }
 
     public boolean checkBackKey(int keyCode) {
-        boolean r;
-
-        if (keyBackEnabled && keyCode == KeyEvent.KEYCODE_BACK) {
-            r = true;
-        } else {
-            r = false;
-        }
-
-        return r;
+        if (keyBackEnabled && keyCode == KeyEvent.KEYCODE_BACK) return true;
+        else return false;
     }
 
     public boolean checkVolumeKeys(int keyCode) {
-        boolean r;
-
         if (keyVolumeEnabled && (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
-            r = true;
+            return true;
         } else {
-            r = false;
+            return false;
         }
+    }
 
-        return r;
+    public void showConsole(boolean visible) {
 
+        if (visible) {
+            consoleRLayout.setAlpha(0);
+            consoleRLayout.setTranslationY(50);
+            consoleRLayout.setVisibility(View.VISIBLE);
+            consoleRLayout.animate().alpha(1).translationYBy(-50).setDuration(500);
+        } else {
+            consoleRLayout.animate().alpha(0).translationYBy(50).setDuration(500).setListener(new Animator.AnimatorListener() {
+
+                @Override
+                public void onAnimationStart(Animator animation) {
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    consoleRLayout.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+                }
+            });
+        }
+    }
+
+    public void showConsole(final String message) {
+        runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+                MLog.d(TAG, "showing console");
+                showConsole(true);
+                consoleText.setText(message);
+                MLog.d(TAG, "msg text");
+            }
+        });
     }
 
     /**

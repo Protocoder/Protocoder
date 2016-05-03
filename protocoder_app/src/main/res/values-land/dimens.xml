@@ -1,0 +1,9 @@
+<resources>
+
+    <dimen name="main_cardview_radius">2dp</dimen>
+    <dimen name="main_cardview_horizontal_margin">10dp</dimen>
+
+    <dimen name="editor_cardview_radius">2dp</dimen>
+    <dimen name="editor_cardview_horizontal_margin">10dp</dimen>
+
+</resources>

@@ -101,20 +101,6 @@ public class ProtocoderHttpServer extends NanoHTTPD {
         for (int i = 0; i < uriSplitted.length; i++) {
             MLog.d(TAG, i + " " + uriSplitted[i]);
         }
-        /*
-        MLog.d(TAG, "serving ... ");
-        final HashMap<String, String> map2 = new HashMap<String, String>();
-        try {
-            session.parseBody(map2);
-            MLog.d(TAG, session.getUri() + " " + " " + session.getMethod() + " map --> " + map2.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ResponseException e) {
-            e.printStackTrace();
-        }
-
-        MLog.d(TAG, "params -> " + session.getParms().toString());
-        */
 
         // project_list
         if (uri.startsWith("/api/project/list/")) {
@@ -138,7 +124,6 @@ public class ProtocoderHttpServer extends NanoHTTPD {
             Project p = new Project(uriSplitted[4] + "/" + uriSplitted[5], uriSplitted[6]);
 
             // POST DATA
-
             String json;
             final HashMap<String, String> map = new HashMap<String, String>();
 

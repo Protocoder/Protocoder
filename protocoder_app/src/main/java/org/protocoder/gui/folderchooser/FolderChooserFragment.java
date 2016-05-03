@@ -54,6 +54,7 @@ public class FolderChooserFragment extends BaseFragment {
     private ResizableRecyclerView folderList;
     private String currentFolder;
     private boolean isTablet;
+    private boolean isLandscapeBig;
 
     public FolderChooserFragment() {
     }
@@ -67,33 +68,48 @@ public class FolderChooserFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mContext = (Context) getActivity();
 
-        isTablet = getArguments().getBoolean("isTablet");
+        isTablet = getResources().getBoolean(R.bool.isTablet);
 
-        final View v = inflater.inflate(R.layout.fragment_project_chooser, container, false);
+        isLandscapeBig = getResources().getBoolean(R.bool.isLandscapeBig);
+
+        final View v = inflater.inflate(R.layout.folderchooser_fragment, container, false);
 
         // project folder menu
         toggleFolderChooser = (ToggleButton) v.findViewById(R.id.selectFolderButton);
         folderList = (ResizableRecyclerView) v.findViewById(R.id.folderList);
-        if (isTablet) {
+
+        if (isTablet || isLandscapeBig) {
             toggleFolderChooser.setVisibility(View.GONE);
             folderList.setVisibility(View.VISIBLE);
         }
 
         // default toggle text
+        toggleFolderChooser.setText("Choose folder");
         toggleFolderChooser.setTextOn("Choose folder");
         toggleFolderChooser.setTextOff("Choose folder");
+
+        // folder list oculto cuando
+        // isTablet => false
+        // isLandscapeBig => false
 
         toggleFolderChooser.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                // show folderlist
                 if (isChecked) {
                     folderList.setVisibility(View.VISIBLE);
+
+                // hide folderlist
                 } else {
-                    if (!isTablet) folderList.setVisibility(View.GONE);
-                    if (currentFolder == null) {
-                        toggleFolderChooser.setTextOff("Choose folder");
-                    } else {
-                        toggleFolderChooser.setTextOff(currentFolder);
+                    if (!(isTablet || isLandscapeBig)) {
+                        MLog.d(TAG, "--------------- HIDING THINGIE " + isTablet + " " + isLandscapeBig + " " );
+                        folderList.setVisibility(View.GONE);
+
+                        if (currentFolder == null) {
+                            toggleFolderChooser.setTextOff("Choose folder");
+                        } else {
+                            toggleFolderChooser.setTextOff(currentFolder);
+                        }
                     }
                 }
             }
@@ -144,13 +160,12 @@ public class FolderChooserFragment extends BaseFragment {
         EventBus.getDefault().unregister(this);
     }
 
-    public static FolderChooserFragment newInstance(String folderName, boolean orderByName, boolean isTablet) {
+    public static FolderChooserFragment newInstance(String folderName, boolean orderByName) {
         FolderChooserFragment myFragment = new FolderChooserFragment();
 
         Bundle args = new Bundle();
         args.putString("folderName", folderName);
         args.putBoolean("orderByName", orderByName);
-        args.putBoolean("isTablet", isTablet);
         myFragment.setArguments(args);
 
         return myFragment;
@@ -160,7 +175,7 @@ public class FolderChooserFragment extends BaseFragment {
     @Subscribe
     public void onEventMainThread(Events.FolderChosen e) {
         MLog.d(TAG, "< Event (folderChosen)");
-        currentFolder = e.getFullFolder();
+        currentFolder = e.getParent() + " > " + e.getName();
         toggleFolderChooser.performClick();
     }
 

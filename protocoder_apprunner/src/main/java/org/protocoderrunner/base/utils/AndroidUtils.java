@@ -259,14 +259,21 @@ public class AndroidUtils {
         }
     }
 
+    public static boolean isVersionN() {
+        MLog.d(TAG, "codename ----------->" + Build.VERSION.CODENAME);
+        return ("N".equals(Build.VERSION.CODENAME));
+    }
+
+    public static boolean isVersionMarshmallow() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
+    }
+
     public static boolean isVersionLollipop() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }
-
     public static boolean isVersionKitKat() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
     }
-
 
     public static boolean isVersionMinSupported() {
         return AppRunnerSettings.MIN_SUPPORTED_VERSION > Build.VERSION.SDK_INT;

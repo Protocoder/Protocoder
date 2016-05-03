@@ -53,12 +53,8 @@ public class WelcomeActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_welcome);
-        //setToolbar();
-        //setToolbarBack();
-
-        //TextView copyright = (TextView) findViewById(R.id.copyright);
-        //copyright.setText(readFile(R.raw.copyright_notice));
+        setContentView(R.layout.welcome_activity);
+        setupActivity();
 
         // request permissions
         checkPermissions();
@@ -69,15 +65,18 @@ public class WelcomeActivity extends BaseActivity {
     }
 
     @Override
+    protected void setupActivity() {
+        super.setupActivity();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
-        MLog.d(TAG, "onResume");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        MLog.d(TAG, "onPause");
     }
 
     @Override
@@ -109,7 +108,9 @@ public class WelcomeActivity extends BaseActivity {
         requiredPermissions.add(Manifest.permission.RECEIVE_SMS);
         requiredPermissions.add(Manifest.permission.INSTALL_SHORTCUT);
         requiredPermissions.add(Manifest.permission.CAMERA);
-        requiredPermissions.add(Manifest.permission.FLASHLIGHT);
+
+        // requiredPermissions.add(Manifest.permission.FLASHLIGHT);
+
         requiredPermissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
         requiredPermissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
         requiredPermissions.add(Manifest.permission.MODIFY_AUDIO_SETTINGS);

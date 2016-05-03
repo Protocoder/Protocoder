@@ -50,9 +50,9 @@ public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.
     /*
      * ProjectItemAdapter
      */
-    public ProjectItemAdapter(Context c) {
+    public ProjectItemAdapter(Context c, boolean listMode) {
         mContext = c;
-        this.mListMode = false;
+        this.mListMode = listMode;
     }
 
     public void setArray( ArrayList<Project> projectList) {
@@ -103,7 +103,6 @@ public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.
 
         return pos;
     }
-
 
     // Create new views (invoked by the layout manager)
     @Override

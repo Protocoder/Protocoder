@@ -42,17 +42,16 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.protocoderrunner.api.PUtil;
+import org.protocoderrunner.api.other.PLooper;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
-import org.protocoderrunner.api.PUtil;
-import org.protocoderrunner.api.other.PLooper;
 import org.protocoderrunner.base.utils.MLog;
 
 import java.util.Vector;
 
 import static android.graphics.Shader.TileMode;
-
 
 public class PCanvas extends View implements PViewInterface {
 
@@ -320,12 +319,10 @@ public class PCanvas extends View implements PViewInterface {
     @ProtoMethodParam(params = {"r", "g", "b"})
     public PCanvas background(int r, int g, int b) {
         background(r, g, b, 255);
-
         refresh();
 
         return this;
     }
-
 
     @ProtoMethod(description = "Draw a point", example = "")
     @ProtoMethodParam(params = {"x", "y"})
@@ -355,7 +352,6 @@ public class PCanvas extends View implements PViewInterface {
         return this;
     }
 
-
     @ProtoMethod(description = "Draw a line", example = "")
     @ProtoMethodParam(params = {"x1", "y1", "x2", "y2"})
     public PCanvas line(float x1, float y1, float x2, float y2) {
@@ -383,7 +379,6 @@ public class PCanvas extends View implements PViewInterface {
         return path;
     }
 
-
     @ProtoMethod(description = "Draw a path", example = "")
     @ProtoMethodParam(params = {"path"})
     public PCanvas path(Path path) {
@@ -393,7 +388,6 @@ public class PCanvas extends View implements PViewInterface {
 
         return this;
     }
-
 
     @ProtoMethod(description = "Set a dashed stroke", example = "")
     @ProtoMethodParam(params = {"float[]", "phase"})
@@ -406,7 +400,6 @@ public class PCanvas extends View implements PViewInterface {
         return this;
     }
 
-
     @ProtoMethod(description = "Draws and ellipse", example = "")
     @ProtoMethodParam(params = {"x1", "y1", "width", "height"})
     public PCanvas ellipse(float x, float y, float width, float height) {
@@ -416,7 +409,6 @@ public class PCanvas extends View implements PViewInterface {
 
         return this;
     }
-
 
     @ProtoMethod(description = "Draws a rectangle", example = "")
     @ProtoMethodParam(params = {"x", "y", "width", "height"})
@@ -428,7 +420,6 @@ public class PCanvas extends View implements PViewInterface {
         return this;
     }
 
-
     @ProtoMethod(description = "Draws a rectangle with a given roundness value", example = "")
     @ProtoMethodParam(params = {"x", "y", "width", "height", "rx", "ry"})
     public PCanvas rect(float x, float y, float width, float height, float rx, float ry) {
@@ -439,7 +430,6 @@ public class PCanvas extends View implements PViewInterface {
 
         return this;
     }
-
 
     @ProtoMethod(description = "Draws an arc", example = "")
     @ProtoMethodParam(params = {"x1", "y1", "x2", "y2", "initAngle", "sweepAngle", "center"})
@@ -453,7 +443,6 @@ public class PCanvas extends View implements PViewInterface {
         return this;
     }
 
-
     @ProtoMethod(description = "Writes text", example = "")
     @ProtoMethodParam(params = {"text", "x", "y"})
     public PCanvas text(String text, float x, float y) {
@@ -463,7 +452,6 @@ public class PCanvas extends View implements PViewInterface {
 
         return this;
     }
-
 
     @ProtoMethod(description = "Draws a text in a path", example = "")
     @ProtoMethodParam(params = {"text", "path", "initOffset", "outOffsett"})
@@ -484,14 +472,12 @@ public class PCanvas extends View implements PViewInterface {
         mCanvas.drawText(text, cx - textBounds.exactCenterX(), cy - textBounds.exactCenterY(), mPaintFill);
     }
 
-
     @ProtoMethod(description = "Load an image", example = "")
     @ProtoMethodParam(params = {"imagePath"})
     public Bitmap loadImage(String imagePath) {
         //TODO reenable this
         return null; //Image.loadBitmap(ProjectManager.getInstance().getCurrentProject().getStoragePath() + File.separator + imagePath);
     }
-
 
     @ProtoMethod(description = "Draws an image", example = "")
     @ProtoMethodParam(params = {"bitmap", "x", "y"})
@@ -503,7 +489,6 @@ public class PCanvas extends View implements PViewInterface {
 
         return this;
     }
-
 
     @ProtoMethod(description = "Draws an image", example = "")
     @ProtoMethodParam(params = {"bitmap", "x", "y", "w", "h"})
@@ -519,14 +504,12 @@ public class PCanvas extends View implements PViewInterface {
         return this;
     }
 
-
     @ProtoMethod(description = "Clear the canvas", example = "")
     @ProtoMethodParam(params = {})
     public void clear() {
         mCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
         refresh();
     }
-
 
     @ProtoMethod(description = "Sets the filling color", example = "")
     @ProtoMethodParam(params = {"r", "g", "b", "alpha"})
@@ -537,7 +520,6 @@ public class PCanvas extends View implements PViewInterface {
 
         return this;
     }
-
 
     @ProtoMethod(description = "Sets the filling color", example = "")
     @ProtoMethodParam(params = {"r", "g", "b"})
@@ -564,7 +546,6 @@ public class PCanvas extends View implements PViewInterface {
         fillOn = false;
 
     }
-
 
     @ProtoMethod(description = "Sets the stroke color", example = "")
     @ProtoMethodParam(params = {"r", "g", "b", "alpha"})

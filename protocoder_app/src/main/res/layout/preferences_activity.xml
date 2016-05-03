@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <include layout="@layout/toolbar2"
+        android:id="@+id/header"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"/>
+
+    <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        card_view:cardCornerRadius="@dimen/other_cardview_radius"
+        android:layout_below="@id/header"
+        android:animateLayoutChanges="true"
+        android:layout_marginTop="@dimen/other_cardview_top_margin"
+        android:layout_marginLeft="@dimen/other_cardview_horizontal_margin"
+        android:layout_marginRight="@dimen/other_cardview_horizontal_margin"
+        >
+
+        <FrameLayout
+            android:id="@+id/pref_container"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+        </FrameLayout>
+
+    </android.support.v7.widget.CardView>
+
+
+</RelativeLayout>

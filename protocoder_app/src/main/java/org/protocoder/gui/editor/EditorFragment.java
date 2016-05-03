@@ -57,6 +57,7 @@ import java.util.HashMap;
 public class EditorFragment extends BaseFragment {
 
     protected static final String TAG = EditorFragment.class.getSimpleName();
+
     public interface EditorFragmentListener {
 
         void onLoad();
@@ -94,10 +95,9 @@ public class EditorFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        v = inflater.inflate(R.layout.fragment_editor, container, false);
+        v = inflater.inflate(R.layout.editor_fragment, container, false);
 
         bindUI();
-
 
         // editor settings
         mEditorSettings.fontSize = mEdit.getTextSize();
@@ -156,11 +156,21 @@ public class EditorFragment extends BaseFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                // update current code string
-                openedFiles.put(mCurrentFile, s.toString());
 
-                // notifiy that a file is changed
-                EventBus.getDefault().post(new Events.EditorEvent(Events.EDITOR_FILE_CHANGED, mCurrentProject, new ProtoFile(mCurrentFile, "")) );
+                String originalText = openedFiles.get(mCurrentFile);
+                String currentText = s.toString();
+
+                // check if text is changed
+                if (originalText.equals(currentText) == false) {
+                    MLog.d(TAG, "text changed");
+
+                    // update current code string
+                    openedFiles.put(mCurrentFile, currentText);
+
+                    // notifiy that a file is changed
+                    EventBus.getDefault().post(new Events.EditorEvent(Events.EDITOR_FILE_CHANGED, mCurrentProject, new ProtoFile(mCurrentFile, "")) );
+                }
+
             }
         });
 
@@ -274,8 +284,10 @@ public class EditorFragment extends BaseFragment {
      * Load a project
      */
     public void loadProject(Project project) {
+        MLog.d("file load send", "qq");
+
         mCurrentProject = project;
-        EventBus.getDefault().post(new Events.EditorEvent(Events.EDITOR_FILE_LOAD, mCurrentProject, new ProtoFile("main.js","")));
+        EventBus.getDefault().postSticky(new Events.EditorEvent(Events.EDITOR_FILE_TO_LOAD, mCurrentProject, new ProtoFile("main.js","")));
 
         loadFile("main.js");
     }
@@ -305,6 +317,8 @@ public class EditorFragment extends BaseFragment {
     public void saveFile() {
         ProtoScriptHelper.saveCode(mCurrentProject.getSandboxPath() + File.separator + mCurrentFile, openedFiles.get(mCurrentFile));
         Toast.makeText(getActivity(), "Saving " + mCurrentProject.getName() + "...", Toast.LENGTH_SHORT).show();
+
+        EventBus.getDefault().post(new Events.EditorEvent(Events.EDITOR_FILE_SAVE, mCurrentProject, new ProtoFile(mCurrentFile, "")));
     }
 
     /**
@@ -320,6 +334,10 @@ public class EditorFragment extends BaseFragment {
     // TODO
     public void toggleEditable(boolean b) {
 
+    }
+
+    public void saveAll() {
+        
     }
 
     /**

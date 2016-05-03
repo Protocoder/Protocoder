@@ -32,13 +32,16 @@ public class SettingsActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_preferences);
+        setContentView(R.layout.preferences_activity);
         setupActivity();
 
-        //setToolbar();
-        //setToolbarBack();
-
         getFragmentManager().beginTransaction().replace(R.id.pref_container, new SettingsFragment()).commit();
+    }
+
+    @Override
+    protected void setupActivity() {
+        super.setupActivity();
+        enableBackOnToolbar();
     }
 
 }

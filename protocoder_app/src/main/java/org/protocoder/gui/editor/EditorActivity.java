@@ -24,16 +24,21 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.protocoder.R;
 import org.protocoder.events.Events;
-import org.protocoder.gui._components.BaseWebviewFragment;
+import org.protocoder.gui._components.APIWebviewFragment;
+import org.protocoder.gui.filepreviewer.FilePreviewerFragment;
+import org.protocoder.server.model.ProtoFile;
 import org.protocoderrunner.base.BaseActivity;
+import org.protocoderrunner.base.utils.FileIO;
 import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.models.Project;
 
@@ -50,12 +55,13 @@ public class EditorActivity extends BaseActivity {
 
     private EditorFragment editorFragment;
     private FileManagerFragment fileFragment;
-    private BaseWebviewFragment webviewFragment;
+    private APIWebviewFragment webviewFragment;
+    private FilePreviewerFragment filePreviewerFragment;
 
     // drawers
     private boolean showFilesDrawer = false;
-    private boolean showAPIDrawer = false;
 
+    private boolean showAPIDrawer = false;
     private Project mCurrentProject;
     private boolean isTablet;
 
@@ -63,7 +69,7 @@ public class EditorActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_editor);
+        setContentView(R.layout.editor_activity);
         isTablet = getResources().getBoolean(R.bool.isTablet);
 
         setupActivity();
@@ -77,18 +83,14 @@ public class EditorActivity extends BaseActivity {
             bundle.putString(Project.FOLDER, folder);
             bundle.putString(Project.NAME, name);
             mCurrentProject = new Project(folder, name);
+
+            // setProjectTitleAndSubtitle(name, ProtocoderSettings.MAIN_FILENAME);
         }
 
-        // add editor fragment
-        editorFragment = EditorFragment.newInstance(bundle);
-        FrameLayout fl = (FrameLayout) findViewById(R.id.pref_container);
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(fl.getId(), editorFragment, String.valueOf(fl.getId()));
-        ft.commit();
-
-        MLog.d(TAG, "qq isTablet: " + isTablet);
-
-        showFileManagerDrawer(isTablet);
+        addEditorFragment(bundle);
+        addFilePreviewerFragment(bundle);
+        addFileManagerDrawer(true);
+        // showFileManagerDrawer(false);
     }
 
     @Override
@@ -107,7 +109,7 @@ public class EditorActivity extends BaseActivity {
     protected void setupActivity() {
         super.setupActivity();
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        enableBackOnToolbar();
     }
 
     @Override
@@ -120,7 +122,38 @@ public class EditorActivity extends BaseActivity {
         if (!isTablet) menu.add(1, MENU_FILES, 0, "F").setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         menu.add(1, MENU_API, 0, "API").setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 
+        // onOptionsItemSelected(mMenu.findItem(MENU_FILES));
+
         return super.onCreateOptionsMenu(menu);
+    }
+
+    public void saveAndRun() {
+        editorFragment.saveFile();
+        editorFragment.run();
+    }
+
+    public void save() {
+        editorFragment.saveFile();
+    }
+
+    public void saveAll() {
+        editorFragment.saveAll();
+    }
+
+    public void toggleFilesDrawer() {
+        MenuItem menuFiles = mMenu.findItem(MENU_FILES).setChecked(showFilesDrawer);
+
+        showFilesDrawer = !showFilesDrawer;
+        showFileManagerDrawer(showFilesDrawer);
+    }
+
+
+    public void toggleApiDrawer() {
+        MenuItem menuApi = mMenu.findItem(MENU_API).setChecked(showFilesDrawer);
+
+        showAPIDrawer = !showAPIDrawer;
+        showAPIDrawer(showAPIDrawer);
+
     }
 
     @Override
@@ -128,35 +161,53 @@ public class EditorActivity extends BaseActivity {
         // Handle item selection
         switch (item.getItemId()) {
             case MENU_RUN:
-                editorFragment.saveFile();
-                editorFragment.run();
-
+                saveAndRun();
                 return true;
 
             case MENU_SAVE:
-                editorFragment.saveFile();
+                save();
 
                 return true;
 
             case MENU_FILES:
-                MenuItem menuFiles = mMenu.findItem(MENU_FILES).setChecked(showFilesDrawer);
-
-                showFilesDrawer = !showFilesDrawer;
-                showFileManagerDrawer(showFilesDrawer);
+                toggleFilesDrawer();
 
                 return true;
 
             case MENU_API:
-                MenuItem menuApi = mMenu.findItem(MENU_API).setChecked(showFilesDrawer);
-
-                showAPIDrawer = !showAPIDrawer;
-                showAPIDrawer(showAPIDrawer);
+                toggleApiDrawer();
 
                 return true;
 
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        return super.onKeyUp(keyCode, event);
+    }
+
+    @Override
+    public boolean onKeyShortcut(int keyCode, KeyEvent event) {
+        if (event.isCtrlPressed()) {
+            switch (keyCode) {
+                case KeyEvent.KEYCODE_R:
+                    saveAndRun();
+                    break;
+
+                case KeyEvent.KEYCODE_S:
+                    save();
+                    break;
+
+                case KeyEvent.KEYCODE_F:
+                    toggleApiDrawer();
+
+                    break;
+            }
+        }
+        return super.onKeyShortcut(keyCode, event);
     }
 
     /**
@@ -169,7 +220,7 @@ public class EditorActivity extends BaseActivity {
                 R.anim.slide_out_left);
 
         if (b) {
-            webviewFragment = new BaseWebviewFragment();
+            webviewFragment = new APIWebviewFragment();
             Bundle bundle = new Bundle();
             bundle.putString("url", "http://localhost:8585/reference.html");
             webviewFragment.setArguments(bundle);
@@ -184,16 +235,13 @@ public class EditorActivity extends BaseActivity {
         ft.commit();
     }
 
-    public void showFileManagerDrawer(boolean b) {
+    public void addFileManagerDrawer(boolean b) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_left);
 
         if (b) {
-            fileFragment = new FileManagerFragment();
+            fileFragment = FileManagerFragment.newInstance();
             Bundle bundle = new Bundle();
-            MLog.d(TAG, ft + " " + mCurrentProject + " (qq) ");
-            MLog.d(TAG, "fileFragment)" + fileFragment);
-
             bundle.putString(Project.NAME, mCurrentProject.name);
             bundle.putString(Project.FOLDER, mCurrentProject.folder);
 
@@ -204,14 +252,51 @@ public class EditorActivity extends BaseActivity {
             } else {
                 ft.add(R.id.fragmentFileManager, fileFragment).addToBackStack(null);
             }
-            // editorFragment.getView().animate().translationX(-50).setDuration(500).start();
-
         } else {
             // editorFragment.getView().animate().translationX(0).setDuration(500).start();
             ft.remove(fileFragment);
         }
 
         ft.commit();
+    }
+
+    private void addEditorFragment(Bundle bundle) {
+        editorFragment = EditorFragment.newInstance(bundle);
+        FrameLayout fl = (FrameLayout) findViewById(R.id.editor_container);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.add(fl.getId(), editorFragment, String.valueOf(fl.getId()));
+        ft.commit();
+    }
+
+    private void addFilePreviewerFragment(Bundle bundle) {
+        filePreviewerFragment = FilePreviewerFragment.newInstance(bundle);
+        FrameLayout fl = (FrameLayout) findViewById(R.id.filepreviewer_container);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.add(fl.getId(), filePreviewerFragment, String.valueOf(fl.getId()));
+        ft.commit();
+    }
+
+    /**
+     * Show / hide file manager
+     */
+    public void showFileManagerDrawer(boolean show) {
+        FrameLayout fileManager = (FrameLayout) findViewById(R.id.fragmentFileManager);
+
+        if (show) {
+            fileManager.setVisibility(View.VISIBLE);
+        } else {
+            fileManager.setVisibility(View.GONE);
+        }
+    }
+
+    public void showFilePreviewerFragment(boolean show) {
+        FrameLayout filePreviewerContainer = (FrameLayout) findViewById(R.id.filepreviewer_container);
+
+        if (show) {
+            filePreviewerContainer.setVisibility(View.VISIBLE);
+        } else {
+            filePreviewerContainer.setVisibility(View.GONE);
+        }
     }
 
     public void addAFile() {
@@ -229,13 +314,46 @@ public class EditorActivity extends BaseActivity {
         MLog.d(TAG, "");
     }
 
+    public void setProjectTitleAndSubtitle(String projectName, String fileName) {
+        mToolbar.setTitle(projectName);
+        mToolbar.setSubtitle(fileName);
+    }
+
     // load script
-    @Subscribe
+    @Subscribe (sticky = true)
     public void onEventMainThread(Events.EditorEvent e) {
-        if (!isTablet) {
-            showFileManagerDrawer(false);
+
+        setProjectTitleAndSubtitle(e.getProject().getName(), e.getProtofile().name);
+
+        if (e.getAction().equals(Events.EDITOR_FILE_TO_LOAD)) {
+            ProtoFile f = e.getProtofile();
+
+            // check type
+            String type = checkType(f.name);
+            MLog.d(TAG, "type : " + type);
+
+            // if preview
+            if (type != null) {
+                EventBus.getDefault().post(new Events.EditorEvent(Events.EDITOR_FILE_PREVIEW, mCurrentProject, f, type));
+                showFilePreviewerFragment(true);
+            } else {
+                showFilePreviewerFragment(false);
+                EventBus.getDefault().post(new Events.EditorEvent(Events.EDITOR_FILE_LOAD, mCurrentProject, f));
+            }
         }
-        mToolbar.setTitle(e.getProject().getName());
-        mToolbar.setSubtitle(e.getProtofile().name);
+    }
+
+
+    private String checkType(String name) {
+        String extension = FileIO.getFileExtension(name);
+        String type = null;
+
+        if (extension.equals("png") || extension.equals("jpg") || extension.equals(".jpeg")) {
+            type = "image";
+        } else if (extension.equals("avi") || extension.equals("mpg") || extension.equals("mpeg") || extension.equals("mp4")){
+            type = "video";
+        }
+
+        return type;
     }
 }

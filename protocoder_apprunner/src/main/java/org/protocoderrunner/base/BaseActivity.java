@@ -31,6 +31,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -54,57 +55,58 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // if (AppSettings.FULLSCREEN) {
-        // setFullScreen();
-        // }
-        //
-        // if (AppSettings.HIDE_HOME_BAR) {
-        // setHideHomeBar();
-        // }
-        //
-        // if (AppSettings.SCREEN_ALWAYS_ON) {
-        // setScreenAlwaysOn();
-        // }
-        //
-        // setVolume(100);
-        // setBrightness(1f);
-
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // System.gc();
+    }
+
+    @Override
+    protected void onResume() {
+        // System.gc();
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // System.gc();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id==android.R.id.home) {
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    // Create the action bar programmatically
     protected void setupActivity () {
-        // Make the app take as much space as it can
-
-        // getWindow().getDecorView().setSystemUiVisibility(
-        //         View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-        //                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-
-        // Create the action bar programmatically
         if (!AndroidUtils.isWear(this)) {
             mToolbar = (Toolbar) findViewById(R.id.toolbar2);
             setSupportActionBar(mToolbar);
-
-            // Set the padding to match the Status Bar height
-            mToolbar.setPadding(0, 0, 0, 0); // getStatusBarHeight(), 0, 0);
-        }
-
+       }
     }
+
+    protected void enableBackOnToolbar() {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
     public void setFullScreen() {
         isToolbarAllowed = true;
-        // activity in full screen
-        //supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
-        // requestWindowFeature(Window.FEATURE_ACTION_BAR);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
     public void setImmersive() {
         isToolbarAllowed = false;
         getSupportActionBar().hide();
-        // activity in full screen
-        //supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
-        // requestWindowFeature(Window.FEATURE_ACTION_BAR);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -254,24 +256,6 @@ public class BaseActivity extends AppCompatActivity {
     public void superMegaForceKill() {
         int pid = android.os.Process.myPid();
         android.os.Process.killProcess(pid);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        System.gc();
-    }
-
-    @Override
-    protected void onResume() {
-        System.gc();
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        System.gc();
     }
 
 }

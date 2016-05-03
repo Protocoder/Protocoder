@@ -28,7 +28,7 @@ public class FolderChooserDialog extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_project_chooser, null);
+        View view = inflater.inflate(R.layout.folderchooser_dialog, null);
 
         Window window = getDialog().getWindow();
         window.requestFeature(Window.FEATURE_NO_TITLE);
@@ -61,7 +61,7 @@ public class FolderChooserDialog extends DialogFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.dialogchooserfl, FolderChooserFragment.newInstance("", true, false));
+        fragmentTransaction.add(R.id.dialogchooserfl, FolderChooserFragment.newInstance("", true));
         fragmentTransaction.commit();
 
         super.onActivityCreated(savedInstanceState);

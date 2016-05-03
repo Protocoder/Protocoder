@@ -4,10 +4,17 @@ android {
     compileSdkVersion 23
     buildToolsVersion '23.0.3'
 
+    // compileSdkVersion 'android-N'
+    // buildToolsVersion '24.0.0 rc1'
+
     defaultConfig {
         applicationId "org.protocoder.extended.sandbox"
         minSdkVersion 15
         targetSdkVersion 25
+
+        // minSdkVersion 'N'
+        // targetSdkVersion 'N'
+
         versionCode 18
         versionName "0.19.0"
         multiDexEnabled true

@@ -28,15 +28,16 @@ import org.protocoder.gui.editor.EditorActivity;
 import org.protocoder.gui.settings.SettingsActivity;
 import org.protocoderrunner.AppRunnerActivity;
 import org.protocoderrunner.AppRunnerService;
+import org.protocoderrunner.base.utils.AndroidUtils;
+import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.models.Project;
 
 public class ProtoAppHelper {
 
     private static final String TAG = ProtoAppHelper.class.getSimpleName();
+    private static boolean multiWindowEnabled = true;
 
     public static void launchScript(Context context, Project p) {
-        //MLog.d(TAG, "intent launch -> " + p.getName() + " " + p.getPath());
-
         if (p.getName().toLowerCase().endsWith("service")) {
             Intent intent = new Intent(context, AppRunnerService.class);
             intent.putExtra(Project.FOLDER, p.getPath());
@@ -47,6 +48,13 @@ public class ProtoAppHelper {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra(Project.FOLDER, p.getPath());
             intent.putExtra(Project.NAME, p.getName());
+
+            MLog.d(TAG, "1 ------------> launching side by side " + AndroidUtils.isVersionN());
+
+            if (AndroidUtils.isVersionN() && multiWindowEnabled) {
+                MLog.d(TAG, "2 ------------> launching side by side");
+                // intent.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT);
+            }
             context.startActivity(intent);
         }
     }

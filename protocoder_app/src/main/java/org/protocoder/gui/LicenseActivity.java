@@ -20,8 +20,15 @@
 
 package org.protocoder.gui;
 
+import android.content.Context;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import org.protocoder.R;
@@ -30,78 +37,123 @@ import org.protocoderrunner.base.BaseActivity;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 public class LicenseActivity extends BaseActivity {
+
+    private static final java.lang.String TAG = LicenseActivity.class.getSimpleName();
+    private AssetManager mAssetManager;
+    private String[] mLicenseFiles;
+    private ArrayList<License> mLicenseFileContent = new ArrayList<>();
+
+    private ListView mLicenseList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_license);
+        setContentView(R.layout.license_activity);
+        mLicenseList = (ListView) findViewById(R.id.license_list);
+
+        final MyAdapter myAdapter = new MyAdapter(this, mLicenseFileContent);
+        mLicenseList.setAdapter(myAdapter);
+
         setupActivity();
 
-        //setToolbar();
-        //setToolbarBack();
-
-        //final ProgressDialog progressDialog = new ProgressDialog(this);
-        //progressDialog.setTitle("");
-        //progressDialog.show();
-
-        setLicense(R.id.websockets, R.raw.license_android_websockets);
-        setLicense(R.id.svg_android, R.raw.license_svg_android);
-        setLicense(R.id.commonslang, R.raw.license_commons_lang);
-        setLicense(R.id.commonsnet, R.raw.license_commons_net);
-        setLicense(R.id.netutil, R.raw.license_netutil);
-        setLicense(R.id.eventbus, R.raw.license_eventbus);
-        setLicense(R.id.httpclient, R.raw.license_httpclient);
-        setLicense(R.id.ioio, R.raw.license_ioiolib);
-        setLicense(R.id.mail, R.raw.license_mail);
-        setLicense(R.id.osmdroid, R.raw.license_osmdroid);
-        setLicense(R.id.libpd, R.raw.license_libpd);
-        setLicense(R.id.physicaloid, R.raw.license_physicaloid);
-        setLicense(R.id.processing, R.raw.license_processing);
-        setLicense(R.id.gson, R.raw.license_gson);
-        setLicense(R.id.usb_serial, R.raw.license_usbserial);
-        setLicense(R.id.rhino, R.raw.license_mozilla_rhino);
-        setLicense(R.id.nano, R.raw.license_nano_httpd);
-        setLicense(R.id.zip4j, R.raw.license_zip4j);
-    }
-
-    private void setLicense(int res, final int text) {
-        final TextView v = (TextView) findViewById(res);
+        mAssetManager = getAssets();
 
         final Handler handler = new Handler();
 
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
-                final String txt = readFile(text);
+
+                // read files
+                try {
+                     mLicenseFiles = mAssetManager.list("licenses");
+                    for (int i = 0; i < mLicenseFiles.length; i++) {
+                        mLicenseFileContent.add(new License(mLicenseFiles[i], readFile("licenses/" + mLicenseFiles[i])));
+                        // MLog.d(TAG, filecontent);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                // show license in ui
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        v.setText(txt);
+                        for (int i = 0; i < mLicenseFiles.length; i++) {
+                            View v = getLayoutInflater().inflate(R.layout.license_view, null);
+                            TextView txtView = (TextView) v.findViewById(R.id.license_title);
+                            txtView.setText(mLicenseFiles[i]);
+
+                            myAdapter.notifyDataSetChanged();
+                            mLicenseList.invalidateViews();
+                        }
                     }
                 });
-
             }
         });
         t.start();
+
     }
 
-    private String readFile(int resource) {
-        InputStream inputStream = getResources().openRawResource(resource);
+    @Override
+    protected void setupActivity() {
+        super.setupActivity();
+
+        enableBackOnToolbar();
+    }
+
+    private String readFile(String path) throws IOException {
+        InputStream is = mAssetManager.open(path);
+
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         int i;
         try {
-            i = inputStream.read();
+            i = is.read();
             while (i != -1) {
                 byteArrayOutputStream.write(i);
-                i = inputStream.read();
+                i = is.read();
             }
-            inputStream.close();
+            is.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
         return byteArrayOutputStream.toString();
+    }
+
+    class License {
+        public String title;
+        public String body;
+
+        public License(String name, String content) {
+            title = name.replace("_", " ").replace(".txt", "");
+            body = content;
+        }
+    }
+
+    private class MyAdapter extends ArrayAdapter<License> {
+
+        public MyAdapter(Context context, ArrayList<License> strings) {
+            super(context, -1, -1, strings);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.license_view, parent, false);
+            }
+            TextView txtTitle = (TextView) convertView.findViewById(R.id.license_title);
+            TextView txtText = (TextView) convertView.findViewById(R.id.license_body);
+
+            License license = getItem(position);
+            txtTitle.setText(license.title);
+            txtText.setText(license.body);
+
+            return convertView;
+        }
     }
 
 }
