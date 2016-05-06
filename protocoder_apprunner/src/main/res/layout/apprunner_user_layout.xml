@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/holder"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:focusableInTouchMode="true"
+        android:gravity="bottom"
+        android:background="@color/white"
+    >
+
+    <org.protocoderrunner.api.widgets.PScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/scroll"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true">
+
+        <org.protocoderrunner.api.widgets.PAbsoluteLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/absolute" />
+    </org.protocoderrunner.api.widgets.PScrollView>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Button"
+        android:id="@+id/button"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+</RelativeLayout>

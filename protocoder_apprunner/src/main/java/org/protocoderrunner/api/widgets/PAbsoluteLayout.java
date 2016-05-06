@@ -6,13 +6,41 @@ import android.view.View;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.base.utils.AndroidUtils;
+import org.protocoderrunner.base.utils.MLog;
 
 public class PAbsoluteLayout extends FixedLayout {
 
+    private static final String TAG = PAbsoluteLayout.class.getSimpleName();
+
+    private Context mContext;
+
+    private static final int PIXELS = 0;
+    private static final int DP = 1;
+    private static final int NORMALIZED = 2;
+    private int mode = NORMALIZED;
+
+    private int mWidth = 1080;
+    private int mHeight = 1374;
+
     public PAbsoluteLayout(Context context) {
         super(context);
+        mContext = context;
     }
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        super.onLayout(changed, l, t, r, b);
+
+        MLog.d(TAG, "onLayout " + l + " " + t + " " + r + " " + b);
+        // mWidth = t;
+        // mHeight = b;
+    }
 
     @ProtoMethod(description = "Sets the background color", example = "")
     @ProtoMethodParam(params = {"colorHex"})
@@ -23,12 +51,48 @@ public class PAbsoluteLayout extends FixedLayout {
 
     @ProtoMethod(description = "Adds a view", example = "")
     @ProtoMethodParam(params = {"view", "x", "y", "w", "h"})
-    public void addView(View v, int x, int y, int w, int h) {
-        //positionView(v, x, y, w, h);
+    public void addView(View v, float x, float y, float w, float h) {
+        MLog.d(TAG, "adding view (normalized) -> " + x + " " + y + " " + w + " "  + h);
+        switch (mode) {
+            case PIXELS:
+                break;
+            case DP:
+                x = AndroidUtils.pixelsToDp(mContext, (int)x);
+                y = AndroidUtils.pixelsToDp(mContext, (int)y);
+                w = AndroidUtils.pixelsToDp(mContext, (int)w);
+                h = AndroidUtils.pixelsToDp(mContext, (int)h);
+                break;
+            case NORMALIZED:
+                MLog.d(TAG, "width " + w + " " + mWidth);
+                MLog.d(TAG, "height " + h + " " + mHeight);
+                x = x * mWidth;
+                y = y * mHeight;
+                w = w * mWidth;
+                h = h * mHeight;
+                break;
+        }
 
-        if (w == -1) w = LayoutParams.WRAP_CONTENT;
-        if (h == -1) h = LayoutParams.WRAP_CONTENT;
-        addView(v, new LayoutParams(w, h, x, y));
+        if (w < 0) w = LayoutParams.WRAP_CONTENT;
+        if (h < 0) h = LayoutParams.WRAP_CONTENT;
+
+        MLog.d(TAG, "adding a view (denormalized) -> " +  v + " in " + x + " " + y + " " + w + " " + h);
+        addView(v, new LayoutParams((int)w, (int)h, (int)x, (int)y));
+    }
+
+    public void mode(String type) {
+        switch (type) {
+            case "pixels":
+                this.mode = PIXELS;
+                break;
+            case "dp":
+                this.mode = DP;
+                break;
+            case "normalized":
+                this.mode = NORMALIZED;
+                break;
+            default:
+                this.mode = NORMALIZED;
+        }
     }
 
 

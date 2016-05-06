@@ -82,7 +82,6 @@ public class PPlotView extends View implements PViewInterface {
         return super.onTouchEvent(event);
     }
 
-
     public void init() {
         mDefinition = 5;
 
@@ -102,14 +101,12 @@ public class PPlotView extends View implements PViewInterface {
         }
     }
 
-
     public void addPlot(String plotName, Plot plot) {
         plots.put(plotName, plot);
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-
         mWidth = w;
         mHeight = h;
 
@@ -260,20 +257,18 @@ public class PPlotView extends View implements PViewInterface {
         return this;
     }
 
-
     @ProtoMethod(description = "Changes the plot limits", example = "")
     @ProtoMethodParam(params = {"min", "max"})
-    public PPlotView setLimits(float min, float max) {
+    public PPlotView range(float min, float max) {
         mMinBoundary = min;
         mMaxBoundary = max;
 
         return this;
     }
 
-
     @ProtoMethod(description = "Changes the plot definition", example = "")
     @ProtoMethodParam(params = {"definition"})
-    public PPlotView setDefinition(int definition) {
+    public PPlotView definition(int definition) {
         mDefinition = definition;
         return this;
     }
@@ -309,7 +304,7 @@ public class PPlotView extends View implements PViewInterface {
 
     @ProtoMethod(description = "Sets the line thickness", example = "")
     @ProtoMethodParam(params = {"thickness"})
-    public PPlotView setThickness(float r) {
+    public PPlotView thickness(float r) {
         thickness = r; // when dot
         mPaint.setStrokeWidth(thickness); // when line
         return this;
@@ -318,7 +313,7 @@ public class PPlotView extends View implements PViewInterface {
 
     @ProtoMethod(description = "Changes the plot color", example = "")
     @ProtoMethodParam(params = {"plotName", "colorHex"})
-    public PPlotView setColor(String plotName, String rgb) {
+    public PPlotView color(String plotName, String rgb) {
         new Color();
         int c = Color.parseColor(rgb);
 
@@ -333,7 +328,7 @@ public class PPlotView extends View implements PViewInterface {
 
     @ProtoMethod(description = "Get the plot array size", example = "")
     @ProtoMethodParam(params = {""})
-    public int getSize() {
+    public int size() {
         return mNumPoints;
     }
 

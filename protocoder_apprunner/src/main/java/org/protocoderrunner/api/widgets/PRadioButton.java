@@ -29,4 +29,13 @@ public class PRadioButton extends RadioButton implements PViewInterface {
         super(context);
     }
 
+    public PRadioButton selected(boolean b) {
+        return this;
+    }
+
+    public PRadioButton text(String text) {
+        setText(text);
+        return this;
+    }
+
 }

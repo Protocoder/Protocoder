@@ -36,4 +36,9 @@ public class PProgressBar extends ProgressBar implements PViewInterface {
 
         this.setProgress(0);
     }
+
+    public PProgressBar progress(float val) {
+        this.setProgress((int) val);
+        return this;
+    }
 }

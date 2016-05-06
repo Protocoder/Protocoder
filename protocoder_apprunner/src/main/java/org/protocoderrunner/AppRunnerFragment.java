@@ -62,6 +62,14 @@ public class AppRunnerFragment extends Fragment {
 
         this.mContext = context;
         mActivity = (AppRunnerActivity) getActivity();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+
+        // init the layout and pass it to the activity
+        mMainView = initLayout();
 
         // create the apprunner
         mAppRunner = new AppRunner(mContext);
@@ -75,14 +83,7 @@ public class AppRunnerFragment extends Fragment {
         mAppRunner.mIntentPostfixScript = bundle.getString(Project.POSTFIX, "");
 
         mAppRunner.initInterpreter();
-    }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-
-        // init the layout and pass it to the activity
-        mMainView = initLayout();
         return mMainView;
     }
 
@@ -115,19 +116,17 @@ public class AppRunnerFragment extends Fragment {
         mAppRunner.interp.addListener(appRunnerCb);
         mAppRunner.initProject();
 
-        // Call the onCreate JavaScript function.
-        mAppRunner.interp.callJsFunction("app.onCreate", savedInstanceState);
-
         // nfc
         mActivity.initializeNFC();
 
         // file observer will notify project file changes
         startFileObserver();
 
+        // Call the onCreate JavaScript function.
+        mAppRunner.interp.callJsFunction("app.onCreate", savedInstanceState);
+
         // send ready to the webIDE
         //TODO this is gone ?!
-
-        mAppRunner.interp.callJsFunction("app.onCreate");
     }
 
     public static AppRunnerFragment newInstance(Bundle bundle) {
@@ -140,21 +139,18 @@ public class AppRunnerFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
         mAppRunner.interp.callJsFunction("app.onResume");
     }
 
     @Override
     public void onPause() {
         super.onPause();
-
         mAppRunner.interp.callJsFunction("app.onPause");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-
         mAppRunner.interp.callJsFunction("app.onDestroy");
         mAppRunner.byebye();
     }

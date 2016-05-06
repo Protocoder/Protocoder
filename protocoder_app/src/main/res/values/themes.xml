@@ -12,6 +12,7 @@
 
     <!-- colorPrimary is used for the default action bar background -->
         <item name="colorPrimary">@color/mwmblue</item>
+
         <!-- colorPrimaryDark is used for the status bar -->
         <item name="colorPrimaryDark">@color/mwmgreen</item>
         <!-- colorAccent is used as the default value for colorControlActivated

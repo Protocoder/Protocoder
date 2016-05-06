@@ -21,11 +21,10 @@
 package org.protocoderrunner.api.network;
 
 import org.mozilla.javascript.NativeArray;
+import org.protocoderrunner.api.ProtoBase;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
-import org.protocoderrunner.api.ProtoBase;
-import org.protocoderrunner.api.PUI;
 import org.protocoderrunner.base.network.bt.SimpleBT;
 
 public class PBluetoothClient extends ProtoBase {
@@ -64,12 +63,15 @@ public class PBluetoothClient extends ProtoBase {
             arrayStrings[i] = (String) nativeArray.get(i, null);
         }
 
+        // TODO enable this 
+        /*
         getAppRunner().pUi.popupChoice("Connect to device", arrayStrings, new PUI.choiceDialogCB() {
             @Override
             public void event(String string) {
                 connectSerial(string.split(" +")[1], callbackfn);
             }
         });
+        */
         listen();
     }
 

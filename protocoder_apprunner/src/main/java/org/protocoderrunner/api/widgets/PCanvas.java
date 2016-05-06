@@ -56,6 +56,7 @@ import static android.graphics.Shader.TileMode;
 public class PCanvas extends View implements PViewInterface {
 
     private static final String TAG = PCanvas.class.getSimpleName();
+
     private AppRunner mAppRunner;
     private Context mContext;
 
@@ -113,22 +114,8 @@ public class PCanvas extends View implements PViewInterface {
         mAppRunner = appRunner;
         this.mContext = appRunner.getAppContext();
         MLog.d(TAG, "onCreate");
-
-        init();
-        initLayers();
     }
 
-    public PCanvas(AppRunner appRunner, int w, int h) {
-        super(appRunner.getAppContext());
-        this.mContext = appRunner.getAppContext();
-        mAppRunner = appRunner;
-        mWidth = w;
-        mHeight = h;
-        MLog.d(TAG, "onCreate " + mWidth + " " + mHeight);
-
-        init();
-        initLayers();
-    }
 
     public interface PCanvasInterfaceDraw {
         void onDraw(Canvas c);
@@ -179,9 +166,39 @@ public class PCanvas extends View implements PViewInterface {
     @Override
     protected synchronized void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        //MLog.d(TAG, "onMeasure");
 
-        setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
+        // MLog.d(TAG, widthMeasureSpec + " " + heightMeasureSpec);
+    }
+
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        MLog.d(TAG, "w " + w + " h " + h);
+
+        mWidth = w;
+        mHeight = w;
+
+        init();
+        initLayers();
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+
+        MLog.d(TAG, "left" + left + " top " + top + " right " + right + " " + bottom);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        __stop();
+        super.onDetachedFromWindow();
     }
 
     //on draw
@@ -254,50 +271,6 @@ public class PCanvas extends View implements PViewInterface {
 
     public Canvas getCanvas() {
         return mCanvas;
-    }
-
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        //.d(TAG, "onAttachedToWindow");
-    }
-
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-        //MLog.d(TAG, "onSizeChanged " + getWidth() + " " + getHeight());
-
-        //enable this
-        //Bitmap.Config conf = Bitmap.Config.ARGB_8888;
-        //Bitmap _bmp = Bitmap.createBitmap(getWidth(), getHeight(), conf);
-        //mCurrentBmp = _bmp;
-        //mCanvas = new Canvas(mCurrentBmp);
-        //draw(mCanvas);
-
-        //mLayerFifo.get(0).bmp = _bmp;
-
-    }
-
-    @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
-        //MLog.d(TAG, "onLayout");
-
-        //init();
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        //MLog.d(TAG, "onDetachedFromwindow");
-
-        stop();
-        super.onDetachedFromWindow();
-    }
-
-    public void stop() {
-        if (loop != null) {
-            loop.stop();
-        }
     }
 
     //TODO drawPaint o drawARGB
@@ -544,7 +517,6 @@ public class PCanvas extends View implements PViewInterface {
     @ProtoMethodParam(params = {})
     public void noFill() {
         fillOn = false;
-
     }
 
     @ProtoMethod(description = "Sets the stroke color", example = "")
@@ -556,7 +528,6 @@ public class PCanvas extends View implements PViewInterface {
 
         return this;
     }
-
 
     @ProtoMethod(description = "Sets the stroke color", example = "")
     @ProtoMethodParam(params = {"r", "g", "b"})
@@ -577,13 +548,11 @@ public class PCanvas extends View implements PViewInterface {
         return this;
     }
 
-
     @ProtoMethod(description = "Removes the stroke color", example = "")
     @ProtoMethodParam(params = {})
     public void noStroke() {
         strokeOn = false;
     }
-
 
     @ProtoMethod(description = "Sets a stroke width", example = "")
     @ProtoMethodParam(params = {"width"})
@@ -592,7 +561,6 @@ public class PCanvas extends View implements PViewInterface {
 
         return this;
     }
-
 
     @ProtoMethod(description = "Sets a stroke cap", example = "")
     @ProtoMethodParam(params = {"cap"})
@@ -610,7 +578,6 @@ public class PCanvas extends View implements PViewInterface {
 //        return this;
 //    }
 
-
     @ProtoMethod(description = "Sets a given font", example = "")
     @ProtoMethodParam(params = {"typeface"})
     public PCanvas font(Typeface typeface) {
@@ -619,7 +586,6 @@ public class PCanvas extends View implements PViewInterface {
 
         return this;
     }
-
 
     @ProtoMethod(description = "Sets the size of the text", example = "")
     @ProtoMethodParam(params = {"size"})
@@ -647,95 +613,75 @@ public class PCanvas extends View implements PViewInterface {
     public PCanvas textSpacing(float spacing) {
         //mPaintFill.setLetterSpacing(spacing);
         //mPaintStroke.setLetterSpacing(spacing);
-
         return this;
     }
-
 
     @ProtoMethod(description = "Enable/Disable antialiasing", example = "")
     @ProtoMethodParam(params = {"boolean"})
     public PCanvas antiAlias(boolean b) {
         mPaintFill.setAntiAlias(b);
         mPaintStroke.setAntiAlias(b);
-
         return this;
     }
-
 
     @ProtoMethod(description = "Sets the shadow fill", example = "")
     @ProtoMethodParam(params = {"x", "y", "radius", "colorHext"})
     public PCanvas shadowFill(int x, int y, float radius, String colorHex) {
         int c = Color.parseColor(colorHex);
         mPaintFill.setShadowLayer(radius, x, y, c);
-
         return this;
     }
-
 
     @ProtoMethod(description = "Set the shadow stroke", example = "")
     @ProtoMethodParam(params = {"x", "y", "radius", "colorHex"})
     public PCanvas shadowStroke(int x, int y, float radius, String colorHex) {
         int c = Color.parseColor(colorHex);
         mPaintStroke.setShadowLayer(radius, x, y, c);
-
         return this;
     }
-
 
     @ProtoMethod(description = "", example = "")
     @ProtoMethodParam(params = {"filter"})
     public PCanvas filter(PorterDuff.Mode mode) {
         mPaintFill.setXfermode(new PorterDuffXfermode(mode));
         mPaintStroke.setXfermode(new PorterDuffXfermode(mode));
-
         return this;
     }
-
 
     @ProtoMethod(description = "save", example = "")
     @ProtoMethodParam(params = {})
     public PCanvas save() {
         mCanvas.save();
-
         return this;
     }
-
 
     @ProtoMethod(description = "Rotate given degrees", example = "")
     @ProtoMethodParam(params = {"degrees"})
     public PCanvas rotate(float degrees) {
         mCanvas.rotate(degrees);
-
         return this;
     }
-
 
     @ProtoMethod(description = "Translate", example = "")
     @ProtoMethodParam(params = {"x", "y"})
     public PCanvas translate(float x, float y) {
         mCanvas.translate(x, y);
-
         return this;
     }
-
 
     @ProtoMethod(description = "Skew", example = "")
     @ProtoMethodParam(params = {"x", "y"})
     public PCanvas skew(float x, float y) {
         mCanvas.skew(x, y);
-
         return this;
     }
-
 
     @ProtoMethod(description = "Scale", example = "")
     @ProtoMethodParam(params = {"x", "y"})
     public PCanvas scale(float x, float y) {
         mCanvas.scale(x, y);
-
         return this;
     }
-
 
     @ProtoMethod(description = "Restore", example = "")
     @ProtoMethodParam(params = {"x", "y"})
@@ -743,7 +689,6 @@ public class PCanvas extends View implements PViewInterface {
         mCanvas.restore();
         return this;
     }
-
 
     @ProtoMethod(description = "Creates a new layer returning its position", example = "")
     @ProtoMethodParam(params = {})
@@ -758,13 +703,11 @@ public class PCanvas extends View implements PViewInterface {
         return currentLayer;
     }
 
-
     @ProtoMethod(description = "", example = "")
     @ProtoMethodParam(params = {"Deletes a layer in a position"})
     public void deleteLayer(int pos) {
         mLayerFifo.remove(pos);
     }
-
 
     @ProtoMethod(description = "Sets a given layer specifying if the rest have to be hidden", example = "")
     @ProtoMethodParam(params = {"position", "hideAllLayers"})
@@ -774,7 +717,6 @@ public class PCanvas extends View implements PViewInterface {
             for (Layer layer : mLayerFifo) {
                 layer.visible = false;
             }
-            ;
         }
 
         //desired layer on
@@ -788,7 +730,6 @@ public class PCanvas extends View implements PViewInterface {
         return this;
     }
 
-
     @ProtoMethod(description = "Enable/Disables a layer", example = "")
     @ProtoMethodParam(params = {"position", "enable"})
     public PCanvas enableLayer(int pos, boolean b) {
@@ -801,7 +742,6 @@ public class PCanvas extends View implements PViewInterface {
         return this;
     }
 
-
     @ProtoMethod(description = "Drawing will be done from a corner if true, otherwise from the center", example = "")
     @ProtoMethodParam(params = {"x", "y"})
     public PCanvas mode(boolean mode) {
@@ -810,15 +750,12 @@ public class PCanvas extends View implements PViewInterface {
         return this;
     }
 
-
     @ProtoMethod(description = "Create a bitmap shader", example = "")
     @ProtoMethodParam(params = {"bitmap", "tileMode"})
     public Shader createBitmapShader(Bitmap bitmap, TileMode mode) {
         BitmapShader shader = new BitmapShader(bitmap, mode, mode);
-
         return shader;
     }
-
 
     @ProtoMethod(description = "Create a linear shader", example = "")
     @ProtoMethodParam(params = {"x1", "y1", "x2", "y2", "colorHex1", "colorHex2", "tileMode"})
@@ -826,7 +763,6 @@ public class PCanvas extends View implements PViewInterface {
         Shader shader = new LinearGradient(x1, y1, x2, y2, Color.parseColor(c1), Color.parseColor(c2), mode);
         return shader;
     }
-
 
     @ProtoMethod(description = "Create a linear shader", example = "")
     @ProtoMethodParam(params = {"x1", "y1", "x2", "y2", "ArrayColorHex", "ArrayPositions", "tileMode"})
@@ -836,28 +772,22 @@ public class PCanvas extends View implements PViewInterface {
             colors[i] = Color.parseColor(colorsStr[i]);
         }
         Shader shader = new LinearGradient(x1, y1, x2, y2, colors, positions, mode);
-
         return shader;
     }
-
 
     @ProtoMethod(description = "Creates a sweep shader", example = "")
     @ProtoMethodParam(params = {"x", "y", "colorHex", "colorHex"})
     public Shader sweepShader(int x, int y, String c1, String c2) {
         Shader shader = new SweepGradient(x, y, Color.parseColor(c1), Color.parseColor(c2));
-
         return shader;
     }
-
 
     @ProtoMethod(description = "Compose two shaders", example = "")
     @ProtoMethodParam(params = {"shader1", "shader2", "mode"})
     public Shader composeShader(Shader s1, Shader s2, PorterDuff.Mode mode) {
         Shader shader = new ComposeShader(s1, s2, mode);
-
         return shader;
     }
-
 
     @ProtoMethod(description = "Sets a shader", example = "")
     @ProtoMethodParam(params = {"shader", "mode"})
@@ -885,7 +815,6 @@ public class PCanvas extends View implements PViewInterface {
 
         return layer;
     }
-
 
     class Layer {
         public boolean visible = false;
@@ -916,4 +845,9 @@ public class PCanvas extends View implements PViewInterface {
         }
     }
 
+    public void __stop() {
+        if (loop != null) {
+            loop.stop();
+        }
+    }
 }

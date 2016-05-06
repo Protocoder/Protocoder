@@ -22,13 +22,11 @@ package org.protocoderrunner.base.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.webkit.WebView;
 
 import org.protocoderrunner.apprunner.AppRunner;
 
 /*
- * http://stackoverflow.com/questions/13257990/android-webview-inside-scrollview-scrolls-only-scrollview
  */
 
 public class CustomWebView extends WebView {
@@ -46,21 +44,5 @@ public class CustomWebView extends WebView {
 
     public CustomWebView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-    }
-
-    public void loadData(String content) {
-        this.loadData(content, "text/html", "utf-8");
-
-    }
-
-    public void loadHTMLFile(String fileName) {
-        String path = mAppRunner.getProject().getFullPathForFile(fileName);
-        loadUrl("file://" + path);
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        requestDisallowInterceptTouchEvent(true);
-        return super.onTouchEvent(event);
     }
 }

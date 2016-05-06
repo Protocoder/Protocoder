@@ -54,14 +54,12 @@ public class PToolbar extends ProtoBase {
         return this;
     }
 
-
     @ProtoMethod(description = "Sets toolbar secondary title", example = "")
     @ProtoMethodParam(params = {"subtitleName"})
     public PToolbar subtitle(String subtitle) {
         mToolbar.setSubtitle(subtitle);
         return this;
     }
-
 
     @ProtoMethod(description = "Show/Hide title bar", example = "")
     @ProtoMethodParam(params = {"boolean"})
@@ -73,7 +71,6 @@ public class PToolbar extends ProtoBase {
         }
         return this;
     }
-
 
     @ProtoMethod(description = "Changes the title bar color", example = "")
     @ProtoMethodParam(params = {"r", "g", "b", "alpha"})

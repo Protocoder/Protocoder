@@ -26,14 +26,16 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.api.PApp;
-import org.protocoderrunner.base.views.CustomWebView;
+import org.protocoderrunner.apprunner.AppRunner;
 
-public class PWebView extends CustomWebView implements PViewInterface {
+public class PWebView extends WebView implements PViewInterface {
+
+    private final AppRunner mAppRunner;
 
     public PWebView(AppRunner appRunner) {
-        super(appRunner);
+        super(appRunner.getAppContext());
+        mAppRunner = appRunner;
 
         this.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         WebSettings webSettings = this.getSettings();
@@ -66,13 +68,32 @@ public class PWebView extends CustomWebView implements PViewInterface {
         this.addJavascriptInterface(new PApp(mAppRunner), "app");
     }
 
+    public void loadData(String content) {
+        this.loadData(content, "text/html", "utf-8");
+    }
+
+    public void loadFile(String fileName) {
+        String path = mAppRunner.getProject().getFullPathForFile(fileName);
+        loadUrl("file://" + path);
+    }
+
+    public void loadUrl(String url) {
+        super.loadUrl(url);
+    }
+
+    // http://stackoverflow.com/questions/13257990/android-webview-inside-scrollview-scrolls-only-scrollview
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        requestDisallowInterceptTouchEvent(true);
+        return super.onTouchEvent(event);
+    }
+
     private class CustomWebViewClient extends WebViewClient {
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            //do whatever you want with the url that is clicked inside the webview.
-            //for example tell the webview to load that url.
-            view.loadUrl(url);
-            //return true if this method handled the link event
-            //or false otherwise
+            //load the url
+            loadUrl(url);
+
+            // return true to tell that we handled the url
             return true;
         }
     }

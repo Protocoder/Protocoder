@@ -11,7 +11,7 @@
             android:summary="@string/setting_websocket_port"
             android:title="@string/setting_websocket_port_title" />
         <CheckBoxPreference
-            android:checked="true"
+            android:selected="true"
             android:key="@string/pref_curtain_notifications"
             android:summary="@string/setting_show_notifications_body"
             android:title="@string/setting_show_notifications_title" />
@@ -32,13 +32,13 @@
             android:summary="@string/setting_list_mode_description"
             android:title="@string/setting_list_mode_title" />
         <!--<CheckBoxPreference-->
-            <!--android:checked="false"-->
+            <!--android:selected="false"-->
             <!--android:key="pref_background_mode"-->
             <!--android:summary="@string/setting_background_mode_description"-->
             <!--android:title="@string/setting_background_mode_title" -->
             <!--/>-->
         <!--<CheckBoxPreference-->
-            <!--android:checked="true"-->
+            <!--android:selected="true"-->
             <!--android:key="pref_connection_alert"-->
             <!--android:summary="@string/setting_connection_alert_description"-->
             <!--android:title="@string/setting_connection_alert_title" />-->

@@ -8,9 +8,8 @@
         <item name="android:statusBarColor">@color/transparent</item>
         <item name="android:navigationBarColor">@color/transparent</item>
         <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:colorPrimary">@color/protocoder_gradient_begin</item>
 
     </style>-->
-
-
 
 </resources>

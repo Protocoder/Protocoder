@@ -21,7 +21,6 @@
 package org.protocoder.appinterpreter;
 
 import org.protocoderrunner.api.PNetwork;
-import org.protocoderrunner.api.PUI;
 
 
 public class Network {
@@ -47,6 +46,8 @@ public class Network {
                     int versionCode = Integer.parseInt(splitted[2]);
 
                     if (versionCode > mAppRunner.pProtocoder.versionCode()) {
+                        // TODO enable this
+                        /*
                         mAppRunner.pUi.popupInfo("New version available", "The new version " + versionName + " is available in the Protocoder.org website. Do you want to get it?", "Yes!", "Later", new PUI.popupCB() {
                             @Override
                             public void event(boolean b) {
@@ -55,6 +56,7 @@ public class Network {
                                 }
                             }
                         });
+                        */
                     } else {
                         //console.log("updated");
                     }

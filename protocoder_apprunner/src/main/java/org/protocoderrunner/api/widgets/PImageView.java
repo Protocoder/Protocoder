@@ -22,10 +22,13 @@ package org.protocoderrunner.api.widgets;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Handler;
 import android.widget.ImageView;
 
+import org.protocoderrunner.api.other.PHelper;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
@@ -41,48 +44,14 @@ public class PImageView extends ImageView implements PViewInterface {
         this.mAppRunner = appRunner;
     }
 
-
     @ProtoMethod(description = "Sets an image", example = "")
     @ProtoMethodParam(params = {"imageName"})
-    public PImageView setImage(String imagePath) {
-
-        if (imagePath.startsWith("http")) {
-            // Add image asynchronously
-            new PUIGeneric.DownloadImageTask(this, false).execute(imagePath);
-        } else {
-
-            // Add the image
-            new PUIGeneric.SetImageTask(this, false).execute(
-                    mAppRunner.getProject().getFullPathForFile(imagePath));
-        }
-
+    public PImageView load(String imagePath) {
+        new PHelper.SetImageTask(this).execute(mAppRunner.getProject().getFullPathForFile(imagePath));
         return this;
     }
 
-    public void setImage(Bitmap bmp) {
-        this.setImageBitmap(bmp);
-    }
-
-
-    @ProtoMethod(description = "Sets a tiled image", example = "")
-    @ProtoMethodParam(params = {"imageName"})
-    public PImageView setTiledImage(String imagePath) {
-
-        if (imagePath.startsWith("http")) {
-            // Add image asynchronously
-            new PUIGeneric.DownloadImageTask(this, true).execute(imagePath);
-        } else {
-
-            // Add the image
-            new PUIGeneric.SetImageTask(this, true).execute(
-                    mAppRunner.getProject().getFullPathForFile(imagePath));
-        }
-
-        return this;
-    }
-
-    public PImageView setRepeat() {
-
+    public PImageView repeat() {
         BitmapDrawable bitmapDrawable = ((BitmapDrawable) this.getDrawable());
         // Bitmap bmp = bitmapDrawable .getBitmap();
 

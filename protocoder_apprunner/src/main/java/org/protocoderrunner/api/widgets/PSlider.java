@@ -45,51 +45,49 @@ public class PSlider extends SeekBar implements PViewInterface {
 
     @ProtoMethod(description = "Changes slider value", example = "")
     @ProtoMethodParam(params = {"value"})
-    public void setValue(float value) {
+    public void value(float value) {
         mCurrentValue = value;
         int valueInt = (int) ((value - mMin) / (mMax - mMin) * MAX_VALUE);
         setProgress(valueInt);
     }
 
-    public float valueToFloat(int valueInt) {
-        float valueFloat = (float) (valueInt * (mMax - mMin) / MAX_VALUE) + mMin;
-
-        return valueFloat;
-    }
-
-
     @ProtoMethod(description = "Gets the slider value", example = "")
     @ProtoMethodParam(params = {""})
-    public float getValue() {
+    public float value() {
         return mCurrentValue;
     }
 
 
     @ProtoMethod(description = "Sets the minimum slider value", example = "")
     @ProtoMethodParam(params = {""})
-    public void setMin(float min) {
+    public PSlider min(float min) {
         mMin = min;
+        return this;
     }
 
 
     @ProtoMethod(description = "Sets the maximum slider value", example = "")
     @ProtoMethodParam(params = {""})
-    public void setMax(float max) {
+    public PSlider max(float max) {
         mMax = max;
+        return this;
     }
-
 
     @ProtoMethod(description = "Gets the minimum  slider value", example = "")
     @ProtoMethodParam(params = {""})
-    public float getMinVal() {
-        return mMax;
+    public float min() {
+        return mMin;
     }
-
 
     @ProtoMethod(description = "Gets the maximum slider value", example = "")
     @ProtoMethodParam(params = {""})
-    public float getMaxVal() {
+    public float max() {
         return mMax;
+    }
+
+    private float valueToFloat(int valueInt) {
+        float valueFloat = (float) (valueInt * (mMax - mMin) / MAX_VALUE) + mMin;
+        return valueFloat;
     }
 
 
@@ -97,7 +95,6 @@ public class PSlider extends SeekBar implements PViewInterface {
     public interface addGenericSliderCB {
         void event(float progress);
     }
-
 
     @ProtoMethod(description = "On slider change", example = "")
     @ProtoMethodParam(params = {"function(value)"})

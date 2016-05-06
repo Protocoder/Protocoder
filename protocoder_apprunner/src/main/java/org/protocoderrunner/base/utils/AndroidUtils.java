@@ -166,6 +166,27 @@ public class AndroidUtils {
         return (int) px;
     }
 
+    public static int pixelsToSp(Context c, int px) {
+
+        Resources resources = c.getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        float dp = px / (metrics.densityDpi / 160f);
+
+        return (int) dp;
+    }
+
+    public static int spToPixels(Context c, int sp) {
+
+        Resources resources = c.getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        float px = sp * (metrics.densityDpi / 160f);
+
+        return (int) px;
+    }
+
+
+
+
     /**
      * Show an event in the LogCat view, for debugging
      */
