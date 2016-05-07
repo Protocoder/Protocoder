@@ -26,6 +26,9 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 
+import org.protocoderrunner.api.common.ReturnInterface;
+import org.protocoderrunner.api.common.ReturnObject;
+
 public class PEditText extends EditText implements PViewInterface {
 
     private EditText mInput;
@@ -48,16 +51,7 @@ public class PEditText extends EditText implements PViewInterface {
         return this.getText().toString();
     }
 
-    // --------- getRequest ---------//
-    public interface addGenericInputCB {
-        void event(String txt);
-    }
-
-    public interface LooseFocusCB {
-        void event(boolean b);
-    }
-
-    public void onChange(final addGenericInputCB callbackfn) {
+    public void onChange(final ReturnInterface callbackfn) {
 
         if (callbackfn != null) {
             // On focus lost, we need to call the callback function
@@ -74,20 +68,22 @@ public class PEditText extends EditText implements PViewInterface {
 
                 @Override
                 public void afterTextChanged(Editable s) {
-                    callbackfn.event(mInput.getText().toString());
+                    ReturnObject r = new ReturnObject(PEditText.this);
+                    r.put("text", mInput.getText().toString());
+                    callbackfn.event(r);
                 }
             });
 
         }
     }
 
-    public void onFocusLost(final LooseFocusCB callbackfn) {
+    public void onFocusLost(final ReturnInterface callbackfn) {
         mInput.setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    callbackfn.event(false);
-                }
+                ReturnObject r = new ReturnObject(PEditText.this);
+                r.put("focused", hasFocus);
+                callbackfn.event(r);
             }
         });
     }

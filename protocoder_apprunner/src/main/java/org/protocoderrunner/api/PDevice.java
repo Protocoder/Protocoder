@@ -454,54 +454,6 @@ public class PDevice extends ProtoBase {
         return pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
     }
 
-    @ProtoMethod(description = "Check if the device has accelerometer", example = "")
-    public boolean hasAccelerometer() {
-        PackageManager pm = getContext().getPackageManager();
-        return pm.hasSystemFeature(PackageManager.FEATURE_SENSOR_ACCELEROMETER);
-    }
-
-    @ProtoMethod(description = "Check if the device has compass", example = "")
-    public boolean isCompassAvailable() {
-        PackageManager pm = getContext().getPackageManager();
-        return pm.hasSystemFeature(PackageManager.FEATURE_SENSOR_COMPASS);
-    }
-
-    @ProtoMethod(description = "Check if the device has gyroscope", example = "")
-    public boolean hasGyroscope() {
-        PackageManager pm = getContext().getPackageManager();
-        return pm.hasSystemFeature(PackageManager.FEATURE_SENSOR_GYROSCOPE);
-    }
-
-    @ProtoMethod(description = "Check if the device has GPS", example = "")
-    public boolean hasGPS() {
-        PackageManager pm = getContext().getPackageManager();
-        return pm.hasSystemFeature(PackageManager.FEATURE_LOCATION_GPS);
-    }
-
-    @ProtoMethod(description = "Check if the device has light sensor", example = "")
-    public boolean hasLightSensor() {
-        PackageManager pm = getContext().getPackageManager();
-        return pm.hasSystemFeature(PackageManager.FEATURE_SENSOR_LIGHT);
-    }
-
-    @ProtoMethod(description = "Check if the device has proximity sensor", example = "")
-    public boolean hasProximitySensor() {
-        PackageManager pm = getContext().getPackageManager();
-        return pm.hasSystemFeature(PackageManager.FEATURE_SENSOR_PROXIMITY);
-    }
-
-    @ProtoMethod(description = "Check if the device has step detector", example = "")
-    public boolean hasStepDetector() {
-        PackageManager pm = getContext().getPackageManager();
-        return pm.hasSystemFeature(PackageManager.FEATURE_SENSOR_STEP_DETECTOR);
-    }
-
-    @ProtoMethod(description = "Check if the device has barometer", example = "")
-    public boolean hasBarometer() {
-        PackageManager pm = getContext().getPackageManager();
-        return pm.hasSystemFeature(PackageManager.FEATURE_SENSOR_BAROMETER);
-    }
-
     public interface OnNotificationCallback {
         public void event(String[] notification);
     }

@@ -25,6 +25,8 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
+import org.protocoderrunner.api.common.ReturnInterface;
+import org.protocoderrunner.api.common.ReturnObject;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
@@ -32,13 +34,9 @@ import org.protocoderrunner.api.other.WhatIsRunningInterface;
 
 public class PMagnetic extends CustomSensorManager implements WhatIsRunningInterface {
 
+    private final static String TAG = PMagnetic.class.getSimpleName();
 
-    public interface MagneticListener extends CustomSensorListener {
-        public void event(float f);
-    }
-
-    private final static String TAG = "Magnetic";
-    private MagneticListener mCallbackMagneticChange;
+    private ReturnInterface mCallbackMagneticChange;
 
     public PMagnetic(AppRunner appRunner) {
         super(appRunner);
@@ -49,16 +47,17 @@ public class PMagnetic extends CustomSensorManager implements WhatIsRunningInter
     @ProtoMethod(description = "Start the magnetic sensor", example = "")
     @ProtoMethodParam(params = {"function(value)"})
     public void start() {
-        if (running) {
-            return;
-        }
         super.start();
 
-        listener = new SensorEventListener() {
+        mListener = new SensorEventListener() {
 
             @Override
             public void onSensorChanged(SensorEvent event) {
-                mCallbackMagneticChange.event(event.values[0]);
+                ReturnObject r = new ReturnObject();
+                r.put("x", event.values[0]);
+                r.put("y", event.values[1]);
+                r.put("z", event.values[2]);
+                mCallbackMagneticChange.event(r);
             }
 
             @Override
@@ -77,13 +76,18 @@ public class PMagnetic extends CustomSensorManager implements WhatIsRunningInter
 
         };
 
-        isSupported = sensormanager.registerListener(listener, sensor, speed);
+        isEnabled = mSensormanager.registerListener(mListener, sensor, speed);
+    }
+
+    @Override
+    public String units() {
+        return "uT";
     }
 
 
     @ProtoMethod(description = "Start the accelerometer. Returns x, y, z", example = "")
     @ProtoMethodParam(params = {"function(x, y, z)"})
-    public void onChange(final MagneticListener callbackfn) {
+    public void onChange(final ReturnInterface callbackfn) {
         mCallbackMagneticChange = callbackfn;
 
         start();

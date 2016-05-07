@@ -24,24 +24,23 @@ import android.content.Context;
 import android.widget.CompoundButton;
 import android.widget.ToggleButton;
 
+import org.protocoderrunner.api.common.ReturnInterface;
+import org.protocoderrunner.api.common.ReturnObject;
+
 public class PToggleButton extends ToggleButton implements PViewInterface {
 
     public PToggleButton(Context context) {
         super(context);
     }
 
-    // --------- Toggle ---------//
-    public interface addGenericToggleCB {
-        void event(boolean isChecked);
-    }
-
-
-    public PToggleButton onChange(final addGenericToggleCB callbackfn) {
+    public PToggleButton onChange(final ReturnInterface callbackfn) {
         // Add change listener
         this.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                callbackfn.event(new Boolean(isChecked));
+                ReturnObject r = new ReturnObject(PToggleButton.this);
+                r.put("checked", isChecked);
+                callbackfn.event(r);
             }
         });
 

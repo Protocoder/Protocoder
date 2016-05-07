@@ -24,24 +24,24 @@ import android.content.Context;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
+import org.protocoderrunner.api.common.ReturnInterface;
+import org.protocoderrunner.api.common.ReturnObject;
+
 public class PCheckBox extends CheckBox implements PViewInterface {
 
     public PCheckBox(Context context) {
         super(context);
     }
 
-    // --------- checkbox ---------//
-    public interface addGenericCheckboxCB {
-        void event(boolean isChecked);
-    }
-
-    public PCheckBox onChange(final addGenericCheckboxCB callbackfn) {
+    public PCheckBox onChange(final ReturnInterface callbackfn) {
 
         // Add the click callback
         this.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                callbackfn.event(isChecked);
+                ReturnObject r = new ReturnObject(PCheckBox.this);
+                r.put("checked", isChecked);
+                callbackfn.event(r);
             }
         });
 

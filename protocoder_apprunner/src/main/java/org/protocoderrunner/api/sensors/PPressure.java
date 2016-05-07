@@ -25,6 +25,8 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
+import org.protocoderrunner.api.common.ReturnInterface;
+import org.protocoderrunner.api.common.ReturnObject;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
@@ -32,13 +34,7 @@ import org.protocoderrunner.api.other.WhatIsRunningInterface;
 
 public class PPressure extends CustomSensorManager implements WhatIsRunningInterface {
 
-
-    public interface PressureListener extends CustomSensorListener {
-        public void event(float f);
-    }
-
-    private final static String TAG = "Pressure";
-    private PressureListener mCallbackPressureChange;
+    private final static String TAG = PPressure.class.getSimpleName();
 
     public PPressure(AppRunner appRunner) {
         super(appRunner);
@@ -48,16 +44,15 @@ public class PPressure extends CustomSensorManager implements WhatIsRunningInter
 
 
     public void start() {
-        if (running) {
-            return;
-        }
         super.start();
 
-        listener = new SensorEventListener() {
+        mListener = new SensorEventListener() {
 
             @Override
             public void onSensorChanged(SensorEvent event) {
-                mCallbackPressureChange.event(event.values[0]);
+                ReturnObject r = new ReturnObject();
+                r.put("", event.values[0]);
+                mCallback.event(r);
             }
 
             @Override
@@ -76,14 +71,19 @@ public class PPressure extends CustomSensorManager implements WhatIsRunningInter
 
         };
 
-        isSupported = sensormanager.registerListener(listener, sensor, speed);
+        isEnabled = mSensormanager.registerListener(mListener, sensor, speed);
+    }
+
+    @Override
+    public String units() {
+        return "hPa";
     }
 
 
     @ProtoMethod(description = "Start the accelerometer. Returns x, y, z", example = "")
     @ProtoMethodParam(params = {"function(x, y, z)"})
-    public void onChange(final PressureListener callbackfn) {
-        mCallbackPressureChange = callbackfn;
+    public void onChange(final ReturnInterface callbackfn) {
+        mCallback = callbackfn;
 
         start();
     }

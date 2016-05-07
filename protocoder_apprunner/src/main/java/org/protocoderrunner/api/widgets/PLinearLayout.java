@@ -20,6 +20,8 @@
 
 package org.protocoderrunner.api.widgets;
 
+import android.graphics.Color;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -30,11 +32,14 @@ import org.protocoderrunner.apprunner.AppRunner;
 public class PLinearLayout extends LinearLayout implements PViewInterface {
 
     private final AppRunner mAppRunner;
+    private final LayoutParams mLp;
     private PListAdapter plistAdapter;
 
     public PLinearLayout(AppRunner appRunner) {
         super(appRunner.getAppContext());
         mAppRunner = appRunner;
+
+        mLp = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
     }
 
     public void orientation(String orientation) {
@@ -53,15 +58,55 @@ public class PLinearLayout extends LinearLayout implements PViewInterface {
         addView(v);
     }
 
-    public void add(View v, float p) {
-        // LayoutParams lp = new LayoutParams()
-        // addView(v, lp);
+    public void add(View v, float weight) {
+        // lp.gravity = Gravity.CENTER;
+        mLp.weight = weight;
+        // setWeightSum(1.0f);
+        addView(v, mLp);
+    }
+
+    public void alignViews(String horizontal, String vertical) {
+        int h = Gravity.LEFT;
+        switch (horizontal) {
+            case "left":
+                h = Gravity.LEFT;
+                break;
+            case "center":
+                h = Gravity.CENTER_HORIZONTAL;
+                break;
+            case "right":
+                h = Gravity.RIGHT;
+                break;
+        }
+
+        int v = Gravity.TOP;
+        switch (vertical) {
+            case "top":
+                v = Gravity.TOP;
+                break;
+            case "center":
+                v = Gravity.CENTER_VERTICAL;
+                break;
+            case "bottom":
+                v = Gravity.BOTTOM;
+                break;
+        }
+
+        setGravity(h | v);
+    }
+
+    public void padding(float l, float t, float r, float b) {
+        setPadding((int) l, (int) t, (int) r, (int) b);
     }
 
     @ProtoMethod(description = "", example = "")
     @ProtoMethodParam(params = {""})
     public void clear() {
         removeAllViews();
+    }
+
+    public void background(int r, int g, int b) {
+        setBackgroundColor(Color.rgb(r, g, b));
     }
 
 }

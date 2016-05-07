@@ -25,6 +25,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
+import org.protocoderrunner.api.common.ReturnInterface;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
@@ -32,13 +33,7 @@ import org.protocoderrunner.api.other.WhatIsRunningInterface;
 
 public class PStep extends CustomSensorManager implements WhatIsRunningInterface {
 
-    public interface StepListener extends CustomSensorListener {
-        public void event();
-    }
-
-    private final static String TAG = "Step";
-    private StepListener mCallbackStepChange;
-
+    private final static String TAG = PStep.class.getSimpleName();
 
     public PStep(AppRunner appRunner) {
         super(appRunner);
@@ -50,17 +45,13 @@ public class PStep extends CustomSensorManager implements WhatIsRunningInterface
     @ProtoMethod(description = "Start the step counter. Not superacurate and only few devices", example = "")
     @ProtoMethodParam(params = {"function(value)"})
     public void start() {
-        if (running) {
-            return;
-        }
         super.start();
 
-        listener = new SensorEventListener() {
+        mListener = new SensorEventListener() {
 
             @Override
             public void onSensorChanged(SensorEvent event) {
-                mCallbackStepChange.event();
-
+                mCallback.event(null);
             }
 
             @Override
@@ -79,14 +70,19 @@ public class PStep extends CustomSensorManager implements WhatIsRunningInterface
 
         };
 
-        isSupported = sensormanager.registerListener(listener, sensor, speed);
+        isEnabled = mSensormanager.registerListener(mListener, sensor, speed);
+    }
+
+    @Override
+    public String units() {
+        return "step";
     }
 
 
     @ProtoMethod(description = "Start the accelerometer. Returns x, y, z", example = "")
     @ProtoMethodParam(params = {"function(x, y, z)"})
-    public void onChange(final StepListener callbackfn) {
-        mCallbackStepChange = callbackfn;
+    public void onChange(final ReturnInterface callbackfn) {
+        mCallback = callbackfn;
 
         start();
     }

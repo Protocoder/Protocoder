@@ -19,6 +19,30 @@
         android:layout_height="match_parent"
         android:layout_below="@id/header"
         android:layout_alignParentRight="true">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Button"
+                android:id="@+id/button6" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Button"
+                android:id="@+id/button7" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Button"
+                android:id="@+id/button8" />
+        </LinearLayout>
     </FrameLayout>
 
     <FrameLayout

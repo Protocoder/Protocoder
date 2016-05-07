@@ -20,8 +20,8 @@
 
 package org.protocoderrunner.api;
 
-import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.AppRunnerFragment;
+import org.protocoderrunner.api.common.ReturnObject;
 import org.protocoderrunner.api.sensors.PAccelerometer;
 import org.protocoderrunner.api.sensors.PGPS;
 import org.protocoderrunner.api.sensors.PGyroscope;
@@ -32,13 +32,14 @@ import org.protocoderrunner.api.sensors.POrientation;
 import org.protocoderrunner.api.sensors.PPressure;
 import org.protocoderrunner.api.sensors.PProximity;
 import org.protocoderrunner.api.sensors.PStep;
+import org.protocoderrunner.apprunner.AppRunner;
 
 public class PSensors extends ProtoBase {
 
     public final PAccelerometer accelerometer;
     public final PGyroscope gyroscope;
     public final PGPS gps;
-    public final PLightIntensity lightIntensity;
+    public final PLightIntensity light;
     public final PMagnetic magnetic;
     public final POrientation orientation;
     public final PPressure pressure;
@@ -52,13 +53,28 @@ public class PSensors extends ProtoBase {
         accelerometer = new PAccelerometer(appRunner);
         gyroscope = new PGyroscope(appRunner);
         gps = new PGPS(appRunner);
-        lightIntensity = new PLightIntensity(appRunner);
+        light = new PLightIntensity(appRunner);
         magnetic = new PMagnetic(appRunner);
         //nfc = new PNFC(context);
         orientation = new POrientation(appRunner);
         pressure = new PPressure(appRunner);
         proximity = new PProximity(appRunner);
         stepDetector = new PStep(appRunner);
+    }
+
+    public ReturnObject listAvailable() {
+        ReturnObject r = new ReturnObject();
+        r.put("accelerometer", accelerometer.isAvailable());
+        r.put("gyroscope", gyroscope.isAvailable());
+        r.put("gps", gps.isAvailable());
+        r.put("light", light.isAvailable());
+        r.put("magnetic", magnetic.isAvailable());
+        r.put("orientation", orientation.isAvailable());
+        r.put("pressure", pressure.isAvailable());
+        r.put("proximity", proximity.isAvailable());
+        r.put("step", stepDetector.isAvailable());
+
+        return r;
     }
 
     @Override

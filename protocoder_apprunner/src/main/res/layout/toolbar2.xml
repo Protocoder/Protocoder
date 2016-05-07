@@ -10,12 +10,11 @@
 
     <View
         android:id="@+id/statusbarspacer"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
         android:layout_height="24dp"
-        android:layout_width="match_parent"></View>
+        android:visibility="gone"
+        android:layout_width="match_parent"/>
 
-    <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.v7.widget.Toolbar
         android:layout_marginTop="0dp"
         style="@style/ToolBarAppRunner.AppRunner"
         android:id="@+id/toolbar2"

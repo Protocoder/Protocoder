@@ -25,6 +25,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -37,10 +38,12 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.provider.Settings;
 
+import org.protocoderrunner.api.ProtoBase;
+import org.protocoderrunner.api.common.ReturnInterface;
+import org.protocoderrunner.api.common.ReturnObject;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
-import org.protocoderrunner.api.ProtoBase;
 import org.protocoderrunner.base.utils.MLog;
 
 import java.io.IOException;
@@ -52,11 +55,6 @@ public class PGPS extends ProtoBase {
 
     protected static final String TAG = PGPS.class.getSimpleName();
 
-    interface GPSListener {
-        void event(double lat, double lon, double alt, float speed, float bearing);
-    }
-
-    private final Context mContext;
     LocationManager locationManager;
     String provider;
 
@@ -66,7 +64,7 @@ public class PGPS extends ProtoBase {
     private LocationListener listener;
     public boolean running;
 
-    private GPSListener mGPSListener;
+    private ReturnInterface mCallback;
 
 
     // The minimum distance to change Updates in meters
@@ -79,7 +77,6 @@ public class PGPS extends ProtoBase {
 
     public PGPS(AppRunner appRunner) {
         super(appRunner);
-        mContext = appRunner.getAppContext();
     }
 
 
@@ -93,7 +90,7 @@ public class PGPS extends ProtoBase {
         MLog.d(TAG, "starting GPS");
 
         // criteria.setSpeedRequired(true);
-        locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
 
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) == false) {
             MLog.d(TAG, "GPS not enabled");
@@ -155,15 +152,20 @@ public class PGPS extends ProtoBase {
             @Override
             public void onProviderDisabled(String provider) {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                mContext.startActivity(intent);
+                getContext().startActivity(intent);
             }
 
             @Override
             public void onLocationChanged(Location location) {
                 MLog.d(TAG, "updated ");
 
-                mGPSListener.event(location.getLatitude(), location.getLongitude(),
-                        location.getAltitude(), location.getSpeed(), location.getAccuracy());
+                ReturnObject r = new ReturnObject();
+                r.put("latitude", location.getLatitude());
+                r.put("longitude", location.getLongitude());
+                r.put("altitude", location.getAltitude());
+                r.put("speed", location.getSpeed());
+                r.put("accuracy", location.getAccuracy());
+                mCallback.event(r);
 
                 if (location == null) {
                     return;
@@ -181,10 +183,10 @@ public class PGPS extends ProtoBase {
 
     @ProtoMethod(description = "Start the accelerometer. Returns x, y, z", example = "")
     @ProtoMethodParam(params = {"function(x, y, z)"})
-    public void onChange(final GPSListener callbackfn) {
+    public void onChange(final ReturnInterface callbackfn) {
         start();
 
-        mGPSListener = callbackfn;
+        mCallback = callbackfn;
     }
 
 
@@ -200,7 +202,7 @@ public class PGPS extends ProtoBase {
     @ProtoMethodParam(params = {"latitude", "longitude"})
     public String getLocationName(double lat, double lon) {
         String gpsLocation = "";
-        Geocoder gcd = new Geocoder(mContext, Locale.getDefault());
+        Geocoder gcd = new Geocoder(getContext(), Locale.getDefault());
         List<Address> addresses;
         try {
             addresses = gcd.getFromLocation(lat, lon, 1);
@@ -218,7 +220,7 @@ public class PGPS extends ProtoBase {
      * lauch Settings Options
      */
     private void showSettingsAlert() {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
 
         // Setting Dialog Title
         alertDialog.setTitle("GPS settings");
@@ -231,7 +233,7 @@ public class PGPS extends ProtoBase {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                mContext.startActivity(intent);
+                getContext().startActivity(intent);
             }
         });
 
@@ -267,6 +269,11 @@ public class PGPS extends ProtoBase {
         float distance = locationA.distanceTo(locationB);
 
         return distance;
+    }
+
+    public boolean isAvailable() {
+        PackageManager packageManager = getContext().getPackageManager();
+        return packageManager.hasSystemFeature(PackageManager.FEATURE_LOCATION_GPS);
     }
 
     public void stop() {

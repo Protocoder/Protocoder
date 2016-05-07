@@ -25,6 +25,9 @@ import android.content.Context;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
+import org.protocoderrunner.api.common.ReturnInterface;
+import org.protocoderrunner.api.common.ReturnObject;
+
 @SuppressLint("NewApi")
 public class PSwitch extends Switch implements PViewInterface {
 
@@ -32,17 +35,14 @@ public class PSwitch extends Switch implements PViewInterface {
         super(context);
     }
 
-
-    public interface addGenericSwitchCB {
-        void event(boolean isChecked);
-    }
-
-    public PSwitch onChange(final addGenericSwitchCB callbackfn) {
+    public PSwitch onChange(final ReturnInterface callbackfn) {
         // Add the click callback
         this.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                callbackfn.event(isChecked);
+                ReturnObject r = new ReturnObject(PSwitch.this);
+                r.put("changed", true);
+                callbackfn.event(r);
             }
         });
 

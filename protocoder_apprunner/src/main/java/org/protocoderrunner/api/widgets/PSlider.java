@@ -23,6 +23,8 @@ package org.protocoderrunner.api.widgets;
 import android.content.Context;
 import android.widget.SeekBar;
 
+import org.protocoderrunner.api.common.ReturnInterface;
+import org.protocoderrunner.api.common.ReturnObject;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 
@@ -90,15 +92,9 @@ public class PSlider extends SeekBar implements PViewInterface {
         return valueFloat;
     }
 
-
-    // --------- seekbar ---------//
-    public interface addGenericSliderCB {
-        void event(float progress);
-    }
-
     @ProtoMethod(description = "On slider change", example = "")
     @ProtoMethodParam(params = {"function(value)"})
-    public PSlider onChange(final addGenericSliderCB callbackfn) {
+    public PSlider onChange(final ReturnInterface callbackfn) {
         // Add the change listener
         mSlider.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
@@ -112,7 +108,9 @@ public class PSlider extends SeekBar implements PViewInterface {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                callbackfn.event(mSlider.valueToFloat(progress));
+                ReturnObject r = new ReturnObject(PSlider.this);
+                r.put("value", mSlider.valueToFloat(progress));
+                callbackfn.event(r);
             }
         });
 

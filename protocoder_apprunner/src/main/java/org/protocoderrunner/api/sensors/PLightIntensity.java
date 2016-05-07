@@ -25,6 +25,8 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
+import org.protocoderrunner.api.common.ReturnInterface;
+import org.protocoderrunner.api.common.ReturnObject;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
@@ -32,12 +34,9 @@ import org.protocoderrunner.api.other.WhatIsRunningInterface;
 
 public class PLightIntensity extends CustomSensorManager implements WhatIsRunningInterface {
 
-    public interface LightListener extends CustomSensorListener {
-        public void event(float f);
-    }
+    private final static String TAG = PLightIntensity.class.getSimpleName();
 
-    private final static String TAG = "PLight";
-    private LightListener mCallbackLightChange;
+    private ReturnInterface mCallbackLightChange;
 
 
     public PLightIntensity(AppRunner appRunner) {
@@ -50,16 +49,14 @@ public class PLightIntensity extends CustomSensorManager implements WhatIsRunnin
     @ProtoMethod(description = "Start the light sensor. Returns the intensity. The value per device might vary", example = "")
     @ProtoMethodParam(params = {"function(intensity)"})
     public void start() {
-        if (running) {
-            return;
-        }
         super.start();
 
-        listener = new SensorEventListener() {
+        mListener = new SensorEventListener() {
 
             @Override
             public void onSensorChanged(SensorEvent event) {
-                mCallbackLightChange.event(event.values[0]);
+                ReturnObject r = new ReturnObject();
+                r.put("intensity", event.values[0]);
             }
 
             @Override
@@ -78,13 +75,18 @@ public class PLightIntensity extends CustomSensorManager implements WhatIsRunnin
 
         };
 
-        isSupported = sensormanager.registerListener(listener, sensor, speed);
+        isEnabled = mSensormanager.registerListener(mListener, sensor, speed);
+    }
+
+    @Override
+    public String units() {
+        return "lux";
     }
 
 
     @ProtoMethod(description = "Start the accelerometer. Returns x, y, z", example = "")
     @ProtoMethodParam(params = {"function(x, y, z)"})
-    public void onChange(final LightListener callbackfn) {
+    public void onChange(final ReturnInterface callbackfn) {
         mCallbackLightChange = callbackfn;
 
         start();

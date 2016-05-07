@@ -25,22 +25,17 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
+import org.protocoderrunner.api.common.ReturnInterface;
+import org.protocoderrunner.api.common.ReturnObject;
+import org.protocoderrunner.api.other.WhatIsRunningInterface;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
-import org.protocoderrunner.api.other.WhatIsRunningInterface;
 
 public class POrientation extends CustomSensorManager implements WhatIsRunningInterface {
 
+    private ReturnInterface mCallbackOrientationChange;
 
-    public interface OrientationListener extends CustomSensorListener {
-        public void event(float pitch, float roll, float z);
-    }
-
-    private OrientationListener mCallbackOrientationChange;
-
-
-    @SuppressWarnings("deprecation")
     public POrientation(AppRunner appRunner) {
         super(appRunner);
 
@@ -50,17 +45,18 @@ public class POrientation extends CustomSensorManager implements WhatIsRunningIn
     @ProtoMethod(description = "Start the orientation sensor. Returns pitch, roll, yaw", example = "")
     @ProtoMethodParam(params = {"function(pitch, roll, yaw)"})
     public void start() {
-        if (running) {
-            return;
-        }
         super.start();
 
-        listener = new SensorEventListener() {
+        mListener = new SensorEventListener() {
 
             @Override
             public void onSensorChanged(SensorEvent event) {
-                mCallbackOrientationChange.event(event.values[0], event.values[1], event.values[2]);
+                ReturnObject r = new ReturnObject();
+                r.put("azimuth", event.values[0]);
+                r.put("pitch", event.values[1]);
+                r.put("roll", event.values[2]);
 
+                mCallbackOrientationChange.event(r);
             }
 
             @Override
@@ -79,13 +75,18 @@ public class POrientation extends CustomSensorManager implements WhatIsRunningIn
 
         };
 
-        isSupported = sensormanager.registerListener(listener, sensor, speed);
+        isEnabled = mSensormanager.registerListener(mListener, sensor, speed);
+    }
+
+    @Override
+    public String units() {
+        return "degrees";
     }
 
 
     @ProtoMethod(description = "Start the accelerometer. Returns x, y, z", example = "")
     @ProtoMethodParam(params = {"function(x, y, z)"})
-    public void onChange(final OrientationListener callbackfn) {
+    public void onChange(final ReturnInterface callbackfn) {
         mCallbackOrientationChange = callbackfn;
 
         start();

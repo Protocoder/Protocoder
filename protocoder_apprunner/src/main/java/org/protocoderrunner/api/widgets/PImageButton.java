@@ -25,6 +25,8 @@ import android.graphics.PorterDuff;
 import android.view.MotionEvent;
 import android.view.View;
 
+import org.protocoderrunner.api.common.ReturnInterface;
+import org.protocoderrunner.api.common.ReturnObject;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.base.utils.MLog;
 
@@ -68,12 +70,7 @@ public class PImageButton extends PImageView implements PViewInterface {
      * Adds an image with the option to hide the default background
      */
 
-    public// --------- getRequest ---------//
-    interface addImageButtonCB {
-        void event();
-    }
-
-    public PImageButton onClick(final addImageButtonCB callbackfn) {
+    public PImageButton onClick(final ReturnInterface callbackfn) {
         // Set on click behavior
         img.setOnTouchListener(new OnTouchListener() {
 
@@ -87,7 +84,9 @@ public class PImageButton extends PImageView implements PViewInterface {
                         img.getDrawable().setColorFilter(0xDD00CCFC, PorterDuff.Mode.MULTIPLY);
 
                     }
-                    callbackfn.event();
+                    ReturnObject r = new ReturnObject(PImageButton.this);
+                    r.put("action", "click");
+                    callbackfn.event(r);
 
                 } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
                     MLog.d(TAG, "up");

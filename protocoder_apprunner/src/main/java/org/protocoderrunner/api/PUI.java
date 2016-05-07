@@ -1,6 +1,7 @@
 package org.protocoderrunner.api;
 
 
+import android.app.FragmentManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -22,6 +23,7 @@ import org.protocoderrunner.api.widgets.PImageView;
 import org.protocoderrunner.api.widgets.PLinearLayout;
 import org.protocoderrunner.api.widgets.PMap;
 import org.protocoderrunner.api.widgets.PPlotView;
+import org.protocoderrunner.api.widgets.PPopupDialogFragment;
 import org.protocoderrunner.api.widgets.PProgressBar;
 import org.protocoderrunner.api.widgets.PRadioButtonGroup;
 import org.protocoderrunner.api.widgets.PScrollView;
@@ -619,11 +621,31 @@ public class PUI extends ProtoBase {
 
     @ProtoMethod(description = "Adds a linear layout", example = "")
     @ProtoMethodParam(params = {"x", "y", "w", "h"})
+    public PLinearLayout addLinearLayout(float x, float y) {
+        PLinearLayout pLinearLayout = newLinearLayout();
+        addViewAbsolute(pLinearLayout, x, y, -1, -1);
+
+        return pLinearLayout;
+    }
+
+    @ProtoMethod(description = "Adds a linear layout", example = "")
+    @ProtoMethodParam(params = {"x", "y", "w", "h"})
     public PLinearLayout addLinearLayout(float x, float y, float w, float h) {
         PLinearLayout pLinearLayout = newLinearLayout();
         addViewAbsolute(pLinearLayout, x, y, w, h);
 
         return pLinearLayout;
+    }
+
+    /**
+     * Popup
+     */
+
+    public PPopupDialogFragment popup() {
+        FragmentManager fm = getActivity().getFragmentManager();
+        PPopupDialogFragment pPopupCustomFragment = PPopupDialogFragment.newInstance(fm);
+
+        return pPopupCustomFragment;
     }
 
     /**

@@ -23,15 +23,14 @@ package org.protocoderrunner.api.widgets;
 import android.content.Context;
 import android.widget.RadioGroup;
 
+import org.protocoderrunner.api.common.ReturnInterface;
+import org.protocoderrunner.api.common.ReturnObject;
+
 public class PRadioButtonGroup extends RadioGroup implements PViewInterface {
 
     public PRadioButtonGroup(Context context) {
         super(context);
         orientation("vertical");
-    }
-
-    public interface addGenericRadioButtonGroupCB {
-        void event(int isChecked);
     }
 
     public void orientation(String orientation) {
@@ -55,11 +54,18 @@ public class PRadioButtonGroup extends RadioGroup implements PViewInterface {
         return rb;
     }
 
-    public void onSelected(final addGenericRadioButtonGroupCB cb) {
+    public void clear() {
+        clearCheck();
+    }
+
+    public void onSelected(final ReturnInterface cb) {
         this.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                cb.event(checkedId);
+                ReturnObject r = new ReturnObject(PRadioButtonGroup.this);
+                PRadioButton rb = (PRadioButton) findViewById(checkedId);
+                r.put("selected", rb.getText());
+                cb.event(r);
             }
         });
     }

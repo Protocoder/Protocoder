@@ -25,6 +25,8 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
+import org.protocoderrunner.api.common.ReturnInterface;
+import org.protocoderrunner.api.common.ReturnObject;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
@@ -32,14 +34,7 @@ import org.protocoderrunner.api.other.WhatIsRunningInterface;
 
 public class PProximity extends CustomSensorManager implements WhatIsRunningInterface {
 
-
-    public interface ProximityListener {
-        public void event(float distance);
-    }
-
-    private final static String TAG = "Proximity";
-    private ProximityListener mCallbackProximityChange;
-
+    private final static String TAG = PProximity.class.getSimpleName();
 
     public PProximity(AppRunner appRunner) {
         super(appRunner);
@@ -51,16 +46,15 @@ public class PProximity extends CustomSensorManager implements WhatIsRunningInte
     @ProtoMethod(description = "Start the proximity sensor. Returns a proximty value. It might differ per device", example = "")
     @ProtoMethodParam(params = {"function(proximity)"})
     public void start() {
-        if (running) {
-            return;
-        }
         super.start();
 
-        listener = new SensorEventListener() {
+        mListener = new SensorEventListener() {
 
             @Override
             public void onSensorChanged(SensorEvent event) {
-                mCallbackProximityChange.event(event.values[0]);
+                ReturnObject r = new ReturnObject();
+                r.put("distance", event.values[0]);
+                mCallback.event(r);
             }
 
             @Override
@@ -79,14 +73,19 @@ public class PProximity extends CustomSensorManager implements WhatIsRunningInte
 
         };
 
-        isSupported = sensormanager.registerListener(listener, sensor, speed);
+        isEnabled = mSensormanager.registerListener(mListener, sensor, speed);
+    }
+
+    @Override
+    public String units() {
+        return "cm";
     }
 
 
     @ProtoMethod(description = "Start the accelerometer. Returns x, y, z", example = "")
     @ProtoMethodParam(params = {"function(x, y, z)"})
-    public void onChange(final ProximityListener callbackfn) {
-        mCallbackProximityChange = callbackfn;
+    public void onChange(final ReturnInterface callbackfn) {
+        mCallback = callbackfn;
 
         start();
     }

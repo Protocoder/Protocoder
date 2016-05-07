@@ -25,25 +25,15 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
+import org.protocoderrunner.api.common.ReturnInterface;
+import org.protocoderrunner.api.common.ReturnObject;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 
 public class PAccelerometer extends CustomSensorManager {
 
-    private AccelerometerChangeCB mCallbackAccelerometerChange;
-    private AccelerometerForceCB mCallbackAccelerometerForce;
-
-    interface AccelerometerChangeCB {
-        void event(float x, float y, float z);
-    }
-
-    interface AccelerometerForceCB {
-        void event(float force);
-    }
-
-    private final static String TAG = "PAccelerometer";
-
+    private final static String TAG = PAccelerometer.class.getSimpleName();
 
     public PAccelerometer(AppRunner appRunner) {
         super(appRunner);
@@ -52,24 +42,21 @@ public class PAccelerometer extends CustomSensorManager {
     }
 
     public void start() {
-        if (running) {
-            return;
-        }
         super.start();
 
-        listener = new SensorEventListener() {
+        mListener = new SensorEventListener() {
 
             @Override
             public void onSensorChanged(SensorEvent event) {
-                if (mCallbackAccelerometerChange != null) {
-                    mCallbackAccelerometerChange.event(event.values[0], event.values[1], event.values[2]);
-                }
+                if (mCallback != null) {
+                    ReturnObject r = new ReturnObject();
 
-                if (mCallbackAccelerometerForce != null) {
-                    float force = (float) Math.sqrt(Math.pow(event.values[0], 2) + Math.pow(event.values[1], 2)
-                            + Math.pow(event.values[2], 2));
-
-                    mCallbackAccelerometerForce.event(force);
+                    r.put("x", event.values[0]);
+                    r.put("y", event.values[1]);
+                    r.put("z", event.values[2]);
+                    float force = (float) Math.sqrt(Math.pow(event.values[0], 2) + Math.pow(event.values[1], 2) + Math.pow(event.values[2], 2));
+                    r.put("force", force);
+                    mCallback.event(r);
                 }
             }
 
@@ -90,21 +77,18 @@ public class PAccelerometer extends CustomSensorManager {
 
         };
 
-        isSupported = sensormanager.registerListener(listener, sensor, speed);
+        isEnabled = mSensormanager.registerListener(mListener, sensor, speed);
+    }
+
+    @Override
+    public String units() {
+        return "m/s^2";
     }
 
     @ProtoMethod(description = "Start the accelerometer. Returns x, y, z", example = "")
     @ProtoMethodParam(params = {"function(x, y, z)"})
-    public void onChange(final AccelerometerChangeCB callbackfn) {
-        mCallbackAccelerometerChange = callbackfn;
-
-        start();
-    }
-
-    @ProtoMethod(description = "Start the accelerometer. Returns x, y, z", example = "")
-    @ProtoMethodParam(params = {"function(x, y, z)"})
-    public void onForce(final AccelerometerChangeCB callbackfn) {
-        mCallbackAccelerometerChange = callbackfn;
+    public void onChange(final ReturnInterface callbackfn) {
+        mCallback = callbackfn;
 
         start();
     }

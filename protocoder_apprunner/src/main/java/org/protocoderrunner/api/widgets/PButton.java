@@ -27,6 +27,8 @@ import android.text.Html;
 import android.view.View;
 import android.widget.Button;
 
+import org.protocoderrunner.api.common.ReturnObject;
+import org.protocoderrunner.api.common.ReturnInterface;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 
@@ -43,21 +45,18 @@ public class PButton extends Button implements PViewInterface, PViewMethodsInter
         //init();
     }
 
-    // --------- newButton ---------//
-    public interface addGenericButtonCB {
-        void event();
-    }
-
-
-    @ProtoMethod(description = "Changes the font type to the button", example = "")
-    @ProtoMethodParam(params = {"Typeface"})
-    public PButton onClick(final addGenericButtonCB callbackfn) {
+    @ProtoMethod(description = "Triggers the function when the button is clicked", example = "")
+    @ProtoMethodParam(params = {"function"})
+    public PButton onClick(final ReturnInterface callbackfn) {
         // Set on click behavior
         this.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (callbackfn != null) {
-                    callbackfn.event();
+
+                    ReturnObject r = new ReturnObject(PButton.this);
+                    r.put("action", "clicked");
+                    callbackfn.event(r);
                 }
             }
         });

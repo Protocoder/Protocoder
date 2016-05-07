@@ -25,6 +25,8 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
+import org.protocoderrunner.api.common.ReturnInterface;
+import org.protocoderrunner.api.common.ReturnObject;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
@@ -32,14 +34,7 @@ import org.protocoderrunner.api.other.WhatIsRunningInterface;
 
 public class PGyroscope extends CustomSensorManager implements WhatIsRunningInterface {
 
-
-    public interface GyroscopeListener extends CustomSensorListener {
-        public void event(float x, float y, float z);
-
-    }
-
-    private final static String TAG = "PGyroscope";
-    private GyroscopeListener mCallbackGyroscopeChange;
+    private final static String TAG = PGyroscope.class.getSimpleName();
 
     public PGyroscope(AppRunner appRunner) {
         super(appRunner);
@@ -49,17 +44,17 @@ public class PGyroscope extends CustomSensorManager implements WhatIsRunningInte
 
 
     public void start() {
-        if (running) {
-            return;
-        }
         super.start();
 
-        listener = new SensorEventListener() {
+        mListener = new SensorEventListener() {
 
             @Override
             public void onSensorChanged(SensorEvent event) {
-                mCallbackGyroscopeChange.event(event.values[0], event.values[1], event.values[2]);
-
+                ReturnObject r = new ReturnObject();
+                r.put("x", event.values[0]);
+                r.put("y", event.values[1]);
+                r.put("z", event.values[2]);
+                mCallback.event(r);
             }
 
             @Override
@@ -78,16 +73,22 @@ public class PGyroscope extends CustomSensorManager implements WhatIsRunningInte
 
         };
 
-        isSupported = sensormanager.registerListener(listener, sensor, speed);
+        isEnabled = mSensormanager.registerListener(mListener, sensor, speed);
+    }
+
+    @Override
+    public String units() {
+        return "radians/second";
     }
 
 
-    @ProtoMethod(description = "Start the accelerometer. Returns x, y, z", example = "")
-    @ProtoMethodParam(params = {"function(x, y, z)"})
-    public void onChange(final GyroscopeListener callbackfn) {
-        mCallbackGyroscopeChange = callbackfn;
+    @ProtoMethod(description = "Start the accelerometer. Returns data", example = "")
+    @ProtoMethodParam(params = {"function(data)"})
+    public void onChange(final ReturnInterface callbackfn) {
+        mCallback = callbackfn;
 
         start();
     }
+
 
 }
