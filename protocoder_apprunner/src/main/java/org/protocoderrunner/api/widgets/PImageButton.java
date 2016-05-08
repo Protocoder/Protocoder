@@ -20,87 +20,111 @@
 
 package org.protocoderrunner.api.widgets;
 
-import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageButton;
 
 import org.protocoderrunner.api.common.ReturnInterface;
 import org.protocoderrunner.api.common.ReturnObject;
 import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.base.utils.Image;
 import org.protocoderrunner.base.utils.MLog;
 
-public class PImageButton extends PImageView implements PViewInterface {
+public class PImageButton extends ImageButton implements PViewInterface {
 
-    private String TAG = "PImageButton";
+    private String TAG = PImageButton.class.getSimpleName();
 
-    private final PImageButton img;
-    Context c;
-    int mColor;
-    int mColorReset;
-    public boolean hideBackground = false;
+    private AppRunner mAppRunner;
+    private boolean hideBackground = false;
+    private Bitmap mImageOff;
+    private Bitmap mImageOn;
 
     public PImageButton(AppRunner appRunner) {
-        super(appRunner);
-        this.img = this;
+        super(appRunner.getAppContext());
+        mAppRunner = appRunner;
 
-        /*
-        this.mColor = Color.parseColor(color);
-        this.mColorReset = Color.parseColor("#FFFFFFFF");
+        setScaleType(ScaleType.FIT_XY);
+    }
 
-        this.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                int action = motionEvent.getAction();
-                if(action == MotionEvent.ACTION_DOWN) {
-                    img.setColorFilter(mColor, PorterDuff.Mode.MULTIPLY);
+    public PImageButton image(String imagePath) {
+        mImageOff = loadImage(imagePath);
+        setImageBitmap(mImageOff);
 
-                } else if (action == MotionEvent.ACTION_UP) {
-                    img.setColorFilter(mColor, PorterDuff.Mode.MULTIPLY);
+        return this;
+    }
 
-                }
 
-                return false;
-            }
-        });
-        */
+    public PImageButton pressed(String imagePath) {
+        mImageOn = loadImage(imagePath);
+
+        return this;
+    }
+
+    public PImageButton noBackground() {
+        this.setBackgroundResource(0);
+        hideBackground = true;
+
+        return this;
     }
 
     /**
      * Adds an image with the option to hide the default background
      */
-
     public PImageButton onClick(final ReturnInterface callbackfn) {
         // Set on click behavior
-        img.setOnTouchListener(new OnTouchListener() {
+        setOnTouchListener(new OnTouchListener() {
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 MLog.d(TAG, "" + event.getAction());
                 int action = event.getAction();
-                if (action == MotionEvent.ACTION_DOWN) {
-                    MLog.d(TAG, "down");
-                    if (hideBackground) {
-                        img.getDrawable().setColorFilter(0xDD00CCFC, PorterDuff.Mode.MULTIPLY);
 
-                    }
-                    ReturnObject r = new ReturnObject(PImageButton.this);
-                    r.put("action", "click");
-                    callbackfn.event(r);
+                ReturnObject r = new ReturnObject(PImageButton.this);
 
-                } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
-                    MLog.d(TAG, "up");
-                    if (hideBackground) {
-                        img.getDrawable().setColorFilter(0xFFFFFFFF, PorterDuff.Mode.MULTIPLY);
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        r.put("action", "down");
+                        on();
 
-                    }
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        r.put("action", "up");
+                        off();
+
+                        break;
+
+                    case MotionEvent.ACTION_CANCEL:
+                        r.put("action", "cancel");
+                        off();
+
+                        break;
                 }
+                callbackfn.event(r);
 
                 return true;
             }
         });
 
-        return img;
+        return this;
+    }
+
+    private void on() {
+        if (hideBackground) PImageButton.this.getDrawable().setColorFilter(0xDD00CCFC, PorterDuff.Mode.MULTIPLY);
+        if (mImageOn != null) setImageBitmap(mImageOn);
+    }
+
+    private void off() {
+        if (hideBackground) PImageButton.this.getDrawable().setColorFilter(0xFFFFFFFF, PorterDuff.Mode.MULTIPLY);
+        if (mImageOff != null) setImageBitmap(mImageOff);
+    }
+
+    private Bitmap loadImage(String imagePath) {
+        Bitmap bmp = Image.loadBitmap(mAppRunner.getProject().getFullPathForFile(imagePath));
+
+        return bmp;
     }
 
 }

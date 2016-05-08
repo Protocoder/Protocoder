@@ -24,9 +24,25 @@ package org.protocoderrunner.api.widgets;
 import android.content.Context;
 import android.widget.NumberPicker;
 
+import org.protocoderrunner.api.common.ReturnInterface;
+import org.protocoderrunner.api.common.ReturnObject;
+
 public class PNumberPicker extends NumberPicker implements PViewInterface {
-    PNumberPicker(Context context) {
+    public PNumberPicker(Context context) {
         super(context);
+    }
+
+    public PNumberPicker onSelected(final ReturnInterface callback) {
+        this.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                ReturnObject r = new ReturnObject(PNumberPicker.this);
+                r.put("selected", newVal);
+                callback.event(r);
+            }
+        });
+
+        return this;
     }
 
 

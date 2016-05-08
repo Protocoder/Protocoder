@@ -19,15 +19,18 @@ import org.protocoderrunner.api.widgets.PButton;
 import org.protocoderrunner.api.widgets.PCanvas;
 import org.protocoderrunner.api.widgets.PCheckBox;
 import org.protocoderrunner.api.widgets.PEditText;
+import org.protocoderrunner.api.widgets.PImageButton;
 import org.protocoderrunner.api.widgets.PImageView;
 import org.protocoderrunner.api.widgets.PLinearLayout;
 import org.protocoderrunner.api.widgets.PMap;
+import org.protocoderrunner.api.widgets.PNumberPicker;
 import org.protocoderrunner.api.widgets.PPlotView;
 import org.protocoderrunner.api.widgets.PPopupDialogFragment;
 import org.protocoderrunner.api.widgets.PProgressBar;
 import org.protocoderrunner.api.widgets.PRadioButtonGroup;
 import org.protocoderrunner.api.widgets.PScrollView;
 import org.protocoderrunner.api.widgets.PSlider;
+import org.protocoderrunner.api.widgets.PSpinner;
 import org.protocoderrunner.api.widgets.PSwitch;
 import org.protocoderrunner.api.widgets.PTextView;
 import org.protocoderrunner.api.widgets.PToggleButton;
@@ -203,6 +206,23 @@ public class PUI extends ProtoBase {
         addViewAbsolute(b, x, y, -1, -1);
         return b;
     }
+
+    @ProtoMethod(description = "Creates a new image button", example = "")
+    @ProtoMethodParam(params = {})
+    public PImageButton newImageButton(String imagePath) {
+        final PImageButton ib = new PImageButton(getAppRunner());
+        ib.image(imagePath);
+
+        return ib;
+    }
+
+    public PImageButton addImageButton(String imagePath, float x, float y, float w, float h) {
+        PImageButton pImageButton = newImageButton(imagePath);
+        addViewAbsolute(pImageButton, x, y, w, h);
+
+        return pImageButton;
+    }
+
 
     /**
      * Text
@@ -459,6 +479,49 @@ public class PUI extends ProtoBase {
         final PImageView iv = newImage(imagePath);
         addViewAbsolute(iv, x, y, w, h);
         return iv;
+    }
+
+    /**
+     * ChoiceBox
+     */
+    @ProtoMethod(description = "Creates a new choice box", example = "")
+    @ProtoMethodParam(params = {"array"})
+    public PSpinner newChoiceBox(final String[] array) {
+        PSpinner pSpinner = new PSpinner(getContext());
+        pSpinner.setData(array);
+        pSpinner.setPrompt("qq");
+
+        return pSpinner;
+    }
+
+    @ProtoMethod(description = "Adds a new choice box", example = "")
+    @ProtoMethodParam(params = {"array"})
+    public PSpinner addChoiceBox(final String[] array, float x, float y, float w, float h) {
+        PSpinner pSpinner = newChoiceBox(array);
+        addViewAbsolute(pSpinner, x, y, w, h);
+        return pSpinner;
+    }
+
+    /**
+     * NumberPIcker
+     */
+    @ProtoMethod(description = "Creates a new number picker", example = "")
+    @ProtoMethodParam(params = {"from", "to"})
+    public PNumberPicker newNumberPicker(int from, int to) {
+        PNumberPicker pNumberPicker = new PNumberPicker(getContext());
+        pNumberPicker.setMinValue(from);
+        pNumberPicker.setMaxValue(to);
+
+        return pNumberPicker;
+    }
+
+    @ProtoMethod(description = "Adds a numberpicker", example = "")
+    @ProtoMethodParam(params = {"array"})
+    public PNumberPicker addNumberPicker(int from, int to, float x, float y, float w, float h) {
+        PNumberPicker pNumberPicker = newNumberPicker(from, to);
+        addViewAbsolute(pNumberPicker, x, y, w, h);
+
+        return pNumberPicker;
     }
 
     /**

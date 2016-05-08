@@ -24,11 +24,15 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
+import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 
 import org.protocoderrunner.api.common.ReturnInterface;
@@ -47,6 +51,10 @@ public class PPopupDialogFragment extends DialogFragment {
     private String[] mMultichoice;
     private boolean[] mMultichoiceState;
     private EditText mInput;
+    private int mWidth = WindowManager.LayoutParams.WRAP_CONTENT;
+    private int mHeight = WindowManager.LayoutParams.WRAP_CONTENT;
+    private float mW = -2;
+    private float mH = -2;
 
     public PPopupDialogFragment() {
 
@@ -69,8 +77,7 @@ public class PPopupDialogFragment extends DialogFragment {
         if (true) {
             mInput = new EditText(getActivity());
             mInput.setInputType(InputType.TYPE_CLASS_TEXT);
-            mInput.setPadding(10, 10, 10, 10);
-            builder.setView(mInput);
+            builder.setView(mInput, 20, 20, 20, 20);
         }
 
         if (mChoice != null) {
@@ -119,6 +126,17 @@ public class PPopupDialogFragment extends DialogFragment {
         });
 
         return builder.create();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // if width and height is unset then we show the default size
+        if (mW == -2 && mH == -2) return;
+
+        calculateSize();
+        getDialog().getWindow().setLayout(mWidth, mHeight);
     }
 
     public PPopupDialogFragment onAction(ReturnInterface callback) {
@@ -171,6 +189,13 @@ public class PPopupDialogFragment extends DialogFragment {
         return this;
     }
 
+    public PPopupDialogFragment size(float w, float h) {
+        mW = w;
+        mH = h;
+
+        return this;
+    }
+
     public void show() {
         this.show(mFragmentManager, "popUpCustom");
     }
@@ -183,5 +208,28 @@ public class PPopupDialogFragment extends DialogFragment {
 
     public void dismiss() {
         super.dismiss();
+    }
+
+    private void calculateSize() {
+        Window window = getDialog().getWindow();
+        Point size = new Point();
+        Display display = window.getWindowManager().getDefaultDisplay();
+        display.getSize(size);
+
+        if (mW < 0) {
+            mWidth = WindowManager.LayoutParams.WRAP_CONTENT;
+        } else if (mW > 1) {
+            mWidth = WindowManager.LayoutParams.MATCH_PARENT;
+        } else {
+            mWidth = (int) (size.x * mW);
+        }
+
+        if (mH < 0) {
+            mHeight = WindowManager.LayoutParams.WRAP_CONTENT;
+        } else if (mH > 1) {
+            mHeight = WindowManager.LayoutParams.MATCH_PARENT;
+        } else {
+            mHeight = (int) (size.y * mH);
+        }
     }
 }
