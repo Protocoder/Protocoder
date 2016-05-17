@@ -22,7 +22,7 @@
             android:icon="@drawable/protocoder_icon"
             android:label="@string/activity_name"
             android:logo="@drawable/protocoder_icon"
-            android:theme="@style/ProtocoderAppTheme"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:launchMode="singleInstance"
             >
             <intent-filter>

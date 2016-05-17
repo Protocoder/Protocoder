@@ -20,16 +20,16 @@
 
 package org.protocoder;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
 
 import org.protocoder.gui.settings.UserSettings;
-import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.base.utils.StrUtils;
 
-public class LauncherActivity extends BaseActivity {
+public class LauncherActivity extends Activity {
 
     Intent intent = null;
     private String TAG = LauncherActivity.class.getSimpleName();
@@ -38,10 +38,11 @@ public class LauncherActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Prepare intent to exit the activity and move to the main one
-        boolean firstLaunch; // If this is the first time the
+        // this Activity chooses between launching the welcome installer
+        // or the app it self
+
         SharedPreferences userDetails = getSharedPreferences("org.protocoder", MODE_PRIVATE);
-        firstLaunch = userDetails.getBoolean(getResources().getString(R.string.pref_is_first_launch), true);
+        boolean firstLaunch = userDetails.getBoolean(getResources().getString(R.string.pref_is_first_launch), true);
 
         // uncomment to avoid first launch
         //userDetails.edit().putBoolean(getResources().getString(R.string.pref_is_first_launch), false).commit();
