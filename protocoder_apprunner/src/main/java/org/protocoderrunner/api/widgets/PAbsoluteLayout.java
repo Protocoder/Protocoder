@@ -6,6 +6,7 @@ import android.view.View;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.base.utils.AndroidUtils;
 import org.protocoderrunner.base.utils.MLog;
 
@@ -13,19 +14,24 @@ public class PAbsoluteLayout extends FixedLayout {
 
     private static final String TAG = PAbsoluteLayout.class.getSimpleName();
 
-    private Context mContext;
+    private AppRunner mAppRunner;
 
     private static final int PIXELS = 0;
     private static final int DP = 1;
     private static final int NORMALIZED = 2;
     private int mode = NORMALIZED;
 
-    private int mWidth = 1080;
-    private int mHeight = 1374;
+    private int mWidth = 500;
+    private int mHeight = 1000;
+    private Context mContext;
 
-    public PAbsoluteLayout(Context context) {
-        super(context);
-        mContext = context;
+    public PAbsoluteLayout(AppRunner appRunner) {
+        super(appRunner.getAppContext());
+        mAppRunner = appRunner;
+        mContext = appRunner.getAppContext();
+
+        mWidth = appRunner.pDevice.info().screenWidth;
+        mHeight = appRunner.pDevice.info().screenHeight;
     }
 
     @Override
@@ -37,9 +43,19 @@ public class PAbsoluteLayout extends FixedLayout {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
 
-        MLog.d(TAG, "onLayout " + l + " " + t + " " + r + " " + b);
+        MLog.d(TAG, l + " " + t + " " + r + " " + b);
         // mWidth = t;
         // mHeight = b;
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+
+        MLog.d(TAG, w + " " + h);
+
+        mWidth = w;
+        mHeight = h;
     }
 
     @ProtoMethod(description = "Sets the background color", example = "")

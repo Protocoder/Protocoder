@@ -154,7 +154,7 @@ public class ProtocoderServerService extends Service {
             public void run() {
 
                 HashMap info = new HashMap();
-                info.put("action", "device");
+                info.put("module", "device");
 
                 info.put("battery level", appRunner.pDevice.battery());
                 info.put("memory", appRunner.pDevice.memory().summary());
@@ -310,8 +310,9 @@ public class ProtocoderServerService extends Service {
             MLog.d(TAG, intent.getAction());
 
             HashMap hashMap = new HashMap();
-            hashMap.put("action", "console");
-            hashMap.put("log", intent.getStringExtra("log"));
+            hashMap.put("module", "console");
+            hashMap.put("action", intent.getStringExtra("action"));
+            hashMap.put("data", intent.getStringExtra("data"));
             String jsonObject = gson.toJson(hashMap);
 
             protocoderWebsockets.send(jsonObject);

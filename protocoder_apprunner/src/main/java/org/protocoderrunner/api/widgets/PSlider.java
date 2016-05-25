@@ -44,7 +44,6 @@ public class PSlider extends SeekBar implements PViewInterface {
         mSlider = this;
     }
 
-
     @ProtoMethod(description = "Changes slider value", example = "")
     @ProtoMethodParam(params = {"value"})
     public void value(float value) {
@@ -59,6 +58,13 @@ public class PSlider extends SeekBar implements PViewInterface {
         return mCurrentValue;
     }
 
+    @ProtoMethod(description = "Sets the minimum and maximum slider values", example = "")
+    @ProtoMethodParam(params = {""})
+    public PSlider range(float min, float max) {
+        mMin = min;
+        mMax = max;
+        return this;
+    }
 
     @ProtoMethod(description = "Sets the minimum slider value", example = "")
     @ProtoMethodParam(params = {""})
@@ -66,7 +72,6 @@ public class PSlider extends SeekBar implements PViewInterface {
         mMin = min;
         return this;
     }
-
 
     @ProtoMethod(description = "Sets the maximum slider value", example = "")
     @ProtoMethodParam(params = {""})

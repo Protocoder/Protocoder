@@ -56,14 +56,19 @@ public class Events {
 
 
     public static class LogEvent {
-        private String log;
+        private String action;
+        private final String data;
 
-        public LogEvent(String log) {
-            this.log = log;
+        public LogEvent(String action, String data) {
+            this.action = action;
+            this.data = data;
         }
 
-        public String getLog() {
-            return log;
+        public String getAction() {
+            return action;
+        }
+        public String getData() {
+            return data;
         }
     }
 

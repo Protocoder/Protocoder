@@ -77,37 +77,6 @@ public class PCanvas extends View implements PViewInterface {
         this.pCanvasInterfaceTouch = pCanvasInterfaceTouch;
     }
 
-    @ProtoMethod(description = "Redraws the canvas in a given interval", example = "")
-    @ProtoMethodParam(params = {"speed", "function()"})
-    public void loopDraw(int ms, final PCanvasInterfaceDraw pCanvasInterfaceDraw) {
-        if (loop != null) {
-            loop.stop();
-            loop = null;
-        }
-
-        PUtil util = new PUtil(mAppRunner);
-
-        loop = util.loop(ms, new PLooper.LooperCB() {
-            @Override
-            public void event() {
-                pCanvasInterfaceDraw.onDraw(mCanvas);
-                invalidate();
-            }
-        }).start();
-
-        mAutoDraw = true;
-    }
-
-
-
-
-    public Canvas getCanvas() {
-        return mCanvas;
-    }
-
-
-
-
 
     //TODO
     //

@@ -14,4 +14,5 @@
     android:layout_alignParentStart="true"
     android:typeface="monospace"
     android:textColor="#10FFFFFF"
+    android:visibility="gone"
     tools:showIn="@layout/toolbar2" />

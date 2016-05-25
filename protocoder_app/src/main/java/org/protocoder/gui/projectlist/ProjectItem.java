@@ -20,8 +20,6 @@
 
 package org.protocoder.gui.projectlist;
 
-import android.animation.AnimatorInflater;
-import android.animation.AnimatorSet;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
@@ -82,10 +80,12 @@ public class ProjectItem extends LinearLayout {
             public void onClick(View v) {
                 // MLog.d(TAG, " " + position + " " + getPosition());
 
+                /*
                 AnimatorSet animSpin;
-                animSpin = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(), R.animator.flip_up);
+                animSpin = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(), R.animator.run);
                 animSpin.setTarget(v);
                 animSpin.start();
+                */
 
                 Runnable r = new Runnable() {
                     @Override
@@ -99,7 +99,9 @@ public class ProjectItem extends LinearLayout {
                 };
 
                 Handler handler = new Handler();
-                handler.postDelayed(r, 50);
+                handler.postDelayed(r, 0);
+
+
             }
         });
 

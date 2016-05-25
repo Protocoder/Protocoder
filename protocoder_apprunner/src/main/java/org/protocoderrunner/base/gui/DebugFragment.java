@@ -123,7 +123,7 @@ public class DebugFragment extends Fragment {
 
     @Subscribe
     public void onEventMainThread(Events.LogEvent e) {
-        String logMsg = e.getLog();
+        String logMsg = e.getData();
         MLog.d(TAG, logMsg);
 
         addText(logMsg);

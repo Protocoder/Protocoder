@@ -112,7 +112,7 @@ public class PUI extends ProtoBase {
             allowScroll(isScrollEnabled);
 
             // Create the main layout. This is where all the items actually go
-            uiAbsoluteLayout = new PAbsoluteLayout(getContext());
+            uiAbsoluteLayout = new PAbsoluteLayout(getAppRunner());
             uiAbsoluteLayout.setLayoutParams(layoutParams);
             uiScrollView.addView(uiAbsoluteLayout);
 
@@ -371,23 +371,15 @@ public class PUI extends ProtoBase {
 
     @ProtoMethod(description = "Creates a new slider", example = "")
     @ProtoMethodParam(params = {"max", "max"})
-    public PSlider newSlider(float min, float max) {
-        final PSlider sb = new PSlider(getContext()).min(min).max(max);
+    public PSlider newSlider() {
+        final PSlider sb = new PSlider(getContext()).range(0, 1);
         return sb;
     }
 
     @ProtoMethod(description = "Adds a slider with a [0, 1] range", example = "")
     @ProtoMethodParam(params = {"x", "y", "w", "h"})
     public PSlider addSlider(float x, float y, float w, float h) {
-        PSlider sb = newSlider(0, 1);
-        addViewAbsolute(sb, x, y, w, -1);
-        return sb;
-    }
-
-    @ProtoMethod(description = "Adds a slider with a [min, max] range", example = "")
-    @ProtoMethodParam(params = {"x", "y", "w", "h", "min", "max"})
-    public PSlider addSlider(float x, float y, float w, float h, float min, float max) {
-        PSlider sb = newSlider(min, max);
+        PSlider sb = newSlider();
         addViewAbsolute(sb, x, y, w, -1);
         return sb;
     }
@@ -455,6 +447,7 @@ public class PUI extends ProtoBase {
         addViewAbsolute(iv, x, y, -1, -1);
         return iv;
     }
+
 
     @ProtoMethod(description = "Adds an image", example = "")
     @ProtoMethodParam(params = {"x", "y", "w", "h"})

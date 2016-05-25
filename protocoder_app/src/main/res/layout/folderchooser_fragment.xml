@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="visible"
-        android:background="@drawable/project_folder_toggle_button"
+        android:background="@drawable/project_folder_toggle_button_selector"
         android:textColor="#88000000" />
 
     <View

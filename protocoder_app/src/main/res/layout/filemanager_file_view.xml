@@ -7,7 +7,7 @@
         android:layout_centerVertical="true"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:background="@drawable/project_folder_toggle_button"
+        android:background="@drawable/project_folder_toggle_button_selector"
         android:padding="5dp" >
 
         <ImageView

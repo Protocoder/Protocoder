@@ -35,14 +35,9 @@ import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 public class PButton extends Button implements PViewInterface, PViewMethodsInterface {
     private static final String TAG = PButton.class.getSimpleName();
 
-    // private int currentColor;
-   // private Paint paint;
-
     public PButton(Context context) {
         super(context);
-        //currentColor = Color.argb(255, 255, 255, 255);
-
-        //init();
+       
     }
 
     @ProtoMethod(description = "Triggers the function when the button is clicked", example = "")

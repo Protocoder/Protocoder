@@ -98,6 +98,7 @@ public class AppRunnerActivity extends BaseActivity {
     private boolean mSettingScreenAlwaysOn;
     private boolean mSettingWakeUpScreen;
     private boolean eventBusRegistered = false;
+    private boolean debugFramentIsVisible;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -229,9 +230,18 @@ public class AppRunnerActivity extends BaseActivity {
         mDebugFragment = DebugFragment.newInstance();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         FrameLayout fl = (FrameLayout) findViewById(R.id.debug_fragment);
-        fl.setVisibility(View.VISIBLE);
         ft.add(fl.getId(), mDebugFragment, String.valueOf(fl.getId()));
         ft.commit();
+
+        debugFramentIsVisible = true;
+    }
+
+    private void removeDebugFragment() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.remove(mDebugFragment);
+        ft.commit();
+
+        debugFramentIsVisible = false;
     }
 
     /**
@@ -340,6 +350,16 @@ public class AppRunnerActivity extends BaseActivity {
      */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if (AppRunnerSettings.DEBUG && keyCode == 25) {
+            MLog.d(TAG, "keyCode " + keyCode + " qq ");
+            if (debugFramentIsVisible) {
+                removeDebugFragment();
+            } else {
+                addDebugFragment();
+            }
+        }
+        
         if (onKeyListener != null) onKeyListener.onKeyDown(keyCode);
         if (checkBackKey(keyCode) || checkVolumeKeys(keyCode)) return super.onKeyDown(keyCode, event);
 
@@ -467,12 +487,9 @@ public class AppRunnerActivity extends BaseActivity {
      */
     @Subscribe
     public void onEventMainThread(Events.LogEvent e) {
-        String logMsg = e.getLog();
-        MLog.d("qq", "qq2");
-        MLog.d(TAG, "-------------- " + logMsg);
-
         Intent i = new Intent("org.protocoder.intent.CONSOLE");
-        i.putExtra("log", logMsg);
+        i.putExtra("action", e.getAction());
+        i.putExtra("data", e.getData());
         sendBroadcast(i);
     }
 

@@ -7,14 +7,15 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:padding="15dp"
+    android:paddingTop="5dp"
     android:animateLayoutChanges="true">
 
     <ImageView
         android:id="@+id/computer_image"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:layout_marginBottom="15dp"
-        android:src="@drawable/app_icon"
+        android:src="@drawable/computer"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
@@ -24,6 +25,9 @@
         android:text="Connected to a WIFI network\nIn your computer's web browser type the IP address to start coding"
         android:id="@+id/info"
         android:textColor="#55FFFFFF"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textSize="12sp"
         android:layout_below="@id/computer_image"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"/>
@@ -34,7 +38,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textColor="#FFFFFFFF"
-        android:textSize="14sp"
+        android:textSize="12sp"
         android:textStyle="italic"
         android:visibility="visible"
         android:text="http://1.2.3.4:5555"

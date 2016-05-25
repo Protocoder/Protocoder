@@ -57,6 +57,7 @@ public class PLightIntensity extends CustomSensorManager implements WhatIsRunnin
             public void onSensorChanged(SensorEvent event) {
                 ReturnObject r = new ReturnObject();
                 r.put("intensity", event.values[0]);
+                mCallbackLightChange.event(r);
             }
 
             @Override

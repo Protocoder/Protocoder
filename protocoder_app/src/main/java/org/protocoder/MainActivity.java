@@ -160,7 +160,7 @@ public class MainActivity extends BaseActivity {
         }
 
         // run project
-        if (true) {
+        if (false) {
             ProtoAppHelper.launchScript(this, new Project("user_projects/User Projects", "f10"));
         }
 

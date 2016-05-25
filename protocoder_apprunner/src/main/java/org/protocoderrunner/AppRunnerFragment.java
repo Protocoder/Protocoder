@@ -95,21 +95,7 @@ public class AppRunnerFragment extends Fragment {
         AppRunnerInterpreter.InterpreterInfo appRunnerCb = new AppRunnerInterpreter.InterpreterInfo() {
             @Override
             public void onError(String message) {
-                MLog.d(TAG, "error " + message);
-                // TODO event
-                // showConsole(message);
-
-                // send to web ide
-                JSONObject obj = new JSONObject();
-                try {
-                    obj.put("type", "error");
-                    obj.put("values", message);
-                    MLog.d(TAG, "error " + obj.toString(2));
-                    //TODO change to events
-                    // IDEcommunication.getInstance(mActivity).send(obj);
-                } catch (JSONException er1) {
-                    er1.printStackTrace();
-                }
+                mAppRunner.pConsole.error(message);
             }
         };
 

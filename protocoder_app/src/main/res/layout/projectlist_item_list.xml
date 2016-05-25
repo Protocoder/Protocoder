@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:background="@drawable/project_item_list_bg"
+    android:background="?attr/selectableItemBackground"
     android:padding="2dp">
 
     <ImageView
@@ -14,7 +14,7 @@
         android:layout_gravity="center|left"
         android:layout_marginTop="5dp"
         android:gravity="left"
-        android:src="@drawable/icon"
+        android:src="@drawable/magenta_rounded_rect"
         android:scaleType="centerCrop" />
 
     <TextView

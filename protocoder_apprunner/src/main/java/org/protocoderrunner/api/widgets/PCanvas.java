@@ -12,9 +12,9 @@ import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
-import android.os.Handler;
 import android.view.View;
 
+import org.protocoderrunner.api.other.PLooper;
 import org.protocoderrunner.apidoc.annotation.ProtoField;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
@@ -41,6 +41,10 @@ public class PCanvas extends View implements PViewInterface {
     @ProtoField(description = "Canvas height", example = "")
     private int height;
 
+    @ProtoField(description = "Time interval between draws", example = "")
+    private int drawInterval = 35;
+
+
     public boolean MODE_CORNER = true;
     public boolean MODE_CENTER = false;
 
@@ -54,12 +58,43 @@ public class PCanvas extends View implements PViewInterface {
     private boolean mModeCorner = MODE_CORNER;
 
 
+    // Autodraw
+    private PLooper loop;
+    int looperSpeed = 35;
+
+    public interface OnSetupCallback { void event (PCanvas c); }
+    public interface OnDrawCallback { void event (PCanvas c); }
+
+    public OnSetupCallback setup;
+    public OnDrawCallback draw;
+
+
     public PCanvas(AppRunner appRunner) {
         super(appRunner.getAppContext());
         mAppRunner = appRunner;
-
-        MLog.d("created", ":)");
+        prepareLooper();
         init();
+    }
+
+    private void prepareLooper() {
+        loop = mAppRunner.pUtil.loop(drawInterval, new PLooper.LooperCB() {
+            @Override
+            public void event() {
+                if (draw != null) {
+                    draw.event(PCanvas.this);
+                    invalidate();
+                }
+            }
+        });
+        loop.speed(looperSpeed);
+    }
+
+    private void startLooper() {
+        loop.start();
+    }
+
+    public void drawInterval(int ms) {
+        loop.speed(ms);
     }
 
     public void init() {
@@ -82,33 +117,8 @@ public class PCanvas extends View implements PViewInterface {
         mCanvas = new Canvas();
         layers = new Layers();
 
-        final Handler handler = new Handler();
-        Runnable r = new Runnable() {
-            @Override
-            public void run() {
-                /*
-                mPaintFill.setStyle(Paint.Style.FILL);
-                mPaintFill.setARGB(35, 255, 0, 0);
-                mCanvas.drawRect(0, 0, width, height, mPaintFill);
-
-                float rw = (float) (width * random());
-                float rh = (float) (height * random());
-                mPaintFill.setARGB(255, 255, 255, 0);
-                mCanvas.drawRect(place(rw, rh, 20, 20), mPaintFill);
-
-                mPaintFill.setARGB(255, 255, 255, 0);
-                mPaintFill.setStrokeWidth(5);
-                mPaintFill.setStyle(Paint.Style.STROKE);
-                mCanvas.drawRect(place(0, 0, width, height), mPaintFill);
-
-                invalidate();
-                */
-
-                handler.postDelayed(this, 10);
-            }
-        };
-        handler.post(r);
-
+        if (setup != null) setup.event(PCanvas.this);
+        startLooper();
     }
 
 
@@ -514,10 +524,6 @@ public class PCanvas extends View implements PViewInterface {
         if (mAutoDraw) invalidate();
         return this;
     }
-
-
-
-
 
 
     /**

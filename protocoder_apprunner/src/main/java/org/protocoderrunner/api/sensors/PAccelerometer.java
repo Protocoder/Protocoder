@@ -50,7 +50,6 @@ public class PAccelerometer extends CustomSensorManager {
             public void onSensorChanged(SensorEvent event) {
                 if (mCallback != null) {
                     ReturnObject r = new ReturnObject();
-
                     r.put("x", event.values[0]);
                     r.put("y", event.values[1]);
                     r.put("z", event.values[2]);

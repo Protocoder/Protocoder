@@ -43,7 +43,7 @@ public class PProximity extends CustomSensorManager implements WhatIsRunningInte
     }
 
 
-    @ProtoMethod(description = "Start the proximity sensor. Returns a proximty value. It might differ per device", example = "")
+    @ProtoMethod(description = "Start the proximity sensor. Returns a proximity value. It might differ per device", example = "")
     @ProtoMethodParam(params = {"function(proximity)"})
     public void start() {
         super.start();
@@ -80,7 +80,6 @@ public class PProximity extends CustomSensorManager implements WhatIsRunningInte
     public String units() {
         return "cm";
     }
-
 
     @ProtoMethod(description = "Start the accelerometer. Returns x, y, z", example = "")
     @ProtoMethodParam(params = {"function(x, y, z)"})

@@ -27,6 +27,7 @@ import com.google.gson.LongSerializationPolicy;
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.protocoderrunner.api.common.ReturnObject;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
@@ -55,47 +56,35 @@ public class PConsole extends ProtoBase {
 
     @ProtoMethod(description = "shows any HTML text in the webIde console", example = "")
     @ProtoMethodParam(params = {"text", "text", "..."})
-    public void log(Object... outputs) {
+    public PConsole log(Object... outputs) {
+        base_log("log", outputs);
+        return this;
+    }
 
-        StringBuilder builder = new StringBuilder();
-        builder.append(getCurrentTime());
-
-        for (Object output : outputs) {
-            // format the objects to json output
-            String out = gson.toJson(output);
-            builder.append(" ").append(out);
-        }
-        String log = builder.toString();
-
-        JSONObject values = null;
-        JSONObject msg = null;
-        try {
-            values = new JSONObject().put("val", log);
-            msg = new JSONObject().put("type", "console").put("action", "log").put("values", values);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        send(msg);
-
-        EventBus.getDefault().post(new Events.LogEvent(log));
+    @ProtoMethod(description = "shows any HTML text in the webIde console marked as error", example = "")
+    @ProtoMethodParam(params = {"text", "text", "..."})
+    public PConsole error(Object outputs) {
+        base_log("log_error", outputs);
+        return this;
     }
 
     @ProtoMethod(description = "clear the webIde console", example = "")
     @ProtoMethodParam(params = {""})
-    public void clear() {
+    public PConsole clear() {
         JSONObject msg = null;
         try {
             msg = new JSONObject().put("type", "console").put("action", "clear");
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        send(msg);
+        // send(msg);
+
+        return this;
     }
 
     @ProtoMethod(description = "show/hide the console", example = "")
     @ProtoMethodParam(params = {"boolean"})
-    public void show(boolean b) {
+    public PConsole show(boolean b) {
         JSONObject values = null;
         JSONObject msg = null;
         try {
@@ -104,12 +93,14 @@ public class PConsole extends ProtoBase {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        send(msg);
+        // send(msg);
+
+        return this;
     }
 
     @ProtoMethod(description = "Change the background color", example = "")
     @ProtoMethodParam(params = {"colorHex"})
-    public void backgroundColor(String colorHex) {
+    public PConsole backgroundColor(String colorHex) {
         String color = AndroidUtils.colorHexToHtmlRgba(colorHex);
 
         JSONObject values = null;
@@ -121,12 +112,14 @@ public class PConsole extends ProtoBase {
             e.printStackTrace();
         }
 
-        send(msg);
+        // send(msg);
+
+        return this;
     }
 
     @ProtoMethod(description = "Log using a defined colorHex", example = "")
     @ProtoMethodParam(params = {"colorHex"})
-    public void logC(String text, String colorHex) {
+    public PConsole logC(String text, String colorHex) {
         String color = AndroidUtils.colorHexToHtmlRgba(colorHex);
 
         text = getCurrentTime() + " " + text;
@@ -139,12 +132,14 @@ public class PConsole extends ProtoBase {
             e.printStackTrace();
         }
 
-        send(msg);
+        // send(msg);
+
+        return this;
     }
 
     @ProtoMethod(description = "Changes the console text size", example = "")
     @ProtoMethodParam(params = {"size"})
-    public void textSize(int textSize) {
+    public PConsole textSize(int textSize) {
 
         JSONObject values = null;
         JSONObject msg = null;
@@ -155,12 +150,14 @@ public class PConsole extends ProtoBase {
             e.printStackTrace();
         }
 
-        send(msg);
+        // send(msg);
+
+        return this;
     }
 
     @ProtoMethod(description = "Changes the console text color", example = "")
     @ProtoMethodParam(params = {"colorHex"})
-    public void textColor(String colorHex) {
+    public PConsole textColor(String colorHex) {
         String color = AndroidUtils.colorHexToHtmlRgba(colorHex);
 
         JSONObject values = null;
@@ -172,24 +169,36 @@ public class PConsole extends ProtoBase {
             e.printStackTrace();
         }
 
-        send(msg);
+        // send(msg);
+
+        return this;
     }
 
     @ProtoMethod(description = "Enable/Disable time in the log", example = "")
     @ProtoMethodParam(params = {"boolean"})
-    public void showTime(boolean b) {
+    public PConsole showTime(boolean b) {
         showTime = b;
+
+        return this;
     }
 
-    //TODO migrate to events
-    private void send(JSONObject msg) {
-        /*
-        try {
-            CustomWebsocketServer.getInstance(getContext()).send(msg);
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
+    private void base_log(String action, Object... outputs) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(getCurrentTime());
+        for (Object output : outputs) {
+            // format the objects to json output if the object is a ReturnObject
+            String out = "";
+            if (output instanceof ReturnObject)out = gson.toJson(output);
+            else out = output.toString();
+            builder.append(" ").append(out);
         }
-        */
+        String log = builder.toString();
+
+        send(action, log);
+    }
+
+    private void send(String action, String data) {
+        EventBus.getDefault().post(new Events.LogEvent(action, data));
     }
 
     private String getCurrentTime() {
@@ -209,5 +218,6 @@ public class PConsole extends ProtoBase {
     public void __stop() {
 
     }
+
 }
 
