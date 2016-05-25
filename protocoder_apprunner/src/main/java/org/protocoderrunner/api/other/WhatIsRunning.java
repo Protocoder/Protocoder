@@ -20,8 +20,6 @@
 
 package org.protocoderrunner.api.other;
 
-import org.protocoderrunner.base.utils.MLog;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Vector;
@@ -39,8 +37,7 @@ public class WhatIsRunning {
     public void stopAll() {
 
         for (Object o : runners) {
-            MLog.d(TAG, "list " + o.getClass().getCanonicalName());
-
+            // MLog.d(TAG, "list " + o.getClass().getCanonicalName());
         }
 
         for (Object o : runners) {
@@ -52,7 +49,7 @@ public class WhatIsRunning {
             } catch (NoSuchMethodException e) {
             }
 
-            MLog.d(TAG, "stopping " + o.getClass().getCanonicalName() + " " + o + " " + method);
+            // MLog.d(TAG, "stopping " + o.getClass().getCanonicalName() + " " + o + " " + method);
 
             try {
                 //if (method !== null) {

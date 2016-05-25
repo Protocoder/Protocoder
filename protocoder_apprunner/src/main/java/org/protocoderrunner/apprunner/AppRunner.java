@@ -182,11 +182,11 @@ public class AppRunner {
     }
 
     public Scriptable newArray() {
-        return interp.newArray();
+        return interp.newNativeArray();
     }
 
     public Scriptable newArray(File[] files) {
-        return interp.newArray(files);
+        return interp.newNativeArrayFrom(files);
     }
 
     public void byebye() {

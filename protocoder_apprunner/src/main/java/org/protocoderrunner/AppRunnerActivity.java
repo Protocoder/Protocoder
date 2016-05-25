@@ -97,11 +97,14 @@ public class AppRunnerActivity extends BaseActivity {
     // project settings
     private boolean mSettingScreenAlwaysOn;
     private boolean mSettingWakeUpScreen;
+    private boolean eventBusRegistered = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
+
+        registerEventBus();
 
         Intent intent = getIntent();
 
@@ -137,15 +140,15 @@ public class AppRunnerActivity extends BaseActivity {
         setContentView(R.layout.apprunner_activity);
         setupActivity();
 
+        // Add debug fragment
+        if (AppRunnerSettings.DEBUG) addDebugFragment();
+
         // add AppRunnerFragment
         mAppRunnerFragment = AppRunnerFragment.newInstance(bundle);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         FrameLayout fl = (FrameLayout) findViewById(R.id.apprunner_fragment);
         ft.add(fl.getId(), mAppRunnerFragment, String.valueOf(fl.getId()));
         ft.commit();
-
-        // Add debug fragment
-        if (AppRunnerSettings.DEBUG) addDebugFragment();
 
         //TODO change to events
         //IDEcommunication.getInstance(this).ready(true);
@@ -171,23 +174,25 @@ public class AppRunnerActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
 
-        EventBus.getDefault().register(this);
+        registerEventBus();
 
         // NFC
         if (nfcSupported) mAdapter.enableForegroundDispatch(this, mPendingIntent, null, null);
 
         // broadcast to start/stop the activity
         startStopActivityBroadcastReceiver();
+        executeCodeActivityBroadcastReceiver();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 
-        EventBus.getDefault().unregister(this);
+        unregisterEventBus();
 
         if (nfcSupported) mAdapter.disableForegroundDispatch(this);
         unregisterReceiver(stopActivitiyBroadcastReceiver);
+        unregisterReceiver(executeCodeActivitiyBroadcastReceiver);
     }
 
     @Override
@@ -206,6 +211,18 @@ public class AppRunnerActivity extends BaseActivity {
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    public void registerEventBus() {
+        if (!eventBusRegistered) {
+            EventBus.getDefault().register(this);
+            eventBusRegistered = true;
+        }
+    }
+
+    public void unregisterEventBus() {
+        EventBus.getDefault().unregister(this);
+        eventBusRegistered = false;
     }
 
     private void addDebugFragment() {
@@ -353,7 +370,6 @@ public class AppRunnerActivity extends BaseActivity {
         }
     }
 
-
     /**
      * Handle the results from the recognition activity.
      */
@@ -449,17 +465,11 @@ public class AppRunnerActivity extends BaseActivity {
     /**
      * Activity dependent events
      */
-
-    // folder choose
-    @Subscribe
-    public void onEventMainThread(Events.ProjectEvent e) {
-        MLog.d(TAG, "");
-    }
-
     @Subscribe
     public void onEventMainThread(Events.LogEvent e) {
         String logMsg = e.getLog();
-        MLog.d(TAG, logMsg);
+        MLog.d("qq", "qq2");
+        MLog.d(TAG, "-------------- " + logMsg);
 
         Intent i = new Intent("org.protocoder.intent.CONSOLE");
         i.putExtra("log", logMsg);
@@ -482,5 +492,29 @@ public class AppRunnerActivity extends BaseActivity {
             finish();
         }
     };
+
+    /**
+     * Receiving order to close the activity
+     */
+    public void executeCodeActivityBroadcastReceiver() {
+        IntentFilter filterSend = new IntentFilter();
+        filterSend.addAction("org.protocoderrunner.intent.EXECUTE_CODE");
+        registerReceiver(executeCodeActivitiyBroadcastReceiver, filterSend);
+    }
+
+    BroadcastReceiver executeCodeActivitiyBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String code = intent.getStringExtra("code");
+
+            mAppRunnerFragment.getAppRunner().interp.eval(code);
+
+            if (mAppRunnerFragment.liveCoding != null) {
+                mAppRunnerFragment.liveCoding.write(code);
+            }
+
+        }
+    };
+
 
 }

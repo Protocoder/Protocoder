@@ -38,12 +38,10 @@ public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private final ProjectItem mView;
-        private final int position;
 
         public ViewHolder(ProjectItem v) {
             super(v);
             mView = v;
-            position = getAdapterPosition();
         }
     }
     
@@ -52,7 +50,7 @@ public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.
      */
     public ProjectItemAdapter(Context c, boolean listMode) {
         mContext = c;
-        this.mListMode = listMode;
+        mListMode = listMode;
     }
 
     public void setArray( ArrayList<Project> projectList) {
@@ -113,7 +111,7 @@ public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.
         return vh;
     }
 
-    // Replace the contents of mContext view (invoked by the layout manager)
+    // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Project p = mProjectList.get(position);

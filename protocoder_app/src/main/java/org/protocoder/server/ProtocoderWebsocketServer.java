@@ -105,18 +105,18 @@ public class ProtocoderWebsocketServer extends WebSocketServer {
 
     @Override
     public void onMessage(WebSocket conn, String message) {
-        //MLog.d(TAG, "Received message " + message);
-        JSONObject json, res;
+        MLog.d(TAG, "Received message --> " + message);
+
+        JSONObject res = new JSONObject();
         try {
-            json = new JSONObject(message);
-            String type = json.getString("type");
-            res = handleMessage(type, json);
+            JSONObject msg = new JSONObject(message);
+            WebSocketListener l = listeners.get(msg.get("id"));
+            l.onUpdated(msg);
         } catch (JSONException e) {
             e.printStackTrace();
             MLog.e(TAG, "Error in handleMessage" + e.toString());
-            res = new JSONObject();
             try {
-                res = res.put("Error", e.toString());
+                res = res.put("error", e.toString());
             } catch (JSONException e1) {
                 e1.printStackTrace();
             }
@@ -131,14 +131,4 @@ public class ProtocoderWebsocketServer extends WebSocketServer {
     public void removeAllListeners() {
         listeners.clear();
     }
-
-    // handle message from the webapp
-    private JSONObject handleMessage(String type, JSONObject msg) throws JSONException {
-        JSONObject data = new JSONObject();
-        WebSocketListener l = listeners.get(msg.get("id"));
-        l.onUpdated(msg);
-
-        return data;
-    }
-
 }

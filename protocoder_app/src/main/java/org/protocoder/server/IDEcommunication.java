@@ -11,7 +11,7 @@ import java.lang.ref.WeakReference;
 
 public class IDEcommunication {
 
-    private String TAG = "IDECommunication";
+    private String TAG = IDEcommunication.class.getSimpleName();
     private static IDEcommunication inst;
     public WeakReference<Context> a;
     ProtocoderWebsocketServer ws = null;

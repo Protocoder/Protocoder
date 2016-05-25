@@ -33,8 +33,6 @@ import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.debug.Debugger;
 import org.protocoderrunner.base.utils.MLog;
 
-import java.io.File;
-
 public class AppRunnerInterpreter {
 
     private static final String TAG = AppRunnerInterpreter.class.getSimpleName();
@@ -137,13 +135,18 @@ public class AppRunnerInterpreter {
     /*
      * Native arrays
      */
-
-    public Scriptable newArray() {
+    public Scriptable newNativeArray() {
         return rhino.newArray(scope, 0);
     }
 
-    public Scriptable newArray(File[] files) {
-        return rhino.newArray(scope, files);
+    public Scriptable newNativeArrayFrom(Object[] obj) {
+        return rhino.newArray(scope, obj);
+    }
+
+    public Scriptable newNativeObject() {
+        Scriptable qq = rhino.newObject(scope);
+
+        return qq;
     }
 
     /*

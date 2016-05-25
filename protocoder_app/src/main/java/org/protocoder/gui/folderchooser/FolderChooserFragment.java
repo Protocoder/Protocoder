@@ -21,7 +21,6 @@
 package org.protocoder.gui.folderchooser;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
@@ -35,8 +34,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.protocoder.R;
 import org.protocoder.events.Events;
 import org.protocoder.gui._components.ResizableRecyclerView;
-import org.protocoder.helpers.ProtoScriptHelper;
 import org.protocoder.gui.settings.ProtocoderSettings;
+import org.protocoder.helpers.ProtoScriptHelper;
 import org.protocoderrunner.base.BaseFragment;
 import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.models.Folder;
@@ -47,7 +46,6 @@ import java.util.ArrayList;
 public class FolderChooserFragment extends BaseFragment {
 
     private String TAG = FolderChooserFragment.class.getSimpleName();
-    private Context mContext;
 
     private ResizableRecyclerView mRecyclerView;
     private ToggleButton toggleFolderChooser;
@@ -56,9 +54,6 @@ public class FolderChooserFragment extends BaseFragment {
     private boolean isTablet;
     private boolean isLandscapeBig;
 
-    public FolderChooserFragment() {
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,10 +61,7 @@ public class FolderChooserFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mContext = (Context) getActivity();
-
         isTablet = getResources().getBoolean(R.bool.isTablet);
-
         isLandscapeBig = getResources().getBoolean(R.bool.isLandscapeBig);
 
         final View v = inflater.inflate(R.layout.folderchooser_fragment, container, false);

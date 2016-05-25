@@ -60,7 +60,6 @@ public class ProjectItem extends LinearLayout {
     private boolean highlighted = false;
     private Project mProject;
     private TextView textViewName;
-    private TextView textViewIcon;
     private ImageView mMenuButton;
 
     public ProjectItem(Context context, boolean listMode) {
@@ -77,7 +76,6 @@ public class ProjectItem extends LinearLayout {
 
         FrameLayout fl = (FrameLayout) findViewById(R.id.viewProjectItemBackground);
         textViewName = (TextView) mItemView.findViewById(R.id.customViewText);
-        textViewIcon = (TextView) mItemView.findViewById(R.id.symbolTextC);
 
         this.setOnClickListener(new OnClickListener() {
             @Override
@@ -117,7 +115,6 @@ public class ProjectItem extends LinearLayout {
     public void setText(String text) {
         this.t = text;
         textViewName.setText(text);
-        textViewIcon.setText(text.substring(0, 1).toUpperCase()); //"< " + text.substring(0, 1).toUpperCase() + " >");
     }
 
     public void reInit(String text, boolean selected) {
@@ -187,7 +184,7 @@ public class ProjectItem extends LinearLayout {
     private void showMenu(View fromView) {
         MLog.d(TAG, "clicked");
         PopupMenu myPopup = new PopupMenu(c, fromView);
-        myPopup.inflate(R.menu.project_list);
+        myPopup.inflate(R.menu.project_actions);
         myPopup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(final MenuItem menuItem) {

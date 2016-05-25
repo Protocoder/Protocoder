@@ -91,7 +91,8 @@ public class BaseActivity extends AppCompatActivity {
         if (!AndroidUtils.isWear(this)) {
             mToolbar = (Toolbar) findViewById(R.id.toolbar2);
             setSupportActionBar(mToolbar);
-       }
+            // getSupportActionBar().setDisplayShowTitleEnabled(false);
+        }
     }
 
     protected void enableBackOnToolbar() {

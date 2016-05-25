@@ -4,6 +4,13 @@
          Customize dimensions originally defined in res/values/dimens.xml (such as
          screen margins) for sw720dp devices (e.g. 10" tablets) in landscape here.
     -->
+
+    <dimen name="main_cardview_radius">2dp</dimen>
+    <dimen name="main_cardview_top_margin">20dp</dimen>
+    <dimen name="main_cardview_bottom_margin">-2dp</dimen>
+    <dimen name="main_cardview_left_margin">300dp</dimen>
+    <dimen name="main_cardview_right_margin">150dp</dimen>
+
     <dimen name="activity_horizontal_margin">128dp</dimen>
     <dimen name="editor_cardview_radius">2dp</dimen>
 

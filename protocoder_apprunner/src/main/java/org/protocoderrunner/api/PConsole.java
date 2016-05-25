@@ -20,6 +20,10 @@
 
 package org.protocoderrunner.api;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.LongSerializationPolicy;
+
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,23 +40,30 @@ import java.util.TimeZone;
 
 public class PConsole extends ProtoBase {
 
-    String TAG = "PConsole";
+    private final Gson gson;
     private boolean showTime = false;
 
     public PConsole(AppRunner appRunner) {
         super(appRunner);
-    }
 
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setLongSerializationPolicy(LongSerializationPolicy.STRING);
+        gsonBuilder.setPrettyPrinting();
+
+        gson = gsonBuilder.create();
+    }
 
     @ProtoMethod(description = "shows any HTML text in the webIde console", example = "")
     @ProtoMethodParam(params = {"text", "text", "..."})
-    public void log(String... outputs) {
+    public void log(Object... outputs) {
 
         StringBuilder builder = new StringBuilder();
         builder.append(getCurrentTime());
 
-        for (String output : outputs) {
-            builder.append(" ").append(output);
+        for (Object output : outputs) {
+            // format the objects to json output
+            String out = gson.toJson(output);
+            builder.append(" ").append(out);
         }
         String log = builder.toString();
 

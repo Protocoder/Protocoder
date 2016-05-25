@@ -168,6 +168,23 @@ public class ProtoScriptHelper {
         return folders;
     }
 
+
+    public static ArrayList<ProtoFile> listFilesForFileManager(String folder) {
+        ArrayList<ProtoFile> protoFiles = new ArrayList();
+
+        File[] files = new File(folder).listFiles();
+
+        for (File f : files) {
+            ProtoFile protoFile = new ProtoFile();
+            protoFile.name = f.getName();
+            protoFile.path = f.getAbsolutePath();
+            protoFile.fileSize = f.length();
+            protoFile.type = f.isDirectory() ? "folder" : "file";
+            protoFiles.add(protoFile);
+        }
+        return protoFiles;
+    }
+
     // List folders in a tree structure
     public static ArrayList<ProtoFile> listFilesInFolder(String folder, int levels) {
         return listFilesInFolder(folder, levels, "*");
@@ -312,7 +329,6 @@ public class ProtoScriptHelper {
         return protoFiles;
     }
 
-
     public void listProcesses(Context context) {
         ActivityManager actvityManager = (ActivityManager)
                 context.getSystemService( context.ACTIVITY_SERVICE );
@@ -323,4 +339,22 @@ public class ProtoScriptHelper {
         }
     }
 
+    public static String fileExt(String url) {
+        if (url.indexOf("?") > -1) {
+            url = url.substring(0, url.indexOf("?"));
+        }
+        if (url.lastIndexOf(".") == -1) {
+            return null;
+        } else {
+            String ext = url.substring(url.lastIndexOf("."));
+            if (ext.indexOf("%") > -1) {
+                ext = ext.substring(0, ext.indexOf("%"));
+            }
+            if (ext.indexOf("/") > -1) {
+                ext = ext.substring(0, ext.indexOf("/"));
+            }
+
+            return ext.toLowerCase();
+        }
+    }
 }

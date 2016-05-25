@@ -11,12 +11,17 @@
     android:fitsSystemWindows="false"
     >
 
-    <include layout="@layout/toolbar2"
-        android:id="@+id/header"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
+    <include layout="@layout/toolbar2" />
+
+    <include layout="@layout/toolbar2_title"
+        android:id="@+id/toolbar2_title"/>
+
+    <include layout="@layout/connection_info_view_vertical"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignTop="@+id/card_view" />
 
     <android.support.v7.widget.CardView
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -29,109 +34,31 @@
         android:layout_below="@+id/header"
         android:animateLayoutChanges="true"
         android:layout_marginTop="@dimen/main_cardview_top_margin"
-        android:layout_marginLeft="@dimen/main_cardview_horizontal_margin"
-        android:layout_marginRight="@dimen/main_cardview_horizontal_margin"
-        >
+        android:layout_marginRight="@dimen/main_cardview_right_margin"
+        android:layout_marginBottom="@dimen/main_cardview_bottom_margin"
+        android:layout_toRightOf="@+id/ip_container"
+        android:layout_toEndOf="@+id/toolbar2_title"
+        android:layout_marginLeft="2dp">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <FrameLayout
                 android:id="@+id/fragmentFolderChooser"
                 android:background="@color/transparent"
-                android:layout_width="200dp"
-                android:layout_height="match_parent"
-                android:layout_alignParentLeft="true"
-                android:visibility="visible"
-                android:layout_marginLeft="0dp"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="0dp" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible" />
 
             <FrameLayout
                 android:id="@+id/fragmentScriptList"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_toLeftOf="@id/fragmentFolderChooser"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="0dp"
-                android:layout_toRightOf="@+id/fragmentFolderChooser"
-                android:layout_toEndOf="@+id/fragmentFolderChooser" />
+                />
 
-            <LinearLayout
-                android:id="@+id/ip_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:orientation="vertical"
-                android:background="@drawable/drawable_transparent"
-                android:layout_toRightOf="@+id/fragmentFolderChooser"
-                android:layout_toEndOf="@+id/fragmentFolderChooser">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:animateLayoutChanges="true">
-
-                    <!-- 48dp margin bottom -->
-
-                    <Button
-                        style="?android:attr/buttonStyleSmall"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="C"
-                        android:id="@+id/button11"
-                        android:layout_gravity="left|top"
-                        android:visibility="invisible" />
-
-                    <TextView
-                        android:id="@+id/ip"
-                        style="@android:style/TextAppearance.Medium"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:padding="15dp"
-                        android:textColor="#222222"
-                        android:textSize="14sp"
-                        android:textStyle="italic"
-                        android:visibility="visible"
-                        android:layout_gravity="center"
-                        android:layout_alignParentTop="true"
-                        android:layout_toRightOf="@+id/button11"
-                        android:layout_toLeftOf="@+id/button12"
-                        android:layout_toStartOf="@+id/button12"
-                        android:layout_width="wrap_content"
-                        />
-
-                    <Button
-                        style="?android:attr/buttonStyleSmall"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="/?"
-                        android:id="@+id/button12"
-                        android:layout_gravity="right|center_vertical"
-                        android:layout_alignBottom="@+id/ip"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentEnd="true"
-                        android:visibility="invisible" />
-
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="llala"
-                        android:id="@+id/button13"
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
-                        android:visibility="gone"
-                        android:layout_below="@id/button12"/>
-                </RelativeLayout>
-
-
-            </LinearLayout>
-
-        </RelativeLayout>
+        </LinearLayout>
 
     </android.support.v7.widget.CardView>
 

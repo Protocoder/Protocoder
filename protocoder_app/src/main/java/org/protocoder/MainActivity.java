@@ -28,12 +28,10 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,6 +46,7 @@ import org.protocoder.appinterpreter.ProtocoderApp;
 import org.protocoder.events.Events;
 import org.protocoder.gui.IntroductionFragment;
 import org.protocoder.gui._components.NewProjectDialogFragment;
+import org.protocoder.gui.editor.FileManagerDialog;
 import org.protocoder.gui.folderchooser.FolderChooserFragment;
 import org.protocoder.gui.projectlist.ProjectListFragment;
 import org.protocoder.gui.settings.ProtocoderSettings;
@@ -56,6 +55,7 @@ import org.protocoder.helpers.ProtoScriptHelper;
 import org.protocoder.server.ProtocoderServerService;
 import org.protocoder.server.model.ProtoFile;
 import org.protocoder.server.networkexchangeobjects.NEOProject;
+import org.protocoderrunner.api.widgets.PPopupDialogFragment;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.models.Project;
@@ -70,10 +70,9 @@ public class MainActivity extends BaseActivity {
     protected AppRunnerCustom appRunner;
 
     // ui
-    private Toolbar mToolbar;
     private ProjectListFragment mListFragmentBase;
     private FolderChooserFragment mFolderChooserFragment;
-    private TextView mTxtIp;
+    // private TextView mTxtIp;
 
     private Intent mServerIntent;
     private boolean isTablet;
@@ -153,16 +152,16 @@ public class MainActivity extends BaseActivity {
             MLog.d(TAG, "list all examples -> " + jsonFiles1);
         }
 
-        // list all files with 10 levels
+        // list all mCurrentFileList with 10 levels
         if (false) {
             ArrayList<ProtoFile> files2 = ProtoScriptHelper.listFilesInFolder(".", 10);
             String jsonFiles2 = gson.toJson(files2);
-            MLog.d(TAG, "list all files with 10 levels -> " + jsonFiles2);
+            MLog.d(TAG, "list all mCurrentFileList with 10 levels -> " + jsonFiles2);
         }
 
         // run project
-        if (false) {
-            ProtoAppHelper.launchScript(this, new Project("examples/Media", "Sound"));
+        if (true) {
+            ProtoAppHelper.launchScript(this, new Project("user_projects/User Projects", "f10"));
         }
 
         // run settings
@@ -180,6 +179,27 @@ public class MainActivity extends BaseActivity {
             ProtoAppHelper.launchEditor(this, new Project("examples/Media", "Sound"));
         }
 
+        // load filemanager in fragment
+        // currentFolder
+        // mCurrentFileList
+        //
+        if (false) {
+            FragmentManager fm = getSupportFragmentManager();
+            PPopupDialogFragment pPopupCustomFragment = PPopupDialogFragment.newInstance(fm);
+            TextView txt = new TextView(this);
+            txt.setText("hola");
+
+            MLog.d(TAG, pPopupCustomFragment + " " + txt + " ");
+            pPopupCustomFragment.addView(txt);
+            pPopupCustomFragment.show();
+        }
+
+        if (false) {
+            FragmentManager fm = getSupportFragmentManager();
+            FileManagerDialog fmd = FileManagerDialog.newInstance();
+            fm.beginTransaction().add(fmd, "qqa").commit();
+        }
+
         // start servers
         if (true) {
             startServers();
@@ -191,8 +211,6 @@ public class MainActivity extends BaseActivity {
         }
 
         // list running projects 1h
-
-
     }
 
     @Override
@@ -276,9 +294,17 @@ public class MainActivity extends BaseActivity {
     protected void setupActivity() {
         super.setupActivity();
 
-        // FolderChooserDialog myDialog = FolderChooserDialog.newInstance();
+        final TextView title = (TextView) findViewById(R.id.toolbar2_title);
+        title.animate().translationY(0).withStartAction(new Runnable(){
+            public void run(){
+                title.setTranslationY(500 - title.getY());
+            }
+        }).setDuration(1000).start();
+
+        // FileManagerDialog myDialog = FileManagerDialog.newInstance();
         // getSupportFragmentManager().beginTransaction().add(myDialog, "12345").commit();
 
+        /*
         mTxtIp = (TextView) findViewById(R.id.ip);
         Button btnIp = (Button) findViewById(R.id.button11);
         btnIp.setOnClickListener(new View.OnClickListener() {
@@ -287,6 +313,8 @@ public class MainActivity extends BaseActivity {
                 toggleView(findViewById(R.id.button13));
             }
         });
+        */
+
     }
 
     public void toggleView(View v) {
@@ -382,7 +410,7 @@ public class MainActivity extends BaseActivity {
         String code = e.getCode();
         MLog.d(TAG, "event -> " + code);
 
-        if (ProtocoderSettings.DEBUG) {
+        if (ProtocoderSettings.DEBUG && e.getProject() != null) {
              appRunner.interp.eval(code);
         }
     }
@@ -392,7 +420,7 @@ public class MainActivity extends BaseActivity {
     public void onEventMainThread(Events.Connection e) {
         String type = e.getType();
         String address = e.getAddress();
-        mTxtIp.setText(type + " " + address);
+        // mTxtIp.setText(type + " " + address);
 
         MLog.d(TAG, " got event "); // No WIFI, still you can hack via USB using the adb command");
         //MLog.d(TAG, "Hack via your browser @ http://" + NetworkUtils.getLocalIpAddress(ProtocoderServerService.this) + ":" + ProtocoderSettings.HTTP_PORT);

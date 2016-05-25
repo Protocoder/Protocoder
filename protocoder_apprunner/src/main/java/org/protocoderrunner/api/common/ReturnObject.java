@@ -9,7 +9,9 @@ import java.util.Set;
 
 // http://stackoverflow.com/questions/7519399/how-to-convert-java-map-to-a-basic-javascript-object
 public class ReturnObject implements Scriptable, Map {
+
     public final Map map;
+
     public ReturnObject() {
         this.map = new HashMap();
     }

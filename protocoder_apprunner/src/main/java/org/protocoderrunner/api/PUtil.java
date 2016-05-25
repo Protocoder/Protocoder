@@ -39,15 +39,19 @@ import android.view.animation.BounceInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 
+import org.mozilla.javascript.NativeArray;
+import org.mozilla.javascript.NativeObject;
+import org.protocoderrunner.api.common.ReturnObject;
+import org.protocoderrunner.api.other.PLooper;
+import org.protocoderrunner.api.other.SignalUtils;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
-import org.protocoderrunner.api.other.PLooper;
-import org.protocoderrunner.api.other.SignalUtils;
 import org.protocoderrunner.base.utils.MLog;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Map;
 
 public class PUtil extends ProtoBase {
 
@@ -64,17 +68,72 @@ public class PUtil extends ProtoBase {
         void event(int eventType, String responseString);
     }
 
+    public void setAnObject(NativeObject obj) {
+
+        for (Map.Entry<Object, Object> entry : obj.entrySet()) {
+            String key = (String) entry.getKey();
+            Object o = entry.getValue();
+
+            MLog.d(TAG, "setAnObject -> " + key + " " + o);
+        }
+
+        MLog.d(TAG, "q --> " + obj.get("q"));
+    }
+
+    public ReturnObject getAnObject() {
+
+        // HashMap map = new HashMap();
+
+        ReturnObject ret = new ReturnObject();
+        ret.put("qq", 1);
+        ret.put("qq 2", 2);
+
+        /*
+        NativeObject ret = (NativeObject) getAppRunner().interp.newNativeObject();
+        ret.defineProperty("q", 2, NativeObject.READONLY);
+
+        ReturnObject ret1 = new ReturnObject();
+        ret1.put();
+
+        */
+
+        return ret;
+    }
+
+    /*
+     * 1. get arraylist to native array
+     * 2. set native array to arraylist
+     */
+    public NativeArray getAnArray() {
+        ArrayList array = new ArrayList();
+        array.add("1");
+        array.add("2");
+
+        NativeArray ret = (NativeArray) getAppRunner().interp.newNativeArrayFrom(array.toArray());
+
+        return ret;
+    }
+
+    public void setAnArray(NativeArray array) {
+        for (int i = 0; i < array.size(); i++) {
+            MLog.d(TAG, "setArrayList -> " + array.get(i));
+        }
+    }
+
+    public String getCharFromUnicode(int unicode){
+        return new String(Character.toChars(unicode));
+    }
 
     @ProtoMethod(description = "Creates a looper that loops a given function every 'n' milliseconds", example = "")
     @ProtoMethodParam(params = {"milliseconds", "function()"})
     public PLooper loop(final int duration, final PLooper.LooperCB callbackkfn) {
-        return new PLooper(duration, callbackkfn);
+        return new PLooper(getAppRunner(), duration, callbackkfn);
     }
 
     @ProtoMethod(description = "Creates a looper that loops a given function every 'n' milliseconds", example = "")
     @ProtoMethodParam(params = {"milliseconds"})
     public PLooper loop(final int duration) {
-        return new PLooper(duration, null);
+        return new PLooper(getAppRunner(), duration, null);
     }
 
     // --------- delay ---------//

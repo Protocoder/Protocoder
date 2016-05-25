@@ -1,9 +1,9 @@
 package org.protocoderrunner.api;
 
-
-import android.app.FragmentManager;
+import android.animation.ValueAnimator;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.ViewGroup;
@@ -621,11 +621,10 @@ public class PUI extends ProtoBase {
     @ProtoMethodParam(params = {"x", "y", "w", "h"})
     public PCanvas addCanvas(float x, float y, float w, float h) {
         PCanvas canvasView = newCanvas();
-        canvasView.autoDraw(true);
         addViewAbsolute(canvasView, x, y, w, h);
-
         return canvasView;
     }
+
 
     /**
      * Map
@@ -705,7 +704,7 @@ public class PUI extends ProtoBase {
      */
 
     public PPopupDialogFragment popup() {
-        FragmentManager fm = getActivity().getFragmentManager();
+        FragmentManager fm = getActivity().getSupportFragmentManager();
         PPopupDialogFragment pPopupCustomFragment = PPopupDialogFragment.newInstance(fm);
 
         return pPopupCustomFragment;
@@ -725,6 +724,53 @@ public class PUI extends ProtoBase {
     public void toast(String text, int duration) {
         Toast.makeText(getContext(), text, duration).show();
     }
+
+    /*
+     * Utilities
+     */
+
+    @ProtoMethod(description = "Resize a view to a given width and height. If a parameter is -1 then that dimension is not changed", example = "")
+    @ProtoMethodParam(params = {"View", "width", "height"})
+    public void resize(final View v, int w, int h, boolean animated) {
+        if (!animated) {
+            if (h != -1) {
+                v.getLayoutParams().height = h;
+            }
+            if (w != -1) {
+                v.getLayoutParams().width = w;
+            }
+            v.setLayoutParams(v.getLayoutParams());
+        } else {
+            int initHeight = v.getLayoutParams().height;
+            int initWidth = v.getLayoutParams().width;
+            // v.setLayoutParams(v.getLayoutParams());
+
+            ValueAnimator animH = ValueAnimator.ofInt(initHeight, h);
+            animH.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                    int val = (Integer) valueAnimator.getAnimatedValue();
+                    v.getLayoutParams().height = val;
+                    v.setLayoutParams(v.getLayoutParams());
+                }
+            });
+            animH.setDuration(200);
+            animH.start();
+
+            ValueAnimator animW = ValueAnimator.ofInt(initWidth, w);
+            animW.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                    int val = (Integer) valueAnimator.getAnimatedValue();
+                    v.getLayoutParams().width = val;
+                    v.setLayoutParams(v.getLayoutParams());
+                }
+            });
+            animW.setDuration(200);
+            animW.start();
+        }
+    }
+
 
     @Override
     public void __stop() {

@@ -7,11 +7,12 @@ import java.util.ArrayList;
 
 /**
  * Network Exchange Object for [ Project ] actions
- * list / new / run / stop / load / save
+ * list / new / run / stop / load / save / execute
  */
 public class NEOProject {
     public String cmd = null;
     public Project project;
     public ArrayList<ProtoFile> files = new ArrayList<>();
+    public String code = "";
 
 }

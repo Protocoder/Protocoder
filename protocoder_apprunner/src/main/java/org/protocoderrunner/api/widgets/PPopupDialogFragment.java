@@ -21,27 +21,31 @@
 package org.protocoderrunner.api.widgets;
 
 import android.app.Dialog;
-import android.app.DialogFragment;
-import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.view.Display;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 
 import org.protocoderrunner.api.common.ReturnInterface;
 import org.protocoderrunner.api.common.ReturnObject;
+import org.protocoderrunner.base.utils.MLog;
 
 public class PPopupDialogFragment extends DialogFragment {
 
     private static FragmentManager mFragmentManager;
-    private ViewGroup mContainer;
+    // private ViewGroup mContainer;
     private String mTitle;
     private String mDescription;
     private String mOk;
@@ -55,6 +59,7 @@ public class PPopupDialogFragment extends DialogFragment {
     private int mHeight = WindowManager.LayoutParams.WRAP_CONTENT;
     private float mW = -2;
     private float mH = -2;
+    private View mView;
 
     public PPopupDialogFragment() {
 
@@ -126,6 +131,19 @@ public class PPopupDialogFragment extends DialogFragment {
         });
 
         return builder.create();
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        if (mView != null) {
+            MLog.d("lalalalalalla", "llalalalalal");
+            LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+            getDialog().addContentView(mView, lp);
+        }
+
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
@@ -201,9 +219,8 @@ public class PPopupDialogFragment extends DialogFragment {
     }
 
     public void addView(View v) {
-        ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        getDialog().addContentView(v, lp);
-        mContainer.addView(v);
+        mView = v;
+        // mContainer.addView(v);
     }
 
     public void dismiss() {

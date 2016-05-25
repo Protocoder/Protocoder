@@ -12,11 +12,6 @@
     android:background="#22000000"
     android:gravity="center">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="#11000000" />
-
     <ToggleButton
         android:id="@+id/selectFolderButton"
         android:layout_width="match_parent"
@@ -24,6 +19,11 @@
         android:visibility="visible"
         android:background="@drawable/project_folder_toggle_button"
         android:textColor="#88000000" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#11000000" />
 
     <org.protocoder.gui._components.ResizableRecyclerView
         android:id="@+id/folderList"

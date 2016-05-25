@@ -87,9 +87,9 @@ public class EditorActivity extends BaseActivity {
             // setProjectTitleAndSubtitle(name, ProtocoderSettings.MAIN_FILENAME);
         }
 
-        addEditorFragment(bundle);
-        addFilePreviewerFragment(bundle);
-        addFileManagerDrawer(true);
+        addEditorFragment(savedInstanceState);
+        addFilePreviewerFragment(savedInstanceState);
+        addFileManagerDrawer(savedInstanceState, true);
         // showFileManagerDrawer(false);
     }
 
@@ -235,23 +235,27 @@ public class EditorActivity extends BaseActivity {
         ft.commit();
     }
 
-    public void addFileManagerDrawer(boolean b) {
+    public void addFileManagerDrawer(Bundle savedInstance, boolean b) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_left);
 
         if (b) {
-            fileFragment = FileManagerFragment.newInstance();
-            Bundle bundle = new Bundle();
-            bundle.putString(Project.NAME, mCurrentProject.name);
-            bundle.putString(Project.FOLDER, mCurrentProject.folder);
 
-            fileFragment.setArguments(bundle);
+            if (savedInstance == null) {
+                fileFragment = FileManagerFragment.newInstance();
+                Bundle bundle = new Bundle();
+                bundle.putString(Project.NAME, mCurrentProject.name);
+                bundle.putString(Project.FOLDER, mCurrentProject.folder);
 
-            if (isTablet) {
-                ft.add(R.id.fragmentFileManager, fileFragment);
-            } else {
-                ft.add(R.id.fragmentFileManager, fileFragment).addToBackStack(null);
+                fileFragment.setArguments(bundle);
+
+                if (isTablet) {
+                    ft.add(R.id.fragmentFileManager, fileFragment);
+                } else {
+                    ft.add(R.id.fragmentFileManager, fileFragment).addToBackStack(null);
+                }
             }
+
         } else {
             // editorFragment.getView().animate().translationX(0).setDuration(500).start();
             ft.remove(fileFragment);
@@ -260,20 +264,25 @@ public class EditorActivity extends BaseActivity {
         ft.commit();
     }
 
-    private void addEditorFragment(Bundle bundle) {
-        editorFragment = EditorFragment.newInstance(bundle);
-        FrameLayout fl = (FrameLayout) findViewById(R.id.editor_container);
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(fl.getId(), editorFragment, String.valueOf(fl.getId()));
-        ft.commit();
+    private void addEditorFragment(Bundle savedInstance) {
+        if (savedInstance == null) {
+            MLog.d(TAG, "-----------------------> qq " + savedInstance);
+            editorFragment = EditorFragment.newInstance(savedInstance);
+            FrameLayout fl = (FrameLayout) findViewById(R.id.editor_container);
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.add(fl.getId(), editorFragment, String.valueOf(fl.getId()));
+            ft.commit();
+        }
     }
 
-    private void addFilePreviewerFragment(Bundle bundle) {
-        filePreviewerFragment = FilePreviewerFragment.newInstance(bundle);
-        FrameLayout fl = (FrameLayout) findViewById(R.id.filepreviewer_container);
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(fl.getId(), filePreviewerFragment, String.valueOf(fl.getId()));
-        ft.commit();
+    private void addFilePreviewerFragment(Bundle savedInstance) {
+        if (savedInstance == null) {
+            filePreviewerFragment = FilePreviewerFragment.newInstance(savedInstance);
+            FrameLayout fl = (FrameLayout) findViewById(R.id.filepreviewer_container);
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.add(fl.getId(), filePreviewerFragment, String.valueOf(fl.getId()));
+            ft.commit();
+        }
     }
 
     /**

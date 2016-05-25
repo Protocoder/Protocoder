@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/filemanager_action_open"
+          android:icon="@drawable/protocoder_icon"
+          android:title="@string/open" />
+    <item android:id="@+id/filemanager_action_open_with"
+          android:icon="@drawable/protocoder_icon"
+          android:title="@string/open_with" />
+    <item android:id="@+id/filemanager_action_delete"
+          android:icon="@drawable/protocoder_icon"
+          android:title="@string/delete" />
+    <item android:id="@+id/filemanager_action_copy"
+        android:icon="@drawable/protocoder_icon"
+        android:title="@string/copy_file" />
+    <item android:id="@+id/filemanager_action_cut"
+          android:icon="@drawable/protocoder_icon"
+          android:title="@string/cut_file" />
+</menu>

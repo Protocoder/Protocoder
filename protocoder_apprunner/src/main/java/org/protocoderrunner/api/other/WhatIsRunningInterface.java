@@ -21,6 +21,5 @@
 package org.protocoderrunner.api.other;
 
 public interface WhatIsRunningInterface {
-
-    public void stop();
+    void __stop();
 }

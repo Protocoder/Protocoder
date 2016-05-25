@@ -115,6 +115,8 @@ public class ProtocoderServerService extends Service {
         super.onCreate();
         MLog.d(TAG, "network service created");
 
+        final AppRunnerCustom appRunner = new AppRunnerCustom(this).initDefaultObjects();
+
         /*
          * Init the event proxy
          */
@@ -145,23 +147,6 @@ public class ProtocoderServerService extends Service {
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
-
-        //protocoderFtpServer = new ProtocoderFtpServer(this);
-
-        registerReceiver(connectivityChangeReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-        fileObserver.startWatching();
-
-        // register log broadcast
-        IntentFilter filterSend = new IntentFilter();
-        filterSend.addAction("org.protocoder.intent.CONSOLE");
-        registerReceiver(logBroadcastReceiver, filterSend);
-
-        // register a broadcast to receive the notification commands
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(SERVICE_CLOSE);
-        registerReceiver(mNotificationReceiver, filter);
-
-        final AppRunnerCustom appRunner = new AppRunnerCustom(this).initDefaultObjects();
 
         final Handler handler = new Handler();
         Runnable r = new Runnable() {
@@ -198,6 +183,21 @@ public class ProtocoderServerService extends Service {
             }
         };
         handler.postDelayed(r, 0);
+
+        //protocoderFtpServer = new ProtocoderFtpServer(this);
+
+        registerReceiver(connectivityChangeReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        fileObserver.startWatching();
+
+        // register log broadcast
+        IntentFilter filterSend = new IntentFilter();
+        filterSend.addAction("org.protocoder.intent.CONSOLE");
+        registerReceiver(logBroadcastReceiver, filterSend);
+
+        // register a broadcast to receive the notification commands
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(SERVICE_CLOSE);
+        registerReceiver(mNotificationReceiver, filter);
     }
 
     @Override
@@ -326,7 +326,6 @@ public class ProtocoderServerService extends Service {
         if (action.equals(Events.PROJECT_RUN)) {
             ProtoAppHelper.launchScript(getApplicationContext(), e.getProject());
         } else if (action.equals(Events.PROJECT_STOP_ALL)) {
-            MLog.d(TAG, "stop_all 1");
             Intent i = new Intent("org.protocoderrunner.intent.CLOSE");
             sendBroadcast(i);
         } else if (action.equals(Events.PROJECT_SAVE)) {
@@ -341,6 +340,15 @@ public class ProtocoderServerService extends Service {
             MLog.d(TAG, "edit " + e.getProject().getName());
 
             ProtoAppHelper.launchEditor(getApplicationContext(), e.getProject());
+        }
+    }
+
+    @Subscribe
+    public void onEventMainThread(Events.ExecuteCodeEvent e) {
+        if (e.getProject() != null) {
+            Intent i = new Intent("org.protocoderrunner.intent.EXECUTE_CODE");
+            i.putExtra("code", e.getCode());
+            sendBroadcast(i);
         }
     }
 

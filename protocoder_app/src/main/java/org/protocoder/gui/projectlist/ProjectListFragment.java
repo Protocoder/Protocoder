@@ -53,10 +53,9 @@ public class ProjectListFragment extends BaseFragment {
     private String TAG = ProjectListFragment.class.getSimpleName();
     private Context mContext;
 
-    protected FitRecyclerView mGrid;
+    private FitRecyclerView mGrid;
     private GridLayoutManager mLayoutManager;
     private LinearLayout mEmptyGrid;
-    // private Animation mAnim;
 
     public ArrayList<Project> mListProjects = null;
     public ProjectItemAdapter mProjectAdapter;
@@ -174,7 +173,7 @@ public class ProjectListFragment extends BaseFragment {
 
     // public View getViewByName(String appName) {
     //   int pos = findAppPosByName(appName);
-    //View view = projectAdapter.getView(pos, null, null);
+    //View view = mProjectAdapter.getView(pos, null, null);
 
     // return null;
     //}

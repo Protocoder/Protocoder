@@ -34,6 +34,7 @@ public class Events {
     public static final String PROJECT_UPDATE       = "update";
     public static final String PROJECT_EDIT         = "edit";
     public static final String PROJECT_DELETE       = "delete";
+    public static final String PROJECT_EXECUTE_CODE = "execute_code";
     public static final String EDITOR_FILE_TO_LOAD  = "editor_file_to_load";
     public static final String EDITOR_FILE_LOAD     = "editor_file_load";
     public static final String EDITOR_FILE_CHANGED  = "editor_file_changed";
@@ -65,13 +66,19 @@ public class Events {
 
     public static class ExecuteCodeEvent {
         private String code;
+        private Project mProject;
 
-        public ExecuteCodeEvent(String code) {
+        public ExecuteCodeEvent(Project p, String code) {
+            mProject = p;
             this.code = code;
         }
 
         public String getCode() {
             return code;
+        }
+
+        public Project getProject() {
+            return mProject;
         }
     }
 

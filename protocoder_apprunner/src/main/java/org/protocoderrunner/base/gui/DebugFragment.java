@@ -1,5 +1,6 @@
 package org.protocoderrunner.base.gui;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,6 +31,7 @@ public class DebugFragment extends Fragment {
     private MyAdapter mArrayAdapter;
     private LinearLayoutManager mLayoutManager;
     private boolean isLockPosition = false;
+    private boolean eventBusRegistered = false;
 
     public static DebugFragment newInstance() {
         DebugFragment myFragment = new DebugFragment();
@@ -39,6 +41,7 @@ public class DebugFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+        registerEventBus();
 
         v = inflater.inflate(R.layout.fragment_debug, container, false);
 
@@ -75,14 +78,26 @@ public class DebugFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        EventBus.getDefault().register(this);
+        registerEventBus();
     }
 
     @Override
     public void onPause() {
         super.onPause();
 
+        unregisterEventBus();
+    }
+
+    public void registerEventBus() {
+        if (!eventBusRegistered) {
+            EventBus.getDefault().register(this);
+            eventBusRegistered = true;
+        }
+    }
+
+    public void unregisterEventBus() {
         EventBus.getDefault().unregister(this);
+        eventBusRegistered = false;
     }
 
     public void addText(String log) {
@@ -123,6 +138,8 @@ public class DebugFragment extends Fragment {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             TextView textView = new TextView(getContext());
+            textView.setBackgroundColor(Color.argb(0, 255, 255, 255));
+
             DebugFragment.ViewHolder vh = new DebugFragment.ViewHolder(textView);
 
             return vh;
@@ -131,7 +148,6 @@ public class DebugFragment extends Fragment {
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             String txt = mLogArray.get(position);
-            MLog.d(TAG, txt);
             holder.textView.setText(txt);
         }
 

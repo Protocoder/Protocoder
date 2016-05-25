@@ -64,7 +64,6 @@ public class FolderChooserAdapter extends RecyclerView.Adapter<FolderChooserAdap
 
     @Override
     public int getItemViewType(int position) {
-
         return mDataSet.get(position).item_type;
     }
 

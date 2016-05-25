@@ -102,7 +102,7 @@ public class ProtocoderHttpServer extends NanoHTTPD {
             MLog.d(TAG, i + " " + uriSplitted[i]);
         }
 
-        // project_list
+        // project_actions
         if (uri.startsWith("/api/project/list/")) {
 
             ArrayList<ProtoFile> files = ProtoScriptHelper.listFilesInFolder("./", 2);
@@ -118,15 +118,41 @@ public class ProtocoderHttpServer extends NanoHTTPD {
             Project p = new Project(uriSplitted[3], uriSplitted[4]);
             ProtoScriptHelper.createNewProject(mContext.get(), p.folder, p.name);
 
-        // project_save :folder/:name
-        } else if ( uri.startsWith("/api/project/save") ) {
-            MLog.d(TAG, "mm project saving");
+        // run_code
+        } else if ( uri.startsWith("/api/project/execute_code") ) {
+            MLog.d(TAG, "run code");
             Project p = new Project(uriSplitted[4] + "/" + uriSplitted[5], uriSplitted[6]);
 
             // POST DATA
             String json;
             final HashMap<String, String> map = new HashMap<String, String>();
+            try {
+                session.parseBody(map);
+                if (map.isEmpty()) return newFixedLengthResponse("BUG");
 
+                json = map.get("postData");
+                NEOProject neo = gson.fromJson(json, NEOProject.class);
+
+                MLog.d(TAG, p.getName() + " " + neo.code);
+                EventBus.getDefault().post(new Events.ExecuteCodeEvent(p, neo.code));
+
+                res = newFixedLengthResponse("OK");
+            } catch (IOException e) {
+                e.printStackTrace();
+                return newFixedLengthResponse("NOP");
+            } catch (ResponseException e) {
+                e.printStackTrace();
+                return newFixedLengthResponse("NOP");
+            }
+
+        // project_save :folder/:name
+        } else if ( uri.startsWith("/api/project/save") ) {
+            MLog.d(TAG, "project saving");
+            Project p = new Project(uriSplitted[4] + "/" + uriSplitted[5], uriSplitted[6]);
+
+            // POST DATA
+            String json;
+            final HashMap<String, String> map = new HashMap<String, String>();
             try {
                 session.parseBody(map);
                 if (map.isEmpty()) return newFixedLengthResponse("BUG");
@@ -145,7 +171,7 @@ public class ProtocoderHttpServer extends NanoHTTPD {
             NEOProject neo = gson.fromJson(json, NEOProject.class);
             MLog.d(TAG, "CMD -> " + neo.project.getName());
 
-            // saving all the files changed
+            // saving all the mCurrentFileList changed
             for (ProtoFile file : neo.files) {
                 ProtoScriptHelper.saveCode(file.path, file.code);
             }
@@ -183,10 +209,10 @@ public class ProtocoderHttpServer extends NanoHTTPD {
         } else if ( uri.startsWith("/api/project/run") ) {
             Project p = new Project(uriSplitted[4] + "/" + uriSplitted[5], uriSplitted[6]);
             MLog.d(TAG, "run --> " + p.getPath());
-            //Project p = new Project("Examples/Media", "Camera");
             EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_RUN, p));
 
             res = newFixedLengthResponse("OK");
+
         // project_stop :folder/:name
         } else if ( uri.startsWith("/api/project/stop/all") ) {
             MLog.d(TAG, "stop all");

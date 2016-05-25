@@ -2,12 +2,14 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="ProtocoderAppRunnerTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="windowActionModeOverlay">true</item>
 
     </style>
 
     <style name="ProtocoderAppRunnerTheme" parent="ProtocoderAppRunnerTheme.Base">
-        <item name="android:windowBackground">@color/white</item>
-        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowBackground">@color/mwmblue</item>
+        <!-- <item name="android:windowContentOverlay">@null</item> -->
+        <item name="windowActionModeOverlay">true</item>
 
         <item name="colorPrimary">@color/mwmblue</item>
         <item name="colorAccent">@color/mwmyellow</item>

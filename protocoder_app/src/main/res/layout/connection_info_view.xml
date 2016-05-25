@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+ <RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ip_container"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="15dp"
+    android:animateLayoutChanges="true">
+
+    <ImageView
+        android:id="@+id/computer_image"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/protocoder_icon"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginRight="15dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Connected to a WIFI network\nIn your computer's web browser type the IP address to start coding"
+        android:id="@+id/info"
+        android:textColor="#55FFFFFF"
+        android:layout_toRightOf="@id/computer_image"
+        android:layout_alignParentRight="true"/>
+
+    <TextView
+        android:id="@+id/ip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="#FFFFFFFF"
+        android:textSize="14sp"
+        android:textStyle="italic"
+        android:visibility="visible"
+        android:text="http://1.2.3.4:5555"
+        android:layout_below="@id/info"
+        android:layout_toRightOf="@id/computer_image"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="15dp"/>
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="/?"
+        android:id="@+id/button12"
+        android:layout_gravity="right|center_vertical"
+        android:layout_alignBottom="@+id/ip"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:visibility="invisible" />
+
+</RelativeLayout>

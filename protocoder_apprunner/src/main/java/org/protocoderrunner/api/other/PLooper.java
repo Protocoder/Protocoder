@@ -24,10 +24,12 @@ import android.os.Handler;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunner;
 
 import java.util.ArrayList;
 
-public class PLooper {
+public class PLooper implements WhatIsRunningInterface {
+    private final AppRunner mAppRunner;
     private LooperCB mCallbackfn;
     Runnable task;
     private final Handler handler;
@@ -41,7 +43,8 @@ public class PLooper {
         void event();
     }
 
-    public PLooper(final int duration, final LooperCB callbackkfn) {
+    public PLooper(AppRunner appRunner, final int duration, final LooperCB callbackkfn) {
+        mAppRunner = appRunner;
         handler = new Handler();
 
         mCallbackfn = callbackkfn;
@@ -64,7 +67,7 @@ public class PLooper {
         rl.add(task);
 
         //TODO enable
-        //WhatIsRunning.getInstance().add(this);
+        mAppRunner.whatIsRunning.add(this);
     }
 
     public PLooper onLoop(LooperCB callbackfn) {
@@ -107,6 +110,10 @@ public class PLooper {
         handler.post(task);
 
         return this;
+    }
+
+    public void __stop() {
+        stop();
     }
 
 }

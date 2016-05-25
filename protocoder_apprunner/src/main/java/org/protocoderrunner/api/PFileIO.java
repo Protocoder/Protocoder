@@ -219,7 +219,7 @@ public class PFileIO extends ProtoBase {
     public File[] listFiles(String url, String filter) {
         File files[] = FileIO.listFiles(url, filter);
         // ProtocoderNativeArray filesNativeArray = new ProtocoderNativeArray(files.length);
-        // Scriptable filesNativeArray = AppRunnerSettings.get().newArray(files);
+        // Scriptable filesNativeArray = AppRunnerSettings.get().newNativeArrayFrom(files);
 
 
         //for (int i = 0; i < files.length; i++) {

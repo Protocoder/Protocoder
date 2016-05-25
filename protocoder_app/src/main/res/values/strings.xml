@@ -16,6 +16,11 @@
     <string name="run">Run</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
+    <string name="open">Open</string>
+    <string name="open_with">Open With...</string>
+    <string name="cut_file">Cut File</string>
+    <string name="copy_file">Cut File</string>
+
     <string name="add_shortcut">Add shortcut to desktop</string>
     <string name="share">Share main.js code</string>
     <string name="share_proto_file">Share project as .proto file</string>

@@ -32,7 +32,7 @@ import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.api.other.WhatIsRunningInterface;
 
-public class PGyroscope extends CustomSensorManager implements WhatIsRunningInterface {
+public class PGyroscope extends CustomSensorManager {
 
     private final static String TAG = PGyroscope.class.getSimpleName();
 

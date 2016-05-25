@@ -237,9 +237,13 @@ public class SimpleBT implements WhatIsRunningInterface {
         return mBluetoothService;
     }
 
-    @Override
     public void stop() {
         disconnect();
+    }
+
+    @Override
+    public void __stop() {
+        stop();
     }
 
 }

@@ -156,7 +156,7 @@ public class EditorFragment extends BaseFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-
+/*
                 String originalText = openedFiles.get(mCurrentFile);
                 String currentText = s.toString();
 
@@ -170,7 +170,7 @@ public class EditorFragment extends BaseFragment {
                     // notifiy that a file is changed
                     EventBus.getDefault().post(new Events.EditorEvent(Events.EDITOR_FILE_CHANGED, mCurrentProject, new ProtoFile(mCurrentFile, "")) );
                 }
-
+*/
             }
         });
 

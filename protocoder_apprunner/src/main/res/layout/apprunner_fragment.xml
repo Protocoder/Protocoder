@@ -5,7 +5,6 @@
         android:layout_height="fill_parent"
         android:focusableInTouchMode="true"
         android:gravity="bottom"
-        android:background="@color/white"
     >
 
     <RelativeLayout

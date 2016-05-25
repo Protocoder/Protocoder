@@ -18,16 +18,18 @@
 * along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
 */
 
+
 package org.protocoder.gui.editor;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.AttributeSet;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -37,13 +39,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
-import android.widget.AdapterView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
+import android.widget.Button;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -54,72 +50,32 @@ import org.protocoder.helpers.ProtoScriptHelper;
 import org.protocoder.server.model.ProtoFile;
 import org.protocoderrunner.base.BaseFragment;
 import org.protocoderrunner.base.utils.MLog;
-import org.protocoderrunner.models.Project;
 
 import java.io.File;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 @SuppressLint("NewApi")
 public class FileManagerFragment extends BaseFragment {
 
     private static final String TAG = FileManagerFragment.class.getSimpleName();
 
+    public static String ROOT_FOLDER = "root_folder";
+    public static final String CURRENT_FOLDER = "current_folder";
+
     private Menu mMenu;
-    public ArrayList<ProtoFile> files;
-    public HashMap<Integer, Boolean> filesModified;
-    protected FileAdapter projectAdapter;
-    protected ListView llFileView;
-    private Project mProject;
-    private int mCurrentSelected = -1;
+    // public HashMap<Integer, Boolean> filesModified;
 
-    public FileManagerFragment() {
-    }
+    protected FileManagerAdapter mProjectAdapter;
+    protected RecyclerView mRecyclerFileList;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    // private Project mProject;
+    // private int mCurrentSelected = -1;
 
-        Bundle bundle = getArguments();
+    public ArrayList<ProtoFile> mCurrentFileList;
+    private String mCurrentFolder = "";
+    private String mRootFolder = "";
 
-        if (bundle != null) {
-            mProject = new Project(bundle.getString(Project.FOLDER), bundle.getString(Project.NAME));
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        View v = inflater.inflate(R.layout.filemanager_fragment, container, false);
-
-        // Get ListView and set adapter
-        llFileView = (ListView) v.findViewById(R.id.llFile);
-
-        MLog.d(TAG, "Project " + mProject.getFullPath());
-
-        files = ProtoScriptHelper.listFilesInFolder(mProject.getSandboxPath(), 0);
-        filesModified = new HashMap<>();
-
-        // get files
-        projectAdapter = new FileAdapter(getActivity());
-        llFileView.setEmptyView(v.findViewById(R.id.empty_list_view));
-
-        // set the emptystate
-        llFileView.setAdapter(projectAdapter);
-
-        notifyDataFilesChanged();
-        registerForContextMenu(llFileView);
-
-        llFileView.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, final View v, final int position, long id) {
-
-            }
-        });
-
-        return v;
-    }
+    private TextView mTxtPath;
 
     public static FileManagerFragment newInstance() {
         FileManagerFragment myFragment = new FileManagerFragment();
@@ -131,6 +87,68 @@ public class FileManagerFragment extends BaseFragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Bundle bundle = getArguments();
+        mRootFolder = bundle.getString(ROOT_FOLDER, "");
+        mCurrentFolder = bundle.getString(CURRENT_FOLDER, mRootFolder);
+
+        MLog.d(TAG, "created with root: " + mCurrentFolder + " and current " + mCurrentFolder);
+
+        // mProject = new Project(bundle.getString(Project.FOLDER), bundle.getString(Project.NAME));
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.filemanager_fragment, container, false);
+
+        bindUI(v);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerFileList.setLayoutManager(linearLayoutManager);
+
+        // if a folder is given we retrieve the files
+        if (!mCurrentFolder.isEmpty()) {
+            getFileList();
+            // mProjectAdapter.notifyDataSetChanged();
+        }
+
+        mProjectAdapter = new FileManagerAdapter(this, mCurrentFileList);
+        mRecyclerFileList.setAdapter(mProjectAdapter);
+
+        // filesModified = new HashMap<>();
+
+        // registerForContextMenu(mRecyclerFileList);z
+
+
+        return v;
+    }
+
+    private void bindUI(View v) {
+        mRecyclerFileList = (RecyclerView) v.findViewById(R.id.llFile);
+
+        // bind up button
+        Button btnDirUp = (Button) v.findViewById(R.id.dir_up);
+        btnDirUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                File f = new File(mCurrentFolder);
+                mCurrentFolder = f.getParent();
+                getFileList();
+
+                MLog.d(TAG, mCurrentFolder);
+                mProjectAdapter.setData(mCurrentFileList);
+                mProjectAdapter.notifyDataSetChanged();
+            }
+        });
+
+        // bind path
+        mTxtPath = (TextView) v.findViewById(R.id.path);
+
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
     }
@@ -139,7 +157,6 @@ public class FileManagerFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         EventBus.getDefault().register(this);
-//		getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
     }
 
     @Override
@@ -173,61 +190,72 @@ public class FileManagerFragment extends BaseFragment {
         super.onDestroyOptionsMenu();
     }
 
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
+    /*
+     * On long press on item
+     */
+    public void showMenuForItem(View fromView, final int index) {
+        File file = new File(mCurrentFileList.get(index).path);
 
-        if (getUserVisibleHint()) {
-            // Handle menu events and return true
-        } else {
-            return false; // Pass the event to the next fragment
-        }
+        PopupMenu myPopup = new PopupMenu(getContext(), fromView);
+        myPopup.inflate(R.menu.filemanager_actions);
+        myPopup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(final MenuItem menuItem) {
 
-        AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-        final int index = info.position;
+                switch (menuItem.getItemId()) {
+                    case R.id.filemanager_action_open:
 
-        File file = new File(files.get(index).path);
+                        return true;
 
-        int itemId = item.getItemId();
-        if (itemId == R.id.menu_project_list_run) {
-            return true;
-        } else if (itemId == R.id.menu_project_list_view) {
-            viewFile(index);
-            return true;
-        } else if (itemId == R.id.menu_project_list_delete) {
-            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    switch (which) {
-                        case DialogInterface.BUTTON_POSITIVE:
-                            // Yes button clicked
-                            deleteFile(index);
-                            break;
+                    case R.id.filemanager_action_open_with:
+                        viewFile(index);
 
-                        case DialogInterface.BUTTON_NEGATIVE:
-                            // No button clicked
-                            break;
-                    }
-                }
-            };
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
-                    .setNegativeButton("No", dialogClickListener).show();
-            return true;
-        } else if (itemId == R.id.menu_project_list_share_with) {
+                        return true;
 
-            return true;
+                    case R.id.filemanager_action_copy:
 
-        } else {
-            return super.onContextItemSelected(item);
-        }
+                        return true;
+
+                    case R.id.filemanager_action_cut:
+
+                        return true;
+
+                    case R.id.filemanager_action_delete:
+                        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                switch (which) {
+                                    case DialogInterface.BUTTON_POSITIVE:
+                                        // deleteFile(index);
+                                        break;
+
+                                    case DialogInterface.BUTTON_NEGATIVE:
+                                        break;
+                                }
+                            }
+                        };
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
+                                .setNegativeButton("No", dialogClickListener).show();
+
+                        return true;
+
+                    default:
+                        return false;
+
+                   }
+            }
+        });
+        myPopup.show();
     }
 
-    /**
-     * Delete a file / folder
-     */
-    protected void deleteFile(int position) {
+    private void getFileList() {
+        mCurrentFileList = ProtoScriptHelper.listFilesForFileManager(mCurrentFolder);
+        mTxtPath.setText(mCurrentFolder);
+    }
 
-        File dir = new File(files.get(position).path);
+    protected void deleteFile(int position) {
+        File dir = new File(mCurrentFileList.get(position).path);
 
         if (dir.isDirectory()) {
             String[] children = dir.list();
@@ -237,170 +265,25 @@ public class FileManagerFragment extends BaseFragment {
         }
         dir.delete();
 
-        files.remove(position);
-
-        projectAdapter.notifyDataSetChanged();
-        llFileView.invalidateViews();
-    }
-
-    public void clear() {
-        llFileView.removeAllViews();
-        projectAdapter.notifyDataSetChanged();
-    }
-
-    public void notifyDataFilesChanged() {
-        projectAdapter.notifyDataSetChanged();
-        llFileView.invalidateViews();
-    }
-
-    @Override
-    public View getView() {
-        return super.getView();
+        mCurrentFileList.remove(position);
     }
 
     private void viewFile(int index) {
-        MimeTypeMap myMime = MimeTypeMap.getSingleton();
-
         Intent newIntent = new Intent(Intent.ACTION_VIEW);
 
-        String fileExt = fileExt(files.get(index).name).substring(1);
-        String mimeType = myMime.getMimeTypeFromExtension(fileExt);
+        String fileExt = ProtoScriptHelper.fileExt(mCurrentFileList.get(index).name).substring(1);
+        String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExt);
 
-        String path = ProtoScriptHelper.getAbsolutePathFromRelative(files.get(index).path);
+        String path = ProtoScriptHelper.getAbsolutePathFromRelative(mCurrentFileList.get(index).path);
         Uri uri = Uri.fromFile(new File(path));
 
         MLog.d(TAG, "Uri " + uri.toString() + " fileExtension " + fileExt + " mimeType " + mimeType);
 
-        /*
-
         newIntent.setDataAndType(uri, mimeType);
         newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        try {
-            getActivity().startActivity(newIntent);
-        } catch (android.content.ActivityNotFoundException e) {
-            Toast.makeText(getActivity(), "No handler for this type of file.", Toast.LENGTH_LONG).show();
-        }
-        */
 
-        newIntent.setData(uri);
         Intent j = Intent.createChooser(newIntent, "Choose an application to open with:");
         startActivity(j);
-    }
-
-    private String fileExt(String url) {
-        if (url.indexOf("?") > -1) {
-            url = url.substring(0, url.indexOf("?"));
-        }
-        if (url.lastIndexOf(".") == -1) {
-            return null;
-        } else {
-            String ext = url.substring(url.lastIndexOf("."));
-            if (ext.indexOf("%") > -1) {
-                ext = ext.substring(0, ext.indexOf("%"));
-            }
-            if (ext.indexOf("/") > -1) {
-                ext = ext.substring(0, ext.indexOf("/"));
-            }
-
-            return ext.toLowerCase();
-        }
-    }
-
-    public class FileAdapter extends BaseAdapter {
-        private final Context mContext;
-
-
-        public FileAdapter(Context c) {
-            mContext = c;
-        }
-
-        @Override
-        public int getCount() {
-            return files.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return files.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        private int getIcon(String type) {
-            return type.equals("folder") ? R.drawable.protocoder_script_example: R.drawable.protocoder_script_project;
-        }
-
-        // create a new ImageView for each item referenced by the Adapter
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            final FileItem customView;
-
-            final ProtoFile f = files.get(position);
-
-            // if it's not recycled, initialize some
-            if (convertView == null) {
-                customView = new FileItem(mContext);
-            } else {
-                customView = (FileItem) convertView;
-            }
-
-            customView.setImage(getIcon(f.type));
-
-            String prefix = "";
-            if (filesModified.containsKey(position)) {
-                if (filesModified.get(position)) {
-                    prefix = "* ";
-                }
-            }
-            customView.setText(prefix + f.name);
-            customView.setTag(f.name);
-            customView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    MLog.d(TAG, "" + f.name);
-                    EventBus.getDefault().post(new Events.EditorEvent(Events.EDITOR_FILE_TO_LOAD, mProject, f));
-                    mCurrentSelected = position;
-                }
-            });
-
-            if (position == mCurrentSelected) customView.setActivated(true);
-
-            return customView;
-        }
-    }
-
-
-    public class FileItem extends LinearLayout {
-
-        private WeakReference<View> v;
-        // private Context c;
-        private Context c;
-
-        public FileItem(Context context) {
-            super(context);
-            this.c = context;
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            this.v = new WeakReference<View>(inflater.inflate(R.layout.filemanager_file_view, this, true));
-        }
-
-        public FileItem(Context context, AttributeSet attributeSet) {
-            super(context, attributeSet);
-
-        }
-
-        public void setImage(int resId) {
-            ImageView imageView = (ImageView) v.get().findViewById(R.id.img_file);
-            imageView.setImageResource(resId);
-        }
-
-        public void setText(String text) {
-            TextView textView = (TextView) v.get().findViewById(R.id.txt_file_name);
-            // TextUtils.changeFont(c.get(), textView, ProtocoderFonts.MENU_TITLE);
-            textView.setText(text);
-        }
     }
 
     // load file in editor
@@ -411,30 +294,30 @@ public class FileManagerFragment extends BaseFragment {
             ProtoFile f = e.getProtofile();
             MLog.d(TAG, "file changed: " + f.name);
 
-            for (int i = 0; i < files.size(); i++) {
-
-                if (files.get(i).name == f.name) {
+            for (int i = 0; i < mCurrentFileList.size(); i++) {
+                if (mCurrentFileList.get(i).name == f.name) {
                     MLog.d(TAG, "is modified: " + f.name);
-                    filesModified.put(i, true);
-                    notifyDataFilesChanged();
+                    // filesModified.put(i, true);
                 }
-
             }
 
         } else if (e.getAction().equals(Events.EDITOR_FILE_SAVE)) {
             ProtoFile f = e.getProtofile();
 
-            for (int i = 0; i < files.size(); i++) {
-
-                if (files.get(i).name == f.name) {
+            for (int i = 0; i < mCurrentFileList.size(); i++) {
+                if (mCurrentFileList.get(i).name == f.name) {
                     MLog.d(TAG, "is removed: " + f.name);
-                    filesModified.remove(i);
-                    notifyDataFilesChanged();
+                    // filesModified.remove(i);
                 }
-
             }
-
         }
     }
 
+    public void setCurrentFolder(String path) {
+        mCurrentFolder = path;
+        MLog.d(TAG, mCurrentFolder);
+        getFileList();
+        mProjectAdapter.setData(mCurrentFileList);
+        mProjectAdapter.notifyDataSetChanged();
+    }
 }

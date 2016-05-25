@@ -5,7 +5,7 @@
      package="org.protocoder">
 
     <uses-sdk
-        android:minSdkVersion="15"
+        android:minSdkVersion="16"
         android:targetSdkVersion="21" />
 
     <!-- android:resizeableActivity = "true" -->

@@ -67,7 +67,7 @@ public class LicenseActivity extends BaseActivity {
             @Override
             public void run() {
 
-                // read files
+                // read mCurrentFileList
                 try {
                      mLicenseFiles = mAssetManager.list("licenses");
                     for (int i = 0; i < mLicenseFiles.length; i++) {

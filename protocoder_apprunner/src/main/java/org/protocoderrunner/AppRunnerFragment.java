@@ -221,21 +221,11 @@ public class AppRunnerFragment extends Fragment {
         }
     }
 
-    /* TODO
-    // execute lines
-    public void onEventMainThread(AppRunnerEvents.ExecuteCodeEvent evt) {
-        String code = evt.getCode(); // .trim();
-        MLog.d(TAG, "event -> " + code);
-
-        if (liveCoding != null) {
-            liveCoding.write(code);
-        }
-        mAppRunner.interp.eval(code);
-    }
-    */
-
     public PLiveCodingFeedback liveCodingFeedback() {
         return liveCoding;
     }
 
+    public AppRunner getAppRunner() {
+        return mAppRunner;
+    }
 }
