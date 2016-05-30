@@ -35,11 +35,13 @@ public class Events {
     public static final String PROJECT_EDIT         = "edit";
     public static final String PROJECT_DELETE       = "delete";
     public static final String PROJECT_EXECUTE_CODE = "execute_code";
-    public static final String EDITOR_FILE_TO_LOAD  = "editor_file_to_load";
+
+    public static final String EDITOR_FILE_INTENT_LOAD = "editor_file_intent_load";
     public static final String EDITOR_FILE_LOAD     = "editor_file_load";
     public static final String EDITOR_FILE_CHANGED  = "editor_file_changed";
     public static final String EDITOR_FILE_SAVE     = "editor_file_saved";
     public static final String EDITOR_FILE_PREVIEW  = "editor_file_preview" ;
+    public static final String EDITOR_ALL_FILE_STATUS = "editor_all_file_status";
 
     public static class ProjectEvent {
         private Project project;
@@ -66,19 +68,13 @@ public class Events {
 
     public static class ExecuteCodeEvent {
         private String code;
-        private Project mProject;
 
-        public ExecuteCodeEvent(Project p, String code) {
-            mProject = p;
+        public ExecuteCodeEvent(String code) {
             this.code = code;
         }
 
         public String getCode() {
             return code;
-        }
-
-        public Project getProject() {
-            return mProject;
         }
     }
 
@@ -175,28 +171,22 @@ public class Events {
     }
 
     public static class EditorEvent {
-        private final Project project;
         private final ProtoFile protofile;
         private final String action;
         private final String previewType;
 
-        public EditorEvent(String action, Project project, ProtoFile protofile, String previewType) {
+        public EditorEvent(String action, ProtoFile protofile, String previewType) {
             this.action = action;
-            this.project = project;
             this.protofile = protofile;
             this.previewType = previewType;
         }
 
-        public EditorEvent(String action, Project project, ProtoFile protofile) {
-            this(action, project, protofile, null);
+        public EditorEvent(String action, ProtoFile protofile) {
+            this(action, protofile, null);
         }
 
         public String getAction() {
             return action;
-        }
-
-        public Project getProject() {
-            return project;
         }
 
         public ProtoFile getProtofile() {

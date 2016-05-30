@@ -35,12 +35,17 @@ import org.greenrobot.eventbus.Subscribe;
 import org.protocoder.R;
 import org.protocoder.events.Events;
 import org.protocoder.gui._components.APIWebviewFragment;
+import org.protocoder.gui.filemanager.FileManagerFragment;
 import org.protocoder.gui.filepreviewer.FilePreviewerFragment;
+import org.protocoder.gui.settings.ProtocoderSettings;
 import org.protocoder.server.model.ProtoFile;
+import org.protocoderrunner.apprunner.AppRunnerSettings;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.base.utils.FileIO;
 import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.models.Project;
+
+import java.util.HashMap;
 
 public class EditorActivity extends BaseActivity {
 
@@ -53,17 +58,21 @@ public class EditorActivity extends BaseActivity {
     private static final int MENU_FILES = 11;
     private static final int MENU_API = 12;
 
+    private boolean isTablet;
+
     private EditorFragment editorFragment;
     private FileManagerFragment fileFragment;
     private APIWebviewFragment webviewFragment;
+
     private FilePreviewerFragment filePreviewerFragment;
 
     // drawers
     private boolean showFilesDrawer = false;
-
     private boolean showAPIDrawer = false;
     private Project mCurrentProject;
-    private boolean isTablet;
+
+    // here we store the opened files with a flag that indicates if the file has been modified (true) or not (false)
+    HashMap<String, Boolean> openedFiles = new HashMap<>();
 
     @SuppressLint("NewApi")
     @Override
@@ -80,11 +89,8 @@ public class EditorActivity extends BaseActivity {
         if (null != intent) {
             String folder = intent.getStringExtra(Project.FOLDER);
             String name = intent.getStringExtra(Project.NAME);
-            bundle.putString(Project.FOLDER, folder);
-            bundle.putString(Project.NAME, name);
             mCurrentProject = new Project(folder, name);
-
-            // setProjectTitleAndSubtitle(name, ProtocoderSettings.MAIN_FILENAME);
+            setProjectTitleAndSubtitle(mCurrentProject.getName(), ProtocoderSettings.MAIN_FILENAME);
         }
 
         addEditorFragment(savedInstanceState);
@@ -92,6 +98,24 @@ public class EditorActivity extends BaseActivity {
         addFileManagerDrawer(savedInstanceState, true);
         // showFileManagerDrawer(false);
     }
+
+    /**
+     * Load a project
+     */
+    public void loadProject(String folder, String name) {
+        mCurrentProject = new Project(folder, name);
+        loadFileInEditor(mCurrentProject.getName(), ProtocoderSettings.MAIN_FILENAME);
+    }
+
+    /**
+     * Load a file within the project
+     */
+    public void loadFileInEditor(String folder, String fileName) {
+        setProjectTitleAndSubtitle(mCurrentProject.getName(), fileName);
+        editorFragment.loadFile(mCurrentProject.getFullPath(), fileName);
+        openedFiles.put(mCurrentProject.getFullPathForFile(fileName), false);
+    }
+
 
     @Override
     protected void onResume() {
@@ -117,10 +141,10 @@ public class EditorActivity extends BaseActivity {
 
         this.mMenu = menu;
         menu.clear();
-        menu.add(1, MENU_RUN, 0, "R").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        menu.add(1, MENU_SAVE, 0, "S").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        if (!isTablet) menu.add(1, MENU_FILES, 0, "F").setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        menu.add(1, MENU_API, 0, "API").setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+        menu.add(1, MENU_RUN, 0, "R").setIcon(R.drawable.ic_play_arrow_black_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(1, MENU_SAVE, 0, "S").setIcon(R.drawable.ic_save_black_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        if (!isTablet) menu.add(1, MENU_FILES, 0, "F").setIcon(R.drawable.ic_list_black_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        menu.add(1, MENU_API, 0, "API").setIcon(R.drawable.ic_chrome_reader_mode_black_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 
         // onOptionsItemSelected(mMenu.findItem(MENU_FILES));
 
@@ -128,16 +152,25 @@ public class EditorActivity extends BaseActivity {
     }
 
     public void saveAndRun() {
-        editorFragment.saveFile();
-        editorFragment.run();
+        save();
+        run();
+    }
+
+
+    /**
+     * Run the current project
+     */
+    public void run() {
+        EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_RUN, mCurrentProject));
     }
 
     public void save() {
         editorFragment.saveFile();
+        EventBus.getDefault().post(new Events.EditorEvent(Events.EDITOR_ALL_FILE_STATUS, null));
     }
 
     public void saveAll() {
-        editorFragment.saveAll();
+        // editorFragment;
     }
 
     public void toggleFilesDrawer() {
@@ -244,9 +277,8 @@ public class EditorActivity extends BaseActivity {
             if (savedInstance == null) {
                 fileFragment = FileManagerFragment.newInstance();
                 Bundle bundle = new Bundle();
-                bundle.putString(Project.NAME, mCurrentProject.name);
-                bundle.putString(Project.FOLDER, mCurrentProject.folder);
-
+                bundle.putString(FileManagerFragment.ROOT_FOLDER, mCurrentProject.getFullPath());
+                bundle.putString(FileManagerFragment.PATH_HIDE_PATH_FROM, AppRunnerSettings.getBaseDir());
                 fileFragment.setArguments(bundle);
 
                 if (isTablet) {
@@ -266,8 +298,10 @@ public class EditorActivity extends BaseActivity {
 
     private void addEditorFragment(Bundle savedInstance) {
         if (savedInstance == null) {
-            MLog.d(TAG, "-----------------------> qq " + savedInstance);
-            editorFragment = EditorFragment.newInstance(savedInstance);
+            Bundle bundle = new Bundle();
+            bundle.putString(EditorFragment.FILE_PATH, mCurrentProject.getFullPath());
+            bundle.putString(EditorFragment.FILE_NAME, ProtocoderSettings.MAIN_FILENAME);
+            editorFragment = EditorFragment.newInstance(bundle);
             FrameLayout fl = (FrameLayout) findViewById(R.id.editor_container);
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.add(fl.getId(), editorFragment, String.valueOf(fl.getId()));
@@ -319,11 +353,10 @@ public class EditorActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        MLog.d(TAG, "");
     }
 
     public void setProjectTitleAndSubtitle(String projectName, String fileName) {
+        MLog.d("qq", projectName + " " + fileName);
         mToolbar.setTitle(projectName);
         mToolbar.setSubtitle(fileName);
     }
@@ -331,10 +364,7 @@ public class EditorActivity extends BaseActivity {
     // load script
     @Subscribe (sticky = true)
     public void onEventMainThread(Events.EditorEvent e) {
-
-        setProjectTitleAndSubtitle(e.getProject().getName(), e.getProtofile().name);
-
-        if (e.getAction().equals(Events.EDITOR_FILE_TO_LOAD)) {
+        if (e.getAction().equals(Events.EDITOR_FILE_INTENT_LOAD)) {
             ProtoFile f = e.getProtofile();
 
             // check type
@@ -343,12 +373,15 @@ public class EditorActivity extends BaseActivity {
 
             // if preview
             if (type != null) {
-                EventBus.getDefault().post(new Events.EditorEvent(Events.EDITOR_FILE_PREVIEW, mCurrentProject, f, type));
+                EventBus.getDefault().post(new Events.EditorEvent(Events.EDITOR_FILE_PREVIEW, f, type));
                 showFilePreviewerFragment(true);
             } else {
                 showFilePreviewerFragment(false);
-                EventBus.getDefault().post(new Events.EditorEvent(Events.EDITOR_FILE_LOAD, mCurrentProject, f));
+                EventBus.getDefault().post(new Events.EditorEvent(Events.EDITOR_FILE_LOAD, f));
             }
+            setProjectTitleAndSubtitle(mCurrentProject.getName(), f.name);
+        } else if (e.getAction().equals(Events.EDITOR_FILE_CHANGED)) {
+            openedFiles.put(e.getProtofile().getFullPath(), true);
         }
     }
 

@@ -40,13 +40,13 @@ public class ProtoAppHelper {
     public static void launchScript(Context context, Project p) {
         if (p.getName().toLowerCase().endsWith("service")) {
             Intent intent = new Intent(context, AppRunnerService.class);
-            intent.putExtra(Project.FOLDER, p.getPath());
+            intent.putExtra(Project.FOLDER, p.getFolder());
             intent.putExtra(Project.NAME, p.getName());
             context.startService(intent);
         } else {
             Intent intent = new Intent(context, AppRunnerActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra(Project.FOLDER, p.getPath());
+            intent.putExtra(Project.FOLDER, p.getFolder());
             intent.putExtra(Project.NAME, p.getName());
 
             MLog.d(TAG, "1 ------------> launching side by side " + AndroidUtils.isVersionN());
@@ -67,7 +67,7 @@ public class ProtoAppHelper {
     public static void launchEditor(Context context, Project p) {
         Intent intent = new Intent(context, EditorActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra(Project.FOLDER, p.getPath());
+        intent.putExtra(Project.FOLDER, p.getFolder());
         intent.putExtra(Project.NAME, p.getName());
         context.startActivity(intent);
     }

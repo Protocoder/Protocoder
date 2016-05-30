@@ -11,8 +11,7 @@
     <ScrollView
         android:id="@+id/scrollView1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false">
+        android:layout_height="match_parent">
 
         <EditText
             android:id="@+id/editText1"
@@ -22,7 +21,7 @@
             android:layout_weight="1"
             android:gravity="top|left"
             android:hint="type here your code"
-            android:imeOptions="actionSend|flagNoExtractUi"
+            android:imeOptions="actionSend|flagNoEnterAction"
             android:inputType="textMultiLine|textNoSuggestions|text"
             android:cursorVisible="true"
             android:textColor="#FFFFFFFF"

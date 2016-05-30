@@ -331,7 +331,7 @@ public class ProtocoderServerService extends Service {
             sendBroadcast(i);
         } else if (action.equals(Events.PROJECT_SAVE)) {
             //Project p = evt.getProject();
-            //mProtocoder.protoScripts.refresh(p.getPath(), p.getName());
+            //mProtocoder.protoScripts.refresh(p.getFolder(), p.getName());
         } else if (action.equals(Events.PROJECT_NEW)) {
             //MLog.d(TAG, "creating new project " + evt.getProject().getName());
             //mProtocoder.protoScripts.createProject("projects", evt.getProject().getName());
@@ -346,11 +346,9 @@ public class ProtocoderServerService extends Service {
 
     @Subscribe
     public void onEventMainThread(Events.ExecuteCodeEvent e) {
-        if (e.getProject() != null) {
-            Intent i = new Intent("org.protocoderrunner.intent.EXECUTE_CODE");
-            i.putExtra("code", e.getCode());
-            sendBroadcast(i);
-        }
+        Intent i = new Intent("org.protocoderrunner.intent.EXECUTE_CODE");
+        i.putExtra("code", e.getCode());
+        sendBroadcast(i);
     }
 
     //stop service

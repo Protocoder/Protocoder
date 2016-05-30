@@ -91,6 +91,7 @@ public class PCanvas extends View implements PViewInterface {
 
     private void startLooper() {
         loop.start();
+        mAutoDraw = true;
     }
 
     public void drawInterval(int ms) {
@@ -118,15 +119,21 @@ public class PCanvas extends View implements PViewInterface {
         layers = new Layers();
 
         if (setup != null) setup.event(PCanvas.this);
-        startLooper();
+        // startLooper();
     }
 
-
+    public void onDraw(OnDrawCallback callback) {
+        draw = callback;
+    }
 
     @Override
     protected synchronized void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+
+        MLog.d(TAG, "1");
+        if (!mAutoDraw) draw.event(this);
         layers.drawAll(canvas);
+        MLog.d(TAG, "2");
     }
 
     /**
@@ -219,8 +226,27 @@ public class PCanvas extends View implements PViewInterface {
 
     @ProtoMethod(description = "Sets a stroke cap", example = "")
     @ProtoMethodParam(params = {"cap"})
-    public PCanvas strokeCap(Paint.Cap cap) {
-        mPaintStroke.setStrokeCap(cap);
+    public PCanvas strokeCap(String cap) {
+
+        Paint.Cap c = Paint.Cap.SQUARE;
+
+        switch (cap) {
+            case "round":
+                c = Paint.Cap.ROUND;
+                break;
+
+            case "butt":
+                c = Paint.Cap.BUTT;
+
+                break;
+
+            case "square":
+                c = Paint.Cap.SQUARE;
+
+                break;
+        }
+
+        mPaintStroke.setStrokeCap(c);
         return this;
     }
 

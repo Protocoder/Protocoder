@@ -1,9 +1,11 @@
-package org.protocoder.gui.editor;
+package org.protocoder.gui.filemanager;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.greenrobot.eventbus.EventBus;
+import org.protocoder.events.Events;
 import org.protocoder.server.model.ProtoFile;
 import org.protocoderrunner.base.utils.MLog;
 
@@ -37,7 +39,6 @@ public class FileManagerAdapter extends RecyclerView.Adapter<FileManagerAdapter.
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         FileManagerListItem fileManagerListItem = new FileManagerListItem(mFragment.getContext());
         ViewHolder vh = new ViewHolder(fileManagerListItem);
-        MLog.d(TAG, "created ");
 
         return vh;
     }
@@ -50,17 +51,16 @@ public class FileManagerAdapter extends RecyclerView.Adapter<FileManagerAdapter.
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MLog.d(TAG, "" + protoFile.name);
+                MLog.d(TAG, "" + protoFile.name + " " + protoFile.getFullPath());
 
                 // if its a folder move to that level
                 if (protoFile.type.equals("folder")) {
-                    mFragment.setCurrentFolder(protoFile.path);
+                    mFragment.setCurrentFolder(protoFile.getFullPath());
                 } else {
-
+                    EventBus.getDefault().post(new Events.EditorEvent(Events.EDITOR_FILE_INTENT_LOAD, protoFile));
                 }
-                // EventBus.getDefault().post(new Events.EditorEvent(Events.EDITOR_FILE_TO_LOAD, mProject, f));
-                // mCurrentSelected = position;
             }
+
         });
 
         holder.mView.setOnLongClickListener(new View.OnLongClickListener() {

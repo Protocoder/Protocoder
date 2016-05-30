@@ -107,7 +107,7 @@
         android:paddingBottom="10dp"
         android:paddingTop="2dp"
         android:scaleType="centerInside"
-        android:src="@drawable/ic_action_overflow_light" />
+        android:src="@drawable/ic_more_vert_black_24dp" />
 </FrameLayout>
 
 

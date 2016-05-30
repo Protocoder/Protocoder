@@ -57,12 +57,16 @@ public class Project {
         return this.name;
     }
 
-    public String getPath() {
+    public String getFolder() {
         return this.folder;
     }
 
     public String getSandboxPath() {
         return this.folder + File.separator + this.name + File.separator;
+    }
+
+    public String getSandboxPathForFile(String filename) {
+        return getSandboxPath() + filename;
     }
 
     public String getFullPath() {
@@ -72,4 +76,5 @@ public class Project {
     public String getFullPathForFile(String fileName) {
         return getFullPath() + fileName;
     }
+
 }

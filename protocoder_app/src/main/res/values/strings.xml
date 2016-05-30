@@ -5,6 +5,8 @@
     <string name="activity_name">\\\\\\\</string>
     <string name="runner_name">\\\\\ AppRunner</string>
     <string name="connect_message">Click to connect</string>
+    <string name="connection_message_wifi">Connected to a WIFI network\nIn your computer s web browser type the IP address to start coding</string>
+    <string name="connection_message_other">No WIFI, still you can hack via USB using the adb command</string>
     <string name="menu_settings">Settings</string>
     <string name="BT_Home">Connect</string>
     <string name="title_activity_launcher">LauncherActivity</string>

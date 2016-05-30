@@ -46,7 +46,7 @@ import org.protocoder.appinterpreter.ProtocoderApp;
 import org.protocoder.events.Events;
 import org.protocoder.gui.IntroductionFragment;
 import org.protocoder.gui._components.NewProjectDialogFragment;
-import org.protocoder.gui.editor.FileManagerDialog;
+import org.protocoder.gui.filemanager.FileManagerDialog;
 import org.protocoder.gui.folderchooser.FolderChooserFragment;
 import org.protocoder.gui.projectlist.ProjectListFragment;
 import org.protocoder.gui.settings.ProtocoderSettings;
@@ -76,6 +76,9 @@ public class MainActivity extends BaseActivity {
 
     private Intent mServerIntent;
     private boolean isTablet;
+
+    private TextView mTxtConnectionMessage;
+    private TextView mTxtConnectionIp;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -135,7 +138,7 @@ public class MainActivity extends BaseActivity {
 
             // gson deserialization
             NEOProject n1 = gson.fromJson(json, NEOProject.class);
-            MLog.d(TAG, n1.project.getName() + " " + n1.project.getPath());
+            MLog.d(TAG, n1.project.getName() + " " + n1.project.getFolder());
         }
 
         // list examples & projects subfolders
@@ -211,6 +214,7 @@ public class MainActivity extends BaseActivity {
         }
 
         // list running projects 1h
+
     }
 
     @Override
@@ -229,7 +233,6 @@ public class MainActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         EventBus.getDefault().unregister(this);
-
         unregisterReceiver(adbBroadcastReceiver);
     }
 
@@ -301,11 +304,13 @@ public class MainActivity extends BaseActivity {
             }
         }).setDuration(1000).start();
 
+        mTxtConnectionMessage = (TextView) findViewById(R.id.connection_message);
+        mTxtConnectionIp = (TextView) findViewById(R.id.connection_ip);
+
         // FileManagerDialog myDialog = FileManagerDialog.newInstance();
         // getSupportFragmentManager().beginTransaction().add(myDialog, "12345").commit();
 
         /*
-        mTxtIp = (TextView) findViewById(R.id.ip);
         Button btnIp = (Button) findViewById(R.id.button11);
         btnIp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -410,7 +415,7 @@ public class MainActivity extends BaseActivity {
         String code = e.getCode();
         MLog.d(TAG, "event -> " + code);
 
-        if (ProtocoderSettings.DEBUG && e.getProject() != null) {
+        if (ProtocoderSettings.DEBUG) {
              appRunner.interp.eval(code);
         }
     }
@@ -420,10 +425,15 @@ public class MainActivity extends BaseActivity {
     public void onEventMainThread(Events.Connection e) {
         String type = e.getType();
         String address = e.getAddress();
-        // mTxtIp.setText(type + " " + address);
 
-        MLog.d(TAG, " got event "); // No WIFI, still you can hack via USB using the adb command");
-        //MLog.d(TAG, "Hack via your browser @ http://" + NetworkUtils.getLocalIpAddress(ProtocoderServerService.this) + ":" + ProtocoderSettings.HTTP_PORT);
+        if (type == "wifi") {
+            mTxtConnectionMessage.setText(getResources().getString(R.string.connection_message_wifi));
+            mTxtConnectionIp.setText(type + " " + address);
+            mTxtConnectionIp.setVisibility(View.VISIBLE);
+        } else {
+            mTxtConnectionMessage.setText(getResources().getString(R.string.connection_message_other));
+            mTxtConnectionIp.setVisibility(View.GONE);
+        }
     }
 
 }

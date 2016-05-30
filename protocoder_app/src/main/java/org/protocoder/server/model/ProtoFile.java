@@ -11,15 +11,23 @@ public class ProtoFile {
     public String path;
     public String type;
     public String code = null;
-    public Long fileSize = null;
+    public Long size = null;
     public ArrayList<ProtoFile> files = null;
 
-    public ProtoFile(String name, String path) {
+    public ProtoFile(String path, String name) {
         this.name = name;
         this.path = path;
     }
 
     public ProtoFile() {
 
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public String getFullPath() {
+        return path + name;
     }
 }

@@ -19,7 +19,7 @@
 */
 
 
-package org.protocoder.gui.editor;
+package org.protocoder.gui.filemanager;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -59,8 +59,9 @@ public class FileManagerFragment extends BaseFragment {
 
     private static final String TAG = FileManagerFragment.class.getSimpleName();
 
-    public static String ROOT_FOLDER = "root_folder";
+    public static final String ROOT_FOLDER = "root_folder";
     public static final String CURRENT_FOLDER = "current_folder";
+    public static final String PATH_HIDE_PATH_FROM = "hide_path_from";
 
     private Menu mMenu;
     // public HashMap<Integer, Boolean> filesModified;
@@ -74,6 +75,7 @@ public class FileManagerFragment extends BaseFragment {
     public ArrayList<ProtoFile> mCurrentFileList;
     private String mCurrentFolder = "";
     private String mRootFolder = "";
+    private String mPathHideFrom;
 
     private TextView mTxtPath;
 
@@ -93,10 +95,9 @@ public class FileManagerFragment extends BaseFragment {
         Bundle bundle = getArguments();
         mRootFolder = bundle.getString(ROOT_FOLDER, "");
         mCurrentFolder = bundle.getString(CURRENT_FOLDER, mRootFolder);
+        mPathHideFrom = bundle.getString(PATH_HIDE_PATH_FROM);
 
         MLog.d(TAG, "created with root: " + mCurrentFolder + " and current " + mCurrentFolder);
-
-        // mProject = new Project(bundle.getString(Project.FOLDER), bundle.getString(Project.NAME));
     }
 
     @Override
@@ -251,7 +252,15 @@ public class FileManagerFragment extends BaseFragment {
 
     private void getFileList() {
         mCurrentFileList = ProtoScriptHelper.listFilesForFileManager(mCurrentFolder);
-        mTxtPath.setText(mCurrentFolder);
+
+        String showPath = "";
+        if (mPathHideFrom != null) {
+            MLog.d(TAG, mPathHideFrom + " " + mCurrentFolder);
+            showPath = mCurrentFolder.replace(mPathHideFrom, "");
+        } else {
+            showPath = mCurrentFolder;
+        }
+        mTxtPath.setText(showPath);
     }
 
     protected void deleteFile(int position) {
@@ -290,9 +299,7 @@ public class FileManagerFragment extends BaseFragment {
     @Subscribe
     public void onEventMainThread(Events.EditorEvent e) {
         if (e.getAction().equals(Events.EDITOR_FILE_CHANGED)) {
-
             ProtoFile f = e.getProtofile();
-            MLog.d(TAG, "file changed: " + f.name);
 
             for (int i = 0; i < mCurrentFileList.size(); i++) {
                 if (mCurrentFileList.get(i).name == f.name) {
@@ -300,22 +307,12 @@ public class FileManagerFragment extends BaseFragment {
                     // filesModified.put(i, true);
                 }
             }
-
-        } else if (e.getAction().equals(Events.EDITOR_FILE_SAVE)) {
-            ProtoFile f = e.getProtofile();
-
-            for (int i = 0; i < mCurrentFileList.size(); i++) {
-                if (mCurrentFileList.get(i).name == f.name) {
-                    MLog.d(TAG, "is removed: " + f.name);
-                    // filesModified.remove(i);
-                }
-            }
         }
     }
 
     public void setCurrentFolder(String path) {
         mCurrentFolder = path;
-        MLog.d(TAG, mCurrentFolder);
+        MLog.d("qq", " " + path);
         getFileList();
         mProjectAdapter.setData(mCurrentFileList);
         mProjectAdapter.notifyDataSetChanged();

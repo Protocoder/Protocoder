@@ -87,7 +87,7 @@
                         android:visibility="invisible" />
 
                     <TextView
-                        android:id="@+id/ip"
+                        android:id="@+id/connection_ip"
                         style="@android:style/TextAppearance.Medium"
                         android:layout_height="wrap_content"
                         android:gravity="center"
@@ -111,7 +111,7 @@
                         android:text="/?"
                         android:id="@+id/button12"
                         android:layout_gravity="right|center_vertical"
-                        android:layout_alignBottom="@+id/ip"
+                        android:layout_alignBottom="@+id/connection_ip"
                         android:layout_alignParentRight="true"
                         android:layout_alignParentEnd="true"
                         android:visibility="invisible" />

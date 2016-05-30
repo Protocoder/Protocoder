@@ -46,25 +46,23 @@ import org.protocoder.events.Events;
 import org.protocoder.helpers.ProtoScriptHelper;
 import org.protocoder.server.model.ProtoFile;
 import org.protocoderrunner.base.BaseFragment;
+import org.protocoderrunner.base.utils.FileIO;
 import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.base.utils.TextUtils;
-import org.protocoderrunner.models.Project;
 
-import java.io.File;
 import java.util.HashMap;
 
 @SuppressLint("NewApi")
 public class EditorFragment extends BaseFragment {
 
     protected static final String TAG = EditorFragment.class.getSimpleName();
+    public static final String FILE_NAME = "file_name";
+    public static final String FILE_PATH = "file_path";
 
     public interface EditorFragmentListener {
-
         void onLoad();
         void onLineTouched();
     }
-    private Context mContext;
-
     private EditText mEdit;
 
     private HorizontalScrollView mExtraKeyBar;
@@ -72,11 +70,8 @@ public class EditorFragment extends BaseFragment {
     private EditorFragmentListener listener;
     // settings
     private EditorSettings mEditorSettings = new EditorSettings();
-
-    private Project mCurrentProject;
-    private String mCurrentFile = "";
-
-    HashMap<String, String> openedFiles = new HashMap<>();
+    private HashMap<String, String> openedFiles = new HashMap<>();
+    private ProtoFile mCurrentFile;
 
     public EditorFragment() {
     }
@@ -84,7 +79,6 @@ public class EditorFragment extends BaseFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mContext = context;
     }
 
     @Override
@@ -110,7 +104,9 @@ public class EditorFragment extends BaseFragment {
         /* get the code file */
         Bundle bundle = getArguments();
         if (bundle != null) {
-            loadProject(new Project(bundle.getString(Project.FOLDER, ""), bundle.getString(Project.NAME, "")));
+            String folder = bundle.getString(FILE_PATH);
+            String name = bundle.getString(FILE_NAME);
+            loadFile(folder, name);
         }
 
         return v;
@@ -156,21 +152,18 @@ public class EditorFragment extends BaseFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-/*
-                String originalText = openedFiles.get(mCurrentFile);
+                String originalText = openedFiles.get(mCurrentFile.getFullPath());
                 String currentText = s.toString();
 
                 // check if text is changed
                 if (originalText.equals(currentText) == false) {
-                    MLog.d(TAG, "text changed");
-
                     // update current code string
-                    openedFiles.put(mCurrentFile, currentText);
+                    openedFiles.put(mCurrentFile.getFullPath(), currentText);
 
                     // notifiy that a file is changed
-                    EventBus.getDefault().post(new Events.EditorEvent(Events.EDITOR_FILE_CHANGED, mCurrentProject, new ProtoFile(mCurrentFile, "")) );
+                    EventBus.getDefault().post(new Events.EditorEvent(Events.EDITOR_FILE_CHANGED, mCurrentFile));
                 }
-*/
+
             }
         });
 
@@ -280,32 +273,17 @@ public class EditorFragment extends BaseFragment {
         this.listener = listener;
     }
 
-    /**
-     * Load a project
-     */
-    public void loadProject(Project project) {
-        MLog.d("file load send", "qq");
 
-        mCurrentProject = project;
-        EventBus.getDefault().postSticky(new Events.EditorEvent(Events.EDITOR_FILE_TO_LOAD, mCurrentProject, new ProtoFile("main.js","")));
-
-        loadFile("main.js");
-    }
-
-    public void loadFile(String fileName) {
-        if (mCurrentProject == null) {
-            mEdit.setText("Project loading failed");
-            return;
-        }
-
-        mCurrentFile = fileName;
+    public void loadFile(String path, String name) {
+        mCurrentFile = new ProtoFile(path, name);
+        String filePath = mCurrentFile.getFullPath();
 
         String code = "";
-        if (openedFiles.containsKey(fileName)) {
-            code = openedFiles.get(fileName);
+        if (openedFiles.containsKey(filePath)) {
+            code = openedFiles.get(filePath);
         } else {
-            code = ProtoScriptHelper.getCode(mCurrentProject, fileName);
-            openedFiles.put(fileName, code);
+            code = FileIO.loadCodeFromFile(filePath);
+            openedFiles.put(filePath, code);
         }
 
         mEdit.setText(code);
@@ -315,30 +293,21 @@ public class EditorFragment extends BaseFragment {
      * Save the current project
      */
     public void saveFile() {
-        ProtoScriptHelper.saveCode(mCurrentProject.getSandboxPath() + File.separator + mCurrentFile, openedFiles.get(mCurrentFile));
-        Toast.makeText(getActivity(), "Saving " + mCurrentProject.getName() + "...", Toast.LENGTH_SHORT).show();
-
-        EventBus.getDefault().post(new Events.EditorEvent(Events.EDITOR_FILE_SAVE, mCurrentProject, new ProtoFile(mCurrentFile, "")));
-    }
-
-    /**
-     * Run the current project
-     */
-    public void run() {
-        EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_RUN, mCurrentProject));
+        ProtoScriptHelper.saveCodeFromAbsolutePath(mCurrentFile.getFullPath(), openedFiles.get(mCurrentFile.getFullPath()));
+        Toast.makeText(getActivity(), "Saving " + mCurrentFile.getFullPath() + "...", Toast.LENGTH_SHORT).show();
     }
 
     /**
      * Toggle edittext editable
      */
-    // TODO
-    public void toggleEditable(boolean b) {
-
+    public void enableEdit(boolean b) {
+        if (b) {
+            mEdit.setFocusableInTouchMode(true);
+        } else {
+            mEdit.setFocusable(false);
+        }
     }
 
-    public void saveAll() {
-        
-    }
 
     /**
      * Get current cursor line
@@ -370,9 +339,22 @@ public class EditorFragment extends BaseFragment {
     // load file in editor
     @Subscribe
     public void onEventMainThread(Events.EditorEvent e) {
-        if (e.getAction().equals(Events.EDITOR_FILE_LOAD)) {
-            ProtoFile f = e.getProtofile();
-            loadFile(f.name);
+        switch (e.getAction()) {
+            case Events.EDITOR_FILE_LOAD:
+                ProtoFile f = e.getProtofile();
+                loadFile(e.getProtofile().path, e.getProtofile().name);
+
+                break;
+
+            case Events.EDITOR_FILE_SAVE:
+
+                break;
+
+            default:
+                break;
+
         }
+
+
     }
 }

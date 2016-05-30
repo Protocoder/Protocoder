@@ -435,7 +435,6 @@ public class FileIO {
     }
 
     public static String loadCodeFromFile(String path) {
-
         String out = null;
         File f = new File(path);
         try {

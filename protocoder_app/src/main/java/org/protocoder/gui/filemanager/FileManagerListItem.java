@@ -1,4 +1,4 @@
-package org.protocoder.gui.editor;
+package org.protocoder.gui.filemanager;
 
 
 import android.content.Context;
@@ -42,7 +42,7 @@ public class FileManagerListItem extends LinearLayout {
     }
 
     private int getIcon(String type) {
-        return type.equals("folder") ? R.drawable.protocoder_script_example : R.drawable.protocoder_script_project;
+        return type.equals("folder") ? R.drawable.ic_folder_black_24dp : R.drawable.ic_insert_drive_file_black_24dp;
     }
 }
 

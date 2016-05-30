@@ -28,10 +28,10 @@ import com.google.gson.GsonBuilder;
 
 import org.greenrobot.eventbus.EventBus;
 import org.protocoder.events.Events;
+import org.protocoder.gui.settings.ProtocoderSettings;
 import org.protocoder.helpers.ProtoScriptHelper;
 import org.protocoder.server.model.ProtoFile;
 import org.protocoder.server.networkexchangeobjects.NEOProject;
-import org.protocoder.gui.settings.ProtocoderSettings;
 import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.models.Project;
 
@@ -48,9 +48,19 @@ import fi.iki.elonen.NanoHTTPD;
 public class ProtocoderHttpServer extends NanoHTTPD {
     public static final String TAG = ProtocoderHttpServer.class.getSimpleName();
 
-    private static WeakReference<Context> mContext;
-    private static String WEBAPP_DIR = "webide/";
+    private final int COMMAND = 3;
+    private final int TYPE = 3;
+    private final int FOLDER = 4;
+    private final int PROJECT_NAME = 5;
+    private final int PROJECT_ACTION = 6;
+    private final int FILE_DELIMITER = 6;
+    private final int FILE_ACTION = 7;
+    private final int FILE = 8;
 
+
+    private static WeakReference<Context> mContext;
+
+    private static String WEBAPP_DIR = "webide/";
     Gson gson;
 
     public ProtocoderHttpServer(Context context, int port) { //} throws IOException {
@@ -90,99 +100,178 @@ public class ProtocoderHttpServer extends NanoHTTPD {
         return res;
     }
 
-    // list, run, stop, load, new, delete
+    /*
+     0   1   2       3
+    "/api/project/list/"
+    "/api/project/stop_all"
+    "/api/project/execute_code"
+
+    // project dependent actions
+    0   1      2   3   4   5    6
+    "/api/project/[ff]/[sf]/[p]/new"
+    "/api/project/[ff]/[sf]/[p]/save/" (POST)
+    "/api/project/[ff]/[sf]/[p]/load/"
+    "/api/project/[ff]/[sf]/[p]/delete/"
+    "/api/project/[ff]/[sf]/[p]/run/"
+    "/api/project/[ff]/[sf]/[p]/stop/"
+
+    // file actions
+    0   1      2   3   4    5      6    7
+    "/api/project/[ff]/[sf]/[p]/files/new" (POST)
+    "/api/project/[ff]/[sf]/[p]/files/save" (POST)
+    "/api/project/[ff]/[sf]/[p]/files/list"
+    "/api/project/[ff]/[sf]/[p]/files/delete/" (POST)
+    "/api/project/[ff]/[sf]/[p]/files/load/main.js"         7
+    */
     private Response serveAPI(IHTTPSession session) {
         Response res = null;
 
         String uri = session.getUri();
         String uriSplitted[] = uri.split("/");
 
+        HashMap<String, String> cmd;
+
         // debug the params
         for (int i = 0; i < uriSplitted.length; i++) {
-            MLog.d(TAG, i + " " + uriSplitted[i]);
+            MLog.d(TAG, uriSplitted.length + " " + i + " " + uriSplitted[i]);
         }
 
-        // project_actions
-        if (uri.startsWith("/api/project/list/")) {
 
-            ArrayList<ProtoFile> files = ProtoScriptHelper.listFilesInFolder("./", 2);
-            String jsonFiles = gson.toJson(files);
-            // MLog.d(TAG, "list examples folders -> " + jsonFiles);
+        /**
+         * Project global actions
+         *
+         * /api/project/command
+         */
 
-            EventBus.getDefault().post(new Events.HTTPServerEvent("project_list_all"));
+        if (uriSplitted.length >= 4 && uriSplitted.length <= 5) {
+            if (uriSplitted[COMMAND].equals("list")) {
+                ArrayList<ProtoFile> files = ProtoScriptHelper.listFilesInFolder("./", 2);
+                String jsonFiles = gson.toJson(files);
 
-            res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), jsonFiles.toString());
+                // MLog.d("list", jsonFiles);
+                EventBus.getDefault().post(new Events.HTTPServerEvent("project_list_all"));
 
-        // project_new :folder/:name
-        } else if ( uri.startsWith("/api/project/new") ) {
-            Project p = new Project(uriSplitted[3], uriSplitted[4]);
-            ProtoScriptHelper.createNewProject(mContext.get(), p.folder, p.name);
+                res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), jsonFiles.toString());
+            } else if (uriSplitted[COMMAND].equals("execute_code")) {
+                MLog.d(TAG, "run code");
 
-        // run_code
-        } else if ( uri.startsWith("/api/project/execute_code") ) {
-            MLog.d(TAG, "run code");
-            Project p = new Project(uriSplitted[4] + "/" + uriSplitted[5], uriSplitted[6]);
+                // POST DATA
+                String json;
+                final HashMap<String, String> map = new HashMap<String, String>();
+                try {
+                    session.parseBody(map);
+                    if (map.isEmpty()) return newFixedLengthResponse("BUG");
 
-            // POST DATA
-            String json;
-            final HashMap<String, String> map = new HashMap<String, String>();
-            try {
-                session.parseBody(map);
-                if (map.isEmpty()) return newFixedLengthResponse("BUG");
+                    json = map.get("postData");
+                    NEOProject neo = gson.fromJson(json, NEOProject.class);
+                    EventBus.getDefault().post(new Events.ExecuteCodeEvent(neo.code));
 
-                json = map.get("postData");
+                    res = newFixedLengthResponse("OK");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return newFixedLengthResponse("NOP");
+                } catch (ResponseException e) {
+                    e.printStackTrace();
+                    return newFixedLengthResponse("NOP");
+                }
+            } else if (uriSplitted[COMMAND].equals("stop_all")) {
+                MLog.d(TAG, "stop all");
+                EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_STOP_ALL, null));
+                res = newFixedLengthResponse("OK");
+            }
+
+        /**
+         * Project dependent actions
+         *
+         * /api/project/[ff]/[sf]/[p]/action
+         */
+
+        } else if (uriSplitted.length == 7) {
+            Project p = new Project(uriSplitted[TYPE] + "/" + uriSplitted[FOLDER], uriSplitted[PROJECT_NAME]);
+
+            if (uriSplitted[PROJECT_ACTION].equals("new")) {
+                ProtoScriptHelper.createNewProject(mContext.get(), p.folder, p.name);
+            } else if (uri.startsWith("/api/project/save")) {
+                String json;
+                final HashMap<String, String> map = new HashMap<String, String>();  // POST DATA
+
+                try {
+                    session.parseBody(map);
+                    if (map.isEmpty()) return newFixedLengthResponse("BUG");
+
+                    json = map.get("postData");
+                    MLog.d(TAG, "map " + map.toString());
+                    MLog.d(TAG, "post data " + json);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return newFixedLengthResponse("NOP");
+                } catch (ResponseException e) {
+                    e.printStackTrace();
+                    return newFixedLengthResponse("NOP");
+                }
+
                 NEOProject neo = gson.fromJson(json, NEOProject.class);
 
-                MLog.d(TAG, p.getName() + " " + neo.code);
-                EventBus.getDefault().post(new Events.ExecuteCodeEvent(p, neo.code));
+                // saving all the files changed
+                for (ProtoFile file : neo.files) {
+                    ProtoScriptHelper.saveCodeFromSandboxPath(file.path, file.code);
+                }
 
                 res = newFixedLengthResponse("OK");
-            } catch (IOException e) {
-                e.printStackTrace();
-                return newFixedLengthResponse("NOP");
-            } catch (ResponseException e) {
-                e.printStackTrace();
-                return newFixedLengthResponse("NOP");
+
+            } else if (uriSplitted[PROJECT_ACTION].equals("load")) {
+                ArrayList<ProtoFile> files = ProtoScriptHelper.listFilesInFolder(p.getSandboxPath(), 0);
+
+                // only load main.js
+                for (int i = 0; i < files.size(); i++) {
+                    if (files.get(i).name.equals(ProtocoderSettings.MAIN_FILENAME)) {
+                        files.get(i).code = ProtoScriptHelper.getCode(p);
+                    }
+                }
+
+                NEOProject neo = new NEOProject();
+                neo.files = files;
+                neo.project = p;
+                neo.current_folder = '/';
+
+                String json = gson.toJson(neo);
+                // MLog.d(TAG, json);
+
+                EventBus.getDefault().post(new Events.HTTPServerEvent("project_load", p));
+                res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), json.toString());
+
+            } else if (uriSplitted[PROJECT_ACTION].equals("delete")) {
+                String path = "";
+                // ProtoScriptHelper.deleteFolder(path);
+
+            } else if (uriSplitted[PROJECT_ACTION].equals("run")) {
+                MLog.d(TAG, "run --> " + p.getFolder());
+                EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_RUN, p));
+
+                res = newFixedLengthResponse("OK");
+
+            } else if (uriSplitted[PROJECT_ACTION].equals("stop")) {
+                MLog.d(TAG, "stop");
+                EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_STOP_ALL, null));
+
+                res = newFixedLengthResponse("OK");
             }
 
-        // project_save :folder/:name
-        } else if ( uri.startsWith("/api/project/save") ) {
-            MLog.d(TAG, "project saving");
-            Project p = new Project(uriSplitted[4] + "/" + uriSplitted[5], uriSplitted[6]);
 
-            // POST DATA
-            String json;
-            final HashMap<String, String> map = new HashMap<String, String>();
-            try {
-                session.parseBody(map);
-                if (map.isEmpty()) return newFixedLengthResponse("BUG");
+        } else if (uriSplitted.length == 8 && uriSplitted[FILE_DELIMITER].equals("files")) {
 
-                json = map.get("postData");
-                MLog.d(TAG, "map " + map.toString());
-                MLog.d(TAG, "post data " + json);
-            } catch (IOException e) {
-                e.printStackTrace();
-                return newFixedLengthResponse("NOP");
-            } catch (ResponseException e) {
-                e.printStackTrace();
-                return newFixedLengthResponse("NOP");
+            if (uriSplitted.equals("list")) {
+                MLog.d("list_files");
             }
 
-            NEOProject neo = gson.fromJson(json, NEOProject.class);
-            MLog.d(TAG, "CMD -> " + neo.project.getName());
+        } else {
+            res = NanoHTTPD.newFixedLengthResponse(Response.Status.BAD_REQUEST, MIME_PLAINTEXT, ":(");
+        }
 
-            // saving all the mCurrentFileList changed
-            for (ProtoFile file : neo.files) {
-                ProtoScriptHelper.saveCode(file.path, file.code);
-            }
+        /*
 
-            res = newFixedLengthResponse("OK");
-
-        // project_load :folder/:name
-        } else if ( uri.startsWith("/api/project/load") ) {
-            Project p = new Project(uriSplitted[4] + "/" + uriSplitted[5], uriSplitted[6]);
-
-            ArrayList<ProtoFile> files = ProtoScriptHelper.listFilesInFolder(p.getSandboxPath(), 0, ".js");
+            // get files
+            ArrayList<ProtoFile> files = ProtoScriptHelper.listFilesInFolder(p.getSandboxPath(), 0);
 
             for (int i = 0; i < files.size(); i++) {
                 ProtoFile f = files.get(i);
@@ -196,30 +285,12 @@ public class ProtocoderHttpServer extends NanoHTTPD {
             String json = gson.toJson(neo);
             // MLog.d(TAG, json);
 
-            EventBus.getDefault().post(new Events.HTTPServerEvent("project_load", p));
-            res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), json.toString());
+            */
 
-        // file_delete :folder/:name
-        } else if ( uri.startsWith("/api/project/delete") ) {
-            Project p = new Project(uriSplitted[3], uriSplitted[4]);
-            String path = "";
-            // ProtoScriptHelper.deleteFolder(path);
+            // EventBus.getDefault().post(new Events.HTTPServerEvent("project_list_files", p));
+            // res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), "" /* json.toString() */);
 
-        // project_run :folder/:name
-        } else if ( uri.startsWith("/api/project/run") ) {
-            Project p = new Project(uriSplitted[4] + "/" + uriSplitted[5], uriSplitted[6]);
-            MLog.d(TAG, "run --> " + p.getPath());
-            EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_RUN, p));
-
-            res = newFixedLengthResponse("OK");
-
-        // project_stop :folder/:name
-        } else if ( uri.startsWith("/api/project/stop/all") ) {
-            MLog.d(TAG, "stop all");
-            EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_STOP_ALL, null));
-
-            res = newFixedLengthResponse("OK");
-        }
+            // serve files
 
         return res;
     }

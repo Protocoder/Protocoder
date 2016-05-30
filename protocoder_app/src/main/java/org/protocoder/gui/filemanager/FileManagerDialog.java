@@ -1,4 +1,4 @@
-package org.protocoder.gui.editor;
+package org.protocoder.gui.filemanager;
 
 import android.graphics.Rect;
 import android.os.Bundle;

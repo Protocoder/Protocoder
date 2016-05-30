@@ -20,6 +20,7 @@
 
 package org.protocoderrunner.api;
 
+import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -28,8 +29,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.hardware.input.InputManager;
 import android.os.BatteryManager;
 import android.os.Build;
+import android.os.Handler;
 import android.os.Vibrator;
 import android.provider.Settings;
 import android.provider.Settings.Secure;
@@ -38,14 +41,17 @@ import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.InputDevice;
+import android.view.KeyCharacterMap;
 
 import com.google.gson.Gson;
 
-import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.base.utils.AndroidUtils;
 import org.protocoderrunner.base.utils.Intents;
+import org.protocoderrunner.base.utils.MLog;
 
 public class PDevice extends ProtoBase {
 
@@ -57,6 +63,41 @@ public class PDevice extends ProtoBase {
         super(appRunner);
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    public void getInputDevices() {
+        InputManager inputManager = (InputManager) getAppRunner().getAppContext().getSystemService(Context.INPUT_SERVICE);
+        int[] devices = inputManager.getInputDeviceIds();
+
+        for (int i = 0; i < devices.length; i++) {
+            InputDevice device = inputManager.getInputDevice(i);
+
+            MLog.d(TAG, "" + device.getControllerNumber());
+            MLog.d(TAG, "" + device.getKeyboardType());
+            MLog.d(TAG, "" + device.getProductId());
+            MLog.d(TAG, "" + device.getName());
+            MLog.d(TAG, "" + device.getDescriptor());
+            KeyCharacterMap qq = device.getKeyCharacterMap();
+
+            Handler handler = new Handler();
+
+            inputManager.registerInputDeviceListener(new InputManager.InputDeviceListener() {
+                @Override
+                public void onInputDeviceAdded(int deviceId) {
+
+                }
+
+                @Override
+                public void onInputDeviceRemoved(int deviceId) {
+
+                }
+
+                @Override
+                public void onInputDeviceChanged(int deviceId) {
+
+                }
+            }, handler);
+        }
+    }
 
     @ProtoMethod(description = "makes the phone vibrate", example = "android.vibrate(500);")
     @ProtoMethodParam(params = {"duration"})

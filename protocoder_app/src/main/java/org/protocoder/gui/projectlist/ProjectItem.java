@@ -201,7 +201,7 @@ public class ProjectItem extends LinearLayout {
                     return true;
                 } else if (itemId == R.id.menu_project_list_delete) {
                     //TODO make it work again
-                    //Protocoder.getInstance(c).protoScripts.delete(mProject.getPath(), mProject.getName());
+                    //Protocoder.getInstance(c).protoScripts.delete(mProject.getFolder(), mProject.getName());
 
                     DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                         @Override
@@ -224,15 +224,15 @@ public class ProjectItem extends LinearLayout {
                     return true;
                 } else if (itemId == R.id.menu_project_list_add_shortcut) {
                     //TODO make it work again
-                    //Protocoder.getInstance(c).protoScripts.addShortcut(mProject.getPath(), mProject.getName());
+                    //Protocoder.getInstance(c).protoScripts.addShortcut(mProject.getFolder(), mProject.getName());
                     return true;
                 } else if (itemId == R.id.menu_project_list_share_with) {
                     //TODO make it work again
-                    //Protocoder.getInstance(c).protoScripts.shareMainJsDialog(mProject.getPath(), mProject.getName());
+                    //Protocoder.getInstance(c).protoScripts.shareMainJsDialog(mProject.getFolder(), mProject.getName());
                     return true;
                 } else if (itemId == R.id.menu_project_list_share_proto_file) {
                     //TODO make it work again
-                    //Protocoder.getInstance(c).protoScripts.shareProtoFileDialog(mProject.getPath(), mProject.getName());
+                    //Protocoder.getInstance(c).protoScripts.shareProtoFileDialog(mProject.getFolder(), mProject.getName());
                     return true;
                 } else {
                     return true;

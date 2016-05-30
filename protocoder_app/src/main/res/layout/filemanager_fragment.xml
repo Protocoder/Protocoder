@@ -14,28 +14,30 @@
         android:layout_alignParentLeft="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="10dp"
         android:padding="10dp"
         android:background="#55000000">
 
         <Button
             style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="U"
-            android:id="@+id/dir_up" />
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="@drawable/ic_arrow_upward_black_24dp"
+            android:id="@+id/dir_up"
+            android:padding="5dp" />
 
         <HorizontalScrollView
             android:id="@+id/crumb_bar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="5dp">
+            android:layout_marginLeft="5dp"
+            android:layout_gravity="center_vertical">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="fill_vertical"
                 android:textColor="#55FFFFFF"
+                android:gravity="center_vertical"
                 android:fontFamily="sans-serif-condensed"
                 android:text="Files included in the project"
                 android:id="@+id/path" />
@@ -52,7 +54,8 @@
         android:layout_height="wrap_content"
         android:background="#55000000"
         android:paddingLeft="10dp"
-        android:paddingRight="10dp">
+        android:paddingRight="10dp"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="wrap_content"

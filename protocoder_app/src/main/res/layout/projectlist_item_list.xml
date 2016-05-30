@@ -55,7 +55,7 @@
         android:paddingLeft="10dp"
         android:paddingTop="10dp"
         android:scaleType="centerInside"
-        android:src="@drawable/ic_action_overflow_light"
+        android:src="@drawable/ic_more_vert_black_24dp"
         android:layout_alignTop="@+id/customViewImage"
         android:layout_alignRight="@+id/view1"
         android:layout_alignEnd="@+id/view1"

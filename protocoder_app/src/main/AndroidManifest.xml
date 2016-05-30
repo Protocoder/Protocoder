@@ -69,6 +69,7 @@
         <activity
             android:name=".gui.editor.EditorActivity"
             android:theme="@style/ProtocoderAppTheme"
+            android:windowSoftInputMode="adjustResize"
             android:label="@string/editor_activity_name" >
         </activity>
         <activity

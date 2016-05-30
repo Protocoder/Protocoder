@@ -39,6 +39,7 @@ import android.speech.RecognizerIntent;
 import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -343,6 +344,13 @@ public class AppRunnerActivity extends BaseActivity {
                 onNFCListener.onNewTag(nfcID, nfcMessage);
             }
         }
+    }
+
+    @Override
+    public boolean onGenericMotionEvent(MotionEvent event) {
+
+
+        return super.onGenericMotionEvent(event);
     }
 
     /**

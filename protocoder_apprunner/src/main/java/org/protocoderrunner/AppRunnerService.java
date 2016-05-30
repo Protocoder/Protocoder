@@ -19,18 +19,6 @@ import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import org.protocoderrunner.api.PApp;
-import org.protocoderrunner.api.PBoards;
-import org.protocoderrunner.api.PConsole;
-import org.protocoderrunner.api.PDashboard;
-import org.protocoderrunner.api.PDevice;
-import org.protocoderrunner.api.PFileIO;
-import org.protocoderrunner.api.PMedia;
-import org.protocoderrunner.api.PNetwork;
-import org.protocoderrunner.api.PProtocoder;
-import org.protocoderrunner.api.PSensors;
-import org.protocoderrunner.api.PUI;
-import org.protocoderrunner.api.PUtil;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.AppRunnerInterpreter;
 import org.protocoderrunner.events.AppRunnerEvents;
@@ -95,7 +83,7 @@ public class AppRunnerService extends Service {
         mNotifManager = (NotificationManager) AppRunnerService.this.getSystemService(Context.NOTIFICATION_SERVICE);
 
         int notificationId = (int) Math.ceil(100000 * Math.random());
-        createNotification(notificationId, mAppRunner.getProject().getPath(), mAppRunner.getProject().getName());
+        createNotification(notificationId, mAppRunner.getProject().getFolder(), mAppRunner.getProject().getName());
 
 
         //just in case it crash

@@ -25,9 +25,6 @@ public class PCanvas extends View implements PViewInterface {
     public TileMode MODE_REPEAT = TileMode.REPEAT;
 
 
-    public Paint.Cap CAP_ROUND = Paint.Cap.ROUND;
-    public Paint.Cap CAP_BUTT = Paint.Cap.BUTT;
-    public Paint.Cap CAP_SQUARE = Paint.Cap.SQUARE;
 
     private PLooper loop;
     private Paint mPaintFill;

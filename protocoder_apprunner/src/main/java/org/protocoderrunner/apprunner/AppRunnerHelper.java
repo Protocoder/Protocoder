@@ -72,8 +72,8 @@ public class AppRunnerHelper {
 
         // Get code from assets if standalone app
         } else {
-            return FileIO.readAssetFile(c, p.getPath() + File.separator +
-                    p.getPath() + File.separator + MAIN_FILENAME);
+            return FileIO.readAssetFile(c, p.getFolder() + File.separator +
+                    p.getFolder() + File.separator + MAIN_FILENAME);
         }
     }
 

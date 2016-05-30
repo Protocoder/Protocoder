@@ -102,11 +102,14 @@ public class ProtoScriptHelper {
     }
 
     // Write a file with code
-    public static void saveCode(String relativePath, String code) {
+    public static void saveCodeFromSandboxPath(String relativePath, String code) {
+        String absolutePath = getAbsolutePathFromRelative(relativePath);
+        MLog.d("absolutePath", absolutePath);
+        saveCodeFromAbsolutePath(absolutePath, code);
+    }
 
-        String filename = getAbsolutePathFromRelative(relativePath);
-
-        File f = new File(filename);
+    public static void saveCodeFromAbsolutePath(String filepath, String code) {
+        File f = new File(filepath);
 
         try {
             if (!f.exists()) {
@@ -125,7 +128,6 @@ public class ProtoScriptHelper {
             // Log.e("Project", e.toString());
         }
     }
-
 
     // Get code from sdcard
     public static String getCode(Project p) {
@@ -177,8 +179,8 @@ public class ProtoScriptHelper {
         for (File f : files) {
             ProtoFile protoFile = new ProtoFile();
             protoFile.name = f.getName();
-            protoFile.path = f.getAbsolutePath();
-            protoFile.fileSize = f.length();
+            protoFile.path = f.getParent() + File.separator;
+            protoFile.size = f.length();
             protoFile.type = f.isDirectory() ? "folder" : "file";
             protoFiles.add(protoFile);
         }
@@ -212,13 +214,14 @@ public class ProtoScriptHelper {
         for (File f : all_projects) {
 
             ProtoFile protoFile = new ProtoFile();
+            MLog.d( TAG, f.getName() + " is a dir " + f.isDirectory() );
 
             if (f.isDirectory()) {
                 protoFile.type = "folder";
                 protoFile.files = new ArrayList<ProtoFile>();
             } else {
                 protoFile.type = "file";
-                protoFile.fileSize = f.length();
+                protoFile.size = f.length();
             }
             protoFile.name = f.getName();
             protoFile.path = ProtoScriptHelper.getRelativePathFromAbsolute(f.getAbsolutePath());
@@ -269,7 +272,7 @@ public class ProtoScriptHelper {
 
         // TODO: Use thread
 
-        String givenName = getBackupFolderPath() + File.separator + p.getPath() + "_" + p.getName();
+        String givenName = getBackupFolderPath() + File.separator + p.getFolder() + "_" + p.getName();
 
         //check if file exists and rename it if so
         File f = new File(givenName + ProtocoderSettings.PROTO_FILE_EXTENSION);
@@ -319,7 +322,7 @@ public class ProtoScriptHelper {
             ProtoFile protoFile = new ProtoFile();
             protoFile.project_parent = p.getName();
             protoFile.name = element.getName();
-            protoFile.fileSize = element.length();
+            protoFile.size = element.length();
             protoFile.path = element.getPath();
             protoFile.type = "file";
 

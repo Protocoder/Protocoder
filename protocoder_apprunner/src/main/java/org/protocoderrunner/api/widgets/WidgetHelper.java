@@ -22,13 +22,12 @@ package org.protocoderrunner.api.widgets;
 import android.view.MotionEvent;
 import android.view.View;
 
+import org.protocoderrunner.api.common.ReturnInterface;
+import org.protocoderrunner.api.common.ReturnObject;
+
 public class WidgetHelper {
 
-    public interface MoveCallback {
-        void event(int x, int y);
-    }
-
-    public static void setMovable(View viewHandler, final View viewContainer, final MoveCallback callback) {
+    public static void setMovable(View viewHandler, final View viewContainer, final ReturnInterface callback) {
         View.OnTouchListener onMoveListener = new View.OnTouchListener() {
 
             public int x_init;
@@ -58,7 +57,11 @@ public class WidgetHelper {
                         viewContainer.setX(posX);
                         viewContainer.setY(posY);
 
-                        if (callback != null) callback.event(posX, posY);
+                        ReturnObject r = new ReturnObject();
+                        r.put("x", posX);
+                        r.put("y", posY);
+
+                        if (callback != null) callback.event(r);
 
                         break;
                 }

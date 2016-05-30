@@ -63,8 +63,7 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@style/ProtocoderAppRunnerTheme"
             android:label="@string/runner_name"
-            android:launchMode="standard"
-            android:windowSoftInputMode="stateHidden" >
+            android:launchMode="standard" >
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
                 <action android:name="org.protocoderrunner.apprunner.AppRunnerActivity" />

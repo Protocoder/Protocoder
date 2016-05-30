@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -12,6 +13,8 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import org.protocoderrunner.AppRunnerFragment;
+import org.protocoderrunner.api.common.ReturnInterface;
+import org.protocoderrunner.api.common.ReturnObject;
 import org.protocoderrunner.api.media.PCamera;
 import org.protocoderrunner.api.other.PProcessing;
 import org.protocoderrunner.api.widgets.PAbsoluteLayout;
@@ -38,6 +41,7 @@ import org.protocoderrunner.api.widgets.PToolbar;
 import org.protocoderrunner.api.widgets.PVideo;
 import org.protocoderrunner.api.widgets.PViewPager;
 import org.protocoderrunner.api.widgets.PWebView;
+import org.protocoderrunner.api.widgets.WidgetHelper;
 import org.protocoderrunner.apidoc.annotation.ProtoField;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
@@ -721,7 +725,6 @@ public class PUI extends ProtoBase {
     /*
      * Utilities
      */
-
     @ProtoMethod(description = "Resize a view to a given width and height. If a parameter is -1 then that dimension is not changed", example = "")
     @ProtoMethodParam(params = {"View", "width", "height"})
     public void resize(final View v, int w, int h, boolean animated) {
@@ -762,6 +765,45 @@ public class PUI extends ProtoBase {
             animW.setDuration(200);
             animW.start();
         }
+    }
+
+
+    public void movable(View viewHandler, View viewContainer, ReturnInterface callback) {
+        WidgetHelper.setMovable(viewHandler, viewContainer, callback);
+    }
+
+    public void removeMovable(View viewHandler) {
+        WidgetHelper.removeMovable(viewHandler);
+    }
+
+    public void onTouch(View view, final ReturnInterface callback) {
+        view.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int action = event.getActionMasked();
+
+                ReturnObject r = new ReturnObject();
+                r.put("x", event.getX());
+                r.put("y", event.getY());
+
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        r.put("action", "down");
+                        break;
+
+                    case MotionEvent.ACTION_MOVE:
+                        r.put("action", "move");
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        r.put("action", "up");
+                        break;
+                }
+                callback.event(r);
+
+                return true;
+            }
+        });
     }
 
 
