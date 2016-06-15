@@ -22,6 +22,7 @@
         android:layout_marginTop="@dimen/other_cardview_top_margin"
         android:layout_marginLeft="@dimen/other_cardview_horizontal_margin"
         android:layout_marginRight="@dimen/other_cardview_horizontal_margin"
+        android:layout_marginBottom="@dimen/main_cardview_bottom_margin"
         >
 
         <FrameLayout

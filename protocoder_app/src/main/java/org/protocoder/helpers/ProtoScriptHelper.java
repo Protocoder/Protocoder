@@ -23,6 +23,7 @@ package org.protocoder.helpers;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.os.Environment;
+import android.widget.Toast;
 
 import org.protocoder.server.model.ProtoFile;
 import org.protocoder.gui.settings.ProtocoderSettings;
@@ -38,6 +39,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class ProtoScriptHelper {
@@ -77,12 +80,22 @@ public class ProtoScriptHelper {
 
     // Create Project
     public static Project createNewProject(Context c, String folder, String newProjectName) {
+
+        /*
+        if (ProtoScriptHelper.isProjectExisting(folder, newProjectName)) {
+            Toast.makeText(c, "Project already exists", Toast.LENGTH_LONG).show();
+            return null;
+        }
+        */
+
         String newTemplateCode = FileIO.readAssetFile(c, "templates/new.js");
 
         if (newTemplateCode == null) {
             newTemplateCode = "";
         }
-        FileIO.writeStringToFile(getProjectFolderPath(folder), newProjectName, newTemplateCode);
+        MLog.d(TAG, "creating project in " + folder);
+
+        FileIO.writeStringToFile(folder, newProjectName, newTemplateCode);
         Project newProject = new Project(folder, newProjectName);
 
         return newProject;
@@ -182,13 +195,35 @@ public class ProtoScriptHelper {
             protoFile.path = f.getParent() + File.separator;
             protoFile.size = f.length();
             protoFile.type = f.isDirectory() ? "folder" : "file";
+            protoFile.isDir = f.isDirectory();
             protoFiles.add(protoFile);
         }
+
+        Collections.sort(protoFiles, new Comparator<ProtoFile>(){
+            @Override
+            public int compare(ProtoFile l, ProtoFile r) {
+
+                // order by folder first and alphabetically
+
+                if (l.isDir && !r.isDir){
+                    return -1;
+                } else if (!l.isDir && r.isDir){
+                    return 1;
+                } else {
+                    return l.name.compareToIgnoreCase(r.name);
+                }
+
+            }
+        });
+
         return protoFiles;
     }
 
+
+
     // List folders in a tree structure
     public static ArrayList<ProtoFile> listFilesInFolder(String folder, int levels) {
+        MLog.d(TAG, folder);
         return listFilesInFolder(folder, levels, "*");
     }
 
@@ -214,8 +249,9 @@ public class ProtoScriptHelper {
         for (File f : all_projects) {
 
             ProtoFile protoFile = new ProtoFile();
-            MLog.d( TAG, f.getName() + " is a dir " + f.isDirectory() );
+            // MLog.d( TAG, f.getName() + " is a dir " + f.isDirectory() );
 
+            protoFile.isDir = f.isDirectory();
             if (f.isDirectory()) {
                 protoFile.type = "folder";
                 protoFile.files = new ArrayList<ProtoFile>();

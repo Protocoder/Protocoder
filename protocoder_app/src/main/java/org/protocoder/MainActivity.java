@@ -28,10 +28,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.CardView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -218,6 +220,22 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+
+        /*
+        if (hasFocus) {
+            CardView cardView = (CardView) findViewById(R.id.card_view);
+            cardView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.splash_slide_in_anim_set));
+        } else {
+            CardView cardView = (CardView) findViewById(R.id.card_view);
+            cardView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.splash_slide_out_anim_set));
+        }
+        */ 
+
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
     }
@@ -298,11 +316,14 @@ public class MainActivity extends BaseActivity {
         super.setupActivity();
 
         final TextView title = (TextView) findViewById(R.id.toolbar2_title);
+
+        /*
         title.animate().translationY(0).withStartAction(new Runnable(){
             public void run(){
                 title.setTranslationY(500 - title.getY());
             }
         }).setDuration(1000).start();
+         */
 
         mTxtConnectionMessage = (TextView) findViewById(R.id.connection_message);
         mTxtConnectionIp = (TextView) findViewById(R.id.connection_ip);
@@ -404,7 +425,8 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onFinishEditDialog(String inputText) {
                 Toast.makeText(MainActivity.this, "Creating " + inputText, Toast.LENGTH_SHORT).show();
-                ProtoScriptHelper.createNewProject(MainActivity.this, "", inputText);
+                Project p = ProtoScriptHelper.createNewProject(MainActivity.this, ProtoScriptHelper.getProjectFolderPath("user_projects/User Projects"), inputText);
+                EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_NEW, p));
             }
         });
     }

@@ -27,7 +27,7 @@ import java.io.File;
 
 public class AppRunnerSettings {
 
-    public static boolean DEBUG = true;
+    public static boolean DEBUG = false;
 
     public final static String PROTOCODER_FOLDER = "protocodersandbox";
     public static final String USER_PROJECTS_FOLDER = "user_projects";

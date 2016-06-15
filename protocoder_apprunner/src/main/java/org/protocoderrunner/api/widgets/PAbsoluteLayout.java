@@ -21,8 +21,8 @@ public class PAbsoluteLayout extends FixedLayout {
     private static final int NORMALIZED = 2;
     private int mode = NORMALIZED;
 
-    private int mWidth = 500;
-    private int mHeight = 1000;
+    public int mWidth = -1;
+    public int mHeight = -1;
     private Context mContext;
 
     public PAbsoluteLayout(AppRunner appRunner) {
@@ -109,6 +109,14 @@ public class PAbsoluteLayout extends FixedLayout {
             default:
                 this.mode = NORMALIZED;
         }
+    }
+
+    public int width() {
+        return mWidth;
+    }
+
+    public int height() {
+        return mHeight;
     }
 
 

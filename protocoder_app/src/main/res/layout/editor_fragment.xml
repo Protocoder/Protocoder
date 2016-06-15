@@ -21,11 +21,12 @@
             android:layout_weight="1"
             android:gravity="top|left"
             android:hint="type here your code"
-            android:imeOptions="actionSend|flagNoEnterAction"
+            android:imeOptions="actionSend|flagNoEnterAction|flagNoExtractUi"
             android:inputType="textMultiLine|textNoSuggestions|text"
             android:cursorVisible="true"
             android:textColor="#FFFFFFFF"
             android:textSize="14sp"
+            android:paddingBottom="50dp"
             android:textStyle="bold" />
     </ScrollView>
 
@@ -53,11 +54,11 @@
     <HorizontalScrollView
         android:id="@+id/extraKeyBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:visibility="visible"
+        android:visibility="gone"
         android:background="@color/blacktransparent"
         android:fillViewport="false">
 

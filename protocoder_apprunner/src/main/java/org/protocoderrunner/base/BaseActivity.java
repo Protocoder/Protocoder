@@ -118,6 +118,14 @@ public class BaseActivity extends AppCompatActivity {
         );
     }
 
+    public void setNormal() {
+        getSupportActionBar().show();
+        isToolbarAllowed = true;
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN, WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    }
+
     public void showHomeBar(boolean b) {
 
         if (Build.VERSION.SDK_INT > AppRunnerSettings.MIN_SUPPORTED_VERSION) {

@@ -74,7 +74,7 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
     int modeCamera;
     private int cameraId;
 
-    protected String TAG = "Camera";
+    protected String TAG = CameraNew.class.getSimpleName();
 
     AppRunner mAppRunner;
 
@@ -94,15 +94,10 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
     private boolean frameProcessing = false;
     private Parameters mParameters;
 
-
     public interface CameraListener {
-
         public void onPicTaken();
-
         public void onVideoRecorded();
-
     }
-
 
     public CameraNew(AppRunner appRunner, int camera, int colorMode) {
         super(appRunner.getAppContext());
@@ -178,7 +173,7 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
     }
 
 
-    protected interface CallbackBmp {
+    public interface CallbackBmp {
         public void event(Bitmap bmp);
     }
 
@@ -186,7 +181,6 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
         this.callbackBmp = callbackBmp;
         startOnFrameProcessing();
     }
-
 
     public interface CallbackStream {
         public void event(String out);

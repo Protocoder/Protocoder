@@ -58,8 +58,7 @@
         <activity
             android:name=".WelcomeActivity"
             android:theme="@style/ProtocoderAppTheme"
-            android:label="@string/welcome_activity_name"
-            android:noHistory="true" >
+            android:label="@string/welcome_activity_name" >
         </activity>
         <activity
             android:name=".gui.settings.SettingsActivity"
@@ -88,9 +87,17 @@
         </service>
 
         <provider
-            android:name=".ProtoContentProvider2"
-            android:authorities="org.protocoder.contentprovider2"
-            android:exported="true"/>
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="org.protocoder.fileprovider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_provider_paths" />
+
+        </provider>
+
     </application>
 
 

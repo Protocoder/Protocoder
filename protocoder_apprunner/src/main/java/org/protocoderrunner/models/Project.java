@@ -20,6 +20,7 @@
 
 package org.protocoderrunner.models;
 
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
 
 import java.io.File;
@@ -59,6 +60,10 @@ public class Project {
 
     public String getFolder() {
         return this.folder;
+    }
+
+    public String getSandBoxPathPrev() {
+        return AppRunnerSettings.getBaseDir() + this.folder + File.separator;
     }
 
     public String getSandboxPath() {

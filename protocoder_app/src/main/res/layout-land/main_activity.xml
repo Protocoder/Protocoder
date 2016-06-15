@@ -8,7 +8,7 @@
     android:focusableInTouchMode="true"
     android:gravity="bottom"
     android:animateLayoutChanges="true"
-    android:fitsSystemWindows="false"
+    android:fitsSystemWindows="true"
     >
 
     <include layout="@layout/toolbar2" />

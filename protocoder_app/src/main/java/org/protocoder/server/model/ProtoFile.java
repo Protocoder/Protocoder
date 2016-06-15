@@ -13,6 +13,7 @@ public class ProtoFile {
     public String code = null;
     public Long size = null;
     public ArrayList<ProtoFile> files = null;
+    public boolean isDir;
 
     public ProtoFile(String path, String name) {
         this.name = name;

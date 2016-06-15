@@ -13,6 +13,7 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="symbol">&lt;\u0020\u0020\u0020&gt;</string>
+    <string name="no_projects">No projects yet!\nStart experimenting :)</string>
 
     <string name="view">View</string>
     <string name="run">Run</string>
@@ -54,7 +55,7 @@
     <!-- Welcome -->
     <string name="welcome_activity_name">protocoder</string>
     <string name="welcome_title">Good to see you.</string>
-    <string name="welcome_body">Protocoder makes simple to create, edit and run projects from your Android device or computer at the same time. \n\nJust start the app from your mobile, navigate to the displayed URL and start coding with the WebIDE.\n\nAre you in?</string>
+    <string name="welcome_body">Protocoder makes simple and fast to experiment creatively with mobile devices. \n\nYou can create projects using this device or using the self-hosted WebIDE through your computer.</string>
     <string name="welcome_accept">Let\'s go.</string>
 
     <!-- Settings screen -->

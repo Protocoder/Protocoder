@@ -29,11 +29,15 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
+import android.widget.ViewFlipper;
 
 import org.protocoder.helpers.ProtoSettingsHelper;
 import org.protocoder.gui.settings.ProtocoderSettings;
 import org.protocoder.gui.settings.UserSettings;
 import org.protocoderrunner.base.BaseActivity;
+import org.protocoderrunner.base.utils.AndroidUtils;
 import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.base.utils.StrUtils;
 
@@ -49,6 +53,22 @@ public class WelcomeActivity extends BaseActivity {
 
     private static final String TAG = WelcomeActivity.class.getSimpleName();
     private static final int REQUEST_CODE_SOME_FEATURES_PERMISSIONS = 11;
+
+    private static final int STEP_WELCOME = 0;
+    private static final int STEP_ASK_PERMISSIONS_PROMPT = 1;
+    private static final int STEP_ASK_PERMISSIONS_PROCESS = 2;
+    private static final int STEP_ASK_PERMISSIONS_ERROR = 3;
+    private static final int STEP_ASK_PERMISSIONS_OK = 4;
+    private static final int STEP_INSTALL_EXAMPLES_PROMPT = 5;
+    private static final int STEP_INSTALL_EXAMPLES_PROCESS = 6;
+    private static final int STEP_INSTALL_EXAMPLES_OK = 7;
+    private static final int STEP_READY = 8;
+
+    private Button mNextStepButton;
+    private ViewFlipper viewFlipper;
+    private int mCurrentStep = 0;
+    private int mNextStep = 0;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,12 +76,28 @@ public class WelcomeActivity extends BaseActivity {
         setContentView(R.layout.welcome_activity);
         setupActivity();
 
-        // request permissions
-        checkPermissions();
+        viewFlipper = (ViewFlipper) findViewById(R.id.viewFlipper);
+        viewFlipper.setInAnimation(this, R.anim.slide_in_left);
+        viewFlipper.setOutAnimation(this, R.anim.slide_out_right);
 
-        // first time id
-        UserSettings userSettings = new UserSettings(this);
-        userSettings.setId(StrUtils.generateRandomString());
+        mNextStepButton = (Button) findViewById(R.id.next_step_button);
+        mNextStepButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToStep(mNextStep);
+            }
+        });
+
+        goToStep(STEP_WELCOME);
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+
+        if (hasFocus) {
+            mNextStepButton.startAnimation(AnimationUtils.loadAnimation(this, R.anim.splash_slide_in_anim_set));
+        }
     }
 
     @Override
@@ -124,11 +160,7 @@ public class WelcomeActivity extends BaseActivity {
             int isGranted2 = isGranted1 & PackageManager.PERMISSION_GRANTED;
 
             MLog.d(TAG, permissionName + " " + isGranted1 + " " + isGranted2);
-
-            // if is already granted we remove it from the list
-            // requiredPermissions.remove(i);
         }
-
 
         // request the permissions
         if (!requiredPermissions.isEmpty()) {
@@ -138,6 +170,8 @@ public class WelcomeActivity extends BaseActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        boolean isPermissionWriteExternalGranted = false;
+
         switch (requestCode) {
             case REQUEST_CODE_SOME_FEATURES_PERMISSIONS: {
                 for (int i = 0; i < permissions.length; i++) {
@@ -146,7 +180,18 @@ public class WelcomeActivity extends BaseActivity {
                     } else if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
                         MLog.d("Permissions", "Permission Denied: " + permissions[i]);
                     }
+
+                    if (permissions[i].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE) && grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                        isPermissionWriteExternalGranted = true;
+                        MLog.d(TAG, "granted!");
+                    }
+                    // if is already granted we remove it from the list
+                    // requiredPermissions.remove(i);
                 }
+
+                // if ok go next step otherwise repeat step
+                if (isPermissionWriteExternalGranted) goToStep(STEP_ASK_PERMISSIONS_OK);
+                else goToStep(STEP_ASK_PERMISSIONS_ERROR);
             }
             break;
             default: {
@@ -155,14 +200,7 @@ public class WelcomeActivity extends BaseActivity {
         }
     }
 
-    public void onAcceptClick(View v) {
-        final ProgressDialog progress = new ProgressDialog(this);
-        progress.setTitle("Installing examples");
-        progress.setMessage("You can start creating with Protocoder in just a second");
-        progress.setCancelable(false);
-        progress.setCanceledOnTouchOutside(false);
-        progress.show();
-
+    public void installExamples() {
         //create folder structure
         new File(ProtocoderSettings.getFolderPath(ProtocoderSettings.USER_PROJECTS_FOLDER)).mkdirs();
         new File(ProtocoderSettings.getFolderPath(ProtocoderSettings.EXAMPLES_FOLDER)).mkdirs();
@@ -173,35 +211,118 @@ public class WelcomeActivity extends BaseActivity {
         ProtoSettingsHelper.installExamples(getApplicationContext(), ProtocoderSettings.EXAMPLES_FOLDER, new ProtoSettingsHelper.InstallListener() {
             @Override
             public void onReady() {
-                progress.dismiss();
-                // Write a shared pref to never come back here
-                SharedPreferences userDetails = getSharedPreferences("org.protocoder", MODE_PRIVATE);
-                userDetails.edit().putBoolean(getResources().getString(R.string.pref_is_first_launch), false).commit();
-                // Start the activity
-                Intent i = new Intent(WelcomeActivity.this, MainActivity.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(i);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        goToStep(STEP_INSTALL_EXAMPLES_OK);
+                    }
+                });
             }
         });
 
     }
 
-    //TODO remove and use fileIO methods
-    private String readFile(int resource) {
-        InputStream inputStream = getResources().openRawResource(resource);
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        int i;
-        try {
-            i = inputStream.read();
-            while (i != -1) {
-                byteArrayOutputStream.write(i);
-                i = inputStream.read();
-            }
-            inputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void ready() {
+        // Start the activity
+        Intent i = new Intent(WelcomeActivity.this, MainActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(i);
+        finish();
+    }
+
+    public void goToStep(int step) {
+        MLog.d(TAG, "step " + step + " " + mNextStep);
+
+        mCurrentStep = step;
+
+        switch (step) {
+            case STEP_WELCOME:
+                if (AndroidUtils.isVersionMarshmallow()) {
+                    mNextStep = STEP_ASK_PERMISSIONS_PROMPT;
+                } else {
+                    mNextStep = STEP_INSTALL_EXAMPLES_PROMPT;
+                }
+
+                break;
+
+            case STEP_ASK_PERMISSIONS_PROMPT:
+                viewFlipper.setDisplayedChild(1);
+                mNextStepButton.setText("ask permissions");
+                mNextStep = STEP_ASK_PERMISSIONS_PROCESS;
+
+                break;
+
+            case STEP_ASK_PERMISSIONS_PROCESS:
+                mNextStepButton.setEnabled(false);
+
+                checkPermissions();
+
+                // show some feedback
+
+                break;
+
+            case STEP_ASK_PERMISSIONS_ERROR:
+                mNextStepButton.setEnabled(true);
+                mNextStepButton.setText("ask permissions");
+                mNextStep = STEP_ASK_PERMISSIONS_PROMPT;
+
+                // hide feedback process
+
+                // show feedback error
+
+                break;
+
+            case STEP_ASK_PERMISSIONS_OK:
+                // hide feedback process
+                // show feedback OK
+
+                // after some time go to next
+                goToStep(STEP_INSTALL_EXAMPLES_PROMPT);
+
+                break;
+
+            case STEP_INSTALL_EXAMPLES_PROMPT:
+                viewFlipper.setDisplayedChild(2);
+                mNextStepButton.setEnabled(true);
+                mNextStepButton.setText("Install examples");
+                mNextStep = STEP_INSTALL_EXAMPLES_PROCESS;
+
+                break;
+
+            case STEP_INSTALL_EXAMPLES_PROCESS:
+                installExamples();
+                mNextStepButton.setEnabled(false);
+
+                // show feedback process
+
+                break;
+
+            case STEP_INSTALL_EXAMPLES_OK:
+                viewFlipper.setDisplayedChild(3);
+                mNextStepButton.setEnabled(true);
+                mNextStepButton.setText("START CREATING");
+                mNextStep = STEP_READY;
+
+                // disable feedback process
+
+                break;
+
+            case STEP_READY:
+                // Write a shared pref to never come back here
+                SharedPreferences userDetails = getSharedPreferences("org.protocoder", MODE_PRIVATE);
+                userDetails.edit().putBoolean(getResources().getString(R.string.pref_is_first_launch), false).commit();
+
+                // first time id
+                UserSettings userSettings = new UserSettings(this);
+                userSettings.setId(StrUtils.generateRandomString());
+
+                ready();
+
+                break;
+
         }
-        return byteArrayOutputStream.toString();
+        step++;
+
     }
 
     @Override
@@ -212,6 +333,5 @@ public class WelcomeActivity extends BaseActivity {
     @Override
     public void onStop() {
         super.onStop();
-
     }
 }

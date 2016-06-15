@@ -49,8 +49,8 @@ import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.protocoderrunner.api.PDevice;
 import org.protocoderrunner.api.PMedia;
-import org.protocoderrunner.api.PUI;
 import org.protocoderrunner.api.network.PBluetooth;
 import org.protocoderrunner.api.sensors.PNfc;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
@@ -84,9 +84,9 @@ public class AppRunnerActivity extends BaseActivity {
     /*
      * Keyboard handling
      */
-    private PUI.onKeyListener   onKeyListener;
-    public boolean              keyVolumeEnabled = true;
-    public boolean              keyBackEnabled = true;
+    private PDevice.onKeyListener   onKeyListener;
+    public boolean ignoreVolumeEnabled = false;
+    public boolean ignoreBackEnabled = false;
 
     /*
      * UI stuff
@@ -348,7 +348,7 @@ public class AppRunnerActivity extends BaseActivity {
 
     @Override
     public boolean onGenericMotionEvent(MotionEvent event) {
-
+        // AndroidUtils.dumpMotionEvent(event);
 
         return super.onGenericMotionEvent(event);
     }
@@ -358,9 +358,7 @@ public class AppRunnerActivity extends BaseActivity {
      */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-
         if (AppRunnerSettings.DEBUG && keyCode == 25) {
-            MLog.d(TAG, "keyCode " + keyCode + " qq ");
             if (debugFramentIsVisible) {
                 removeDebugFragment();
             } else {
@@ -368,19 +366,44 @@ public class AppRunnerActivity extends BaseActivity {
             }
         }
         
-        if (onKeyListener != null) onKeyListener.onKeyDown(keyCode);
-        if (checkBackKey(keyCode) || checkVolumeKeys(keyCode)) return super.onKeyDown(keyCode, event);
+        if (onKeyListener != null) {
+            onKeyListener.onKeyDown(event);
+            onKeyListener.onKeyEvent(event);
+        }
 
-        return true;
+        // check if back key or volume keys are disabled
+        MLog.d(TAG, "checkbackkey " + checkBackKey(keyCode));
+
+        if (checkBackKey(keyCode) || checkVolumeKeys(keyCode)) return true;
+
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if (onKeyListener != null) onKeyListener.onKeyUp(keyCode);
-        if (checkBackKey(keyCode) || checkVolumeKeys(keyCode)) return super.onKeyUp(keyCode, event);
+        if (onKeyListener != null) {
+            onKeyListener.onKeyUp(event);
+            onKeyListener.onKeyEvent(event);
+        }
 
-        return true;
+        // check if back key or volume keys are disabled
+        if (checkBackKey(keyCode) || checkVolumeKeys(keyCode)) return true;
+
+        return super.onKeyUp(keyCode, event);
     }
+
+    @Override
+    public boolean onKeyShortcut(int keyCode, KeyEvent event) {
+        if (event.isCtrlPressed()) {
+            switch (keyCode) {
+                case KeyEvent.KEYCODE_R:
+                    finish();
+                    break;
+            }
+        }
+        return super.onKeyShortcut(keyCode, event);
+    }
+
 
     /**
      * Menu
@@ -424,7 +447,7 @@ public class AppRunnerActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void addOnKeyListener(PUI.onKeyListener onKeyListener2) { onKeyListener = onKeyListener2; }
+    public void addOnKeyListener(PDevice.onKeyListener onKeyListener2) { onKeyListener = onKeyListener2; }
 
     public void addNFCReadListener(PNfc.onNFCListener onNFCListener2) { onNFCListener = onNFCListener2; }
 
@@ -435,12 +458,12 @@ public class AppRunnerActivity extends BaseActivity {
     public void addVoiceRecognitionListener(PMedia.onVoiceRecognitionListener onVoiceRecognitionListener2) { onVoiceRecognitionListener = onVoiceRecognitionListener2; }
 
     public boolean checkBackKey(int keyCode) {
-        if (keyBackEnabled && keyCode == KeyEvent.KEYCODE_BACK) return true;
+        if (ignoreBackEnabled && keyCode == KeyEvent.KEYCODE_BACK) return true;
         else return false;
     }
 
     public boolean checkVolumeKeys(int keyCode) {
-        if (keyVolumeEnabled && (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
+        if (ignoreVolumeEnabled && (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
             return true;
         } else {
             return false;

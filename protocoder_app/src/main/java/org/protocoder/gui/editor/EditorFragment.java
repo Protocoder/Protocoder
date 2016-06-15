@@ -216,9 +216,9 @@ public class EditorFragment extends BaseFragment {
                 // MLog.d(TAG, "" + heightDiff);
 
                 if (heightDiff > 300) {
-                    mExtraKeyBar.setVisibility(View.VISIBLE);
+                    // mExtraKeyBar.setVisibility(View.VISIBLE);
                 } else {
-                    mExtraKeyBar.setVisibility(View.GONE);
+                    // mExtraKeyBar.setVisibility(View.GONE);
                 }
             }
         });

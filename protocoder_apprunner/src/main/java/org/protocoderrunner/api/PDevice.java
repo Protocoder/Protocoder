@@ -43,9 +43,12 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.InputDevice;
 import android.view.KeyCharacterMap;
+import android.view.KeyEvent;
 
 import com.google.gson.Gson;
 
+import org.protocoderrunner.api.common.ReturnInterface;
+import org.protocoderrunner.api.common.ReturnObject;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
@@ -53,11 +56,29 @@ import org.protocoderrunner.base.utils.AndroidUtils;
 import org.protocoderrunner.base.utils.Intents;
 import org.protocoderrunner.base.utils.MLog;
 
+import java.util.ArrayList;
+
 public class PDevice extends ProtoBase {
 
     private BroadcastReceiver batteryReceiver;
     private BroadcastReceiver onNotification;
     private BroadcastReceiver smsReceiver;
+
+    private ReturnInterface mOnKeyDownfn;
+    private ReturnInterface mOnKeyUpfn;
+    private ReturnInterface mOnKeyEventfn;
+
+    private boolean isKeyPressInit = false;
+
+
+    /**
+     * Interface for key up / down
+     */
+    public interface onKeyListener {
+        public void onKeyDown(KeyEvent event);
+        public void onKeyUp(KeyEvent event);
+        public void onKeyEvent(KeyEvent event);
+    }
 
     public PDevice(AppRunner appRunner) {
         super(appRunner);
@@ -66,44 +87,155 @@ public class PDevice extends ProtoBase {
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public void getInputDevices() {
         InputManager inputManager = (InputManager) getAppRunner().getAppContext().getSystemService(Context.INPUT_SERVICE);
-        int[] devices = inputManager.getInputDeviceIds();
+        int[] devicesId = inputManager.getInputDeviceIds();
 
-        for (int i = 0; i < devices.length; i++) {
-            InputDevice device = inputManager.getInputDevice(i);
+        MLog.d(TAG, "" + devicesId.length);
 
-            MLog.d(TAG, "" + device.getControllerNumber());
-            MLog.d(TAG, "" + device.getKeyboardType());
-            MLog.d(TAG, "" + device.getProductId());
-            MLog.d(TAG, "" + device.getName());
-            MLog.d(TAG, "" + device.getDescriptor());
+        ArrayList gameControllerDeviceIds = new ArrayList();
+
+
+        for (int i = 0; i < devicesId.length; i++) {
+            InputDevice device = inputManager.getInputDevice(devicesId[i]);
+
+            MLog.d(TAG, "controller number: " + device.getControllerNumber());
+            MLog.d(TAG, "keyboard type: " + device.getKeyboardType());
+            MLog.d(TAG, "product id: " + device.getProductId());
+            MLog.d(TAG, "name: " + device.getName());
+            MLog.d(TAG, "descriptor: " + device.getDescriptor());
             KeyCharacterMap qq = device.getKeyCharacterMap();
 
-            Handler handler = new Handler();
+            int sources = device.getSources();
 
-            inputManager.registerInputDeviceListener(new InputManager.InputDeviceListener() {
-                @Override
-                public void onInputDeviceAdded(int deviceId) {
-
+            // Verify that the device has gamepad buttons, control sticks, or both.
+            if (((sources & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD) || ((sources & InputDevice.SOURCE_JOYSTICK) == InputDevice.SOURCE_JOYSTICK)) {
+                // This device is a game controller. Store its device ID.
+                if (!gameControllerDeviceIds.contains(devicesId[i])) {
+                    gameControllerDeviceIds.add(devicesId[i]);
                 }
-
-                @Override
-                public void onInputDeviceRemoved(int deviceId) {
-
-                }
-
-                @Override
-                public void onInputDeviceChanged(int deviceId) {
-
-                }
-            }, handler);
+            }
         }
+
+        Handler handler = new Handler();
+        inputManager.registerInputDeviceListener(new InputManager.InputDeviceListener() {
+            @Override
+            public void onInputDeviceAdded(int deviceId) {
+                MLog.d(TAG, "added " + deviceId);
+            }
+
+            @Override
+            public void onInputDeviceRemoved(int deviceId) {
+                MLog.d(TAG, "removed " + deviceId);
+            }
+
+            @Override
+            public void onInputDeviceChanged(int deviceId) {
+                MLog.d(TAG, "removed " + deviceId);
+            }
+        }, handler);
+
     }
 
-    @ProtoMethod(description = "makes the phone vibrate", example = "android.vibrate(500);")
+
+    private ReturnObject keyEventToJs(KeyEvent event) {
+        ReturnObject o = new ReturnObject();
+        o.put("key", event.getKeyCode());
+        o.put("id", event.getDeviceId());
+
+        String action = "unknown";
+        switch (event.getAction()) {
+            case KeyEvent.ACTION_DOWN:
+                action = "down";
+                break;
+
+            case KeyEvent.ACTION_UP:
+                action = "up";
+                break;
+
+            case KeyEvent.ACTION_MULTIPLE:
+                action = "multiple";
+                break;
+        }
+
+        o.put("action", action);
+
+        o.put("alt", event.isAltPressed());
+        o.put("ctrl", event.isCtrlPressed());
+        o.put("fn", event.isFunctionPressed());
+        o.put("meta", event.isMetaPressed());
+        o.put("chars", event.getCharacters());
+        o.put("number", event.getNumber());
+
+        return o;
+    }
+
+    private void keyInit() {
+        if (isKeyPressInit) return;
+        isKeyPressInit = true;
+
+        (getActivity()).addOnKeyListener(new onKeyListener() {
+            @Override
+            public void onKeyUp(KeyEvent event) {
+                if (mOnKeyUpfn != null) mOnKeyUpfn.event(keyEventToJs(event));
+            }
+
+            @Override
+            public void onKeyDown(KeyEvent event) {
+                if (mOnKeyDownfn != null) mOnKeyDownfn.event(keyEventToJs(event));
+            }
+
+            @Override
+            public void onKeyEvent(KeyEvent event) {
+                if (mOnKeyEventfn != null) mOnKeyEventfn.event(keyEventToJs(event));
+            }
+        });
+    }
+
+    @ProtoMethod(description = "", example = "")
+    @ProtoMethodParam(params = {"function(keyNumber)"})
+    public void onKeyDown(ReturnInterface fn) {
+        keyInit();
+        mOnKeyDownfn = fn;
+    }
+
+    @ProtoMethod(description = "", example = "")
+    @ProtoMethodParam(params = {"function(keyNumber)"})
+    public void onKeyUp(ReturnInterface fn) {
+        keyInit();
+        mOnKeyUpfn = fn;
+    }
+
+    @ProtoMethod(description = "", example = "")
+    @ProtoMethodParam(params = {"function(keyNumber)"})
+    public void onKeyEvent(ReturnInterface fn) {
+        keyInit();
+        mOnKeyEventfn = fn;
+    }
+
+
+    @ProtoMethod(description = "", example = "")
+    @ProtoMethodParam(params = {"boolean"})
+    public void ignoreVolumeKeys(boolean b) {
+        getActivity().ignoreVolumeEnabled = b;
+    }
+
+    @ProtoMethod(description = "", example = "")
+    @ProtoMethodParam(params = {"boolean"})
+    public void ignoreBackKey(boolean b) {
+        getActivity().ignoreBackEnabled = b;
+    }
+
+    @ProtoMethod(description = "makes the phone vibrate", example = "android.vibrate(500)")
     @ProtoMethodParam(params = {"duration"})
     public void vibrate(int duration) {
         Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
         v.vibrate(duration);
+    }
+
+    @ProtoMethod(description = "makes the phone vibrate", example = "android.vibrate(500)")
+    @ProtoMethodParam(params = {"duration"})
+    public void vibrate(long[] pattern, int repeat) {
+        Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
+        v.vibrate(pattern, repeat);
     }
 
 

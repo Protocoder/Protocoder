@@ -9,7 +9,7 @@
     android:layout_alignParentTop="true"
     android:layout_gravity="left|top"
     android:animateLayoutChanges="true"
-    android:background="#22000000"
+    android:background="#11000000"
     android:gravity="center">
 
     <ToggleButton

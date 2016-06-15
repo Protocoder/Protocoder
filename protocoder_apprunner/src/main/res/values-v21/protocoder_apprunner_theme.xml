@@ -3,8 +3,8 @@
 
     <style name="ProtocoderAppRunnerTheme" parent="ProtocoderAppRunnerTheme.Base">-->
         <item name="android:statusBarColor">#22000000</item>
-        <item name="android:navigationBarColor">@color/transparent</item>
-        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:navigationBarColor">@color/black</item>
+        <item name="android:windowTranslucentNavigation">false</item>
         <item name="android:colorPrimary">@color/mwmmagenta</item>
     </style>-->
 

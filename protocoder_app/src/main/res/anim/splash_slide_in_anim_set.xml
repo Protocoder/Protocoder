@@ -21,12 +21,12 @@
 
     <alpha
         android:duration="350"
-        android:fromAlpha="1.0"
+        android:fromAlpha="0.0"
         android:toAlpha="1.0" />
 
     <translate
         android:duration="350"
-        android:fromXDelta="100%"
+        android:fromYDelta="50%"
         android:toXDelta="0%"
         android:zAdjustment="top" />
 

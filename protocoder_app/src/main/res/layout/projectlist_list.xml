@@ -39,23 +39,15 @@
             <!--android:src="@drawable/protocoder_none" />-->
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="No Projects yet :("
-            android:textSize="35sp"
-            android:layout_marginBottom="25dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/no_projects"
+            android:textSize="22sp"
+            android:layout_gravity="center"
+            android:gravity="center"
             android:textColor="#55000000"
             />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="10dp"
-            android:shadowRadius="2"
-            android:text="@string/projects_zero"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
     </LinearLayout>
 
 </FrameLayout>

@@ -20,14 +20,14 @@
 
 package org.protocoderrunner.api.media;
 
+import org.protocoderrunner.api.common.ReturnInterface;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.api.widgets.PViewInterface;
 import org.protocoderrunner.base.gui.CameraNew;
 
-public class PCamera extends CameraNew implements PViewInterface {
-
+public class PCamera extends CameraNew implements PCameraInterface, PViewInterface {
 
     private final PCamera cam;
     protected AppRunner mAppRunner;
@@ -38,16 +38,10 @@ public class PCamera extends CameraNew implements PViewInterface {
         cam = this;
     }
 
-    // --------- takePicture ---------//
-    public interface TakePictureCB {
-        void event();
-    }
-
-
     @ProtoMethodParam(params = {"fileName", "function()"})
     @ProtoMethod(description = "Takes a picture and saves it to fileName", example = "camera.takePicture();")
     // @APIRequires()
-    public void takePicture(String file, final TakePictureCB callbackfn) {
+    public void takePicture(String file, final ReturnInterface callbackfn) {
 
         takePic(mAppRunner.getProject().getFullPathForFile(file));
         addListener(new CameraListener() {
@@ -59,27 +53,23 @@ public class PCamera extends CameraNew implements PViewInterface {
 
             @Override
             public void onPicTaken() {
-                callbackfn.event();
+                callbackfn.event(null);
                 cam.removeListener(this);
             }
         });
     }
 
-
     @ProtoMethodParam(params = {"function(bitmap)"})
     @ProtoMethod(description = "Gets bitmap frames ready to use", example = "camera.takePicture();")
-    // @APIRequires()
     public void onNewBitmap(final CameraNew.CallbackBmp callbackfn) {
         cam.addCallbackBmp(callbackfn);
     }
-
 
     @ProtoMethodParam(params = {"function(base64Image)"})
     @ProtoMethod(description = "Get the frames ready to stream", example = "camera.takePicture();")
     public void onNewStreamFrame(CameraNew.CallbackStream callbackfn) {
         cam.addCallbackStream(callbackfn);
     }
-
 
     @ProtoMethodParam(params = {"width", "height"})
     @ProtoMethod(description = "Set the camera preview resolution", example = "camera.takePicture();")
@@ -93,13 +83,11 @@ public class PCamera extends CameraNew implements PViewInterface {
         super.setPictureSize(w, h);
     }
 
-
     @ProtoMethodParam(params = {"{'none', 'mono', 'sepia', 'negative', 'solarize', 'posterize', 'whiteboard', 'blackboard'}"})
     @ProtoMethod(description = "Set the camera picture effect if supported", example = "camera.takePicture();")
     public void setColorEffect(String effect) {
         super.setColorEffect(effect);
     }
-
 
     @ProtoMethod(description = "Records a video in fileName", example = "")
     @ProtoMethodParam(params = {"fileName"})
@@ -113,13 +101,11 @@ public class PCamera extends CameraNew implements PViewInterface {
         stopRecordingVideo();
     }
 
-
     @ProtoMethod(description = "Checks if flash is available", example = "")
     @ProtoMethodParam(params = {""})
     public boolean isFlashAvailable() {
         return super.isFlashAvailable();
     }
-
 
     @ProtoMethod(description = "Turns on/off the flash", example = "")
     @ProtoMethodParam(params = {""})
@@ -127,13 +113,11 @@ public class PCamera extends CameraNew implements PViewInterface {
         super.turnOnFlash(b);
     }
 
-
     @ProtoMethod(description = "Turn the autofocus on/off", example = "")
     @ProtoMethodParam(params = {""})
     public void focus() {
         super.focus(null);
     }
-
 
     @ProtoMethod(description = "Turn the autofocus on/off", example = "")
     @ProtoMethodParam(params = {""})

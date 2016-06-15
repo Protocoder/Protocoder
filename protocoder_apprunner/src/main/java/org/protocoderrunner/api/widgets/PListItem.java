@@ -57,7 +57,7 @@ public class PListItem extends LinearLayout {
         ImageView imageView = null; //(ImageView) v.get().findViewById(R.id.customViewImage);
         imageView.setImageResource(resId);
 
-        // drawText(imageView, t);
+        // drawText(imageView, mTouches);
     }
 
     //TODO place holder

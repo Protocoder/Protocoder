@@ -20,44 +20,54 @@
         android:layout_marginRight="12dp"
         />
 
-    <TextView
-        android:id="@+id/connection_message"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/connection_message_other"
-        android:textColor="#55FFFFFF"
-        android:textSize="12sp"
-        android:gravity="center"
+        android:layout_toRightOf="@id/computer_image"
+        android:layout_gravity="center"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@id/computer_image"
-        android:layout_alignRight="@+id/button12"
-        android:layout_alignEnd="@+id/button12" />
+        android:animateLayoutChanges="true"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/connection_ip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textColor="#FFFFFFFF"
-        android:textSize="12sp"
-        android:textStyle="italic"
-        android:visibility="visible"
-        android:text="http://1.2.3.4.5:8585"
-        android:layout_below="@id/connection_message"
-        android:layout_toRightOf="@id/computer_image"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="15dp"/>
+        <TextView
+            android:id="@+id/connection_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/connection_message_other"
+            android:textColor="#55FFFFFF"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:layout_centerVertical="true"
+            android:layout_alignRight="@+id/button12"
+            android:layout_alignEnd="@+id/button12" />
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="/?"
-        android:id="@+id/button12"
-        android:layout_gravity="right|center_vertical"
-        android:layout_alignBottom="@+id/connection_ip"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:visibility="invisible" />
+        <TextView
+            android:id="@+id/connection_ip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="#FFFFFFFF"
+            android:textSize="12sp"
+            android:textStyle="italic"
+            android:visibility="gone"
+            android:text="http://1.2.3.4.5:8585"
+            android:layout_below="@+id/connection_message"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="/?"
+            android:id="@+id/button12"
+            android:layout_gravity="right|center_vertical"
+            android:layout_alignBottom="@+id/connection_ip"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
 
 </RelativeLayout>

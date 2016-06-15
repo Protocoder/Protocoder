@@ -147,13 +147,11 @@ public class FilePreviewerFragment extends BaseFragment {
 
     }
 
-    private void loadImage(String path) {
+    private void loadImage(String file) {
         mImageContainer.setVisibility(View.VISIBLE);
         ImageView imageView = (ImageView) v.findViewById(R.id.imageView);
-        path = ProtoScriptHelper.getAbsolutePathFromRelative(path);
-        MLog.d(TAG, path);
 
-        imageView.setImageBitmap(Image.loadBitmap(path));
+        imageView.setImageBitmap(Image.loadBitmap(file));
     }
 
     // load file in editor
@@ -165,7 +163,7 @@ public class FilePreviewerFragment extends BaseFragment {
 
             unloadAll();
 
-            if (type.equals("image")) loadImage(f.path);
+            if (type.equals("image")) loadImage(f.getFullPath());
             else if (type.equals("video")) loadVideo(f.path);
             else if (type.equals("sound")) loadSound(f.path);
         }

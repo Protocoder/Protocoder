@@ -74,8 +74,20 @@ public class PToolbar extends ProtoBase {
 
     @ProtoMethod(description = "Changes the title bar color", example = "")
     @ProtoMethodParam(params = {"r", "g", "b", "alpha"})
-    public PToolbar bgColor(int r, int g, int b, int alpha) {
+    public PToolbar background(int r, int g, int b, int alpha) {
         int c = Color.argb(alpha, r, g, b);
+
+        ColorDrawable d = new ColorDrawable();
+        d.setColor(c);
+        mToolbar.setBackgroundDrawable(d);
+
+        return this;
+    }
+
+    @ProtoMethod(description = "Changes the title bar color", example = "")
+    @ProtoMethodParam(params = {"r", "g", "b", "alpha"})
+    public PToolbar background(int r, int g, int b) {
+        int c = Color.rgb(r, g, b);
 
         ColorDrawable d = new ColorDrawable();
         d.setColor(c);
@@ -105,7 +117,7 @@ public class PToolbar extends ProtoBase {
 
     @ProtoMethod(description = "Sets an image rather than text as toolbar title", example = "")
     @ProtoMethodParam(params = {"imageName"})
-    public PToolbar imageIcon(String imagePath) {
+    public PToolbar icon(String imagePath) {
         Bitmap myBitmap = BitmapFactory.decodeFile(mAppRunner.getProject().getFullPathForFile(imagePath));
         Drawable icon = new BitmapDrawable(mAppRunner.getAppContext().getResources(), myBitmap);
 

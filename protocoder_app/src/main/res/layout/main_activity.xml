@@ -12,8 +12,9 @@
     >
 
     <include layout="@layout/toolbar2"/>
-    <include layout="@layout/toolbar2_title"
+    <!-- <include layout="@layout/toolbar2_title"
         android:id="@+id/toolbar2_title"/>
+    -->
 
     <include layout="@layout/connection_info_view"
         android:layout_below="@id/header"
@@ -24,7 +25,7 @@
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/card_view"
         android:layout_gravity="center"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         card_view:cardCornerRadius="@dimen/main_cardview_radius"
         card_view:cardBackgroundColor="@color/white"

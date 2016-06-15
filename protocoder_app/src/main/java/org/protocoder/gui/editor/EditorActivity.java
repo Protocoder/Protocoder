@@ -95,7 +95,7 @@ public class EditorActivity extends BaseActivity {
 
         addEditorFragment(savedInstanceState);
         addFilePreviewerFragment(savedInstanceState);
-        addFileManagerDrawer(savedInstanceState, true);
+        // addFileManagerDrawer(savedInstanceState, true);
         // showFileManagerDrawer(false);
     }
 
@@ -141,9 +141,9 @@ public class EditorActivity extends BaseActivity {
 
         this.mMenu = menu;
         menu.clear();
-        menu.add(1, MENU_RUN, 0, "R").setIcon(R.drawable.ic_play_arrow_black_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        menu.add(1, MENU_SAVE, 0, "S").setIcon(R.drawable.ic_save_black_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        if (!isTablet) menu.add(1, MENU_FILES, 0, "F").setIcon(R.drawable.ic_list_black_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        menu.add(1, MENU_RUN, 0, "Run Project").setIcon(R.drawable.ic_play_arrow_black_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(1, MENU_SAVE, 0, "Save File").setIcon(R.drawable.ic_save_black_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        if (!isTablet) menu.add(1, MENU_FILES, 0, "Show Project Files").setIcon(R.drawable.ic_list_black_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         menu.add(1, MENU_API, 0, "API").setIcon(R.drawable.ic_chrome_reader_mode_black_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 
         // onOptionsItemSelected(mMenu.findItem(MENU_FILES));
@@ -177,16 +177,15 @@ public class EditorActivity extends BaseActivity {
         MenuItem menuFiles = mMenu.findItem(MENU_FILES).setChecked(showFilesDrawer);
 
         showFilesDrawer = !showFilesDrawer;
-        showFileManagerDrawer(showFilesDrawer);
+        addFileManagerDrawer(null, showFilesDrawer);
+        // showFileManagerDrawer(showFilesDrawer);
     }
-
 
     public void toggleApiDrawer() {
         MenuItem menuApi = mMenu.findItem(MENU_API).setChecked(showFilesDrawer);
 
         showAPIDrawer = !showAPIDrawer;
         showAPIDrawer(showAPIDrawer);
-
     }
 
     @Override
@@ -278,18 +277,19 @@ public class EditorActivity extends BaseActivity {
                 fileFragment = FileManagerFragment.newInstance();
                 Bundle bundle = new Bundle();
                 bundle.putString(FileManagerFragment.ROOT_FOLDER, mCurrentProject.getFullPath());
-                bundle.putString(FileManagerFragment.PATH_HIDE_PATH_FROM, AppRunnerSettings.getBaseDir());
+
+                // we pass the initial route to hide
+                bundle.putString(FileManagerFragment.PATH_HIDE_PATH_FROM, mCurrentProject.getSandBoxPathPrev());
                 fileFragment.setArguments(bundle);
 
                 if (isTablet) {
                     ft.add(R.id.fragmentFileManager, fileFragment);
                 } else {
-                    ft.add(R.id.fragmentFileManager, fileFragment).addToBackStack(null);
+                    ft.add(R.id.fragmentFileManager, fileFragment).addToBackStack("filemanager");
                 }
             }
 
         } else {
-            // editorFragment.getView().animate().translationX(0).setDuration(500).start();
             ft.remove(fileFragment);
         }
 

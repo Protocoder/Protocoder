@@ -1,6 +1,7 @@
 package org.protocoderrunner.api;
 
 import android.animation.ValueAnimator;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -16,6 +17,7 @@ import org.protocoderrunner.AppRunnerFragment;
 import org.protocoderrunner.api.common.ReturnInterface;
 import org.protocoderrunner.api.common.ReturnObject;
 import org.protocoderrunner.api.media.PCamera;
+import org.protocoderrunner.api.media.PCamera2;
 import org.protocoderrunner.api.other.PProcessing;
 import org.protocoderrunner.api.widgets.PAbsoluteLayout;
 import org.protocoderrunner.api.widgets.PButton;
@@ -27,6 +29,7 @@ import org.protocoderrunner.api.widgets.PImageView;
 import org.protocoderrunner.api.widgets.PLinearLayout;
 import org.protocoderrunner.api.widgets.PMap;
 import org.protocoderrunner.api.widgets.PNumberPicker;
+import org.protocoderrunner.api.widgets.PPadView;
 import org.protocoderrunner.api.widgets.PPlotView;
 import org.protocoderrunner.api.widgets.PPopupDialogFragment;
 import org.protocoderrunner.api.widgets.PProgressBar;
@@ -47,6 +50,7 @@ import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.base.gui.CameraNew;
+import org.protocoderrunner.base.utils.AndroidUtils;
 
 import java.util.ArrayList;
 
@@ -64,14 +68,8 @@ public class PUI extends ProtoBase {
     private RelativeLayout uiHolderLayout;
     private PScrollView uiScrollView;
 
-
-    /**
-     * Interface for key up / down
-     */
-    public interface onKeyListener {
-        public void onKeyDown(int keyCode);
-        public void onKeyUp(int keyCode);
-    }
+    private int screenWidth;
+    private int screenHeight;
 
     public PUI(AppRunner appRunner) {
         super(appRunner);
@@ -137,6 +135,48 @@ public class PUI extends ProtoBase {
         uiAbsoluteLayout.mode(type);
     }
 
+
+    @ProtoMethod(description = "Sets the fullscreen / immersive / dimBars mode", example = "")
+    @ProtoMethodParam(params = {"mode={fullscreen, immersive, lightsout, normal}"})
+    public void screenMode(String mode) {
+
+        switch (mode) {
+            case "fullscreen":
+                getActivity().setFullScreen();
+                break;
+
+            case "lightsout":
+                getActivity().lightsOutMode();
+                break;
+
+            case "immersive":
+                getActivity().setImmersive();
+                break;
+
+            default:
+                getActivity().setNormal();
+
+                updateScreenSizes();
+        }
+    }
+
+    private void updateScreenSizes() {
+        screenWidth = uiAbsoluteLayout.width();
+        screenHeight = uiAbsoluteLayout.height();
+    }
+
+    @ProtoMethod(description = "Forces landscape mode in the app", example = "")
+    @ProtoMethodParam(params = {"mode={'landscape', 'portrait', 'auto'"})
+    public void screenOrientation(String mode) {
+        if (mode.equals("landscape")) {
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        } else if (mode.equals("portrait")) {
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        } else {
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+        }
+    }
+
     @ProtoMethod(description = "Adds the given view to the layout", example = "")
     @ProtoMethodParam(params = {"x", "y", "w", "h"})
     protected void addViewAbsolute(View v, float x, float y, float w, float h) {
@@ -146,8 +186,8 @@ public class PUI extends ProtoBase {
 
     protected void addView(View v) {
         v.setAlpha(0);
-        v.setRotationX(-30);
-        v.animate().alpha(1).rotationX(0).setDuration(500).setStartDelay(100 * (1 + viewArray.size()));
+        // v.setRotationX(-30);
+        // v.animate().alpha(1).setDuration(500).setStartDelay(100 * (1 + viewArray.size()));
         viewArray.add(v);
     }
 
@@ -526,7 +566,7 @@ public class PUI extends ProtoBase {
      */
     @ProtoMethod(description = "Creates a new camera view", example = "")
     @ProtoMethodParam(params = {"['front','back']"})
-    public PCamera newCameraView(String type) {
+    public Object newCameraView(String type) {
         int camNum = -1;
         switch (type) {
             case "front":
@@ -536,16 +576,22 @@ public class PUI extends ProtoBase {
                 camNum = CameraNew.MODE_CAMERA_BACK;
                 break;
         }
-        PCamera pCamera = new PCamera(getAppRunner(), camNum, PCamera.MODE_COLOR_COLOR);
+
+        Object pCamera;
+        if (AndroidUtils.isVersionMarshmallow()) {
+            pCamera = new PCamera2(getAppRunner(), camNum, PCamera.MODE_COLOR_COLOR);
+        } else {
+            pCamera = new PCamera(getAppRunner(), camNum, PCamera.MODE_COLOR_COLOR);
+        }
 
         return pCamera;
     }
 
     @ProtoMethod(description = "Add camera view", example = "")
     @ProtoMethodParam(params = {"type", "x", "y", "w", "h"})
-    public PCamera addCameraView(String type, float x, float y, float w, float h) {
-        PCamera pCamera = newCameraView(type);
-        addViewAbsolute(pCamera, x, y, w, h);
+    public Object addCameraView(String type, float x, float y, float w, float h) {
+        Object pCamera = newCameraView(type);
+        addViewAbsolute((View) pCamera, x, y, w, h);
         return pCamera;
     }
 
@@ -602,6 +648,34 @@ public class PUI extends ProtoBase {
         PPlotView pPlotView = newPlot();
         addViewAbsolute(pPlotView, x, y, w, h);
         return pPlotView;
+    }
+
+    /**
+     * XYPad
+     */
+    @ProtoMethod(description = "Creates a new touch pad", example = "")
+    @ProtoMethodParam(params = {"function(data)"})
+    public PPadView newTouchPad(final ReturnInterface callbackfn) {
+        PPadView taV = new PPadView(getContext());
+        taV.setTouchAreaListener(new PPadView.OnTouchAreaListener() {
+            @Override
+            public void onGenericTouch(ArrayList<PPadView.TouchEvent> t) {
+                ReturnObject o = new ReturnObject();
+                o.put("points", t);
+                callbackfn.event(o);
+            }
+        });
+
+        return taV;
+    }
+
+    @ProtoMethod(description = "Creates a new touch pad", example = "")
+    @ProtoMethodParam(params = {"x", "y", "w", "h", "function(o)"})
+    public PPadView addXYPad(int x, int y, int w, int h, final ReturnInterface callbackfn) {
+        PPadView taV = newTouchPad(callbackfn);
+        addViewAbsolute(taV, x, y, w, h);
+
+        return taV;
     }
 
     /**
@@ -805,7 +879,6 @@ public class PUI extends ProtoBase {
             }
         });
     }
-
 
     @Override
     public void __stop() {

@@ -39,10 +39,12 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.protocoder.R;
 import org.protocoder.events.Events;
+import org.protocoder.helpers.ProtoScriptHelper;
 import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.models.Project;
 
@@ -200,9 +202,6 @@ public class ProjectItem extends LinearLayout {
                     EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_EDIT, mProject));
                     return true;
                 } else if (itemId == R.id.menu_project_list_delete) {
-                    //TODO make it work again
-                    //Protocoder.getInstance(c).protoScripts.delete(mProject.getFolder(), mProject.getName());
-
                     DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -210,6 +209,9 @@ public class ProjectItem extends LinearLayout {
                                 case DialogInterface.BUTTON_POSITIVE:
                                     EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_DELETE, mProject));
                                     //mPlf.removeItem(mProject);
+                                    MLog.d(TAG, "deleting " + mProject.getFullPath());
+                                    Toast.makeText(getContext(), mProject.getName() + " Deleted", Toast.LENGTH_LONG).show();
+                                    ProtoScriptHelper.deleteFolder(mProject.getFullPath());
 
                                     break;
 

@@ -83,6 +83,7 @@ public class AppRunnerFragment extends Fragment {
         mAppRunner.mIntentPostfixScript = bundle.getString(Project.POSTFIX, "");
 
         mAppRunner.initInterpreter();
+        mAppRunner.pUi.screenOrientation("portrait");
 
         return mMainView;
     }
@@ -206,7 +207,7 @@ public class AppRunnerFragment extends Fragment {
             };
         }
     }
-
+    
     public PLiveCodingFeedback liveCodingFeedback() {
         return liveCoding;
     }

@@ -22,6 +22,7 @@
         android:layout_marginTop="@dimen/other_cardview_top_margin"
         android:layout_marginLeft="@dimen/other_cardview_horizontal_margin"
         android:layout_marginRight="@dimen/other_cardview_horizontal_margin"
+        android:layout_marginBottom="@dimen/main_cardview_bottom_margin"
         >
 
         <ListView
@@ -29,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingBottom="0dp"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin" >

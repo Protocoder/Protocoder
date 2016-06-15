@@ -47,9 +47,8 @@ public class FolderChooserFragment extends BaseFragment {
 
     private String TAG = FolderChooserFragment.class.getSimpleName();
 
-    private ResizableRecyclerView mRecyclerView;
+    private ResizableRecyclerView mFolderRecyclerView;
     private ToggleButton toggleFolderChooser;
-    private ResizableRecyclerView folderList;
     private String currentFolder;
     private boolean isTablet;
     private boolean isLandscapeBig;
@@ -68,44 +67,7 @@ public class FolderChooserFragment extends BaseFragment {
 
         // project folder menu
         toggleFolderChooser = (ToggleButton) v.findViewById(R.id.selectFolderButton);
-        folderList = (ResizableRecyclerView) v.findViewById(R.id.folderList);
 
-        if (isTablet || isLandscapeBig) {
-            toggleFolderChooser.setVisibility(View.GONE);
-            folderList.setVisibility(View.VISIBLE);
-        }
-
-        // default toggle text
-        toggleFolderChooser.setText("Choose folder");
-        toggleFolderChooser.setTextOn("Choose folder");
-        toggleFolderChooser.setTextOff("Choose folder");
-
-        // folder list oculto cuando
-        // isTablet => false
-        // isLandscapeBig => false
-
-        toggleFolderChooser.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                // show folderlist
-                if (isChecked) {
-                    folderList.setVisibility(View.VISIBLE);
-
-                // hide folderlist
-                } else {
-                    if (!(isTablet || isLandscapeBig)) {
-                        MLog.d(TAG, "--------------- HIDING THINGIE " + isTablet + " " + isLandscapeBig + " " );
-                        folderList.setVisibility(View.GONE);
-
-                        if (currentFolder == null) {
-                            toggleFolderChooser.setTextOff("Choose folder");
-                        } else {
-                            toggleFolderChooser.setTextOff(currentFolder);
-                        }
-                    }
-                }
-            }
-        });
 
         //this goes to the adapter
         ArrayList<FolderAdapterData> foldersForAdapter = new ArrayList<FolderAdapterData>();
@@ -125,12 +87,48 @@ public class FolderChooserFragment extends BaseFragment {
         }
 
         // Attach the adapter with the folders data
-        mRecyclerView = (ResizableRecyclerView) v.findViewById(R.id.folderList);
-        mRecyclerView.setHasFixedSize(true);
+        mFolderRecyclerView = (ResizableRecyclerView) v.findViewById(R.id.folderList);
+        mFolderRecyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(linearLayoutManager);
+        mFolderRecyclerView.setLayoutManager(linearLayoutManager);
         FolderChooserAdapter folderChooserAdapter = new FolderChooserAdapter(foldersForAdapter);
-        mRecyclerView.setAdapter(folderChooserAdapter);
+        mFolderRecyclerView.setAdapter(folderChooserAdapter);
+
+        if (isTablet || isLandscapeBig) {
+            toggleFolderChooser.setVisibility(View.GONE);
+            mFolderRecyclerView.setVisibility(View.VISIBLE);
+        }
+
+        // default toggle text
+        toggleFolderChooser.setText("Choose folder");
+        toggleFolderChooser.setTextOn("Choose folder");
+        toggleFolderChooser.setTextOff("Choose folder");
+
+        // folder list oculto cuando
+        // isTablet => false
+        // isLandscapeBig => false
+
+        toggleFolderChooser.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                // show folderlist
+                if (isChecked) {
+                    mFolderRecyclerView.setVisibility(View.VISIBLE);
+
+                // hide folderlist
+                } else {
+                    if (!(isTablet || isLandscapeBig)) {
+                        mFolderRecyclerView.setVisibility(View.GONE);
+
+                        if (currentFolder == null) {
+                            toggleFolderChooser.setTextOff("Choose folder");
+                        } else {
+                            toggleFolderChooser.setTextOff(currentFolder);
+                        }
+                    }
+                }
+            }
+        });
 
         return v;
     }

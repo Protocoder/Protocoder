@@ -26,6 +26,7 @@ import android.content.res.AssetManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.apache.commons.lang3.StringUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.protocoder.events.Events;
 import org.protocoder.gui.settings.ProtocoderSettings;
@@ -36,6 +37,8 @@ import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.models.Project;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
@@ -55,7 +58,7 @@ public class ProtocoderHttpServer extends NanoHTTPD {
     private final int PROJECT_ACTION = 6;
     private final int FILE_DELIMITER = 6;
     private final int FILE_ACTION = 7;
-    private final int FILE = 8;
+    private final int FILE_NAME = 8;
 
 
     private static WeakReference<Context> mContext;
@@ -101,6 +104,7 @@ public class ProtocoderHttpServer extends NanoHTTPD {
     }
 
     /*
+    // project global actions
      0   1   2       3
     "/api/project/list/"
     "/api/project/stop_all"
@@ -108,7 +112,7 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 
     // project dependent actions
     0   1      2   3   4   5    6
-    "/api/project/[ff]/[sf]/[p]/new"
+    "/api/project/[folder]/[subfolder]/[p]/new"
     "/api/project/[ff]/[sf]/[p]/save/" (POST)
     "/api/project/[ff]/[sf]/[p]/load/"
     "/api/project/[ff]/[sf]/[p]/delete/"
@@ -256,15 +260,40 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 
                 res = newFixedLengthResponse("OK");
             }
-
-
-        } else if (uriSplitted.length == 8 && uriSplitted[FILE_DELIMITER].equals("files")) {
-
-            if (uriSplitted.equals("list")) {
+        } else if (uriSplitted.length >= 8 && uriSplitted[FILE_DELIMITER].equals("files")) {
+            MLog.d(TAG, "-> files ");
+            Project p = new Project(uriSplitted[TYPE] + "/" + uriSplitted[FOLDER], uriSplitted[PROJECT_NAME]);
+            if (uriSplitted[FILE_ACTION].equals("list")) {
                 MLog.d("list_files");
+                // MLog.d(TAG, uriSplitted);
+
+                String path = StringUtils.join(uriSplitted, "/", FILE_ACTION + 1, uriSplitted.length);
+                MLog.d("getting folder -> " + path);
+
+                // here
+                ArrayList<ProtoFile> files = ProtoScriptHelper.listFilesInFolder(p.getSandboxPath() + path, 0);
+                String jsonFiles = gson.toJson(files);
+
+                MLog.d("list", jsonFiles);
+                EventBus.getDefault().post(new Events.HTTPServerEvent("project_list_all"));
+
+                res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), jsonFiles.toString());
+            } else if (uriSplitted[FILE_ACTION].equals("load")) {
+                // fetch file
+                String fileName = uriSplitted[FILE_NAME];
+                String mime = getMimeType(fileName); // Get MIME type
+                InputStream fi = null;
+                try {
+                    fi = new FileInputStream(p.getFullPathForFile(fileName));
+                    res = newFixedLengthResponse(Response.Status.OK, mime, fi, fi.available());
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
-        } else {
+            } else {
             res = NanoHTTPD.newFixedLengthResponse(Response.Status.BAD_REQUEST, MIME_PLAINTEXT, ":(");
         }
 

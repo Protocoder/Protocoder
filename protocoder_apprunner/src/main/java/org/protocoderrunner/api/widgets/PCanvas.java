@@ -36,10 +36,10 @@ public class PCanvas extends View implements PViewInterface {
     public Canvas mCanvas;
 
     @ProtoField(description = "Canvas width", example = "")
-    private int width;
+    public int width;
 
     @ProtoField(description = "Canvas height", example = "")
-    private int height;
+    public int height;
 
     @ProtoField(description = "Time interval between draws", example = "")
     private int drawInterval = 35;
@@ -530,6 +530,7 @@ public class PCanvas extends View implements PViewInterface {
     @ProtoMethodParam(params = {"boolean"})
     public PCanvas autoDraw(boolean b) {
         mAutoDraw = b;
+        loop.start();
         return this;
     }
 

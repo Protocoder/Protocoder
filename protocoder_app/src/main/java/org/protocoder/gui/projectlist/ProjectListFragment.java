@@ -62,7 +62,7 @@ public class ProjectListFragment extends BaseFragment {
 
     public String mProjectFolder;
     boolean mListMode;
-    public boolean mOrderByName;
+    public boolean mOrderByName = true;
     public int num = 0;
     public static int totalNum = 0;
 
@@ -145,7 +145,7 @@ public class ProjectListFragment extends BaseFragment {
     }
 
     private void checkEmptyState() {
-        //check if mProjects has been loaded
+        //check if a has been loaded
         if (mListProjects == null) {
             showProjectList(false);
 
@@ -254,11 +254,27 @@ public class ProjectListFragment extends BaseFragment {
     //run project
     @Subscribe
     public void onEventMainThread(ProjectEvent evt) {
-        if (evt.getAction() == "run") {
-            Project p = evt.getProject();
-            projectRefresh(p.getName());
-            MLog.d(TAG, "> Event (Run project feedback)" + p.getName());
+        String action = evt.getAction();
+
+        switch (action) {
+            case Events.PROJECT_RUN:
+                Project p = evt.getProject();
+                projectRefresh(p.getName());
+                MLog.d(TAG, "> Event (Run project feedback)" + p.getName());
+
+                break;
+
+            case Events.PROJECT_NEW:
+                MLog.d(TAG, "notify data set changed");
+                mProjectAdapter.add(evt.getProject());
+
+                break;
+
+            case Events.PROJECT_DELETE:
+                mProjectAdapter.remove(evt.getProject());
+                break;
         }
+
     }
 
     // folder choose

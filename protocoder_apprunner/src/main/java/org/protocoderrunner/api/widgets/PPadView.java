@@ -20,12 +20,6 @@
 
 package org.protocoderrunner.api.widgets;
 
-/*
- * use vectors 
- * add values to it 
- * 
- */
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -40,14 +34,16 @@ import android.view.View;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.base.utils.MLog;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 
 public class PPadView extends View {
-    private static final String TAG = "TouchAreaView";
+    private static final String TAG = PPadView.class.getSimpleName();
+
     private static final String TYPE_PROG = "prog";
     private static final String TYPE_FINGER = "finger";
+
     // paint
     private final Paint mPaint = new Paint();
     private Canvas mCanvas = new Canvas();
@@ -58,9 +54,9 @@ public class PPadView extends View {
     private float mHeight;
     private boolean lastTouch = false;
     private OnTouchAreaListener mOnTouchAreaListener;
-    HashMap<Integer, TouchEvent> t = new HashMap<Integer, PPadView.TouchEvent>();
+    private ArrayList<TouchEvent> mTouches = new ArrayList<>();
     private int mStrokeColor;
-    private int mBackgroundColor = 0x00FFFFFF;
+    private int mBackgroundColor = 0xFF00FFFF;
     private int mPadsColorStroke = 0x0000FF;
     private int mPadsColorBg = 0x880000FF;
 
@@ -120,31 +116,30 @@ public class PPadView extends View {
             mPaint.setColor(mBackgroundColor);
             mCanvas.drawRoundRect(new RectF(0, 0, mWidth, mHeight), 5, 5, mPaint);
 
-
             mPaint.setStyle(Paint.Style.STROKE);
             mCanvas.drawColor(mStrokeColor);
             mPaint.setColor(mStrokeColor);
 
             mCanvas.drawRoundRect(new RectF(0, 0, mWidth, mHeight), 5, 5, mPaint);
 
-            for (Map.Entry<Integer, PPadView.TouchEvent> t1 : t.entrySet()) {
-                int key = t1.getKey();
-                TouchEvent value = t1.getValue();
+            for (int i = 0; i < mTouches.size(); i++) {
+                TouchEvent t = mTouches.get(i);
+                MLog.d(TAG, "painting " + t.id + " " + t.x + " " + t.y);
 
                 mPaint.setColor(mPadsColorBg);
                 mPaint.setStyle(Paint.Style.FILL);
 
-                mCanvas.drawCircle(value.x, value.y, 50, mPaint);
+                mCanvas.drawCircle(t.x, t.y, 50, mPaint);
 
                 mPaint.setColor(mPadsColorStroke);
                 mPaint.setStyle(Paint.Style.STROKE);
                 mPaint.setStrokeWidth(3);
 
-                mCanvas.drawCircle(value.x, value.y, 50, mPaint);
+                mCanvas.drawCircle(t.x, t.y, 50, mPaint);
             }
-        }
 
-        t.clear();
+        }
+        mTouches.clear();
 
         if (lastTouch) {
             lastTouch = false;
@@ -158,7 +153,6 @@ public class PPadView extends View {
 		 * handler.removeCallbacks(this); rl.remove(this); } };
 		 * handler.postDelayed(task, 200);
 		 */
-
     }
 
     public class TouchEvent {
@@ -175,7 +169,6 @@ public class PPadView extends View {
             this.x = x;
             this.y = y;
         }
-
     }
 
     public TouchEvent newTouch(int id, int x, int y) {
@@ -196,12 +189,12 @@ public class PPadView extends View {
         for (int i = 0; i < numPoints; i++) {
             int id = event.getPointerId(i);
             TouchEvent o = new TouchEvent(TYPE_FINGER, id, "move", (int) event.getX(i), (int) event.getY(i));
-            t.put(id, o);
+            mTouches.add(o);
         }
 
         // check finger if down or up
         int p = action >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
-        TouchEvent te = t.get(p);
+        TouchEvent te = mTouches.get(p);
         if (te != null) {
             if (actionCode == MotionEvent.ACTION_POINTER_DOWN) {
                 te.action = "down";
@@ -214,11 +207,10 @@ public class PPadView extends View {
 
             // if last finger up clear array
             if (actionCode == MotionEvent.ACTION_UP) {
-                // t.get(0).action = "up";
                 lastTouch = true;
             }
 
-            mOnTouchAreaListener.onGenericTouch(t);
+            mOnTouchAreaListener.onGenericTouch(mTouches);
         }
 
         invalidate();
@@ -237,7 +229,7 @@ public class PPadView extends View {
     }
 
     public interface OnTouchAreaListener {
-        public abstract void onGenericTouch(HashMap<Integer, TouchEvent> t);
+        public abstract void onGenericTouch(ArrayList<TouchEvent> t);
     }
 
     void printSamples(MotionEvent ev) {
@@ -256,7 +248,6 @@ public class PPadView extends View {
         }
     }
 
-
     @ProtoMethod(description = "Change the pad color", example = "")
     @ProtoMethodParam(params = {"colorHex"})
     public PPadView padsColor(String c) {
@@ -269,14 +260,12 @@ public class PPadView extends View {
         return this;
     }
 
-
     @ProtoMethod(description = "Change the strokeColor", example = "")
     @ProtoMethodParam(params = {"colorHex"})
     public PPadView strokeColor(String c) {
         mBackgroundColor = Color.parseColor(c);
         return this;
     }
-
 
     @ProtoMethod(description = "Change the background color", example = "")
     @ProtoMethodParam(params = {"colorHex"})

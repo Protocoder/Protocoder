@@ -27,6 +27,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -41,6 +43,7 @@ import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -134,19 +137,28 @@ public class FileManagerFragment extends BaseFragment {
         btnDirUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                File f = new File(mCurrentFolder);
-                mCurrentFolder = f.getParent();
-                getFileList();
+                File currentFolder = new File(mCurrentFolder);
+                String toFolder = currentFolder.getParent() + File.separator;
 
-                MLog.d(TAG, mCurrentFolder);
-                mProjectAdapter.setData(mCurrentFileList);
-                mProjectAdapter.notifyDataSetChanged();
+                // MLog.d(TAG, toFolder + " " + mRootFolder);
+                // MLog.d(TAG, "boolean " + toFolder.startsWith(mRootFolder));
+                // check if where are in the top allowed level
+                if (toFolder.startsWith(mRootFolder)) {
+                    mCurrentFolder = toFolder;
+
+                    getFileList();
+
+                    // MLog.d(TAG, mCurrentFolder);
+                    mProjectAdapter.setData(mCurrentFileList);
+                    mProjectAdapter.notifyDataSetChanged();
+                } else {
+                    Toast.makeText(getContext(), "You reached the top of the project folder", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
         // bind path
         mTxtPath = (TextView) v.findViewById(R.id.path);
-
     }
 
     @Override
@@ -255,7 +267,7 @@ public class FileManagerFragment extends BaseFragment {
 
         String showPath = "";
         if (mPathHideFrom != null) {
-            MLog.d(TAG, mPathHideFrom + " " + mCurrentFolder);
+            // MLog.d(TAG, mPathHideFrom + " " + mCurrentFolder);
             showPath = mCurrentFolder.replace(mPathHideFrom, "");
         } else {
             showPath = mCurrentFolder;
@@ -278,21 +290,35 @@ public class FileManagerFragment extends BaseFragment {
     }
 
     private void viewFile(int index) {
-        Intent newIntent = new Intent(Intent.ACTION_VIEW);
+        Intent newIntent = new Intent();
 
-        String fileExt = ProtoScriptHelper.fileExt(mCurrentFileList.get(index).name).substring(1);
+        String fileName = mCurrentFileList.get(index).name;
+        String fileExt = ProtoScriptHelper.fileExt(fileName).substring(1);
         String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExt);
+        String path = (mCurrentFileList.get(index).path) + fileName;
+        File file = new File(Environment.getExternalStorageDirectory(), "protocodersandbox/examples/User%20Interface/UI/patata2.png");
 
-        String path = ProtoScriptHelper.getAbsolutePathFromRelative(mCurrentFileList.get(index).path);
-        Uri uri = Uri.fromFile(new File(path));
+        MLog.d(TAG, "File path " + file.getAbsoluteFile() + " fileExtension " + fileExt + " mimeType " + mimeType);
 
-        MLog.d(TAG, "Uri " + uri.toString() + " fileExtension " + fileExt + " mimeType " + mimeType);
+        Uri uri = FileProvider.getUriForFile(getContext(), "org.protocoder.fileprovider", file);
+        //Uri uri = Uri.parse("content://org.protocoder.fileprovider/file" + path);
+
+        MLog.d(TAG, "uri: " + uri);
+
+        newIntent.setAction(Intent.ACTION_VIEW);
+        newIntent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+        newIntent.addFlags(Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP);
+
+        // newIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        newIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
         newIntent.setDataAndType(uri, mimeType);
-        newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        // newIntent.setType(mimeType);
 
-        Intent j = Intent.createChooser(newIntent, "Choose an application to open with:");
-        startActivity(j);
+        // AndroidUtils.debugIntent("qq", newIntent);
+
+        // Intent j = Intent.createChooser(newIntent, "Choose an application to open with:");
+        startActivity(newIntent);
     }
 
     // load file in editor
@@ -312,7 +338,7 @@ public class FileManagerFragment extends BaseFragment {
 
     public void setCurrentFolder(String path) {
         mCurrentFolder = path;
-        MLog.d("qq", " " + path);
+        MLog.d(TAG, "setcurrentfolder " + path);
         getFileList();
         mProjectAdapter.setData(mCurrentFileList);
         mProjectAdapter.notifyDataSetChanged();
