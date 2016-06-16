@@ -204,8 +204,8 @@ public class ProtocoderHttpServer extends NanoHTTPD {
                     if (map.isEmpty()) return newFixedLengthResponse("BUG");
 
                     json = map.get("postData");
-                    MLog.d(TAG, "map " + map.toString());
-                    MLog.d(TAG, "post data " + json);
+                    // MLog.d(TAG, "map " + map.toString());
+                    // MLog.d(TAG, "post data " + json);
                 } catch (IOException e) {
                     e.printStackTrace();
                     return newFixedLengthResponse("NOP");

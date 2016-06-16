@@ -33,6 +33,7 @@ import android.provider.MediaStore.MediaColumns;
 import android.support.v4.app.NotificationCompat;
 
 import org.mozilla.javascript.NativeObject;
+import org.protocoderrunner.api.common.ReturnInterface;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.AppRunnerActivity;
 import org.protocoderrunner.R;
@@ -278,6 +279,22 @@ public class PApp extends ProtoBase {
         //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         getContext().startActivity(intent);
+    }
+
+    public void onCreate(ReturnInterface callback) {
+      //  callback.event(null);
+    }
+
+    public void onPause(ReturnInterface callback) {
+      //  callback.event(null);
+    }
+
+    public void onResume(ReturnInterface callback) {
+      //  callback.event(null);
+    }
+
+    public void onDestroy(ReturnInterface callback) {
+      //  callback.event(null);
     }
 
     @Override

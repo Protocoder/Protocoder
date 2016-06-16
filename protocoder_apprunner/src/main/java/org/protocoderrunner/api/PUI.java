@@ -185,7 +185,7 @@ public class PUI extends ProtoBase {
     }
 
     protected void addView(View v) {
-        v.setAlpha(0);
+        // v.setAlpha(0);
         // v.setRotationX(-30);
         // v.animate().alpha(1).setDuration(500).setStartDelay(100 * (1 + viewArray.size()));
         viewArray.add(v);

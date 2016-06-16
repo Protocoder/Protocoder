@@ -450,7 +450,7 @@ public class MainActivity extends BaseActivity {
 
         if (type == "wifi") {
             mTxtConnectionMessage.setText(getResources().getString(R.string.connection_message_wifi));
-            mTxtConnectionIp.setText(type + " " + address);
+            mTxtConnectionIp.setText("http://" + address);
             mTxtConnectionIp.setVisibility(View.VISIBLE);
         } else {
             mTxtConnectionMessage.setText(getResources().getString(R.string.connection_message_other));

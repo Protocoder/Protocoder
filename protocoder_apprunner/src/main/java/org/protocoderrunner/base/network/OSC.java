@@ -25,6 +25,8 @@ import android.os.Looper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.protocoderrunner.api.common.ReturnInterface;
+import org.protocoderrunner.api.common.ReturnObject;
 import org.protocoderrunner.base.utils.MLog;
 
 import java.io.IOException;
@@ -45,16 +47,8 @@ public class OSC {
     protected static final String TAG = "OSC";
 
     public interface OSCServerListener {
-
         public void onMessage(OSCMessage msg);
-
     }
-
-    // --------- OSC Server ---------//
-    interface startOSCServerCB {
-        void event(String string, JSONArray jsonArray);
-    }
-
 
     public class Server {
         public Handler mHandler = new Handler(Looper.getMainLooper());
@@ -100,7 +94,7 @@ public class OSC {
             }
         }
 
-        public void onNewData(final startOSCServerCB callbackfn) {
+        public void onNewData(final ReturnInterface callbackfn) {
             this.addListener(new OSC.OSCServerListener() {
 
                 @Override
@@ -124,7 +118,10 @@ public class OSC {
                         @Override
                         public void run() {
                             // MLog.d(TAG, "receiver");
-                            callbackfn.event(msg.getName(), jsonArray);
+                            ReturnObject o = new ReturnObject();
+                            o.put("name", msg.getName());
+                            o.put("data", jsonArray);
+                            callbackfn.event(o);
                         }
                     });
                 }
@@ -134,6 +131,10 @@ public class OSC {
 
         public void stop() {
             stopOSCServer();
+        }
+
+        public void __stop() {
+            stop();
         }
 
         public void stopOSCServer() {
@@ -230,6 +231,11 @@ public class OSC {
         public void stop() {
             disconnectOSC();
         }
+
+        public void __stop() {
+            stop();
+        }
+
     }
 
 }

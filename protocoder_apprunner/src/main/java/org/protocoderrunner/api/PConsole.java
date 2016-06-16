@@ -32,6 +32,7 @@ import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.base.utils.AndroidUtils;
+import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.events.Events;
 
 import java.text.SimpleDateFormat;
@@ -64,7 +65,10 @@ public class PConsole extends ProtoBase {
     @ProtoMethod(description = "shows any HTML text in the webIde console marked as error", example = "")
     @ProtoMethodParam(params = {"text", "text", "..."})
     public PConsole error(Object outputs) {
+        // if (mShowExtendedError) {}
+
         base_log("log_error", outputs);
+
         return this;
     }
 

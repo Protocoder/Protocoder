@@ -47,8 +47,10 @@ import android.view.KeyEvent;
 
 import com.google.gson.Gson;
 
+import org.protocoderrunner.AppRunnerFragment;
 import org.protocoderrunner.api.common.ReturnInterface;
 import org.protocoderrunner.api.common.ReturnObject;
+import org.protocoderrunner.api.sensors.PNfc;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
@@ -70,6 +72,8 @@ public class PDevice extends ProtoBase {
 
     private boolean isKeyPressInit = false;
 
+    public PNfc nfc;
+
 
     /**
      * Interface for key up / down
@@ -82,7 +86,18 @@ public class PDevice extends ProtoBase {
 
     public PDevice(AppRunner appRunner) {
         super(appRunner);
+
+        //nfc = new PNFC(context);
     }
+
+    @Override
+    public void initForParentFragment(AppRunnerFragment fragment) {
+        super.initForParentFragment(fragment);
+
+        nfc = new PNfc(getAppRunner());
+        nfc.initForParentFragment(getFragment());
+    }
+
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public void getInputDevices() {

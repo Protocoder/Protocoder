@@ -28,6 +28,8 @@ import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
 import org.java_websocket.drafts.Draft_17;
 import org.java_websocket.handshake.ServerHandshake;
+import org.protocoderrunner.api.common.ReturnInterface;
+import org.protocoderrunner.api.common.ReturnObject;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.api.ProtoBase;
 
@@ -38,14 +40,9 @@ public class PWebSocketClient extends ProtoBase {
 
     private static final String TAG = "PWebSocketClient";
     private Handler mHandler = new Handler(Looper.getMainLooper());
-    private connectWebsocketCB mCallbackfn;
+    private ReturnInterface mCallbackfn;
     private WebSocketClient mWebSocketClient = null;
     private boolean mIsConnected = false;
-
-    // --------- connect websocket ---------//
-    interface connectWebsocketCB {
-        void event(String string, String string2);
-    }
 
     public PWebSocketClient(AppRunner appRunner, String uri) {
         super(appRunner);
@@ -63,7 +60,9 @@ public class PWebSocketClient extends ProtoBase {
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            mCallbackfn.event("onOpen", "");
+                            ReturnObject o = new ReturnObject();
+                            o.put("status", "open");
+                            mCallbackfn.event(o);
                         }
                     });
                     //Log.d(TAG, "onOpen");
@@ -76,7 +75,10 @@ public class PWebSocketClient extends ProtoBase {
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            mCallbackfn.event("onMessage", arg0);
+                            ReturnObject o = new ReturnObject();
+                            o.put("status", "message");
+                            o.put("data", arg0);
+                            mCallbackfn.event(o);
                         }
                     });
 
@@ -91,8 +93,9 @@ public class PWebSocketClient extends ProtoBase {
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            mCallbackfn.event("onError", "");
-
+                            ReturnObject o = new ReturnObject();
+                            o.put("status", "error");
+                            mCallbackfn.event(o);
                         }
                     });
 
@@ -106,7 +109,9 @@ public class PWebSocketClient extends ProtoBase {
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            mCallbackfn.event("onClose", "");
+                            ReturnObject o = new ReturnObject();
+                            o.put("status", "close");
+                            mCallbackfn.event(o);
                         }
                     });
 
@@ -119,12 +124,16 @@ public class PWebSocketClient extends ProtoBase {
         } catch (URISyntaxException e) {
             Log.d(TAG, "error");
 
-            mCallbackfn.event("error ", e.toString());
+            ReturnObject o = new ReturnObject();
+            o.put("status", "error");
+            o.put("data", e.toString());
+
+            mCallbackfn.event(o);
             e.printStackTrace();
         }
     }
 
-    public PWebSocketClient onNewData(final connectWebsocketCB callbackfn) {
+    public PWebSocketClient onNewData(final ReturnInterface callbackfn) {
         mCallbackfn = callbackfn;
 
         return this;
@@ -137,7 +146,6 @@ public class PWebSocketClient extends ProtoBase {
 
         return this;
     }
-
 
     public boolean isConnected() {
         return mIsConnected;

@@ -168,7 +168,7 @@ public class AppRunner {
         if (!mIntentPostfixScript.isEmpty()) evaluate(mIntentPostfixScript, "");
 
         //call the javascript method setup
-        interp.callJsFunction("setup");
+        // interp.callJsFunction("setup");
 
         return this;
     }

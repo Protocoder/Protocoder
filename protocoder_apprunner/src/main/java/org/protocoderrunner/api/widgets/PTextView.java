@@ -106,9 +106,8 @@ public class PTextView extends TextView implements PViewInterface, PViewMethodsI
     }
 
     @ProtoMethod(description = "Clears the text", example = "")
-    @ProtoMethodParam(params = {"text"})
-    public PTextView clear(String text) {
-        this.clear("");
+    public PTextView clear() {
+        this.setText("");
         return this;
     }
 

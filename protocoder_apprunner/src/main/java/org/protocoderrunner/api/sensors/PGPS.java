@@ -251,7 +251,7 @@ public class PGPS extends ProtoBase {
 
     @ProtoMethod(description = "Get the distance from two points", example = "")
     @ProtoMethodParam(params = {"startLatitude", "starLongitude", "endLatitude", "endLongitude"})
-    public double getDistance(double startLatitude, double startLongitude, double endLatitude, double endLongitude) {
+    public double distance(double startLatitude, double startLongitude, double endLatitude, double endLongitude) {
         float[] results = null;
         // Location.distanceBetween(startLatitude, startLongitude, endLatitude,
         // endLongitude, results);

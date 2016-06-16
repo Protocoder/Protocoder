@@ -45,7 +45,6 @@ public class PSensors extends ProtoBase {
     public final PPressure pressure;
     public final PProximity proximity;
     public final PStep stepDetector;
-    public PNfc nfc;
 
     public PSensors(AppRunner appRunner) {
         super(appRunner);
@@ -55,7 +54,6 @@ public class PSensors extends ProtoBase {
         gps = new PGPS(appRunner);
         light = new PLightIntensity(appRunner);
         magnetic = new PMagnetic(appRunner);
-        //nfc = new PNFC(context);
         orientation = new POrientation(appRunner);
         pressure = new PPressure(appRunner);
         proximity = new PProximity(appRunner);
@@ -75,14 +73,6 @@ public class PSensors extends ProtoBase {
         r.put("step", stepDetector.isAvailable());
 
         return r;
-    }
-
-    @Override
-    public void initForParentFragment(AppRunnerFragment fragment) {
-        super.initForParentFragment(fragment);
-
-        nfc = new PNfc(getAppRunner());
-        nfc.initForParentFragment(getFragment());
     }
 
     @Override

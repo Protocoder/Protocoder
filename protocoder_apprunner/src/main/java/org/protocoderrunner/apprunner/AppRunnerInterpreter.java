@@ -23,6 +23,8 @@ package org.protocoderrunner.apprunner;
 
 import android.util.Log;
 
+import com.google.gson.Gson;
+
 import org.mozilla.javascript.Callable;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContextFactory;
@@ -46,7 +48,6 @@ public class AppRunnerInterpreter {
     private Context rhino = null;
     private Scriptable scope;
     private InterpreterInfo mInterpreterListener;
-
 
     AppRunnerInterpreter() {
         init();
@@ -93,7 +94,6 @@ public class AppRunnerInterpreter {
         ScriptableObject.putProperty(scope, name, Context.javaToJS(obj, scope));
     }
 
-
     public Object getJsFunction(String name) {
         Object function = scope.get(name, scope);
         return function;
@@ -103,8 +103,9 @@ public class AppRunnerInterpreter {
         Object obj = getJsFunction(name);
         if (obj instanceof Function) {
             Function function = (Function) obj;
-            NativeObject result = (NativeObject) function.call(rhino, scope, scope, params);
-            processResult(result, RESULT_OK);
+            // NativeObject result = (NativeObject)
+            function.call(rhino, scope, scope, params);
+            processResult("", RESULT_OK);
         }
     }
 
@@ -119,15 +120,16 @@ public class AppRunnerInterpreter {
     public void processResult(Object result, int resultType) {
         switch (resultType) {
             case RESULT_OK:
-                String msg = Context.toString(result);
-                MLog.i(TAG, msg);
+                // String msg = Context.toString(result);
+                // MLog.i(TAG, msg);
                 //if (mInterpreterListener != null) mInterpreterListener.onError(msg);
                 break;
             //basically we throw here the exception errors
             case RESULT_ERROR:
-                String msg_e = result.toString();
-                MLog.e(TAG, msg_e);
-                if (mInterpreterListener != null) mInterpreterListener.onError(msg_e);
+                String resultClean = ((Throwable)result).getMessage();
+                resultClean = resultClean.replace("org.protocoderrunner.api.P", "");
+
+                if (mInterpreterListener != null) mInterpreterListener.onError(resultClean);
                 break;
         }
     }
@@ -153,7 +155,7 @@ public class AppRunnerInterpreter {
     *   Errors and misc
     */
     public interface InterpreterInfo {
-        void onError(String message);
+        void onError(Object message);
     }
 
     public void addListener(InterpreterInfo listener) {

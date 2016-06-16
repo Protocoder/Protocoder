@@ -84,6 +84,7 @@ public class AppRunnerFragment extends Fragment {
 
         mAppRunner.initInterpreter();
         mAppRunner.pUi.screenOrientation("portrait");
+        mAppRunner.pUi.background(69, 102, 121);
 
         return mMainView;
     }
@@ -95,7 +96,7 @@ public class AppRunnerFragment extends Fragment {
         // catch errors and send them to the WebIDE or the app console
         AppRunnerInterpreter.InterpreterInfo appRunnerCb = new AppRunnerInterpreter.InterpreterInfo() {
             @Override
-            public void onError(String message) {
+            public void onError(Object message) {
                 mAppRunner.pConsole.error(message);
             }
         };
@@ -110,7 +111,7 @@ public class AppRunnerFragment extends Fragment {
         startFileObserver();
 
         // Call the onCreate JavaScript function.
-        mAppRunner.interp.callJsFunction("app.onCreate", savedInstanceState);
+        mAppRunner.interp.callJsFunction("onCreate", savedInstanceState);
 
         // send ready to the webIDE
         //TODO this is gone ?!
@@ -126,19 +127,19 @@ public class AppRunnerFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        mAppRunner.interp.callJsFunction("app.onResume");
+        mAppRunner.interp.callJsFunction("onResume");
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mAppRunner.interp.callJsFunction("app.onPause");
+        mAppRunner.interp.callJsFunction("onPause");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mAppRunner.interp.callJsFunction("app.onDestroy");
+        mAppRunner.interp.callJsFunction("onDestroy");
         mAppRunner.byebye();
     }
 
