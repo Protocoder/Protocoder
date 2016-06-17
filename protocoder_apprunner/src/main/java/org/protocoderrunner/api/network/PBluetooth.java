@@ -27,6 +27,8 @@ import android.content.Intent;
 import android.widget.Toast;
 
 import org.mozilla.javascript.NativeArray;
+import org.protocoderrunner.api.common.ReturnInterface;
+import org.protocoderrunner.api.common.ReturnObject;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
@@ -38,7 +40,8 @@ import org.protocoderrunner.base.utils.MLog;
 import java.util.Set;
 
 public class PBluetooth extends ProtoBase {
-    private scanBTNetworksCB onBluetoothfn;
+
+    private ReturnInterface onBluetoothfn;
     private SimpleBT simpleBT;
     private boolean mBtStarted = false;
 
@@ -136,14 +139,18 @@ public class PBluetooth extends ProtoBase {
 
     @ProtoMethod(description = "Scan bluetooth networks. Gives back the name, mac and signal strength", example = "")
     @ProtoMethodParam(params = {"function(name, macAddress, strength)"})
-    public void scanNetworks(final scanBTNetworksCB callbackfn) {
+    public void scanNetworks(final ReturnInterface callbackfn) {
         start();
         onBluetoothfn = callbackfn;
         simpleBT.scanBluetooth(new onBluetoothListener() {
 
             @Override
             public void onDeviceFound(String name, String macAddress, float strength) {
-                onBluetoothfn.event(name, macAddress, strength);
+                ReturnObject o = new ReturnObject();
+                o.put("name", name);
+                o.put("mac", macAddress);
+                o.put("strength", strength);
+                onBluetoothfn.event(o);
             }
 
             @Override

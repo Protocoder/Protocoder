@@ -7,7 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="25dp"
-    >
+    android:gravity="center_horizontal">
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -16,6 +17,8 @@
         android:background="@drawable/round_step"
         android:id="@+id/step_num_1"
         android:gravity="center"
+        android:width="50dp"
+        android:height="50dp"
         android:layout_alignParentLeft="true"
         android:layout_marginRight="12dp"
         android:layout_alignParentTop="true"
@@ -35,7 +38,7 @@
         android:layout_marginBottom="8dp"/>
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="In order to make cool programs we need some permissions, such as Camera, Sensors, etc. If you are not using a feature, you can say no. Remember that you can always enable or disable them from the Settings section."
         android:id="@+id/step_body_1"
@@ -43,7 +46,8 @@
         android:layout_weight="1"
         android:layout_toRightOf="@+id/step_num_1"
         android:layout_below="@+id/step_title_1"
-        android:textColor="#adffffff" />
+        android:textColor="#adffffff"
+        android:maxWidth="500dp" />
 
     <ImageView
         android:layout_marginTop="15dp"
@@ -51,6 +55,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/imageView3"
         android:src="@drawable/image_placeholder"
-        android:layout_below="@id/step_body_1"/>
+        android:layout_below="@id/step_body_1"
+        android:layout_gravity="center" />
 
 </RelativeLayout>

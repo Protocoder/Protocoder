@@ -95,7 +95,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@null"
-            android:src="@drawable/protocoder_none" />
+            android:src="@drawable/protocoder_icon" />
 
         <TextView
             android:layout_width="wrap_content"

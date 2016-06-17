@@ -9,38 +9,73 @@
     >
 
     <include layout="@layout/toolbar2"
-             android:layout_alignParentRight="true"
-             android:layout_alignParentTop="true"
-             android:layout_height="wrap_content"
-             android:layout_width="match_parent"
-             android:id="@+id/tb">
-    </include>
+        android:id="@+id/include3" />
 
-    <Button
-        android:id="@+id/next_step_button"
+    <LinearLayout
+        android:id="@+id/next_step_button_wrapper"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/solid_dark_grey_button"
-        android:gravity="center"
-        android:text="@string/welcome_accept"
-        android:textColor="#ffffff"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
-        />
+        android:gravity="center"
+        android:orientation="vertical"
+        android:animateLayoutChanges="true"
+        >
+
+        <LinearLayout
+            android:id="@+id/loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
+            android:visibility="gone">
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminateTintMode="src_atop"
+                android:indeterminateTint="@color/white"
+                android:layout_gravity="center" />
+
+            <TextView
+                android:id="@+id/loadingText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="Installing..."
+                android:layout_gravity="center"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                ></TextView>
+
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/next_step_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/solid_dark_grey_button"
+            android:text="@string/welcome_accept"
+            android:textColor="#ffffff"
+            />
+
+    </LinearLayout>
+
 
     <ViewFlipper
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/viewFlipper"
         android:layout_gravity="center_horizontal"
-        android:layout_below="@id/tb"
-        android:layout_above="@id/next_step_button"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        >
+        android:layout_above="@+id/next_step_button_wrapper"
+        android:layout_below="@+id/include3">
 
         <include layout="@layout/welcome_activity_slide_one" />
         <include layout="@layout/welcome_activity_slide_two" />
@@ -66,8 +101,8 @@
         android:layout_height="match_parent"
         android:id="@+id/scrollView"
         android:layout_gravity="center_horizontal"
-        android:layout_below="@id/tb"
-        android:layout_above="@id/next_step_button">
+        android:layout_below="@id/toolbar2"
+        android:layout_above="@id/next_step_button_wrapper">
 
     </ScrollView>
 

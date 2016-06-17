@@ -561,6 +561,8 @@ public class PUI extends ProtoBase {
         return pNumberPicker;
     }
 
+    boolean enableCamera2 = false;
+
     /**
      * Camera
      */
@@ -578,7 +580,7 @@ public class PUI extends ProtoBase {
         }
 
         Object pCamera;
-        if (AndroidUtils.isVersionMarshmallow()) {
+        if (AndroidUtils.isVersionMarshmallow() && enableCamera2) {
             pCamera = new PCamera2(getAppRunner(), camNum, PCamera.MODE_COLOR_COLOR);
         } else {
             pCamera = new PCamera(getAppRunner(), camNum, PCamera.MODE_COLOR_COLOR);

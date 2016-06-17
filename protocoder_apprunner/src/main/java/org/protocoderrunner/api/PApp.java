@@ -47,6 +47,8 @@ import org.protocoderrunner.base.utils.FileIO;
 public class PApp extends ProtoBase {
 
     PEvents pevents;
+    public String folder;
+    public String name;
 
     public interface onAppStatus {
         public void onStart();

@@ -22,7 +22,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="10dp"
-            android:src="@drawable/protocoder_script_project"
+            android:src="@drawable/protocoder_icon"
             android:gravity="left"
             android:visibility="gone"
             android:scaleType="fitCenter" />

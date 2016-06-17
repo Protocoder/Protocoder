@@ -11,16 +11,14 @@
     android:animateLayoutChanges="true"
     >
 
-    <include layout="@layout/toolbar2"
-        android:id="@+id/include" />
+    <include layout="@layout/toolbar2"/>
 
-    <include layout="@layout/connection_info_view"
-        android:layout_gravity="center_horizontal"
-        android:layout_width="400dp"
+    <include layout="@layout/connection_info_view_vertical"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/include"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/include2" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignTop="@+id/card_view" />
 
     <android.support.v7.widget.CardView
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -30,13 +28,15 @@
         android:layout_height="match_parent"
         card_view:cardCornerRadius="2dp"
         card_view:cardBackgroundColor="#FFFFFFFF"
+        android:layout_below="@+id/header"
         android:animateLayoutChanges="true"
-        android:layout_below="@+id/include2"
         android:layout_marginTop="@dimen/main_cardview_top_margin"
-        android:layout_marginLeft="@dimen/main_cardview_left_margin"
         android:layout_marginRight="@dimen/main_cardview_right_margin"
         android:layout_marginBottom="@dimen/main_cardview_bottom_margin"
-        android:layout_centerHorizontal="true">
+        android:layout_toRightOf="@+id/ip_container"
+        android:layout_toEndOf="@+id/toolbar2_title"
+        android:layout_marginLeft="2dp">
+
 
         <RelativeLayout
             android:layout_width="match_parent"

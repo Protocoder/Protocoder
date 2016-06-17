@@ -53,11 +53,11 @@ public class LauncherActivity extends Activity {
             Toast.makeText(this, "The script crashed :(", Toast.LENGTH_LONG).show();
         }
 
-        if (false) {
+        if (firstLaunch) {
             intent = new Intent(this, WelcomeActivity.class);
             UserSettings userSettings = new UserSettings(this);
             userSettings.setId(StrUtils.generateRandomString());
-            userSettings.setConnectionAlert(true);
+            userSettings.setConnectionAlert(false);
         } else {
             intent = new Intent(this, MainActivity.class);
            // intent.putExtras();

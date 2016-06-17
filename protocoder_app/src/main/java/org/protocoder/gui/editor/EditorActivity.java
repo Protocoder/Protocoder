@@ -95,7 +95,9 @@ public class EditorActivity extends BaseActivity {
 
         addEditorFragment(savedInstanceState);
         addFilePreviewerFragment(savedInstanceState);
-        // addFileManagerDrawer(savedInstanceState, true);
+
+        if (isTablet) addFileManagerDrawer(savedInstanceState, true);
+
         // showFileManagerDrawer(false);
     }
 

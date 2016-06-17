@@ -98,6 +98,8 @@ configurations {
 dependencies {
     normalCompile project(path: ':protocoder_apprunner', configuration:'normalrunnerRelease')
     extendedCompile project(path: ':protocoder_apprunner', configuration:'extendedrunnerRelease')
+    compile 'com.android.support:multidex:1.0.0'
+
     //compile project(':protocoder_apprunner')
 
     compile(name: 'processing_fragmented', ext: 'aar')

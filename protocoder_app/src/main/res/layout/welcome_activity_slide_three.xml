@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="25dp"
-        >
+    android:gravity="center_horizontal">
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -14,6 +15,8 @@
         android:background="@drawable/round_step"
         android:id="@+id/step_num_2"
         android:gravity="center"
+        android:width="50dp"
+        android:height="50dp"
         android:layout_alignParentLeft="true"
         android:layout_marginRight="12dp"
         android:layout_alignParentTop="true"
@@ -33,7 +36,7 @@
         android:layout_marginBottom="8dp"/>
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Examples are great for learning. They will be copied in your device memory so you can have full access to modify them. Don't worry if you break them, they can be restored easily :)"
         android:id="@+id/step_body_2"
@@ -41,7 +44,8 @@
         android:layout_weight="1"
         android:layout_toRightOf="@+id/step_num_2"
         android:layout_below="@+id/step_title_2"
-        android:textColor="#adffffff" />
+        android:textColor="#adffffff"
+        android:maxWidth="500dp" />
     
     <ImageView
         android:layout_marginTop="15dp"
@@ -49,6 +53,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/imageView3"
         android:src="@drawable/image_placeholder"
-        android:layout_below="@id/step_body_2"/>
+        android:layout_below="@id/step_body_2"
+        android:layout_gravity="center" />
 
 </RelativeLayout>

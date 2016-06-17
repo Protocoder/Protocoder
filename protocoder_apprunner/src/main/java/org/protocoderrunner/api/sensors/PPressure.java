@@ -51,7 +51,7 @@ public class PPressure extends CustomSensorManager implements WhatIsRunningInter
             @Override
             public void onSensorChanged(SensorEvent event) {
                 ReturnObject r = new ReturnObject();
-                r.put("", event.values[0]);
+                r.put("bar", event.values[0]);
                 mCallback.event(r);
             }
 

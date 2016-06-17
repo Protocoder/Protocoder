@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
 <!-- 1 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:layout_alignParentLeft="true"
-    android:layout_alignParentStart="true"
-    tools:showIn="@layout/welcome_activity">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="25dp"
+    android:gravity="center_horizontal">
 
     <TextView
         android:id="@+id/welcome_body"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="0dp"
+        android:maxWidth="500dp"
         android:text="@string/welcome_body"
         android:textColor="@color/white"
         android:shadowColor="#55000000"
@@ -27,7 +25,9 @@
         android:layout_marginTop="15dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/welcome_body"
         android:id="@+id/imageView3"
-        android:src="@drawable/image_placeholder" />
+        android:src="@drawable/image_placeholder"
+        android:layout_gravity="center" />
 
-</LinearLayout>
+</RelativeLayout>

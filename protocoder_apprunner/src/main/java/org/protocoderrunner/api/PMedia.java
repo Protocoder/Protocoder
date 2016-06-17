@@ -133,7 +133,7 @@ public class PMedia extends ProtoBase {
 
     @ProtoMethod(description = "Record a sound with the microphone", example = "")
     @ProtoMethodParam(params = {"fileName", "showProgressBoolean"})
-    public void audioRecord(String fileName, boolean showProgress) {
+    public void recordSound(String fileName, boolean showProgress) {
         if (!recording) {
             recording = true;
             if (getAppRunner().hasUserInterface) {
@@ -146,7 +146,7 @@ public class PMedia extends ProtoBase {
 
     @ProtoMethod(description = "Record a sound with the microphone", example = "")
     @ProtoMethodParam(params = {"fileName", "showProgressBoolean"})
-    public void stopAudioRecord() {
+    public void stopRecordingSound() {
         if (recording) {
             rec.stopRecording();
             recording = false;

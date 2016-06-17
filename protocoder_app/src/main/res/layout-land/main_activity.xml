@@ -2,19 +2,16 @@
 <!-- main -->
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/contentHolder"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
     android:gravity="bottom"
     android:animateLayoutChanges="true"
-    android:fitsSystemWindows="true"
     >
 
     <include layout="@layout/toolbar2" />
-
-    <include layout="@layout/toolbar2_title"
-        android:id="@+id/toolbar2_title"/>
 
     <include layout="@layout/connection_info_view_vertical"
         android:layout_width="200dp"

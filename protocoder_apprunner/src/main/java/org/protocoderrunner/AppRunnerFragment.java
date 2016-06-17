@@ -77,7 +77,10 @@ public class AppRunnerFragment extends Fragment {
 
         // get parameters and set them in the AppRunner
         Bundle bundle = getArguments();
-        mAppRunner.loadProject(bundle.getString(Project.FOLDER, ""), bundle.getString(Project.NAME, ""));
+        String folder = bundle.getString(Project.FOLDER, "");
+        String name = bundle.getString(Project.NAME, "");
+
+        mAppRunner.loadProject(folder, name);
         mAppRunner.mIntentPrefixScript = bundle.getString(Project.PREFIX, "");
         mAppRunner.mIntentCode = bundle.getString(Project.INTENTCODE, "");
         mAppRunner.mIntentPostfixScript = bundle.getString(Project.POSTFIX, "");
@@ -85,6 +88,9 @@ public class AppRunnerFragment extends Fragment {
         mAppRunner.initInterpreter();
         mAppRunner.pUi.screenOrientation("portrait");
         mAppRunner.pUi.background(69, 102, 121);
+        mAppRunner.pUi.toolbar.title(name);
+        mAppRunner.pApp.folder = folder;
+        mAppRunner.pApp.name = name;
 
         return mMainView;
     }

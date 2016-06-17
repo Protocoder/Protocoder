@@ -53,7 +53,7 @@
     <string name="about_special_thanks">Special thanks to José Juan Sánchez Hernández, Maciej Górski, bq.com, Ali Javidan, Gopi Palaniappan, Alan Sien and the MWM Crew :)</string>
 
     <!-- Welcome -->
-    <string name="welcome_activity_name">protocoder</string>
+    <string name="welcome_activity_name">\\\\\\\ Welcome</string>
     <string name="welcome_title">Good to see you.</string>
     <string name="welcome_body">Protocoder makes simple and fast to experiment creatively with mobile devices. \n\nYou can create projects using this device or using the self-hosted WebIDE through your computer.</string>
     <string name="welcome_accept">Let\'s go.</string>

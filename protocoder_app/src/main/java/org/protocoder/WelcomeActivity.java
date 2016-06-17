@@ -31,6 +31,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ViewFlipper;
 
 import org.protocoder.helpers.ProtoSettingsHelper;
@@ -68,6 +69,7 @@ public class WelcomeActivity extends BaseActivity {
     private ViewFlipper viewFlipper;
     private int mCurrentStep = 0;
     private int mNextStep = 0;
+    private LinearLayout mLoading;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,6 +89,7 @@ public class WelcomeActivity extends BaseActivity {
                 goToStep(mNextStep);
             }
         });
+        mLoading = (LinearLayout) findViewById(R.id.loading);
 
         goToStep(STEP_WELCOME);
     }
@@ -291,19 +294,22 @@ public class WelcomeActivity extends BaseActivity {
 
             case STEP_INSTALL_EXAMPLES_PROCESS:
                 installExamples();
-                mNextStepButton.setEnabled(false);
 
                 // show feedback process
+                mNextStepButton.setVisibility(View.GONE);
+                mLoading.setVisibility(View.VISIBLE);
 
                 break;
 
             case STEP_INSTALL_EXAMPLES_OK:
-                viewFlipper.setDisplayedChild(3);
-                mNextStepButton.setEnabled(true);
-                mNextStepButton.setText("START CREATING");
+                // viewFlipper.setDisplayedChild(3);
                 mNextStep = STEP_READY;
 
                 // disable feedback process
+                mNextStepButton.setVisibility(View.VISIBLE);
+                mLoading.setVisibility(View.GONE);
+
+                mNextStepButton.setText("START CREATING");
 
                 break;
 

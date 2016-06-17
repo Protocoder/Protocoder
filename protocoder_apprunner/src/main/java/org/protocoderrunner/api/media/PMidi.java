@@ -6,6 +6,8 @@ import android.os.Handler.Callback;
 import android.os.Message;
 import android.widget.Toast;
 
+import org.protocoderrunner.api.common.ReturnInterface;
+import org.protocoderrunner.api.common.ReturnObject;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.api.ProtoBase;
 
@@ -15,13 +17,14 @@ import jp.kshoji.driver.midi.device.MidiInputDevice;
 
 public class PMidi extends ProtoBase {
 
-    private static final String TAG = "PMidi";
+    private static final String TAG = PMidi.class.getSimpleName();
+
+    private ReturnInterface mMidiEvent;
 
     // User interface
     final Handler midiInputEventHandler = new Handler(new Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-
             return true;
         }
     });
@@ -34,13 +37,17 @@ public class PMidi extends ProtoBase {
         }
     });
 
-
     private void callback(final int cable, final int channel, final int function, final int value) {
 
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                if (mMidiEvent != null) mMidiEvent.event(cable, channel, function, value);
+                ReturnObject o = new ReturnObject();
+                o.put("cable", cable);
+                o.put("channel", channel);
+                o.put("function", function);
+                o.put("value", value);
+                if (mMidiEvent != null) mMidiEvent.event(o);
             }
         });
 
@@ -52,14 +59,6 @@ public class PMidi extends ProtoBase {
     public interface MidiConnectedCB {
         void event(boolean connected);
     }
-
-
-    // --------- startVoiceRecognition ---------//
-    public interface MidiDeviceEventCB {
-        void event(int cable, int channel, int function, int value);
-    }
-
-    MidiDeviceEventCB mMidiEvent;
 
     public PMidi(AppRunner appRunner) {
         super(appRunner);
@@ -163,7 +162,7 @@ public class PMidi extends ProtoBase {
 
     }
 
-    public PMidi onChange(final PMidi.MidiDeviceEventCB callbackfn) {
+    public PMidi onChange(final ReturnInterface callbackfn) {
         mMidiEvent = callbackfn;
 
         return this;

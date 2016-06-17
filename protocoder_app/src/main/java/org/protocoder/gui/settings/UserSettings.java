@@ -50,7 +50,7 @@ public class UserSettings {
     }
 
     public boolean getListPreference() {
-        boolean pref = mSharedPrefs.getBoolean("pref_list_mode", false);
+        boolean pref = mSharedPrefs.getBoolean("pref_list_mode", true);
 
         return pref;
     }

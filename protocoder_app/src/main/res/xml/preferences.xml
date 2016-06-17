@@ -26,11 +26,14 @@
             android:key="pref_screen_on"
             android:summary="@string/setting_screen_on_description"
             android:title="@string/setting_screen_on_title" />
+
+        <!--
         <CheckBoxPreference
             android:checked="false"
             android:key="pref_list_mode"
             android:summary="@string/setting_list_mode_description"
             android:title="@string/setting_list_mode_title" />
+            -->
         <!--<CheckBoxPreference-->
             <!--android:selected="false"-->
             <!--android:key="pref_background_mode"-->
@@ -42,6 +45,7 @@
             <!--android:key="pref_connection_alert"-->
             <!--android:summary="@string/setting_connection_alert_description"-->
             <!--android:title="@string/setting_connection_alert_title" />-->
+        <!--
         <EditTextPreference
             android:key="pref_app_color"
             android:summary="@string/setting_app_color_description"
@@ -55,10 +59,12 @@
             android:key="reinstall_examples"
             android:summary="@string/setting_reinstall_description"
             android:title="@string/setting_reinstall_title" />
+            -->
 
 
     </PreferenceCategory>
 
+    <!--
     <PreferenceCategory android:title="Advance">
         <ListPreference
             android:key="pref_change_editor"
@@ -70,7 +76,7 @@
             android:summary="Protocoder starts with a ftp server in the port 8589 that can be used to transfer files to it"
             android:title="Enable ftp" />
     </PreferenceCategory>
-
+    -->
 
 
     <PreferenceCategory android:title="@string/setting_about" >

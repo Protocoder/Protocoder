@@ -557,15 +557,16 @@ public class PDevice extends ProtoBase {
         deviceInfo.model = Build.MODEL;
         deviceInfo.display = Build.DISPLAY;
         deviceInfo.versionRelease = Build.VERSION.RELEASE;
-        deviceInfo.os = Build.VERSION.BASE_OS;
+        deviceInfo.os = "";
+        if (AndroidUtils.isVersionMarshmallow()) {
+            deviceInfo.os = Build.VERSION.BASE_OS;
+        }
         deviceInfo.board = Build.BOARD;
         deviceInfo.brand = Build.BRAND;
         deviceInfo.device = Build.DEVICE;
         deviceInfo.fingerPrint = Build.FINGERPRINT;
         deviceInfo.host = Build.HOST;
         deviceInfo.id = Build.ID;
-        deviceInfo.cpuAbi = Build.CPU_ABI;
-        deviceInfo.cpuAbi2 = Build.CPU_ABI2;
         deviceInfo.keyboardPresent = getContext().getResources().getConfiguration().keyboard != Configuration.KEYBOARD_NOKEYS;
 
 

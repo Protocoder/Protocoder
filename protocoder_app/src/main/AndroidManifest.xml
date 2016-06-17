@@ -15,7 +15,9 @@
         android:label="@string/app_name"
         android:allowBackup="true"
         android:theme = "@style/Theme.AppCompat"
-        tools:replace="android:allowBackup">
+        tools:replace="android:allowBackup"
+        android:name="android.support.multidex.MultiDexApplication"
+        >
 
         <activity
             android:name=".LauncherActivity"
