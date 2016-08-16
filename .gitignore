@@ -5,6 +5,8 @@
 #   git config --global core.excludesfile ~/.gitignore_global
 
 /keystore
+/protocoder_app/fabric.properties
+
 
 # Ignore bundler config
 /.bundle

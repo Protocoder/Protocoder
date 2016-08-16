@@ -23,15 +23,13 @@ package org.protocoderrunner.apprunner;
 
 import android.util.Log;
 
-import com.google.gson.Gson;
-
 import org.mozilla.javascript.Callable;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContextFactory;
 import org.mozilla.javascript.Function;
-import org.mozilla.javascript.NativeObject;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.WrappedException;
 import org.mozilla.javascript.debug.Debugger;
 import org.protocoderrunner.base.utils.MLog;
 
@@ -40,14 +38,16 @@ public class AppRunnerInterpreter {
     private static final String TAG = AppRunnerInterpreter.class.getSimpleName();
 
     //result after line execution
-    private static final int RESULT_OK = 1;
-    private static final int RESULT_ERROR = 2;
+    public static final int RESULT_OK = 1;
+    public static final int RESULT_ERROR = 2;
+    public static final int RESULT_PERMISSION_ERROR = 3;
 
     //rhino stuff
     private static ScriptContextFactory mScriptContextFactory;
     private Context rhino = null;
     private Scriptable scope;
     private InterpreterInfo mInterpreterListener;
+    public ObservingDebugger observingDebugger;
 
     AppRunnerInterpreter() {
         init();
@@ -63,6 +63,9 @@ public class AppRunnerInterpreter {
         mScriptContextFactory.setInterpreter(this);
 
         rhino = Context.enter();
+        observingDebugger = new ObservingDebugger();
+        rhino.setDebugger(observingDebugger, new Integer(0));
+        rhino.setGeneratingDebug(true);
 
         // give some android love
         rhino.setOptimizationLevel(-1);
@@ -75,8 +78,6 @@ public class AppRunnerInterpreter {
 
     //we will use this method for normal script execution
     public void eval(String jscode, String origin) {
-        //null is the security domain :/
-
         try {
             Object result = rhino.evaluateString(scope, jscode, origin, 1, null);
             processResult(result, RESULT_OK);
@@ -118,6 +119,7 @@ public class AppRunnerInterpreter {
     }
 
     public void processResult(Object result, int resultType) {
+        String resultClean = "";
         switch (resultType) {
             case RESULT_OK:
                 // String msg = Context.toString(result);
@@ -126,10 +128,16 @@ public class AppRunnerInterpreter {
                 break;
             //basically we throw here the exception errors
             case RESULT_ERROR:
-                String resultClean = ((Throwable)result).getMessage();
+                resultClean = ((Throwable)result).getMessage();
                 resultClean = resultClean.replace("org.protocoderrunner.api.P", "");
 
-                if (mInterpreterListener != null) mInterpreterListener.onError(resultClean);
+                if (mInterpreterListener != null) mInterpreterListener.onError(resultType, resultClean);
+                break;
+            case RESULT_PERMISSION_ERROR:
+                resultClean = ((Throwable)result).getMessage();
+                resultClean = resultClean.replace("org.protocoderrunner.api.PermissionNotGrantedException:", "");
+                if (mInterpreterListener != null) mInterpreterListener.onError(resultType, resultClean);
+
                 break;
         }
     }
@@ -155,7 +163,7 @@ public class AppRunnerInterpreter {
     *   Errors and misc
     */
     public interface InterpreterInfo {
-        void onError(Object message);
+        void onError(int resultType, Object message);
     }
 
     public void addListener(InterpreterInfo listener) {
@@ -187,14 +195,19 @@ public class AppRunnerInterpreter {
         protected Object doTopCall(Callable callable, Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {
             try {
                 return super.doTopCall(callable, cx, scope, thisObj, args);
-            } catch (Throwable e) {
-                Log.e(TAG, "ContextFactory catched error: " + e);
-                mAppRunnerInterpretter.processResult(e, RESULT_ERROR);
+            } catch (WrappedException e) {
+                MLog.e(TAG, "ContextFactory catched error: " + e);
 
+                if (e.getWrappedException() instanceof PermissionNotGrantedException) {
+                    mAppRunnerInterpretter.processResult(e.getWrappedException(), RESULT_PERMISSION_ERROR);
+                } else {
+                    mAppRunnerInterpretter.processResult(e.getWrappedException(), RESULT_ERROR);
+                }
                 return e;
             }
         }
     }
+
 
 
 }

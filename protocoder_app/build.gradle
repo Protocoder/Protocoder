@@ -1,4 +1,14 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 23
@@ -15,8 +25,8 @@ android {
         // minSdkVersion 'N'
         // targetSdkVersion 'N'
 
-        versionCode 18
-        versionName "0.19.0"
+        versionCode 19
+        versionName "0.19.1"
         multiDexEnabled true
 
         compileOptions {
@@ -88,6 +98,7 @@ repositories {
     mavenCentral()
     //mavenLocal()
     maven { url 'https://github.com/kshoji/USB-MIDI-Driver/raw/master/MIDIDriver/snapshots' }
+    maven { url 'https://maven.fabric.io/public' }
 }
 
 configurations {
@@ -104,4 +115,7 @@ dependencies {
 
     compile(name: 'processing_fragmented', ext: 'aar')
     compile 'jp.kshoji:midi-driver:0.0.2-SNAPSHOT:@aar'
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.7@aar') {
+        transitive = true;
+    }
 }

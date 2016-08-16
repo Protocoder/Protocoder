@@ -86,7 +86,7 @@ public abstract class CustomSensorManager implements WhatIsRunningInterface {
         }
     }
 
-    public float maximum() {
+    public float max() {
         return sensor.getMaximumRange();
     }
 

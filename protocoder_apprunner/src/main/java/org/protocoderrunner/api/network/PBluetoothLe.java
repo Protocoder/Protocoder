@@ -131,7 +131,7 @@ public class PBluetoothLe extends ProtoBase {
         this.mDevices = new ArrayList<BluetoothDevice>();
         this.mAdapter = ((BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
         MLog.d(TAG, "Initializated");
-        this.context = context;
+        this.context = appRunner.getAppContext();
         appRunner.whatIsRunning.add(this);
     }
 
@@ -148,6 +148,7 @@ public class PBluetoothLe extends ProtoBase {
         MLog.d(TAG, "Scanning Devices");
         Handler handler = new Handler();
         mAdapter.startLeScan(this.mScanCallback);
+
         handler.postDelayed(SearchDevices, milis);
 
         return mDevices;

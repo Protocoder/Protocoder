@@ -1,0 +1,81 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/black">
+
+
+    <!-- console window -->
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/logwrapper"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/sendblock"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:padding="5dp"
+        android:orientation="vertical"
+        android:focusableInTouchMode="true"
+        >
+    </android.support.v7.widget.RecyclerView>
+
+    <!-- send part -->
+
+    <LinearLayout
+        android:id="@+id/sendblock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:visibility="gone">
+
+        <EditText
+            android:id="@+id/cmd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+            <requestFocus />
+        </EditText>
+
+        <Button
+            android:id="@+id/send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:textColor="@drawable/console_send_button"
+            android:text="Send" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/sendblock"
+        android:layout_toEndOf="@+id/sendblock"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
+
+        <ToggleButton
+            android:id="@+id/toogleLockList"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_margin="10dp"
+            android:textOff=""
+            android:textOn=""
+            android:background="@drawable/debug_toggle_lock" />
+
+        <Button
+            android:id="@+id/close"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_margin="10dp"
+            android:textOff=""
+            android:textOn=""
+            android:background="@drawable/debug_close" />
+    </LinearLayout>
+
+
+</RelativeLayout>

@@ -44,6 +44,7 @@ import org.protocoderrunner.api.common.ReturnObject;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.apprunner.FeatureNotAvailableException;
 import org.protocoderrunner.base.utils.MLog;
 
 import java.io.IOException;
@@ -83,6 +84,21 @@ public class PGPS extends ProtoBase {
     @ProtoMethod(description = "Start the gps. Returns lat, lon, alt, speed, bearing", example = "")
     @ProtoMethodParam(params = {"function(lat, lon, alt, speed, bearing)"})
     public void start() {
+
+        if (!isAvailable()) {
+
+            try {
+                MLog.d(TAG, "try");
+                throw new FeatureNotAvailableException();
+            } catch (FeatureNotAvailableException e) {
+                e.printStackTrace();
+                MLog.d(TAG, "catch");
+                getAppRunner().pConsole.error("Your device doesn't have a GPS :(");
+                getAppRunner().interp.observingDebugger.setDisconnected(true);
+                return;
+            }
+        }
+
         if (running) {
             return;
         }

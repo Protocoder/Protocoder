@@ -25,7 +25,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
-
 import org.protocoder.gui.settings.UserSettings;
 import org.protocoderrunner.base.utils.StrUtils;
 

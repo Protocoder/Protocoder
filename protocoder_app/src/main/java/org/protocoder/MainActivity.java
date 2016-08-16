@@ -33,11 +33,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -67,6 +70,8 @@ import java.util.ArrayList;
 public class MainActivity extends BaseActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String FRAGMENT_FOLDER_CHOOSER = "11";
+    private static final String FRAGMENT_PROJECT_LIST = "12";
 
     // custom app runner
     protected AppRunnerCustom appRunner;
@@ -89,11 +94,19 @@ public class MainActivity extends BaseActivity {
         isTablet = getResources().getBoolean(R.bool.isTablet);
         MLog.d(TAG, "isTablet " + isTablet);
 
+        Answers.getInstance().logContentView(new ContentViewEvent()
+                .putContentId("launched app"));
+
         /*
          * Setup the ui
          */
         setContentView(R.layout.main_activity);
         setupActivity();
+
+        CardView c = (CardView) findViewById(R.id.card_view);
+        // Animation anim = AnimationUtils.loadAnimation(this, R.anim.slide_in_left);
+        // c.startAnimation(anim);
+
         addProjectFolderChooser(savedInstanceState);
         addProjectListFragment(savedInstanceState);
         //showIntroduction(savedInstanceState);
@@ -166,7 +179,7 @@ public class MainActivity extends BaseActivity {
 
         // run project
         if (false) {
-            ProtoAppHelper.launchScript(this, new Project("user_projects/User Projects", "f10"));
+            ProtoAppHelper.launchScript(this, new Project("user_projects/User Projects", "qq"));
         }
 
         // run settings
@@ -315,7 +328,7 @@ public class MainActivity extends BaseActivity {
     protected void setupActivity() {
         super.setupActivity();
 
-        final TextView title = (TextView) findViewById(R.id.toolbar2_title);
+        // final TextView title = (TextView) findViewById(R.id.toolbar2_title);
 
         /*
         title.animate().translationY(0).withStartAction(new Runnable(){
@@ -352,7 +365,9 @@ public class MainActivity extends BaseActivity {
     private void addProjectFolderChooser(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
             mFolderChooserFragment = FolderChooserFragment.newInstance(ProtocoderSettings.EXAMPLES_FOLDER, true);
-            addFragment(mFolderChooserFragment, R.id.fragmentFolderChooser);
+            addFragment(mFolderChooserFragment, R.id.fragmentFolderChooser, FRAGMENT_FOLDER_CHOOSER);
+        } else {
+            mFolderChooserFragment = (FolderChooserFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_FOLDER_CHOOSER);
         }
     }
 
@@ -361,8 +376,10 @@ public class MainActivity extends BaseActivity {
         if (savedInstanceState == null) {
             mListFragmentBase = ProjectListFragment.newInstance("", true);
 
-            addFragment(mListFragmentBase, R.id.fragmentScriptList);
+            addFragment(mListFragmentBase, R.id.fragmentScriptList, FRAGMENT_PROJECT_LIST);
         } else {
+            mListFragmentBase = (ProjectListFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_PROJECT_LIST);
+
             // mProtocoder.protoScripts.reinitScriptList();
         }
 
@@ -372,16 +389,16 @@ public class MainActivity extends BaseActivity {
     private void showIntroduction(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
             IntroductionFragment introductionFragment = IntroductionFragment.newInstance();
-            addFragment(introductionFragment, R.id.fragmentIntroduction);
+            addFragment(introductionFragment, R.id.fragmentIntroduction, "");
         } else {
             // mProtocoder.protoScripts.reinitScriptList();
         }
     }
 
-    private void addFragment(Fragment f, int id) {
+    private void addFragment(Fragment f, int id, String tag) {
         FrameLayout fl = (FrameLayout) findViewById(id);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(fl.getId(), f, String.valueOf(fl.getId()));
+        ft.add(fl.getId(), f, tag);
         ft.commit();
     }
 

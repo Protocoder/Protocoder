@@ -1,38 +1,41 @@
 /*
-* Bluetooth serial example 
-*
-* If you want to connect a bluetooth serial module to Arduino this is a 
-* good start 
-* https://learn.sparkfun.com/tutorials/using-the-bluesmirf/all
-*/
+ * \\\ Example: Bluetooth serial
+ *
+ * If you want to connect a bluetooth serial module to Arduino this is a
+ * good start
+ * https://learn.sparkfun.com/tutorials/using-the-bluesmirf/all
+ */
 
-var txt = ui.addText(10, 450, ui.screenWidth, -1);
+var txt = ui.addText(0, 0, 1, 0.5)
 
-ui.addButton("Scan bluetooth", 10, 0).onClick(function() {
-    network.bluetooth.scanNetworks(function(n, m, s) { 
-        console.log("hola", n, m, s);
-        txt.append(n + " " + m + " " + s + "\n");
-    });
-});
+// scan bluetooth networks
+ui.addButton('Scan bluetooth', 0, 0.5, 1, 0.2).onClick(function () {
+  network.bluetooth.scanNetworks(function(data) {
+    txt.append(data.name + ' ' + data.mac + ' ' + data.strength + '\n')
+  })
+})
 
-var btClient;
-ui.addButton("Connect to bluetooth", 10, 150).onClick(function() {
-    //if you want to use the Bluetooth Address, use 
-    //network.bluetooth.connectSerial(macAddess, function(status) {});
-    btClient = network.bluetooth.connectSerial(function(status) {
-        console.log("connected " + status);
-    });
-    
-    btClient.onNewData(function(data) {
-        txt.text(data + "\n");
-    });
-});
+// connect to a bluetooth peripheral using a dialog
+// if you know the mac address you can connect using:
+// network.bluetooth.connectSerial(macAddess, function(status) {})
+var btClient
+ui.addButton('Connect to bluetooth', 0, 0.7, 0.5, 0.2).onClick(function() {
+  btClient = network.bluetooth.connectSerial(function(status) {
+    console.log('connected ' + status)
+  })
 
-ui.addButton("Disconnect", 380, 150).onClick(function() {
-    btClient.disconnect();
-});
+  // here is we get the received data
+  btClient.onNewData(function(data) {
+    txt.text(data + '\n')
+  })
+})
 
-var input = ui.addInput("message", 10, 300, 200, 100);
-var send = ui.addButton("Send", 210, 300, 150, 100).onClick(function() {
-    btClient.send(input.getText() + "\n");
-});
+ui.addButton('Disconnect', 0.5, 0.7, 0.5, 0.2).onClick(function() {
+  btClient.disconnect()
+})
+
+// send bluetooth messages
+var input = ui.addInput('message', 0, 0.9, 0.7, 0.2)
+var send = ui.addButton('Send', 0.7, 0.9, 0.3, 0.3).onClick(function() {
+  btClient.send(input.text() + '\n')
+})

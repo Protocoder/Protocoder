@@ -97,7 +97,7 @@ public class PAbsoluteLayout extends FixedLayout {
 
     public void mode(String type) {
         switch (type) {
-            case "pixels":
+            case "px":
                 this.mode = PIXELS;
                 break;
             case "dp":

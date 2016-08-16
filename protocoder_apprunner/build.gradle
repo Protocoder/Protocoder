@@ -21,8 +21,8 @@ android {
         // minSdkVersion 'N'
         // targetSdkVersion 'N'
 
-        versionCode 18
-        versionName "0.11.0"
+        versionCode 19
+        versionName "0.19.1"
     }
 
     compileOptions {

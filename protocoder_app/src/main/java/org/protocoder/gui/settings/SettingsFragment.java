@@ -101,7 +101,8 @@ public class SettingsFragment extends PreferenceFragment {
             }
         });
 
-        appColor.setText(mSettings.getColor());
+        // TODO enable again
+        // appColor.setText(mSettings.getColor());
 
         Preference btnShowLicenses = findPreference("licenses_detail");
         btnShowLicenses.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -234,6 +235,8 @@ public class SettingsFragment extends PreferenceFragment {
         }
 
         //load webIDE
+        // TODO enable again
+        /*
         final ListPreference loadEditorPreference = (ListPreference) findPreference("pref_change_editor");
         String[] editors = WebEditorManager.getInstance().listEditors();
         loadEditorPreference.setEntries(editors);
@@ -316,6 +319,7 @@ public class SettingsFragment extends PreferenceFragment {
                 return true;
             }
         });
+        */
 
         return view;
 

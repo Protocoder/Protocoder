@@ -44,6 +44,8 @@ import org.protocoderrunner.base.utils.MLog;
 
 public class PPopupDialogFragment extends DialogFragment {
 
+    private static final java.lang.String TAG = PPopupDialogFragment.class.getSimpleName();
+
     private static FragmentManager mFragmentManager;
     // private ViewGroup mContainer;
     private String mTitle;
@@ -79,7 +81,8 @@ public class PPopupDialogFragment extends DialogFragment {
 
         final ReturnObject r = new ReturnObject();
 
-        if (true) {
+        // enable this
+        if (false) {
             mInput = new EditText(getActivity());
             mInput.setInputType(InputType.TYPE_CLASS_TEXT);
             builder.setView(mInput, 20, 20, 20, 20);
@@ -89,8 +92,10 @@ public class PPopupDialogFragment extends DialogFragment {
             builder.setItems(mChoice, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                    MLog.d(TAG, "choice " + mChoice[which]);
                     r.put("answer", mChoice[which]);
                     r.put("answerId", which);
+                    mCallback.event(r);
                     dismiss();
                 }
             });

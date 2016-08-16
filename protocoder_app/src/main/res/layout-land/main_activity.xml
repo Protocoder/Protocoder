@@ -34,7 +34,6 @@
         android:layout_marginRight="@dimen/main_cardview_right_margin"
         android:layout_marginBottom="@dimen/main_cardview_bottom_margin"
         android:layout_toRightOf="@+id/ip_container"
-        android:layout_toEndOf="@+id/toolbar2_title"
         android:layout_marginLeft="2dp">
 
         <LinearLayout

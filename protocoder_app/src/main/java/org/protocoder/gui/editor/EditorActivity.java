@@ -39,7 +39,6 @@ import org.protocoder.gui.filemanager.FileManagerFragment;
 import org.protocoder.gui.filepreviewer.FilePreviewerFragment;
 import org.protocoder.gui.settings.ProtocoderSettings;
 import org.protocoder.server.model.ProtoFile;
-import org.protocoderrunner.apprunner.AppRunnerSettings;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.base.utils.FileIO;
 import org.protocoderrunner.base.utils.MLog;
@@ -51,10 +50,14 @@ public class EditorActivity extends BaseActivity {
 
     private final String TAG = EditorActivity.class.getSimpleName();
 
+    private static final String FRAGMENT_EDITOR = "11";
+    private static final String FRAGMENT_FILE_MANAGER  = "12";
+    private static final String FRAGMENT_FILE_PREVIEWER = "21";
+
     private Menu mMenu;
     private static final int MENU_RUN = 8;
     private static final int MENU_SAVE = 9;
-    private static final int MENU_BACK = 10;
+    // private static final int MENU_BACK = 10;
     private static final int MENU_FILES = 11;
     private static final int MENU_API = 12;
 
@@ -78,6 +81,7 @@ public class EditorActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.editor_activity);
         isTablet = getResources().getBoolean(R.bool.isTablet);
 
@@ -285,9 +289,15 @@ public class EditorActivity extends BaseActivity {
                 fileFragment.setArguments(bundle);
 
                 if (isTablet) {
-                    ft.add(R.id.fragmentFileManager, fileFragment);
+                    ft.add(R.id.fragmentFileManager, fileFragment, FRAGMENT_FILE_PREVIEWER);
                 } else {
-                    ft.add(R.id.fragmentFileManager, fileFragment).addToBackStack("filemanager");
+                    ft.add(R.id.fragmentFileManager, fileFragment, FRAGMENT_FILE_PREVIEWER).addToBackStack("filemanager");
+                }
+            } else {
+                if (isTablet) {
+                    filePreviewerFragment = (FilePreviewerFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_FILE_PREVIEWER);
+                } else {
+                    filePreviewerFragment = (FilePreviewerFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_FILE_PREVIEWER);
                 }
             }
 
@@ -306,8 +316,10 @@ public class EditorActivity extends BaseActivity {
             editorFragment = EditorFragment.newInstance(bundle);
             FrameLayout fl = (FrameLayout) findViewById(R.id.editor_container);
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.add(fl.getId(), editorFragment, String.valueOf(fl.getId()));
+            ft.add(fl.getId(), editorFragment, FRAGMENT_EDITOR);
             ft.commit();
+        } else {
+            editorFragment = (EditorFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_EDITOR);
         }
     }
 
@@ -316,8 +328,10 @@ public class EditorActivity extends BaseActivity {
             filePreviewerFragment = FilePreviewerFragment.newInstance(savedInstance);
             FrameLayout fl = (FrameLayout) findViewById(R.id.filepreviewer_container);
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.add(fl.getId(), filePreviewerFragment, String.valueOf(fl.getId()));
+            ft.add(fl.getId(), filePreviewerFragment, FRAGMENT_FILE_PREVIEWER);
             ft.commit();
+        } else {
+            filePreviewerFragment = (FilePreviewerFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_FILE_PREVIEWER);
         }
     }
 
@@ -358,7 +372,6 @@ public class EditorActivity extends BaseActivity {
     }
 
     public void setProjectTitleAndSubtitle(String projectName, String fileName) {
-        MLog.d("qq", projectName + " " + fileName);
         mToolbar.setTitle(projectName);
         mToolbar.setSubtitle(fileName);
     }
@@ -371,7 +384,6 @@ public class EditorActivity extends BaseActivity {
 
             // check type
             String type = checkType(f.name);
-            MLog.d(TAG, "type : " + type);
 
             // if preview
             if (type != null) {

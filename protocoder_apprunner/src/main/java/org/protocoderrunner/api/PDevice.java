@@ -552,7 +552,7 @@ public class PDevice extends ProtoBase {
         deviceInfo.androidId = Secure.getString(getContext().getContentResolver(), Secure.ANDROID_ID);
 
         // imei
-        deviceInfo.imei = ((TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
+        // deviceInfo.imei = ((TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
         deviceInfo.manufacturer = Build.MANUFACTURER;
         deviceInfo.model = Build.MODEL;
         deviceInfo.display = Build.DISPLAY;
@@ -611,6 +611,12 @@ public class PDevice extends ProtoBase {
     public boolean hasCameraFlash() {
         PackageManager pm = getContext().getPackageManager();
         return pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
+    }
+
+    @ProtoMethod(description = "Check if the device has GPS", example = "")
+    public boolean hasGPS() {
+        PackageManager pm = getContext().getPackageManager();
+        return pm.hasSystemFeature(PackageManager.FEATURE_CAMERA);
     }
 
     @ProtoMethod(description = "Check if the device has bluetooth", example = "")

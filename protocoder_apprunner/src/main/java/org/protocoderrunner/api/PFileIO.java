@@ -57,7 +57,7 @@ public class PFileIO extends ProtoBase {
         FileIO.deleteFileDir(getAppRunner().getProject().getFullPathForFile(name));
     }
 
-    @ProtoMethod(description = "Get 1 is is a file, 2 if is a directory and -1 if the file doesnt exist", example = "")
+    @ProtoMethod(description = "Get 1 is is a file, 2 if is a directory and -1 if the file doesnt exists", example = "")
     @ProtoMethodParam(params = {"fileName"})
     public int type(String name) {
         int ret = 0;

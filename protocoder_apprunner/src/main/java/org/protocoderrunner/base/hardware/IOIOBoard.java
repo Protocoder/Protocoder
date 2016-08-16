@@ -33,9 +33,9 @@ import ioio.lib.api.IOIO;
 
 public class IOIOBoard extends HardwareBase {
 
-    private static String TAG = "IOIOBoard";
+    private static String TAG = IOIOBoard.class.getSimpleName();
 
-    private final Context activity_;
+    private final Context mContext;
     private IOIOBoardService service_;
     private Intent serviceIntent_;
     private Boolean serviceBound = false;
@@ -60,9 +60,9 @@ public class IOIOBoard extends HardwareBase {
         }
     };
 
-    public IOIOBoard(Context activity, HardwareCallback callback) {
+    public IOIOBoard(Context context, HardwareCallback callback) {
         super(callback);
-        activity_ = activity;
+        mContext = context;
     }
 
     /**
@@ -78,9 +78,9 @@ public class IOIOBoard extends HardwareBase {
         //SysFs.write("/sys/class/gpio/gpio43/value", "1");
 
         MLog.d(TAG, "Setting up intent");
-        serviceIntent_ = new Intent(activity_, IOIOBoardService.class);
+        serviceIntent_ = new Intent(mContext, IOIOBoardService.class);
         MLog.d(TAG, "Binding service...");
-        activity_.bindService(serviceIntent_, connection_, Context.BIND_AUTO_CREATE);
+        mContext.bindService(serviceIntent_, connection_, Context.BIND_AUTO_CREATE);
         MLog.d(TAG, "Service bound with connection");
     }
 
@@ -96,20 +96,23 @@ public class IOIOBoard extends HardwareBase {
         if (serviceBound) {
             MLog.d(TAG, "Aborting thread...");
             service_.stopSelf();
-            activity_.unbindService(connection_);
+            mContext.unbindService(connection_);
             serviceBound = false;
             service_ = null;
         }
+
+        /*
         SysFs.write("/sys/class/gpio/export", "43");
         SysFs.write("/sys/class/gpio/gpio43/direction", "out");
         SysFs.write("/sys/class/gpio/gpio43/value", "0");
+        */
     }
 
-    public void stop() {
+    public void __stop() {
         MLog.d(TAG, "IOIOBoard stop called");
         // powerOff();
         if (serviceIntent_ != null) {
-            activity_.stopService(serviceIntent_);
+            mContext.stopService(serviceIntent_);
         }
     }
 

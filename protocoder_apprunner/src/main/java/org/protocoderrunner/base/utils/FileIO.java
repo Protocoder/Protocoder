@@ -63,7 +63,7 @@ public class FileIO {
 
     /**
      * Write the data to the file indicate by fileName. The file is created if
-     * it doesn't exist.
+     * it doesn't exists.
      */
     public static void write(Activity activity, String data, String fileName) throws IOException {
         FileOutputStream fo = activity.openFileOutput(fileName, 0);
@@ -524,8 +524,8 @@ public class FileIO {
 
     /**
      * Takes mContext path and creates any in-between folders if they don't already
-     * exist. Useful when trying to save to mContext subfolder that may not actually
-     * exist.
+     * exists. Useful when trying to save to mContext subfolder that may not actually
+     * exists.
      */
     static public void createPath(String path) {
         createPath(new File(path));
@@ -590,7 +590,7 @@ public class FileIO {
                             unzipFile.mkdirs();
                         }
                     } else {
-                        // check for and create parent directories if they don't exist
+                        // check for and create parent directories if they don't exists
                         File parentDir = unzipFile.getParentFile();
                         if (null != parentDir) {
                             if (!parentDir.isDirectory()) {

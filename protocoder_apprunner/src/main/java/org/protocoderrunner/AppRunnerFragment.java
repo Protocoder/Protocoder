@@ -21,7 +21,10 @@
 package org.protocoderrunner;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.FileObserver;
 import android.support.v4.app.Fragment;
@@ -38,6 +41,9 @@ import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.AppRunnerInterpreter;
 import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.models.Project;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressLint("NewApi")
 public class AppRunnerFragment extends Fragment {
@@ -102,8 +108,8 @@ public class AppRunnerFragment extends Fragment {
         // catch errors and send them to the WebIDE or the app console
         AppRunnerInterpreter.InterpreterInfo appRunnerCb = new AppRunnerInterpreter.InterpreterInfo() {
             @Override
-            public void onError(Object message) {
-                mAppRunner.pConsole.error(message);
+            public void onError(int resultType, Object message) {
+                mAppRunner.pConsole.p_error(resultType, message);
             }
         };
 
@@ -221,5 +227,24 @@ public class AppRunnerFragment extends Fragment {
 
     public AppRunner getAppRunner() {
         return mAppRunner;
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private void checkPermission(String... p) {
+        List<String> requiredPermissions = new ArrayList<String>();
+
+        for (int i = 0; i < p.length; i++) {
+            requiredPermissions.add(p[i]);
+        }
+
+        // check if permission is already granted
+        for (int i = 0; i < requiredPermissions.size(); i++) {
+            String permissionName = requiredPermissions.get(i);
+            int isGranted1 = getActivity().checkSelfPermission(permissionName);
+            int isGranted2 = isGranted1 & PackageManager.PERMISSION_GRANTED;
+
+            MLog.d(TAG, permissionName + " " + isGranted1 + " " + isGranted2);
+        }
+
     }
 }

@@ -49,6 +49,7 @@ import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
+import org.protocoderrunner.api.network.PBluetoothLe;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.api.network.PBluetooth;
 import org.protocoderrunner.api.network.PFtpClient;
@@ -259,7 +260,6 @@ public class PNetwork extends ProtoBase {
         return pWebSocketServer;
     }
 
-
     @ProtoMethod(description = "Connect to a websocket server", example = "")
     @ProtoMethodParam(params = {"uri", "function(status, data)"})
     public PWebSocketClient connectWebsocket(String uri) {
@@ -267,7 +267,6 @@ public class PNetwork extends ProtoBase {
 
         return pWebSocketClient;
     }
-
 
     @ProtoMethod(description = "Connect to a SocketIO server", example = "")
     @ProtoMethodParam(params = {"uri", "function(status, message, data)"})
@@ -738,7 +737,6 @@ public class PNetwork extends ProtoBase {
         return ftpClient;
     }
 
-    /*
     @ProtoMethod(description = "Initialize Bluetooth Low Energy System")
     @ProtoMethodParam(params = {})
     public PBluetoothLe startBLE() {
@@ -746,11 +744,10 @@ public class PNetwork extends ProtoBase {
         //p.startBLE();
 
         Log.i("PROTOBLE","STARTING BLE");
-        PBluetoothLe pBluetoothLe = new PBluetoothLe(getContext());
+        PBluetoothLe pBluetoothLe = new PBluetoothLe(getAppRunner());
 
         return pBluetoothLe;
     }
-    */
 
     @ProtoMethod(description = "Connect to a MQTT service", example = "")
     @ProtoMethodParam(params = {})

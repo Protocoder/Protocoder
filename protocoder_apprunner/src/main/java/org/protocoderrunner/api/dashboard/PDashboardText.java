@@ -39,6 +39,12 @@ public class PDashboardText extends ProtoBase {
         super(appRunner);
     }
 
+    /**
+     *
+     * @description Hola que tal
+     * estamos por aqui
+     *
+     */
     public void add(String name, int x, int y, int width, int height, int size, String color)
             throws UnknownHostException, JSONException {
         this.id = StrUtils.generateRandomString();

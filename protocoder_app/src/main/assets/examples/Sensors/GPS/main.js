@@ -1,27 +1,21 @@
-/* 
-*	GPS example 
-* 
-* 	Protocoder works with real GPS, therefore
-*	you need be outdoor   
-*/ 
+/*
+ * \\\ Example: GPS 
+ */
+ 
+var txt = ui.addText('', 0, 0)
 
-// Labels to hold lat, lng & city name values of current location
-var latTxt = ui.addText("Latitude : ", 10, 100, 500, 100);
-var lonTxt = ui.addText("Longitude : ", 10, 200, 500, 100);
-var altTxt = ui.addText("City : ", 10, 300, 500, 100);
+// we start in latitude and longitude 0, 0
+var map	= ui.addImage('https://maps.googleapis.com/maps/api/staticmap?center=0,0&zoom=20&size=700x500&sensor=false', 0, 400, 700, 500)
 
-//as demo purposes we are going to use google static maps 
-//where for each update it will show an image of your current location 
+// for each GPS update the image and values are changed
+sensors.gps.onChange(function (data) {
+  txt.clear()
+  txt.append('Latitude : ' + data.latitude)
+  txt.append('\nLongitude : ' + data.longitude)
+  txt.append('\nAltitude : ' + data.altitude)
+  var distance = sensors.gps.distance(data.latitude, data.longitude, 37.1773, 3.5986)
+  txt.append('\n\nYour are ' + distance + ' km far away from Granada, Spain')
 
-//we start in latitude and longitude 0, 0
-var map	= ui.addImage("https://maps.googleapis.com/maps/api/staticmap?center=0,0&zoom=20&size=700x500&sensor=false", 0, 400, 700, 500);
-
-//for each GPS update the image and values are changed 
-sensors.gps.onChange(function (lat, lon, alt, speed, bearing) { 
-    latTxt.setText("Latitude : " + lat);
-    lonTxt.setText("Longitude : " + lon);
-    altTxt.setText("Altitude : " + alt);
-    
-    var url = "https://maps.googleapis.com/maps/api/staticmap?center="+lat+","+lon+"&zoom=20&size=700x500&sensor=false";
-    map.setImage(url)
-});
+  var url = 'https://maps.googleapis.com/maps/api/staticmap?center=' + data.latitude + ',' + data.longitude + '&zoom=20&size=700x500&sensor=false'
+  map.load(url)
+})

@@ -44,6 +44,7 @@ import android.widget.Toast;
 import org.greenrobot.eventbus.EventBus;
 import org.protocoder.R;
 import org.protocoder.events.Events;
+import org.protocoder.helpers.ProtoAppHelper;
 import org.protocoder.helpers.ProtoScriptHelper;
 import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.models.Project;
@@ -199,6 +200,8 @@ public class ProjectItem extends LinearLayout {
                     EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_RUN, mProject));
                     return true;
                 } else if (itemId == R.id.menu_project_list_edit) {
+                    // ProtoAppHelper.launchEditor(getContext(), mProject);
+
                     EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_EDIT, mProject));
                     return true;
                 } else if (itemId == R.id.menu_project_list_delete) {

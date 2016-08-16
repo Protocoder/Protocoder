@@ -148,4 +148,12 @@ public class PTextView extends TextView implements PViewInterface, PViewMethodsI
         return this;
     }
 
+    /*
+    public PTextView center(String how) {
+        this.setTextAlignment(TEXT_ALIGNMENT_TEXT_START);
+        this.setTextAlignment(TEXT_ALIGNMENT_CENTER);
+        this.setTextAlignment(TEXT_ALIGNMENT_TEXT_END);
+        this.setTextAlignment(TEXT_ALIGNMENT);
+    }
+    */
 }

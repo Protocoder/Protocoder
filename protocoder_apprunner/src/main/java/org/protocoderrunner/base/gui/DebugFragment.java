@@ -1,6 +1,5 @@
 package org.protocoderrunner.base.gui;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,13 +8,16 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.protocoderrunner.R;
+import org.protocoderrunner.apprunner.AppRunnerInterpreter;
 import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.events.Events;
 
@@ -27,7 +29,8 @@ public class DebugFragment extends Fragment {
 
     private View v;
     private RecyclerView mListView;
-    private ArrayList<String> mLogArray;
+    private ArrayList<DebugFragment.LogData> mLogArray = new ArrayList<>();
+    ;
     private MyAdapter mArrayAdapter;
     private LinearLayoutManager mLayoutManager;
     private boolean isLockPosition = false;
@@ -43,9 +46,8 @@ public class DebugFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         registerEventBus();
 
-        v = inflater.inflate(R.layout.fragment_debug, container, false);
+        v = inflater.inflate(R.layout.debug_fragment, container, false);
 
-        mLogArray = new ArrayList<>();
         mListView = (RecyclerView) v.findViewById(R.id.logwrapper);
 
         mArrayAdapter = new MyAdapter();
@@ -63,6 +65,14 @@ public class DebugFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 isLockPosition = isChecked;
+            }
+        });
+
+        Button close = (Button) v.findViewById(R.id.close);
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().beginTransaction().remove(DebugFragment.this).commit();
             }
         });
 
@@ -100,8 +110,9 @@ public class DebugFragment extends Fragment {
         eventBusRegistered = false;
     }
 
-    public void addText(String log) {
-        mLogArray.add(log);
+    public void addText(int actionType, String log) {
+        MLog.d(TAG, actionType + " " + log);
+        mLogArray.add(new LogData(actionType, log));
 
         if (isLockPosition == false) {
             mArrayAdapter.notifyItemInserted(mLogArray.size());
@@ -121,12 +132,15 @@ public class DebugFragment extends Fragment {
         return true;
     }
 
-    @Subscribe
+    @Subscribe (sticky = true)
     public void onEventMainThread(Events.LogEvent e) {
         String logMsg = e.getData();
-        MLog.d(TAG, logMsg);
 
-        addText(logMsg);
+        int actionType = AppRunnerInterpreter.RESULT_OK;
+        if (e.getAction() == "log_error") actionType = AppRunnerInterpreter.RESULT_ERROR;
+        else if (e.getAction() == "log_permission_error") actionType = AppRunnerInterpreter.RESULT_PERMISSION_ERROR;
+
+        addText(actionType, logMsg);
     }
 
     private class MyAdapter extends RecyclerView.Adapter<ViewHolder> {
@@ -137,18 +151,39 @@ public class DebugFragment extends Fragment {
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            TextView textView = new TextView(getContext());
-            textView.setBackgroundColor(Color.argb(0, 255, 255, 255));
+            LinearLayout ll = null;
+            switch (viewType) {
+                case AppRunnerInterpreter.RESULT_OK:
+                    ll = (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.debug_console_text, parent, false);
+                    break;
 
-            DebugFragment.ViewHolder vh = new DebugFragment.ViewHolder(textView);
+                case AppRunnerInterpreter.RESULT_ERROR:
+                    ll = (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.debug_console_error, parent, false);
+                    break;
+
+                case AppRunnerInterpreter.RESULT_PERMISSION_ERROR:
+                    ll = (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.debug_console_permissions, parent, false);
+                    break;
+
+            }
+            DebugFragment.ViewHolder vh = new DebugFragment.ViewHolder(viewType, ll);
 
             return vh;
         }
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            String txt = mLogArray.get(position);
-            holder.textView.setText(txt);
+            String txt = mLogArray.get(position).data;
+            holder.consoleText.setText(txt);
+
+            if (holder.viewType == AppRunnerInterpreter.RESULT_PERMISSION_ERROR) {
+                holder.btnGrantPermissions.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        MLog.d(TAG, "qq");
+                    }
+                });
+            }
         }
 
         @Override
@@ -156,14 +191,38 @@ public class DebugFragment extends Fragment {
             return mLogArray.size();
         }
 
+        @Override
+        public int getItemViewType(int position) {
+            return mLogArray.get(position).type;
+        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView textView;
+        private final LinearLayout ll;
+        private final TextView consoleType = null;
+        private final TextView consoleText;
+        private final int viewType;
+        private Button btnGrantPermissions = null;
 
-        public ViewHolder(TextView v) {
+        public ViewHolder(int viewType, LinearLayout v) {
             super(v);
-            textView = v;
+            this.viewType = viewType;
+            ll = v;
+            consoleText = (TextView) ll.findViewById(R.id.console_text);
+
+            if (viewType == AppRunnerInterpreter.RESULT_PERMISSION_ERROR) {
+                btnGrantPermissions = (Button) ll.findViewById(R.id.grantPermissionsBtn);
+            }
+        }
+    }
+
+    public class LogData {
+        int type;
+        String data;
+
+        public LogData(int actionType, String log) {
+            this.type = actionType;
+            this.data = log;
         }
     }
 }

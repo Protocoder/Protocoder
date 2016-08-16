@@ -21,6 +21,7 @@
 package org.protocoderrunner;
 
 import android.animation.Animator;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -34,9 +35,11 @@ import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.nfc.tech.NfcF;
+import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -44,8 +47,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -92,8 +93,6 @@ public class AppRunnerActivity extends BaseActivity {
      * UI stuff
      */
     private DebugFragment   mDebugFragment;
-    private RelativeLayout consoleRLayout;
-    private TextView consoleText;
 
     // project settings
     private boolean mSettingScreenAlwaysOn;
@@ -206,8 +205,8 @@ public class AppRunnerActivity extends BaseActivity {
     public void onDestroy() {
         super.onDestroy();
 
-        // TODO change to events
-        //IDEcommunication.getInstance(this).ready(false);
+        Intent i = new Intent("org.protocoder.intent.CLOSED");
+        sendBroadcast(i);
     }
 
     @Override
@@ -470,47 +469,12 @@ public class AppRunnerActivity extends BaseActivity {
         }
     }
 
-    public void showConsole(boolean visible) {
+    @TargetApi(Build.VERSION_CODES.M)
+    public boolean checkPermission(String p) {
+        boolean permission = ContextCompat.checkSelfPermission(this, p) == PackageManager.PERMISSION_GRANTED;
+        MLog.d(TAG, p + " " + permission);
 
-        if (visible) {
-            consoleRLayout.setAlpha(0);
-            consoleRLayout.setTranslationY(50);
-            consoleRLayout.setVisibility(View.VISIBLE);
-            consoleRLayout.animate().alpha(1).translationYBy(-50).setDuration(500);
-        } else {
-            consoleRLayout.animate().alpha(0).translationYBy(50).setDuration(500).setListener(new Animator.AnimatorListener() {
-
-                @Override
-                public void onAnimationStart(Animator animation) {
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animation) {
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    consoleRLayout.setVisibility(View.GONE);
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation) {
-                }
-            });
-        }
-    }
-
-    public void showConsole(final String message) {
-        runOnUiThread(new Runnable() {
-
-            @Override
-            public void run() {
-                MLog.d(TAG, "showing console");
-                showConsole(true);
-                consoleText.setText(message);
-                MLog.d(TAG, "msg text");
-            }
-        });
+        return permission;
     }
 
     /**
@@ -519,9 +483,18 @@ public class AppRunnerActivity extends BaseActivity {
     @Subscribe
     public void onEventMainThread(Events.LogEvent e) {
         Intent i = new Intent("org.protocoder.intent.CONSOLE");
-        i.putExtra("action", e.getAction());
-        i.putExtra("data", e.getData());
+
+        String action = e.getAction();
+        String data = e.getData();
+
+        i.putExtra("action", action);
+        i.putExtra("data", data);
         sendBroadcast(i);
+
+        MLog.d("action", action);
+        if ((action == "log_error" || action == "log_permission_error") && !debugFramentIsVisible) addDebugFragment();
+        else if (action == "show") addDebugFragment();
+        else if (action == "hide") removeDebugFragment();
     }
 
     /**
@@ -536,7 +509,6 @@ public class AppRunnerActivity extends BaseActivity {
     BroadcastReceiver stopActivitiyBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            MLog.d(TAG, "stop_all 2");
             finish();
         }
     };

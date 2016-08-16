@@ -23,6 +23,9 @@ package org.protocoder.helpers;
 import android.content.Context;
 import android.content.Intent;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
+
 import org.protocoder.gui.LicenseActivity;
 import org.protocoder.gui.editor.EditorActivity;
 import org.protocoder.gui.settings.SettingsActivity;
@@ -38,6 +41,10 @@ public class ProtoAppHelper {
     private static boolean multiWindowEnabled = true;
 
     public static void launchScript(Context context, Project p) {
+
+        Answers.getInstance().logContentView(new ContentViewEvent()
+                .putContentId("launched script"));
+
         if (p.getName().toLowerCase().endsWith("service")) {
             Intent intent = new Intent(context, AppRunnerService.class);
             intent.putExtra(Project.FOLDER, p.getFolder());
@@ -65,10 +72,12 @@ public class ProtoAppHelper {
     }
 
     public static void launchEditor(Context context, Project p) {
+        MLog.d(TAG, "starting editor");
         Intent intent = new Intent(context, EditorActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(Project.FOLDER, p.getFolder());
         intent.putExtra(Project.NAME, p.getName());
+
         context.startActivity(intent);
     }
 

@@ -1,7 +1,9 @@
 package org.protocoderrunner.api;
 
+import android.Manifest;
 import android.animation.ValueAnimator;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -23,7 +25,7 @@ import org.protocoderrunner.api.widgets.PAbsoluteLayout;
 import org.protocoderrunner.api.widgets.PButton;
 import org.protocoderrunner.api.widgets.PCanvas;
 import org.protocoderrunner.api.widgets.PCheckBox;
-import org.protocoderrunner.api.widgets.PEditText;
+import org.protocoderrunner.api.widgets.PInput;
 import org.protocoderrunner.api.widgets.PImageButton;
 import org.protocoderrunner.api.widgets.PImageView;
 import org.protocoderrunner.api.widgets.PLinearLayout;
@@ -49,8 +51,11 @@ import org.protocoderrunner.apidoc.annotation.ProtoField;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.apprunner.FeatureNotAvailableException;
+import org.protocoderrunner.apprunner.PermissionNotGrantedException;
 import org.protocoderrunner.base.gui.CameraNew;
 import org.protocoderrunner.base.utils.AndroidUtils;
+import org.protocoderrunner.base.utils.MLog;
 
 import java.util.ArrayList;
 
@@ -155,9 +160,9 @@ public class PUI extends ProtoBase {
 
             default:
                 getActivity().setNormal();
-
-                updateScreenSizes();
         }
+        
+        updateScreenSizes();
     }
 
     private void updateScreenSizes() {
@@ -175,6 +180,8 @@ public class PUI extends ProtoBase {
         } else {
             getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
         }
+
+        updateScreenSizes();
     }
 
     @ProtoMethod(description = "Adds the given view to the layout", example = "")
@@ -322,24 +329,24 @@ public class PUI extends ProtoBase {
 
     @ProtoMethod(description = "Creates a new input", example = "")
     @ProtoMethodParam(params = {"label"})
-    public PEditText newInput(String label) {
-        final PEditText et = new PEditText(getContext());
+    public PInput newInput(String label) {
+        final PInput et = new PInput(getContext());
         et.setHint(label);
         return et;
     }
 
     @ProtoMethod(description = "Adds an input box", example = "")
     @ProtoMethodParam(params = {"label", "x", "y", "w", "h"})
-    public PEditText addInput(float x, float y, float w, float h) {
-        PEditText et = newInput("");
+    public PInput addInput(float x, float y, float w, float h) {
+        PInput et = newInput("");
         addViewAbsolute(et, x, y, w, h);
         return et;
     }
 
     @ProtoMethod(description = "Adds an input box", example = "")
     @ProtoMethodParam(params = {"label", "x", "y", "w", "h"})
-    public PEditText addInput(String label, float x, float y, float w, float h) {
-        PEditText et = newInput(label);
+    public PInput addInput(String label, float x, float y, float w, float h) {
+        PInput et = newInput(label);
         addViewAbsolute(et, x, y, w, h);
         return et;
     }
@@ -579,14 +586,29 @@ public class PUI extends ProtoBase {
                 break;
         }
 
-        Object pCamera;
+        Object pCamera = null;
         if (AndroidUtils.isVersionMarshmallow() && enableCamera2) {
             pCamera = new PCamera2(getAppRunner(), camNum, PCamera.MODE_COLOR_COLOR);
         } else {
-            pCamera = new PCamera(getAppRunner(), camNum, PCamera.MODE_COLOR_COLOR);
+            if (check("camera", PackageManager.FEATURE_CAMERA, Manifest.permission.CAMERA)) {
+                pCamera = new PCamera(getAppRunner(), camNum, PCamera.MODE_COLOR_COLOR);
+            }
         }
 
         return pCamera;
+    }
+
+    private boolean check(String what, String feature, String permission) {
+        boolean ret = false;
+
+        PackageManager pm = getContext().getPackageManager();
+
+        // check if available
+        if (!pm.hasSystemFeature(feature)) throw new FeatureNotAvailableException(what);
+        if (!getActivity().checkPermission(permission)) throw new PermissionNotGrantedException(what);
+        ret = true;
+
+        return ret;
     }
 
     @ProtoMethod(description = "Add camera view", example = "")

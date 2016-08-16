@@ -33,7 +33,7 @@ import ioio.lib.util.android.IOIOService;
 
 public class IOIOBoardService extends IOIOService {
     public static final int SET_CALLBACK = 1;
-    protected static final String TAG = "IOIOBoardService";
+    protected static final String TAG = IOIOBoardService.class.getSimpleName();
     private HardwareCallback callback_;
     protected Boolean abort_ = false;
     // Binder given to clients

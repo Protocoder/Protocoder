@@ -100,7 +100,7 @@ public class APIManager {
                 // get method information
                 if (apiMethod.name.contains("$") == false) {
                     Annotation[] annotations = element.getDeclaredAnnotations();
-                    // check if annotation exist and add apidocs
+                    // check if annotation exists and add apidocs
                     for (Annotation annotation2 : annotations) {
 
                         // description and example

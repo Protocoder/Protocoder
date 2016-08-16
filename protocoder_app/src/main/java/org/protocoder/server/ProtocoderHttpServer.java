@@ -33,6 +33,7 @@ import org.protocoder.gui.settings.ProtocoderSettings;
 import org.protocoder.helpers.ProtoScriptHelper;
 import org.protocoder.server.model.ProtoFile;
 import org.protocoder.server.networkexchangeobjects.NEOProject;
+import org.protocoderrunner.base.utils.FileIO;
 import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.models.Project;
 
@@ -193,9 +194,16 @@ public class ProtocoderHttpServer extends NanoHTTPD {
         } else if (uriSplitted.length == 7) {
             Project p = new Project(uriSplitted[TYPE] + "/" + uriSplitted[FOLDER], uriSplitted[PROJECT_NAME]);
 
-            if (uriSplitted[PROJECT_ACTION].equals("new")) {
-                ProtoScriptHelper.createNewProject(mContext.get(), p.folder, p.name);
-            } else if (uri.startsWith("/api/project/save")) {
+            if (uriSplitted[PROJECT_ACTION].equals("create")) {
+                MLog.d(TAG, "create project " + p.getFullPath() + " " + p.exists());
+
+                if (!p.exists()) {
+                    ProtoScriptHelper.createNewProject(mContext.get(), p.getParentPath(), p.name);
+                    res = newFixedLengthResponse("OK");
+                }
+
+            } else if (uriSplitted[PROJECT_ACTION].equals("save")) {
+                MLog.d(TAG, "project save");
                 String json;
                 final HashMap<String, String> map = new HashMap<String, String>();  // POST DATA
 
@@ -291,10 +299,40 @@ public class ProtocoderHttpServer extends NanoHTTPD {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }
+            } else if (uriSplitted[FILE_ACTION].equals("upload")) {
+                MLog.d(TAG, "upload for " + p.getFullPath());
+                final HashMap<String, String> files = new HashMap<String, String>();  // POST DATA
+                try {
+                    session.parseBody(files);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ResponseException e) {
+                    e.printStackTrace();
+                }
 
+                // get the file and copy it to the project folder
+                String fileName = session.getParms().get("name");
+                String fileType = session.getParms().get("type");
+                File fileSrc = new File(files.get("file"));
+                File fileDst = new File(p.getFullPathForFile(fileName));
+
+                // if (fileDst.exists()) {
+                //    res = NanoHTTPD.newFixedLengthResponse(Response.Status.CONFLICT, MIME_PLAINTEXT, "File exist already");
+                // }
+
+                try {
+                    FileIO.copyFile(fileSrc, fileDst);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+                res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("txt"), fileName);
+
+                // res = NanoHTTPD.newFixedLengthResponse("OK");
             } else {
-            res = NanoHTTPD.newFixedLengthResponse(Response.Status.BAD_REQUEST, MIME_PLAINTEXT, ":(");
+                res = NanoHTTPD.newFixedLengthResponse(Response.Status.BAD_REQUEST, MIME_PLAINTEXT, ":(");
+            }
         }
 
         /*

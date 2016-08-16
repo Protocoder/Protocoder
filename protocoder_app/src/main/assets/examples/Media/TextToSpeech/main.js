@@ -1,7 +1,9 @@
-/* 
-*	Uses android text to speech 
-*/ 
+/*
+ * \\\ Example:	Text To Speech
+ *
+ * Speak using the system's TextToSpeech
+ */
 
-ui.addButton("Speak!", 0, 0, 500, 200).onClick(function() { 
-	media.textToSpeech("hola amigos"); 
-});
+ui.addButton('Speak!', 0, 0).onClick(function () {
+	media.textToSpeech('hola amigos')
+})

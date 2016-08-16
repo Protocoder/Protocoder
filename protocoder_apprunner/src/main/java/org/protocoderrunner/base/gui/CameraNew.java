@@ -167,6 +167,7 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
             mCamera.release();
         }
 
+
         setCameraDisplayOrientation(cameraId, mCamera);
         mCamera.startPreview();
 

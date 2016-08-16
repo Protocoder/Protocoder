@@ -22,10 +22,13 @@ package org.protocoderrunner.api.network;
 
 import org.mozilla.javascript.NativeArray;
 import org.protocoderrunner.api.ProtoBase;
+import org.protocoderrunner.api.common.ReturnInterface;
+import org.protocoderrunner.api.common.ReturnObject;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.base.network.bt.SimpleBT;
+import org.protocoderrunner.base.utils.MLog;
 
 public class PBluetoothClient extends ProtoBase {
 
@@ -63,15 +66,15 @@ public class PBluetoothClient extends ProtoBase {
             arrayStrings[i] = (String) nativeArray.get(i, null);
         }
 
-        // TODO enable this 
-        /*
-        getAppRunner().pUi.popupChoice("Connect to device", arrayStrings, new PUI.choiceDialogCB() {
+        getAppRunner().pUi.popup().title("Connect to device").choice(arrayStrings).onAction(new ReturnInterface() {
             @Override
-            public void event(String string) {
-                connectSerial(string.split(" +")[1], callbackfn);
+            public void event(ReturnObject r) {
+                String addr = (String) r.get("answer");
+                MLog.d(TAG, "address " + addr);
+                connectSerial(addr.split(" +")[1], callbackfn);
             }
-        });
-        */
+        }).show();
+
         listen();
     }
 

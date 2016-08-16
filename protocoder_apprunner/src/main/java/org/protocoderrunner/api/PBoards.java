@@ -47,7 +47,6 @@ public class PBoards extends ProtoBase {
         return ioio;
     }
 
-
     @ProtoMethod(description = "initializes serial communication", example = "")
     @ProtoMethodParam(params = {"bauds", "function()"})
     public PSerial connectSerial(int baud, PSerial.OnStartCallback callbackfn) {
@@ -56,7 +55,6 @@ public class PBoards extends ProtoBase {
 
         return serial;
     }
-
 
     @ProtoMethod(description = "initializes arduino board without callback", example = "")
     @ProtoMethodParam(params = {""})

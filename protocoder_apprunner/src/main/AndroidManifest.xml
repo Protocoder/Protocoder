@@ -61,6 +61,7 @@
             android:name=".AppRunnerActivity"
             android:process=":AppRunner"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:windowSoftInputMode="stateUnchanged"
             android:theme="@style/ProtocoderAppRunnerTheme"
             android:label="@string/runner_name"
             android:launchMode="standard" >
@@ -103,7 +104,8 @@
             android:icon="@drawable/icon"
             android:label="AppRunnerService" >
         </service>
-        <service android:name=".base.hardware.IOIOBoardService" />
+        <service android:name=".base.hardware.IOIOBoardService"
+            android:process=":AppRunner" />
         <service
             android:name="org.puredata.android.service.PdService"
             android:process=":AppRunner"

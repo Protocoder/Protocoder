@@ -13,7 +13,9 @@
 
     <include layout="@layout/toolbar2"/>
 
-    <include layout="@layout/connection_info_view_vertical"
+    <include
+        android:id="@id/ip_container"
+        layout="@layout/connection_info_view_vertical"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -34,7 +36,6 @@
         android:layout_marginRight="@dimen/main_cardview_right_margin"
         android:layout_marginBottom="@dimen/main_cardview_bottom_margin"
         android:layout_toRightOf="@+id/ip_container"
-        android:layout_toEndOf="@+id/toolbar2_title"
         android:layout_marginLeft="2dp">
 
 

@@ -74,6 +74,10 @@ public class Project {
         return getSandboxPath() + filename;
     }
 
+    public String getParentPath() {
+        return AppRunnerSettings.getBaseDir() + this.folder + File.separator;
+    }
+
     public String getFullPath() {
         return AppRunnerSettings.getBaseDir() + getSandboxPath();
     }
@@ -82,4 +86,8 @@ public class Project {
         return getFullPath() + fileName;
     }
 
+    public boolean exists() {
+        File f = new File(getFullPath());
+        return f.exists();
+    }
 }

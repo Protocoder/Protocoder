@@ -32,7 +32,7 @@ public class CanvasUtils {
     }
 
     /**
-     * Normalize mContext value to exist between 0 and 1 (inclusive). Mathematically
+     * Normalize mContext value to exists between 0 and 1 (inclusive). Mathematically
      * the opposite of lerp(), figures out what proportion mContext particular value is
      * relative to start and stop coordinates.
      */

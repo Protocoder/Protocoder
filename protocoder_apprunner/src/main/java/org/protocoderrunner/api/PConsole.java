@@ -25,13 +25,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.LongSerializationPolicy;
 
 import org.greenrobot.eventbus.EventBus;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.protocoderrunner.api.common.ReturnObject;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
-import org.protocoderrunner.base.utils.AndroidUtils;
+import org.protocoderrunner.apprunner.AppRunnerInterpreter;
 import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.events.Events;
 
@@ -65,43 +63,49 @@ public class PConsole extends ProtoBase {
     @ProtoMethod(description = "shows any HTML text in the webIde console marked as error", example = "")
     @ProtoMethodParam(params = {"text", "text", "..."})
     public PConsole error(Object outputs) {
-        // if (mShowExtendedError) {}
-
         base_log("log_error", outputs);
 
         return this;
     }
 
-    @ProtoMethod(description = "clear the webIde console", example = "")
+    @ProtoMethod(description = "shows any HTML text in the webIde console marked as error", example = "")
+    @ProtoMethodParam(params = {"text", "text", "..."})
+    public PConsole p_error(int type, Object outputs) {
+
+        switch (type) {
+            case AppRunnerInterpreter.RESULT_ERROR:
+                base_log("log_error", outputs);
+
+                break;
+            case AppRunnerInterpreter.RESULT_PERMISSION_ERROR:
+                base_log("log_permission_error", outputs);
+
+                break;
+        }
+
+        return this;
+    }
+
+
+
+    @ProtoMethod(description = "clear the console", example = "")
     @ProtoMethodParam(params = {""})
     public PConsole clear() {
-        JSONObject msg = null;
-        try {
-            msg = new JSONObject().put("type", "console").put("action", "clear");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        // send(msg);
-
+        send("clear", "");
         return this;
     }
 
     @ProtoMethod(description = "show/hide the console", example = "")
     @ProtoMethodParam(params = {"boolean"})
     public PConsole show(boolean b) {
-        JSONObject values = null;
-        JSONObject msg = null;
-        try {
-            values = new JSONObject().put("val", b);
-            msg = new JSONObject().put("type", "console").put("action", "show").put("values", values);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        // send(msg);
+        if (b) send("show", "");
+        else send("hide", "");
 
         return this;
     }
 
+
+    /*
     @ProtoMethod(description = "Change the background color", example = "")
     @ProtoMethodParam(params = {"colorHex"})
     public PConsole backgroundColor(String colorHex) {
@@ -185,6 +189,7 @@ public class PConsole extends ProtoBase {
 
         return this;
     }
+    */
 
     private void base_log(String action, Object... outputs) {
         StringBuilder builder = new StringBuilder();
@@ -202,7 +207,7 @@ public class PConsole extends ProtoBase {
     }
 
     private void send(String action, String data) {
-        EventBus.getDefault().post(new Events.LogEvent(action, data));
+        EventBus.getDefault().postSticky(new Events.LogEvent(action, data));
     }
 
     private String getCurrentTime() {

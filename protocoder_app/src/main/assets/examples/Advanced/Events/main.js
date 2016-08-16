@@ -1,32 +1,28 @@
 /*
-*	
-* Events
-* A simple way to obtain MVC patterns using 
-* Protocoder events
-*
-*/
+ * \\\ Example: Events
+ *
+ * A simple way use data in different parts of the app
+ * easy to obtain MVC patterns using
+ *
+ */
 
+// start accelerometer
+sensors.accelerometer.onChange(function (event) {
+  // send event
+  app.sendEvent('e1', event)
+})
 
-sensors.accelerometer.onChange(function(x, y, z) {
-    var o = {};
-    o.x = x;
-    o.y = y;
-    o.z = z;
-    
-    app.sendEvent("e1", o);
+// register event
+var id = app.listenEvent('e1', function (event) {
+  console.log(event.x)
+})
+
+var txt = ui.addText('', 0, 0)
+txt.textSize(85)
+
+// register an event and display it in the text field
+var id = app.listenEvent('e1', function (o) {
+  txt.text(Math.round(o.x * 100) / 100)
 });
 
-
-var id = app.listenEvent("e1", function(obj) {
-    console.log(obj.x);
-});
-
-var txt = ui.addText("", 10, 10);
-txt.textSize(85);
-
-var id = app.listenEvent("e1", function(obj) {
-    txt.text(Math.round(obj.x * 100) / 100);
-});
-
-
-//app.removeEvent(id);
+// you can use app.removeEvent(id) in order to stop listening to the event

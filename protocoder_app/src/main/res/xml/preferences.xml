@@ -21,13 +21,13 @@
             android:summary="@string/setting_device_id_description"
             android:title="@string/setting_device_id_title" />
 
+        <!--
         <CheckBoxPreference
             android:checked="false"
             android:key="pref_screen_on"
             android:summary="@string/setting_screen_on_description"
             android:title="@string/setting_screen_on_title" />
 
-        <!--
         <CheckBoxPreference
             android:checked="false"
             android:key="pref_list_mode"
@@ -55,11 +55,12 @@
             android:key="pref_new_version_check"
             android:summary="@string/setting_new_version_description"
             android:title="@string/setting_new_version_title" />
+            -->
+
         <Preference
             android:key="reinstall_examples"
             android:summary="@string/setting_reinstall_description"
             android:title="@string/setting_reinstall_title" />
-            -->
 
 
     </PreferenceCategory>
