@@ -53,6 +53,7 @@ import org.protocoderrunner.api.common.ReturnObject;
 import org.protocoderrunner.api.sensors.PNfc;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apidoc.annotation.ProtoObject;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.base.utils.AndroidUtils;
 import org.protocoderrunner.base.utils.Intents;
@@ -60,6 +61,7 @@ import org.protocoderrunner.base.utils.MLog;
 
 import java.util.ArrayList;
 
+@ProtoObject
 public class PDevice extends ProtoBase {
 
     private BroadcastReceiver batteryReceiver;

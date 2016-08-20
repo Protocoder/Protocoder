@@ -24,6 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apidoc.annotation.ProtoObject;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.api.dashboard.PDashboardBackground;
 import org.protocoderrunner.api.dashboard.PDashboardButton;
@@ -39,6 +40,7 @@ import org.protocoderrunner.base.utils.StrUtils;
 
 import java.net.UnknownHostException;
 
+@ProtoObject
 public class PDashboard extends ProtoBase {
 
     String TAG = "PDashboard";

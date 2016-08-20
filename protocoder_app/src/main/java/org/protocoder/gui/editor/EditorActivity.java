@@ -41,7 +41,6 @@ import org.protocoder.gui.settings.ProtocoderSettings;
 import org.protocoder.server.model.ProtoFile;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.base.utils.FileIO;
-import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.models.Project;
 
 import java.util.HashMap;
@@ -285,7 +284,7 @@ public class EditorActivity extends BaseActivity {
                 bundle.putString(FileManagerFragment.ROOT_FOLDER, mCurrentProject.getFullPath());
 
                 // we pass the initial route to hide
-                bundle.putString(FileManagerFragment.PATH_HIDE_PATH_FROM, mCurrentProject.getSandBoxPathPrev());
+                bundle.putString(FileManagerFragment.PATH_HIDE_PATH_FROM, mCurrentProject.getPathPrev());
                 fileFragment.setArguments(bundle);
 
                 if (isTablet) {

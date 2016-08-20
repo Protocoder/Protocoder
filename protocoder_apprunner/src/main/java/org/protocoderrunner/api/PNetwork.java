@@ -50,6 +50,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.protocoderrunner.api.network.PBluetoothLe;
+import org.protocoderrunner.apidoc.annotation.ProtoObject;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.api.network.PBluetooth;
 import org.protocoderrunner.api.network.PFtpClient;
@@ -92,6 +93,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 
+@ProtoObject
 public class PNetwork extends ProtoBase {
 
     private final String TAG = PNetwork.class.getSimpleName();

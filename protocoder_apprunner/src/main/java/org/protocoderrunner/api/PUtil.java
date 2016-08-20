@@ -46,6 +46,7 @@ import org.protocoderrunner.api.other.PLooper;
 import org.protocoderrunner.api.other.SignalUtils;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apidoc.annotation.ProtoObject;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.base.utils.MLog;
 
@@ -53,6 +54,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 
+@ProtoObject
 public class PUtil extends ProtoBase {
 
     private final Handler handler;

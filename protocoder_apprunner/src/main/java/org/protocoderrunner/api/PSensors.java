@@ -20,30 +20,41 @@
 
 package org.protocoderrunner.api;
 
-import org.protocoderrunner.AppRunnerFragment;
 import org.protocoderrunner.api.common.ReturnObject;
 import org.protocoderrunner.api.sensors.PAccelerometer;
 import org.protocoderrunner.api.sensors.PGPS;
 import org.protocoderrunner.api.sensors.PGyroscope;
 import org.protocoderrunner.api.sensors.PLightIntensity;
 import org.protocoderrunner.api.sensors.PMagnetic;
-import org.protocoderrunner.api.sensors.PNfc;
 import org.protocoderrunner.api.sensors.POrientation;
 import org.protocoderrunner.api.sensors.PPressure;
 import org.protocoderrunner.api.sensors.PProximity;
 import org.protocoderrunner.api.sensors.PStep;
+import org.protocoderrunner.apidoc.annotation.ProtoField;
+import org.protocoderrunner.apidoc.annotation.ProtoObject;
 import org.protocoderrunner.apprunner.AppRunner;
 
+
+@ProtoObject
 public class PSensors extends ProtoBase {
 
+    @ProtoField
     public final PAccelerometer accelerometer;
+    @ProtoField
     public final PGyroscope gyroscope;
+    @ProtoField
     public final PGPS gps;
+    @ProtoField
     public final PLightIntensity light;
+    @ProtoField
     public final PMagnetic magnetic;
+    @ProtoField
     public final POrientation orientation;
+    @ProtoField
     public final PPressure pressure;
+    @ProtoField
     public final PProximity proximity;
+    @ProtoField
     public final PStep stepDetector;
 
     public PSensors(AppRunner appRunner) {

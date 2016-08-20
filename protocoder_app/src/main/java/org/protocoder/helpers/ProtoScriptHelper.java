@@ -37,6 +37,7 @@ import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -65,38 +66,27 @@ public class ProtoScriptHelper {
         return getBaseDir() + folder;
     }
 
-    // Check if a folder project exists
-    public static boolean isProjectExisting(String folder, String name) {
-        ArrayList<Project> projects = ProtoScriptHelper.listProjects(folder, false);
-
-        for (int i = 0; i < projects.size(); i++) {
-            if (projects.get(i).getName().equals(name)) {
-                return true;
-            }
-        }
-
-        return false;
+    public static String[] listTemplates(Context c) {
+        return FileIO.listFilesInAssets(c, "templates");
     }
 
     // Create Project
-    public static Project createNewProject(Context c, String folder, String newProjectName) {
+    public static Project createNewProject(Context c, String template, String where, String newProjectName) {
+        Project newProject = null;
+        String fullPath = ProtoScriptHelper.getProjectFolderPath(where + newProjectName);
+        MLog.d(TAG, "--> " + fullPath);
 
-        /*
-        if (ProtoScriptHelper.isProjectExisting(folder, newProjectName)) {
-            Toast.makeText(c, "Project already exists", Toast.LENGTH_LONG).show();
-            return null;
+        // check if is existing
+        if (new File(fullPath).exists()) {
+            MLog.d(TAG, "Project already exists");
+            return newProject;
+        } else {
+            FileIO.copyAssetFolder(c.getAssets(), "templates/" + template, fullPath);
+            MLog.d(TAG, "creating project in " + where);
+
+            newProject = new Project(where, newProjectName);
         }
-        */
 
-        String newTemplateCode = FileIO.readAssetFile(c, "templates/new.js");
-
-        if (newTemplateCode == null) {
-            newTemplateCode = "";
-        }
-        MLog.d(TAG, "creating project in " + folder);
-
-        FileIO.writeStringToFile(folder, newProjectName, newTemplateCode);
-        Project newProject = new Project(folder, newProjectName);
 
         return newProject;
     }

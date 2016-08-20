@@ -25,6 +25,7 @@ import android.os.FileObserver;
 import net.lingala.zip4j.exception.ZipException;
 
 import org.apache.commons.io.FileUtils;
+import org.protocoderrunner.apidoc.annotation.ProtoObject;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.api.other.PSqLite;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
@@ -34,6 +35,7 @@ import org.protocoderrunner.base.utils.FileIO;
 import java.io.File;
 import java.io.IOException;
 
+@ProtoObject
 public class PFileIO extends ProtoBase {
 
     final private String TAG = PFileIO.class.getSimpleName();

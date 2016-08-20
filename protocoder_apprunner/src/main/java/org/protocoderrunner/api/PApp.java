@@ -34,6 +34,7 @@ import android.support.v4.app.NotificationCompat;
 
 import org.mozilla.javascript.NativeObject;
 import org.protocoderrunner.api.common.ReturnInterface;
+import org.protocoderrunner.apidoc.annotation.ProtoObject;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.AppRunnerActivity;
 import org.protocoderrunner.R;
@@ -44,6 +45,7 @@ import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.base.utils.ExecuteCmd;
 import org.protocoderrunner.base.utils.FileIO;
 
+@ProtoObject
 public class PApp extends ProtoBase {
 
     PEvents pevents;

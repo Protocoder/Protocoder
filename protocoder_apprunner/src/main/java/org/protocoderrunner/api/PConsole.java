@@ -28,6 +28,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.protocoderrunner.api.common.ReturnObject;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apidoc.annotation.ProtoObject;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.AppRunnerInterpreter;
 import org.protocoderrunner.base.utils.MLog;
@@ -38,6 +39,7 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
+@ProtoObject
 public class PConsole extends ProtoBase {
 
     private final Gson gson;
@@ -68,8 +70,6 @@ public class PConsole extends ProtoBase {
         return this;
     }
 
-    @ProtoMethod(description = "shows any HTML text in the webIde console marked as error", example = "")
-    @ProtoMethodParam(params = {"text", "text", "..."})
     public PConsole p_error(int type, Object outputs) {
 
         switch (type) {

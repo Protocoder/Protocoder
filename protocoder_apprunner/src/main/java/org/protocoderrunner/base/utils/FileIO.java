@@ -669,4 +669,14 @@ public class FileIO {
         }
     }
 
+
+    public static String[] listFilesInAssets(Context c, String path) {
+        String[] ret = null;
+        try {
+            ret =  c.getAssets().list(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ret;
+    }
 }

@@ -1,13 +1,13 @@
 apply plugin: 'android'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    compileSdkVersion 24
+    buildToolsVersion "24.0.1"
 
     defaultConfig {
         applicationId "com.myscript"
         minSdkVersion 16
-        targetSdkVersion 21
+        targetSdkVersion 24
         versionCode 1
         versionName "0.1"
 

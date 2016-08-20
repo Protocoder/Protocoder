@@ -22,6 +22,7 @@ package org.protocoderrunner.api;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apidoc.annotation.ProtoObject;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.api.boards.PArduino;
 import org.protocoderrunner.api.boards.PIOIO;
@@ -29,6 +30,7 @@ import org.protocoderrunner.api.boards.PSerial;
 import org.protocoderrunner.base.hardware.AdkPort;
 import org.protocoderrunner.base.utils.MLog;
 
+@ProtoObject
 public class PBoards extends ProtoBase {
 
     private final String TAG = PBoards.class.getSimpleName();

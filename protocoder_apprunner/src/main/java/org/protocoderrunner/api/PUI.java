@@ -5,7 +5,9 @@ import android.animation.ValueAnimator;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.MotionEvent;
@@ -50,17 +52,22 @@ import org.protocoderrunner.api.widgets.WidgetHelper;
 import org.protocoderrunner.apidoc.annotation.ProtoField;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apidoc.annotation.ProtoObject;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.FeatureNotAvailableException;
 import org.protocoderrunner.apprunner.PermissionNotGrantedException;
 import org.protocoderrunner.base.gui.CameraNew;
 import org.protocoderrunner.base.utils.AndroidUtils;
-import org.protocoderrunner.base.utils.MLog;
 
 import java.util.ArrayList;
 
 import processing.core.PApplet;
 
+/**
+ * Hola
+ * @author Victor Diaz
+ */
+@ProtoObject
 public class PUI extends ProtoBase {
 
     // contains a reference of all views added to the absolute layout
@@ -161,7 +168,7 @@ public class PUI extends ProtoBase {
             default:
                 getActivity().setNormal();
         }
-        
+
         updateScreenSizes();
     }
 
@@ -242,14 +249,31 @@ public class PUI extends ProtoBase {
         return b;
     }
 
-    @ProtoMethod(description = "Adds a button", example = "")
-    @ProtoMethodParam(params = {"label", "x", "y", "w", "h"})
+    /**
+     * Adds a button to the main screen
+     *
+     * @param label Text that appears in the button
+     * @param x Horizontal position
+     * @param y Vertical position
+     * @param w Width
+     * @param h Height
+     * @return llal
+     */
+    @ProtoMethod
     public PButton addButton(String label, float x, float y, float w, float h) {
         PButton b = newButton(label);
         addViewAbsolute(b, x, y, w, h);
         return b;
     }
 
+    /**
+     * Adds a button to the main screen
+     *
+     * @param label Text that appears in the button
+     * @param x Horizontal position
+     * @param y Vertical position
+     * @return lall
+     */
     @ProtoMethod(description = "Adds a button", example = "")
     @ProtoMethodParam(params = {"label", "x", "y"})
     public PButton addButton(String label, float x, float y) {
@@ -803,6 +827,19 @@ public class PUI extends ProtoBase {
         PPopupDialogFragment pPopupCustomFragment = PPopupDialogFragment.newInstance(fm);
 
         return pPopupCustomFragment;
+    }
+
+    public void showWeb(String url) {
+        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+        builder.setToolbarColor(Color.BLUE);
+        builder.addDefaultShareMenuItem();
+        builder.setInstantAppsEnabled(true);
+
+        // builder.setStartAnimations(this, R.anim.slide_in_right, R.anim.slide_out_left);
+        // builder.setExitAnimations(this, R.anim.slide_in_left, R.anim.slide_out_right);
+
+        CustomTabsIntent customTabsIntent = builder.build();
+        customTabsIntent.launchUrl(getActivity(), Uri.parse(url));
     }
 
     /**

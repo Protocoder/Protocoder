@@ -35,6 +35,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.webkit.WebViewFragment;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,6 +51,7 @@ import org.protocoder.appinterpreter.AppRunnerCustom;
 import org.protocoder.appinterpreter.ProtocoderApp;
 import org.protocoder.events.Events;
 import org.protocoder.gui.IntroductionFragment;
+import org.protocoder.gui._components.APIWebviewFragment;
 import org.protocoder.gui._components.NewProjectDialogFragment;
 import org.protocoder.gui.filemanager.FileManagerDialog;
 import org.protocoder.gui.folderchooser.FolderChooserFragment;
@@ -223,12 +225,18 @@ public class MainActivity extends BaseActivity {
             startServers();
         }
 
-        // stop servers 1h
+        // stop servers
         if (false) {
             stopServers();
         }
 
-        // list running projects 1h
+        if (false) {
+            APIWebviewFragment webViewFragment = new APIWebviewFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString("url", "http://127.0.0.1:8585");
+            webViewFragment.setArguments(bundle);
+            addFragment(webViewFragment, R.id.fragmentEditor, "qq");
+        }
 
     }
 
@@ -438,11 +446,17 @@ public class MainActivity extends BaseActivity {
         NewProjectDialogFragment newProjectDialog = new NewProjectDialogFragment();
         newProjectDialog.show(fm, "fragment_edit_name");
 
+        String[] templates = ProtoScriptHelper.listTemplates(this);
+        for (String template : templates) {
+            MLog.d(TAG, "template " + template);
+        }
+
         newProjectDialog.setListener(new NewProjectDialogFragment.NewProjectDialogListener() {
             @Override
             public void onFinishEditDialog(String inputText) {
+                String template = "default";
                 Toast.makeText(MainActivity.this, "Creating " + inputText, Toast.LENGTH_SHORT).show();
-                Project p = ProtoScriptHelper.createNewProject(MainActivity.this, ProtoScriptHelper.getProjectFolderPath("user_projects/User Projects"), inputText);
+                Project p = ProtoScriptHelper.createNewProject(MainActivity.this, template, "user_projects/User Projects/", inputText);
                 EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_NEW, p));
             }
         });

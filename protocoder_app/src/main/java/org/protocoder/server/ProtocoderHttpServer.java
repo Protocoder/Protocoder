@@ -198,8 +198,11 @@ public class ProtocoderHttpServer extends NanoHTTPD {
                 MLog.d(TAG, "create project " + p.getFullPath() + " " + p.exists());
 
                 if (!p.exists()) {
-                    ProtoScriptHelper.createNewProject(mContext.get(), p.getParentPath(), p.name);
+                    String template = "web";
+                    MLog.d(TAG, p.getParentPath());
+                    ProtoScriptHelper.createNewProject(mContext.get(), template, p.getSandboxPathParent(), p.name);
                     res = newFixedLengthResponse("OK");
+                    EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_NEW, p));
                 }
 
             } else if (uriSplitted[PROJECT_ACTION].equals("save")) {
@@ -222,6 +225,7 @@ public class ProtocoderHttpServer extends NanoHTTPD {
                     return newFixedLengthResponse("NOP");
                 }
 
+                MLog.d(TAG, json);
                 NEOProject neo = gson.fromJson(json, NEOProject.class);
 
                 // saving all the files changed
@@ -303,10 +307,13 @@ public class ProtocoderHttpServer extends NanoHTTPD {
                 MLog.d(TAG, "upload for " + p.getFullPath());
                 final HashMap<String, String> files = new HashMap<String, String>();  // POST DATA
                 try {
+                    MLog.d(TAG, "qq1");
                     session.parseBody(files);
                 } catch (IOException e) {
+                    MLog.d(TAG, "qq2");
                     e.printStackTrace();
                 } catch (ResponseException e) {
+                    MLog.d(TAG, "qq2");
                     e.printStackTrace();
                 }
 
@@ -316,6 +323,9 @@ public class ProtocoderHttpServer extends NanoHTTPD {
                 File fileSrc = new File(files.get("file"));
                 File fileDst = new File(p.getFullPathForFile(fileName));
 
+                MLog.d(TAG, fileSrc.getAbsolutePath());
+                MLog.d(TAG, fileDst.getAbsolutePath());
+
                 // if (fileDst.exists()) {
                 //    res = NanoHTTPD.newFixedLengthResponse(Response.Status.CONFLICT, MIME_PLAINTEXT, "File exist already");
                 // }
@@ -323,6 +333,7 @@ public class ProtocoderHttpServer extends NanoHTTPD {
                 try {
                     FileIO.copyFile(fileSrc, fileDst);
                 } catch (IOException e) {
+                    MLog.d(TAG, "qq5");
                     e.printStackTrace();
                 }
 

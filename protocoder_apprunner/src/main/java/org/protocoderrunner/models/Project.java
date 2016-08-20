@@ -62,12 +62,16 @@ public class Project {
         return this.folder;
     }
 
-    public String getSandBoxPathPrev() {
+    public String getPathPrev() {
         return AppRunnerSettings.getBaseDir() + this.folder + File.separator;
     }
 
     public String getSandboxPath() {
         return this.folder + File.separator + this.name + File.separator;
+    }
+
+    public String getSandboxPathParent() {
+        return this.folder + File.separator;
     }
 
     public String getSandboxPathForFile(String filename) {

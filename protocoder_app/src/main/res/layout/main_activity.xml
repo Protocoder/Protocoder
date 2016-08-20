@@ -57,11 +57,12 @@
 
     <FrameLayout
         android:id="@+id/fragmentEditor"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        android:layout_below="@+id/toolbar2"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/toolbar2"/>
+        android:layout_alignParentEnd="true" />
 
     <FrameLayout
         android:id="@+id/fragmentIntroduction"
