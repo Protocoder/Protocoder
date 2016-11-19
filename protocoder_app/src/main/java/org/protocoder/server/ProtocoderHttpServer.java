@@ -20,7 +20,10 @@
 
 package org.protocoder.server;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.AssetManager;
 
 import com.google.gson.Gson;
@@ -35,6 +38,7 @@ import org.protocoder.server.model.ProtoFile;
 import org.protocoder.server.networkexchangeobjects.NEOProject;
 import org.protocoderrunner.base.utils.FileIO;
 import org.protocoderrunner.base.utils.MLog;
+import org.protocoderrunner.models.Folder;
 import org.protocoderrunner.models.Project;
 
 import java.io.File;
@@ -66,6 +70,7 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 
     private static String WEBAPP_DIR = "webide/";
     Gson gson;
+    private String views;
 
     public ProtocoderHttpServer(Context context, int port) { //} throws IOException {
         super(port);
@@ -122,7 +127,7 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 
     // file actions
     0   1      2   3   4    5      6    7
-    "/api/project/[ff]/[sf]/[p]/files/new" (POST)
+    "/api/project/[ff]/[sf]/[p]/files/create" (POST)
     "/api/project/[ff]/[sf]/[p]/files/save" (POST)
     "/api/project/[ff]/[sf]/[p]/files/list"
     "/api/project/[ff]/[sf]/[p]/files/delete/" (POST)
@@ -150,10 +155,17 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 
         if (uriSplitted.length >= 4 && uriSplitted.length <= 5) {
             if (uriSplitted[COMMAND].equals("list")) {
-                ArrayList<ProtoFile> files = ProtoScriptHelper.listFilesInFolder("./", 2);
+                HashMap<String, ArrayList> files = new HashMap<>();
+
+                ArrayList<ProtoFile> userFolder = ProtoScriptHelper.listFilesInFolder(ProtocoderSettings.USER_PROJECTS_FOLDER, 1);
+                ArrayList<ProtoFile> examplesFolder = ProtoScriptHelper.listFilesInFolder(ProtocoderSettings.EXAMPLES_FOLDER, 1);
+
+                files.put(ProtocoderSettings.USER_PROJECTS_FOLDER, userFolder);
+                files.put(ProtocoderSettings.EXAMPLES_FOLDER, examplesFolder);
+
                 String jsonFiles = gson.toJson(files);
 
-                // MLog.d("list", jsonFiles);
+                MLog.d("list", jsonFiles);
                 EventBus.getDefault().post(new Events.HTTPServerEvent("project_list_all"));
 
                 res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), jsonFiles.toString());
@@ -183,7 +195,27 @@ public class ProtocoderHttpServer extends NanoHTTPD {
                 MLog.d(TAG, "stop all");
                 EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_STOP_ALL, null));
                 res = newFixedLengthResponse("OK");
+
+            /*
+             * This is for the UI editor
+             */
+            } else if (uriSplitted[COMMAND].equals("views_list_types")) {
+                ArrayList<String> arrayList = new ArrayList();
+                arrayList.add("button");
+                arrayList.add("slider");
+                arrayList.add("knob");
+                String json = gson.toJson(arrayList);
+                res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), json.toString());
+            } else if (uriSplitted[COMMAND].equals("views_get_all")) {
+                if (views == null) {
+                    res = newFixedLengthResponse("NOP");
+                } else {
+                    res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), views);
+                }
+            } else if (uriSplitted[COMMAND].equals("views_set_all")) {
+
             }
+
 
         /**
          * Project dependent actions
@@ -198,7 +230,7 @@ public class ProtocoderHttpServer extends NanoHTTPD {
                 MLog.d(TAG, "create project " + p.getFullPath() + " " + p.exists());
 
                 if (!p.exists()) {
-                    String template = "web";
+                    String template = "default";
                     MLog.d(TAG, p.getParentPath());
                     ProtoScriptHelper.createNewProject(mContext.get(), template, p.getSandboxPathParent(), p.name);
                     res = newFixedLengthResponse("OK");
@@ -238,17 +270,17 @@ public class ProtocoderHttpServer extends NanoHTTPD {
             } else if (uriSplitted[PROJECT_ACTION].equals("load")) {
                 ArrayList<ProtoFile> files = ProtoScriptHelper.listFilesInFolder(p.getSandboxPath(), 0);
 
-                // only load main.js
+                // only load main.js & app.conf
                 for (int i = 0; i < files.size(); i++) {
-                    if (files.get(i).name.equals(ProtocoderSettings.MAIN_FILENAME)) {
-                        files.get(i).code = ProtoScriptHelper.getCode(p);
+                    if (files.get(i).name.equals(ProtocoderSettings.MAIN_FILENAME)) { // || files.get(i).name.equals(ProtocoderSettings.CONF_FILENAME)) {
+                        files.get(i).code = ProtoScriptHelper.getCode(p, files.get(i).name);
                     }
                 }
 
                 NEOProject neo = new NEOProject();
                 neo.files = files;
                 neo.project = p;
-                neo.current_folder = '/';
+                neo.current_folder = "/";
 
                 String json = gson.toJson(neo);
                 // MLog.d(TAG, json);
@@ -266,6 +298,10 @@ public class ProtocoderHttpServer extends NanoHTTPD {
 
                 res = newFixedLengthResponse("OK");
 
+            } else if (uriSplitted[PROJECT_ACTION].equals("stop_all_and_run")) {
+                EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_STOP_ALL_AND_RUN, p));
+
+                res = newFixedLengthResponse("STOP_AND_RUN");
             } else if (uriSplitted[PROJECT_ACTION].equals("stop")) {
                 MLog.d(TAG, "stop");
                 EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_STOP_ALL, null));
@@ -290,9 +326,9 @@ public class ProtocoderHttpServer extends NanoHTTPD {
                 EventBus.getDefault().post(new Events.HTTPServerEvent("project_list_all"));
 
                 res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), jsonFiles.toString());
-            } else if (uriSplitted[FILE_ACTION].equals("load")) {
-                // fetch file
+            } else if (uriSplitted[FILE_ACTION].equals("view")) {
                 String fileName = uriSplitted[FILE_NAME];
+
                 String mime = getMimeType(fileName); // Get MIME type
                 InputStream fi = null;
                 try {
@@ -303,6 +339,65 @@ public class ProtocoderHttpServer extends NanoHTTPD {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
+            } else if (uriSplitted[FILE_ACTION].equals("load")) {
+                // fetch file
+                String fileName = uriSplitted[FILE_NAME];
+                ProtoFile file = new ProtoFile();
+                file.name = fileName;
+                file.code = ProtoScriptHelper.getCode(p, fileName);
+                NEOProject neo = new NEOProject();
+                neo.files.add(file);
+
+                String json = gson.toJson(neo);
+                // MLog.d(TAG, json);
+
+                // EventBus.getDefault().post(new Events.HTTPServerEvent("project_load", p));
+                res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), json.toString());
+
+
+            } else if (uriSplitted[FILE_ACTION].equals("create")) {
+                final HashMap<String, String> map = new HashMap<String, String>();  // POST DATA
+
+                String json = null;
+                try {
+                    session.parseBody(map);
+                    if (map.isEmpty()) return newFixedLengthResponse("BUG");
+                    json = map.get("postData");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ResponseException e) {
+                    e.printStackTrace();
+                }
+
+                MLog.d(TAG, json);
+                NEOProject neo = gson.fromJson(json, NEOProject.class);
+
+                for (ProtoFile file : neo.files) {
+                    MLog.d(TAG, "creating file in " + file.path + " " + file.name + " " + file.type);
+                    String path = p.getFullPathForFile(file.path + File.separator + file.name);
+                    MLog.d(TAG, path);
+
+                    if (!new File(path).exists()) {
+                        switch (file.type) {
+                            case "folder":
+                                new File(path).mkdir();
+                                break;
+                            case "file":
+                                try {
+                                    new File(path).createNewFile();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                break;
+                        }
+                        res = newFixedLengthResponse("OK");
+
+                    } else {
+                        res = newFixedLengthResponse("NOP");
+                    }
+                }
+
             } else if (uriSplitted[FILE_ACTION].equals("upload")) {
                 MLog.d(TAG, "upload for " + p.getFullPath());
                 final HashMap<String, String> files = new HashMap<String, String>();  // POST DATA
@@ -447,4 +542,9 @@ public class ProtocoderHttpServer extends NanoHTTPD {
     public void close() {
         stop();
     }
+
+    public void setViews(String views) {
+        this.views = views;
+    }
+
 }

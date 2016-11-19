@@ -2,14 +2,16 @@
  * \\\ Example: Light Sensor
  */
 
-var plot = ui.addPlot(0, 0, 1, 0.2).range(-15, 15)
+ui.addTitle(app.name)
+
+var plot = ui.addPlot(0.1, 0.15, 0.8, 0.1).name('light intensity')
 
 sensors.light.onChange(function (data) {
-  plot.update('intensity', data.intensity)
-  console.log(data.intensity)
+  plot.update(data.intensity)
 })
 
-// stop light
-ui.addButton('STOP', 0, 0.2).onClick(function () {
-  sensors.intensity.stop()
+// start / stop light sensor
+ui.addToggle('ON', 0.1, 0.3, 0.2, 0.1).onChange(function (o) {
+  if (o.checked) sensors.light.start()
+  else sensors.light.stop()
 })

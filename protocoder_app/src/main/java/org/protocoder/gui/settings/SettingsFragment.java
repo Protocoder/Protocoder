@@ -26,40 +26,34 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
-import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 import android.preference.TwoStatePreference;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.EditText;
 
 import org.protocoder.R;
 import org.protocoder.gui.LicenseActivity;
 import org.protocoder.helpers.ProtoSettingsHelper;
 import org.protocoderrunner.base.BaseNotification;
-import org.protocoderrunner.base.utils.MLog;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class SettingsFragment extends PreferenceFragment {
 
     protected static final String TAG = SettingsFragment.class.getSimpleName();
     private Context mContext;
-    private SharedPreferences mPrefs;
-    private UserSettings mSettings;
+    private NewUserPreferences mUserPreferences;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mSettings = new UserSettings(getActivity());
+        mUserPreferences = NewUserPreferences.getInstance();
 
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.preferences);
@@ -70,39 +64,138 @@ public class SettingsFragment extends PreferenceFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         mContext = getActivity();
-        mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        TwoStatePreference qq = new TwoStatePreference(getActivity()) {
-            @Override
-            protected void onClick() {
-                super.onClick();
-            }
-        };
 
-        final EditTextPreference prefId = (EditTextPreference) findPreference("pref_id");
-        prefId.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-
+        final EditTextPreference prefDeviceId = (EditTextPreference) findPreference("device_id");
+        prefDeviceId.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                prefId.setText((String) newValue);
+                prefDeviceId.setText((String) newValue);
+                mUserPreferences.set("device_id", (String) newValue).save();
                 return false;
             }
         });
+        prefDeviceId.setText((String) NewUserPreferences.getInstance().get("device_id"));
 
-        prefId.setText(mSettings.getId());
+        // Screen always on mode
+        final TwoStatePreference prefScreenOn = (TwoStatePreference) findPreference("screen_always_on");
+        prefScreenOn.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object o) {
+                boolean isChecked = (Boolean) o;
+                mUserPreferences.set("screen_always_on", isChecked).save();
+                return true;
+            }
+        });
+        prefScreenOn.setChecked((Boolean) mUserPreferences.get("screen_always_on"));
 
-        final EditTextPreference appColor = (EditTextPreference) findPreference("pref_app_color");
-        prefId.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+        // Start servers on launch
+        final TwoStatePreference prefStartServers = (TwoStatePreference) findPreference("servers_enabled_on_start");
+        prefStartServers.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object o) {
+                boolean isChecked = (Boolean) o;
+                mUserPreferences.set("servers_enabled_on_start", isChecked).save();
+                return true;
+            }
+        });
+        prefStartServers.setChecked((Boolean) mUserPreferences.get("servers_enabled_on_start"));
 
+
+        // Notify new version
+        final TwoStatePreference prefNewVersionCheck = (TwoStatePreference) findPreference("notify_new_version");
+        prefNewVersionCheck.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object o) {
+                boolean isChecked = (Boolean) o;
+                mUserPreferences.set("notify_new_version", isChecked).save();
+                return true;
+            }
+        });
+        prefNewVersionCheck.setChecked((Boolean) mUserPreferences.get("notify_new_version"));
+
+
+        // Notify new version
+        final TwoStatePreference prefSendUsageLog = (TwoStatePreference) findPreference("send_usage_log");
+        prefSendUsageLog.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object o) {
+                boolean isChecked = (Boolean) o;
+                mUserPreferences.set("send_usage_log", isChecked).save();
+                return true;
+            }
+        });
+        prefSendUsageLog.setChecked((Boolean) mUserPreferences.get("send_usage_log"));
+
+
+        // WebIDE mode
+        final TwoStatePreference prefWebIdeMode = (TwoStatePreference) findPreference("webide_mode");
+        prefWebIdeMode.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object o) {
+                boolean isChecked = (Boolean) o;
+                mUserPreferences.set("webide_mode", isChecked).save();
+                return true;
+            }
+        });
+        prefWebIdeMode.setChecked((Boolean) mUserPreferences.get("webide_mode"));
+
+
+        // Launch on device boot mode
+        final TwoStatePreference prefLaunchOnBoot = (TwoStatePreference) findPreference("launch_on_device_boot");
+        prefLaunchOnBoot.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object o) {
+                boolean isChecked = (Boolean) o;
+                mUserPreferences.set("launch_on_device_boot", isChecked).save();
+                return true;
+            }
+        });
+        prefLaunchOnBoot.setChecked((Boolean) mUserPreferences.get("launch_on_device_boot"));
+
+
+        final EditTextPreference prefLaunchScript = (EditTextPreference) findPreference("launch_script_on_app_launch");
+        prefLaunchScript.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                prefId.setText((String) newValue);
+                prefLaunchScript.setText((String) newValue);
+                mUserPreferences.set("launch_on_device_boot", (String) newValue).save();
                 return false;
             }
         });
+        prefLaunchScript.setText((String) NewUserPreferences.getInstance().get("launch_script_on_app_launch"));
 
-        // TODO enable again
-        // appColor.setText(mSettings.getColor());
+        // Column mode
+        final TwoStatePreference prefAppsInColumnMode = (TwoStatePreference) findPreference("apps_in_list_mode");
+        if (prefAppsInColumnMode != null) {
+            prefAppsInColumnMode.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object o) {
+                    boolean isChecked = (Boolean) o;
+                    mUserPreferences.set("apps_in_list_mode", isChecked).save();
+                    return true;
+                }
+            });
+        }
+        prefAppsInColumnMode.setChecked((Boolean) mUserPreferences.get("apps_in_list_mode"));
+
+
+
+
+
+
+        /*
+        final EditTextPreference appColor = (EditTextPreference) findPreference("app_color");
+        appColor.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                appColor.setText((String) newValue);
+                return false;
+            }
+        });
+        appColor.setText((String) NewUserPreferences.getInstance().get("app_color"));
+        */
 
         Preference btnShowLicenses = findPreference("licenses_detail");
         btnShowLicenses.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -142,8 +235,6 @@ public class SettingsFragment extends PreferenceFragment {
                 }).setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // Perform Your Task Here--When No is
-                        // pressed
                         dialog.cancel();
                     }
                 }).show();
@@ -152,75 +243,8 @@ public class SettingsFragment extends PreferenceFragment {
             }
         });
 
-        // Show curtain notification
-        final TwoStatePreference curtainPreference = (TwoStatePreference) findPreference(getString(R.string.pref_curtain_notifications));
-        if (curtainPreference != null) {
-            curtainPreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object o) {
-                    boolean isChecked = (Boolean) o;
-                    mPrefs.edit()
-                            .putBoolean(getActivity().getResources().getString(R.string.pref_curtain_notifications),
-                                    isChecked).commit();
-                    // if start
-                    if (isChecked) {
-                        // Do nothing as the server will restart on
-                        // resume of MainActivity.
-                        // If we don't have the server automatically
-                        // restart, then this is mContext separate issue.
-                    } else {
-                        // Kill all notifications
-                        BaseNotification.killAll(getActivity());
-                    }
-                    return true;
-                }
-            });
-        } else {
-            // something
-        }
 
-
-        // Screen always on mode
-        final TwoStatePreference screenOnPreference = (TwoStatePreference) findPreference("pref_screen_on");
-        if (screenOnPreference != null) {
-            screenOnPreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object o) {
-                    boolean isChecked = (Boolean) o;
-                    mSettings.setScreenOn(isChecked);
-
-                    return true;
-                }
-            });
-        }
-
-        // Column mode
-        final TwoStatePreference columnModePreference = (TwoStatePreference) findPreference("pref_list_mode");
-        if (columnModePreference != null) {
-            columnModePreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object o) {
-                    boolean isChecked = (Boolean) o;
-                    mPrefs.edit().putBoolean("pref_list_mode", isChecked).commit();
-
-                    return true;
-                }
-            });
-        }
-
-        // Background mode
-        final TwoStatePreference backgroundModePreference = (TwoStatePreference) findPreference("pref_background_mode");
-        if (backgroundModePreference != null) {
-            backgroundModePreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object o) {
-                    boolean isChecked = (Boolean) o;
-                    mPrefs.edit().putBoolean("pref_background_mode", isChecked).commit();
-                    return true;
-                }
-            });
-        }
-
+        /*
         // Connection alert mode
         final TwoStatePreference connectionAlertPreference = (TwoStatePreference) findPreference("pref_connection_alert");
         if (connectionAlertPreference != null) {
@@ -228,11 +252,12 @@ public class SettingsFragment extends PreferenceFragment {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object o) {
                     boolean isChecked = (Boolean) o;
-                    mSettings.setConnectionAlert(isChecked);
+                    // mSettings.setConnectionAlert(isChecked);
                     return true;
                 }
             });
         }
+        */
 
         //load webIDE
         // TODO enable again

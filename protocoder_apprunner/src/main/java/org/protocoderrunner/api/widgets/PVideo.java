@@ -25,7 +25,7 @@ import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.base.gui.CustomVideoTextureView;
 
-public class PVideo extends CustomVideoTextureView implements PViewInterface {
+public class PVideo extends CustomVideoTextureView {
 
     protected AppRunner mAppRunner;
     private OnUpdateCB mCallbackUpdate;

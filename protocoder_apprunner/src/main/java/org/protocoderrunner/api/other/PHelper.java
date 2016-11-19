@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import com.larvalabs.svgandroid.SVG;
 import com.larvalabs.svgandroid.SVGBuilder;
 
-import org.protocoderrunner.api.widgets.PImageView;
+import org.protocoderrunner.api.widgets.PImage;
 import org.protocoderrunner.base.utils.FileIO;
 import org.protocoderrunner.base.utils.Image;
 import org.protocoderrunner.base.utils.MLog;
@@ -22,15 +22,17 @@ import java.io.InputStream;
 
 public class PHelper {
 
+    private static final java.lang.String TAG = PHelper.class.getSimpleName();
+
     /**
      * This class lets us set images from a file asynchronously
      */
     public static class SetImageTask extends AsyncTask<String, Void, Object> {
-        private PImageView image;
+        private PImage image;
         private String imagePath;
         private String fileExtension;
 
-        public SetImageTask(PImageView image) {
+        public SetImageTask(PImage image) {
             this.image = image;
         }
 
@@ -76,7 +78,9 @@ public class PHelper {
 
         @Override
         protected void onPostExecute(Object result) {
-            image.setScaleType(ImageView.ScaleType.FIT_XY);
+            MLog.d(TAG, "image" + image);
+            image.mode(null);
+            // image.setScaleType(ImageView.ScaleType.FIT_XY);
 
             if (fileExtension.equals("svg")) {
                 MLog.d("svg", "is SVG 2 " + result);
@@ -85,6 +89,7 @@ public class PHelper {
             } else {
                 image.setImageBitmap((Bitmap) result);
             }
+
         }
     }
 

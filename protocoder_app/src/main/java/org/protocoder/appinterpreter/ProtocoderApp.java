@@ -28,14 +28,14 @@ public class ProtocoderApp {
 
     //public objects
     public Network network;
-    public UserSettings userSettings;
+    // public UserSettings userSettings;
 
     public ProtocoderApp(AppRunnerCustom appRunner) {
         this.mAppRunner = appRunner;
 
         //lazy load all the objects
         network = new Network(appRunner);
-        userSettings = new UserSettings(appRunner.getAppContext());
+        // userSettings = new UserSettings(appRunner.getAppContext());
     }
 
 

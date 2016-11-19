@@ -11,12 +11,11 @@
 # Ignore bundler config
 /.bundle
 
-# Ignore the default SQLite database.
-/webapp/db/*.sqlite3
+# Ignore WebIDE
+protocoder_app/src/main/assets/webide/
 
-# Ignore all logfiles and tempfiles.
-/webapp/log/*.log
-/webapp/tmp
+# Ignore examples
+protocoder_app/src/main/assets/examples/
 
 ## ANDROID THINGS
 # built application files

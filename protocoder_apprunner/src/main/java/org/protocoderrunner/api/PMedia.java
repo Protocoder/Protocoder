@@ -51,7 +51,7 @@ import java.util.Locale;
 @ProtoObject
 public class PMedia extends ProtoBase {
 
-    String TAG = "PMedia";
+    String TAG = PMedia.class.getSimpleName();
 
     private HeadSetReceiver headsetPluggedReceiver;
     private MicPluggedCB headsetCallbackfn;

@@ -20,13 +20,11 @@
 
 package org.protocoderrunner.api.widgets;
 
-import android.graphics.Typeface;
-import android.view.View;
+import java.util.Map;
 
 public interface PViewMethodsInterface {
 
-    public View font(Typeface font);
-
+    /*
     public View color(String c);
 
     public View background(String c);
@@ -35,8 +33,11 @@ public interface PViewMethodsInterface {
 
     public View boxsize(int w, int h);
 
-    public View textSize(int size);
 
     public View pos(int x, int y);
+    */
 
+    void set(float x, float y, float w, float h);
+    void setStyle(Map style);
+    Map getStyle();
 }

@@ -34,9 +34,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/connection_message_other"
-            android:textColor="#55FFFFFF"
+            android:textColor="#88FFFFFF"
             android:textSize="12sp"
-            android:gravity="center"
+            android:gravity="left"
             android:layout_centerVertical="true"
             android:layout_alignRight="@+id/button12"
             android:layout_alignEnd="@+id/button12" />

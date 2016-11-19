@@ -197,12 +197,12 @@ public class PGPS extends ProtoBase {
     }
 
 
-    @ProtoMethod(description = "Start the accelerometer. Returns x, y, z", example = "")
+    @ProtoMethod(description = "Start the GPS. Returns x, y, z", example = "")
     @ProtoMethodParam(params = {"function(x, y, z)"})
-    public void onChange(final ReturnInterface callbackfn) {
-        start();
-
+    public PGPS onChange(final ReturnInterface callbackfn) {
         mCallback = callbackfn;
+
+        return this;
     }
 
 

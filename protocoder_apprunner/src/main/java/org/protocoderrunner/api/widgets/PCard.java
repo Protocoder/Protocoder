@@ -32,7 +32,7 @@ import org.protocoderrunner.R;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 
-public class PCard extends LinearLayout implements PViewInterface {
+public class PCard extends LinearLayout {
 
     private final int currentColor;
     private final int viewCount = 0;

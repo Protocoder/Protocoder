@@ -3,10 +3,17 @@
  *
  */
 
-ui.addButton('Record', 0, 0, 1, 0.5).onClick(function () {
+ui.addTitle(app.name)
+
+var btnRecord = ui.addButton('Record', 0.1, 0.15, 0.8, 0.35).onClick(function () {
   media.recordSound('recording.mp4', true)
 })
+btnRecord.props.background = '#e22e2e'
+btnRecord.props.backgroundPressed = '#BBe22e2e'
 
-ui.addButton('Play', 0, 0.5, 1, 0.5).onClick(function () {
+
+var btnPlay = ui.addButton('Play', 0.1, 0.55, 0.8, 0.35).onClick(function () {
   media.playSound('recording.mp4')
 })
+btnPlay.props.background = '#2ee248'
+btnPlay.props.backgroundPressed = '#BB2ee248'

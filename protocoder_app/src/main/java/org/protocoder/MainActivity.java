@@ -20,10 +20,12 @@
 
 package org.protocoder;
 
+import android.animation.TimeInterpolator;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -33,9 +35,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.webkit.WebViewFragment;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,6 +59,7 @@ import org.protocoder.gui._components.NewProjectDialogFragment;
 import org.protocoder.gui.filemanager.FileManagerDialog;
 import org.protocoder.gui.folderchooser.FolderChooserFragment;
 import org.protocoder.gui.projectlist.ProjectListFragment;
+import org.protocoder.gui.settings.NewUserPreferences;
 import org.protocoder.gui.settings.ProtocoderSettings;
 import org.protocoder.helpers.ProtoAppHelper;
 import org.protocoder.helpers.ProtoScriptHelper;
@@ -93,6 +97,8 @@ public class MainActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        NewUserPreferences.getInstance().load();
+
         isTablet = getResources().getBoolean(R.bool.isTablet);
         MLog.d(TAG, "isTablet " + isTablet);
 
@@ -100,18 +106,42 @@ public class MainActivity extends BaseActivity {
                 .putContentId("launched app"));
 
         /*
-         * Setup the ui
+         * Setup the ui, either the webIDE as main interface or the native one
+         * depending on user preferences
          */
         setContentView(R.layout.main_activity);
         setupActivity();
 
-        CardView c = (CardView) findViewById(R.id.card_view);
-        // Animation anim = AnimationUtils.loadAnimation(this, R.anim.slide_in_left);
-        // c.startAnimation(anim);
+        if (!(boolean) NewUserPreferences.getInstance().get("webide_mode")) {
+            final CardView c = (CardView) findViewById(R.id.card_view);
+            c.setAlpha(0.0f);
 
-        addProjectFolderChooser(savedInstanceState);
-        addProjectListFragment(savedInstanceState);
-        //showIntroduction(savedInstanceState);
+            final ViewTreeObserver viewTreeObserver = c.getViewTreeObserver();
+            viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+
+                    c.setY(c.getY() + 200);
+                    c.animate().yBy(-200).alpha(1.0f).setDuration(800).setInterpolator(new DecelerateInterpolator()).start();
+
+                    if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                        c.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                    } else {
+                        c.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    }
+                }
+            });
+
+            addProjectFolderChooser(savedInstanceState);
+            addProjectListFragment(savedInstanceState);
+            //showIntroduction(savedInstanceState);
+        } else {
+            APIWebviewFragment webViewFragment = new APIWebviewFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString("url", "http://127.0.0.1:8585");
+            webViewFragment.setArguments(bundle);
+            addFragment(webViewFragment, R.id.fragmentEditor, "qq");
+        }
 
         /*
          * init custom appRunner
@@ -119,7 +149,7 @@ public class MainActivity extends BaseActivity {
         appRunner = new AppRunnerCustom(this);
         appRunner.initDefaultObjects().initInterpreter();
         ProtocoderApp protocoderApp = new ProtocoderApp(appRunner);
-        protocoderApp.network.checkVersion();
+        // protocoderApp.network.checkVersion();
         appRunner.interp.eval("device.vibrate(100);");
         /*
          * Servers
@@ -182,6 +212,7 @@ public class MainActivity extends BaseActivity {
         // run project
         if (false) {
             ProtoAppHelper.launchScript(this, new Project("user_projects/User Projects", "qq"));
+            // ProtoAppHelper.launchScript(this, new Project("examples/Javascript Basics", "For loops with callbacks"));
         }
 
         // run settings
@@ -196,7 +227,7 @@ public class MainActivity extends BaseActivity {
 
         // run editor
         if (false) {
-            ProtoAppHelper.launchEditor(this, new Project("examples/Media", "Sound"));
+            // ProtoAppHelper.launchEditor(this, new Project("examples/Media", "Sound"));
         }
 
         // load filemanager in fragment
@@ -220,22 +251,24 @@ public class MainActivity extends BaseActivity {
             fm.beginTransaction().add(fmd, "qqa").commit();
         }
 
-        // start servers
-        if (true) {
-            startServers();
-        }
-
         // stop servers
         if (false) {
             stopServers();
         }
 
         if (false) {
-            APIWebviewFragment webViewFragment = new APIWebviewFragment();
-            Bundle bundle = new Bundle();
-            bundle.putString("url", "http://127.0.0.1:8585");
-            webViewFragment.setArguments(bundle);
-            addFragment(webViewFragment, R.id.fragmentEditor, "qq");
+            ProtoAppHelper.launchScriptInfoActivity(this, new Project("examples/Javascript Basics", "For loops with callbacks"));
+        }
+
+
+        // start servers
+        if ((boolean) NewUserPreferences.getInstance().get("servers_enabled_on_start")) startServers();
+        setScreenAlwaysOn((boolean) NewUserPreferences.getInstance().get("screen_always_on"));
+
+        String script = (String) NewUserPreferences.getInstance().get("launch_script_on_app_launch");
+        if (!script.isEmpty()) {
+            Project p = new Project(script);
+            ProtoAppHelper.launchScript(this, p);
         }
 
     }
@@ -265,7 +298,12 @@ public class MainActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         EventBus.getDefault().register(this);
+
         startBroadCastReceiver();
+
+        // send appIsClosed
+        Intent i = new Intent("org.protocoder.intent.CLOSED");
+        sendBroadcast(i);
     }
 
     @Override
@@ -377,6 +415,8 @@ public class MainActivity extends BaseActivity {
         } else {
             mFolderChooserFragment = (FolderChooserFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_FOLDER_CHOOSER);
         }
+
+
     }
 
     // add the project list fragment
@@ -460,6 +500,16 @@ public class MainActivity extends BaseActivity {
                 EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_NEW, p));
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        MLog.d(TAG, "back pressed 1");
+
+        // moveTaskToBack(false);
+        MLog.d(TAG, "back pressed 2");
+        // super.onBackPressed();
+        EventBus.getDefault().post(new Events.ProjectEvent(Events.CLOSE_APP, null));
     }
 
     // execute lines

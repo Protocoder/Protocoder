@@ -2,6 +2,8 @@ package org.protocoderrunner.api.widgets;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Rect;
+import android.os.Build;
 import android.view.View;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
@@ -31,7 +33,7 @@ public class PAbsoluteLayout extends FixedLayout {
         mContext = appRunner.getAppContext();
 
         mWidth = appRunner.pDevice.info().screenWidth;
-        mHeight = appRunner.pDevice.info().screenHeight;
+        mHeight = appRunner.pDevice.info().screenHeight - AndroidUtils.dpToPixels(getContext(), 24);
     }
 
     @Override
@@ -52,10 +54,10 @@ public class PAbsoluteLayout extends FixedLayout {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
 
-        MLog.d(TAG, w + " " + h);
+        // MLog.d(TAG, w + " " + h);
 
-        mWidth = w;
-        mHeight = h;
+        // mWidth = w;
+        // mHeight = h;
     }
 
     @ProtoMethod(description = "Sets the background color", example = "")
@@ -79,8 +81,8 @@ public class PAbsoluteLayout extends FixedLayout {
                 h = AndroidUtils.pixelsToDp(mContext, (int)h);
                 break;
             case NORMALIZED:
-                MLog.d(TAG, "width " + w + " " + mWidth);
-                MLog.d(TAG, "height " + h + " " + mHeight);
+                MLog.d(TAG, x + " " + y + w + " " + h);
+                MLog.d(TAG, mWidth + " " + mHeight);
                 x = x * mWidth;
                 y = y * mHeight;
                 w = w * mWidth;

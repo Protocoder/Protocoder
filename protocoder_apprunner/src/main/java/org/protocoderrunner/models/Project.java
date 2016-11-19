@@ -38,6 +38,7 @@ public class Project {
 
     public static final String SETTINGS_SCREEN_ALWAYS_ON = "settings_screenOn";
     public static final String SETTINGS_SCREEN_WAKEUP = "settings_wakeUpScreen";
+    public static final String SETTINGS_SCREEN_ORIENTATION = "settings_screenOrientation";
 
     /*
      * this will get serialized
@@ -52,6 +53,12 @@ public class Project {
     public Project(String folder, String projectName) {
         this.folder = folder;
         this.name = projectName;
+    }
+
+    // TODO this is a hack, separate it to folder and name
+    public Project(String script) {
+        this.folder = "";
+        this.name = script;
     }
 
     public String getName() {

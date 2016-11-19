@@ -27,7 +27,7 @@ import android.widget.NumberPicker;
 import org.protocoderrunner.api.common.ReturnInterface;
 import org.protocoderrunner.api.common.ReturnObject;
 
-public class PNumberPicker extends NumberPicker implements PViewInterface {
+public class PNumberPicker extends NumberPicker {
     public PNumberPicker(Context context) {
         super(context);
     }

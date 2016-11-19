@@ -9,7 +9,7 @@ import android.widget.Spinner;
 import org.protocoderrunner.api.common.ReturnInterface;
 import org.protocoderrunner.api.common.ReturnObject;
 
-public class PSpinner extends Spinner implements PViewInterface {
+public class PSpinner extends Spinner {
     private String[] mData;
 
     public PSpinner(Context context) {

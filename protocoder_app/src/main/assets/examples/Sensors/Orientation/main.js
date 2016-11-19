@@ -1,16 +1,21 @@
 /*
- * \\\ Example: Accelerometer
+ * \\\ Example: Orientation
  */
 
-var plot = ui.addPlot(0, 0, 1, 0.2).range(-15, 15)
+ui.addTitle(app.name)
+
+var plotA = ui.addPlot(0.1, 0.15, 0.8, 0.1).name('azimuth')
+var plotP = ui.addPlot(0.1, 0.30, 0.8, 0.1).name('pitch')
+var plotR = ui.addPlot(0.1, 0.45, 0.8, 0.1).name('roll')
 
 sensors.orientation.onChange(function (data) {
-  plot.update('azimuth', data.azimuth)
-  plot.update('pitch', data.pitch)
-  plot.update('roll', data.roll)
+  plotA.update(data.azimuth)
+  plotP.update(data.pitch)
+  plotR.update(data.roll)
 })
 
-// stop orientation
-ui.addButton('STOP', 0, 0.2).onClick(function () {
-  sensors.orientation.stop()
+// start / stop orientation sensor
+ui.addToggle('ON', 0.1, 0.6, 0.2, 0.1).onChange(function (o) {
+  if (o.checked) sensors.orientation.start()
+  else sensors.orientation.stop()
 })

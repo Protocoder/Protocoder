@@ -14,7 +14,7 @@
         android:textColor="@color/console_textcolor"
         android:textSize="10sp"
         android:fontFamily="monospace"
-        android:background="@drawable/magenta_rounded_rect"
+        android:background="@drawable/primarycolor_rounded_rect"
         android:text="error"
         android:padding="5dp"
         android:layout_margin="5dp"

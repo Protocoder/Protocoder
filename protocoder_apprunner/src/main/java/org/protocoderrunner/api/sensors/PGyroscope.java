@@ -82,12 +82,12 @@ public class PGyroscope extends CustomSensorManager {
     }
 
 
-    @ProtoMethod(description = "Start the accelerometer. Returns data", example = "")
+    @ProtoMethod(description = "Start the gyroscope. Returns data", example = "")
     @ProtoMethodParam(params = {"function(data)"})
-    public void onChange(final ReturnInterface callbackfn) {
+    public PGyroscope onChange(final ReturnInterface callbackfn) {
         mCallback = callbackfn;
 
-        start();
+        return this;
     }
 
 

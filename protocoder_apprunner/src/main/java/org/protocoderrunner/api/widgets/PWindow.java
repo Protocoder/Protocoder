@@ -33,7 +33,7 @@ import org.protocoderrunner.R;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 
-public class PWindow extends RelativeLayout implements PViewInterface {
+public class PWindow extends RelativeLayout {
 
     private static final String TAG = "PWindow";
     private final int currentColor;

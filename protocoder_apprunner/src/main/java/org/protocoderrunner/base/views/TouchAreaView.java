@@ -105,7 +105,7 @@ public class TouchAreaView extends View {
                     new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight()), null);
 
             // paint
-            // mPaint.setStyle(Style.STROKE);
+            // mPaint.setStyle(Styler.STROKE);
 
             if (showArea) {
                 mPaint.setColor(0x88FFFFFF);

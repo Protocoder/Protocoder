@@ -29,6 +29,8 @@ public class AppRunnerSettings {
 
     public static boolean DEBUG = false;
 
+    public static String MAIN_FILENAME                      = "main.js";
+    public static final String CONF_FILENAME                = "app.conf";
     public final static String PROTOCODER_FOLDER = "protocodersandbox";
     public static final String USER_PROJECTS_FOLDER = "user_projects";
     public static final String EXAMPLES_FOLDER = "examples";

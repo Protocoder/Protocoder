@@ -26,7 +26,7 @@ import android.widget.RadioGroup;
 import org.protocoderrunner.api.common.ReturnInterface;
 import org.protocoderrunner.api.common.ReturnObject;
 
-public class PRadioButtonGroup extends RadioGroup implements PViewInterface {
+public class PRadioButtonGroup extends RadioGroup {
 
     public PRadioButtonGroup(Context context) {
         super(context);

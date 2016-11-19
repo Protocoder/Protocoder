@@ -1,32 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- toolbar -->
-    <style name="ToolBarAppRunner.Base" parent="">
-
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="AppBaseTheme" parent="android:Theme.Light">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
     </style>
 
-    <style name="ToolBarAppRunner.AppRunner" parent="ToolBarAppRunner.Base">
-    </style>
-
-    <style name="TextAppearance.Widget.Event.Toolbar.Title.AppRunner" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
-
-    </style>
-
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="AppTheme.Base"/>
-
-    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- colorPrimary is used for the default action bar background -->
-        <item name="colorPrimary">@color/mwmblue</item>
-
-        <!-- colorPrimaryDark is used for the status bar -->
-        <item name="colorPrimaryDark">@color/mwmmagenta</item>
-
-        <!-- colorAccent is used as the default value for colorControlActivated
-        which is used to tint widgets -->
-        <item name="colorAccent">@color/mwmorange</item>
-
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
 </resources>

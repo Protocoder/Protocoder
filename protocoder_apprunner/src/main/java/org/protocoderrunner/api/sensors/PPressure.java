@@ -80,12 +80,12 @@ public class PPressure extends CustomSensorManager implements WhatIsRunningInter
     }
 
 
-    @ProtoMethod(description = "Start the accelerometer. Returns x, y, z", example = "")
+    @ProtoMethod(description = "Start the pressure sensor. Returns x, y, z", example = "")
     @ProtoMethodParam(params = {"function(x, y, z)"})
-    public void onChange(final ReturnInterface callbackfn) {
+    public PPressure onChange(final ReturnInterface callbackfn) {
         mCallback = callbackfn;
-
-        start();
+        
+        return this;
     }
 
 

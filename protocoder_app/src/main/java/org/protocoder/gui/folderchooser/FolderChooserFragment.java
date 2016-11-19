@@ -26,8 +26,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.ToggleButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -48,8 +48,14 @@ public class FolderChooserFragment extends BaseFragment {
     private String TAG = FolderChooserFragment.class.getSimpleName();
 
     private ResizableRecyclerView mFolderRecyclerView;
-    private ToggleButton toggleFolderChooser;
+    private LinearLayout toggleFolderChooser;
+    private String currentParentFolder;
     private String currentFolder;
+    private TextView mTxtChooseFolder;
+    private TextView mTxtSeparator;
+    private TextView mTxtParentFolder;
+    private TextView mTxtFolder;
+    private boolean isShown = true;
     private boolean isTablet;
     private boolean isLandscapeBig;
 
@@ -66,8 +72,11 @@ public class FolderChooserFragment extends BaseFragment {
         final View v = inflater.inflate(R.layout.folderchooser_fragment, container, false);
 
         // project folder menu
-        toggleFolderChooser = (ToggleButton) v.findViewById(R.id.selectFolderButton);
-
+        toggleFolderChooser = (LinearLayout) v.findViewById(R.id.selectFolderButton);
+        mTxtChooseFolder = (TextView) v.findViewById(R.id.choosefolder);
+        mTxtSeparator = (TextView) v.findViewById(R.id.separator);
+        mTxtParentFolder = (TextView) v.findViewById(R.id.parentFolder);
+        mTxtFolder = (TextView) v.findViewById(R.id.folder);
 
         //this goes to the adapter
         ArrayList<FolderAdapterData> foldersForAdapter = new ArrayList<FolderAdapterData>();
@@ -100,35 +109,46 @@ public class FolderChooserFragment extends BaseFragment {
         }
 
         // default toggle text
-        toggleFolderChooser.setText("Choose folder");
-        toggleFolderChooser.setTextOn("Choose folder");
-        toggleFolderChooser.setTextOff("Choose folder");
+        // toggleFolderChooser.setText("Choose folder");
+        // toggleFolderChooser.setTextOn("Choose folder");
+        // toggleFolderChooser.setTextOff("Choose folder");
 
         // folder list oculto cuando
         // isTablet => false
         // isLandscapeBig => false
 
-        toggleFolderChooser.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                // show folderlist
-                if (isChecked) {
-                    mFolderRecyclerView.setVisibility(View.VISIBLE);
+        toggleFolderChooser.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+               // show folderlist
+               if (isShown) {
+                   mFolderRecyclerView.setVisibility(View.VISIBLE);
 
-                // hide folderlist
-                } else {
-                    if (!(isTablet || isLandscapeBig)) {
-                        mFolderRecyclerView.setVisibility(View.GONE);
+                   mTxtChooseFolder.setVisibility(View.VISIBLE);
+                   mTxtParentFolder.setVisibility(View.GONE);
+                   mTxtSeparator.setVisibility(View.GONE);
+                   mTxtFolder.setVisibility(View.GONE);
 
-                        if (currentFolder == null) {
-                            toggleFolderChooser.setTextOff("Choose folder");
-                        } else {
-                            toggleFolderChooser.setTextOff(currentFolder);
-                        }
-                    }
-                }
-            }
+                   // hide folderlist
+               } else {
+                   if (!(isTablet || isLandscapeBig)) {
+                       mFolderRecyclerView.setVisibility(View.GONE);
+
+                       if (currentFolder == null) {
+
+                       } else {
+                           mTxtChooseFolder.setVisibility(View.GONE);
+                           mTxtParentFolder.setVisibility(View.VISIBLE);
+                           mTxtSeparator.setVisibility(View.VISIBLE);
+                           mTxtFolder.setVisibility(View.VISIBLE);
+                           // toggleFolderChooser.setTextOff(currentFolder);
+                       }
+                   }
+               }
+               isShown = !isShown;
+           }
         });
+        toggleFolderChooser.performClick();
 
         return v;
     }
@@ -161,11 +181,22 @@ public class FolderChooserFragment extends BaseFragment {
         return myFragment;
     }
 
+    @Subscribe
+    public void onEventMainThread(Events.ProjectEvent e) {
+        if (e.getAction() == Events.CLOSE_APP) {
+            if (!isShown) getActivity().finish();
+            else toggleFolderChooser.performClick();
+        }
+    }
+
     // folder choose
     @Subscribe
     public void onEventMainThread(Events.FolderChosen e) {
         MLog.d(TAG, "< Event (folderChosen)");
-        currentFolder = e.getParent() + " > " + e.getName();
+        currentParentFolder = e.getParent();
+        currentFolder = e.getName();
+        mTxtParentFolder.setText(currentParentFolder);
+        mTxtFolder.setText(currentFolder);
         toggleFolderChooser.performClick();
     }
 

@@ -18,6 +18,9 @@
     <item android:id="@+id/menu_project_list_share_proto_file"
           android:icon="@drawable/protocoder_icon"
           android:title="@string/share_proto_file" />
+    <item android:id="@+id/menu_project_list_show_info"
+          android:icon="@drawable/protocoder_icon"
+          android:title="@string/show_project_info" />
 
     <!--  Bean is broken disabled till fixed
     <item android:id="@+id/menu_project_list_beam"

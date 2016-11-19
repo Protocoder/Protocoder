@@ -103,6 +103,17 @@
             android:process=":AppRunner"
             android:icon="@drawable/icon"
             android:label="AppRunnerService" >
+
+            <!-- intent to close the runner -->
+            <intent-filter>
+                <action android:name="org.protocoderrunner.intent.CLOSE"></action>
+            </intent-filter>
+
+            <!-- intent to close the runner -->
+            <intent-filter>
+                <action android:name="org.protocoderrunner.intent.EXECUTE_CODE"></action>
+            </intent-filter>
+
         </service>
         <service android:name=".base.hardware.IOIOBoardService"
             android:process=":AppRunner" />

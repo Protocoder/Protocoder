@@ -36,7 +36,8 @@
     <color name="mwmmagenta">#CD005B</color>
     <color name="mwmorange">#FA871E</color>
     <color name="mwmyellow">#E6AF21</color>
- 
+
+    <color name="primaryAccent">#f5d328</color>
     <color name="theme_bg_blue">#BB33B5E5</color>
     <color name="theme_bg_magenta">#BBCD005B</color>
     <color name="theme_text_white">#FFFFFFFF</color>

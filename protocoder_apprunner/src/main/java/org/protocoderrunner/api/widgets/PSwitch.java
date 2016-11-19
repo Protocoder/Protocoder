@@ -29,7 +29,7 @@ import org.protocoderrunner.api.common.ReturnInterface;
 import org.protocoderrunner.api.common.ReturnObject;
 
 @SuppressLint("NewApi")
-public class PSwitch extends Switch implements PViewInterface {
+public class PSwitch extends Switch {
 
     public PSwitch(Context context) {
         super(context);

@@ -21,14 +21,28 @@
 package org.protocoder.helpers;
 
 import android.app.ActivityManager;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Environment;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import net.lingala.zip4j.exception.ZipException;
+
+import org.protocoder.App;
+import org.protocoder.R;
 import org.protocoder.server.model.ProtoFile;
 import org.protocoder.gui.settings.ProtocoderSettings;
+import org.protocoderrunner.AppRunnerActivity;
+import org.protocoderrunner.apprunner.AppRunnerHelper;
+import org.protocoderrunner.apprunner.AppRunnerSettings;
 import org.protocoderrunner.base.utils.FileIO;
 import org.protocoderrunner.base.utils.MLog;
+import org.protocoderrunner.base.utils.TimeUtils;
 import org.protocoderrunner.models.Folder;
 import org.protocoderrunner.models.Project;
 
@@ -37,12 +51,14 @@ import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Array;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ProtoScriptHelper {
 
@@ -57,8 +73,11 @@ public class ProtoScriptHelper {
         return baseDir;
     }
 
-    public static String getBackupFolderPath() {
-        return getProjectFolderPath("backup");
+    public static String getExportFolderPath() {
+        File p = new File(getProjectFolderPath(ProtocoderSettings.EXPORTED_FOLDER));
+        p.mkdirs();
+
+        return p.getAbsolutePath();
     }
 
     //
@@ -67,7 +86,7 @@ public class ProtoScriptHelper {
     }
 
     public static String[] listTemplates(Context c) {
-        return FileIO.listFilesInAssets(c, "templates");
+        return FileIO.listFilesInAssets(c, ProtocoderSettings.TEMPLATES_FOLDER);
     }
 
     // Create Project
@@ -81,7 +100,7 @@ public class ProtoScriptHelper {
             MLog.d(TAG, "Project already exists");
             return newProject;
         } else {
-            FileIO.copyAssetFolder(c.getAssets(), "templates/" + template, fullPath);
+            FileIO.copyAssetFolder(c.getAssets(), ProtocoderSettings.TEMPLATES_FOLDER + "/" + template, fullPath);
             MLog.d(TAG, "creating project in " + where);
 
             newProject = new Project(where, newProjectName);
@@ -112,24 +131,7 @@ public class ProtoScriptHelper {
     }
 
     public static void saveCodeFromAbsolutePath(String filepath, String code) {
-        File f = new File(filepath);
-
-        try {
-            if (!f.exists()) {
-                f.createNewFile();
-            }
-            FileOutputStream fo = new FileOutputStream(f);
-            byte[] data = code.getBytes();
-            fo.write(data);
-            fo.flush();
-            fo.close();
-
-        } catch (FileNotFoundException ex) {
-            MLog.e(TAG, ex.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-            // Log.e("Project", e.toString());
-        }
+        FileIO.saveCodeToFile(code, filepath);
     }
 
     // Get code from sdcard
@@ -208,8 +210,6 @@ public class ProtoScriptHelper {
 
         return protoFiles;
     }
-
-
 
     // List folders in a tree structure
     public static ArrayList<ProtoFile> listFilesInFolder(String folder, int levels) {
@@ -295,26 +295,19 @@ public class ProtoScriptHelper {
     }
 
     public static String exportProjectAsProtoFile(Project p) {
+        File f = new File(getExportFolderPath() + File.separator + p.getName() + "_" + TimeUtils.getCurrentTime() + ProtocoderSettings.PROTO_FILE_EXTENSION);
 
-        // TODO: Use thread
+        MLog.d(TAG, "compress " + p.getFullPath());
+        MLog.d(TAG, "to " + f.getAbsolutePath());
 
-        String givenName = getBackupFolderPath() + File.separator + p.getFolder() + "_" + p.getName();
-
-        //check if file exists and rename it if so
-        File f = new File(givenName + ProtocoderSettings.PROTO_FILE_EXTENSION);
-        int num = 1;
-        while (f.exists()) {
-            f = new File(givenName + "_" + num++ + ProtocoderSettings.PROTO_FILE_EXTENSION);
-        }
-
-        //compress
+        // compress
         try {
-            FileIO.zipFolder(p.getSandboxPath(), f.getAbsolutePath());
+            FileIO.zipFolder(p.getFullPath(), f.getAbsolutePath());
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        //return the filepath of the backup
+        // return the filepath of the backup
         return f.getAbsolutePath();
     }
 
@@ -385,5 +378,80 @@ public class ProtoScriptHelper {
 
             return ext.toLowerCase();
         }
+    }
+
+    public static void addShortcut(Context c, String folder, String name) {
+        Project p = new Project(folder, name);
+
+        Intent.ShortcutIconResource icon;
+        icon = Intent.ShortcutIconResource.fromContext(c, R.drawable.app_icon);
+
+        try {
+            Intent shortcutIntent = new Intent(c, AppRunnerActivity.class);
+            shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            shortcutIntent.putExtra(Project.NAME, p.getName());
+            shortcutIntent.putExtra(Project.FOLDER, p.getFolder());
+
+            Map<String, Object> map = AppRunnerHelper.readProjectProperties(c, p);
+
+            final Intent putShortCutIntent = new Intent();
+            putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
+            putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, p.getName());
+            putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);
+            putShortCutIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
+            c.sendBroadcast(putShortCutIntent);
+        } catch (Exception e) {
+            // TODO
+        }
+        // Show toast
+        Toast.makeText(c, "Adding shortcut for " + p.getName(), Toast.LENGTH_SHORT).show();
+
+    }
+
+    public static void shareMainJsDialog(Context c, String folder, String name) {
+        Project p = new Project(folder, name);
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, getCode(p));
+        sendIntent.setType("text/plain");
+        c.startActivity(Intent.createChooser(sendIntent, c.getResources().getText(R.string.send_to)));
+    }
+
+    public static void shareProtoFileDialog(Context c, String folder, String name) {
+        final ProgressDialog progress = new ProgressDialog(c);
+        progress.setTitle("Exporting .proto");
+        progress.setMessage("Your project will be ready soon!");
+        progress.setCancelable(true);
+        progress.setCanceledOnTouchOutside(false);
+        progress.show();
+
+        Project p = new Project(folder, name);
+        String zipFilePath = exportProjectAsProtoFile(p);
+
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(zipFilePath)));
+        shareIntent.setType("application/zip");
+
+        progress.dismiss();
+
+        c.startActivity(Intent.createChooser(shareIntent, c.getResources().getText(R.string.share_proto_file)));
+    }
+
+
+    public static boolean installProject(Context c, String from, String to) {
+        try {
+            FileIO.unZipFile(from, to);
+            return true;
+        } catch (ZipException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public static void stop_all_scripts() {
+        App.myLifecycleHandler.closeAllScripts();
     }
 }

@@ -21,22 +21,6 @@ public class PMidi extends ProtoBase {
 
     private ReturnInterface mMidiEvent;
 
-    // User interface
-    final Handler midiInputEventHandler = new Handler(new Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            return true;
-        }
-    });
-
-    final Handler midiOutputEventHandler = new Handler(new Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-
-            return true;
-        }
-    });
-
     private void callback(final int cable, final int channel, final int function, final int value) {
 
         mHandler.post(new Runnable() {
@@ -77,89 +61,66 @@ public class PMidi extends ProtoBase {
 
             @Override
             public void onMidiNoteOff(final MidiInputDevice sender, int cable, int channel, int note, int velocity) {
-                midiInputEventHandler.sendMessage(Message.obtain(midiInputEventHandler, 0, "NoteOff from: " + sender.getUsbDevice().getDeviceName() + ", cable: " + cable + ", channel: " + channel + ", note: " + note + ", velocity: " + velocity));
-
                 callback(cable, channel, note, velocity);
             }
 
             @Override
             public void onMidiNoteOn(final MidiInputDevice sender, int cable, int channel, int note, int velocity) {
-                midiInputEventHandler.sendMessage(Message.obtain(midiInputEventHandler, 0, "NoteOn from: " + sender.getUsbDevice().getDeviceName() + ", cable: " + cable + ",  channel: " + channel + ", note: " + note + ", velocity: " + velocity));
-
                 callback(cable, channel, note, velocity);
             }
 
             @Override
             public void onMidiPolyphonicAftertouch(final MidiInputDevice sender, int cable, int channel, int note, int pressure) {
-                midiInputEventHandler.sendMessage(Message.obtain(midiInputEventHandler, 0, "PolyphonicAftertouch from: " + sender.getUsbDevice().getDeviceName() + ", cable: " + cable + ", channel: " + channel + ", note: " + note + ", pressure: " + pressure));
-
                 callback(cable, channel, note, pressure);
             }
 
             @Override
             public void onMidiControlChange(final MidiInputDevice sender, final int cable, final int channel, final int function, final int value) {
-                midiInputEventHandler.sendMessage(Message.obtain(midiInputEventHandler, 0, "ControlChange from: " + sender.getUsbDevice().getDeviceName() + ", cable: " + cable + ", channel: " + channel + ", function: " + function + ", value: " + value));
-
                 callback(cable, channel, function, value);
             }
 
             @Override
             public void onMidiProgramChange(final MidiInputDevice sender, int cable, int channel, int program) {
-                midiInputEventHandler.sendMessage(Message.obtain(midiInputEventHandler, 0, "ProgramChange from: " + sender.getUsbDevice().getDeviceName() + ", cable: " + cable + ", channel: " + channel + ", program: " + program));
                 callback(cable, channel, channel, program);
-
             }
 
             @Override
             public void onMidiChannelAftertouch(final MidiInputDevice sender, int cable, int channel, int pressure) {
-                midiInputEventHandler.sendMessage(Message.obtain(midiInputEventHandler, 0, "ChannelAftertouch from: " + sender.getUsbDevice().getDeviceName() + ", cable: " + cable + ", channel: " + channel + ", pressure: " + pressure));
                 callback(cable, channel, channel, pressure);
             }
 
             @Override
             public void onMidiPitchWheel(final MidiInputDevice sender, int cable, int channel, int amount) {
-                midiInputEventHandler.sendMessage(Message.obtain(midiInputEventHandler, 0, "PitchWheel from: " + sender.getUsbDevice().getDeviceName() + ", cable: " + cable + ", channel: " + channel + ", amount: " + amount));
-
                 callback(cable, channel, channel, amount);
             }
 
             @Override
             public void onMidiSystemExclusive(final MidiInputDevice sender, int cable, final byte[] systemExclusive) {
-                midiInputEventHandler.sendMessage(Message.obtain(midiInputEventHandler, 0, "SystemExclusive from: " + sender.getUsbDevice().getDeviceName() + ", cable: " + cable + ", data:" + Arrays.toString(systemExclusive)));
-
 
             }
 
             @Override
             public void onMidiSystemCommonMessage(final MidiInputDevice sender, int cable, final byte[] bytes) {
-                midiInputEventHandler.sendMessage(Message.obtain(midiInputEventHandler, 0, "SystemCommonMessage from: " + sender.getUsbDevice().getDeviceName() + ", cable: " + cable + ", bytes: " + Arrays.toString(bytes)));
 
             }
 
             @Override
             public void onMidiSingleByte(final MidiInputDevice sender, int cable, int byte1) {
-                midiInputEventHandler.sendMessage(Message.obtain(midiInputEventHandler, 0, "SingleByte from: " + sender.getUsbDevice().getDeviceName() + ", cable: " + cable + ", data: " + byte1));
-
 
             }
 
             @Override
             public void onMidiMiscellaneousFunctionCodes(final MidiInputDevice sender, int cable, int byte1, int byte2, int byte3) {
-                midiInputEventHandler.sendMessage(Message.obtain(midiInputEventHandler, 0, "MiscellaneousFunctionCodes from: " + sender.getUsbDevice().getDeviceName() + ", cable: " + cable + ", byte1: " + byte1 + ", byte2: " + byte2 + ", byte3: " + byte3));
-
 
             }
 
             @Override
             public void onMidiCableEvents(final MidiInputDevice sender, int cable, int byte1, int byte2, int byte3) {
-                midiInputEventHandler.sendMessage(Message.obtain(midiInputEventHandler, 0, "CableEvents from: " + sender.getUsbDevice().getDeviceName() + ", cable: " + cable + ", byte1: " + byte1 + ", byte2: " + byte2 + ", byte3: " + byte3));
-
 
             }
         };
 
         usbMidiDriver.open();
-
     }
 
     public PMidi onChange(final ReturnInterface callbackfn) {
@@ -171,6 +132,7 @@ public class PMidi extends ProtoBase {
 
     @Override
     public void __stop() {
+        mMidiEvent = null;
         usbMidiDriver.close();
     }
 

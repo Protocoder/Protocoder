@@ -40,9 +40,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
-public class PPlotView extends View implements PViewInterface {
+public class PPlotView_ extends View {
 
-    private static final String TAG = "PPlotView";
+    private static final String TAG = PPlotView_.class.getSimpleName();
 
     // paint
     private final Paint mPaint = new Paint();
@@ -67,12 +67,12 @@ public class PPlotView extends View implements PViewInterface {
     private boolean mReady = false;
     private float thickness = 2;
 
-    public PPlotView(Context context, AttributeSet attributeSet) {
+    public PPlotView_(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         init();
     }
 
-    public PPlotView(Context context) {
+    public PPlotView_(Context context) {
         super(context);
         init();
     }
@@ -201,7 +201,7 @@ public class PPlotView extends View implements PViewInterface {
 
             // draw border
             // mPaint.setColor(0xFF000000);
-            // mPaint.setStyle(Style.STROKE);
+            // mPaint.setStyle(Styler.STROKE);
             // mCanvas.drawRoundRect(new RectF(0, 0, mWidth, mHeight), 0, 0,
             // mPaint);
 
@@ -211,7 +211,7 @@ public class PPlotView extends View implements PViewInterface {
 
     @ProtoMethod(description = "Init a plot name", example = "")
     @ProtoMethodParam(params = {""})
-    public PPlotView init(String plotName) {
+    public PPlotView_ init(String plotName) {
 
         if (plots.containsKey(plotName) == false) {
             plots.put(plotName, new Plot(Color.BLUE));
@@ -224,7 +224,7 @@ public class PPlotView extends View implements PViewInterface {
 
     @ProtoMethod(description = "Updates the value of the plotName plot", example = "")
     @ProtoMethodParam(params = {"plotName", "value"})
-    public PPlotView update(String plotName, float v1) {
+    public PPlotView_ update(String plotName, float v1) {
 
         if (mReady) {
             init(plotName);
@@ -251,7 +251,7 @@ public class PPlotView extends View implements PViewInterface {
 
     @ProtoMethod(description = "Updates the value of the default plot", example = "")
     @ProtoMethodParam(params = {"value"})
-    public PPlotView update(float v) {
+    public PPlotView_ update(float v) {
         update("default", v);
 
         return this;
@@ -259,7 +259,7 @@ public class PPlotView extends View implements PViewInterface {
 
     @ProtoMethod(description = "Changes the plot limits", example = "")
     @ProtoMethodParam(params = {"min", "max"})
-    public PPlotView range(float min, float max) {
+    public PPlotView_ range(float min, float max) {
         mMinBoundary = min;
         mMaxBoundary = max;
 
@@ -268,7 +268,7 @@ public class PPlotView extends View implements PViewInterface {
 
     @ProtoMethod(description = "Changes the plot definition", example = "")
     @ProtoMethodParam(params = {"definition"})
-    public PPlotView definition(int definition) {
+    public PPlotView_ definition(int definition) {
         mDefinition = definition;
         return this;
     }
@@ -304,7 +304,7 @@ public class PPlotView extends View implements PViewInterface {
 
     @ProtoMethod(description = "Sets the line thickness", example = "")
     @ProtoMethodParam(params = {"thickness"})
-    public PPlotView thickness(float r) {
+    public PPlotView_ thickness(float r) {
         thickness = r; // when dot
         mPaint.setStrokeWidth(thickness); // when line
         return this;
@@ -313,7 +313,7 @@ public class PPlotView extends View implements PViewInterface {
 
     @ProtoMethod(description = "Changes the plot color", example = "")
     @ProtoMethodParam(params = {"plotName", "colorHex"})
-    public PPlotView color(String plotName, String rgb) {
+    public PPlotView_ color(String plotName, String rgb) {
         new Color();
         int c = Color.parseColor(rgb);
 
@@ -345,7 +345,7 @@ public class PPlotView extends View implements PViewInterface {
 
     @ProtoMethod(description = "Set an array of values in the plot", example = "")
     @ProtoMethodParam(params = {"plotName", "value"})
-    public PPlotView setArray(String plotName, float[] values) {
+    public PPlotView_ setArray(String plotName, float[] values) {
         Plot p = plots.get(plotName);
 
         MLog.d(TAG, p.plotValues.size() + " " + values.length);
@@ -363,7 +363,7 @@ public class PPlotView extends View implements PViewInterface {
 
     @ProtoMethod(description = "Sets the background color", example = "")
     @ProtoMethodParam(params = {"colorHex"})
-    public PPlotView setBackground(String c) {
+    public PPlotView_ setBackground(String c) {
         super.setBackgroundColor(Color.parseColor(c));
 
         return this;

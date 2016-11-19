@@ -12,6 +12,61 @@
     android:background="#11000000"
     android:gravity="center">
 
+    <LinearLayout
+        android:id="@+id/selectFolderButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:background="@drawable/project_folder_toggle_button_selector"
+        android:textColor="#88000000"
+        >
+
+        <TextView
+            android:id="@+id/choosefolder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="choose folder"
+            android:padding="10dp"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            />
+
+        <TextView
+            android:id="@+id/parentFolder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/mwmyellow"
+            android:text="folder"
+            android:padding="10dp"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:visibility="gone"
+            />
+
+        <TextView
+            android:id="@+id/separator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=">"
+            android:textColor="@color/mwmyellow"
+            android:textStyle="bold"
+            android:visibility="gone"
+            />
+
+        <TextView
+            android:id="@+id/folder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="subfolder"
+            android:padding="10dp"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:visibility="gone"
+            />
+
+    </LinearLayout>
+
+    <!--
     <ToggleButton
         android:id="@+id/selectFolderButton"
         android:layout_width="match_parent"
@@ -19,6 +74,7 @@
         android:visibility="visible"
         android:background="@drawable/project_folder_toggle_button_selector"
         android:textColor="#88000000" />
+    -->
 
     <View
         android:layout_width="match_parent"
@@ -30,8 +86,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/transparent"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
+
         android:visibility="gone">
     </org.protocoder.gui._components.ResizableRecyclerView>
 

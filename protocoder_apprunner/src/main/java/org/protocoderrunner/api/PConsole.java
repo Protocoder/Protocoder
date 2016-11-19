@@ -36,6 +36,7 @@ import org.protocoderrunner.events.Events;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -44,6 +45,8 @@ public class PConsole extends ProtoBase {
 
     private final Gson gson;
     private boolean showTime = false;
+    private SimpleDateFormat s = new SimpleDateFormat("hh:mm:ss");
+
 
     public PConsole(AppRunner appRunner) {
         super(appRunner);
@@ -193,7 +196,7 @@ public class PConsole extends ProtoBase {
 
     private void base_log(String action, Object... outputs) {
         StringBuilder builder = new StringBuilder();
-        builder.append(getCurrentTime());
+        if (showTime) builder.append(getCurrentTime());
         for (Object output : outputs) {
             // format the objects to json output if the object is a ReturnObject
             String out = "";
@@ -207,20 +210,11 @@ public class PConsole extends ProtoBase {
     }
 
     private void send(String action, String data) {
-        EventBus.getDefault().postSticky(new Events.LogEvent(action, data));
+        EventBus.getDefault().postSticky(new Events.LogEvent(action, getCurrentTime(), data));
     }
 
     private String getCurrentTime() {
-        String time = "";
-
-        if (showTime) {
-            Calendar cal = Calendar.getInstance(TimeZone.getDefault());
-
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
-            time = sdf.format(cal.getTime()).toString();
-        }
-
-        return time;
+        return s.format(new Date());
     }
 
     @Override

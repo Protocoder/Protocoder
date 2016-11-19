@@ -10,15 +10,15 @@
     <dimen name="apprunner_console">150dp</dimen>
     <dimen name="apprunner_console_text_padding">15dp</dimen>
 
-    <dimen name="main_cardview_radius">2dp</dimen>
+    <dimen name="main_cardview_radius">0dp</dimen>
     <dimen name="main_cardview_top_margin">0dp</dimen>
     <dimen name="main_cardview_bottom_margin">-2dp</dimen>
-    <dimen name="main_cardview_left_margin">10dp</dimen>
-    <dimen name="main_cardview_right_margin">10dp</dimen>
+    <dimen name="main_cardview_left_margin">0dp</dimen>
+    <dimen name="main_cardview_right_margin">0dp</dimen>
 
-    <dimen name="other_cardview_radius">2dp</dimen>
-    <dimen name="other_cardview_top_margin">5dp</dimen>
-    <dimen name="other_cardview_horizontal_margin">10dp</dimen>
+    <dimen name="other_cardview_radius">0dp</dimen>
+    <dimen name="other_cardview_top_margin">0dp</dimen>
+    <dimen name="other_cardview_horizontal_margin">0dp</dimen>
 
     <dimen name="editor_cardview_radius">0dp</dimen>
     <dimen name="editor_cardview_top_margin">5dp</dimen>

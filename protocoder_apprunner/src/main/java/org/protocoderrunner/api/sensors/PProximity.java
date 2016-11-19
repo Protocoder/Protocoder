@@ -81,12 +81,12 @@ public class PProximity extends CustomSensorManager implements WhatIsRunningInte
         return "cm";
     }
 
-    @ProtoMethod(description = "Start the accelerometer. Returns x, y, z", example = "")
+    @ProtoMethod(description = "Start the proximity sensor. Returns x, y, z", example = "")
     @ProtoMethodParam(params = {"function(x, y, z)"})
-    public void onChange(final ReturnInterface callbackfn) {
+    public PProximity onChange(final ReturnInterface callbackfn) {
         mCallback = callbackfn;
 
-        start();
+        return this;
     }
 
 }

@@ -85,12 +85,12 @@ public class PMagnetic extends CustomSensorManager implements WhatIsRunningInter
     }
 
 
-    @ProtoMethod(description = "Start the accelerometer. Returns x, y, z", example = "")
+    @ProtoMethod(description = "Start the magnetic sensor. Returns x, y, z", example = "")
     @ProtoMethodParam(params = {"function(x, y, z)"})
-    public void onChange(final ReturnInterface callbackfn) {
+    public PMagnetic onChange(final ReturnInterface callbackfn) {
         mCallbackMagneticChange = callbackfn;
 
-        start();
+        return this;
     }
 
 

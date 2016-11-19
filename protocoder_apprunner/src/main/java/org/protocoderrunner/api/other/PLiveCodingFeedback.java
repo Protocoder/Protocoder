@@ -27,7 +27,7 @@ import org.protocoderrunner.base.utils.MLog;
 
 public class PLiveCodingFeedback {
 
-    private static final String TAG = "PProtocoderFeedback";
+    private static final String TAG = PLiveCodingFeedback.class.getSimpleName();
 
     protected Context a;
 
@@ -203,7 +203,7 @@ public class PLiveCodingFeedback {
 
             }
 
-            // if there is mContext textview then remove it
+            // if there is a textview then remove it
             if (liveText != null) {
                 liveRLayout.removeView(liveText);
             }

@@ -24,12 +24,9 @@ import org.protocoderrunner.api.common.ReturnInterface;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
-import org.protocoderrunner.api.widgets.PViewInterface;
-import org.protocoderrunner.apprunner.FeatureNotAvailableException;
 import org.protocoderrunner.base.gui.CameraNew;
-import org.protocoderrunner.base.utils.MLog;
 
-public class PCamera extends CameraNew implements PCameraInterface, PViewInterface {
+public class PCamera extends CameraNew implements PCameraInterface {
 
     private final PCamera cam;
     protected AppRunner mAppRunner;

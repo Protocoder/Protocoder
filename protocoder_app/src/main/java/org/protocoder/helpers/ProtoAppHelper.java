@@ -26,14 +26,19 @@ import android.content.Intent;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 
+import org.protocoder.gui.InfoScriptActivity;
 import org.protocoder.gui.LicenseActivity;
 import org.protocoder.gui.editor.EditorActivity;
+import org.protocoder.gui.settings.NewUserPreferences;
 import org.protocoder.gui.settings.SettingsActivity;
 import org.protocoderrunner.AppRunnerActivity;
 import org.protocoderrunner.AppRunnerService;
+import org.protocoderrunner.apprunner.AppRunnerHelper;
 import org.protocoderrunner.base.utils.AndroidUtils;
 import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.models.Project;
+
+import java.util.Map;
 
 public class ProtoAppHelper {
 
@@ -45,17 +50,21 @@ public class ProtoAppHelper {
         Answers.getInstance().logContentView(new ContentViewEvent()
                 .putContentId("launched script"));
 
-        if (p.getName().toLowerCase().endsWith("service")) {
+        Map<String, Object> map = AppRunnerHelper.readProjectProperties(context, p);
+        boolean isService = (boolean) map.get("background_service");
+
+        if (isService) {
             Intent intent = new Intent(context, AppRunnerService.class);
             intent.putExtra(Project.FOLDER, p.getFolder());
             intent.putExtra(Project.NAME, p.getName());
+            intent.putExtra("device_id", (String) NewUserPreferences.getInstance().get("device_id"));
             context.startService(intent);
         } else {
             Intent intent = new Intent(context, AppRunnerActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra(Project.FOLDER, p.getFolder());
             intent.putExtra(Project.NAME, p.getName());
-
+            intent.putExtra("device_id", (String) NewUserPreferences.getInstance().get("device_id"));
             MLog.d(TAG, "1 ------------> launching side by side " + AndroidUtils.isVersionN());
 
             if (AndroidUtils.isVersionN() && multiWindowEnabled) {
@@ -86,4 +95,16 @@ public class ProtoAppHelper {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
+
+    public static void launchScriptInfoActivity(Context context, Project p) {
+        Intent intent = new Intent(context, InfoScriptActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(Project.FOLDER, p.getFolder());
+        intent.putExtra(Project.NAME, p.getName());
+
+        context.startActivity(intent);
+    }
+
+
+
 }

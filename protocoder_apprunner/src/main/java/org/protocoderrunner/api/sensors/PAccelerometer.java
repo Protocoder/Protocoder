@@ -86,10 +86,10 @@ public class PAccelerometer extends CustomSensorManager {
 
     @ProtoMethod(description = "Start the accelerometer. Returns x, y, z", example = "")
     @ProtoMethodParam(params = {"function(x, y, z)"})
-    public void onChange(final ReturnInterface callbackfn) {
+    public PAccelerometer onChange(final ReturnInterface callbackfn) {
         mCallback = callbackfn;
 
-        start();
+        return this;
     }
 
 }

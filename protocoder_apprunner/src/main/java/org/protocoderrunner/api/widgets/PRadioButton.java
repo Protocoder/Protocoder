@@ -23,7 +23,7 @@ package org.protocoderrunner.api.widgets;
 import android.content.Context;
 import android.widget.RadioButton;
 
-public class PRadioButton extends RadioButton implements PViewInterface {
+public class PRadioButton extends RadioButton {
 
     public PRadioButton(Context context) {
         super(context);

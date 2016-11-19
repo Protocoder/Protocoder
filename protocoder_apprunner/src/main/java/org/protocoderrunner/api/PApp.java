@@ -182,7 +182,7 @@ public class PApp extends ProtoBase {
     //TODO reenable this
     @ProtoMethod(description = "get the current project HTTP URL", example = "")
     public String servingUrl() {
-        String url = null; //ProjectManager.getInstance().getCurrentProject().getServingURL();
+        String url = null; // getAppRunner().getProject()..getServingURL();
         return url;
     }
 

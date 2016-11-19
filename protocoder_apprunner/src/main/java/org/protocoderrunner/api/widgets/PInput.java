@@ -20,21 +20,44 @@
 
 package org.protocoderrunner.api.widgets;
 
-import android.content.Context;
+import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import org.protocoderrunner.api.common.ReturnInterface;
 import org.protocoderrunner.api.common.ReturnObject;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.apprunner.StyleProperties;
 
-public class PInput extends EditText implements PViewInterface {
+import java.util.Map;
 
+public class PInput extends EditText implements PViewMethodsInterface, PTextInterface {
+
+    private final AppRunner mAppRunner;
     private EditText mInput;
 
-    public PInput(Context context) {
-        super(context);
+    public StyleProperties props = new StyleProperties();
+    public Styler styler;
+
+    public PInput(AppRunner appRunner) {
+        super(appRunner.getAppContext());
+
+        mAppRunner = appRunner;
+        setClickable(true);
+        setFocusableInTouchMode(true);
+
+        styler = new Styler(appRunner, this, props);
+        styler.apply();
+
+        setHintTextColor(styler.hintColor);
 
         mInput = this;
     }
@@ -86,5 +109,70 @@ public class PInput extends EditText implements PViewInterface {
                 callbackfn.event(r);
             }
         });
+    }
+
+
+    @Override
+    public View font(Typeface font) {
+        this.setTypeface(font);
+        return this;
+    }
+
+    @Override
+    public View textSize(int size) {
+        this.setTextSize(size);
+        return this;
+    }
+
+    @Override
+    public View textColor(String textColor) {
+        this.setTextColor(Color.parseColor(textColor));
+        return this;
+    }
+
+    @Override
+    @ProtoMethod(description = "Changes the font text color", example = "")
+    @ProtoMethodParam(params = {"colorHex"})
+    public View textColor(int c) {
+        this.setTextColor(c);
+        return this;
+    }
+
+    @Override
+    public View textSize(float textSize) {
+        this.setTextSize(textSize);
+        return this;
+    }
+
+    @Override
+    public View textStyle(int style) {
+        this.setTypeface(null, style);
+        return this;
+    }
+
+    @Override
+    public void set(float x, float y, float w, float h) {
+        styler.setLayoutProps(x, y, w, h);
+    }
+
+    @Override
+    public void setStyle(Map style) {
+        styler.setStyle(style);
+    }
+
+    @Override
+    public Map getStyle() {
+        return props;
+    }
+
+    @Override
+    protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
+        hideKeyboard(this);
+        super.onFocusChanged(focused, direction, previouslyFocusedRect);
+    }
+
+    private void hideKeyboard(View view) {
+        InputMethodManager inputMethodManager =(InputMethodManager) mAppRunner.getAppContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }

@@ -29,6 +29,7 @@ public class Events {
     public static final String PROJECT_RUN          = "run";
     public static final String PROJECT_STOP         = "stop";
     public static final String PROJECT_STOP_ALL     = "stop_all";
+    public static final String PROJECT_STOP_ALL_AND_RUN = "stop_all_and_run";
     public static final String PROJECT_SAVE         = "save";
     public static final String PROJECT_NEW          = "new";
     public static final String PROJECT_UPDATE       = "update";
@@ -42,6 +43,8 @@ public class Events {
     public static final String EDITOR_FILE_SAVE     = "editor_file_saved";
     public static final String EDITOR_FILE_PREVIEW  = "editor_file_preview" ;
     public static final String EDITOR_ALL_FILE_STATUS = "editor_all_file_status";
+    
+    public static final String CLOSE_APP = "cloase_app";
 
     public static class ProjectEvent {
         private Project project;

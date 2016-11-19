@@ -12,12 +12,15 @@ import io.fabric.sdk.android.Fabric;
  */
 public class App extends Application {
 
+    public static MyLifecycleHandler myLifecycleHandler;
+
     @Override
     public void onCreate() {
         super.onCreate();
 
         MultiDex.install(this);
-
+        myLifecycleHandler = new MyLifecycleHandler();
+        registerActivityLifecycleCallbacks(myLifecycleHandler);
         Fabric.with(this, new Crashlytics());
     }
 }

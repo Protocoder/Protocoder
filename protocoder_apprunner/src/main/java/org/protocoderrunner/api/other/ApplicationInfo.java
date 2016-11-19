@@ -18,41 +18,19 @@ package org.protocoderrunner.api.other;
 
 import android.content.ComponentName;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
 import com.google.gson.annotations.Expose;
 
-/**
- * Represents mContext launchable application. An application is made of mContext name (or
- * title), an intent and an icon.
- */
 public class ApplicationInfo {
-    /**
-     * The application name.
-     */
-    @Expose
     public CharSequence title;
-
-    /**
-     * The intent used to start the application.
-     */
     Intent intent;
-
-    /**
-     * The application icon.
-     */
-    public Drawable icon;
-
-    /**
-     * When set to true, indicates that the icon has been resized.
-     */
-    boolean filtered;
-
-    @Expose
+    public Drawable iconDrawable;
+    public Bitmap iconBitmap;
     public String iconURL;
-
-    @Expose
     public String packageName;
+    public String permission;
 
     public final void setActivity(ComponentName className, int launchFlags) {
         intent = new Intent(Intent.ACTION_MAIN);

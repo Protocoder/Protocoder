@@ -79,12 +79,12 @@ public class PStep extends CustomSensorManager implements WhatIsRunningInterface
     }
 
 
-    @ProtoMethod(description = "Start the accelerometer. Returns x, y, z", example = "")
+    @ProtoMethod(description = "Start the step sensor. Returns x, y, z", example = "")
     @ProtoMethodParam(params = {"function(x, y, z)"})
-    public void onChange(final ReturnInterface callbackfn) {
+    public PStep onChange(final ReturnInterface callbackfn) {
         mCallback = callbackfn;
 
-        start();
+        return this;
     }
 
 }

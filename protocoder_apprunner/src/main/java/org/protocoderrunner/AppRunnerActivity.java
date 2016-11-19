@@ -20,7 +20,6 @@
 
 package org.protocoderrunner;
 
-import android.animation.Animator;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -28,7 +27,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.graphics.Point;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
@@ -40,13 +42,14 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -54,6 +57,7 @@ import org.protocoderrunner.api.PDevice;
 import org.protocoderrunner.api.PMedia;
 import org.protocoderrunner.api.network.PBluetooth;
 import org.protocoderrunner.api.sensors.PNfc;
+import org.protocoderrunner.apprunner.AppRunnerHelper;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.base.gui.DebugFragment;
@@ -63,6 +67,7 @@ import org.protocoderrunner.events.Events;
 import org.protocoderrunner.models.Project;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class AppRunnerActivity extends BaseActivity {
 
@@ -99,6 +104,10 @@ public class AppRunnerActivity extends BaseActivity {
     private boolean mSettingWakeUpScreen;
     private boolean eventBusRegistered = false;
     private boolean debugFramentIsVisible;
+    private boolean orientationChanged = false;
+    private Bundle mBundle;
+    private boolean isLandscape;
+    private boolean isPortrait;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,23 +129,53 @@ public class AppRunnerActivity extends BaseActivity {
             finish();
         }
 
-        // settings
-        mSettingScreenAlwaysOn   = intent.getBooleanExtra(Project.SETTINGS_SCREEN_ALWAYS_ON, false);
-        mSettingWakeUpScreen     = intent.getBooleanExtra(Project.SETTINGS_SCREEN_WAKEUP, false);
+        String name = intent.getStringExtra(Project.NAME);
+        String folder = intent.getStringExtra(Project.FOLDER);
+        Project p = new Project(folder, name);
 
-        // the actual code
-        String prefix   = intent.getStringExtra(Project.PREFIX);
-        String code     = intent.getStringExtra(Project.INTENTCODE);
-        String postfix  = intent.getStringExtra(Project.POSTFIX);
+        // settings
+        Map<String, Object> map = AppRunnerHelper.readProjectProperties(getApplicationContext(), p);
+        boolean screenAlwaysOn   = false;
+        String orientation       = (String) map.get("orientation");
+        String screenMode     = (String) map.get("screen_mode");
 
         // send bundle to the fragment
-        Bundle bundle = new Bundle();
-        bundle.putString(Project.NAME, intent.getStringExtra(Project.NAME));
-        bundle.putString(Project.FOLDER, intent.getStringExtra(Project.FOLDER));
-        bundle.putString(Project.PREFIX, prefix);
-        bundle.putString(Project.INTENTCODE, code);
-        bundle.putString(Project.POSTFIX, postfix);
+        mBundle = new Bundle();
+        mBundle.putString(Project.NAME, name);
+        mBundle.putString(Project.FOLDER, folder);
+        mBundle.putString(Project.PREFIX, intent.getStringExtra(Project.PREFIX));
+        mBundle.putString(Project.INTENTCODE, intent.getStringExtra(Project.INTENTCODE));
+        mBundle.putString(Project.POSTFIX, intent.getStringExtra(Project.POSTFIX));
+        mBundle.putString("device_id", intent.getStringExtra("device_id"));
 
+        /*
+         * Set fullscreen
+         */
+        if (screenMode.equals("fullscreen")) setImmersive();
+
+        
+        /*
+         * Set orientation
+         */
+        Point size = new Point();
+        getWindowManager().getDefaultDisplay().getSize(size);
+        if (size.x > size.y) isLandscape = true;
+        else isPortrait = true;
+
+        if (orientation.equals("landscape") && !isLandscape) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            orientationChanged = true;
+        } else if (orientation.equals("portrait") && !isPortrait) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            orientationChanged = true;
+        }
+
+        // if we changed the orientation, we will wait for the orientation to change
+        // and init the AppRunner in onConfigurationChanged
+        if (!orientationChanged) initAppRunner();
+    }
+
+    public void initAppRunner() {
         // Set the Activity UI
         setContentView(R.layout.apprunner_activity);
         setupActivity();
@@ -145,14 +184,11 @@ public class AppRunnerActivity extends BaseActivity {
         if (AppRunnerSettings.DEBUG) addDebugFragment();
 
         // add AppRunnerFragment
-        mAppRunnerFragment = AppRunnerFragment.newInstance(bundle);
+        mAppRunnerFragment = AppRunnerFragment.newInstance(mBundle);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         FrameLayout fl = (FrameLayout) findViewById(R.id.apprunner_fragment);
         ft.add(fl.getId(), mAppRunnerFragment, String.valueOf(fl.getId()));
         ft.commit();
-
-        //TODO change to events
-        //IDEcommunication.getInstance(this).ready(true);
     }
 
     @Override
@@ -212,6 +248,19 @@ public class AppRunnerActivity extends BaseActivity {
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        // Checks the orientation of the screen for landscape and portrait
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            initAppRunner();
+            // Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            initAppRunner();
+        }
     }
 
     public void registerEventBus() {
@@ -364,7 +413,7 @@ public class AppRunnerActivity extends BaseActivity {
                 addDebugFragment();
             }
         }
-        
+
         if (onKeyListener != null) {
             onKeyListener.onKeyDown(event);
             onKeyListener.onKeyEvent(event);
@@ -485,9 +534,11 @@ public class AppRunnerActivity extends BaseActivity {
         Intent i = new Intent("org.protocoder.intent.CONSOLE");
 
         String action = e.getAction();
+        String time = e.getTime();
         String data = e.getData();
 
         i.putExtra("action", action);
+        i.putExtra("time", time);
         i.putExtra("data", data);
         sendBroadcast(i);
 
@@ -514,7 +565,7 @@ public class AppRunnerActivity extends BaseActivity {
     };
 
     /**
-     * Receiving order to close the activity
+     * Receiving order to execute line of code
      */
     public void executeCodeActivityBroadcastReceiver() {
         IntentFilter filterSend = new IntentFilter();

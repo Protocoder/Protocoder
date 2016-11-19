@@ -3,4 +3,4 @@
  *  by ........ 
  */
 
-ui.title(app.name)
+ui.addTitle(app.name)

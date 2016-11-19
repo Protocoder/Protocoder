@@ -84,12 +84,12 @@ public class POrientation extends CustomSensorManager implements WhatIsRunningIn
     }
 
 
-    @ProtoMethod(description = "Start the accelerometer. Returns x, y, z", example = "")
+    @ProtoMethod(description = "Start the orientation sensor. Returns x, y, z", example = "")
     @ProtoMethodParam(params = {"function(x, y, z)"})
-    public void onChange(final ReturnInterface callbackfn) {
+    public POrientation onChange(final ReturnInterface callbackfn) {
         mCallbackOrientationChange = callbackfn;
 
-        start();
+        return this;
     }
 
 

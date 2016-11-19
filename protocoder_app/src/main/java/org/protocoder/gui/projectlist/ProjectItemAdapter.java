@@ -24,7 +24,6 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
-import org.protocoder.helpers.ProtoScriptHelper;
 import org.protocoderrunner.models.Project;
 
 import java.util.ArrayList;
@@ -112,7 +111,7 @@ public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Project p = mProjectList.get(position);
-        holder.mView.setProject(p);
+        holder.mView.setProjectInfo(p);
     }
 
     @Override

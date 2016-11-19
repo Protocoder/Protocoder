@@ -1,8 +1,8 @@
 /*
  * \\\ Example: Processing
  *
- * This is a tiny bit modified version of Processing.org 
- * for Android. 
+ * This is a tiny bit modified version of Processing.org
+ * for Android.
  * The usage its pretty similar, you just need to prepend
  * the processing object (p.) to the methods to access them
  * example: p.rect(x, y, w, h)
@@ -24,7 +24,9 @@ processing.draw(function (p) {
   p.rect(0, 0, p.width, p.height)
   p.noStroke()
   p.fill(255)
-  
+
   size = p.dist(p.pmouseX, p.pmouseY, p.mouseX, p.mouseY)
   p.ellipse(p.mouseX, p.mouseY, size, size)
 })
+
+ui.addTitle(app.name)

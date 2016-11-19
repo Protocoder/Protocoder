@@ -24,14 +24,19 @@ import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.hardware.input.InputManager;
 import android.os.BatteryManager;
 import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.provider.Settings;
@@ -50,6 +55,7 @@ import com.google.gson.Gson;
 import org.protocoderrunner.AppRunnerFragment;
 import org.protocoderrunner.api.common.ReturnInterface;
 import org.protocoderrunner.api.common.ReturnObject;
+import org.protocoderrunner.api.other.ApplicationInfo;
 import org.protocoderrunner.api.sensors.PNfc;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
@@ -59,7 +65,10 @@ import org.protocoderrunner.base.utils.AndroidUtils;
 import org.protocoderrunner.base.utils.Intents;
 import org.protocoderrunner.base.utils.MLog;
 
+import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @ProtoObject
 public class PDevice extends ProtoBase {
@@ -75,15 +84,16 @@ public class PDevice extends ProtoBase {
     private boolean isKeyPressInit = false;
 
     public PNfc nfc;
+    public String deviceId;
 
 
     /**
      * Interface for key up / down
      */
     public interface onKeyListener {
-        public void onKeyDown(KeyEvent event);
-        public void onKeyUp(KeyEvent event);
-        public void onKeyEvent(KeyEvent event);
+        void onKeyDown(KeyEvent event);
+        void onKeyUp(KeyEvent event);
+        void onKeyEvent(KeyEvent event);
     }
 
     public PDevice(AppRunner appRunner) {
@@ -670,6 +680,71 @@ public class PDevice extends ProtoBase {
         };
 
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(onNotification, new IntentFilter("Msg"));
+    }
+
+
+    /**
+     * Loads the list of installed applications in mApplications.
+     */
+    public List listInstalledApps() {
+        ArrayList<ApplicationInfo> mApplications = new ArrayList<ApplicationInfo>();;
+
+        /*
+        if (isLaunching && mApplications != null) {
+            return;
+        }
+        */
+
+        // get installed apps
+        PackageManager pm = getContext().getPackageManager();
+        Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+        final List<ResolveInfo> apps = pm.queryIntentActivities(mainIntent, 0);
+        Collections.sort(apps, new ResolveInfo.DisplayNameComparator(pm));
+
+        if (apps != null) {
+            int count = apps.size();
+
+            for (int i = 0; i < count; i++) {
+                ApplicationInfo application = new ApplicationInfo();
+                ResolveInfo info = apps.get(i);
+
+                application.title = info.loadLabel(pm);
+                application.packageName = info.activityInfo.packageName;
+                application.setActivity(new ComponentName(info.activityInfo.applicationInfo.packageName,
+                        info.activityInfo.name),
+                        Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                application.iconDrawable = info.activityInfo.loadIcon(pm);
+                application.permission = info.activityInfo.permission;
+
+                MLog.d(TAG, application.title + " " + application.packageName); // " " + application.iconURL);
+
+                application.iconBitmap = ((BitmapDrawable) application.iconDrawable).getBitmap();
+
+                // Bitmap icon =
+                // BitmapFactory.decodeResource(this.getResources(),
+                // application.icon);
+
+
+                /*
+                save icon in path
+                 */
+                /*
+                String path = Environment.getExternalStorageDirectory().toString();
+                application.iconURL = path + "/" + application.packageName + ".png";
+
+                try {
+                    FileOutputStream out = new FileOutputStream(application.iconURL);
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }*/
+
+                mApplications.add(application);
+            }
+        }
+
+        return  mApplications;
     }
 
     @Override

@@ -89,6 +89,7 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
     private View v;
 
     private Vector<CameraListener> listeners = new Vector<CameraListener>();
+    private CallbackData callbackData;
     private CallbackBmp callbackBmp;
     private CallbackStream callbackStream;
     private boolean frameProcessing = false;
@@ -174,8 +175,18 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
     }
 
 
+    public interface CallbackData {
+        void event(byte[] data, Camera camera);
+    }
+
+    public void addCallbackData(CallbackData callbackData) {
+        MLog.d(TAG, "qq 1");
+        this.callbackData = callbackData;
+        startOnFrameProcessing();
+    }
+
     public interface CallbackBmp {
-        public void event(Bitmap bmp);
+        void event(Bitmap bmp);
     }
 
     public void addCallbackBmp(CallbackBmp callbackBmp) {
@@ -184,7 +195,7 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
     }
 
     public interface CallbackStream {
-        public void event(String out);
+        void event(String out);
     }
 
     public void addCallbackStream(CallbackStream callbackStream) {
@@ -219,13 +230,14 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
 
 
     public void startOnFrameProcessing() {
+        MLog.d(TAG, "qq 2");
         if (frameProcessing == false) {
             frameProcessing = true;
-            MLog.d(TAG, "startOnFrameProccesing");
+            MLog.d(TAG, "qq 3");
             Camera.Parameters parameters = mCamera.getParameters();
             int format = parameters.getPreviewFormat();
 
-            MLog.d(TAG, "format " + format);
+            MLog.d(TAG, "qq 4 " + format);
 
             mCamera.setPreviewCallback(new PreviewCallback() {
 
@@ -233,32 +245,38 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
                 public void onPreviewFrame(byte[] data, Camera camera) {
                     MLog.d(TAG, "onNewFrame");
 
-                    Camera.Parameters parameters = camera.getParameters();
-                    int width = parameters.getPreviewSize().width;
-                    int height = parameters.getPreviewSize().height;
 
-                    //get support preview format
-                    //set preview format
-
-
-                    YuvImage yuv = new YuvImage(data, parameters.getPreviewFormat(), width, height, null);
-
-                    ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-                    //maybe pass the out to the callbacks and do each compression there?
-                    yuv.compressToJpeg(new Rect(0, 0, width, height), 50, out);
-
-                    byte[] bytes = out.toByteArray();
-
-                    BitmapFactory.Options bitmap_options = new BitmapFactory.Options();
-                    bitmap_options.inPreferredConfig = Bitmap.Config.RGB_565;
-
-
+                    if (callbackData != null) {
+                        callbackData.event(data, camera);
+                    }
                     if (callbackBmp != null) {
+                        Camera.Parameters parameters = camera.getParameters();
+                        int width = parameters.getPreviewSize().width;
+                        int height = parameters.getPreviewSize().height;
+
+                        // get support preview format
+                        YuvImage yuv = new YuvImage(data, parameters.getPreviewFormat(), width, height, null);
+                        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+                        // maybe pass the out to the callbacks and do each compression there?
+                        yuv.compressToJpeg(new Rect(0, 0, width, height), 50, out);
+                        byte[] bytes = out.toByteArray();
+
+                        BitmapFactory.Options bitmap_options = new BitmapFactory.Options();
+                        bitmap_options.inPreferredConfig = Bitmap.Config.RGB_565;
+
                         final Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, bitmap_options);
                         callbackBmp.event(bitmap);
                     }
                     if (callbackStream != null) {
+                        Camera.Parameters parameters = camera.getParameters();
+                        int width = parameters.getPreviewSize().width;
+                        int height = parameters.getPreviewSize().height;
+
+                        // get support preview format
+                        YuvImage yuv = new YuvImage(data, parameters.getPreviewFormat(), width, height, null);
+                        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
                         String encodedImage = Base64.encodeToString(out.toByteArray(), Base64.DEFAULT);
                         callbackStream.event(encodedImage);
                     }

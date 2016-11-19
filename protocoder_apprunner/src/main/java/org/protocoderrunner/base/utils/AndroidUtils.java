@@ -55,76 +55,31 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AndroidUtils {
 
     private static final String TAG = "AndroidUtils";
 
-    public static void takeScreenshot(String where, String name, View v) {
-
-        // image naming and path to include sd card appending name you choose
-        // for file
-        String mPath = where + "/" + name;
-
+    public static void takeScreenshot(View v) {
         // create bitmap screen capture
         Bitmap bitmap;
         View v1 = v.getRootView();
         v1.setDrawingCacheEnabled(true);
         bitmap = Bitmap.createBitmap(v1.getDrawingCache());
         v1.setDrawingCacheEnabled(false);
-
-        OutputStream fout = null;
-        File imageFile = new File(mPath);
-
-        try {
-            fout = new FileOutputStream(imageFile);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 90, fout);
-            fout.flush();
-            fout.close();
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
     }
 
-    public static Bitmap takeScreenshotView(String where, String name, View v) {
-
-        // image naming and path to include sd card appending name you choose
-        // for file
-        String mPath = where + "/" + name;
-
+    public static Bitmap takeScreenshotView(View v) {
         // create bitmap screen capture
-        Bitmap bitmap;
         v.setDrawingCacheEnabled(true);
-        bitmap = Bitmap.createBitmap(v.getDrawingCache());
+        Bitmap bitmap = Bitmap.createBitmap(v.getDrawingCache());
         v.setDrawingCacheEnabled(false);
-
-        // save if path is given
-        if (name.equals("") != true) {
-            MLog.d("qq", mPath + "entra");
-            OutputStream fout = null;
-            File imageFile = new File(mPath);
-
-            try {
-                fout = new FileOutputStream(imageFile);
-                bitmap.compress(Bitmap.CompressFormat.PNG, 90, fout);
-                fout.flush();
-                fout.close();
-
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
 
         return bitmap;
 
     }
-
 
     public static Point getScreenSize(Context context) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
@@ -477,6 +432,27 @@ public class AndroidUtils {
         md.update(text.getBytes("iso-8859-1"), 0, text.length());
         byte[] sha1hash = md.digest();
         return convertToHex(sha1hash);
+    }
+
+    public static String actionToString(int action) {
+        switch (action) {
+
+            case MotionEvent.ACTION_DOWN: return "Down";
+            case MotionEvent.ACTION_MOVE: return "Move";
+            case MotionEvent.ACTION_POINTER_DOWN: return "Pointer Down";
+            case MotionEvent.ACTION_UP: return "Up";
+            case MotionEvent.ACTION_POINTER_UP: return "Pointer Up";
+            case MotionEvent.ACTION_OUTSIDE: return "Outside";
+            case MotionEvent.ACTION_CANCEL: return "Cancel";
+        }
+        return "";
+    }
+
+    public static void prettyPrintMap(Map<String, Object> map) {
+        for (Map.Entry<String, Object> entry : map.entrySet())
+        {
+            MLog.d(entry.getKey() + " : " + entry.getValue());
+        }
     }
 
 }

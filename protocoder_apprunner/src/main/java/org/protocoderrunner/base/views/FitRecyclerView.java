@@ -18,7 +18,7 @@
 * along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package org.protocoder.gui._components;
+package org.protocoderrunner.base.views;
 
 
 import android.content.Context;

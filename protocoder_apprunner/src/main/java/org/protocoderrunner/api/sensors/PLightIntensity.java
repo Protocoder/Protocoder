@@ -85,12 +85,12 @@ public class PLightIntensity extends CustomSensorManager implements WhatIsRunnin
     }
 
 
-    @ProtoMethod(description = "Start the accelerometer. Returns x, y, z", example = "")
+    @ProtoMethod(description = "Start the light sensor. Returns x, y, z", example = "")
     @ProtoMethodParam(params = {"function(x, y, z)"})
-    public void onChange(final ReturnInterface callbackfn) {
+    public PLightIntensity onChange(final ReturnInterface callbackfn) {
         mCallbackLightChange = callbackfn;
 
-        start();
+        return this;
     }
 
 }

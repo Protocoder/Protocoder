@@ -262,67 +262,6 @@ public class PProtocoder extends ProtoBase {
         getContext().startActivity(intent);
     }
 
-
-    //TODO this is not finished either
-    public static ArrayList<ApplicationInfo> mApplications;
-
-    /**
-     * Loads the list of installed applications in mApplications.
-     */
-    private void loadApplications(boolean isLaunching) {
-        if (isLaunching && mApplications != null) {
-            return;
-        }
-
-        PackageManager manager = getContext().getPackageManager();
-
-        Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
-        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-
-        final List<ResolveInfo> apps = manager.queryIntentActivities(mainIntent, 0);
-        Collections.sort(apps, new ResolveInfo.DisplayNameComparator(manager));
-
-        if (apps != null) {
-            final int count = apps.size();
-
-            if (mApplications == null) {
-                mApplications = new ArrayList<ApplicationInfo>(count);
-            }
-            mApplications.clear();
-
-            for (int i = 0; i < count; i++) {
-                ApplicationInfo application = new ApplicationInfo();
-                ResolveInfo info = apps.get(i);
-
-                application.title = info.loadLabel(manager);
-                application.packageName = info.activityInfo.packageName;
-                Log.d("qq", "qq " + application.packageName);
-                application.setActivity(new ComponentName(info.activityInfo.applicationInfo.packageName,
-                        info.activityInfo.name), Intent.FLAG_ACTIVITY_NEW_TASK
-                        | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-                application.icon = info.activityInfo.loadIcon(manager);
-
-                Bitmap bitmap = ((BitmapDrawable) application.icon).getBitmap();
-
-                // Bitmap icon =
-                // BitmapFactory.decodeResource(this.getResources(),
-                // application.icon);
-
-                String path = Environment.getExternalStorageDirectory().toString();
-                application.iconURL = path + "/" + application.packageName + ".png";
-
-                try {
-                    FileOutputStream out = new FileOutputStream(application.iconURL);
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                mApplications.add(application);
-            }
-        }
-    }
-
     @Override
     public void __stop() {
         

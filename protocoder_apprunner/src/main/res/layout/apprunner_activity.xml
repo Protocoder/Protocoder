@@ -3,15 +3,12 @@
         android:id="@+id/contentHolder"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:focusableInTouchMode="true"
+        android:focusableInTouchMode="false"
         android:gravity="bottom"
         android:background="@color/white"
     >
 
-    <include layout="@layout/toolbar2"
-        android:id="@+id/header"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent" />
+    <include layout="@layout/toolbar2" android:id="@+id/header"  />
 
     <FrameLayout
         android:id="@+id/apprunner_fragment"

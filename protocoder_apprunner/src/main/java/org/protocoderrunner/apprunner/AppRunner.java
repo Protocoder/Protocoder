@@ -145,7 +145,7 @@ public class AppRunner {
 
     public AppRunner loadProject(String folder, String name) {
         mProject = new Project(folder, name);
-        mScript = AppRunnerHelper.getCode(mContext, mProject);
+        mScript = AppRunnerHelper.getCode(mProject);
 
         return this;
     }

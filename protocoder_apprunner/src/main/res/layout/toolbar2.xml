@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 25dp margin top -->
 
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/header"
     android:layout_width="match_parent"
@@ -10,17 +9,21 @@
 
     <View
         android:id="@+id/statusbarspacer"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
         android:layout_height="24dp"
         android:visibility="gone"
         android:layout_width="match_parent"/>
 
-    <android.support.v7.widget.Toolbar
+    <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_marginTop="0dp"
-        style="@style/ToolBarAppRunner.AppRunner"
         android:id="@+id/toolbar2"
         android:navigationIcon="@drawable/protocoder_icon"
         android:layout_height="?attr/actionBarSize"
-        android:layout_width="match_parent">
+        android:layout_width="match_parent"
+        android:layout_below="@id/statusbarspacer"
+        android:layout_alignParentRight="true"
+        android:background="@color/blacktransparent">
     </android.support.v7.widget.Toolbar>
 
-</LinearLayout>
+</RelativeLayout>

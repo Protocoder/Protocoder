@@ -20,52 +20,54 @@
 
 package org.protocoderrunner.api.widgets;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.TextView;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.apprunner.StyleProperties;
 
-public class PTextView extends TextView implements PViewInterface, PViewMethodsInterface {
+import java.util.Map;
 
-    PViewMethods vM;
+public class PText extends TextView implements PViewMethodsInterface, PTextInterface {
 
-    public PTextView(Context context) {
-        super(context);
-        vM = new PViewMethods();
+    public StyleProperties props = new StyleProperties();
+    public Styler styler;
+
+    public PText(AppRunner appRunner) {
+        super(appRunner.getAppContext());
+        styler = new Styler(appRunner, this, props);
+        styler.apply();
     }
 
     @ProtoMethod(description = "Sets the text color", example = "")
     @ProtoMethodParam(params = {"colorHex"})
-    public PTextView color(String c) {
+    public PText color(String c) {
         this.setTextColor(Color.parseColor(c));
+
         return this;
     }
 
     @ProtoMethod(description = "Sets the background color", example = "")
     @ProtoMethodParam(params = {"colorHex"})
-    public PTextView background(String c) {
+    public PText background(String c) {
         this.setBackgroundColor(Color.parseColor(c));
-        return this;
-    }
-
-    @ProtoMethod(description = "Sets the text size", example = "")
-    @ProtoMethodParam(params = {"size"})
-    public PTextView textSize(int size) {
-        this.setTextSize(size);
         return this;
     }
 
     @ProtoMethod(description = "Enables/disables the scroll in the text view", example = "")
     @ProtoMethodParam(params = {"size"})
-    public PTextView scrollable(boolean b) {
+    public PText scrollable(boolean b) {
         if (b) {
             this.setMovementMethod(new ScrollingMovementMethod());
+            this.setVerticalScrollBarEnabled(true);
+            // this.setGravity(Gravity.BOTTOM);
         } else {
             this.setMovementMethod(null);
         }
@@ -74,14 +76,14 @@ public class PTextView extends TextView implements PViewInterface, PViewMethodsI
 
     @ProtoMethod(description = "Changes the text to the given text", example = "")
     @ProtoMethodParam(params = {"text"})
-    public PTextView text(String text) {
+    public PText text(String text) {
         this.setText(text);
         return this;
     }
 
     @ProtoMethod(description = "Changes the text to the given text", example = "")
     @ProtoMethodParam(params = {"text, text, ..., text"})
-    public PTextView text(String... txt) {
+    public PText text(String... txt) {
         String joinedText = "";
         for (int i = 0; i < txt.length; i++) {
             joinedText += " " + txt[i];
@@ -93,27 +95,28 @@ public class PTextView extends TextView implements PViewInterface, PViewMethodsI
 
     @ProtoMethod(description = "Changes the text to the given html text", example = "")
     @ProtoMethodParam(params = {"htmlText"})
-    public PTextView html(String text) {
+    public PText html(String text) {
         this.setText(Html.fromHtml(text));
         return this;
     }
 
     @ProtoMethod(description = "Appends text to the text view", example = "")
     @ProtoMethodParam(params = {"text"})
-    public PTextView append(String text) {
+    public PText append(String text) {
         this.setText(getText() + text);
+
         return this;
     }
 
     @ProtoMethod(description = "Clears the text", example = "")
-    public PTextView clear() {
+    public PText clear() {
         this.setText("");
         return this;
     }
 
     @ProtoMethod(description = "Changes the box size of the text", example = "")
     @ProtoMethodParam(params = {"w", "h"})
-    public PTextView boxsize(int w, int h) {
+    public PText boxsize(int w, int h) {
         this.setWidth(w);
         this.setHeight(h);
         return this;
@@ -121,7 +124,7 @@ public class PTextView extends TextView implements PViewInterface, PViewMethodsI
 
     @ProtoMethod(description = "Sets a new position for the text", example = "")
     @ProtoMethodParam(params = {"x", "y"})
-    public PTextView pos(int x, int y) {
+    public PText pos(int x, int y) {
         this.setX(x);
         this.setY(y);
         return this;
@@ -129,23 +132,71 @@ public class PTextView extends TextView implements PViewInterface, PViewMethodsI
 
     @ProtoMethod(description = "Specifies a shadow for the text", example = "")
     @ProtoMethodParam(params = {"x", "y", "radius", "colorHex"})
-    public PTextView shadow(int x, int y, int r, String c) {
+    public PText shadow(int x, int y, int r, String c) {
         this.setShadowLayer(r, x, y, Color.parseColor(c));
-        return this;
-    }
-
-    @ProtoMethod(description = "Changes the font", example = "")
-    @ProtoMethodParam(params = {"Typeface"})
-    public PTextView font(Typeface f) {
-        this.setTypeface(f);
         return this;
     }
 
     @ProtoMethod(description = "Centers the text inside the textview", example = "")
     @ProtoMethodParam(params = {"Typeface"})
-    public PTextView center(String centering) {
+    public PText center(String centering) {
         this.setGravity(Gravity.CENTER_VERTICAL);
         return this;
+    }
+
+    @ProtoMethod(description = "Changes the font", example = "")
+    @ProtoMethodParam(params = {"Typeface"})
+    public PText font(Typeface f) {
+        this.setTypeface(f);
+        return this;
+    }
+
+    @ProtoMethod(description = "Sets the text size", example = "")
+    @ProtoMethodParam(params = {"size"})
+    public PText textSize(int size) {
+        this.setTextSize(size);
+        return this;
+    }
+
+    @Override
+    public View textColor(String textColor) {
+        this.setTextColor(Color.parseColor(textColor));
+        return this;
+    }
+
+    @Override
+    @ProtoMethod(description = "Changes the font text color", example = "")
+    @ProtoMethodParam(params = {"colorHex"})
+    public View textColor(int c) {
+        this.setTextColor(c);
+        return this;
+    }
+
+    @Override
+    public View textSize(float textSize) {
+        this.setTextSize(textSize);
+        return this;
+    }
+
+    @Override
+    public View textStyle(int style) {
+        this.setTypeface(null, style);
+        return this;
+    }
+
+    @Override
+    public void set(float x, float y, float w, float h) {
+        styler.setLayoutProps(x, y, w, h);
+    }
+
+    @Override
+    public void setStyle(Map style) {
+        styler.setStyle(style);
+    }
+
+    @Override
+    public Map getStyle() {
+        return props;
     }
 
     /*

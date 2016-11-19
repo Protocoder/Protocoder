@@ -20,6 +20,7 @@
 
 package org.protocoderrunner.events;
 
+import org.protocoderrunner.base.utils.AndroidUtils;
 import org.protocoderrunner.models.Project;
 
 public class Events {
@@ -57,10 +58,12 @@ public class Events {
 
     public static class LogEvent {
         private String action;
+        private final String time;
         private final String data;
 
-        public LogEvent(String action, String data) {
+        public LogEvent(String action, String time, String data) {
             this.action = action;
+            this.time = time;
             this.data = data;
         }
 
@@ -70,6 +73,10 @@ public class Events {
         public String getData() {
             return data;
         }
+        public String getTime() {
+            return time;
+        }
+        
     }
 
 

@@ -26,6 +26,7 @@ import org.protocoder.events.Events;
 import org.protocoder.events.EventsProxy;
 import org.protocoder.helpers.ProtoAppHelper;
 import org.protocoder.gui.settings.ProtocoderSettings;
+import org.protocoder.helpers.ProtoScriptHelper;
 import org.protocoderrunner.api.PDevice;
 import org.protocoderrunner.base.network.NetworkUtils;
 import org.protocoderrunner.base.utils.AndroidUtils;
@@ -33,6 +34,7 @@ import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.models.Project;
 
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ProtocoderServerService extends Service {
@@ -154,35 +156,54 @@ public class ProtocoderServerService extends Service {
             @Override
             public void run() {
 
+                HashMap data = new HashMap();
+                data.put("module", "device");
                 HashMap info = new HashMap();
-                info.put("module", "device");
+                data.put("info", info);
 
-                info.put("battery level", appRunner.pDevice.battery());
-                info.put("memory", appRunner.pDevice.memory().summary());
-                info.put("brightness", appRunner.pDevice.brightness());
-                info.put("screen", appRunner.pDevice.isScreenOn());
-
+                // device
+                HashMap device = new HashMap();
                 PDevice.DeviceInfo deviceInfo = appRunner.pDevice.info();
-                info.put("type", appRunner.pDevice.type());
-                info.put("model name", deviceInfo.model);
-                info.put("orientation", appRunner.pDevice.orientation());
-                info.put("manufacturer", deviceInfo.manufacturer);
-                info.put("screen resolution", deviceInfo.screenWidth + " x " + deviceInfo.screenHeight);
-                info.put("screen dpi", deviceInfo.screenDpi);
+                device.put("type", appRunner.pDevice.type());
+                device.put("model name", deviceInfo.model);
+                device.put("manufacturer", deviceInfo.manufacturer);
 
-                info.put("network available", appRunner.pNetwork.isNetworkAvailable());
-                info.put("wifi enabled", appRunner.pNetwork.isWifiEnabled());
-                info.put("network type", appRunner.pNetwork.getNetworkType());
-                info.put("ip", appRunner.pNetwork.ipAddress());
-                info.put("rssi", appRunner.pNetwork.wifiInfo().getRssi());
-                info.put("ssid", appRunner.pNetwork.wifiInfo().getSSID());
+                // screen
+                HashMap screen = new HashMap();
+                screen.put("orientation", appRunner.pDevice.orientation());
+                screen.put("screen", appRunner.pDevice.isScreenOn());
+                screen.put("screen resolution", deviceInfo.screenWidth + " x " + deviceInfo.screenHeight);
+                screen.put("screen dpi", deviceInfo.screenDpi);
+                screen.put("brightness", appRunner.pDevice.brightness());
 
-                // name of the current running project
+                // others
+                HashMap other = new HashMap();
+                other.put("battery level", appRunner.pDevice.battery());
+                other.put("memory", appRunner.pDevice.memory().summary());
+
+                // network
+                HashMap network = new HashMap();
+                network.put("network available", appRunner.pNetwork.isNetworkAvailable());
+                network.put("wifi enabled", appRunner.pNetwork.isWifiEnabled());
+                network.put("network type", appRunner.pNetwork.getNetworkType());
+                network.put("ip", appRunner.pNetwork.ipAddress());
+                network.put("rssi", appRunner.pNetwork.wifiInfo().getRssi());
+                network.put("ssid", appRunner.pNetwork.wifiInfo().getSSID());
+
+                // scripts info (name of the current running project)
+                HashMap script = new HashMap();
+
                 String name = "none";
                 if (mProjectRunning != null) name = mProjectRunning.getName();
-                info.put("running script", name);
+                script.put("running script", name);
 
-                String jsonObject = gson.toJson(info);
+                info.put("device", device);
+                info.put("screen", screen);
+                info.put("other", other);
+                info.put("network", network);
+                info.put("script", script);
+
+                String jsonObject = gson.toJson(data);
 
                 protocoderWebsockets.send(jsonObject);
                 handler.postDelayed(this, 1000);
@@ -205,6 +226,8 @@ public class ProtocoderServerService extends Service {
         filter.addAction(SERVICE_CLOSE);
         registerReceiver(mNotificationReceiver, filter);
         startStopActivityBroadcastReceiver();
+
+        viewsUpdate();
     }
 
     @Override
@@ -221,6 +244,7 @@ public class ProtocoderServerService extends Service {
         unregisterReceiver(mNotificationReceiver);
         unregisterReceiver(logBroadcastReceiver);
         unregisterReceiver(stopActivitiyBroadcastReceiver);
+        unregisterReceiver(viewsUpdateBroadcastReceiver);
 
         fileObserver.stopWatching();
 
@@ -321,6 +345,7 @@ public class ProtocoderServerService extends Service {
             HashMap hashMap = new HashMap();
             hashMap.put("module", "console");
             hashMap.put("action", intent.getStringExtra("action"));
+            hashMap.put("time", intent.getStringExtra("time"));
             hashMap.put("data", intent.getStringExtra("data"));
             String jsonObject = gson.toJson(hashMap);
 
@@ -336,6 +361,12 @@ public class ProtocoderServerService extends Service {
         if (action.equals(Events.PROJECT_RUN)) {
             ProtoAppHelper.launchScript(getApplicationContext(), e.getProject());
             mProjectRunning = e.getProject();
+        } else if (action.equals(Events.PROJECT_STOP_ALL_AND_RUN)) {
+            // ProtoScriptHelper.stop_all_scripts();
+            Intent i = new Intent("org.protocoderrunner.intent.CLOSE");
+            sendBroadcast(i);
+            ProtoAppHelper.launchScript(getApplicationContext(), e.getProject());
+
         } else if (action.equals(Events.PROJECT_STOP_ALL)) {
             Intent i = new Intent("org.protocoderrunner.intent.CLOSE");
             sendBroadcast(i);
@@ -381,6 +412,27 @@ public class ProtocoderServerService extends Service {
         public void onReceive(Context context, Intent intent) {
             MLog.d(TAG, "stop_all 2");
             mProjectRunning = null;
+        }
+    };
+
+
+    /**
+     * Receiving order to execute line of code
+     */
+    public void viewsUpdate() {
+        MLog.d("registerreceiver", "sending event");
+
+        IntentFilter filterSend = new IntentFilter();
+        filterSend.addAction("org.protocoder.intent.VIEWS_UPDATE");
+        registerReceiver(viewsUpdateBroadcastReceiver, filterSend);
+    }
+
+    BroadcastReceiver viewsUpdateBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String views = intent.getStringExtra("views");
+            MLog.d(TAG, "views" + views);
+            protocoderHttpServer.setViews(views);
         }
     };
 

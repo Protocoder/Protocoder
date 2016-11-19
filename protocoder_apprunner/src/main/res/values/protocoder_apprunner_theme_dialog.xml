@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!--<style name="ProtocoderAppRunner.Dialog" parent="Theme.AppCompat.Dialog">-->
+    <!--<getStyles name="ProtocoderAppRunner.Dialog" parent="Theme.AppCompat.Dialog">-->
         <!--<item name="android:background">@color/transparent</item>-->
         <!--<item name="android:windowContentOverlay">@null</item>-->
 
         <!--<item name="windowActionBar">false</item>-->
         <!--<item name="android:windowNoTitle">true</item>-->
         <!-- <item name="android:windowNoTitle">true</item> -->
-        <!-- <item name="android:listViewStyle">@style/MyListView</item> -->
-        <!--<item name="android:buttonStyle">@style/ProtocoderDark.Button</item>-->
-        <!--<item name="android:textViewStyle">@style/ProtocoderDark.TextView</item>-->
-        <!--<item name="android:seekBarStyle">@style/ProtocoderDark.SeekBar</item>-->
+        <!-- <item name="android:listViewStyle">@getStyles/MyListView</item> -->
+        <!--<item name="android:buttonStyle">@getStyles/ProtocoderDark.Button</item>-->
+        <!--<item name="android:textViewStyle">@getStyles/ProtocoderDark.TextView</item>-->
+        <!--<item name="android:seekBarStyle">@getStyles/ProtocoderDark.SeekBar</item>-->
 
 
 		<!--<item name="android:windowIsTranslucent">true</item>-->
@@ -20,9 +20,9 @@
         <!--<item name="android:backgroundDimEnabled">true</item>-->
         <!--<item name="android:colorBackgroundCacheHint">@null</item>-->
         <!--<item name="android:windowFrame">@null</item>-->
-        <!--<item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>-->
+        <!--<item name="android:windowAnimationStyle">@android:getStyles/Animation.Dialog</item>-->
 
    
-    <!--</style>-->
+    <!--</getStyles>-->
 
 </resources>

@@ -34,6 +34,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ViewFlipper;
 
+import org.protocoder.gui.settings.NewUserPreferences;
 import org.protocoder.helpers.ProtoSettingsHelper;
 import org.protocoder.gui.settings.ProtocoderSettings;
 import org.protocoder.gui.settings.UserSettings;
@@ -319,8 +320,7 @@ public class WelcomeActivity extends BaseActivity {
                 userDetails.edit().putBoolean(getResources().getString(R.string.pref_is_first_launch), false).commit();
 
                 // first time id
-                UserSettings userSettings = new UserSettings(this);
-                userSettings.setId(StrUtils.generateRandomString());
+                NewUserPreferences.getInstance().set("user_id", StrUtils.generateRandomString()).save();
 
                 ready();
 

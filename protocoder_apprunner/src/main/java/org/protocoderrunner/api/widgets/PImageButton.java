@@ -23,108 +23,73 @@ package org.protocoderrunner.api.widgets;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.view.MotionEvent;
-import android.view.View;
-import android.widget.ImageButton;
 
 import org.protocoderrunner.api.common.ReturnInterface;
 import org.protocoderrunner.api.common.ReturnObject;
 import org.protocoderrunner.apprunner.AppRunner;
-import org.protocoderrunner.base.utils.Image;
 import org.protocoderrunner.base.utils.MLog;
 
-public class PImageButton extends ImageButton implements PViewInterface {
+public class PImageButton extends PImage {
 
     private String TAG = PImageButton.class.getSimpleName();
 
-    private AppRunner mAppRunner;
-    private boolean hideBackground = false;
-    private Bitmap mImageOff;
-    private Bitmap mImageOn;
+    private boolean hideBackground = true;
+    private Bitmap mBitmap;
+    private Bitmap mBitmapPressed;
+    private ReturnInterface callbackfn;
 
     public PImageButton(AppRunner appRunner) {
-        super(appRunner.getAppContext());
-        mAppRunner = appRunner;
-
-        setScaleType(ScaleType.FIT_XY);
+        super(appRunner);
     }
 
-    public PImageButton image(String imagePath) {
-        mImageOff = loadImage(imagePath);
-        setImageBitmap(mImageOff);
+    // Set on click behavior
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        MLog.d(TAG, "" + event.getAction());
+        ReturnObject r = new ReturnObject();
 
-        return this;
-    }
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                r.put("action", "down");
+                this.setPressed(true);
+                on();
 
+                break;
 
-    public PImageButton pressed(String imagePath) {
-        mImageOn = loadImage(imagePath);
+            case MotionEvent.ACTION_UP:
+                r.put("action", "up");
+                this.setPressed(false);
+                off();
+                break;
 
-        return this;
-    }
+            case MotionEvent.ACTION_CANCEL:
+                this.setPressed(false);
+                r.put("action", "cancel");
+                off();
+                break;
+        }
 
-    public PImageButton noBackground() {
-        this.setBackgroundResource(0);
-        hideBackground = true;
+        if (callbackfn != null && !r.isEmpty()) callbackfn.event(r);
 
-        return this;
+        return true;
     }
 
     /**
      * Adds an image with the option to hide the default background
      */
     public PImageButton onClick(final ReturnInterface callbackfn) {
-        // Set on click behavior
-        setOnTouchListener(new OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                MLog.d(TAG, "" + event.getAction());
-                int action = event.getAction();
-
-                ReturnObject r = new ReturnObject(PImageButton.this);
-
-                switch (action) {
-                    case MotionEvent.ACTION_DOWN:
-                        r.put("action", "down");
-                        on();
-
-                        break;
-
-                    case MotionEvent.ACTION_UP:
-                        r.put("action", "up");
-                        off();
-
-                        break;
-
-                    case MotionEvent.ACTION_CANCEL:
-                        r.put("action", "cancel");
-                        off();
-
-                        break;
-                }
-                callbackfn.event(r);
-
-                return true;
-            }
-        });
+        this.callbackfn = callbackfn;
 
         return this;
     }
 
     private void on() {
-        if (hideBackground) PImageButton.this.getDrawable().setColorFilter(0xDD00CCFC, PorterDuff.Mode.MULTIPLY);
-        if (mImageOn != null) setImageBitmap(mImageOn);
+        if (hideBackground) PImageButton.this.getDrawable().setColorFilter(styler.srcTintPressed, PorterDuff.Mode.MULTIPLY);
+        if (mBitmapPressed != null) setImageBitmap(mBitmapPressed);
     }
 
     private void off() {
         if (hideBackground) PImageButton.this.getDrawable().setColorFilter(0xFFFFFFFF, PorterDuff.Mode.MULTIPLY);
-        if (mImageOff != null) setImageBitmap(mImageOff);
+        if (mBitmap != null) setImageBitmap(mBitmap);
     }
-
-    private Bitmap loadImage(String imagePath) {
-        Bitmap bmp = Image.loadBitmap(mAppRunner.getProject().getFullPathForFile(imagePath));
-
-        return bmp;
-    }
-
 }

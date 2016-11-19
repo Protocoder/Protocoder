@@ -20,6 +20,7 @@
 
 package org.protocoder.appinterpreter;
 
+import org.protocoder.gui.settings.NewUserPreferences;
 import org.protocoderrunner.api.PNetwork;
 
 
@@ -32,10 +33,8 @@ public class Network {
     }
 
     public void checkVersion() {
-        //TODO reenable
         //check if new version is available
-
-        if (mAppRunner.pNetwork.isNetworkAvailable() && mAppRunner.protocoderApp.userSettings.getNewVersionCheckEnabled()) {
+        if (mAppRunner.pNetwork.isNetworkAvailable() && (boolean) NewUserPreferences.getInstance().get("notify_new_version")) {
             mAppRunner.pNetwork.httpGet("http://www.protocoder.org/downloads/list_latest.php", new PNetwork.HttpGetCB() {
                 @Override
                 public void event(int eventType, String responseString) {

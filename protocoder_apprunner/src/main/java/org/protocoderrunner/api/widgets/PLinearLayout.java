@@ -29,11 +29,10 @@ import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
 
-public class PLinearLayout extends LinearLayout implements PViewInterface {
+public class PLinearLayout extends LinearLayout {
 
     private final AppRunner mAppRunner;
     private final LayoutParams mLp;
-    private PListAdapter plistAdapter;
 
     public PLinearLayout(AppRunner appRunner) {
         super(appRunner.getAppContext());

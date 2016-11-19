@@ -20,29 +20,31 @@
 
 package org.protocoderrunner.api.widgets;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Paint.Style;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.view.MotionEvent;
 import android.view.View;
 
+import org.mozilla.javascript.NativeObject;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.base.utils.MLog;
 
 import java.util.ArrayList;
 
-public class PPadView extends View {
-    private static final String TAG = PPadView.class.getSimpleName();
+public class PTouchPad_ extends View {
+    private static final String TAG = PTouchPad_.class.getSimpleName();
 
     private static final String TYPE_PROG = "prog";
     private static final String TYPE_FINGER = "finger";
+
+    private final Styler style;
 
     // paint
     private final Paint mPaint = new Paint();
@@ -60,9 +62,13 @@ public class PPadView extends View {
     private int mPadsColorStroke = 0x0000FF;
     private int mPadsColorBg = 0x880000FF;
 
-    public PPadView(Context context) {
-        super(context);
+    public PTouchPad_(AppRunner appRunner) {
+        super(appRunner.getAppContext());
+        // getStyles = new Styler(appRunner, this);
+        style = null;
+
         init();
+        MLog.d(TAG, "added");
     }
 
     public void init() {
@@ -71,6 +77,7 @@ public class PPadView extends View {
         // mPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
 
         if (isInEditMode()) {
+            MLog.d(TAG, "edit mode");
             loadDemoValues();
         }
 
@@ -82,6 +89,7 @@ public class PPadView extends View {
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        MLog.d(TAG, w + " " + h + " " + oldw + " " + oldh);
         mWidth = w - 1;
         mHeight = h - 1;
 
@@ -100,43 +108,41 @@ public class PPadView extends View {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected synchronized void onDraw(Canvas canvas) {
+        MLog.d(TAG, "drawing " + bitmap);
 
-        synchronized (this) {
+        // saved
+        canvas.drawBitmap(bitmap, new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight()),
+                new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight()), null);
 
-            // saved
-            canvas.drawBitmap(bitmap, new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight()),
-                    new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight()), null);
+        //clear
+        mCanvas.drawColor(0, Mode.CLEAR);
 
-            //clear
-            mCanvas.drawColor(0, Mode.CLEAR);
+        // background
+        mPaint.setStyle(Paint.Style.FILL);
+        mPaint.setColor(mBackgroundColor);
+        mCanvas.drawRoundRect(new RectF(0, 0, mWidth, mHeight), 5, 5, mPaint);
 
-            // background
-            mPaint.setStyle(Style.FILL);
-            mPaint.setColor(mBackgroundColor);
-            mCanvas.drawRoundRect(new RectF(0, 0, mWidth, mHeight), 5, 5, mPaint);
+        mPaint.setStyle(Paint.Style.STROKE);
+        mCanvas.drawColor(mStrokeColor);
+        mPaint.setColor(mStrokeColor);
 
+        mCanvas.drawRoundRect(new RectF(0, 0, mWidth, mHeight), 5, 5, mPaint);
+
+        for (int i = 0; i < mTouches.size(); i++) {
+            TouchEvent t = mTouches.get(i);
+            MLog.d(TAG, "painting " + t.id + " " + t.x + " " + t.y);
+
+            mPaint.setColor(mPadsColorBg);
+            mPaint.setStyle(Paint.Style.FILL);
+
+            mCanvas.drawCircle(t.x, t.y, 50, mPaint);
+
+            mPaint.setColor(mPadsColorStroke);
             mPaint.setStyle(Paint.Style.STROKE);
-            mCanvas.drawColor(mStrokeColor);
-            mPaint.setColor(mStrokeColor);
+            mPaint.setStrokeWidth(3);
 
-            mCanvas.drawRoundRect(new RectF(0, 0, mWidth, mHeight), 5, 5, mPaint);
-
-            for (int i = 0; i < mTouches.size(); i++) {
-                TouchEvent t = mTouches.get(i);
-                MLog.d(TAG, "painting " + t.id + " " + t.x + " " + t.y);
-
-                mPaint.setColor(mPadsColorBg);
-                mPaint.setStyle(Paint.Style.FILL);
-
-                mCanvas.drawCircle(t.x, t.y, 50, mPaint);
-
-                mPaint.setColor(mPadsColorStroke);
-                mPaint.setStyle(Paint.Style.STROKE);
-                mPaint.setStrokeWidth(3);
-
-                mCanvas.drawCircle(t.x, t.y, 50, mPaint);
-            }
+            mCanvas.drawCircle(t.x, t.y, 50, mPaint);
 
         }
         mTouches.clear();
@@ -218,13 +224,24 @@ public class PPadView extends View {
         return true;
     }
 
+    /*
+            taV.setTouchAreaListener(new PPadView.OnTouchAreaListener() {
+            @Override
+            public void onGenericTouch(ArrayList<PPadView.TouchEvent> t) {
+                ReturnObject o = new ReturnObject();
+                o.put("points", t);
+                callbackfn.event(o);
+            }
+        });
+     */
+
     public void destroy() {
         if (bitmap != null) {
             bitmap.recycle();
         }
     }
 
-    public void setTouchAreaListener(OnTouchAreaListener l) {
+    public void onTouch(OnTouchAreaListener l) {
         mOnTouchAreaListener = l;
     }
 
@@ -250,7 +267,7 @@ public class PPadView extends View {
 
     @ProtoMethod(description = "Change the pad color", example = "")
     @ProtoMethodParam(params = {"colorHex"})
-    public PPadView padsColor(String c) {
+    public PTouchPad_ padsColor(String c) {
         mPadsColorStroke = Color.parseColor(c);
         int r = Color.red(mPadsColorStroke);
         int g = Color.green(mPadsColorStroke);
@@ -262,14 +279,14 @@ public class PPadView extends View {
 
     @ProtoMethod(description = "Change the strokeColor", example = "")
     @ProtoMethodParam(params = {"colorHex"})
-    public PPadView strokeColor(String c) {
+    public PTouchPad_ strokeColor(String c) {
         mBackgroundColor = Color.parseColor(c);
         return this;
     }
 
     @ProtoMethod(description = "Change the background color", example = "")
     @ProtoMethodParam(params = {"colorHex"})
-    public PPadView backgroundColor(String c) {
+    public PTouchPad_ backgroundColor(String c) {
         mBackgroundColor = Color.parseColor(c);
         return this;
     }

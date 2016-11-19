@@ -1,125 +1,124 @@
-/*
-* Part of Protocoder http://www.protocoder.org
-* A prototyping platform for Android devices 
-*
-* Copyright (C) 2013 Victor Diaz Barrales victormdb@gmail.com
-* 
-* Protocoder is free software: you can redistribute it and/or modify
-* it under the terms of the GNU Lesser General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* Protocoder is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-* 
-* You should have received a copy of the GNU Lesser General Public License
-* along with Protocoder. If not, see <http://www.gnu.org/licenses/>.
-*/
-
 package org.protocoderrunner.api.widgets;
 
-import android.content.Context;
-import android.widget.SeekBar;
+import android.view.MotionEvent;
+import android.view.View;
 
 import org.protocoderrunner.api.common.ReturnInterface;
 import org.protocoderrunner.api.common.ReturnObject;
-import org.protocoderrunner.apidoc.annotation.ProtoMethod;
-import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.apprunner.StyleProperties;
+import org.protocoderrunner.base.utils.MLog;
+import org.protocoderrunner.base.views.CanvasUtils;
 
-public class PSlider extends SeekBar implements PViewInterface {
+import java.util.ArrayList;
+import java.util.Map;
 
-    private final PSlider mSlider;
-    private float mMin = 0.0f;
-    private float mMax = 100f;
-    private float mCurrentValue = 0.0f;
-    private int MAX_VALUE = 999999999;
+/**
+ * Created by biquillo on 11/09/16.
+ */
+public class PSlider extends PCanvas implements PViewMethodsInterface {
 
-    public PSlider(Context context) {
-        super(context);
-        super.setMax(MAX_VALUE);
-        // setProgressDrawable(getResources().getDrawable(R.drawable.ui_seekbar_progress));
+    private static final String TAG = PSlider.class.getSimpleName();
 
-        mSlider = this;
+    public StyleProperties props = new StyleProperties();
+    public Styler styler;
+
+    private ArrayList touches;
+    private float x;
+    private float y;
+    private boolean touching;
+    private ReturnInterface callback;
+    private int mWidth;
+    private int mHeight;
+    private float mappedVal;
+    private float rangeFrom = 0;
+    private float rangeTo = 1;
+
+    public PSlider(AppRunner appRunner) {
+        super(appRunner);
+        MLog.d(TAG, "create slider");
+
+        draw = mydraw;
+        styler = new Styler(appRunner, this, props);
+        styler.apply();
     }
 
-    @ProtoMethod(description = "Changes slider value", example = "")
-    @ProtoMethodParam(params = {"value"})
-    public void value(float value) {
-        mCurrentValue = value;
-        int valueInt = (int) ((value - mMin) / (mMax - mMin) * MAX_VALUE);
-        setProgress(valueInt);
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        x = event.getX();
+        y = event.getY();
+
+        if (x < 0) x = 0;
+        if (x > mWidth) x = mWidth;
+        if (y < 0) y = 0;
+        if (y > mHeight) y = mHeight;
+
+        mappedVal = CanvasUtils.map(x, 0, mWidth, rangeFrom, rangeTo);
+
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                return true;
+            case MotionEvent.ACTION_MOVE:
+                break;
+            case MotionEvent.ACTION_UP:
+                break;
+            default:
+                return false;
+        }
+
+        if (callback != null) {
+            ReturnObject ret = new ReturnObject();
+            ret.put("value", mappedVal);
+            callback.event(ret);
+        }
+
+        invalidate();
+        return true;
     }
 
-    @ProtoMethod(description = "Gets the slider value", example = "")
-    @ProtoMethodParam(params = {""})
-    public float value() {
-        return mCurrentValue;
-    }
+    OnDrawCallback mydraw = new OnDrawCallback() {
+        @Override
+        public void event(PCanvas c) {
+            mWidth = c.width;
+            mHeight = c.height;
 
-    @ProtoMethod(description = "Sets the minimum and maximum slider values", example = "")
-    @ProtoMethodParam(params = {""})
-    public PSlider range(float min, float max) {
-        mMin = min;
-        mMax = max;
-        return this;
-    }
+            c.clear();
+            c.mode(true);
 
-    @ProtoMethod(description = "Sets the minimum slider value", example = "")
-    @ProtoMethodParam(params = {""})
-    public PSlider min(float min) {
-        mMin = min;
-        return this;
-    }
+            if (!touching) c.fill(styler.slider);
+            else c.fill(styler.sliderPressed);
+            c.strokeWidth(styler.sliderBorderSize);
+            c.stroke(styler.sliderBorderColor);
+            c.rect(0, 0, x, c.height);
+        }
+    };
 
-    @ProtoMethod(description = "Sets the maximum slider value", example = "")
-    @ProtoMethodParam(params = {""})
-    public PSlider max(float max) {
-        mMax = max;
-        return this;
-    }
-
-    @ProtoMethod(description = "Gets the minimum  slider value", example = "")
-    @ProtoMethodParam(params = {""})
-    public float min() {
-        return mMin;
-    }
-
-    @ProtoMethod(description = "Gets the maximum slider value", example = "")
-    @ProtoMethodParam(params = {""})
-    public float max() {
-        return mMax;
-    }
-
-    private float valueToFloat(int valueInt) {
-        float valueFloat = (float) (valueInt * (mMax - mMin) / MAX_VALUE) + mMin;
-        return valueFloat;
-    }
-
-    @ProtoMethod(description = "On slider change", example = "")
-    @ProtoMethodParam(params = {"function(value)"})
     public PSlider onChange(final ReturnInterface callbackfn) {
-        // Add the change listener
-        mSlider.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+        this.callback = callbackfn;
 
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-            }
+        return this;
+    }
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
+    public PSlider range(float from, float to) {
+        rangeFrom = from;
+        rangeTo = to;
 
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                ReturnObject r = new ReturnObject(PSlider.this);
-                r.put("value", mSlider.valueToFloat(progress));
-                callbackfn.event(r);
-            }
-        });
+        return this;
+    }
+    
+    @Override
+    public void set(float x, float y, float w, float h) {
+        styler.setLayoutProps(x, y, w, h);
+    }
 
-        return mSlider;
+    @Override
+    public void setStyle(Map style) {
+        styler.setStyle(style);
+    }
+
+    @Override
+    public Map getStyle() {
+        return props;
     }
 
 }

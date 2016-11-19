@@ -20,6 +20,9 @@
 
 package org.protocoderrunner;
 
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
+import android.animation.LayoutTransition;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -32,11 +35,14 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.protocoderrunner.api.other.PLiveCodingFeedback;
+import org.protocoderrunner.api.widgets.PText;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.AppRunnerInterpreter;
 import org.protocoderrunner.base.utils.MLog;
@@ -58,8 +64,12 @@ public class AppRunnerFragment extends Fragment {
     // Layout stuff
     public  RelativeLayout mainLayout;
     private RelativeLayout parentScriptedLayout;
+    private RelativeLayout infoLayout;
+
     public  PLiveCodingFeedback liveCoding;
     private View mMainView;
+    private TextView txtTitle;
+    private TextView txtSubtitle;
 
 
     @Override
@@ -92,9 +102,12 @@ public class AppRunnerFragment extends Fragment {
         mAppRunner.mIntentPostfixScript = bundle.getString(Project.POSTFIX, "");
 
         mAppRunner.initInterpreter();
-        mAppRunner.pUi.screenOrientation("portrait");
-        mAppRunner.pUi.background(69, 102, 121);
+
+        mAppRunner.pDevice.deviceId = bundle.getString("device_id", "");
+        // mAppRunner.pUi.screenOrientation("portrait");
+        mAppRunner.pUi.updateScreenSizes();
         mAppRunner.pUi.toolbar.title(name);
+        mAppRunner.pUi.toolbar.show(false);
         mAppRunner.pApp.folder = folder;
         mAppRunner.pApp.name = name;
 
@@ -112,8 +125,8 @@ public class AppRunnerFragment extends Fragment {
                 mAppRunner.pConsole.p_error(resultType, message);
             }
         };
-
         mAppRunner.interp.addListener(appRunnerCb);
+
         mAppRunner.initProject();
 
         // nfc
@@ -124,9 +137,6 @@ public class AppRunnerFragment extends Fragment {
 
         // Call the onCreate JavaScript function.
         mAppRunner.interp.callJsFunction("onCreate", savedInstanceState);
-
-        // send ready to the webIDE
-        //TODO this is gone ?!
     }
 
     public static AppRunnerFragment newInstance(Bundle bundle) {
@@ -175,6 +185,10 @@ public class AppRunnerFragment extends Fragment {
 
         liveCoding = new PLiveCodingFeedback(mContext);
         mainLayout.addView(liveCoding.add());
+
+        infoLayout = (RelativeLayout) v.findViewById(R.id.infoLayout);
+        txtTitle = (TextView) v.findViewById(R.id.txtTitle);
+        txtSubtitle = (TextView) v.findViewById(R.id.txtSubtitle);
 
         return mainLayout;
     }
@@ -246,5 +260,25 @@ public class AppRunnerFragment extends Fragment {
             MLog.d(TAG, permissionName + " " + isGranted1 + " " + isGranted2);
         }
 
+    }
+
+    public TextView changeTitle(String title) {
+        txtTitle.setText(title);
+        txtTitle.setAlpha(0.0f);
+        txtTitle.setX(-100f);
+        txtTitle.setVisibility(View.VISIBLE);
+        txtTitle.animate().x(50).alpha(1.0f).setStartDelay(300);
+
+        return txtTitle;
+    }
+
+    public TextView changeSubtitle(String subtitle) {
+        txtSubtitle.setText(subtitle);
+        txtSubtitle.setX(-100f);
+        txtSubtitle.setAlpha(0.0f);
+        txtSubtitle.setVisibility(View.VISIBLE);
+        txtSubtitle.animate().x(50).alpha(1.0f).setStartDelay(500);
+
+        return txtSubtitle;
     }
 }

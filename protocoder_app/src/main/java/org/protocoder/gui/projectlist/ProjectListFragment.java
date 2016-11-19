@@ -38,8 +38,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.protocoder.R;
 import org.protocoder.events.Events;
 import org.protocoder.events.Events.ProjectEvent;
-import org.protocoder.gui._components.FitRecyclerView;
-import org.protocoder.gui.settings.UserSettings;
+import org.protocoderrunner.base.views.FitRecyclerView;
+import org.protocoder.gui.settings.NewUserPreferences;
 import org.protocoder.helpers.ProtoScriptHelper;
 import org.protocoderrunner.base.BaseFragment;
 import org.protocoderrunner.base.utils.MLog;
@@ -78,8 +78,8 @@ public class ProjectListFragment extends BaseFragment {
         //mProjectFolder = "projects";
         MLog.d(TAG, "showing " + mProjectFolder);
         mOrderByName = getArguments().getBoolean("orderByName");
-        mListMode = new UserSettings(getContext()).getListPreference();
-
+        mListMode = (boolean) NewUserPreferences.getInstance().get("apps_in_list_mode");
+        
         mProjectAdapter = new ProjectItemAdapter(getActivity(), mListMode);
     }
 
@@ -241,7 +241,7 @@ public class ProjectListFragment extends BaseFragment {
         View v = mGrid.findViewWithTag(projectName);
         v.setSelected(b);
         //TODO reenable this
-        //mProjectAdapter.mProjectList.get(mProjectAdapter.findAppIdByName(projectName)).selected = true;
+        //mProjectAdapter.mData.get(mProjectAdapter.findAppIdByName(projectName)).selected = true;
         v.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
 
         return v;

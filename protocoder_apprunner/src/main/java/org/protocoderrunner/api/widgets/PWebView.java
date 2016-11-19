@@ -28,14 +28,21 @@ import android.webkit.WebViewClient;
 
 import org.protocoderrunner.api.PApp;
 import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.apprunner.StyleProperties;
 
-public class PWebView extends WebView implements PViewInterface {
+import java.util.Map;
+
+public class PWebView extends WebView implements PViewMethodsInterface {
 
     private final AppRunner mAppRunner;
+
+    public StyleProperties props = new StyleProperties();
+    private Styler styler;
 
     public PWebView(AppRunner appRunner) {
         super(appRunner.getAppContext());
         mAppRunner = appRunner;
+        styler = new Styler(appRunner, this, props);
 
         this.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         WebSettings webSettings = this.getSettings();
@@ -96,6 +103,21 @@ public class PWebView extends WebView implements PViewInterface {
             // return true to tell that we handled the url
             return true;
         }
+    }
+
+    @Override
+    public void set(float x, float y, float w, float h) {
+        styler.setLayoutProps(x, y, w, h);
+    }
+
+    @Override
+    public void setStyle(Map style) {
+        styler.setStyle(style);
+    }
+
+    @Override
+    public Map getStyle() {
+        return props;
     }
 
 }

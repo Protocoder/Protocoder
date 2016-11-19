@@ -21,12 +21,4 @@
             android:id="@+id/absolute" />
     </org.protocoderrunner.api.widgets.PScrollView>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/button"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
 </RelativeLayout>

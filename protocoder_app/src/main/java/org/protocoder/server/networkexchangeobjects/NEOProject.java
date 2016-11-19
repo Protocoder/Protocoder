@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class NEOProject {
     public String cmd = null;
     public Project project;
-    public char current_folder;
+    public String current_folder;
     public ArrayList<ProtoFile> files = new ArrayList<>();
     public String code = "";
 }

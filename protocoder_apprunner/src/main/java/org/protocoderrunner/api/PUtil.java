@@ -27,6 +27,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.hardware.Camera;
 import android.media.FaceDetector;
 import android.os.Handler;
 import android.util.Base64;
@@ -39,6 +40,23 @@ import android.view.animation.BounceInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.BinaryBitmap;
+import com.google.zxing.ChecksumException;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.FormatException;
+import com.google.zxing.MultiFormatReader;
+import com.google.zxing.NotFoundException;
+import com.google.zxing.PlanarYUVLuminanceSource;
+import com.google.zxing.Reader;
+import com.google.zxing.Result;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.common.HybridBinarizer;
+import com.google.zxing.qrcode.QRCodeWriter;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import com.google.zxing.qrcode.encoder.ByteMatrix;
+
 import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.NativeObject;
 import org.protocoderrunner.api.common.ReturnObject;
@@ -48,9 +66,13 @@ import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apidoc.annotation.ProtoObject;
 import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.base.utils.Image;
 import org.protocoderrunner.base.utils.MLog;
+import org.protocoderrunner.base.views.CanvasUtils;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -119,6 +141,53 @@ public class PUtil extends ProtoBase {
     public void setAnArray(NativeArray array) {
         for (int i = 0; i < array.size(); i++) {
             MLog.d(TAG, "setArrayList -> " + array.get(i));
+        }
+    }
+
+    public Bitmap generateQRCode(String text) {
+        Bitmap bmp = null;
+
+        Hashtable<EncodeHintType, ErrorCorrectionLevel> hintMap = new Hashtable<EncodeHintType, ErrorCorrectionLevel>();
+        hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H); // H = 30% damage
+
+        int size = 256;
+
+        BitMatrix bitMatrix = null;
+        try {
+            bitMatrix = new QRCodeWriter().encode(text, BarcodeFormat.QR_CODE, size, size, hintMap);
+
+            int width = bitMatrix.getWidth();
+            bmp = Bitmap.createBitmap(width, width, Bitmap.Config.RGB_565);
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < width; y++) {
+                    bmp.setPixel(y, x, bitMatrix.get(x, y) == true ? Color.BLACK : Color.WHITE);
+                }
+            }
+        } catch (WriterException e) {
+            e.printStackTrace();
+        }
+
+        return bmp;
+    }
+
+    public void scanQRcode(byte[] data, Camera camera) {
+        Camera.Size size = camera.getParameters().getPreviewSize();
+
+        // Create BinaryBitmap
+        PlanarYUVLuminanceSource source = new PlanarYUVLuminanceSource(data, size.width, size.height, 0, 0, size.width, size.height, false);
+        BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
+
+        // Read QR Code
+        Reader reader = new MultiFormatReader();
+        Result result = null;
+        try {
+            result = reader.decode(bitmap);
+            String text = result.getText();
+
+            MLog.d(TAG, "result: " + text);
+        } catch (NotFoundException e) {
+        } catch (ChecksumException e) {
+        } catch (FormatException e) {
         }
     }
 
@@ -265,6 +334,10 @@ public class PUtil extends ProtoBase {
         return Typeface.createFromFile(getAppRunner().getProject().getFullPath() + fontName);
     }
 
+    public Bitmap loadBitmap(String path) {
+        return Image.loadBitmap(getAppRunner().getProject().getFullPathForFile(path));
+    }
+
     @ProtoMethod(description = "Detect faces in a bitmap", example = "")
     @ProtoMethodParam(params = {"Bitmap", "numFaces"})
     public int detectFaces(Bitmap bmp, int num_faces) {
@@ -275,20 +348,34 @@ public class PUtil extends ProtoBase {
         return face_count;
     }
 
+    public String bitmapToBase64String(Bitmap bmp) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream .toByteArray();
+
+        String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+
+        return encoded;
+    }
+
     @ProtoMethod(description = "Converts byte array to bmp", example = "")
     @ProtoMethodParam(params = {"encodedImage"})
-    public Bitmap decodeBase64ToBitmap(String encodedImage) {
+    public Bitmap base64StringToBitmap(String encodedImage) {
         byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
 
-        MLog.d(TAG, "bytes--> " + decodedString);
+        // MLog.d(TAG, "bytes--> " + decodedString);
         BitmapFactory.Options bitmap_options = new BitmapFactory.Options();
         bitmap_options.inPreferredConfig = Bitmap.Config.RGB_565;
 
         final Bitmap bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length, bitmap_options);
 
-        MLog.d(TAG, "bitmap --> " + bitmap);
+        // MLog.d(TAG, "bitmap --> " + bitmap);
 
         return bitmap;
+    }
+
+    public float map (float val, float istart, float istop, float ostart, float ostop) {
+        return CanvasUtils.map(val, istart, istop, ostart, ostop);
     }
 
     public SignalUtils signal(int n) {

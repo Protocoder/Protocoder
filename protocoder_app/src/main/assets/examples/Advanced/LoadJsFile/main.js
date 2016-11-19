@@ -2,7 +2,9 @@
  * \\\ Example: Load external scripts
  */
 
-// files must be in the same folder
+ui.addTitle(app.name)
+
+// load external files
 app.load('outside.js')
 
 // once loaded we can access the function

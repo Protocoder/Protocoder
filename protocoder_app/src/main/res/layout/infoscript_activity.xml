@@ -1,0 +1,53 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+    >
+
+    <include layout="@layout/toolbar2"
+             android:layout_alignParentRight="true"
+             android:layout_alignParentTop="true"
+             android:layout_height="wrap_content"
+             android:layout_width="match_parent">
+    </include>
+
+    <RelativeLayout
+        android:id="@+id/infoHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/header"
+        android:layout_alignParentEnd="false">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="55sp"
+            android:text="Large Text"
+            android:id="@+id/projectName" />
+    </RelativeLayout>
+
+    <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        card_view:cardCornerRadius="@dimen/other_cardview_radius"
+        android:layout_below="@id/infoHeader"
+        android:animateLayoutChanges="true"
+        android:layout_marginTop="@dimen/other_cardview_top_margin"
+        android:layout_marginLeft="@dimen/other_cardview_horizontal_margin"
+        android:layout_marginRight="@dimen/other_cardview_horizontal_margin"
+        android:layout_marginBottom="@dimen/main_cardview_bottom_margin"
+        >
+
+        <LinearLayout
+            android:id="@+id/properties_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="15dp"
+            >
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+</RelativeLayout>

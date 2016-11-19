@@ -20,7 +20,6 @@
 
 package org.protocoderrunner.api.widgets;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.Html;
@@ -31,13 +30,28 @@ import org.protocoderrunner.api.common.ReturnObject;
 import org.protocoderrunner.api.common.ReturnInterface;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.apprunner.StyleProperties;
 
-public class PButton extends Button implements PViewInterface, PViewMethodsInterface {
+import java.util.Map;
+
+public class PButton extends Button implements PViewMethodsInterface, PTextInterface {
     private static final String TAG = PButton.class.getSimpleName();
+    private final AppRunner mAppRunner;
 
-    public PButton(Context context) {
-        super(context);
-       
+    public StyleProperties props = new StyleProperties();
+    public Styler styler;
+
+    public PButton(AppRunner appRunner) {
+        super(appRunner.getAppContext());
+        mAppRunner = appRunner;
+
+        // StyleProperties styleProperties = new StyleProperties();
+        // styleProperties.put("backgroundPressed", styleProperties, "#FF008800");
+        // appRunner.pUi.registerStyle("button", styleProperties);
+
+        styler = new Styler(appRunner, this, props);
+        styler.apply();
     }
 
     @ProtoMethod(description = "Triggers the function when the button is clicked", example = "")
@@ -68,14 +82,34 @@ public class PButton extends Button implements PViewInterface, PViewMethodsInter
         return this;
     }
 
+    @Override
+    public View textStyle(int style) {
+        this.setTypeface(null, style);
+        return this;
+    }
 
+    @Override
+    public View textSize(int size) {
+        this.textSize(size);
+        return this;
+    }
+
+
+    @Override
     @ProtoMethod(description = "Changes the font text color", example = "")
     @ProtoMethodParam(params = {"colorHex"})
-    public PButton color(String c) {
+    public PButton textColor(String c) {
         this.setTextColor(Color.parseColor(c));
         return this;
     }
 
+    @Override
+    @ProtoMethod(description = "Changes the font text color", example = "")
+    @ProtoMethodParam(params = {"colorHex"})
+    public PButton textColor(int c) {
+        this.setTextColor(c);
+        return this;
+    }
 
     @ProtoMethod(description = "Changes the background color", example = "")
     @ProtoMethodParam(params = {"colorHex"})
@@ -103,14 +137,14 @@ public class PButton extends Button implements PViewInterface, PViewMethodsInter
         return this;
     }
 
-
+    @Override
     @ProtoMethod(description = "Changes the text size", example = "")
     @ProtoMethodParam(params = {"size"})
-    public View textSize(int size) {
+    public View textSize(float size) {
         this.setTextSize(size);
+
         return this;
     }
-
 
     @ProtoMethod(description = "Button position", example = "")
     @ProtoMethodParam(params = {"x", "y"})
@@ -120,59 +154,24 @@ public class PButton extends Button implements PViewInterface, PViewMethodsInter
         return this;
     }
 
-//    private void init() {
-//
-//        paint = new Paint();
-//        paint.setStyle(Paint.Style.STROKE);
-//        paint.setColor(Color.BLACK);
-//        paint.setStrokeWidth(4);
-//
-//
-//        float radius = 2;
-//        float[] outerR = {radius, radius, radius, radius, radius, radius, radius, radius};
-//
-//        ShapeDrawable pressed = new ShapeDrawable(new RoundRectShape(outerR, null, null));
-//        pressed.getPaint().setColor(0xFF00FF00);
-//        //pressed.getPaint().setStyle(S);
-//        pressed.getPaint().setShadowLayer(2, 5, 5, 0xFF000000);
-//        pressed.setPadding(15, 15, 15, 15);
-//
-//        GradientDrawable normal = new GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, new int[]{0xFF0000FF, 0xFF0000FF});
-//        //normal.getPaint().setColor(0x550000FF);
-//        normal.setStroke(0, 0xFF000000);
-//        normal.setShape(GradientDrawable.RECTANGLE);
-//        normal.setCornerRadius(2);
-//        //normal.get
-//
-//
-//        ShapeDrawable disabled = new ShapeDrawable(new RoundRectShape(outerR, null, null));
-//        disabled.getPaint().setColor(0xFF555555);
-//
-//
-//        StateListDrawable states = new StateListDrawable();
-//        states.addState(new int[]{android.R.attr.state_pressed, android.R.attr.state_enabled}, pressed);
-//        states.addState(new int[]{android.R.attr.state_focused, android.R.attr.state_enabled}, pressed);
-//        states.addState(new int[]{android.R.attr.state_enabled}, normal);
-//        states.addState(new int[]{-android.R.attr.state_enabled}, disabled);
-//
-//        setBackgroundDrawable(states);
-//
-//
-//        //getBackground().setColorFilter(new PorterDuffColorFilter(0xFF00FF00, PorterDuff.Mode.MULTIPLY));
-//        //states.
-//        setPadding(15, 15, 15, 15);
-//    }
+    @Override
+    public void set(float x, float y, float w, float h) {
+        styler.setLayoutProps(x, y, w, h);
+    }
 
-//    @Override
-//    protected void onDraw(Canvas canvas) {
-//        super.onDraw(canvas);
+    @Override
+    public void setStyle(Map style) {
+        styler.setStyle(style);
+    }
 
-        //paint.setStyle(Paint.Style.FILL);
-        //paint.setColor(Color.parseColor("#550000FF"));
-        //canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), paint);
-        //paint.setStyle(Paint.Style.STROKE);
-        //paint.setColor(Color.parseColor("#FF0000FF"));
-        //super.onDraw(canvas);
-        //canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), paint);
-//    }
+    @Override
+    public Map getStyle() {
+        return props;
+    }
+
+    public void styleq(Map style) {
+        styler.setStyle(style);
+    }
+
+
 }

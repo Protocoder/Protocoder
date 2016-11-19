@@ -22,6 +22,8 @@ package org.protocoderrunner.base;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
@@ -33,6 +35,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 
 import org.protocoderrunner.apprunner.AppRunnerSettings;
@@ -106,7 +109,7 @@ public class BaseActivity extends AppCompatActivity {
 
     public void setImmersive() {
         isToolbarAllowed = false;
-        getSupportActionBar().hide();
+        // getSupportActionBar().hide();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -116,6 +119,25 @@ public class BaseActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         );
+    }
+
+    public int getStatusBarSize() {
+        Rect rectangle = new Rect();
+        Window window = getWindow();
+        window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
+        int statusBarHeight = rectangle.top;
+        int contentViewTop = window.findViewById(Window.ID_ANDROID_CONTENT).getTop();
+        int titleBarHeight= contentViewTop - statusBarHeight;
+        return titleBarHeight;
+    }
+
+    public int getNavigationBarSize() {
+        Resources resources = getApplicationContext().getResources();
+        int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            return resources.getDimensionPixelSize(resourceId);
+        }
+        return 0;
     }
 
     public void setNormal() {

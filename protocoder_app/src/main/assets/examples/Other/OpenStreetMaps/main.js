@@ -17,3 +17,5 @@ map.addPointToPath(p, 100 * Math.random(), 100 * Math.random())
 map.addPointToPath(p, 100 * Math.random(), 100 * Math.random())
 
 map.addMarker('title', 'text', 100 * Math.random(), 100 * Math.random())
+
+ui.addTitle(app.name)

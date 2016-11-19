@@ -26,6 +26,7 @@ import android.util.Log;
 import org.mozilla.javascript.Callable;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContextFactory;
+import org.mozilla.javascript.EvaluatorException;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
@@ -76,17 +77,19 @@ public class AppRunnerInterpreter {
         rhino.getWrapFactory().setJavaPrimitiveWrap(false);
     }
 
-    //we will use this method for normal script execution
+    // we will use this method for normal script execution
     public void eval(String jscode, String origin) {
         try {
             Object result = rhino.evaluateString(scope, jscode, origin, 1, null);
             processResult(result, RESULT_OK);
+        } catch (org.mozilla.javascript.EvaluatorException e) {
+            processResult(e, RESULT_ERROR);
         } catch (Exception e) {
             processResult(e, RESULT_ERROR);
         }
     }
 
-    //we will use this method for live coding
+    // we will use this method for live coding
     public void eval(String jscode) {
         eval(jscode, "liveCoding");
     }

@@ -32,10 +32,11 @@ public class ProtocoderSettings extends AppRunnerSettings {
 	 * Protocoder app settings
 	 */
 	public final static boolean DEBUG                       = true;
-    public static String MAIN_FILENAME                      = "main.js";
     public static String PROTO_FILE_EXTENSION               = ".proto";
 
     public static final String APP_FOLDER_CUSTOM_WEBEDITOR  = "webeditors";
+    public static final String EXPORTED_FOLDER              = "exported";
+    public static final String TEMPLATES_FOLDER             = "templates";
 
     public static int MIN_SUPPORTED_VERSION                 = Build.VERSION_CODES.ICE_CREAM_SANDWICH;
 
@@ -43,9 +44,9 @@ public class ProtocoderSettings extends AppRunnerSettings {
     public static final int HTTP_PORT                       = 8585;
     public final int FTP_PORT                               = 8589;
 
-    private static ProtocoderSettings instance;
+    public static String getBaseWebEditorsDir() { return getBaseDir() + APP_FOLDER_CUSTOM_WEBEDITOR + File.separator; }
 
-    public static String getBaseWebEditorsDir() {
-        return getBaseDir() + APP_FOLDER_CUSTOM_WEBEDITOR + File.separator;
+    public static String getPrefUrl() {
+        return getBaseDir() + "settings.conf";
     }
 }

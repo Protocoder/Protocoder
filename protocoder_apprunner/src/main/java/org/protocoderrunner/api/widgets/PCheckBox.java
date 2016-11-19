@@ -20,17 +20,29 @@
 
 package org.protocoderrunner.api.widgets;
 
-import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
 import org.protocoderrunner.api.common.ReturnInterface;
 import org.protocoderrunner.api.common.ReturnObject;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.apprunner.StyleProperties;
 
-public class PCheckBox extends CheckBox implements PViewInterface {
+import java.util.Map;
 
-    public PCheckBox(Context context) {
-        super(context);
+public class PCheckBox extends CheckBox implements PViewMethodsInterface, PTextInterface {
+
+    public StyleProperties props = new StyleProperties();
+    public Styler styler;
+
+    public PCheckBox(AppRunner appRunner) {
+        super(appRunner.getAppContext());
+        styler = new Styler(appRunner, this, props);
     }
 
     public PCheckBox onChange(final ReturnInterface callbackfn) {
@@ -46,6 +58,59 @@ public class PCheckBox extends CheckBox implements PViewInterface {
         });
 
         return this;
+    }
+
+    @Override
+    public View font(Typeface font) {
+        this.setTypeface(font);
+        return this;
+    }
+
+    @Override
+    public View textSize(int size) {
+        this.setTextSize(size);
+        return this;
+    }
+
+    @Override
+    public View textColor(String textColor) {
+        this.setTextColor(Color.parseColor(textColor));
+        return this;
+    }
+
+    @Override
+    @ProtoMethod(description = "Changes the font text color", example = "")
+    @ProtoMethodParam(params = {"colorHex"})
+    public View textColor(int c) {
+        this.setTextColor(c);
+        return this;
+    }
+
+    @Override
+    public View textSize(float textSize) {
+        this.setTextSize(textSize);
+        return this;
+    }
+
+    @Override
+    public View textStyle(int style) {
+        this.setTypeface(null, style);
+        return this;
+    }
+
+    @Override
+    public void set(float x, float y, float w, float h) {
+        styler.setLayoutProps(x, y, w, h);
+    }
+
+    @Override
+    public void setStyle(Map style) {
+        styler.setStyle(style);
+    }
+
+    @Override
+    public Map getStyle() {
+        return props;
     }
 
 }

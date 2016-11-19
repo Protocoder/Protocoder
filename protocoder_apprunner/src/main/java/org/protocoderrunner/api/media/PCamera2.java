@@ -21,15 +21,11 @@
 package org.protocoderrunner.api.media;
 
 import org.protocoderrunner.api.common.ReturnInterface;
-import org.protocoderrunner.api.other.WhatIsRunning;
-import org.protocoderrunner.api.widgets.PViewInterface;
-import org.protocoderrunner.apidoc.annotation.ProtoMethod;
-import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.base.gui.CameraNew;
 import org.protocoderrunner.base.gui.CameraNew2;
 
-public class PCamera2 extends CameraNew2 implements PCameraInterface, PViewInterface {
+public class PCamera2 extends CameraNew2 implements PCameraInterface {
 
     private final PCamera2 cam;
     protected AppRunner mAppRunner;

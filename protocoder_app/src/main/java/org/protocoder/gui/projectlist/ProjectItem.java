@@ -24,6 +24,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -49,12 +50,14 @@ import org.protocoder.helpers.ProtoScriptHelper;
 import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.models.Project;
 
+import java.io.File;
+
 public class ProjectItem extends LinearLayout {
 
     private static final String TAG = ProjectItem.class.getSimpleName();
-
     //private final ProjectListFragment mPlf;
     private View mItemView;
+
     // private Context c;
     private final Context c;
     private String t;
@@ -62,6 +65,7 @@ public class ProjectItem extends LinearLayout {
     private Project mProject;
     private TextView textViewName;
     private ImageView mMenuButton;
+    private final ImageView imageView;
 
     public ProjectItem(Context context, boolean listMode) {
         super(context);
@@ -77,6 +81,7 @@ public class ProjectItem extends LinearLayout {
 
         FrameLayout fl = (FrameLayout) findViewById(R.id.viewProjectItemBackground);
         textViewName = (TextView) mItemView.findViewById(R.id.customViewText);
+        imageView = (ImageView) mItemView.findViewById(R.id.customViewImage);
 
         this.setOnClickListener(new OnClickListener() {
             @Override
@@ -111,10 +116,14 @@ public class ProjectItem extends LinearLayout {
     }
 
     public void setImage(int resId) {
-        ImageView imageView = (ImageView) mItemView.findViewById(R.id.customViewImage);
         imageView.setImageResource(resId);
 
         // drawText(imageView, t);
+    }
+
+    public void setImage(Bitmap bmp) {
+        imageView.setImageBitmap(bmp);
+
     }
 
     public void setText(String text) {
@@ -228,16 +237,16 @@ public class ProjectItem extends LinearLayout {
                             .setNegativeButton("No", dialogClickListener).show();
                     return true;
                 } else if (itemId == R.id.menu_project_list_add_shortcut) {
-                    //TODO make it work again
-                    //Protocoder.getInstance(c).protoScripts.addShortcut(mProject.getFolder(), mProject.getName());
+                    ProtoScriptHelper.addShortcut(c, mProject.getFolder(), mProject.getName());
                     return true;
                 } else if (itemId == R.id.menu_project_list_share_with) {
-                    //TODO make it work again
-                    //Protocoder.getInstance(c).protoScripts.shareMainJsDialog(mProject.getFolder(), mProject.getName());
+                    ProtoScriptHelper.shareMainJsDialog(c, mProject.getFolder(), mProject.getName());
                     return true;
                 } else if (itemId == R.id.menu_project_list_share_proto_file) {
-                    //TODO make it work again
-                    //Protocoder.getInstance(c).protoScripts.shareProtoFileDialog(mProject.getFolder(), mProject.getName());
+                    ProtoScriptHelper.shareProtoFileDialog(c, mProject.getFolder(), mProject.getName());
+                    return true;
+                } else if (itemId == R.id.menu_project_list_show_info) {
+                    ProtoAppHelper.launchScriptInfoActivity(c, mProject);
                     return true;
                 } else {
                     return true;
@@ -267,10 +276,21 @@ public class ProjectItem extends LinearLayout {
         return highlighted;
     }
 
-    public void setProject(Project p) {
+    public void setProjectInfo(Project p) {
         mProject = p;
         setText(p.getName());
         setTag(p.getName());
+
+        File f = new File(p.getFullPathForFile("icon.png"));
+        setImage(R.drawable.primarycolor_rounded_rect);
+
+        if (f.exists()) {
+            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+            Bitmap bitmap = BitmapFactory.decodeFile(f.getPath(), bmOptions);
+            bitmap = Bitmap.createScaledBitmap(bitmap, 32, 32, true);
+
+            setImage(bitmap);
+        }
         setMenu();
     }
 }

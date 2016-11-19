@@ -52,7 +52,7 @@ public class PAudioRecorder extends ProtoBase {
         recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
         // recorder.setAudioEncoder(MediaRecorder.getAudioSourceMax());
-        recorder.setAudioEncodingBitRate(16);
+        recorder.setAudioEncodingBitRate(96000);
         recorder.setAudioSamplingRate(44100);
 
         recorder.setOutputFile(getAppRunner().getProject().getFullPathForFile(fileName));

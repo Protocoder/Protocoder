@@ -25,11 +25,12 @@ import org.protocoderrunner.base.utils.MLog;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class PCanvas extends View implements PViewInterface {
+
+public class PCanvas extends View {
 
     private static final String TAG = PCanvas.class.getSimpleName();
 
-    private final AppRunner mAppRunner;
+    protected final AppRunner mAppRunner;
 
     @ProtoField(description = "Object that contains the layers", example = "")
     public Layers layers;
@@ -50,9 +51,9 @@ public class PCanvas extends View implements PViewInterface {
 
     private RectF mRectf;
     private Paint mPaintBackground;
-    private Paint mPaintFill;
+    public Paint mPaintFill;
     private Paint mPaintStroke;
-    private boolean mAutoDraw = false;
+    protected boolean mAutoDraw = false;
     private boolean fillOn = true;
     private boolean strokeOn = false;
     private boolean mModeCorner = MODE_CORNER;
@@ -61,6 +62,7 @@ public class PCanvas extends View implements PViewInterface {
     // Autodraw
     private PLooper loop;
     int looperSpeed = 35;
+    private boolean absoluteMode = false;
 
     public interface OnSetupCallback { void event (PCanvas c); }
     public interface OnDrawCallback { void event (PCanvas c); }
@@ -69,9 +71,19 @@ public class PCanvas extends View implements PViewInterface {
     public OnDrawCallback draw;
 
 
+    public PCanvas(AppRunner appRunner, int w, int h) {
+        this(appRunner);
+        width = w;
+        height = h;
+
+        absoluteMode = true;
+        post_init();
+    }
+
     public PCanvas(AppRunner appRunner) {
         super(appRunner.getAppContext());
         mAppRunner = appRunner;
+
         prepareLooper();
         init();
     }
@@ -107,19 +119,25 @@ public class PCanvas extends View implements PViewInterface {
         mPaintStroke.setAntiAlias(true);
     }
 
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-        MLog.d("new size --> ", w + " " + h);
-
-        width = w;
-        height = h;
-
+    public void post_init() {
         mCanvas = new Canvas();
         layers = new Layers();
 
         if (setup != null) setup.event(PCanvas.this);
         // startLooper();
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        MLog.d(TAG, "new size --> " + w + " " + h);
+
+        if (!absoluteMode) {
+            width = w;
+            height = h;
+            post_init();
+            invalidate();
+        }
     }
 
     public void onDraw(OnDrawCallback callback) {
@@ -129,11 +147,10 @@ public class PCanvas extends View implements PViewInterface {
     @Override
     protected synchronized void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        // MLog.d(TAG, "onDraw");
 
-        MLog.d(TAG, "1");
-        if (!mAutoDraw) draw.event(this);
+        if (!mAutoDraw && draw != null) draw.event(this);
         layers.drawAll(canvas);
-        MLog.d(TAG, "2");
     }
 
     /**
@@ -147,11 +164,17 @@ public class PCanvas extends View implements PViewInterface {
     }
 
     @ProtoMethod(description = "Sets the filling color", example = "")
+    @ProtoMethodParam(params = {"hex"})
+    public PCanvas fill(String hex) {
+        fill(Color.parseColor(hex));
+
+        return this;
+    }
+
+    @ProtoMethod(description = "Sets the filling color", example = "")
     @ProtoMethodParam(params = {"r", "g", "b", "alpha"})
     public PCanvas fill(int r, int g, int b, int alpha) {
-        mPaintFill.setStyle(Paint.Style.FILL);
-        mPaintFill.setARGB(alpha, r, g, b);
-        fillOn = true;
+        fill(Color.argb(alpha, r, g, b));
 
         return this;
     }
@@ -159,17 +182,16 @@ public class PCanvas extends View implements PViewInterface {
     @ProtoMethod(description = "Sets the filling color", example = "")
     @ProtoMethodParam(params = {"r", "g", "b"})
     public PCanvas fill(int r, int g, int b) {
-        fill(r, g, b, 255);
-        fillOn = true;
+        fill(Color.argb(255, r, g, b));
 
         return this;
     }
 
     @ProtoMethod(description = "Sets the filling color", example = "")
     @ProtoMethodParam(params = {"hex"})
-    public PCanvas fill(String hex) {
+    public PCanvas fill(int c) {
         mPaintFill.setStyle(Paint.Style.FILL);
-        mPaintFill.setColor(Color.parseColor(hex));
+        mPaintFill.setColor(c);
         fillOn = true;
 
         return this;
@@ -184,9 +206,7 @@ public class PCanvas extends View implements PViewInterface {
     @ProtoMethod(description = "Sets the stroke color", example = "")
     @ProtoMethodParam(params = {"r", "g", "b", "alpha"})
     public PCanvas stroke(int r, int g, int b, int alpha) {
-        mPaintStroke.setStyle(Paint.Style.STROKE);
-        mPaintStroke.setARGB(alpha, r, g, b);
-        strokeOn = true;
+        stroke(Color.argb(alpha, r, g, b));
 
         return this;
     }
@@ -194,8 +214,7 @@ public class PCanvas extends View implements PViewInterface {
     @ProtoMethod(description = "Sets the stroke color", example = "")
     @ProtoMethodParam(params = {"r", "g", "b"})
     public PCanvas stroke(int r, int g, int b) {
-        stroke(r, g, b, 255);
-        strokeOn = true;
+        stroke(Color.argb(255, r, g, b));
 
         return this;
     }
@@ -203,8 +222,16 @@ public class PCanvas extends View implements PViewInterface {
     @ProtoMethod(description = "Sets the stroke color", example = "")
     @ProtoMethodParam(params = {"hex"})
     public PCanvas stroke(String c) {
+        stroke(Color.parseColor(c));
+
+        return this;
+    }
+
+    @ProtoMethod(description = "Sets the stroke color", example = "")
+    @ProtoMethodParam(params = {"hex"})
+    public PCanvas stroke(int c) {
         mPaintStroke.setStyle(Paint.Style.STROKE);
-        mPaintStroke.setColor(Color.parseColor(c));
+        mPaintStroke.setColor(c);
         strokeOn = true;
 
         return this;
@@ -292,6 +319,11 @@ public class PCanvas extends View implements PViewInterface {
         return this;
     }
 
+    public PCanvas line(float x1, float y1, float x2, float y2) {
+        mCanvas.drawLine(x1, y1, x2, y2, mPaintStroke);
+        return this;
+    }
+
     @ProtoMethod(description = "Draws a rectangle", example = "")
     @ProtoMethodParam(params = {"x", "y", "width", "height"})
     public PCanvas rect(float x, float y, float width, float height) {
@@ -332,6 +364,51 @@ public class PCanvas extends View implements PViewInterface {
         return this;
     }
 
+    public void drawPath(Path p1) {
+        if (fillOn) mCanvas.drawPath(p1, mPaintFill);
+        if (strokeOn) mCanvas.drawPath(p1, mPaintStroke);
+    }
+
+    public Path path() {
+        return new Path();
+    }
+
+    public void path(float[][] p) {
+        // MLog.d(TAG, "path length " + p.length);
+        Path path = new Path();
+
+        path.moveTo(p[0][0], p[0][1]);
+
+        for (int i = 0; i < p.length; i++) {
+            // MLog.d(TAG, "setting point in " + p[i][0] + " " + p[i][1]);
+            path.lineTo(p[i][0], p[i][1]);
+        }
+
+        if (fillOn) mCanvas.drawPath(path, mPaintFill);
+        if (strokeOn) mCanvas.drawPath(path, mPaintStroke);
+        refresh();
+    }
+
+    Path path;
+    boolean firstPathPoint = false;
+    public void beginPath() {
+        path = new Path();
+        firstPathPoint = true;
+    }
+
+    public void pointPath(float x, float y) {
+        if (firstPathPoint) {
+            path.moveTo(x, y);
+            firstPathPoint = false;
+        }
+        path.lineTo(x, y);
+    }
+
+    public void closePath() {
+        if (fillOn) mCanvas.drawPath(path, mPaintFill);
+        if (strokeOn) mCanvas.drawPath(path, mPaintStroke);
+        refresh();
+    }
 
     /**
      * Text stuff
@@ -392,6 +469,16 @@ public class PCanvas extends View implements PViewInterface {
         refresh();
 
         return this;
+    }
+
+    public void drawTextCentered(String text){
+        int cx = mCanvas.getWidth() / 2;
+        int cy = mCanvas.getHeight() / 2;
+
+        Rect textBounds = new Rect();
+
+        mPaintFill.getTextBounds(text, 0, text.length(), textBounds);
+        mCanvas.drawText(text, cx - textBounds.exactCenterX(), cy - textBounds.exactCenterY(), mPaintFill);
     }
 
     @ProtoMethod(description = "Load an image", example = "")
@@ -533,6 +620,15 @@ public class PCanvas extends View implements PViewInterface {
         loop.start();
         return this;
     }
+
+    /*
+    public PCanvas ref() {
+        draw.event(PCanvas.this);
+        invalidate();
+
+        return this;
+    }
+    */
 
     private RectF place(float x, float y, float w, float h) {
         if (mModeCorner == MODE_CORNER) {

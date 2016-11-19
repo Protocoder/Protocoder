@@ -52,6 +52,9 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.channels.FileChannel;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
@@ -552,6 +555,7 @@ public class FileIO {
 
         ZipFile zipfile = new ZipFile(f.getAbsolutePath());
         ZipParameters parameters = new ZipParameters();
+        parameters.setIncludeRootFolder(false);
         parameters.setCompressionMethod(Zip4jConstants.COMP_DEFLATE);
         parameters.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_NORMAL);
         zipfile.addFolder(src, parameters);
@@ -561,6 +565,58 @@ public class FileIO {
         ZipFile zipFile = new ZipFile(src);
         MLog.d(TAG, "--------------> " + src + " " + dst);
         zipFile.extractAll(dst);
+    }
+
+    static public List seeZipContent(String file) throws ZipException {
+        ZipFile zipFile = new ZipFile(file);
+        List list = zipFile.getFileHeaders();
+        return list;
+    }
+
+    public static HashMap<String, List<String>> seeZipContent2(String path) {
+        File zipFile = new File(path);
+
+        HashMap<String, List<String>> contents = new HashMap<>();
+        try  {
+            FileInputStream fin = new FileInputStream(zipFile);
+            ZipInputStream zin = new ZipInputStream(fin);
+            ZipEntry ze = null;
+            while ((ze = zin.getNextEntry()) != null) {
+                if(ze.isDirectory()) {
+                    String directory = ze.getName();
+                    MLog.d(TAG, "directory " + directory);
+                    if (!contents.containsKey(directory)) {
+                        contents.put(directory, new ArrayList<String>());
+                    }
+                } else {
+                    String file = ze.getName();
+                    int pos = file.lastIndexOf("/");
+                    if (pos != -1) {
+                        String directory = file.substring(0, pos+1);
+                        String fileName = file.substring(pos+1);
+                        if (!contents.containsKey(directory)) {
+                            contents.put(directory, new ArrayList<String>());
+                            List<String> fileNames = contents.get(directory);
+                            fileNames.add(fileName);
+                        } else {
+                            List<String> fileNames = contents.get(directory);
+                            fileNames.add(fileName);
+                        }
+                    } else {
+                        if (!contents.containsKey("root")) {
+                            contents.put("root", new ArrayList<String>());
+                        }
+                        List<String> fileNames = contents.get("root");
+                        fileNames.add(file);
+                    }
+                }
+                zin.closeEntry();
+            }
+            zin.close();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        return contents;
     }
 
     static public void extractZip(String zipFile, String location) throws IOException {
@@ -678,5 +734,27 @@ public class FileIO {
             e.printStackTrace();
         }
         return ret;
+    }
+
+
+    public static void saveCodeToFile(String code, String filepath) {
+        File f = new File(filepath);
+
+        try {
+            if (!f.exists()) {
+                f.createNewFile();
+            }
+            FileOutputStream fo = new FileOutputStream(f);
+            byte[] data = code.getBytes();
+            fo.write(data);
+            fo.flush();
+            fo.close();
+
+        } catch (FileNotFoundException ex) {
+            MLog.e(TAG, ex.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Log.e("Project", e.toString());
+        }
     }
 }

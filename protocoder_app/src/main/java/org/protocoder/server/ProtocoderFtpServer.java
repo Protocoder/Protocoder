@@ -22,6 +22,7 @@ package org.protocoder.server;
 
 import android.content.Context;
 
+import org.protocoder.gui.settings.NewUserPreferences;
 import org.protocoder.gui.settings.ProtocoderSettings;
 import org.protocoder.gui.settings.UserSettings;
 import org.protocoder.appinterpreter.AppRunnerCustom;
@@ -31,21 +32,24 @@ import org.protocoderrunner.base.utils.MLog;
 import java.lang.ref.WeakReference;
 
 public class ProtocoderFtpServer extends PFtpServer {
-    public static final String TAG = "ProtocoderFtpServer";
-    private final WeakReference<Context> ctx;
+    public static final String TAG = ProtocoderFtpServer.class.getSimpleName();
 
     private static ProtocoderFtpServer instance = null;
     private static boolean started = false;
+    private Context c;
 
     public ProtocoderFtpServer(AppRunnerCustom appRunner, int port) {
         super(port, null);
         MLog.d(TAG, "" + port);
 
-        ctx = new WeakReference<Context>(appRunner.getAppContext());
-        UserSettings userSettings = appRunner.protocoderApp.userSettings;
+        c = appRunner.getAppContext();
+        NewUserPreferences newUserPreferences = NewUserPreferences.getInstance();
 
-        MLog.d(TAG, "" + userSettings.getFtpUserName() + " " + userSettings.getFtpUserPassword());
-        addUser(userSettings.getFtpUserName(), userSettings.getFtpUserPassword(), ProtocoderSettings.getBaseDir(), true);
+        String user = (String) newUserPreferences.get("ftp_user");
+        String password = (String) newUserPreferences.get("ftp_password");
+
+        MLog.d(TAG, "" + user + " " + password);
+        addUser(user, password, ProtocoderSettings.getBaseDir(), true);
     }
 
     public void stopServer() {

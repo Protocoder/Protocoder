@@ -21,63 +21,64 @@
 package org.protocoderrunner.api.widgets;
 
 import android.content.Context;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 
+import org.mozilla.javascript.NativeArray;
+import org.protocoderrunner.api.common.ReturnInterfaceWithReturn;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.apprunner.StyleProperties;
+import org.protocoderrunner.base.views.FitRecyclerView;
 
 import java.util.ArrayList;
 
-public class PList extends LinearLayout implements PViewInterface {
+public class PList extends FitRecyclerView {
 
-    private final ListView lv;
-    private final Context c;
-    private PListAdapter plistAdapter;
+    private final Context mContext;
+    private PViewItemAdapter mViewAdapter;
 
-    public PList(Context context) {
-        super(context);
-        c = context;
+    public StyleProperties props = new StyleProperties();
+    public Styler styler;
 
-        lv = new ListView(c);
+    public PList(AppRunner appRunner, NativeArray data, ReturnInterfaceWithReturn creating, ReturnInterfaceWithReturn binding) {
+        super(appRunner.getAppContext());
+        mContext = appRunner.getAppContext();
 
+        styler = new Styler(appRunner, this, props);
+        styler.apply();
+
+        setLayoutManager(new GridLayoutManager(mContext, 1));
+        // setLayoutManager(new StaggeredGridLayoutManager(2, VERTICAL));
+        mViewAdapter = new PViewItemAdapter(mContext, data, creating, binding);
+
+        // Get GridView and set adapter
+        setHasFixedSize(true);
+        setAdapter(mViewAdapter);
+        notifyDataChanged();
+
+        setItemAnimator(new DefaultItemAnimator());
     }
-
-    //TODO place holder
 
     @ProtoMethod(description = "", example = "")
     @ProtoMethodParam(params = {""})
-    public void setItems(ArrayList<PListItem> items) {
-        plistAdapter = new PListAdapter(c, items);
-        lv.setAdapter(plistAdapter);
+    public void setItems(NativeArray data) {
+        mViewAdapter.setArray(data);
     }
-
-    @Override
-    //TODO place holder
-
-    @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = {""})
-    public void addView(View v) {
-        lv.addView(v);
-    }
-
-    //TODO place holder
 
     @ProtoMethod(description = "", example = "")
     @ProtoMethodParam(params = {""})
     public void clear() {
-        lv.removeAllViews();
-        plistAdapter.notifyDataSetChanged();
-    }
 
-    //TODO place holder
+    }
 
     @ProtoMethod(description = "", example = "")
     @ProtoMethodParam(params = {""})
-    public void notifyAddedProject() {
-        plistAdapter.notifyDataSetChanged();
-        lv.invalidateViews();
+    public void notifyDataChanged() {
+        mViewAdapter.notifyDataSetChanged();
     }
 
 }

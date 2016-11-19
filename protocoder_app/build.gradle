@@ -12,16 +12,16 @@ apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion '24.0.1'
+    compileSdkVersion 25
+    buildToolsVersion '25.0.0'
 
     defaultConfig {
         applicationId "org.protocoder.extended.sandbox"
         minSdkVersion 16
         targetSdkVersion 24
 
-        versionCode 19
-        versionName "0.19.1"
+        versionCode 21
+        versionName "0.20.2"
         multiDexEnabled true
 
         compileOptions {
