@@ -22,7 +22,6 @@ package org.protocoder;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -35,18 +34,14 @@ import android.widget.LinearLayout;
 import android.widget.ViewFlipper;
 
 import org.protocoder.gui.settings.NewUserPreferences;
-import org.protocoder.helpers.ProtoSettingsHelper;
 import org.protocoder.gui.settings.ProtocoderSettings;
-import org.protocoder.gui.settings.UserSettings;
+import org.protocoder.helpers.ProtoSettingsHelper;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.base.utils.AndroidUtils;
 import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.base.utils.StrUtils;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -107,6 +102,7 @@ public class WelcomeActivity extends BaseActivity {
     @Override
     protected void setupActivity() {
         super.setupActivity();
+        mToolbar.setVisibility(View.GONE);
     }
 
     @Override

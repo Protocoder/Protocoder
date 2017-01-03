@@ -4,8 +4,8 @@ import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
 
-import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.api.ProtoBase;
+import org.protocoderrunner.apprunner.AppRunner;
 
 public class PWave extends ProtoBase {
 

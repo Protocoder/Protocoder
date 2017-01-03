@@ -1,8 +1,10 @@
 /*
  * \\\ Example:	File Storage
  *
- * Simple File Input and Output operations
+ * Simple File Write and Read operation
  */
+
+ui.addTitle(app.name)
 
 // create an Arrary with the data we want to save
 var data = []
@@ -18,21 +20,13 @@ fileio.saveStrings('file.txt', data)
 // read data and store it in readData
 var readData = fileio.loadStrings('file.txt')
 
-var txt = ui.addText('stored and loaded data: \n', 0, 0)
+var txt = ui.addText('stored and loaded data: \n\n', 0.1, 0.15, 0.8, 0.5)
+txt.props.background = '#000000'
+txt.props.padding = 20
+txt.props.textSize = 15
 
 // show in the console the data
 for(var i = 0; i < readData.length; i++) {
   console.log(readData[i])
   txt.append(readData[i] + '\n')
 }
-
-
-// other methods
-// fileio.delete('fileName')
-// fileio.moveFileToDir('fileName', 'dir')
-// fileio.moveDirToDir('dir', 'dir')
-// fileio.copyFileToDir('fileName', 'dir')
-// fileio.copyDirToDir('dir', 'dir')
-// fileio.rename('fileName', 'newFileName')
-// console.log(fileio.type('fileName'))
-// fileio.createEmptyFile('file.txt')

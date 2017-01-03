@@ -1,4 +1,4 @@
-package org.protocoderrunner.api.sensors;
+package org.protocoderrunner.api.network;
 
 import android.content.Context;
 import android.nfc.FormatException;
@@ -9,10 +9,10 @@ import android.nfc.TagLostException;
 import android.nfc.tech.Ndef;
 import android.nfc.tech.NdefFormatable;
 
+import org.protocoderrunner.api.ProtoBase;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
-import org.protocoderrunner.api.ProtoBase;
 
 import java.io.IOException;
 import java.nio.charset.Charset;

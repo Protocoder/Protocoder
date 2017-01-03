@@ -20,18 +20,21 @@
 
 package org.protocoderrunner.api.widgets;
 
+import android.annotation.TargetApi;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.text.Html;
 import android.view.View;
 import android.widget.Button;
 
-import org.protocoderrunner.api.common.ReturnObject;
 import org.protocoderrunner.api.common.ReturnInterface;
+import org.protocoderrunner.api.common.ReturnObject;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.StyleProperties;
+import org.protocoderrunner.base.utils.MLog;
 
 import java.util.Map;
 
@@ -85,6 +88,15 @@ public class PButton extends Button implements PViewMethodsInterface, PTextInter
     @Override
     public View textStyle(int style) {
         this.setTypeface(null, style);
+        return this;
+    }
+
+    @Override
+    public View textAlign(int alignment) {
+        MLog.d("qq", "button align " + alignment);
+
+        this.setGravity(alignment);
+
         return this;
     }
 

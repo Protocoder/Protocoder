@@ -25,8 +25,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
-import org.protocoder.gui.settings.UserSettings;
-import org.protocoderrunner.base.utils.StrUtils;
 
 public class LauncherActivity extends Activity {
 
@@ -51,7 +49,7 @@ public class LauncherActivity extends Activity {
         if (wasCrash) {
             Toast.makeText(this, "The script crashed :(", Toast.LENGTH_LONG).show();
         }
-        
+
         if (firstLaunch) {
             intent = new Intent(this, WelcomeActivity.class);
         } else {

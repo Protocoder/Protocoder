@@ -3,16 +3,16 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_help"
-        android:icon="@drawable/ic_action_about"
-        app:showAsAction="never"
-        android:title="@string/menu_label_about">
-    </item>
-    <item
         android:id="@+id/menu_new"
         android:icon="@drawable/ic_content_new"
         app:showAsAction="never"
         android:title="@string/menu_label_new">
+    </item>
+    <item
+        android:id="@+id/menu_help"
+        android:icon="@drawable/ic_action_help"
+        app:showAsAction="never"
+        android:title="@string/menu_label_help">
     </item>
     <!--<item-->
         <!--android:id="@+id/menu_start_stop"-->

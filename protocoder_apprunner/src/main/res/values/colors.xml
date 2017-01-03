@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+
+    <color name="protocoder_backgroundColor">#F9E971</color>
+    <color name="protocoder_backgroundColor_second">#FDD629</color>
+    <color name="protocoder_mainColor">#566b75</color>
+    <color name="protocoder_accentColor">#FDD629</color>
+    <color name="protocoder_textColor">#302d15</color>
+
+
     <!-- theme -->
     <color name="console_background">#A6000000</color>
     <color name="console_textcolor">#FFFFFF</color>

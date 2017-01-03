@@ -28,17 +28,29 @@ import android.widget.LinearLayout;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
+import org.protocoderrunner.apprunner.StyleProperties;
+
+import java.util.HashMap;
+import java.util.Hashtable;
 
 public class PLinearLayout extends LinearLayout {
 
     private final AppRunner mAppRunner;
     private final LayoutParams mLp;
 
+    public StyleProperties props = new StyleProperties();
+    public Styler styler;
+    private HashMap<String, View> mViews = new HashMap<>();
+
     public PLinearLayout(AppRunner appRunner) {
         super(appRunner.getAppContext());
         mAppRunner = appRunner;
 
-        mLp = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        styler = new Styler(appRunner, this, props);
+        styler.apply();
+
+        mLp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 1f);
+        setLayoutParams(mLp);
     }
 
     public void orientation(String orientation) {
@@ -53,15 +65,23 @@ public class PLinearLayout extends LinearLayout {
     }
     @ProtoMethod(description = "", example = "")
     @ProtoMethodParam(params = {""})
-    public void add(View v) {
+    public void add(View v, String name) {
         addView(v);
+        mViews.put(name, v);
     }
 
-    public void add(View v, float weight) {
+    public void add(View v, String name, float weight) {
         // lp.gravity = Gravity.CENTER;
-        mLp.weight = weight;
+        LinearLayout.LayoutParams lp = new LayoutParams(0, LayoutParams.WRAP_CONTENT, weight);
+
+        mViews.put(name, v);
+
         // setWeightSum(1.0f);
-        addView(v, mLp);
+        addView(v, lp);
+    }
+
+    public View get(String name) {
+        return mViews.get(name);
     }
 
     public void alignViews(String horizontal, String vertical) {

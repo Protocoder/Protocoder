@@ -20,8 +20,10 @@
 
 package org.protocoderrunner.api.widgets;
 
+import android.annotation.TargetApi;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ToggleButton;
@@ -108,6 +110,12 @@ public class PToggle extends ToggleButton implements PViewMethodsInterface, PTex
     @Override
     public View textStyle(int style) {
         this.setTypeface(null, style);
+        return this;
+    }
+
+    @Override
+    public View textAlign(int alignment) {
+        setGravity(alignment);
         return this;
     }
 

@@ -29,10 +29,10 @@ import com.hoho.android.usbserial.driver.UsbSerialPort;
 import com.hoho.android.usbserial.driver.UsbSerialProber;
 import com.hoho.android.usbserial.util.SerialInputOutputManager;
 
+import org.protocoderrunner.api.ProtoBase;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
-import org.protocoderrunner.api.ProtoBase;
 import org.protocoderrunner.base.utils.MLog;
 
 import java.io.IOException;
@@ -155,7 +155,6 @@ public class PSerial extends ProtoBase {
                             mHandler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    //antes pasaba finalMsgReturn
                                     if (mCallbackData != null) mCallbackData.event(finalMsgReturn);
                                 }
                             });

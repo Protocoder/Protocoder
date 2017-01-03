@@ -29,7 +29,6 @@ import android.graphics.drawable.LayerDrawable;
 import android.view.Gravity;
 import android.widget.SeekBar;
 
-import org.mozilla.javascript.NativeObject;
 import org.protocoderrunner.api.common.ReturnInterface;
 import org.protocoderrunner.api.common.ReturnObject;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;

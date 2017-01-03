@@ -38,11 +38,11 @@ import org.greenrobot.eventbus.Subscribe;
 import org.protocoder.R;
 import org.protocoder.events.Events;
 import org.protocoder.events.Events.ProjectEvent;
-import org.protocoderrunner.base.views.FitRecyclerView;
 import org.protocoder.gui.settings.NewUserPreferences;
 import org.protocoder.helpers.ProtoScriptHelper;
 import org.protocoderrunner.base.BaseFragment;
 import org.protocoderrunner.base.utils.MLog;
+import org.protocoderrunner.base.views.FitRecyclerView;
 import org.protocoderrunner.models.Project;
 
 import java.util.ArrayList;

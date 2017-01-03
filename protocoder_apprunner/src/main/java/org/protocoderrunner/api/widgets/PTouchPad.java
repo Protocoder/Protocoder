@@ -20,6 +20,7 @@ public class PTouchPad extends PCanvas implements PViewMethodsInterface {
     public StyleProperties props = new StyleProperties();
     public Styler styler;
     private ArrayList touches;
+    private ReturnInterface onTouch;
 
     public PTouchPad(AppRunner appRunner) {
         super(appRunner);
@@ -27,10 +28,13 @@ public class PTouchPad extends PCanvas implements PViewMethodsInterface {
 
         draw = mydraw;
         styler = new Styler(appRunner, this, props);
+        styler.apply();
 
         appRunner.pUi.onTouch(this, new ReturnInterface() {
             @Override
             public void event(ReturnObject r) {
+                onTouch.event(r);
+
                 touches = (ArrayList) r.get("touches");
 
                 if (touches.size() > 0) {
@@ -49,7 +53,12 @@ public class PTouchPad extends PCanvas implements PViewMethodsInterface {
                 // invalidate();
             }
         });
+    }
 
+    public PTouchPad onTouch(ReturnInterface callback) {
+        onTouch = callback;
+
+        return this;
     }
 
     PLooper looper = new PLooper(mAppRunner, 50, new PLooper.LooperCB() {

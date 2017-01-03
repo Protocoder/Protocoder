@@ -27,7 +27,6 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 
 import org.protocoderrunner.base.utils.MLog;
-import org.protocoderrunner.base.utils.SysFs;
 
 import ioio.lib.api.IOIO;
 

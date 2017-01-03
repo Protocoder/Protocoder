@@ -30,7 +30,9 @@ import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.drawable.ColorDrawable;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
@@ -42,21 +44,19 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.view.Display;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.protocoderrunner.api.PDevice;
 import org.protocoderrunner.api.PMedia;
 import org.protocoderrunner.api.network.PBluetooth;
-import org.protocoderrunner.api.sensors.PNfc;
+import org.protocoderrunner.api.network.PNfc;
 import org.protocoderrunner.apprunner.AppRunnerHelper;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
 import org.protocoderrunner.base.BaseActivity;
@@ -108,6 +108,7 @@ public class AppRunnerActivity extends BaseActivity {
     private Bundle mBundle;
     private boolean isLandscape;
     private boolean isPortrait;
+    private Map<String, Object> scriptSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,13 +132,8 @@ public class AppRunnerActivity extends BaseActivity {
 
         String name = intent.getStringExtra(Project.NAME);
         String folder = intent.getStringExtra(Project.FOLDER);
+        AppRunnerSettings.SERVER_PORT = intent.getIntExtra(Project.SERVER_PORT, 0);
         Project p = new Project(folder, name);
-
-        // settings
-        Map<String, Object> map = AppRunnerHelper.readProjectProperties(getApplicationContext(), p);
-        boolean screenAlwaysOn   = false;
-        String orientation       = (String) map.get("orientation");
-        String screenMode     = (String) map.get("screen_mode");
 
         // send bundle to the fragment
         mBundle = new Bundle();
@@ -148,11 +144,17 @@ public class AppRunnerActivity extends BaseActivity {
         mBundle.putString(Project.POSTFIX, intent.getStringExtra(Project.POSTFIX));
         mBundle.putString("device_id", intent.getStringExtra("device_id"));
 
+        // settings
+        scriptSettings = AppRunnerHelper.readProjectProperties(getApplicationContext(), p);
+        boolean screenAlwaysOn   = false;
+        String orientation       = (String) scriptSettings.get("orientation");
+        String screenMode     = (String) scriptSettings.get("screen_mode");
+
         /*
          * Set fullscreen
          */
         if (screenMode.equals("fullscreen")) setImmersive();
-
+        else if (screenMode.equals("dialog")) setTheme(R.style.ProtocoderAppRunner_Dialog);
         
         /*
          * Set orientation
@@ -162,17 +164,19 @@ public class AppRunnerActivity extends BaseActivity {
         if (size.x > size.y) isLandscape = true;
         else isPortrait = true;
 
-        if (orientation.equals("landscape") && !isLandscape) {
+        if (orientation.equals("landscape")) { // && !isLandscape) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            orientationChanged = true;
-        } else if (orientation.equals("portrait") && !isPortrait) {
+            // orientationChanged = true;
+        } else if (orientation.equals("portrait")) { // && !isPortrait) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            orientationChanged = true;
+            // orientationChanged = true;
         }
 
         // if we changed the orientation, we will wait for the orientation to change
         // and init the AppRunner in onConfigurationChanged
         if (!orientationChanged) initAppRunner();
+
+        registerEventBus();
     }
 
     public void initAppRunner() {
@@ -211,8 +215,6 @@ public class AppRunnerActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
 
-        registerEventBus();
-
         // NFC
         if (nfcSupported) mAdapter.enableForegroundDispatch(this, mPendingIntent, null, null);
 
@@ -225,7 +227,7 @@ public class AppRunnerActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
 
-        unregisterEventBus();
+        MLog.d(TAG, "onPause 1");
 
         if (nfcSupported) mAdapter.disableForegroundDispatch(this);
         unregisterReceiver(stopActivitiyBroadcastReceiver);
@@ -234,12 +236,15 @@ public class AppRunnerActivity extends BaseActivity {
 
     @Override
     public void onStop() {
+        MLog.d(TAG, "onStop 1");
         super.onStop();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        unregisterEventBus();
 
         Intent i = new Intent("org.protocoder.intent.CLOSED");
         sendBroadcast(i);
@@ -481,7 +486,6 @@ public class AppRunnerActivity extends BaseActivity {
 
             for (String _string : matches) {
                 MLog.d(TAG, "" + _string);
-
             }
             onVoiceRecognitionListener.onNewResult(matches.get(0));
 

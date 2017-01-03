@@ -25,38 +25,34 @@ import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.hardware.input.InputManager;
+import android.net.Uri;
 import android.os.BatteryManager;
 import android.os.Build;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.provider.Settings;
 import android.provider.Settings.Secure;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.SmsManager;
-import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.InputDevice;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
-
-import com.google.gson.Gson;
 
 import org.protocoderrunner.AppRunnerFragment;
 import org.protocoderrunner.api.common.ReturnInterface;
 import org.protocoderrunner.api.common.ReturnObject;
 import org.protocoderrunner.api.other.ApplicationInfo;
-import org.protocoderrunner.api.sensors.PNfc;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apidoc.annotation.ProtoObject;
@@ -65,7 +61,6 @@ import org.protocoderrunner.base.utils.AndroidUtils;
 import org.protocoderrunner.base.utils.Intents;
 import org.protocoderrunner.base.utils.MLog;
 
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -83,7 +78,6 @@ public class PDevice extends ProtoBase {
 
     private boolean isKeyPressInit = false;
 
-    public PNfc nfc;
     public String deviceId;
 
 
@@ -98,16 +92,11 @@ public class PDevice extends ProtoBase {
 
     public PDevice(AppRunner appRunner) {
         super(appRunner);
-
-        //nfc = new PNFC(context);
     }
 
     @Override
     public void initForParentFragment(AppRunnerFragment fragment) {
         super.initForParentFragment(fragment);
-
-        nfc = new PNfc(getAppRunner());
-        nfc.initForParentFragment(getFragment());
     }
 
 
@@ -266,21 +255,16 @@ public class PDevice extends ProtoBase {
     }
 
 
-    @ProtoMethod(description = "send an sms to the given number", example = "")
+    @ProtoMethod(description = "send an sms to a given number", example = "")
     @ProtoMethodParam(params = {"number", "message"})
     public void smsSend(String number, String msg) {
         SmsManager sm = SmsManager.getDefault();
         sm.sendTextMessage(number, null, msg, null, null);
     }
 
-    // --------- onSmsReceived ---------//
-    interface onSmsReceivedCB {
-        void event(String number, String responseString);
-    }
-
     @ProtoMethod(description = "Gives back the number and sms of the sender", example = "")
     @ProtoMethodParam(params = {"function(number, message)"})
-    public void onSmsReceived(final onSmsReceivedCB fn) {
+    public void onSmsReceived(final ReturnInterface callback) {
 
         // SMS receive
         IntentFilter intentFilter = new IntentFilter("SmsMessage.intent.MAIN");
@@ -295,7 +279,11 @@ public class PDevice extends ProtoBase {
                 String body = msg.substring(msg.lastIndexOf(":") + 1, msg.length());
                 String pNumber = msg.substring(0, msg.lastIndexOf(":"));
 
-                fn.event(pNumber, body);
+                ReturnObject ret = new ReturnObject();
+                ret.put("from", pNumber);
+                ret.put("message", "body");
+
+                callback.event(ret);
             }
         };
         getContext().registerReceiver(smsReceiver, intentFilter);
@@ -399,31 +387,35 @@ public class PDevice extends ProtoBase {
     @ProtoMethod(description = "Call a given phone number", example = "")
     @ProtoMethodParam(params = {"number"})
     public void call(String number) {
-        Intents.call(getContext(), number);
+        Intents.call(getActivity(), number);
     }
 
     @ProtoMethod(description = "Open the default web browser with a given Url", example = "")
     @ProtoMethodParam(params = {"url"})
     public void openWebApp(String url) {
-        Intents.openWeb(getContext(), url);
+        Intents.openWeb(getActivity(), url);
     }
 
     @ProtoMethod(description = "Open the search app with the given text", example = "")
     @ProtoMethodParam(params = {"text"})
     public void openWebSearch(String text) {
-        Intents.webSearch(getContext(), text);
+        Intents.webSearch(getActivity(), text);
     }
 
-    // --------- battery ---------//
-    interface StartBateryListenerCB {
-        void event(BatteryReturn o);
+
+    //TODO reenable this
+    // @ProtoMethod(description = "opens a file with a given app provided as package name ", example = "")
+    // @ProtoMethodParam(params = {"fileName", "packageName"})
+    public void runApp(final String src, String packageName) {
+        final String projectPath = null; //ProjectManager.getInstance().getCurrentProject().getStoragePath();
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(Uri.parse("file://" + projectPath + "/" + src), packageName);
+        //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        getContext().startActivity(intent);
     }
 
-    class BatteryReturn {
-        public int level;
-        public int temperature;
-        public boolean connected;
-    }
 
     @ProtoMethod(description = "Copy the content into the clipboard", example = "")
     @ProtoMethodParam(params = {"label", "text"})
@@ -441,7 +433,7 @@ public class PDevice extends ProtoBase {
 
     @ProtoMethod(description = "", example = "")
     @ProtoMethodParam(params = {""})
-    public void battery(final StartBateryListenerCB cb) {
+    public void battery(final ReturnInterface callback) {
         batteryReceiver = new BroadcastReceiver() {
             int scale = -1;
             int level = -1;
@@ -470,15 +462,16 @@ public class PDevice extends ProtoBase {
                     isConnected = false;
                 }
 
-                BatteryReturn o = new BatteryReturn();
+                ReturnObject o = new ReturnObject();
 
-                o.level = level;
-                o.temperature = temp;
-                o.connected = isConnected;
+                o.put("level", level);
+                o.put("temperature", temp);
+                o.put("connected", isConnected);
+                o.put("scale", scale);
+                o.put("temperature", temp);
+                o.put("voltage", voltage);
 
-                // plugConnected = isConnected;
-                cb.event(o);
-                Log.d("BATTERY", "level is " + level + " is connected " + isConnected);
+                callback.event(o);
             }
         };
 
@@ -520,91 +513,47 @@ public class PDevice extends ProtoBase {
 
         return orientationStr;
     }
-
-    public class DeviceInfo {
-        public String androidId;
-        public String board;
-        public String brand;
-        public String cpuAbi;
-        public String cpuAbi2;
-        public String device;
-        public String display;
-        public String fingerPrint;
-        public String host;
-        public String id;
-        public String imei;
-        public boolean keyboardPresent;
-        public String manufacturer;
-        public String model;
-        public String os;
-        public int screenDpi;
-        public int screenWidth;
-        public int screenHeight;
-        public String sdk;
-        public String versionRelease;
-
-        public String toJSON() {
-            return new Gson().toJson(this);
-        }
-    }
-
     @ProtoMethod(description = "Get some device information", example = "")
     @ProtoMethodParam(params = {""})
-    public DeviceInfo info() {
-        DeviceInfo deviceInfo = new DeviceInfo();
+    public ReturnObject info() {
+        ReturnObject ret = new ReturnObject();
 
         // density dpi
         DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
 
-        deviceInfo.screenDpi = metrics.densityDpi;
-        deviceInfo.screenWidth = metrics.widthPixels;
-        deviceInfo.screenHeight = metrics.heightPixels;
+        ret.put("screenDpi", metrics.densityDpi);
+        ret.put("screenWidth", metrics.widthPixels);
+        ret.put("screenHeight", metrics.heightPixels);
 
         // id
-        deviceInfo.androidId = Secure.getString(getContext().getContentResolver(), Secure.ANDROID_ID);
+        ret.put("androidId", Secure.getString(getContext().getContentResolver(), Secure.ANDROID_ID));
 
         // imei
         // deviceInfo.imei = ((TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
-        deviceInfo.manufacturer = Build.MANUFACTURER;
-        deviceInfo.model = Build.MODEL;
-        deviceInfo.display = Build.DISPLAY;
-        deviceInfo.versionRelease = Build.VERSION.RELEASE;
-        deviceInfo.os = "";
+        ret.put("manufacturer", Build.MANUFACTURER);
+        ret.put("model", Build.MODEL);
+        ret.put("display", Build.DISPLAY);
+        ret.put("versionRelease", Build.VERSION.RELEASE);
+
+        String os = "";
         if (AndroidUtils.isVersionMarshmallow()) {
-            deviceInfo.os = Build.VERSION.BASE_OS;
+            os = Build.VERSION.BASE_OS;
         }
-        deviceInfo.board = Build.BOARD;
-        deviceInfo.brand = Build.BRAND;
-        deviceInfo.device = Build.DEVICE;
-        deviceInfo.fingerPrint = Build.FINGERPRINT;
-        deviceInfo.host = Build.HOST;
-        deviceInfo.id = Build.ID;
-        deviceInfo.keyboardPresent = getContext().getResources().getConfiguration().keyboard != Configuration.KEYBOARD_NOKEYS;
+        ret.put("os", os);
 
+        ret.put("board", Build.BOARD);
+        ret.put("brand", Build.BRAND);
+        ret.put("device", Build.DEVICE);
+        ret.put("fingerPrint", Build.FINGERPRINT);
+        ret.put("host", Build.HOST);
+        ret.put("id", Build.ID);
+        ret.put("keyboardPresent",  getContext().getResources().getConfiguration().keyboard != Configuration.KEYBOARD_NOKEYS);
 
-        return deviceInfo;
-    }
+        ret.put("totalMem", Runtime.getRuntime().totalMemory());
+        ret.put("usedMem", Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
+        ret.put("maxMem", Runtime.getRuntime().maxMemory());
 
-    public class Memory {
-        public long total;
-        public long used;
-        public long max;
-
-        public String summary() {
-            return used + " (" + max + ") " + "/ " + total;
-        }
-    }
-
-    @ProtoMethod(description = "Get memory usage", example = "")
-    @ProtoMethodParam(params = {""})
-    public Memory memory() {
-        Memory mem = new Memory();
-
-        mem.total = Runtime.getRuntime().totalMemory();
-        mem.used = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-        mem.max = Runtime.getRuntime().maxMemory();
-
-        return mem;
+        return ret;
     }
 
     @ProtoMethod(description = "Check if the device has camera", example = "")
@@ -661,21 +610,41 @@ public class PDevice extends ProtoBase {
         return pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
     }
 
-    public interface OnNotificationCallback {
-        public void event(String[] notification);
+    public boolean areNotificationsEnabled() {
+        return NotificationManagerCompat.from(getContext()).areNotificationsEnabled();
     }
 
-    public void onNewNotification(final OnNotificationCallback callback) {
-        final String[] notification = new String[3];
+    private void showNotificationsManager() {
+        if (AndroidUtils.isVersionMarshmallow()) {
+            getActivity().startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
+        } else {
+            getActivity().startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));
+        }
+
+    }
+
+    private boolean isNotificationServiceRunning() {
+        ContentResolver contentResolver = getContext().getContentResolver();
+        String enabledNotificationListeners = Settings.Secure.getString(contentResolver, "enabled_notification_listeners");
+        String packageName = getContext().getPackageName();
+        return enabledNotificationListeners != null && enabledNotificationListeners.contains(packageName);
+    }
+
+    public void onNewNotification(final ReturnInterface callback) {
+        if (!isNotificationServiceRunning()) {
+            showNotificationsManager();
+        }
 
         onNotification = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                notification[0] = intent.getStringExtra("package");
-                notification[1] = intent.getStringExtra("title");
-                notification[2] = intent.getStringExtra("text");
+                ReturnObject ret = new ReturnObject();
 
-                callback.event(notification);
+                ret.put("package", intent.getStringExtra("package"));
+                ret.put("title", intent.getStringExtra("title"));
+                ret.put("text", intent.getStringExtra("text"));
+
+                callback.event(ret);
             }
         };
 
@@ -688,12 +657,6 @@ public class PDevice extends ProtoBase {
      */
     public List listInstalledApps() {
         ArrayList<ApplicationInfo> mApplications = new ArrayList<ApplicationInfo>();;
-
-        /*
-        if (isLaunching && mApplications != null) {
-            return;
-        }
-        */
 
         // get installed apps
         PackageManager pm = getContext().getPackageManager();

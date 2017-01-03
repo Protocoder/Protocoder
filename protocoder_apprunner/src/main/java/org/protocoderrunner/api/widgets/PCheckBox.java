@@ -20,8 +20,10 @@
 
 package org.protocoderrunner.api.widgets;
 
+import android.annotation.TargetApi;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -95,6 +97,12 @@ public class PCheckBox extends CheckBox implements PViewMethodsInterface, PTextI
     @Override
     public View textStyle(int style) {
         this.setTypeface(null, style);
+        return this;
+    }
+
+    @Override
+    public View textAlign(int alignment) {
+        setGravity(alignment);
         return this;
     }
 

@@ -26,14 +26,9 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.protocoderrunner.base.utils.FileIO;
-import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.models.Project;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
@@ -74,9 +69,20 @@ public class AppRunnerHelper {
         }
 
         // fill with default properties
+        if (!map.containsKey("name")) map.put("name", "");
+        if (!map.containsKey("description")) map.put("description", "portrait");
+        if (!map.containsKey("icon")) map.put("icon", "portrait");
+        if (!map.containsKey("window_size")) map.put("window_size", "");
         if (!map.containsKey("orientation")) map.put("orientation", "portrait");
-        if (!map.containsKey("background_service")) map.put("background_service", false);
         if (!map.containsKey("screen_mode")) map.put("screen_mode", "normal");
+        if (!map.containsKey("featured_image")) map.put("featured_image", "");
+        if (!map.containsKey("background_service")) map.put("background_service", false);
+        if (!map.containsKey("protocoder_version")) map.put("protocoder_version", "");
+        if (!map.containsKey("permissions")) map.put("permissions", "");
+        if (!map.containsKey("author")) map.put("author", "");
+        if (!map.containsKey("contact")) map.put("contact", "");
+        if (!map.containsKey("url")) map.put("url", "");
+        if (!map.containsKey("execute_on_save")) map.put("execute_on_save", "");
 
         return map;
     }

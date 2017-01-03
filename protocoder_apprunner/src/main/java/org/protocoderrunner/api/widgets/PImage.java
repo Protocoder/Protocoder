@@ -25,12 +25,16 @@ import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
+
 import org.protocoderrunner.api.other.PHelper;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.StyleProperties;
+import org.protocoderrunner.base.utils.MLog;
 
+import java.io.File;
 import java.util.Map;
 
 public class PImage extends ImageView implements PViewMethodsInterface {
@@ -51,8 +55,28 @@ public class PImage extends ImageView implements PViewMethodsInterface {
 
     @ProtoMethod(description = "Sets an image", example = "")
     @ProtoMethodParam(params = {"imageName"})
+    public PImage load(String imagePath, int width, int height) {
+        if (imagePath.startsWith("http://")) {
+            Picasso.with(mAppRunner.getAppContext()).load(imagePath).resize(width, height).centerCrop().into(this);
+        } else {
+            imagePath = mAppRunner.getProject().getFullPathForFile(imagePath);
+            Picasso.with(mAppRunner.getAppContext()).load(new File(imagePath)).resize(width, height).centerCrop().into(this);
+        }
+
+        // MLog.d(TAG, "loading image from " + imagePath);
+        // new PHelper.SetImageTask(this).execute(imagePath);
+
+        return this;
+    }
+
     public PImage load(String imagePath) {
-        new PHelper.SetImageTask(this).execute(mAppRunner.getProject().getFullPathForFile(imagePath));
+        if (imagePath.startsWith("http://")) {
+            Picasso.with(mAppRunner.getAppContext()).load(imagePath).into(this);
+        } else {
+            imagePath = mAppRunner.getProject().getFullPathForFile(imagePath);
+            Picasso.with(mAppRunner.getAppContext()).load(new File(imagePath)).into(this);
+        }
+
         return this;
     }
 

@@ -20,7 +20,6 @@
 
 package org.protocoderrunner.models;
 
-import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.AppRunnerSettings;
 
 import java.io.File;
@@ -39,6 +38,7 @@ public class Project {
     public static final String SETTINGS_SCREEN_ALWAYS_ON = "settings_screenOn";
     public static final String SETTINGS_SCREEN_WAKEUP = "settings_wakeUpScreen";
     public static final String SETTINGS_SCREEN_ORIENTATION = "settings_screenOrientation";
+    public static final String SERVER_PORT = "settings_protocoder_port";
 
     /*
      * this will get serialized

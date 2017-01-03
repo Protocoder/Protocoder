@@ -20,7 +20,6 @@
 
 package org.protocoderrunner.events;
 
-import org.protocoderrunner.base.utils.AndroidUtils;
 import org.protocoderrunner.models.Project;
 
 public class Events {

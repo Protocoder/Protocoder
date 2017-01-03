@@ -26,41 +26,32 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.os.AsyncTask;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
+import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.ContentBody;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HttpContext;
-import org.protocoderrunner.api.network.PBluetoothLe;
-import org.protocoderrunner.apidoc.annotation.ProtoObject;
-import org.protocoderrunner.apprunner.AppRunner;
+import org.mozilla.javascript.NativeArray;
+import org.mozilla.javascript.NativeObject;
+import org.protocoderrunner.AppRunnerFragment;
+import org.protocoderrunner.api.common.ReturnInterface;
+import org.protocoderrunner.api.common.ReturnObject;
 import org.protocoderrunner.api.network.PBluetooth;
+import org.protocoderrunner.api.network.PBluetoothLe;
 import org.protocoderrunner.api.network.PFtpClient;
 import org.protocoderrunner.api.network.PFtpServer;
 import org.protocoderrunner.api.network.PMqtt;
+import org.protocoderrunner.api.network.PNfc;
+import org.protocoderrunner.api.network.PSimpleHttpServer;
 import org.protocoderrunner.api.network.PSocketIOClient;
 import org.protocoderrunner.api.network.PWebSocketClient;
 import org.protocoderrunner.api.network.PWebSocketServer;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apidoc.annotation.ProtoObject;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.base.network.NetworkUtils;
 import org.protocoderrunner.base.network.NetworkUtils.DownloadTask.DownloadListener;
 import org.protocoderrunner.base.network.OSC;
@@ -71,21 +62,20 @@ import org.protocoderrunner.base.utils.MLog;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
-import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Properties;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.activation.DataHandler;
+import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Session;
+import javax.mail.Store;
 import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -93,30 +83,43 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
+
 @ProtoObject
 public class PNetwork extends ProtoBase {
 
     private final String TAG = PNetwork.class.getSimpleName();
 
+    public PNfc nfc;
     public PBluetooth bluetooth = null;
+    public ServiceDiscovery mDNS = null;
     private PWebSocketServer PWebsockerServer;
 
     public PNetwork(AppRunner appRunner) {
         super(appRunner);
 
+        nfc = new PNfc(getAppRunner());
+        nfc.initForParentFragment(getFragment());
         bluetooth = new PBluetooth(appRunner);
+        mDNS = new ServiceDiscovery(appRunner);
     }
-//
-//    public void initForParentFragment(AppRunnerFragment fragment) {
-//        super.initForParentFragment(fragment);
-//
-//        //prevent crashing in protocoder app
-//        MLog.d(TAG, "is getActivity() " + getActivity());
-//
-//        if (getFragment() != null) {
-//            bluetooth.initForParentFragment(getFragment());
-//        }
-//    }
+
+    public void initForParentFragment(AppRunnerFragment fragment) {
+        super.initForParentFragment(fragment);
+
+        //prevent crashing in protocoder app
+        MLog.d(TAG, "is getActivity() " + getActivity());
+
+        if (getFragment() != null) {
+            bluetooth.initForParentFragment(getFragment());
+        }
+    }
 
     // --------- download file ---------//
     interface downloadFileCB {
@@ -179,7 +182,7 @@ public class PNetwork extends ProtoBase {
 
     @ProtoMethod(description = "Returns the current device Ip address", example = "")
     @ProtoMethodParam(params = {""})
-    public String ipAddress() {
+    public HashMap<String, String> networkInfo() {
         return NetworkUtils.getLocalIpAddress(getContext());
     }
 
@@ -278,38 +281,37 @@ public class PNetwork extends ProtoBase {
         return socketIOClient;
     }
 
-    private class EmailConf {
-        public String host;
-        public String user;
-        public String password;
-        public String port;
-        public String auth;
-        public String ttl;
-    }
 
-    // public EmailConf emailSettings;
+    // http://stackoverflow.com/questions/3303805/are-there-any-good-short-code-examples-that-simply-read-a-new-gmail-message
+    public void getEmail() throws MessagingException, IOException {
+        Session session = Session.getDefaultInstance(System.getProperties(),null);
+        Store store = null;
+        store = session.getStore("imaps");
 
+        // store.connect(this.host, this.userName, this.password);
 
-    @ProtoMethod(description = "Creates an object where to set the e-mail sending settings", example = "")
-    @ProtoMethodParam(params = {"url", "function(data)"})
-    public EmailConf createEmailSettings() {
-        /*
-		 * String host, String user, String pass, String iPort, String bAuth,
-		 * String bTtl) {
-		 * 
-		 * emailSettings = new EmailConf(); emailSettings.host = host;
-		 * emailSettings.user = user; emailSettings.password = pass;
-		 * emailSettings.port = iPort; emailSettings.auth = bAuth;
-		 * emailSettings.ttl = bTtl;
-		 */
-        return new EmailConf();
+        // Get default folder
+        Folder folder = store.getDefaultFolder();
+        folder.getMessages();
+        folder.getNewMessageCount();
+        Message m = folder.getMessage(0);
+        m.getMessageNumber();
+        m.getAllRecipients();
+        m.getReceivedDate();
+        m.getFrom();
+        m.getSubject();
+        m.getReplyTo();
+        m.getContent();
+        m.getSize();
+
+        // Get any folder by name
+        Folder[] folderList = folder.list();
     }
 
     // http://mrbool.com/how-to-work-with-java-mail-api-in-android/27800#ixzz2tulYAG00
-
-    @ProtoMethod(description = "Send an E-mail. It requires passing a EmailConf object", example = "")
+    @ProtoMethod(description = "Send an E-mail. It requires passing a configuration object with (host, user, password, port, auth, ttl) parameters", example = "")
     @ProtoMethodParam(params = {"url", "function(data)"})
-    public void sendEmail(String from, String to, String subject, String text, final EmailConf emailSettings)
+    public void sendEmail(String from, String to, String subject, String text, final HashMap<String, String> emailSettings)
             throws AddressException, MessagingException {
 
         if (emailSettings == null) {
@@ -324,12 +326,12 @@ public class PNetwork extends ProtoBase {
         String finalString = "";
 
         Properties props = System.getProperties();
-        props.put("mail.smtp.starttls.enable", emailSettings.ttl);
-        props.put("mail.smtp.host", emailSettings.host);
-        props.put("mail.smtp.user", emailSettings.user);
-        props.put("mail.smtp.password", emailSettings.password);
-        props.put("mail.smtp.port", emailSettings.port);
-        props.put("mail.smtp.auth", emailSettings.auth);
+        props.put("mail.smtp.starttls.enable", emailSettings.get("ttl"));
+        props.put("mail.smtp.host", emailSettings.get("host"));
+        props.put("mail.smtp.user", emailSettings.get("user"));
+        props.put("mail.smtp.password", emailSettings.get("password"));
+        props.put("mail.smtp.port", emailSettings.get("port"));
+        props.put("mail.smtp.auth", emailSettings.get("auth"));
 
         Log.i("Check", "done pops");
         final Session session = Session.getDefaultInstance(props, null);
@@ -357,7 +359,7 @@ public class PNetwork extends ProtoBase {
                     //MLog.i("check", "transport");
                     Transport transport = session.getTransport("smtp");
                     //MLog.i("check", "connecting");
-                    transport.connect(emailSettings.host, emailSettings.user, emailSettings.password);
+                    transport.connect(emailSettings.get("host"), emailSettings.get("user"), emailSettings.get("password"));
                     //MLog.i("check", "wana send");
                     transport.sendMessage(message, message.getAllRecipients());
                     transport.close();
@@ -374,16 +376,36 @@ public class PNetwork extends ProtoBase {
 
     }
 
-    // --------- getRequest ---------//
-    public interface HttpGetCB {
-        void event(int eventType, String responseString);
-    }
-
 
     @ProtoMethod(description = "Simple http get. It returns the data using the callback", example = "")
     @ProtoMethodParam(params = {"url", "function(eventType, responseString)"})
-    public void httpGet(String url, final HttpGetCB callbackfn) {
+    public void httpGet(String url, final ReturnInterface callbackfn) {
+        final OkHttpClient client = new OkHttpClient();
+        final Request request = new Request.Builder().url(url).build();
 
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final ReturnObject ret = new ReturnObject();
+                try {
+                    Response response = client.newCall(request).execute();
+                    ret.put("response", response.body().string());
+                    ret.put("status", response.code());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        callbackfn.event(ret);
+                    }
+                });
+            }
+        });
+        t.start();
+
+            /*
         class RequestTask extends AsyncTask<String, String, String> {
             String responseString = null;
 
@@ -407,12 +429,14 @@ public class PNetwork extends ProtoBase {
                     }
                     MLog.d(TAG, "downloading ");
 
-                    mHandler.post(new Runnable() {
+                    final ReturnObject ret = new ReturnObject();
+                    ret.put("status", statusLine.getStatusCode());
+                    ret.put("response", responseString);
 
+                    mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            MLog.d(TAG, "passing data to ui thread " + statusLine + " " + responseString);
-                            callbackfn.event(statusLine.getStatusCode(), responseString);
+                            callbackfn.event(ret);
                         }
                     });
 
@@ -434,6 +458,7 @@ public class PNetwork extends ProtoBase {
         }
 
         MLog.d(TAG, "" + new RequestTask().execute(url));
+        */
     }
 
     // --------- postRequest ---------//
@@ -444,46 +469,81 @@ public class PNetwork extends ProtoBase {
 
     @ProtoMethod(description = "Simple http post request. It needs an object to be sent. If an element of the object contains the key file then it will try to upload the resource indicated in the value as Uri ", example = "")
     @ProtoMethodParam(params = {"url", "params", "function(responseString)"})
-    public void httpPost(String url, Object object, final HttpPostCB callbackfn) {
+    public void httpPost(final String url, final NativeArray parts, final ReturnInterface callbackfn) {
+        final OkHttpClient client = new OkHttpClient();
+
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                MultipartBody.Builder formBody = new MultipartBody.Builder();
+                formBody.setType(MultipartBody.FORM);
+
+                for (int i = 0; i < parts.size(); i++) {
+                    NativeObject o = (NativeObject) parts.get(i);
+
+                    // go through elements
+                    String name = (String) o.get("name");
+                    String content = (String) o.get("content");
+                    String type = (String) o.get("type");
+
+                    if (type.equals("file")) {
+                        String mediaType = (String) o.get("mediaType");
+                        File f = new File(getAppRunner().getProject().getFullPathForFile(content));
+                        formBody.addFormDataPart(name, content, RequestBody.create(MediaType.parse(mediaType), f));
+                    } else {
+                        formBody.addFormDataPart(name, content);
+                    }
+                }
+                MultipartBody body = formBody.build();
+
+                Request request = new Request.Builder().url(url).post(body).build();
+                Response response = null;
+                final ReturnObject ret = new ReturnObject();
+                try {
+                    response = client.newCall(request).execute();
+                    ret.put("response", response.body().string());
+                    ret.put("status", response.code());
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            callbackfn.event(ret);
+                        }
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        });
+        t.start();
+
+
+        /*
         final HttpClient httpClient = new DefaultHttpClient();
         final HttpContext localContext = new BasicHttpContext();
         final HttpPost httpPost = new HttpPost(url);
 
-        Gson g = new Gson();
-        JsonArray q = g.toJsonTree(object).getAsJsonArray();
-
         MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
 
-        for (int i = 0; i < q.size(); i++) {
-            Set<Entry<String, JsonElement>> set = q.get(i).getAsJsonObject().entrySet();
+        for (int i = 0; i < parts.size(); i++) {
+            NativeObject o = (NativeObject) parts.get(i);
 
             // go through elements
-            String name = "";
-            String content = "";
-            String type = "";
-            for (Object element : set) {
-                Entry<String, JsonElement> entry = (Entry<String, JsonElement>) element;
-                if (entry.getKey().equals("name")) {
-                    name = entry.getValue().getAsString();
-                } else if (entry.getKey().equals("content")) {
-                    content = entry.getValue().getAsString();
-                } else if (entry.getKey().equals("type")) {
-                    type = entry.getValue().getAsString();
-                }
-            }
+            String name = (String) o.get("name");
+            String content = (String) o.get("content");
+            String type = (String) o.get("type");
 
             // create the multipart
             if (type.contains("file")) {
-                //TODO reenable this
-                File f = null; //new File(ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/" + content);
+                File f = new File(getAppRunner().getProject().getFullPathForFile(content));
                 ContentBody cbFile = new FileBody(f);
                 entity.addPart(name, cbFile);
-            } else if (type.contains("text")) { // Normal string data
-                try {
-                    entity.addPart(name, new StringBody(content));
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
+            } else if (type.equals("text")){ // Normal string data
+                entity.addPart(name, new StringBody(content, ContentType.TEXT_PLAIN));
+            } else if (type.equals("json")){ // Normal string data
+                entity.addPart(name, new StringBody(content, ContentType.APPLICATION_JSON));
             }
         }
 
@@ -495,7 +555,15 @@ public class PNetwork extends ProtoBase {
             public void run() {
                 try {
                     HttpResponse response = httpClient.execute(httpPost, localContext);
-                    callbackfn.event(response.getStatusLine().toString());
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+                    response.getEntity().writeTo(out);
+                    out.close();
+                    String responseString = out.toString();
+
+                    ReturnObject o = new ReturnObject();
+                    o.put("status", response.getStatusLine().toString());
+                    o.put("response", responseString);
+                    callbackfn.event(o);
                 } catch (ClientProtocolException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -503,6 +571,8 @@ public class PNetwork extends ProtoBase {
                 }
             }
         }).start();
+
+        */
     }
 
     //gives the url trying to access
@@ -512,43 +582,72 @@ public class PNetwork extends ProtoBase {
     //
     //}
 
-//
-//    @ProtoMethod(description = "Simple http server, serving the content of the project folder", example = "")
-//    @ProtoMethodParam(params = {"port", "function(responseString)"})
-//    public PSimpleHttpServer createSimpleHttpServer(int port) {
-//        PSimpleHttpServer httpServer = null;
-//        try {
-//            httpServer = new PSimpleHttpServer(getAppRunner(), port);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return httpServer;
-//    }
-//
+
+    @ProtoMethod(description = "Simple http server, serving the content of the project folder", example = "")
+    @ProtoMethodParam(params = {"port", "function(responseString)"})
+    public PSimpleHttpServer createSimpleHttpServer(int port) {
+        PSimpleHttpServer httpServer = null;
+        try {
+            httpServer = new PSimpleHttpServer(getAppRunner(), port);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return httpServer;
+    }
+
+    public String ssh(final String serverAddress, final int port, final String username, final String password) {
+        MLog.d(TAG, "trying to connect");
 
 
-//       public PBluetooth createBluetoothSerialServer() {
-//        PBluetooth pBluetooth = new PBluetooth(getActivity());
-//        pBluetooth.initForParentFragment(getFragment());
-//
-//        pBluetooth.start();
-//
-//        return pBluetooth;
-//    }
-//
-//
-//    @ProtoMethod(description = "Start the bluetooth interface", example = "")
-//    @ProtoMethodParam(params = {})
-//    public PBluetooth connectBluetoothSerial() {
-//        PBluetooth pBluetooth = new PBluetooth(getActivity());
-//        pBluetooth.initForParentFragment(getFragment());
-//
-//        pBluetooth.start();
-//
-//        return pBluetooth;
-//    }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                com.jcraft.jsch.Session session = null;
+                try {
+                    JSch jsch = new JSch();
+                    String result = "";
 
+                    session = jsch.getSession(username, serverAddress, port);
+                    session.setPassword(password);
+
+                    // Avoid asking for key confirmation
+                    Properties prop = new Properties();
+                    prop.put("StrictHostKeyChecking", "no");
+                    session.setConfig(prop);
+                    session.connect();
+
+                    // SSH Channel
+                    ChannelExec channel = (ChannelExec) session.openChannel("exec");
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    channel.setOutputStream(stream);
+
+                    // Execute command
+                    channel.setCommand("ls -ltr");
+                    channel.connect(1000);
+                    java.lang.Thread.sleep(500);   // this kludge seemed to be required.
+                    channel.disconnect();
+
+                    result = stream.toString();
+                    MLog.d(TAG, "result: " + result);
+
+                } catch (JSchException ex) {
+                    String s = ex.toString();
+                    System.out.println(s);
+                } catch (InterruptedException ex) {
+                    String s = ex.toString();
+                    System.out.println(s);
+                } finally {
+                    MLog.d(TAG, "disconnected");
+                    if (session != null) session.disconnect();
+                }
+
+            }
+        }).start();
+
+
+        return "";
+    }
 
     @ProtoMethod(description = "Enable/Disable the Wifi adapter", example = "")
     @ProtoMethodParam(params = {"boolean"})
@@ -671,48 +770,29 @@ public class PNetwork extends ProtoBase {
         void event();
     }
 
-
-    @ProtoMethod(description = "Register mContext discovery service", example = "")
-    @ProtoMethodParam(params = {"serviceName, serviceType, port, function(name, status)"})
-    public void registerService(String serviceName, String serviceType, int port, ServiceDiscovery.CreateCB callbackfn) {
-        ServiceDiscovery.Create rD = new ServiceDiscovery().create(getContext(), serviceName, serviceType, port, callbackfn);
-        getAppRunner().whatIsRunning.add(rD);
-    }
-
-
-    @ProtoMethod(description = "Discover services in the current network", example = "")
-    @ProtoMethodParam(params = {"serviceType, function(name, jsonData)"})
-    public void discoverServices(final String serviceType, ServiceDiscovery.DiscoverCB callbackfn) {
-        ServiceDiscovery.Discover sD = new ServiceDiscovery().discover(getContext(), serviceType, callbackfn);
-        getAppRunner().whatIsRunning.add(sD);
-    }
-
-    public interface PingCallback {
-        void event(float ms);
-    }
-
-
     @ProtoMethod(description = "Ping mContext Ip address", example = "")
     @ProtoMethodParam(params = {"ip", "function(time)"})
-    public void ping(final String where, final PingCallback callbackfn) {
+    public void ping(final String where, final int num, final ReturnInterface callbackfn) {
        mHandler.post(new Runnable() {
            @Override
            public void run() {
                final Pattern pattern = Pattern.compile("time=(\\d.+)\\s*ms");
                final Matcher[] m = {null};
 
-               new ExecuteCmd("/system/bin/ping -c 8 " + where, new ExecuteCmd.ExecuteCommandCB() {
+               new ExecuteCmd("/system/bin/ping -c " + num + " " + where, new ExecuteCmd.ExecuteCommandCB() {
                    @Override
                    public void event(String buffer) {
                        //MLog.d(TAG, pattern.toString() + "" + buffer);
 
+                       ReturnObject ret = new ReturnObject();
                        m[0] = pattern.matcher(buffer);
                        if (m[0].find()) {
-                           callbackfn.event(Float.parseFloat(m[0].group(1)));
+                           ret.put("time", Float.parseFloat(m[0].group(1)));
                        } else {
-                           callbackfn.event(-1);
-                           //MLog.d(TAG, "" + -1);
+                           ret.put("time", -1);
                        }
+                       callbackfn.event(ret);
+
 
                    }
                }).start();
@@ -753,7 +833,7 @@ public class PNetwork extends ProtoBase {
 
     @ProtoMethod(description = "Connect to a MQTT service", example = "")
     @ProtoMethodParam(params = {})
-    public PMqtt createMqttClient() {
+    public PMqtt createMQTTClient() {
         PMqtt pMqtt = new PMqtt(getAppRunner());
 
         return pMqtt;

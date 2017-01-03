@@ -24,6 +24,7 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -126,6 +127,7 @@ public class LicenseActivity extends BaseActivity {
     class License {
         public String title;
         public String body;
+        public boolean showing = false;
 
         public License(String name, String content) {
             title = name.replace("_", " ").replace(".txt", "");
@@ -146,11 +148,27 @@ public class LicenseActivity extends BaseActivity {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.license_view, parent, false);
             }
             TextView txtTitle = (TextView) convertView.findViewById(R.id.license_title);
-            TextView txtText = (TextView) convertView.findViewById(R.id.license_body);
+            final TextView txtText = (TextView) convertView.findViewById(R.id.license_body);
 
-            License license = getItem(position);
+            final License license = getItem(position);
             txtTitle.setText(license.title);
             txtText.setText(license.body);
+
+            txtText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (!license.showing) {
+                        txtText.setEllipsize(null);
+                        txtText.setMaxLines(Integer.MAX_VALUE);
+                    }
+                    else {
+                        txtText.setEllipsize(TextUtils.TruncateAt.END);
+                        txtText.setMaxLines(3);
+                    }
+
+                    license.showing = !license.showing;
+                }
+            });
 
             return convertView;
         }

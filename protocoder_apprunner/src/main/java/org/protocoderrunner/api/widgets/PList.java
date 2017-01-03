@@ -23,8 +23,6 @@ package org.protocoderrunner.api.widgets;
 import android.content.Context;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.view.View;
 
 import org.mozilla.javascript.NativeArray;
 import org.protocoderrunner.api.common.ReturnInterfaceWithReturn;
@@ -34,8 +32,6 @@ import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.StyleProperties;
 import org.protocoderrunner.base.views.FitRecyclerView;
 
-import java.util.ArrayList;
-
 public class PList extends FitRecyclerView {
 
     private final Context mContext;
@@ -44,19 +40,20 @@ public class PList extends FitRecyclerView {
     public StyleProperties props = new StyleProperties();
     public Styler styler;
 
-    public PList(AppRunner appRunner, NativeArray data, ReturnInterfaceWithReturn creating, ReturnInterfaceWithReturn binding) {
+    public PList(AppRunner appRunner, int numCols, NativeArray data, ReturnInterfaceWithReturn creating, ReturnInterfaceWithReturn binding) {
         super(appRunner.getAppContext());
         mContext = appRunner.getAppContext();
 
         styler = new Styler(appRunner, this, props);
         styler.apply();
 
-        setLayoutManager(new GridLayoutManager(mContext, 1));
+        setLayoutManager(new GridLayoutManager(mContext, numCols));
         // setLayoutManager(new StaggeredGridLayoutManager(2, VERTICAL));
         mViewAdapter = new PViewItemAdapter(mContext, data, creating, binding);
 
         // Get GridView and set adapter
         setHasFixedSize(true);
+
         setAdapter(mViewAdapter);
         notifyDataChanged();
 

@@ -21,8 +21,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
-import com.google.gson.annotations.Expose;
-
 public class ApplicationInfo {
     public CharSequence title;
     Intent intent;

@@ -24,17 +24,15 @@ import org.greenrobot.eventbus.Subscribe;
 import org.protocoder.appinterpreter.AppRunnerCustom;
 import org.protocoder.events.Events;
 import org.protocoder.events.EventsProxy;
-import org.protocoder.helpers.ProtoAppHelper;
 import org.protocoder.gui.settings.ProtocoderSettings;
-import org.protocoder.helpers.ProtoScriptHelper;
-import org.protocoderrunner.api.PDevice;
+import org.protocoder.helpers.ProtoAppHelper;
+import org.protocoderrunner.api.common.ReturnObject;
 import org.protocoderrunner.base.network.NetworkUtils;
 import org.protocoderrunner.base.utils.AndroidUtils;
 import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.models.Project;
 
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ProtocoderServerService extends Service {
@@ -163,30 +161,32 @@ public class ProtocoderServerService extends Service {
 
                 // device
                 HashMap device = new HashMap();
-                PDevice.DeviceInfo deviceInfo = appRunner.pDevice.info();
+                ReturnObject deviceInfo = appRunner.pDevice.info();
                 device.put("type", appRunner.pDevice.type());
-                device.put("model name", deviceInfo.model);
-                device.put("manufacturer", deviceInfo.manufacturer);
+                device.put("model name", deviceInfo.get("model"));
+                device.put("manufacturer", deviceInfo.get("manufacturer"));
 
                 // screen
                 HashMap screen = new HashMap();
                 screen.put("orientation", appRunner.pDevice.orientation());
                 screen.put("screen", appRunner.pDevice.isScreenOn());
-                screen.put("screen resolution", deviceInfo.screenWidth + " x " + deviceInfo.screenHeight);
-                screen.put("screen dpi", deviceInfo.screenDpi);
+                screen.put("screen resolution", deviceInfo.get("screenWidth") + " x " + deviceInfo.get("screenHeight"));
+                screen.put("screen dpi", deviceInfo.get("screenDpi"));
                 screen.put("brightness", appRunner.pDevice.brightness());
 
                 // others
                 HashMap other = new HashMap();
                 other.put("battery level", appRunner.pDevice.battery());
-                other.put("memory", appRunner.pDevice.memory().summary());
+                other.put("used memory", deviceInfo.get("usedMem"));
+                other.put("total memory", deviceInfo.get("totalMem"));
 
                 // network
                 HashMap network = new HashMap();
                 network.put("network available", appRunner.pNetwork.isNetworkAvailable());
                 network.put("wifi enabled", appRunner.pNetwork.isWifiEnabled());
-                network.put("network type", appRunner.pNetwork.getNetworkType());
-                network.put("ip", appRunner.pNetwork.ipAddress());
+                network.put("cellular network type", appRunner.pNetwork.getNetworkType());
+                network.put("ip", appRunner.pNetwork.networkInfo().get("ip"));
+                network.put("wifi type", appRunner.pNetwork.networkInfo().get("type"));
                 network.put("rssi", appRunner.pNetwork.wifiInfo().getRssi());
                 network.put("ssid", appRunner.pNetwork.wifiInfo().getSSID());
 
@@ -257,17 +257,18 @@ public class ProtocoderServerService extends Service {
     BroadcastReceiver connectivityChangeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            MLog.d(TAG, "connectivity changed");
             AndroidUtils.debugIntent("connectivityChangerReceiver", intent);
 
-            // check if there is mContext WIFI connection or we can connect via USB
-            if (NetworkUtils.getLocalIpAddress(ProtocoderServerService.this).equals("-1")) {
+            // check if there is a WIFI connection or we can connect via USB
+            if (NetworkUtils.getLocalIpAddress(ProtocoderServerService.this).get("ip").equals("127.0.0.1")) {
                 MLog.d(TAG, "No WIFI, still you can hack via USB using the adb command");
                 EventBus.getDefault().post(new Events.Connection("none", ""));
-
             } else {
                 MLog.d(TAG, "Hack via your browser @ http://" + NetworkUtils.getLocalIpAddress(ProtocoderServerService.this) + ":" + ProtocoderSettings.HTTP_PORT);
-                String ip = NetworkUtils.getLocalIpAddress(ProtocoderServerService.this) + ":" + ProtocoderSettings.HTTP_PORT;
-                EventBus.getDefault().post(new Events.Connection("wifi", ip));
+                String ip = NetworkUtils.getLocalIpAddress(ProtocoderServerService.this).get("ip") + ":" + ProtocoderSettings.HTTP_PORT;
+                String type = NetworkUtils.getLocalIpAddress(ProtocoderServerService.this).get("type");
+                EventBus.getDefault().post(new Events.Connection(type, ip));
             }
         }
     };

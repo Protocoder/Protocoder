@@ -24,6 +24,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.hardware.Camera;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.speech.RecognitionListener;
@@ -31,21 +34,37 @@ import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.util.Log;
 
-import org.protocoderrunner.apidoc.annotation.ProtoMethod;
-import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
-import org.protocoderrunner.apidoc.annotation.ProtoObject;
-import org.protocoderrunner.apprunner.AppRunner;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.BinaryBitmap;
+import com.google.zxing.ChecksumException;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.FormatException;
+import com.google.zxing.MultiFormatReader;
+import com.google.zxing.NotFoundException;
+import com.google.zxing.PlanarYUVLuminanceSource;
+import com.google.zxing.Reader;
+import com.google.zxing.Result;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.common.HybridBinarizer;
+import com.google.zxing.qrcode.QRCodeWriter;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+
 import org.protocoderrunner.api.media.PAudioPlayer;
 import org.protocoderrunner.api.media.PAudioRecorder;
 import org.protocoderrunner.api.media.PMidi;
 import org.protocoderrunner.api.media.PPureData;
 import org.protocoderrunner.api.media.PWave;
+import org.protocoderrunner.apidoc.annotation.ProtoMethod;
+import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apidoc.annotation.ProtoObject;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.base.media.Audio;
-import org.protocoderrunner.base.media.AudioServicePd;
 import org.protocoderrunner.base.utils.AndroidUtils;
 import org.protocoderrunner.base.utils.MLog;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Locale;
 
 @ProtoObject
@@ -105,6 +124,7 @@ public class PMedia extends ProtoBase {
         AndroidUtils.setEnableSoundEffects(getContext(), b);
     }
 
+    /*
     @ProtoMethod(description = "Loads and initializes a PureData patch http://www.puredata.info using libpd", example = "")
     @ProtoMethodParam(params = {"fileName", "micChannels", "outputChannels", "sampleRate", "buffer"})
     public PPureData initPdPatch(String fileName, int micChannels, int outputChannels, int sampleRate, int buffer) {
@@ -115,20 +135,20 @@ public class PMedia extends ProtoBase {
 
         return this.initPdPatch(fileName);
     }
+    */
 
     @ProtoMethod(description = "Loads and initializes a PureData patch http://www.puredata.info using libpd", example = "")
     @ProtoMethodParam(params = {"fileName"})
-    public PPureData initPdPatch(String fileName) {
+    public PPureData initLibPd() {
         PPureData pPureData = new PPureData(getAppRunner());
 
+        /*
         String filePath = getAppRunner().getProject().getFullPathForFile(fileName);
-        MLog.d(TAG, filePath);
+        pPureData.loadPatch(filePath);
+        pPureData.start();
 
-        pPureData.path = filePath;
-
-        MLog.d(TAG, " "  + filePath);
-        // pPureData.initPatch(fileName);
         pPureData.initPdService();
+        */
 
         return pPureData;
     }
@@ -329,6 +349,54 @@ public class PMedia extends ProtoBase {
                         break;
                 }
             }
+        }
+    }
+
+
+    public Bitmap generateQRCode(String text) {
+        Bitmap bmp = null;
+
+        Hashtable<EncodeHintType, ErrorCorrectionLevel> hintMap = new Hashtable<EncodeHintType, ErrorCorrectionLevel>();
+        hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H); // H = 30% damage
+
+        int size = 256;
+
+        BitMatrix bitMatrix = null;
+        try {
+            bitMatrix = new QRCodeWriter().encode(text, BarcodeFormat.QR_CODE, size, size, hintMap);
+
+            int width = bitMatrix.getWidth();
+            bmp = Bitmap.createBitmap(width, width, Bitmap.Config.RGB_565);
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < width; y++) {
+                    bmp.setPixel(y, x, bitMatrix.get(x, y) == true ? Color.BLACK : Color.WHITE);
+                }
+            }
+        } catch (WriterException e) {
+            e.printStackTrace();
+        }
+
+        return bmp;
+    }
+
+    public void scanQRcode(byte[] data, Camera camera) {
+        Camera.Size size = camera.getParameters().getPreviewSize();
+
+        // Create BinaryBitmap
+        PlanarYUVLuminanceSource source = new PlanarYUVLuminanceSource(data, size.width, size.height, 0, 0, size.width, size.height, false);
+        BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
+
+        // Read QR Code
+        Reader reader = new MultiFormatReader();
+        Result result = null;
+        try {
+            result = reader.decode(bitmap);
+            String text = result.getText();
+
+            MLog.d(TAG, "result: " + text);
+        } catch (NotFoundException e) {
+        } catch (ChecksumException e) {
+        } catch (FormatException e) {
         }
     }
 

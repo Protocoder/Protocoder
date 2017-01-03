@@ -1,28 +1,29 @@
 package org.protocoderrunner.api.media;
 
 import android.hardware.usb.UsbDevice;
-import android.os.Handler;
-import android.os.Handler.Callback;
-import android.os.Message;
+import android.support.annotation.NonNull;
 import android.widget.Toast;
 
+import org.protocoderrunner.api.ProtoBase;
 import org.protocoderrunner.api.common.ReturnInterface;
 import org.protocoderrunner.api.common.ReturnObject;
 import org.protocoderrunner.apprunner.AppRunner;
-import org.protocoderrunner.api.ProtoBase;
-
-import java.util.Arrays;
+import org.protocoderrunner.base.utils.MLog;
 
 import jp.kshoji.driver.midi.device.MidiInputDevice;
+import jp.kshoji.driver.midi.device.MidiOutputDevice;
+import jp.kshoji.driver.midi.util.UsbMidiDriver;
 
 public class PMidi extends ProtoBase {
 
     private static final String TAG = PMidi.class.getSimpleName();
 
     private ReturnInterface mMidiEvent;
+    public MidiOutputDevice mMidiOutputDevice;
 
     private void callback(final int cable, final int channel, final int function, final int value) {
 
+        MLog.d(TAG, "new val + " + cable + " " + channel + " " + function + " " + value);
         mHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -48,75 +49,167 @@ public class PMidi extends ProtoBase {
         super(appRunner);
 
         usbMidiDriver = new UsbMidiDriver(appRunner.getAppContext()) {
+
             @Override
-            public void onDeviceAttached(UsbDevice usbDevice) {
-                Toast.makeText(getContext(), "USB MIDI Device " + usbDevice.getDeviceName() + " has been attached.", Toast.LENGTH_LONG).show();
-                //mConnectedCallback.event(true);
+            public void onMidiMiscellaneousFunctionCodes(@NonNull MidiInputDevice midiInputDevice, int i, int i1, int i2, int i3) {
+
             }
 
             @Override
-            public void onDeviceDetached(UsbDevice usbDevice) {
-                //  Toast.makeText(UsbMidiDriverSampleActivity.this, "USB MIDI Device " + usbDevice.getDeviceName() + " has been detached.", Toast.LENGTH_LONG).show();
+            public void onMidiCableEvents(@NonNull MidiInputDevice midiInputDevice, int i, int i1, int i2, int i3) {
+
             }
 
             @Override
-            public void onMidiNoteOff(final MidiInputDevice sender, int cable, int channel, int note, int velocity) {
+            public void onMidiSystemCommonMessage(@NonNull MidiInputDevice midiInputDevice, int i, byte[] bytes) {
+
+            }
+
+            @Override
+            public void onMidiSystemExclusive(@NonNull MidiInputDevice midiInputDevice, int i, byte[] bytes) {
+
+            }
+
+            @Override
+            public void onMidiNoteOff(MidiInputDevice midiInputDevice, int cable, int channel, int note, int velocity) {
                 callback(cable, channel, note, velocity);
             }
 
             @Override
-            public void onMidiNoteOn(final MidiInputDevice sender, int cable, int channel, int note, int velocity) {
+            public void onMidiNoteOn(MidiInputDevice midiInputDevice, int cable, int channel, int note, int velocity) {
                 callback(cable, channel, note, velocity);
             }
 
             @Override
-            public void onMidiPolyphonicAftertouch(final MidiInputDevice sender, int cable, int channel, int note, int pressure) {
+            public void onMidiPolyphonicAftertouch(@NonNull MidiInputDevice midiInputDevice, int cable, int channel, int note, int pressure) {
                 callback(cable, channel, note, pressure);
             }
 
             @Override
-            public void onMidiControlChange(final MidiInputDevice sender, final int cable, final int channel, final int function, final int value) {
+            public void onMidiControlChange(@NonNull MidiInputDevice midiInputDevice, int cable, int channel, int function, int value) {
                 callback(cable, channel, function, value);
             }
 
             @Override
-            public void onMidiProgramChange(final MidiInputDevice sender, int cable, int channel, int program) {
+            public void onMidiProgramChange(@NonNull MidiInputDevice midiInputDevice, int cable, int channel, int program) {
                 callback(cable, channel, channel, program);
             }
 
             @Override
-            public void onMidiChannelAftertouch(final MidiInputDevice sender, int cable, int channel, int pressure) {
+            public void onMidiChannelAftertouch(@NonNull MidiInputDevice midiInputDevice, int cable, int channel, int pressure) {
                 callback(cable, channel, channel, pressure);
             }
 
             @Override
-            public void onMidiPitchWheel(final MidiInputDevice sender, int cable, int channel, int amount) {
+            public void onMidiPitchWheel(@NonNull MidiInputDevice midiInputDevice, int cable, int channel, int amount) {
                 callback(cable, channel, channel, amount);
             }
 
             @Override
-            public void onMidiSystemExclusive(final MidiInputDevice sender, int cable, final byte[] systemExclusive) {
+            public void onMidiSingleByte(@NonNull MidiInputDevice midiInputDevice, int i, int i1) {
 
             }
 
             @Override
-            public void onMidiSystemCommonMessage(final MidiInputDevice sender, int cable, final byte[] bytes) {
+            public void onMidiTimeCodeQuarterFrame(@NonNull MidiInputDevice midiInputDevice, int i, int i1) {
 
             }
 
             @Override
-            public void onMidiSingleByte(final MidiInputDevice sender, int cable, int byte1) {
+            public void onMidiSongSelect(@NonNull MidiInputDevice midiInputDevice, int i, int i1) {
 
             }
 
             @Override
-            public void onMidiMiscellaneousFunctionCodes(final MidiInputDevice sender, int cable, int byte1, int byte2, int byte3) {
+            public void onMidiSongPositionPointer(@NonNull MidiInputDevice midiInputDevice, int i, int i1) {
 
             }
 
             @Override
-            public void onMidiCableEvents(final MidiInputDevice sender, int cable, int byte1, int byte2, int byte3) {
+            public void onMidiTuneRequest(@NonNull MidiInputDevice midiInputDevice, int i) {
 
+            }
+
+            @Override
+            public void onMidiTimingClock(@NonNull MidiInputDevice midiInputDevice, int i) {
+
+            }
+
+            @Override
+            public void onMidiStart(@NonNull MidiInputDevice midiInputDevice, int i) {
+
+            }
+
+            @Override
+            public void onMidiContinue(@NonNull MidiInputDevice midiInputDevice, int i) {
+
+            }
+
+            @Override
+            public void onMidiStop(@NonNull MidiInputDevice midiInputDevice, int i) {
+
+            }
+
+            @Override
+            public void onMidiActiveSensing(@NonNull MidiInputDevice midiInputDevice, int i) {
+
+            }
+
+            @Override
+            public void onMidiReset(@NonNull MidiInputDevice midiInputDevice, int i) {
+
+            }
+
+            @Override
+            public void onMidiRPNReceived(@NonNull MidiInputDevice midiInputDevice, int i, int i1, int i2, int i3) {
+
+            }
+
+            @Override
+            public void onMidiNRPNReceived(@NonNull MidiInputDevice midiInputDevice, int i, int i1, int i2, int i3) {
+
+            }
+
+            @Override
+            public void onDeviceDetached(@NonNull UsbDevice usbDevice) {
+
+            }
+
+            @Override
+            public void onMidiInputDeviceDetached(@NonNull MidiInputDevice midiInputDevice) {
+
+            }
+
+            @Override
+            public void onMidiOutputDeviceDetached(@NonNull MidiOutputDevice midiOutputDevice) {
+                Toast.makeText(getContext(), "USB MIDI Output Device deatached" + midiOutputDevice.getUsbDevice().getDeviceName(), Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onDeviceAttached(@NonNull UsbDevice usbDevice) {
+
+            }
+
+            @Override
+            public void onMidiInputDeviceAttached(@NonNull MidiInputDevice midiInputDevice) {
+
+            }
+
+            @Override
+            public void onMidiOutputDeviceAttached( MidiOutputDevice midiOutputDevice) {
+                Toast.makeText(getContext(), "USB MIDI Output Device " + midiOutputDevice.getUsbDevice().getDeviceName() + " has been attached.", Toast.LENGTH_LONG).show();
+
+                mMidiOutputDevice = midiOutputDevice;
+
+                /*
+                Set<MidiOutputDevice> midiOutputDevices = usbMidiDriver.getMidiOutputDevices(midiOutputDevice.getUsbDevice());
+                MLog.d(TAG, "midioutputdevices: " + midiOutputDevices.size());
+                if (midiOutputDevices.size() > 0) {
+                    midiOutputDevice = (MidiOutputDevice) midiOutputDevices.toArray()[0];
+                    MLog.d(TAG, "midiOutputDevice " + midiOutputDevice);
+                    midiOutputDevice.sendMidiNoteOn(0, 0, 50, 68);
+                }
+                */
             }
         };
 
@@ -129,9 +222,19 @@ public class PMidi extends ProtoBase {
         return this;
     }
 
+    public void sendNoteOn(int cable, int channel, int note, int velocity) {
+        mMidiOutputDevice.sendMidiNoteOn(cable, channel, note, velocity);
+    }
+
+    public void sendNoteOff(int cable, int channel, int note, int velocity) {
+        mMidiOutputDevice.sendMidiNoteOff(cable, channel, note, velocity);
+    }
+
 
     @Override
     public void __stop() {
+        MLog.d(TAG, "close");
+        if (mMidiOutputDevice != null) mMidiOutputDevice.suspend();
         mMidiEvent = null;
         usbMidiDriver.close();
     }

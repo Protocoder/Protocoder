@@ -1,7 +1,6 @@
 package org.protocoderrunner.api.widgets;
 
 import android.view.MotionEvent;
-import android.view.View;
 
 import org.protocoderrunner.api.common.ReturnInterface;
 import org.protocoderrunner.api.common.ReturnObject;

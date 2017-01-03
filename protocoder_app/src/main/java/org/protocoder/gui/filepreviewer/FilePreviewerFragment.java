@@ -35,11 +35,9 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.protocoder.R;
 import org.protocoder.events.Events;
-import org.protocoder.helpers.ProtoScriptHelper;
 import org.protocoder.server.model.ProtoFile;
 import org.protocoderrunner.base.BaseFragment;
 import org.protocoderrunner.base.utils.Image;
-import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.models.Project;
 
 @SuppressLint("NewApi")

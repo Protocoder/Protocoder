@@ -20,7 +20,6 @@
 
 package org.protocoder;
 
-import android.animation.TimeInterpolator;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -36,10 +35,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -79,23 +79,28 @@ public class MainActivity extends BaseActivity {
     private static final String FRAGMENT_FOLDER_CHOOSER = "11";
     private static final String FRAGMENT_PROJECT_LIST = "12";
 
+    private Context mContext;
+
     // custom app runner
     protected AppRunnerCustom appRunner;
-
     // ui
     private ProjectListFragment mListFragmentBase;
     private FolderChooserFragment mFolderChooserFragment;
+
     // private TextView mTxtIp;
-
     private Intent mServerIntent;
-    private boolean isTablet;
 
+    private boolean isTablet;
     private TextView mTxtConnectionMessage;
     private TextView mTxtConnectionIp;
+    private LinearLayout mConnectionButtons;
+    private ImageView mComputerimage;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mContext = this;
 
         NewUserPreferences.getInstance().load();
 
@@ -115,6 +120,7 @@ public class MainActivity extends BaseActivity {
         if (!(boolean) NewUserPreferences.getInstance().get("webide_mode")) {
             final CardView c = (CardView) findViewById(R.id.card_view);
             c.setAlpha(0.0f);
+            c.setVisibility(View.VISIBLE);
 
             final ViewTreeObserver viewTreeObserver = c.getViewTreeObserver();
             viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -136,11 +142,15 @@ public class MainActivity extends BaseActivity {
             addProjectListFragment(savedInstanceState);
             //showIntroduction(savedInstanceState);
         } else {
+            FrameLayout fl = (FrameLayout) findViewById(R.id.fragmentEditor);
+            fl.setVisibility(View.VISIBLE);
+            MLog.d(TAG, "using webide");
             APIWebviewFragment webViewFragment = new APIWebviewFragment();
             Bundle bundle = new Bundle();
             bundle.putString("url", "http://127.0.0.1:8585");
             webViewFragment.setArguments(bundle);
             addFragment(webViewFragment, R.id.fragmentEditor, "qq");
+
         }
 
         /*
@@ -285,7 +295,7 @@ public class MainActivity extends BaseActivity {
             CardView cardView = (CardView) findViewById(R.id.card_view);
             cardView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.splash_slide_out_anim_set));
         }
-        */ 
+        */
 
     }
 
@@ -384,8 +394,33 @@ public class MainActivity extends BaseActivity {
         }).setDuration(1000).start();
          */
 
+        mComputerimage = (ImageView) findViewById(R.id.computer_image);
+        LinearLayout connectionInfo = (LinearLayout) findViewById(R.id.connection_info);
+        connectionInfo.setVisibility(View.VISIBLE);
+        mComputerimage.setAlpha(0.0f);
+        mComputerimage.animate().alpha(1.0f).setDuration(300).setStartDelay(300);
         mTxtConnectionMessage = (TextView) findViewById(R.id.connection_message);
         mTxtConnectionIp = (TextView) findViewById(R.id.connection_ip);
+
+        mConnectionButtons = (LinearLayout) findViewById(R.id.connection_buttons);
+        Button connectWifi = (Button) findViewById(R.id.connect_to_wifi);
+        Button startHotspot = (Button) findViewById(R.id.start_hotspot);
+        Button webide_connection_help = (Button) findViewById(R.id.webide_connection_help);
+
+
+        connectWifi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ProtoAppHelper.launchWifiSettings(mContext);
+            }
+        });
+
+        startHotspot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ProtoAppHelper.launchHotspotSettings(mContext);
+            }
+        });
 
         // FileManagerDialog myDialog = FileManagerDialog.newInstance();
         // getSupportFragmentManager().beginTransaction().add(myDialog, "12345").commit();
@@ -443,13 +478,6 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private void addFragment(Fragment f, int id, String tag) {
-        FrameLayout fl = (FrameLayout) findViewById(id);
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(fl.getId(), f, tag);
-        ft.commit();
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -471,7 +499,7 @@ public class MainActivity extends BaseActivity {
             createProjectDialog();
             return true;
         } else if (itemId == R.id.menu_help) {
-            ProtoAppHelper.launchLicense(this);
+            ProtoAppHelper.launchHelp(this);
             return true;
         } else if (itemId == R.id.menu_settings) {
             ProtoAppHelper.launchSettings(this);
@@ -533,9 +561,17 @@ public class MainActivity extends BaseActivity {
             mTxtConnectionMessage.setText(getResources().getString(R.string.connection_message_wifi));
             mTxtConnectionIp.setText("http://" + address);
             mTxtConnectionIp.setVisibility(View.VISIBLE);
+            mConnectionButtons.setVisibility(View.GONE);
+        } else if (type == "tethering") {
+            mTxtConnectionMessage.setText(getResources().getString(R.string.connection_message_tethering));
+            mTxtConnectionIp.setText("http://" + address);
+            mTxtConnectionIp.setVisibility(View.VISIBLE);
+            mConnectionButtons.setVisibility(View.GONE);
         } else {
-            mTxtConnectionMessage.setText(getResources().getString(R.string.connection_message_other));
+            mTxtConnectionMessage.setText(getResources().getString(R.string.connection_message_not_connected));
             mTxtConnectionIp.setVisibility(View.GONE);
+            mConnectionButtons.setVisibility(View.VISIBLE);
+
         }
     }
 

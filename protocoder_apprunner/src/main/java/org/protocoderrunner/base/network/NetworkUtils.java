@@ -38,6 +38,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
@@ -47,6 +49,7 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.ByteOrder;
 import java.util.Enumeration;
+import java.util.HashMap;
 
 public class NetworkUtils {
 
@@ -222,12 +225,44 @@ public class NetworkUtils {
 
     }
 
+    public static boolean isTetheringEnabled(Context c) {
+        boolean isWifiAPenabled = false;
+
+        WifiManager wifi = (WifiManager) c.getSystemService(Context.WIFI_SERVICE);
+        Method[] wmMethods = wifi.getClass().getDeclaredMethods();
+        for (Method method : wmMethods) {
+            if (method.getName().equals("isWifiApEnabled")) {
+
+                try {
+                    isWifiAPenabled = (boolean) method.invoke(wifi);
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+
+        return isWifiAPenabled;
+    }
+
+
     // Get the local IP address
-    public static String getLocalIpAddress(Context c) {
+    public static HashMap<String, String> getLocalIpAddress(Context c) {
+        HashMap<String, String> networkInfo = new HashMap<>();
+        networkInfo.put("ip", "127.0.0.1");
+        networkInfo.put("type", "local");
+
+        if (NetworkUtils.isTetheringEnabled(c)) {
+            networkInfo.put("type", "tethering");
+            networkInfo.put("ip", "192.168.43.1");
+        }
 
         WifiManager wifiManager = (WifiManager) c.getSystemService(Context.WIFI_SERVICE);
         int ipAddress = wifiManager.getConnectionInfo().getIpAddress();
-        String ipAddressString = "-1";
         if (ipAddress != 0) {
 
             // Convert little-endian to big-endianif needed
@@ -239,14 +274,14 @@ public class NetworkUtils {
 
 
             try {
-                ipAddressString = InetAddress.getByAddress(ipByteArray).getHostAddress();
+                networkInfo.put("type", "wifi");
+                networkInfo.put("ip", InetAddress.getByAddress(ipByteArray).getHostAddress());
             } catch (UnknownHostException ex) {
                 Log.e("WIFIIP", "Unable to get host address.");
-                ipAddressString = null;
             }
         }
 
-        return ipAddressString;
+        return networkInfo;
 
         // try {
         // for (Enumeration<NetworkInterface> en =

@@ -15,6 +15,6 @@
         android:textSize="20sp"
         android:textColor="#222222"
         android:padding="5dp"
-        android:paddingLeft="15dp"
+        android:paddingLeft="14dp"
         android:id="@+id/textFolder"/>
 </LinearLayout>

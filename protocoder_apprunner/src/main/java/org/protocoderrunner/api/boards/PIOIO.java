@@ -20,10 +20,10 @@
 
 package org.protocoderrunner.api.boards;
 
+import org.protocoderrunner.api.ProtoBase;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
-import org.protocoderrunner.api.ProtoBase;
 import org.protocoderrunner.base.hardware.HardwareCallback;
 import org.protocoderrunner.base.hardware.IOIOBoard;
 import org.protocoderrunner.base.utils.MLog;

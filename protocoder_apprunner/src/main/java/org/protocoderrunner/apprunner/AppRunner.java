@@ -37,9 +37,12 @@ import org.protocoderrunner.api.PSensors;
 import org.protocoderrunner.api.PUI;
 import org.protocoderrunner.api.PUtil;
 import org.protocoderrunner.api.other.WhatIsRunning;
+import org.protocoderrunner.base.network.NetworkUtils;
+import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.models.Project;
 
 import java.io.File;
+import java.util.HashMap;
 
 public class AppRunner {
 
@@ -108,7 +111,7 @@ public class AppRunner {
         pMedia = new PMedia(this);
         pMedia.initForParentFragment(appRunnerFragment);
         pNetwork = new PNetwork(this);
-        // pNetwork.initForParentFragment(appRunnerFragment);
+        pNetwork.initForParentFragment(appRunnerFragment);
         pProtocoder = new PProtocoder(this);
         pSensors = new PSensors(this);
         pSensors.initForParentFragment(appRunnerFragment);
@@ -198,4 +201,12 @@ public class AppRunner {
         return mProject;
     }
 
+    public String getServingUrl() {
+        HashMap<String, String> networkInfo = NetworkUtils.getLocalIpAddress(getAppContext());
+        String ip = networkInfo.get("ip");
+        MLog.d(TAG, ip);
+        String url = "http://" + ip + ":" + AppRunnerSettings.SERVER_PORT + File.separator;
+
+        return url;
+    }
 }

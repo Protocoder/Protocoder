@@ -52,9 +52,9 @@ import java.util.List;
 import java.util.Locale;
 
 @TargetApi(Build.VERSION_CODES.GINGERBREAD)
-public class PGPS extends ProtoBase {
+public class PLocation extends ProtoBase {
 
-    protected static final String TAG = PGPS.class.getSimpleName();
+    protected static final String TAG = PLocation.class.getSimpleName();
 
     LocationManager locationManager;
     String provider;
@@ -76,12 +76,12 @@ public class PGPS extends ProtoBase {
     // private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1
     // minute
 
-    public PGPS(AppRunner appRunner) {
+    public PLocation(AppRunner appRunner) {
         super(appRunner);
     }
 
 
-    @ProtoMethod(description = "Start the gps. Returns lat, lon, alt, speed, bearing", example = "")
+    @ProtoMethod(description = "Start the location. Returns lat, lon, alt, speed, bearing", example = "")
     @ProtoMethodParam(params = {"function(lat, lon, alt, speed, bearing)"})
     public void start() {
 
@@ -132,7 +132,7 @@ public class PGPS extends ProtoBase {
 
             @Override
             public void onStatusChanged(String provider, int status, Bundle extras) {
-                MLog.d(TAG, "the gps status is: " + status);
+                MLog.d(TAG, "the location status is: " + status);
 
                 // TODO add listener to see when the GPS is on or not
                 switch (status) {
@@ -181,6 +181,11 @@ public class PGPS extends ProtoBase {
                 r.put("altitude", location.getAltitude());
                 r.put("speed", location.getSpeed());
                 r.put("accuracy", location.getAccuracy());
+                r.put("speed", location.getSpeed());
+                r.put("accuracy", location.getAccuracy());
+                r.put("bearing", location.getBearing());
+                r.put("provider", location.getProvider());
+                r.put("time", location.getTime());
                 mCallback.event(r);
 
                 if (location == null) {
@@ -199,7 +204,7 @@ public class PGPS extends ProtoBase {
 
     @ProtoMethod(description = "Start the GPS. Returns x, y, z", example = "")
     @ProtoMethodParam(params = {"function(x, y, z)"})
-    public PGPS onChange(final ReturnInterface callbackfn) {
+    public PLocation onChange(final ReturnInterface callbackfn) {
         mCallback = callbackfn;
 
         return this;

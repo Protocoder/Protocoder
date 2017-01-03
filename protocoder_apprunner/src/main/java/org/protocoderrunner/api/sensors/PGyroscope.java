@@ -30,7 +30,6 @@ import org.protocoderrunner.api.common.ReturnObject;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
-import org.protocoderrunner.api.other.WhatIsRunningInterface;
 
 public class PGyroscope extends CustomSensorManager {
 

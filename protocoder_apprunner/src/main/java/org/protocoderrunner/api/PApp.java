@@ -20,34 +20,41 @@
 
 package org.protocoderrunner.api;
 
-import android.annotation.TargetApi;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.MediaStore;
 import android.provider.MediaStore.MediaColumns;
 import android.support.v4.app.NotificationCompat;
 
 import org.mozilla.javascript.NativeObject;
-import org.protocoderrunner.api.common.ReturnInterface;
-import org.protocoderrunner.apidoc.annotation.ProtoObject;
-import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.AppRunnerActivity;
 import org.protocoderrunner.R;
+import org.protocoderrunner.api.common.ReturnInterface;
 import org.protocoderrunner.api.other.PEvents;
 import org.protocoderrunner.api.other.PLiveCodingFeedback;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apidoc.annotation.ProtoObject;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.base.utils.ExecuteCmd;
 import org.protocoderrunner.base.utils.FileIO;
+import org.protocoderrunner.base.utils.MLog;
+
+import java.util.Map;
 
 @ProtoObject
 public class PApp extends ProtoBase {
 
+    public final Notification notification;
     PEvents pevents;
     public String folder;
     public String name;
@@ -61,7 +68,7 @@ public class PApp extends ProtoBase {
 
     public PApp(AppRunner appRunner) {
         super(appRunner);
-
+        notification = new Notification();
         pevents = new PEvents(appRunner);
     }
 
@@ -73,28 +80,28 @@ public class PApp extends ProtoBase {
     //}
 
     //TODO reenable this
-    @ProtoMethod(description = "", example = "")
+    // @ProtoMethod(description = "", example = "")
     public void delayedAlarm(int delay, boolean alarmRepeat, boolean wakeUpScreen) {
         //Project p = ProjectManager.getInstance().getCurrentProject();
         //SchedulerManager.getInstance(getContext()).setAlarmDelayed(p, delay, alarmRepeat, wakeUpScreen);
     }
 
     //TODO reenable this
-    @ProtoMethod(description = "", example = "")
+    // @ProtoMethod(description = "", example = "")
     public void delayedAlarm(int hour, int minute, int second, boolean wakeUpScreen) {
         //Project p = ProjectManager.getInstance().getCurrentProject();
         //SchedulerManager.getInstance(getContext()).setAlarm(p, hour, minute, second, wakeUpScreen);
     }
 
     //TODO reenable this
-    @ProtoMethod(description = "", example = "")
+    // @ProtoMethod(description = "", example = "")
     public void exactAlarm(int hour, int minute, int second, boolean wakeUpScreen) {
         //Project p = ProjectManager.getInstance().getCurrentProject();
         //SchedulerManager.getInstance(getContext()).setAlarm(p, hour, minute, second, wakeUpScreen);
     }
 
-    @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = {"type", "data"})
+    // @ProtoMethod(description = "", example = "")
+    // @ProtoMethodParam(params = {"type", "data"})
     public void getSharedData(String type, String data) {
 
     }
@@ -107,8 +114,14 @@ public class PApp extends ProtoBase {
     @android.webkit.JavascriptInterface
     @ProtoMethod(description = "evaluate script", example = "")
     @ProtoMethodParam(params = {"code"})
-    public void eval(String code) {
-        getAppRunner().interp.eval(code);
+    public void eval(final String code) {
+
+        runOnUiThread(new CallbackRunUi() {
+            @Override
+            public void event() {
+                getAppRunner().interp.eval(code);
+            }
+        });
     }
 
     @ProtoMethod(description = "loads and external file containing code", example = "")
@@ -127,28 +140,73 @@ public class PApp extends ProtoBase {
         getAppRunner().interp.eval(code);
     }
 
-    //TODO way to cancel notification and come back to the script
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = {"id", "title", "description"})
-    public void notification(int id, String title, String description) {
 
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getContext())
-                .setSmallIcon(R.drawable.protocoder_icon).setContentTitle(title).setContentText(description);
-        // Creates an explicit intent for an Activity in your app
-        Intent resultIntent = new Intent(getContext(), AppRunnerActivity.class);
+    public class MyBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            MLog.d(TAG, "notification cancelled");
+        }
 
-        // The stack builder object will contain an artificial back stack for
-        // navigating backward from the Activity leads out your application to the Home screen.
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getContext());
-        stackBuilder.addParentStack(AppRunnerActivity.class);
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
 
-        mBuilder.setContentIntent(resultPendingIntent);
-        NotificationManager mNotificationManager = (NotificationManager) getContext().getSystemService(
-                getContext().NOTIFICATION_SERVICE);
-        mNotificationManager.notify(id, mBuilder.build());
+    class Notification {
+        private NotificationManager mNotificationManager;
+
+        Notification () {
+            mNotificationManager = (NotificationManager) getContext().getSystemService(getContext().NOTIFICATION_SERVICE);
+        }
+
+        public Notification show(Map map) {
+
+            Bitmap iconBmp = null;
+            String iconName = (String) map.get("icon");
+            if (iconName != null) iconBmp = BitmapFactory.decodeFile(getAppRunner().getProject().getFullPathForFile(iconName));
+
+            Intent intent = new Intent(getContext(), MyBroadcastReceiver.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 0, intent, 0);
+
+            // Creates an explicit intent for an Activity in your app
+            Intent resultIntent = new Intent(getContext(), AppRunnerActivity.class);
+            // The stack builder object will contain an artificial back stack for navigating backward from the Activity leads out your application to the Home screen.
+            TaskStackBuilder stackBuilder = TaskStackBuilder.create(getContext());
+            stackBuilder.addParentStack(AppRunnerActivity.class);
+            stackBuilder.addNextIntent(resultIntent);
+            PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            int id = ((Number) map.get("id")).intValue();
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getContext())
+                    .setSmallIcon(R.drawable.app_icon)
+                    .setContentTitle((CharSequence) map.get("title"))
+                    .setContentText((CharSequence) map.get("description"))
+                    .setLights(Color.parseColor((String) map.get("color")), 1000, 1000)
+                    .setLargeIcon(iconBmp)
+                    .setAutoCancel((Boolean) map.get("autocancel"))
+                    .setTicker((String)map.get("ticker"))
+                    .setSubText((CharSequence) map.get("subtext"))
+                    .setDeleteIntent(pendingIntent)
+                    .setContentIntent(resultPendingIntent);
+
+            mNotificationManager.notify(id, mBuilder.build());
+
+            return this;
+        }
+
+        public Notification cancel(int id) {
+            mNotificationManager.cancel(id);
+
+            return this;
+        }
+
+        public Notification cancelAll() {
+            mNotificationManager.cancelAll();
+
+            return this;
+        }
+
+        public Notification onClick(ReturnInterface callback) {
+
+            return this;
+        }
     }
 
     // TOFIX not working yet
@@ -176,14 +234,6 @@ public class PApp extends ProtoBase {
         shareIntent.setType("text/*");
         shareIntent.putExtra(Intent.EXTRA_TEXT, text);
         getContext().startActivity(shareIntent);
-    }
-
-
-    //TODO reenable this
-    @ProtoMethod(description = "get the current project HTTP URL", example = "")
-    public String servingUrl() {
-        String url = null; // getAppRunner().getProject()..getServingURL();
-        return url;
     }
 
     @ProtoMethod(description = "get the current project path", example = "")
@@ -271,19 +321,6 @@ public class PApp extends ProtoBase {
 //
 //        mContext.startActivity(intent);
 //    }
-
-    //TODO reenable this
-    @ProtoMethod(description = "opens a file with a given app provided as package name ", example = "")
-    @ProtoMethodParam(params = {"fileName", "packageName"})
-    public void openWithApp(final String src, String packageName) {
-        final String projectPath = null; //ProjectManager.getInstance().getCurrentProject().getStoragePath();
-
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.parse("file://" + projectPath + "/" + src), packageName);
-        //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-        getContext().startActivity(intent);
-    }
 
     public void onCreate(ReturnInterface callback) {
       //  callback.event(null);

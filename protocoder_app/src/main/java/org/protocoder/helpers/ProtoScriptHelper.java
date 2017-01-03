@@ -28,18 +28,14 @@ import android.net.Uri;
 import android.os.Environment;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 import net.lingala.zip4j.exception.ZipException;
 
 import org.protocoder.App;
 import org.protocoder.R;
-import org.protocoder.server.model.ProtoFile;
 import org.protocoder.gui.settings.ProtocoderSettings;
+import org.protocoder.server.model.ProtoFile;
 import org.protocoderrunner.AppRunnerActivity;
 import org.protocoderrunner.apprunner.AppRunnerHelper;
-import org.protocoderrunner.apprunner.AppRunnerSettings;
 import org.protocoderrunner.base.utils.FileIO;
 import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.base.utils.TimeUtils;
@@ -48,15 +44,10 @@ import org.protocoderrunner.models.Project;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

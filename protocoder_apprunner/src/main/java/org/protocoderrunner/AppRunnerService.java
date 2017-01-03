@@ -26,10 +26,10 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.AppRunnerInterpreter;
-import org.protocoderrunner.events.AppRunnerEvents;
+import org.protocoderrunner.apprunner.AppRunnerSettings;
+import org.protocoderrunner.base.utils.MLog;
 import org.protocoderrunner.events.Events;
 import org.protocoderrunner.models.Project;
-import org.protocoderrunner.base.utils.MLog;
 
 public class AppRunnerService extends Service {
 
@@ -64,6 +64,7 @@ public class AppRunnerService extends Service {
 
         String folder = intent.getStringExtra(Project.FOLDER);
         String name = intent.getStringExtra(Project.NAME);
+        AppRunnerSettings.SERVER_PORT = intent.getIntExtra(Project.SERVER_PORT, 0);
 
         mAppRunner = new AppRunner(mContext);
         mAppRunner.hasUserInterface = false;

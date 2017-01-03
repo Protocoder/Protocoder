@@ -20,177 +20,97 @@
 
 package org.protocoderrunner.api.media;
 
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.IBinder;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 
-import org.protocoderrunner.apprunner.AppRunner;
+import org.json.JSONArray;
 import org.protocoderrunner.api.ProtoBase;
+import org.protocoderrunner.api.common.ReturnInterface;
+import org.protocoderrunner.api.common.ReturnObject;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.base.utils.MLog;
 import org.puredata.android.io.AudioParameters;
-import org.puredata.android.service.PdService;
+import org.puredata.android.io.PdAudio;
 import org.puredata.android.utils.PdUiDispatcher;
 import org.puredata.core.PdBase;
 import org.puredata.core.PdListener;
 import org.puredata.core.utils.PdDispatcher;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class PPureData extends ProtoBase {
 
     private String TAG = PPureData.class.getSimpleName();
 
-    private final Object lock = new Object(); /* synchronize on this lock whenever you access pdService */
-    PdService pdService = null;
-    boolean play = true;
-
-    private PdPatchCallback mCallbackfn;
-    private PdUiDispatcher receiver;
-
     public String path;
+    private int mPatch;
+    private ReturnInterface callback;
 
     public PPureData(AppRunner appRunner) {
         super(appRunner);
     }
 
-    // initPdPatch callback
-    public interface PdPatchCallback {
-        void event(PDReturn o);
-    }
-
-    // return object to JS
-    class PDReturn {
-        public String type;
-        public String source;
-        public Object value;
-    }
-
-    private final ServiceConnection serviceConnection = new ServiceConnection() {
-        /* This gets called when our service is bound and sets up */
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            synchronized(lock) {
-                pdService = ((PdService.PdBinder)service).getService();
-                initPd();   /* see below */
-            }
+    public void loadPatch(String fileName) {
+        try {
+            MLog.d(TAG, "" + mPatch + " " + fileName);
+            mPatch = PdBase.openPatch(getAppRunner().getProject().getFullPathForFile(fileName));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-        }
-    };
-
-    /* actually bind the service, which triggers the code above;
-       this is the method you should call to launch Pd */
-    public void initPdService() {
-        // a separate thread is not strictly necessary, but it improves responsiveness */
-        new Thread() {
-            @Override
-            public void run() {
-                getContext().bindService(new Intent(getContext(), PdService.class),
-                        serviceConnection, getContext().BIND_AUTO_CREATE);
-            }
-        }.start();
     }
 
     /* this is how we initialize Pd */
-    private void initPd() {
-        /* here is where we bind the print statement catcher defined below */
-        PdBase.setReceiver(myDispatcher);
+    public void start() {
+        int srate = PdBase.suggestSampleRate();
+        if (srate < 0) srate = AudioParameters.suggestSampleRate();
 
-        /* here we are adding the listener for various messages
-         from Pd sent to "GUI", i.e., anything that goes into the object
-         [s GUI] will send to the listener defined below */
-        myDispatcher.addListener("GUI", myListener);
-        startAudio();  /* see below */
-    }
+        int nic = PdBase.suggestInputChannels();
+        if (nic < 0) nic = AudioParameters.suggestInputChannels();
 
+        int noc = PdBase.suggestOutputChannels();
+        if (noc < 0) noc = AudioParameters.suggestOutputChannels();
 
-    /* this is where we'll save the handle of the Pd patch */
-    int patch = 0;
+        float millis = -1;
+        if (millis < 0) millis = 50.0f;  // conservative choice
+        int tpb = (int) (0.001f * millis * srate / PdBase.blockSize()) + 1;
 
-    private void startAudio() {
-        synchronized (lock) {
-            if (pdService == null) return;
-            if (!initAudio(2, 2) && !initAudio(1, 2)) {  /* see below */
-                if (!initAudio(0, 2)) {
-                    MLog.e(TAG, "Unable to initialize audio interface");
-                    return;
-                } else {
-                    MLog.w(TAG, "No audio input available");
-                }
-            }
-            if (patch == 0) {
-                try {
-                    /* assuming here that the patch zipfile contained a single
-                       folder "patch/" that contains an _main.pd */
-                    /* open Pd patch and save its handle for future reference */
-                    patch = PdBase.openPatch(path);
-                } catch (IOException e) {
-                    MLog.e(TAG, e.toString());
-                    // finish();
-                    return;
-                }
-                try {
-                    /* sleep for one second to give Pd a chance to load samples and such;
-                       this is not always necessary, but not doing this may give rise to
-                       obscure glitches when the patch contains audio files */
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    // do nothing
-                }
-            }
-
-            getAppRunner().whatIsRunning.add(this);
-            pdService.startAudio();
-        }
-    }
-
-    /* helper method for startAudio();
-       try to initialize Pd audio for the given number of input/output channels,
-       return true on success */
-    private boolean initAudio(int nIn, int nOut) {
         try {
-            pdService.initAudio(AudioParameters.suggestSampleRate(), nIn, nOut, -1); // negative values default to PdService preferences
+            PdAudio.initAudio(srate, nic, noc, tpb, true);
         } catch (IOException e) {
-            MLog.e(TAG, e.toString());
-            return false;
+            e.printStackTrace();
         }
-        return true;
+
+        /* here is where we bind the print statement catcher defined below */
+        PdBase.setReceiver(receiver);
+
+        /*
+         * here we are adding the listener for various messages
+         * from Pd sent to "GUI", i.e., anything that goes into the object
+         * [s GUI] will send to the listener defined below
+         */
+        startAudio();
+        getAppRunner().whatIsRunning.add(this);
     }
 
-    private void stopAudio() {
-        synchronized (lock) {
-            if (pdService == null) return;
-            /* consider ramping down the volume here to avoid clicks */
-            pdService.stopAudio();
-        }
+
+    public void startAudio() {
+        PdAudio.startAudio(getContext());
+    }
+
+    public void stopAudio() {
+        PdAudio.stopAudio();
     }
 
     public void stop() {
-        MLog.d(TAG, "stopping Pdaudio");
-        synchronized(lock) {
-            /* make sure to release all resources */
-            stopAudio();
-            if (patch != 0) {
-                PdBase.closePatch(patch);
-                patch = 0;
-            }
-            myDispatcher.release();
-            PdBase.release();
-            try {
-                getContext().unbindService(serviceConnection);
-            } catch (IllegalArgumentException e) {
-                // already unbound
-                pdService = null;
-            }
-        }
+        PdBase.closePatch(mPatch);
+        myDispatcher.release();
+        stopAudio();
+        PdAudio.release();
+        PdBase.release();
     }
 
 
@@ -199,7 +119,7 @@ public class PPureData extends ProtoBase {
     private final PdDispatcher myDispatcher = new PdUiDispatcher() {
         @Override
         public void print(String s) {
-            MLog.i(TAG, "Pd print " + "" + s);
+            // MLog.i(TAG, "Pd print " + "" + s);
         }
     };
 
@@ -237,31 +157,28 @@ public class PPureData extends ProtoBase {
         }
     };
 
-
     // TODO Activate listeners
-    /*
-    receiver = new PdUiDispatcher() {
 
-        public void sendBack(final PDReturn o) {
+    PdUiDispatcher receiver = new PdUiDispatcher() {
 
-            if (mCallbackfn != null) {
+        public void sendBack(final ReturnObject o) {
+            if (callback != null) {
                 //mHandler.post(new Runnable() {
                 //    @Override
                 //    public void run() {
-                mCallbackfn.event(o);
+                callback.event(o);
                 //    }
                 //});
             }
-
         }
 
         @Override
         public void print(String s) {
             MLog.d(TAG, "pd >> " + s);
 
-            final PDReturn o = new PDReturn();
-            o.type = "print";
-            o.value = s;
+            final ReturnObject o = new ReturnObject();
+            o.put("type", "print");
+            o.put("value", s);
             sendBack(o);
         }
 
@@ -269,9 +186,9 @@ public class PPureData extends ProtoBase {
         public void receiveBang(String source) {
             MLog.d(TAG, "bang");
 
-            PDReturn o = new PDReturn();
-            o.type = "bang";
-            o.source = source;
+            ReturnObject o = new ReturnObject();
+            o.put("type", "bang");
+            o.put("source", source);
 
             sendBack(o);
         }
@@ -280,10 +197,10 @@ public class PPureData extends ProtoBase {
         public void receiveFloat(String source, float x) {
             MLog.d(TAG, "float: " + x);
 
-            PDReturn o = new PDReturn();
-            o.type = "float";
-            o.source = source;
-            o.value = x;
+            ReturnObject o = new ReturnObject();
+            o.put("type", "float");
+            o.put("source", source);
+            o.put("value", x);
 
             sendBack(o);
         }
@@ -297,10 +214,10 @@ public class PPureData extends ProtoBase {
                 jsonArray.put(arg);
             }
 
-            PDReturn o = new PDReturn();
-            o.type = "list";
-            o.source = source;
-            o.value = jsonArray;
+            ReturnObject o = new ReturnObject();
+            o.put("type", "list");
+            o.put("source", source);
+            o.put("value", jsonArray);
 
             sendBack(o);
         }
@@ -314,10 +231,10 @@ public class PPureData extends ProtoBase {
                 jsonArray.put(arg);
             }
 
-            PDReturn o = new PDReturn();
-            o.type = "message";
-            o.source = source;
-            o.value = jsonArray;
+            ReturnObject o = new ReturnObject();
+            o.put("type", "message");
+            o.put("source", source);
+            o.put("value", jsonArray);
 
             sendBack(o);
         }
@@ -326,20 +243,17 @@ public class PPureData extends ProtoBase {
         public void receiveSymbol(String source, String symbol) {
             MLog.d(TAG, "symbol: " + symbol);
 
-            PDReturn o = new PDReturn();
-            o.type = "symbol";
-            o.source = source;
-            o.value = symbol;
+            ReturnObject o = new ReturnObject();
+            o.put("type", "symbol");
+            o.put("source", source);
+            o.put("value", symbol);
 
             sendBack(o);
         }
-
     };
-    */
 
-    public PPureData onNewData(final PdPatchCallback callbackfn) {
-        mCallbackfn = callbackfn;
-
+    public PPureData onNewData(final ReturnInterface callbackfn) {
+        this.callback = callbackfn;
         return this;
     }
 
@@ -412,18 +326,8 @@ public class PPureData extends ProtoBase {
         telephonyManager.listen(new PhoneStateListener() {
             @Override
             public void onCallStateChanged(int state, String incomingNumber) {
-                synchronized (lock) {
-                    if (pdService == null) return;
-                    if (state == TelephonyManager.CALL_STATE_IDLE) {
-                        if (play && !pdService.isRunning()) {
-                            startAudio();
-                        }
-                    } else {
-                        if (pdService.isRunning()) {
-                            stopAudio();
-                        }
-                    }
-                }
+                if (state == TelephonyManager.CALL_STATE_IDLE) startAudio();
+                else stopAudio();
             }
         }, PhoneStateListener.LISTEN_CALL_STATE);
     }

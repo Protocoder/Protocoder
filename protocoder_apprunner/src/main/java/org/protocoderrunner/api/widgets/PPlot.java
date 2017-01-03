@@ -89,7 +89,7 @@ public class PPlot extends PCanvas implements PViewMethodsInterface {
     OnDrawCallback mydraw = new OnDrawCallback() {
         @Override
         public void event(PCanvas c) {
-            MLog.d(TAG, "paint ");
+            // MLog.d(TAG, "paint ");
 
             c.clear();
             c.mode(false);
@@ -111,7 +111,8 @@ public class PPlot extends PCanvas implements PViewMethodsInterface {
 
                 c.strokeWidth(AndroidUtils.dpToPixels(mAppRunner.getAppContext(), 2)); // styler.plotWidth);
                 c.noFill();
-                c.stroke("#FF000000"); // styler.plotColor);
+                c.strokeWidth(styler.plotWidth);
+                c.stroke(styler.plotColor); // styler.plotColor);
 
                 c.beginPath();
                 p = arrayViz.get(0);
@@ -139,7 +140,7 @@ public class PPlot extends PCanvas implements PViewMethodsInterface {
 
             // text
             c.textSize(AndroidUtils.spToPixels(mAppRunner.getAppContext(), 12));
-            c.fill("#55000000");
+            c.fill(styler.textColor);
             c.noStroke();
             c.textAlign("right");
 

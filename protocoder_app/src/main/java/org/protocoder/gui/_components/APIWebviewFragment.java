@@ -21,6 +21,7 @@
 package org.protocoder.gui._components;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -30,6 +31,7 @@ import android.webkit.GeolocationPermissions;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import org.protocoder.R;
 import org.protocoderrunner.base.BaseFragment;
@@ -42,6 +44,7 @@ public class APIWebviewFragment extends BaseFragment {
     final Handler myHandler = new Handler();
     protected View v;
     private String mUrl = null;
+    private String TAG = APIWebviewFragment.class.getSimpleName();
 
     public APIWebviewFragment(String file) {
         super();
@@ -60,7 +63,7 @@ public class APIWebviewFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        MLog.d("WEBVIEW", "LOADED BaseWebView");
+        MLog.d(TAG, "LOADED BaseWebView");
         v = inflater.inflate(R.layout.webview, container, false);
 
         return v;
@@ -77,7 +80,7 @@ public class APIWebviewFragment extends BaseFragment {
         Bundle bundle = getArguments();
 
         if (bundle != null) {
-            this.mUrl = bundle.getString("url");
+            this.mUrl = bundle.getString("url", null);
         }
     }
 
@@ -85,19 +88,21 @@ public class APIWebviewFragment extends BaseFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        MLog.d("WEBVIEW", "onActivityCreated");
+        MLog.d(TAG, "onActivityCreated");
         webView = (WebView) v.findViewById(R.id.webView1);
-        MLog.d("WEBVIEW", "Loaded WebView");
+        MLog.d(TAG, "Loaded WebView");
 
         webView.setHorizontalScrollBarEnabled(false);
         webView.setVerticalScrollBarEnabled(false);
         webView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
-        settings.setGeolocationEnabled(true);
-        settings.setAppCacheEnabled(false);
-        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
-        settings.setJavaScriptCanOpenWindowsAutomatically(true);
+        // settings.setGeolocationEnabled(true);
+        // settings.setAppCacheEnabled(false);
+        // settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        settings.setJavaScriptCanOpenWindowsAutomatically(false);
+        settings.setDomStorageEnabled(true);
+        WebView.setWebContentsDebuggingEnabled(true);
 
         settings.setLightTouchEnabled(true);
 
@@ -109,6 +114,31 @@ public class APIWebviewFragment extends BaseFragment {
         });
 
         webView.getSettings().setGeolocationDatabasePath("/data/data/customwebview");
+
+        webView.setWebViewClient(new WebViewClient() {
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                return super.shouldOverrideUrlLoading(view, url);
+            }
+
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+            }
+
+            @Override
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                super.onReceivedError(view, errorCode, description, failingUrl);
+                MLog.e(TAG, "error" + description);
+            }
+
+        });
 
         if (mUrl != null) {
             webView.loadUrl(mUrl);

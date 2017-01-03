@@ -35,7 +35,7 @@
             android:id="@+id/parentFolder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/mwmyellow"
+            android:textColor="@color/protocoder_mainColor"
             android:text="folder"
             android:padding="10dp"
             android:textAllCaps="true"
@@ -48,7 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=">"
-            android:textColor="@color/mwmyellow"
+            android:textColor="@color/protocoder_mainColor"
             android:textStyle="bold"
             android:visibility="gone"
             />

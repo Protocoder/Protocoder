@@ -28,7 +28,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.protocoder.R;
-import org.protocoder.helpers.ProtoScriptHelper;
 import org.protocoderrunner.apprunner.AppRunnerHelper;
 import org.protocoderrunner.base.BaseActivity;
 import org.protocoderrunner.base.utils.MLog;

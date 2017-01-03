@@ -20,10 +20,12 @@
 
 package org.protocoderrunner.api.widgets;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -147,6 +149,12 @@ public class PInput extends EditText implements PViewMethodsInterface, PTextInte
     @Override
     public View textStyle(int style) {
         this.setTypeface(null, style);
+        return this;
+    }
+
+    @Override
+    public View textAlign(int alignment) {
+        setGravity(alignment);
         return this;
     }
 

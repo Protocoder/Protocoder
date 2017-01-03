@@ -24,34 +24,25 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.pm.ResolveInfo;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.debug.DebugFrame;
 import org.mozilla.javascript.debug.DebuggableScript;
+import org.protocoderrunner.AppRunnerActivity;
+import org.protocoderrunner.api.widgets.PWebEditor;
 import org.protocoderrunner.apidoc.annotation.APIRequires;
 import org.protocoderrunner.apidoc.annotation.APIVersion;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
-import org.protocoderrunner.api.other.ApplicationInfo;
-import org.protocoderrunner.api.widgets.PWebEditor;
+import org.protocoderrunner.base.utils.AndroidUtils;
 import org.protocoderrunner.base.utils.MLog;
-
-import java.io.FileOutputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import org.protocoderrunner.models.Project;
 
 /*
  * This class only contains methods used during app creation. These methods shouldnt be used
@@ -85,7 +76,17 @@ public class PProtocoder extends ProtoBase {
 //		PrefsFragment.setId(mContext, id);
 //	}
 
-    //TODO this is mContext place holder
+
+    //TODO reenable this
+    @ProtoMethod(description = "get the current project HTTP URL", example = "")
+    public String urlForFiles() {
+        // http://127.0.0.1:8585/api/project/user_projects%2FUser%20Projects%2Fcss3_1%2Ffiles/view/patata2.png
+        Project p = getAppRunner().getProject();
+        String url = getAppRunner().getServingUrl() + "api/project/" + p.getSandboxPath() + "files/view/";
+        return url;
+    }
+
+    //TODO this is a place holder
     //
     @ProtoMethod(description = "Returns an object to manipulate the device app webIDE", example = "")
     @ProtoMethodParam(params = {})
@@ -259,6 +260,16 @@ public class PProtocoder extends ProtoBase {
         intent.putExtra("autoInstall", b);
         // intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
+        getContext().startActivity(intent);
+    }
+
+    public void runScript(String folder, String scriptName) {
+        Intent intent = new Intent(getContext(), AppRunnerActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(Project.FOLDER, folder);
+        intent.putExtra(Project.NAME, scriptName);
+        // intent.putExtra(Project.SERVER_PORT, ProtocoderSettings.HTTP_PORT);
+        // intent.putExtra("device_id", (String) NewUserPreferences.getInstance().get("device_id"));
         getContext().startActivity(intent);
     }
 

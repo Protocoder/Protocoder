@@ -53,6 +53,7 @@ public class PPopupDialogFragment extends DialogFragment {
     private String mOk;
     private String mCancel;
     private ReturnInterface mCallback;
+    private String mInputText;
     private String[] mChoice;
     private String[] mMultichoice;
     private boolean[] mMultichoiceState;
@@ -79,16 +80,23 @@ public class PPopupDialogFragment extends DialogFragment {
         builder.setTitle(mTitle);
         builder.setMessage(mDescription);
 
+        MLog.d(TAG, "creating a dialog");
+
         final ReturnObject r = new ReturnObject();
 
         // enable this
-        if (false) {
+        if (mInputText != null) {
+            MLog.d(TAG, "input");
             mInput = new EditText(getActivity());
             mInput.setInputType(InputType.TYPE_CLASS_TEXT);
+            mInput.setHint(mInputText);
             builder.setView(mInput, 20, 20, 20, 20);
+            // builder.setView(mInput);
         }
 
         if (mChoice != null) {
+            MLog.d(TAG, "choice");
+
             builder.setItems(mChoice, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -102,6 +110,8 @@ public class PPopupDialogFragment extends DialogFragment {
         }
 
         if (mMultichoice != null) {
+            MLog.d(TAG, "multichoice");
+
             builder.setMultiChoiceItems(mMultichoice, mMultichoiceState, new DialogInterface.OnMultiChoiceClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which, boolean isChecked) {
@@ -112,19 +122,18 @@ public class PPopupDialogFragment extends DialogFragment {
         }
 
         // only show ok if we dont have a selectable list
-        if (mChoice == null) {
-            builder.setPositiveButton(mOk, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    if (mCallback != null) {
-                        r.put("accept", true);
-                        if (mMultichoiceState != null) r.put("choices", mMultichoiceState);
-                        if (mInput != null) r.put("answer", mInput.getText());
-                        mCallback.event(r);
-                    }
-                }
-            });
-        }
+        builder.setPositiveButton(mOk, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            if (mCallback != null) {
+                r.put("accept", true);
+                if (mMultichoiceState != null) r.put("choices", mMultichoiceState);
+                if (mInput != null) r.put("answer", mInput.getText().toString());
+                mCallback.event(r);
+            }
+            }
+        });
+
 
         builder.setNegativeButton(mCancel, new DialogInterface.OnClickListener() {
             @Override
@@ -188,6 +197,12 @@ public class PPopupDialogFragment extends DialogFragment {
 
     public PPopupDialogFragment cancel(String cancel) {
         mCancel = cancel;
+
+        return this;
+    }
+
+    public PPopupDialogFragment input(String hint) {
+        mInputText = hint;
 
         return this;
     }

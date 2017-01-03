@@ -6,7 +6,10 @@
     android:id="@+id/ip_container"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="15dp"
+    android:paddingTop="0dp"
+    android:paddingBottom="0dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
     android:gravity="center"
     android:animateLayoutChanges="true">
 
@@ -21,51 +24,94 @@
         />
 
     <LinearLayout
+        android:id="@+id/connection_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/computer_image"
         android:layout_gravity="center"
         android:layout_centerVertical="true"
         android:animateLayoutChanges="true"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/connection_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/connection_message_other"
-            android:textColor="#88FFFFFF"
+            android:text="@string/connection_message_not_connected"
+            android:textColor="@color/protocoder_textColor"
             android:textSize="12sp"
             android:gravity="left"
             android:layout_centerVertical="true"
             android:layout_alignRight="@+id/button12"
             android:layout_alignEnd="@+id/button12" />
 
+        <LinearLayout
+            android:id="@+id/connection_buttons"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:padding="0dp"
+            android:layout_margin="0dp"
+            android:visibility="visible">
+
+            <Button
+                android:text="Connect to WIFI"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/connect_to_wifi"
+                android:layout_weight="1"
+                android:paddingTop="0dp"
+                android:layout_margin="0dp"
+                android:textSize="10sp"
+                android:textColor="#BB000000"
+                android:background="?android:attr/selectableItemBackground"
+                android:textStyle="normal|bold"
+                android:paddingBottom="0dp" />
+
+            <Button
+                android:text="Start HOTSPOT"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/start_hotspot"
+                android:layout_weight="1"
+                android:paddingTop="0dp"
+                android:layout_margin="0dp"
+                android:textSize="10sp"
+                android:textColor="#BB000000"
+                android:background="?android:attr/selectableItemBackground"
+                android:textStyle="normal|bold"
+                android:paddingBottom="0dp" />
+
+            <Button
+                android:text="help"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/webide_connection_help"
+                android:layout_weight="1"
+                android:paddingTop="0dp"
+                android:layout_margin="0dp"
+                android:textSize="10sp"
+                android:textColor="#BB000000"
+                android:background="?android:attr/selectableItemBackground"
+                android:textStyle="normal|bold"
+                android:visibility="gone"/>
+        </LinearLayout>
+
         <TextView
             android:id="@+id/connection_ip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textColor="#FFFFFFFF"
+            android:textColor="@color/protocoder_textColor"
             android:textSize="12sp"
-            android:textStyle="italic"
-            android:visibility="gone"
+            android:textStyle="italic|bold"
+            android:visibility="invisible"
             android:text="http://1.2.3.4.5:8585"
             android:layout_below="@+id/connection_message"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp" />
-
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="/?"
-            android:id="@+id/button12"
-            android:layout_gravity="right|center_vertical"
-            android:layout_alignBottom="@+id/connection_ip"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:visibility="gone" />
 
     </LinearLayout>
 

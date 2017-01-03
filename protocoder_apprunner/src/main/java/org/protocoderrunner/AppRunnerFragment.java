@@ -20,9 +20,6 @@
 
 package org.protocoderrunner;
 
-import android.animation.AnimatorInflater;
-import android.animation.AnimatorSet;
-import android.animation.LayoutTransition;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -35,14 +32,12 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.protocoderrunner.api.other.PLiveCodingFeedback;
-import org.protocoderrunner.api.widgets.PText;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.AppRunnerInterpreter;
 import org.protocoderrunner.base.utils.MLog;
@@ -155,12 +150,15 @@ public class AppRunnerFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+        MLog.d(TAG, "onPause");
+
         mAppRunner.interp.callJsFunction("onPause");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        MLog.d(TAG, "onDestroy");
         mAppRunner.interp.callJsFunction("onDestroy");
         mAppRunner.byebye();
     }

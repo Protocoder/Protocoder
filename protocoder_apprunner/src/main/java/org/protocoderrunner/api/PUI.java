@@ -8,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.app.FragmentManager;
@@ -37,9 +36,10 @@ import org.protocoderrunner.api.widgets.PAbsoluteLayout;
 import org.protocoderrunner.api.widgets.PButton;
 import org.protocoderrunner.api.widgets.PCanvas;
 import org.protocoderrunner.api.widgets.PCheckBox;
-import org.protocoderrunner.api.widgets.PInput;
-import org.protocoderrunner.api.widgets.PImageButton;
 import org.protocoderrunner.api.widgets.PImage;
+import org.protocoderrunner.api.widgets.PImageButton;
+import org.protocoderrunner.api.widgets.PInput;
+import org.protocoderrunner.api.widgets.PKnob;
 import org.protocoderrunner.api.widgets.PLinearLayout;
 import org.protocoderrunner.api.widgets.PList;
 import org.protocoderrunner.api.widgets.PMap;
@@ -51,7 +51,6 @@ import org.protocoderrunner.api.widgets.PProgressBar;
 import org.protocoderrunner.api.widgets.PRadioButtonGroup;
 import org.protocoderrunner.api.widgets.PScrollView;
 import org.protocoderrunner.api.widgets.PSlider;
-import org.protocoderrunner.api.widgets.PKnob;
 import org.protocoderrunner.api.widgets.PSpinner;
 import org.protocoderrunner.api.widgets.PSwitch;
 import org.protocoderrunner.api.widgets.PText;
@@ -69,8 +68,8 @@ import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apidoc.annotation.ProtoObject;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.FeatureNotAvailableException;
-import org.protocoderrunner.apprunner.StyleProperties;
 import org.protocoderrunner.apprunner.PermissionNotGrantedException;
+import org.protocoderrunner.apprunner.StyleProperties;
 import org.protocoderrunner.base.gui.CameraNew;
 import org.protocoderrunner.base.utils.AndroidUtils;
 import org.protocoderrunner.base.utils.MLog;
@@ -89,6 +88,7 @@ import processing.core.PApplet;
 @ProtoObject
 public class PUI extends ProtoBase {
 
+
     private final AppRunner mAppRunner;
     // contains a reference of all views added to the absolute layout
     private ArrayList<View> viewArray = new ArrayList<>();
@@ -104,6 +104,9 @@ public class PUI extends ProtoBase {
     private int screenHeight;
 
     LinkedHashMap<String, StyleProperties> styles = new LinkedHashMap<>();
+
+    public StyleProperties style;
+    public StyleProperties theme;
 
     public PUI(AppRunner appRunner) {
         super(appRunner);
@@ -166,107 +169,141 @@ public class PUI extends ProtoBase {
 
             isMainLayoutSetup = true;
 
-            StyleProperties mainStyle = new StyleProperties();
-            // mainStyle.put("x", mainStyle, 0);
-            // mainStyle.put("y", mainStyle, 0);
+            // style.put("x", style, 0);
+            // style.put("y", style, 0);
             // nativeObject.put("width", nativeObject, 100);
             // nativeObject.put("height", nativeObject, 100);
-            mainStyle.put("enabled", mainStyle, true);
-            mainStyle.put("opacity", mainStyle, 1.0f);
-            mainStyle.put("visibility", mainStyle, "visible");
-            mainStyle.put("background", mainStyle, "#efefef");
-            mainStyle.put("backgroundHover", mainStyle, "#88000000");
-            mainStyle.put("backgroundPressed", mainStyle, "#d4aa00");
-            mainStyle.put("backgroundSelected", mainStyle, "#88000000");
-            mainStyle.put("backgroundChecked", mainStyle, "#88000000");
-            mainStyle.put("borderColor", mainStyle, "#00000000");
-            mainStyle.put("borderWidth", mainStyle, 0);
-            mainStyle.put("borderRadius", mainStyle, 10);
-
-            mainStyle.put("src", mainStyle, "");
-            mainStyle.put("srcPressed", mainStyle, "");
-
-            mainStyle.put("textColor", mainStyle, "#323232");
-            mainStyle.put("textSize", mainStyle, 18);
-            mainStyle.put("textFont", mainStyle, "normal");
-            mainStyle.put("textStyle", mainStyle, "normal");
-            mainStyle.put("textAlign", mainStyle, "left");
-            mainStyle.put("textTransform", mainStyle, "none");
-            mainStyle.put("padding", mainStyle, 0);
-
-            mainStyle.put("hintColor", mainStyle, "#88FFFFFF");
-
-            mainStyle.put("animInBefore", mainStyle, "this.x(0).y(100)");
-            mainStyle.put("animIn", mainStyle, "this.animate().x(100)");
-            mainStyle.put("animOut", mainStyle, "this.animate().x(0)");
-
-            mainStyle.put("slider", mainStyle, "#d4aa00");
-            mainStyle.put("sliderPressed", mainStyle, "#d4aa00");
-            mainStyle.put("sliderHeight", mainStyle, 20);
-            mainStyle.put("sliderBorderSize", mainStyle, 0);
-            mainStyle.put("sliderBorderColor", mainStyle, "#000000");
-            mainStyle.put("padSize", mainStyle, 20);
-            mainStyle.put("padColor", mainStyle, "#00BB00");
-            mainStyle.put("padBorderColor", mainStyle, "#0000BB");
-            mainStyle.put("padBorderSize", mainStyle, 20);
-
-            mainStyle.put("knobBorderWidth", mainStyle, 5);
-            mainStyle.put("knobProgressSeparation", mainStyle, 50);
-            mainStyle.put("knobBorderColor", mainStyle, "#d4aa00");
-            mainStyle.put("knobProgressColor", mainStyle, "#d4aa00");
-
-            mainStyle.put("matrixCellColor", mainStyle, "#00000000");
-            mainStyle.put("matrixCellSelectedColor", mainStyle, "#d4aa00");
-            mainStyle.put("matrixCellBorderSize", mainStyle, 3);
-            mainStyle.put("matrixCellBorderColor", mainStyle, "#ff111111");
-            mainStyle.put("matrixCellBorderRadius", mainStyle, 2);
-            styles.put("*", mainStyle);
-
-            background("#2c2c2c");
-
-            StyleProperties buttonStyle = new StyleProperties();
-            buttonStyle.put("textStyle", buttonStyle, "bold");
-            styles.put("button", buttonStyle);
-
-            StyleProperties imageStyle = new StyleProperties();
-            imageStyle.put("background", imageStyle, "#00ffffff");
-            imageStyle.put("srcMode", imageStyle, "resize");
-            styles.put("image", imageStyle);
-
-            StyleProperties imageButtonStyle = new StyleProperties();
-            imageButtonStyle.put("srcMode", imageButtonStyle, "resize");
-            mainStyle.put("srcTintPressed", mainStyle, "#FFFFFFFF");
-            styles.put("imagebutton", imageButtonStyle);
-
-            StyleProperties knobStyle = new StyleProperties();
-            knobStyle.put("background", knobStyle, "#00ffffff");
-            knobStyle.put("textColor", knobStyle, "#d4aa00");
-            knobStyle.put("textFont", knobStyle, "monospace");
-            knobStyle.put("textSize", knobStyle, 10);
-            styles.put("knob", knobStyle);
-
-            StyleProperties textStyle = new StyleProperties();
-            textStyle.put("background", textStyle, "#00000000");
-            textStyle.put("textColor", textStyle, "#ffffff");
-            textStyle.put("textSize", textStyle, 25);
-            styles.put("text", textStyle);
-
-            StyleProperties toggleStyle = new StyleProperties();
-            toggleStyle.put("textColor", toggleStyle, "#ffffff");
-            toggleStyle.put("background", toggleStyle, "#0000bb00");
-            toggleStyle.put("backgroundChecked", toggleStyle, "#d4aa00");
-            toggleStyle.put("borderColor", toggleStyle, "#ffffff");
-            toggleStyle.put("borderWidth", toggleStyle, 5);
-            styles.put("toggle", toggleStyle);
-
-            StyleProperties inputStyle = new StyleProperties();
-            styles.put("input", inputStyle);
-
-            StyleProperties matrixStyle = new StyleProperties();
-            textStyle.put("background", matrixStyle, "#00000000");
-            textStyle.put("backgroundPressed", matrixStyle, "#00ffffff");
-            styles.put("matrix", matrixStyle);
+            setTheme();
+            setStyle();
+            background((String) theme.get("secondaryColor"));
         }
+    }
+
+
+    private void setTheme() {
+        theme = new StyleProperties();
+        theme.put("accentColor", "#FDD629");
+        theme.put("primaryColor", "#efefef");
+        theme.put("secondaryColor", "#2c2c2c");
+    }
+
+    private void setStyle() {
+        String accentColor = (String) theme.get("accentColor");
+        String primaryColor = (String) theme.get("primaryColor");
+        String secondaryColor = (String) theme.get("secondaryColor");
+        String transparentColor = "#00FFFFFF";
+
+        style = new StyleProperties();
+        style.put("enabled", style, true);
+        style.put("opacity", style, 1.0f);
+        style.put("visibility", style, "visible");
+        style.put("background", style, primaryColor);
+        style.put("backgroundHover", style, "#88000000");
+        style.put("backgroundPressed", style, accentColor);
+        style.put("backgroundSelected", style, "#88000000");
+        style.put("backgroundChecked", style, "#88000000");
+        style.put("borderColor", style, transparentColor);
+        style.put("borderWidth", style, 0);
+        style.put("borderRadius", style, 10);
+
+        style.put("src", style, "");
+        style.put("srcPressed", style, "");
+
+        style.put("textColor", style, secondaryColor);
+        style.put("textSize", style, 18);
+        style.put("textFont", style, "normal");
+        style.put("textStyle", style, "normal");
+        style.put("textAlign", style, "center");
+        style.put("textTransform", style, "none");
+        style.put("padding", style, 0);
+
+        style.put("hintColor", style, "#88FFFFFF");
+
+        style.put("animInBefore", style, "this.x(0).y(100)");
+        style.put("animIn", style, "this.animate().x(100)");
+        style.put("animOut", style, "this.animate().x(0)");
+
+        style.put("slider", style, accentColor);
+        style.put("sliderPressed", style, accentColor);
+        style.put("sliderHeight", style, 20);
+        style.put("sliderBorderSize", style, 0);
+        style.put("sliderBorderColor", style, transparentColor);
+        style.put("padSize", style, 20);
+        style.put("padColor", style, "#00BB00");
+        style.put("padBorderColor", style, "#0000BB");
+        style.put("padBorderSize", style, 20);
+
+        style.put("knobBorderWidth", style, 5);
+        style.put("knobProgressSeparation", style, 50);
+        style.put("knobBorderColor", style, accentColor);
+        style.put("knobProgressColor", style, accentColor);
+
+        style.put("matrixCellColor", style, "#00000000");
+        style.put("matrixCellSelectedColor", style, accentColor);
+        style.put("matrixCellBorderSize", style, 3);
+        style.put("matrixCellBorderColor", style, secondaryColor);
+        style.put("matrixCellBorderRadius", style, 2);
+
+        style.put("plotColor", style, "#000000");
+        style.put("plotWidth", style, 5);
+
+        styles.put("*", style);
+
+        StyleProperties buttonStyle = new StyleProperties();
+        buttonStyle.put("textStyle", buttonStyle, "bold");
+        buttonStyle.put("textAlign", buttonStyle, "center");
+        styles.put("button", buttonStyle);
+
+        StyleProperties imageStyle = new StyleProperties();
+        imageStyle.put("background", imageStyle, transparentColor);
+        imageStyle.put("srcMode", imageStyle, "fit");
+        styles.put("image", imageStyle);
+
+        StyleProperties imageButtonStyle = new StyleProperties();
+        imageButtonStyle.put("srcMode", imageButtonStyle, "resize");
+        style.put("srcTintPressed", style, primaryColor);
+        styles.put("imagebutton", imageButtonStyle);
+
+        StyleProperties knobStyle = new StyleProperties();
+        knobStyle.put("background", knobStyle, transparentColor);
+        knobStyle.put("textColor", knobStyle, accentColor);
+        knobStyle.put("textFont", knobStyle, "monospace");
+        knobStyle.put("textSize", knobStyle, 10);
+        styles.put("knob", knobStyle);
+
+        StyleProperties textStyle = new StyleProperties();
+        textStyle.put("background", textStyle, transparentColor);
+        textStyle.put("textColor", textStyle, "#ffffff");
+        textStyle.put("textSize", textStyle, 25);
+        textStyle.put("textAlign", textStyle, "left");
+        styles.put("text", textStyle);
+
+        StyleProperties toggleStyle = new StyleProperties();
+        toggleStyle.put("textColor", toggleStyle, primaryColor);
+        toggleStyle.put("background", toggleStyle, secondaryColor);
+        toggleStyle.put("backgroundChecked", toggleStyle, accentColor);
+        toggleStyle.put("borderColor", toggleStyle, "#ffffff");
+        toggleStyle.put("borderWidth", toggleStyle, 5);
+        styles.put("toggle", toggleStyle);
+
+        StyleProperties inputStyle = new StyleProperties();
+        inputStyle.put("textAlign", inputStyle, "left");
+        inputStyle.put("background", inputStyle, transparentColor);
+        inputStyle.put("borderColor", inputStyle, "#ffffff");
+        inputStyle.put("borderWidth", inputStyle, 5);
+        inputStyle.put("textColor", inputStyle, "#ffffff");
+        styles.put("input", inputStyle);
+
+
+        StyleProperties matrixStyle = new StyleProperties();
+        textStyle.put("background", matrixStyle, transparentColor);
+        textStyle.put("backgroundPressed", matrixStyle, transparentColor);
+        styles.put("matrix", matrixStyle);
+
+        StyleProperties plotStyle = new StyleProperties();
+        plotStyle.put("textColor", plotStyle, "#55000000");
+
+        styles.put("plot", plotStyle);
     }
 
     public void registerStyle(String name, StyleProperties widgetProp) {
@@ -379,9 +416,9 @@ public class PUI extends ProtoBase {
     }
 
     protected void addView(View v) {
-        // v.setAlpha(0);
+        v.setAlpha(0);
         // v.setRotationX(-30);
-        // v.animate().alpha(1).setDuration(500).setStartDelay(100 * (1 + viewArray.size()));
+        v.animate().alpha(1).setDuration(300).setStartDelay(100 * (1 + viewArray.size()));
         viewArray.add(v);
     }
 
@@ -490,6 +527,18 @@ public class PUI extends ProtoBase {
     public PButton addButton(String label, float x, float y) {
         PButton b = newButton(label);
         addViewAbsolute(b, x, y, -1, -1);
+        return b;
+    }
+
+    private float toFloat(Object o) {
+        return ((Number) o).floatValue();
+    }
+
+    public PButton addButton(Map style) {
+        PButton b = newButton("hi");
+        b.setStyle(style);
+        addViewAbsolute(b, toFloat(style.get("x")), toFloat(style.get("y")), toFloat(style.get("width")), toFloat(style.get("height")));
+
         return b;
     }
 
@@ -1009,16 +1058,26 @@ public class PUI extends ProtoBase {
         return mapView;
     }
 
-    public PList newList(NativeArray data, ReturnInterfaceWithReturn creating, ReturnInterfaceWithReturn binding) {
-        return new PList(getAppRunner(), data, creating, binding);
+    public PList newList(int numCols, NativeArray data, ReturnInterfaceWithReturn creating, ReturnInterfaceWithReturn binding) {
+        return new PList(getAppRunner(), numCols, data, creating, binding);
     }
 
-    public PList addList(float x, float y, float w, float h, NativeArray data, ReturnInterfaceWithReturn creating, ReturnInterfaceWithReturn binding) {
-        PList list = newList(data, creating, binding);
+
+    public PList addGrid(float x, float y, float w, float h, int numCols, NativeArray data, ReturnInterfaceWithReturn creating, ReturnInterfaceWithReturn binding) {
+        PList list = newList(numCols, data, creating, binding);
         addViewAbsolute(list, x, y, w ,h);
 
         return list;
     }
+
+    public PList addList(float x, float y, float w, float h, NativeArray data, ReturnInterfaceWithReturn creating, ReturnInterfaceWithReturn binding) {
+        PList list = newList(1, data, creating, binding);
+        addViewAbsolute(list, x, y, w ,h);
+
+        return list;
+    }
+
+
 
     /**
      * Processing

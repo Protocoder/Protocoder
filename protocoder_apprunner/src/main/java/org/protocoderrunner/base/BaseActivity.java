@@ -37,9 +37,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 
-import org.protocoderrunner.apprunner.AppRunnerSettings;
 import org.protocoderrunner.R;
+import org.protocoderrunner.apprunner.AppRunnerSettings;
 import org.protocoderrunner.base.media.Audio;
 import org.protocoderrunner.base.utils.AndroidUtils;
 import org.protocoderrunner.base.utils.MLog;
@@ -192,8 +193,15 @@ public class BaseActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
-    public void addFragment(Fragment fragment, int fragmentPosition, String tag, boolean addToBackStack) {
 
+    public void addFragment(Fragment f, int id, String tag) {
+        FrameLayout fl = (FrameLayout) findViewById(id);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.add(fl.getId(), f, tag);
+        ft.commit();
+    }
+
+    public void addFragment(Fragment fragment, int fragmentPosition, String tag, boolean addToBackStack) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
         ft.add(fragmentPosition, fragment, tag);
@@ -203,6 +211,7 @@ public class BaseActivity extends AppCompatActivity {
         }
         ft.commit();
     }
+
 
     public void addFragment(Fragment fragment, int fragmentPosition, boolean addToBackStack) {
 

@@ -27,40 +27,46 @@ import android.net.nsd.NsdServiceInfo;
 import android.os.Build;
 import android.util.Log;
 
+import org.protocoderrunner.api.common.ReturnInterface;
+import org.protocoderrunner.api.common.ReturnObject;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.base.utils.MLog;
 
+import java.net.Inet4Address;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
+
+import javax.mail.internet.InternetAddress;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class ServiceDiscovery {
 
-    private static final String TAG = "ServiceDiscovery";
+    private static final String TAG = ServiceDiscovery.class.getSimpleName();
+    private final AppRunner mAppRunner;
 
-    public Create create(Context a, String serviceName, String serviceType, int port, CreateCB callbackfn) {
-        return new Create(a, serviceName, serviceType, port, callbackfn);
+
+    public ServiceDiscovery(AppRunner appRunner) {
+        mAppRunner = appRunner;
     }
 
-    public Discover discover(Context a, String serviceType, DiscoverCB callbackfn) {
-        return new Discover(a, serviceType, callbackfn);
+    public Create register(String serviceName, String serviceType, int port) {
+        return new Create(mAppRunner.getAppContext(), serviceName, serviceType, port);
     }
 
-
-    // --------- CreateCB ---------//
-    public interface CreateCB {
-        void event(String mServiceName, String registered);
+    public Discover discover(String serviceType) {
+        return new Discover(mAppRunner.getAppContext(), serviceType);
     }
 
-    public class Create {
-
+    private class Create {
         private final NsdManager mNsdManager;
+        private final NsdServiceInfo serviceInfo;
         private NsdManager.RegistrationListener mRegistrationListener;
-        public String mServiceName;
+        private ReturnInterface mCallback;
 
-        Create(Context a, String name, String serviceType, int port, final CreateCB callbackfn) {
-            mServiceName = name;
+        Create(Context a, String name, String serviceType, int port) {
 
             // Create the NsdServiceInfo object, and populate it.
-            NsdServiceInfo serviceInfo = new NsdServiceInfo();
+            serviceInfo = new NsdServiceInfo();
 
             // The name is subject to change based on conflicts
             // with other services advertised on the same network.
@@ -68,46 +74,74 @@ public class ServiceDiscovery {
             serviceInfo.setServiceType(serviceType);
             serviceInfo.setPort(port);
 
+            String ip = mAppRunner.pNetwork.networkInfo().get("ip");
+            MLog.d(TAG, "ip: " + ip);
+            try {
+                serviceInfo.setHost(InetAddress.getByName(ip));
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            }
+
             mNsdManager = (NsdManager) a.getSystemService(Context.NSD_SERVICE);
 
             mRegistrationListener = new NsdManager.RegistrationListener() {
-
-
                 @Override
-                public void onServiceRegistered(NsdServiceInfo NsdServiceInfo) {
+                public void onServiceRegistered(NsdServiceInfo serviceInfo) {
                     // Save the service name.  Android may have changed it in order to
                     // resolve mContext conflict, so update the name you initially requested
                     // with the name Android actually used.
-                    mServiceName = NsdServiceInfo.getServiceName();
-                    callbackfn.event(mServiceName, "registered");
+
+                    ReturnObject ret = new ReturnObject();
+                    ret.put("status", "registered");
+                    ret.put("host", serviceInfo.getHost());
+                    ret.put("port", serviceInfo.getPort());
+                    ret.put("type", serviceInfo.getServiceType());
+                    ret.put("name", serviceInfo.getServiceName());
+                    if (mCallback != null)  mCallback.event(ret);
                 }
 
                 @Override
                 public void onRegistrationFailed(NsdServiceInfo serviceInfo, int errorCode) {
                     // Registration failed!  Put debugging code here to determine why.
-                    callbackfn.event(mServiceName, "registration_failed");
-
+                    ReturnObject ret = new ReturnObject();
+                    ret.put("name", serviceInfo.getServiceName());
+                    ret.put("status", "registration_failed");
+                    if (mCallback != null) mCallback.event(ret);
                 }
 
                 @Override
                 public void onServiceUnregistered(NsdServiceInfo arg0) {
                     // Service has been unregistered.  This only happens when you call
                     // NsdManager.unregisterService() and pass in this listener.
-                    callbackfn.event(mServiceName, "unregistered");
-
+                    ReturnObject ret = new ReturnObject();
+                    ret.put("name", serviceInfo.getServiceName());
+                    ret.put("status", "unregistered");
+                    if (mCallback != null) mCallback.event(ret);
                 }
 
                 @Override
                 public void onUnregistrationFailed(NsdServiceInfo serviceInfo, int errorCode) {
                     // Unregistration failed.  Put debugging code here to determine why.
-                    callbackfn.event(mServiceName, "unregistration_failed");
+                    ReturnObject ret = new ReturnObject();
+                    ret.put("name", serviceInfo.getServiceName());
+                    ret.put("status", "unregistration_failed");
+                    if (mCallback != null) mCallback.event(ret);
                 }
             };
+        }
 
-            mNsdManager.registerService(
-                    serviceInfo, NsdManager.PROTOCOL_DNS_SD, mRegistrationListener);
+        public Create onNewData(ReturnInterface callback) {
+            mCallback = callback;
 
+            return this;
+        }
 
+        public Create start() {
+            mNsdManager.registerService(serviceInfo, NsdManager.PROTOCOL_DNS_SD, mRegistrationListener);
+
+            mAppRunner.whatIsRunning.add(this);
+
+            return this;
         }
 
         public void stop() {
@@ -115,17 +149,15 @@ public class ServiceDiscovery {
         }
     }
 
-    // --------- DiscoverCB ---------//
-    public interface DiscoverCB {
-        void event(String mServiceName, NsdServiceInfo serviceInfo);
-    }
 
-    public class Discover {
+    private class Discover {
         final NsdManager mNsdManager;
+        private final String mServiceType;
         NsdManager.DiscoveryListener mDiscoveryListener;
+        ReturnInterface mCallback;
 
-        Discover(Context a, final String serviceType, final DiscoverCB callbackfn) {
-
+        Discover(Context a, final String serviceType) {
+            mServiceType = serviceType;
             mNsdManager = (NsdManager) a.getSystemService(Context.NSD_SERVICE);
 
             // Instantiate mContext new DiscoveryListener
@@ -135,50 +167,95 @@ public class ServiceDiscovery {
                 @Override
                 public void onDiscoveryStarted(String regType) {
                     MLog.d(TAG, "Service discovery started");
-                    callbackfn.event("start", null);
-
+                    ReturnObject ret = new ReturnObject();
+                    ret.put("name", regType);
+                    ret.put("status", "started");
+                    if (mCallback != null) mCallback.event(ret);
                 }
 
                 @Override
-                public void onServiceFound(NsdServiceInfo serviceInfo) {
+                public void onServiceFound(final NsdServiceInfo serviceInfo) {
                     // A service was found!  Do something with it.
 
-                    //mService = serviceInfo;
-                    int port = serviceInfo.getPort();
-                    String serviceName = serviceInfo.getServiceName();
-                    InetAddress host = serviceInfo.getHost();
+                    MLog.d(TAG, "1: " + serviceInfo.getServiceType() + " 2: " + mServiceType);
+                    if (serviceInfo.getServiceType().equals(mServiceType)) {
+                        mNsdManager.resolveService(serviceInfo, new NsdManager.ResolveListener() {
+                            @Override
+                            public void onResolveFailed(NsdServiceInfo nsdServiceInfo, int i) {
 
-                    callbackfn.event("discovered", serviceInfo);
+                            }
+
+                            @Override
+                            public void onServiceResolved(NsdServiceInfo nsdServiceInfo) {
+                                ReturnObject ret = new ReturnObject();
+                                ret.put("status", "discovered_resolved");
+                                ret.put("port", serviceInfo.getPort());
+                                ret.put("serviceName", serviceInfo.getServiceName());
+                                ret.put("host", serviceInfo.getHost());
+                                ret.put("type", serviceInfo.getServiceType());
+                                if (mCallback != null) mCallback.event(ret);
+                            }
+                        });
+                    }
 
                 }
 
 
                 @Override
-                public void onServiceLost(NsdServiceInfo service) {
+                public void onServiceLost(NsdServiceInfo serviceInfo) {
                     // When the network service is no longer available.
                     // Internal bookkeeping code goes here.
-                    Log.e(TAG, "service lost" + service);
+                    Log.e(TAG, "service lost");
+                    ReturnObject ret = new ReturnObject();
+                    ret.put("status", "service_lost");
+                    ret.put("port", serviceInfo.getPort());
+                    ret.put("serviceName", serviceInfo.getServiceName());
+                    ret.put("host", serviceInfo.getHost());
+                    ret.put("type", serviceInfo.getServiceType());
+                    if (mCallback != null) mCallback.event(ret);
                 }
 
                 @Override
                 public void onDiscoveryStopped(String serviceType) {
                     Log.i(TAG, "Discovery stopped: " + serviceType);
+                    ReturnObject ret = new ReturnObject();
+                    ret.put("type", serviceType);
+                    ret.put("status", "discovery_stopped");
+                    if (mCallback != null) mCallback.event(ret);
                 }
 
                 @Override
                 public void onStartDiscoveryFailed(String serviceType, int errorCode) {
                     Log.e(TAG, "Discovery failed: Error code:" + errorCode);
                     //mNsdManager.stopServiceDiscovery(this);
+                    ReturnObject ret = new ReturnObject();
+                    ret.put("type", serviceType);
+                    ret.put("error", errorCode);
+                    ret.put("status", "discovery_failed");
+                    if (mCallback != null) mCallback.event(ret);
                 }
 
                 @Override
                 public void onStopDiscoveryFailed(String serviceType, int errorCode) {
                     Log.e(TAG, "Discovery failed: Error code:" + errorCode);
-                    //mNsdManager.stopServiceDiscovery(this);
-                }
+                    ReturnObject ret = new ReturnObject();
+                    ret.put("name", serviceType);
+                    ret.put("error", errorCode);
+                    ret.put("status", "stop_discovering_failed");
+                    if (mCallback != null) mCallback.event(ret);                }
             };
+        }
 
-            mNsdManager.discoverServices(serviceType, NsdManager.PROTOCOL_DNS_SD, mDiscoveryListener);
+        public Discover onNewData(ReturnInterface callback) {
+            mCallback = callback;
+
+            return this;
+        }
+
+        public Discover start() {
+            mNsdManager.discoverServices(mServiceType, NsdManager.PROTOCOL_DNS_SD, mDiscoveryListener);
+            mAppRunner.whatIsRunning.add(this);
+            return this;
         }
 
         public void stop() {

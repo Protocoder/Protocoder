@@ -22,6 +22,8 @@ package org.protocoder.appinterpreter;
 
 import org.protocoder.gui.settings.NewUserPreferences;
 import org.protocoderrunner.api.PNetwork;
+import org.protocoderrunner.api.common.ReturnInterface;
+import org.protocoderrunner.api.common.ReturnObject;
 
 
 public class Network {
@@ -35,11 +37,11 @@ public class Network {
     public void checkVersion() {
         //check if new version is available
         if (mAppRunner.pNetwork.isNetworkAvailable() && (boolean) NewUserPreferences.getInstance().get("notify_new_version")) {
-            mAppRunner.pNetwork.httpGet("http://www.protocoder.org/downloads/list_latest.php", new PNetwork.HttpGetCB() {
+            mAppRunner.pNetwork.httpGet("http://www.protocoder.org/downloads/list_latest.php", new ReturnInterface() {
                 @Override
-                public void event(int eventType, String responseString) {
+                public void event(ReturnObject data) {
                     //console.log(event + " " + data);
-                    String[] splitted = responseString.split(":");
+                    String[] splitted = ((String) data.get("response")).split(":");
                     String remoteFile = "http://www.protocoder.org/downloads/" + splitted[0];
                     String versionName = splitted[1];
                     int versionCode = Integer.parseInt(splitted[2]);

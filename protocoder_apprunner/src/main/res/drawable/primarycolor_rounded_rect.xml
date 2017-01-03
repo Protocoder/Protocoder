@@ -4,8 +4,8 @@
 
     <item android:left="0dp" android:right="0dp">
         <shape android:shape="rectangle"> 
-            <corners android:radius="2dp" />
-            <solid android:color="@color/primaryAccent"/>
+            <corners android:radius="1dp" />
+            <solid android:color="#22000000"/>
          </shape>
     </item>
 

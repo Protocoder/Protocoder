@@ -21,8 +21,8 @@
 package org.protocoderrunner.api.other;
 
 import org.mozilla.javascript.NativeObject;
-import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.api.ProtoBase;
+import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.base.utils.StrUtils;
 
 import java.util.ArrayList;

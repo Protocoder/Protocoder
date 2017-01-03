@@ -20,8 +20,8 @@ android {
         minSdkVersion 16
         targetSdkVersion 24
 
-        versionCode 21
-        versionName "0.20.2"
+        versionCode 23
+        versionName "0.23.0"
         multiDexEnabled true
 
         compileOptions {
@@ -90,9 +90,10 @@ repositories {
     flatDir {
         dirs 'libs'
     }
+    maven { url 'https://github.com/kshoji/USB-MIDI-Driver/raw/master/MIDIDriver/snapshots' }
+
     mavenCentral()
     //mavenLocal()
-    maven { url 'https://github.com/kshoji/USB-MIDI-Driver/raw/master/MIDIDriver/snapshots' }
     maven { url 'https://maven.fabric.io/public' }
 }
 
@@ -106,10 +107,12 @@ dependencies {
     extendedCompile project(path: ':protocoder_apprunner', configuration:'extendedrunnerRelease')
     compile 'com.android.support:multidex:1.0.0'
 
+    compile (name:'processing_fragmented', ext:'aar')
+
+    compile 'jp.kshoji:midi-driver:0.1.4:@aar'
+
     //compile project(':protocoder_apprunner')
 
-    compile(name: 'processing_fragmented', ext: 'aar')
-    compile 'jp.kshoji:midi-driver:0.0.2-SNAPSHOT:@aar'
     compile('com.crashlytics.sdk.android:crashlytics:2.5.7@aar') {
         transitive = true;
     }

@@ -22,142 +22,139 @@ package org.protocoderrunner.api.network;
 
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.widget.Toast;
 
 import org.mozilla.javascript.NativeArray;
+import org.protocoderrunner.api.ProtoBase;
 import org.protocoderrunner.api.common.ReturnInterface;
 import org.protocoderrunner.api.common.ReturnObject;
+import org.protocoderrunner.api.other.ProtocoderNativeArray;
+import org.protocoderrunner.api.other.WhatIsRunningInterface;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
-import org.protocoderrunner.api.ProtoBase;
-import org.protocoderrunner.api.other.ProtocoderNativeArray;
-import org.protocoderrunner.base.network.bt.SimpleBT;
 import org.protocoderrunner.base.utils.MLog;
 
 import java.util.Set;
+import java.util.UUID;
 
-public class PBluetooth extends ProtoBase {
+public class PBluetooth extends ProtoBase implements WhatIsRunningInterface {
 
-    private ReturnInterface onBluetoothfn;
-    private SimpleBT simpleBT;
+    protected static final UUID UUID_SPP = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+    protected BluetoothAdapter mAdapter;
     private boolean mBtStarted = false;
+    public static final int REQUEST_ENABLE_BT = 2;
+
+    // interface to get info from the activity when requesting to enable the bluetooth adapter
+    public interface onBluetoothListener {
+        public void onActivityResult(int requestCode, int resultCode, Intent data);
+    }
 
     public PBluetooth(AppRunner appRunner) {
         super(appRunner);
     }
 
-    @ProtoMethod(description = "")
-    @ProtoMethodParam(params = {""})
-    public void createSerialServer() {
-        start();
-    }
-
-    @ProtoMethod(description = "")
-    @ProtoMethodParam(params = {""})
-    public PBluetoothClient connectSerial(String mac, PBluetoothClient.CallbackConnected callback) {
-        start();
-
-        PBluetoothClient pBluetoothClient = new PBluetoothClient(this, getAppRunner());
-        pBluetoothClient.connectSerial(mac, callback);
-
-        return pBluetoothClient;
-    }
-
-    @ProtoMethod(description = "Connect to a bluetooth serial device", example = "")
-    @ProtoMethodParam(params = {})
-    public PBluetoothClient connectSerial(PBluetoothClient.CallbackConnected callback) {
-        start();
-
-        PBluetoothClient pBluetoothClient = new PBluetoothClient(this, getAppRunner());
-        pBluetoothClient.connectSerial(callback);
-
-        return pBluetoothClient;
-    }
-
     @ProtoMethod(description = "Start the bluetooth adapter", example = "")
     @ProtoMethodParam(params = {""})
-    public SimpleBT start() {
-        if (mBtStarted) {
-            return simpleBT;
-        }
-        simpleBT = new SimpleBT(getContext(), getActivity());
-        simpleBT.start();
+    public PBluetooth start() {
+        MLog.d(TAG, "Bluetooth is started: " + mBtStarted);
 
+        mAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        // try to start the bluetooth if not enabled
+        if (!mAdapter.isEnabled()) {
+            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            if (getActivity() != null) {
+                getActivity().startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+            } else {
+                MLog.d(TAG, "you must enabled bluetooth before");
+            }
+        } else {
+            MLog.d(TAG, "BT enabled");
+            mBtStarted = true;
+        }
+
+        // we get the result from the activity
         if (getActivity() != null) {
-            MLog.d(TAG, "starting bluetooth in a activity");
+            MLog.d(TAG, "Prompt bluetooth Dialog in a Activity");
 
             getActivity().addBluetoothListener(new onBluetoothListener() {
-
-                @Override
-                public void onDeviceFound(String name, String macAddress, float strength) {
-                }
-
                 @Override
                 public void onActivityResult(int requestCode, int resultCode, Intent data) {
-                    simpleBT.onActivityResult(requestCode, resultCode, data);
+                    onActivityResult(requestCode, resultCode, data);
 
+                    // if OK bt is already enabled
                     switch (requestCode) {
-                        case SimpleBT.REQUEST_ENABLE_BT:
-                            // When the request to enable Bluetooth returns
+                        case REQUEST_ENABLE_BT:
                             if (resultCode == Activity.RESULT_OK) {
-                                //MLog.d(TAG, "enabling BT");
-                                // Bluetooth is now enabled, so set up mContext Bluetooth session
+                                MLog.d(TAG, "enabling BT");
                                 mBtStarted = true;
-                                simpleBT.startBtService();
-
-                                // User did not enable Bluetooth or an error occurred
                             } else {
-                                //	MLog.d(TAG, "BT not enabled");
-                                Toast.makeText(getActivity().getApplicationContext(), "BT not enabled :(", Toast.LENGTH_SHORT)
-                                        .show();
-
+                                Toast.makeText(getActivity().getApplicationContext(), "BT not enabled :(", Toast.LENGTH_SHORT).show();
                             }
+                        break;
                     }
                 }
             });
         } else {
-            MLog.d(TAG, "starting bluetooth as service");
+            MLog.d(TAG, "not showing UI since running BT in a service");
         }
 
-        getAppRunner().whatIsRunning.add(simpleBT);
+        getAppRunner().whatIsRunning.add(this);
 
-        return simpleBT;
+        return this;
     }
 
-    public interface onBluetoothListener {
-        public void onDeviceFound(String name, String macAddress, float strength);
-        public void onActivityResult(int requestCode, int resultCode, Intent data);
+    @ProtoMethod(description = "")
+    @ProtoMethodParam(params = {""})
+    public PBluetoothClient createClient() {
+        start();
+        PBluetoothClient pBluetoothClient = new PBluetoothClient(this, getAppRunner());
+        return pBluetoothClient;
     }
 
-    interface scanBTNetworksCB {
-        void event(String name, String macAddress, float strength);
-    }
+    @ProtoMethod(description = "")
+    @ProtoMethodParam(params = {""})
+    public PBluetoothServer createServer(String name) {
+        start();
+        PBluetoothServer pBluetoothServer = new PBluetoothServer(this, getAppRunner(), name);
 
+        return pBluetoothServer;
+    }
 
     @ProtoMethod(description = "Scan bluetooth networks. Gives back the name, mac and signal strength", example = "")
     @ProtoMethodParam(params = {"function(name, macAddress, strength)"})
     public void scanNetworks(final ReturnInterface callbackfn) {
+        MLog.d(TAG, "scanNetworks");
         start();
-        onBluetoothfn = callbackfn;
-        simpleBT.scanBluetooth(new onBluetoothListener() {
 
+        mAdapter.startDiscovery();
+        BroadcastReceiver mReceiver = new BroadcastReceiver() {
             @Override
-            public void onDeviceFound(String name, String macAddress, float strength) {
-                ReturnObject o = new ReturnObject();
-                o.put("name", name);
-                o.put("mac", macAddress);
-                o.put("strength", strength);
-                onBluetoothfn.event(o);
-            }
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
+                if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+                    BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 
-            @Override
-            public void onActivityResult(int requestCode, int resultCode, Intent data) {
+                    int rssi = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI, Short.MIN_VALUE);
 
+                    ReturnObject o = new ReturnObject();
+                    o.put("name", device.getName());
+                    o.put("mac", device.getAddress());
+                    o.put("strength", rssi);
+                    callbackfn.event(o);
+                }
             }
-        });
+        };
+
+        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        getContext().registerReceiver(mReceiver, filter);
 
     }
 
@@ -166,7 +163,7 @@ public class PBluetooth extends ProtoBase {
     public NativeArray getBondedDevices() {
         start();
 
-        Set<BluetoothDevice> listDevices = simpleBT.listBondedDevices();
+        Set<BluetoothDevice> listDevices = mAdapter.getBondedDevices();
         MLog.d(TAG, "listDevices " + listDevices);
         int listSize = listDevices.size();
         ProtocoderNativeArray array = new ProtocoderNativeArray(listSize);
@@ -190,19 +187,19 @@ public class PBluetooth extends ProtoBase {
         start();
     }
 
-
     @ProtoMethod(description = "Disable the bluetooth adapter", example = "")
     @ProtoMethodParam(params = {})
     public void disable() {
         start();
-        simpleBT.disable();
+        mAdapter.disable();
     }
     
     @Override
-    public void __stop() {
-        if (simpleBT.isConnected()) {
-            simpleBT.disconnect();
-        }
+    public void __stop() { }
+
+    protected BluetoothAdapter getAdapter() {
+        return mAdapter;
     }
+
 
 }

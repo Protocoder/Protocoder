@@ -22,7 +22,7 @@ package org.protocoderrunner.api;
 
 import org.protocoderrunner.api.common.ReturnObject;
 import org.protocoderrunner.api.sensors.PAccelerometer;
-import org.protocoderrunner.api.sensors.PGPS;
+import org.protocoderrunner.api.sensors.PLocation;
 import org.protocoderrunner.api.sensors.PGyroscope;
 import org.protocoderrunner.api.sensors.PLightIntensity;
 import org.protocoderrunner.api.sensors.PMagnetic;
@@ -43,7 +43,7 @@ public class PSensors extends ProtoBase {
     @ProtoField
     public final PGyroscope gyroscope;
     @ProtoField
-    public final PGPS gps;
+    public final PLocation location;
     @ProtoField
     public final PLightIntensity light;
     @ProtoField
@@ -62,7 +62,7 @@ public class PSensors extends ProtoBase {
 
         accelerometer = new PAccelerometer(appRunner);
         gyroscope = new PGyroscope(appRunner);
-        gps = new PGPS(appRunner);
+        location = new PLocation(appRunner);
         light = new PLightIntensity(appRunner);
         magnetic = new PMagnetic(appRunner);
         orientation = new POrientation(appRunner);
@@ -75,7 +75,7 @@ public class PSensors extends ProtoBase {
         ReturnObject r = new ReturnObject();
         r.put("accelerometer", accelerometer.isAvailable());
         r.put("gyroscope", gyroscope.isAvailable());
-        r.put("gps", gps.isAvailable());
+        r.put("location", location.isAvailable());
         r.put("light", light.isAvailable());
         r.put("magnetic", magnetic.isAvailable());
         r.put("orientation", orientation.isAvailable());

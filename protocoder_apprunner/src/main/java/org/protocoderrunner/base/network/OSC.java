@@ -111,7 +111,7 @@ public class OSC {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    // callback(callbackfn, "\"" + msg.getName() + "\"", str);
+                    // callback(mCallback, "\"" + msg.getName() + "\"", str);
                     // Log.d(TAG, msg.g)
                     mHandler.post(new Runnable() {
 

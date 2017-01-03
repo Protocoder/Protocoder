@@ -74,7 +74,7 @@ public class NewProjectDialogFragment extends DialogFragment implements OnEditor
 
         AlertDialog dialog = builder.create();
         dialog.setView(view);
-        dialog.setTitle("New project");
+        dialog.setTitle("NEW PROJECT");
         dialog.getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
         return dialog;

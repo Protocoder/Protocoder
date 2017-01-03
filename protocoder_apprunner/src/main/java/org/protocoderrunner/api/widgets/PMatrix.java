@@ -7,7 +7,6 @@ import org.protocoderrunner.api.common.ReturnObject;
 import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.apprunner.StyleProperties;
 import org.protocoderrunner.base.utils.MLog;
-import org.protocoderrunner.base.views.CanvasUtils;
 
 import java.util.ArrayList;
 import java.util.Map;

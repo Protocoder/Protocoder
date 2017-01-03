@@ -55,7 +55,6 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-import com.google.zxing.qrcode.encoder.ByteMatrix;
 
 import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.NativeObject;
@@ -141,53 +140,6 @@ public class PUtil extends ProtoBase {
     public void setAnArray(NativeArray array) {
         for (int i = 0; i < array.size(); i++) {
             MLog.d(TAG, "setArrayList -> " + array.get(i));
-        }
-    }
-
-    public Bitmap generateQRCode(String text) {
-        Bitmap bmp = null;
-
-        Hashtable<EncodeHintType, ErrorCorrectionLevel> hintMap = new Hashtable<EncodeHintType, ErrorCorrectionLevel>();
-        hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H); // H = 30% damage
-
-        int size = 256;
-
-        BitMatrix bitMatrix = null;
-        try {
-            bitMatrix = new QRCodeWriter().encode(text, BarcodeFormat.QR_CODE, size, size, hintMap);
-
-            int width = bitMatrix.getWidth();
-            bmp = Bitmap.createBitmap(width, width, Bitmap.Config.RGB_565);
-            for (int x = 0; x < width; x++) {
-                for (int y = 0; y < width; y++) {
-                    bmp.setPixel(y, x, bitMatrix.get(x, y) == true ? Color.BLACK : Color.WHITE);
-                }
-            }
-        } catch (WriterException e) {
-            e.printStackTrace();
-        }
-
-        return bmp;
-    }
-
-    public void scanQRcode(byte[] data, Camera camera) {
-        Camera.Size size = camera.getParameters().getPreviewSize();
-
-        // Create BinaryBitmap
-        PlanarYUVLuminanceSource source = new PlanarYUVLuminanceSource(data, size.width, size.height, 0, 0, size.width, size.height, false);
-        BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
-
-        // Read QR Code
-        Reader reader = new MultiFormatReader();
-        Result result = null;
-        try {
-            result = reader.decode(bitmap);
-            String text = result.getText();
-
-            MLog.d(TAG, "result: " + text);
-        } catch (NotFoundException e) {
-        } catch (ChecksumException e) {
-        } catch (FormatException e) {
         }
     }
 

@@ -31,7 +31,8 @@
         android:layout_marginLeft="@dimen/main_cardview_left_margin"
         android:layout_marginRight="@dimen/main_cardview_right_margin"
         android:layout_marginBottom="@dimen/main_cardview_bottom_margin"
-        android:layout_below="@+id/ip_container">
+        android:layout_below="@+id/ip_container"
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -59,8 +60,8 @@
         android:id="@+id/fragmentEditor"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"
-        android:layout_below="@+id/toolbar2"
+        android:visibility="gone"
+        android:layout_below="@+id/header"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
@@ -70,7 +71,7 @@
         android:layout_height="fill_parent"
         android:layout_alignParentRight="true"
         android:visibility="gone"
-        android:layout_below="@+id/toolbar2"/>
+        android:layout_below="@+id/header"/>
 
     <FrameLayout
         android:id="@+id/fragmentLogOverlay"

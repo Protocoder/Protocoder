@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="license_header">#33b5e5</color>
-    <color name="license_text">#777777</color>
+    <color name="license_header">@color/protocoder_mainColor</color>
+    <color name="license_text">@color/protocoder_backgroundColor</color>
 </resources>

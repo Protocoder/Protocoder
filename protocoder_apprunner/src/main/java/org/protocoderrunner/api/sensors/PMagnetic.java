@@ -27,10 +27,10 @@ import android.hardware.SensorManager;
 
 import org.protocoderrunner.api.common.ReturnInterface;
 import org.protocoderrunner.api.common.ReturnObject;
+import org.protocoderrunner.api.other.WhatIsRunningInterface;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
-import org.protocoderrunner.api.other.WhatIsRunningInterface;
 
 public class PMagnetic extends CustomSensorManager implements WhatIsRunningInterface {
 

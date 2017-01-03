@@ -20,8 +20,10 @@
 
 package org.protocoderrunner.api.widgets;
 
+import android.annotation.TargetApi;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Gravity;
@@ -181,6 +183,12 @@ public class PText extends TextView implements PViewMethodsInterface, PTextInter
     @Override
     public View textStyle(int style) {
         this.setTypeface(null, style);
+        return this;
+    }
+
+    @Override
+    public View textAlign(int alignment) {
+        this.setGravity(alignment);
         return this;
     }
 

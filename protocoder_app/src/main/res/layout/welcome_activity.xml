@@ -4,8 +4,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
+                android:layout_marginTop="20dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
     >
 
     <include layout="@layout/toolbar2"
@@ -19,8 +21,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:gravity="center"
+        android:gravity="right|center"
         android:orientation="vertical"
         android:animateLayoutChanges="true"
         >
@@ -57,7 +58,7 @@
 
         <Button
             android:id="@+id/next_step_button"
-            android:layout_width="match_parent"
+            android:layout_width="126dp"
             android:layout_height="wrap_content"
             android:background="@drawable/solid_dark_grey_button"
             android:text="@string/welcome_accept"

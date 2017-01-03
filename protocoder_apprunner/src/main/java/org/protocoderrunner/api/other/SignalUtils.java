@@ -20,10 +20,10 @@
 
 package org.protocoderrunner.api.other;
 
+import org.protocoderrunner.api.ProtoBase;
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
 import org.protocoderrunner.apidoc.annotation.ProtoMethodParam;
 import org.protocoderrunner.apprunner.AppRunner;
-import org.protocoderrunner.api.ProtoBase;
 import org.protocoderrunner.base.utils.FFT;
 
 public class SignalUtils extends ProtoBase {

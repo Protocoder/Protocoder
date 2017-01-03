@@ -99,11 +99,19 @@
     </PreferenceCategory>
     -->
 
-    <PreferenceCategory android:title="@string/setting_about" >
+    <PreferenceCategory android:title="@string/setting_about_title" >
         <Preference
             android:key="licenses_detail"
             android:summary="@string/setting_opensource_description"
             android:title="@string/setting_opensource_title" />
+
+        <Preference
+            android:key="app_about"
+            android:summary="@string/setting_about_description"
+            android:title="@string/setting_about_title" />
+
     </PreferenceCategory>
+
+
 
 </PreferenceScreen>

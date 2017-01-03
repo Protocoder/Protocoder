@@ -199,4 +199,9 @@ public class PKnob extends PCanvas implements PViewMethodsInterface, PTextInterf
        // this.textStyle = textStyle;
         return this;
     }
+
+    @Override
+    public View textAlign(int alignment) {
+        return this;
+    }
 }

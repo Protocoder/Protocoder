@@ -6,7 +6,6 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="25dp"
     android:gravity="center_horizontal">
 
     <TextView
@@ -47,6 +46,7 @@
         android:layout_toRightOf="@+id/step_num_1"
         android:layout_below="@+id/step_title_1"
         android:textColor="#adffffff"
+        android:textSize="16sp"
         android:maxWidth="500dp" />
 
     <ImageView
@@ -54,7 +54,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imageView3"
-        android:src="@drawable/image_placeholder"
+        android:src="@drawable/install_2"
         android:layout_below="@id/step_body_1"
         android:layout_gravity="center" />
 

@@ -22,14 +22,11 @@ package org.protocoder.server;
 
 import android.content.Context;
 
+import org.protocoder.appinterpreter.AppRunnerCustom;
 import org.protocoder.gui.settings.NewUserPreferences;
 import org.protocoder.gui.settings.ProtocoderSettings;
-import org.protocoder.gui.settings.UserSettings;
-import org.protocoder.appinterpreter.AppRunnerCustom;
 import org.protocoderrunner.api.network.PFtpServer;
 import org.protocoderrunner.base.utils.MLog;
-
-import java.lang.ref.WeakReference;
 
 public class ProtocoderFtpServer extends PFtpServer {
     public static final String TAG = ProtocoderFtpServer.class.getSimpleName();

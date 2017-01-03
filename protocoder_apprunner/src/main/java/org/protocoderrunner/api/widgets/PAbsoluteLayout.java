@@ -2,8 +2,6 @@ package org.protocoderrunner.api.widgets;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Rect;
-import android.os.Build;
 import android.view.View;
 
 import org.protocoderrunner.apidoc.annotation.ProtoMethod;
@@ -32,8 +30,8 @@ public class PAbsoluteLayout extends FixedLayout {
         mAppRunner = appRunner;
         mContext = appRunner.getAppContext();
 
-        mWidth = appRunner.pDevice.info().screenWidth;
-        mHeight = appRunner.pDevice.info().screenHeight - AndroidUtils.dpToPixels(getContext(), 24);
+        mWidth = (int) appRunner.pDevice.info().get("screenWidth");
+        mHeight = (int) appRunner.pDevice.info().get("screenHeight") - AndroidUtils.dpToPixels(getContext(), 24);
     }
 
     @Override
@@ -75,10 +73,10 @@ public class PAbsoluteLayout extends FixedLayout {
             case PIXELS:
                 break;
             case DP:
-                x = AndroidUtils.pixelsToDp(mContext, (int)x);
-                y = AndroidUtils.pixelsToDp(mContext, (int)y);
-                w = AndroidUtils.pixelsToDp(mContext, (int)w);
-                h = AndroidUtils.pixelsToDp(mContext, (int)h);
+                x = AndroidUtils.dpToPixels(mContext, (int)x);
+                y = AndroidUtils.dpToPixels(mContext, (int)y);
+                w = AndroidUtils.dpToPixels(mContext, (int)w);
+                h = AndroidUtils.dpToPixels(mContext, (int)h);
                 break;
             case NORMALIZED:
                 MLog.d(TAG, x + " " + y + w + " " + h);

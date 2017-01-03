@@ -84,12 +84,12 @@ public class PImageButton extends PImage {
     }
 
     private void on() {
-        if (hideBackground) PImageButton.this.getDrawable().setColorFilter(styler.srcTintPressed, PorterDuff.Mode.MULTIPLY);
+        // if (hideBackground) PImageButton.this.getDrawable().setColorFilter(styler.srcTintPressed, PorterDuff.Mode.MULTIPLY);
         if (mBitmapPressed != null) setImageBitmap(mBitmapPressed);
     }
 
     private void off() {
-        if (hideBackground) PImageButton.this.getDrawable().setColorFilter(0xFFFFFFFF, PorterDuff.Mode.MULTIPLY);
+        // if (hideBackground) PImageButton.this.getDrawable().setColorFilter(0xFFFFFFFF, PorterDuff.Mode.MULTIPLY);
         if (mBitmap != null) setImageBitmap(mBitmap);
     }
 }

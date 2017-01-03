@@ -32,4 +32,5 @@ public interface PTextInterface {
     View textColor(int textColor);
     View textSize(float textSize);
     View textStyle(int textStyle);
+    View textAlign(int alignment);
 }

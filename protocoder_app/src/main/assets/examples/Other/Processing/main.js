@@ -9,6 +9,9 @@
  *
  */
 
+ui.addTitle(app.name)
+ui.addSubtitle('Touch the screen to paint thingies')
+
 var processing = ui.addProcessing(0, 0, 1, 1, 'P3D')
 
 var size
@@ -28,5 +31,3 @@ processing.draw(function (p) {
   size = p.dist(p.pmouseX, p.pmouseY, p.mouseX, p.mouseY)
   p.ellipse(p.mouseX, p.mouseY, size, size)
 })
-
-ui.addTitle(app.name)

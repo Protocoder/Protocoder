@@ -70,7 +70,7 @@
             android:shadowDy="1"
             android:shadowRadius="0.1"
             android:text="P"
-            android:textColor="#555555"
+            android:textColor="#FFFFFF"
             android:textSize="45sp"
             android:typeface="normal"
             android:textStyle="bold"

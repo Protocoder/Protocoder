@@ -6,22 +6,25 @@
         <item name="android:actionBarStyle">@style/ProtocoderAppTheme.ActionBarStyle</item>
         <item name="android:windowBackground">@drawable/protocoder_background</item>
         <item name="windowActionModeOverlay">true</item>
+        <item name="android:alertDialogTheme">@style/ProtocoderAppTheme.Dialog</item>
+        <item name="colorAccent">@color/protocoder_mainColor</item>
+        <item name="android:textColorSecondary">@color/protocoder_mainColor</item>
     </style>
 
     <style name="ProtocoderAppTheme" parent="ProtocoderAppTheme.Base">
 
-    <!-- colorPrimary is used for the default action bar background -->
-        <item name="colorPrimary">@color/primaryAccent</item>
+        <!-- colorPrimary is used for the default action bar background -->
+        <item name="colorPrimary">@color/protocoder_backgroundColor</item>
 
         <!-- colorPrimaryDark is used for the status bar -->
-        <item name="colorPrimaryDark">@color/primaryAccent</item>
+        <item name="colorPrimaryDark">@color/protocoder_backgroundColor</item>
         <!-- colorAccent is used as the default value for colorControlActivated
              which is used to tint widgets -->
-        <item name="colorAccent">@color/primaryAccent</item>
-        >
+
+        <item name="colorAccent">@color/protocoder_accentColor</item>
+        <item name="android:textColorSecondary">@color/protocoder_mainColor</item>
     </style>
 
-    <!-- ProtocoderThemeApp -->
     <style name="ProtocoderAppTheme.Toolbar" parent="Theme.AppCompat.Light">
         <item name="android:actionBarStyle">@style/ProtocoderAppTheme.ActionBarStyle</item>
         <item name="android:background">@color/mwmyellow</item>
@@ -40,8 +43,14 @@
         <item name="android:src">@drawable/ic_action_overflow</item>
     </style>
 
-    <style name="ProtocoderAppTheme.Dialog" parent="Theme.AppCompat.Dialog">
+    <style name="ProtocoderAppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:textSize">14sp</item>
+        <item name="android:windowMinWidthMajor">85%</item>
+        <item name="android:windowMinWidthMinor">85%</item>
+        <item name="android:textColor">@color/protocoder_mainColor</item>
+        <item name="colorAccent">@color/protocoder_mainColor</item>
 
+        <!-- <item name="android:windowBackground">@android:color/transparent</item> -->
     </style>
 
     <!-- ProtocoderThemeAppRunner -->

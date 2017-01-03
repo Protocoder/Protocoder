@@ -3,6 +3,7 @@ package org.protocoderrunner.api.widgets;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.StateListDrawable;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -12,6 +13,10 @@ import org.protocoderrunner.base.utils.MLog;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import static android.view.View.TEXT_ALIGNMENT_CENTER;
+import static android.view.View.TEXT_ALIGNMENT_TEXT_END;
+import static android.view.View.TEXT_ALIGNMENT_TEXT_START;
 
 /**
  * Created by biquillo on 10/09/16.
@@ -51,6 +56,7 @@ public class Styler {
     String textFont;
     String textStyle;
     String textTransform;
+    private String textAlign;
     public float padding;
     public int hintColor;
     String animInBefore;
@@ -75,8 +81,8 @@ public class Styler {
     public float matrixCellBorderSize;
     public int matrixCellBorderColor;
     public float matrixCellBorderRadius;
-    private boolean mViewIsSet;
 
+    private boolean mViewIsSet;
     public int plotBackground = Color.parseColor("#22000000");
     public int plotColor = Color.parseColor("#222222");
     public float plotWidth = 2;
@@ -134,6 +140,7 @@ public class Styler {
         fromTo(styles.get("*"), props);
 
         StyleProperties p = styles.get(viewName);
+        MLog.d("qq", "viewname " + viewName);
         if (p != null) {
             MLog.d(TAG, "" + p.size());
             MLog.d(TAG, "applying view specific style for " + viewName);
@@ -163,10 +170,12 @@ public class Styler {
         }
         */
 
-        // if (props.containsKey("x")) setX(props.get("x"));
-        // if (props.containsKey("y")) setY(props.get("y"));
-        // if (props.containsKey("width")) setWidth(props.get("width"));
-        // if (props.containsKey("height")) setHeight(props.get("height"));
+        /*
+        if (props.containsKey("x")) setX(props.get("x"));
+        if (props.containsKey("y")) setY(props.get("y"));
+        if (props.containsKey("width")) setWidth(props.get("width"));
+        if (props.containsKey("height")) setHeight(props.get("height"));
+        */
 
         visibility = props.get("visibility").toString();
         opacity = toFloat(props.get("opacity"));
@@ -177,7 +186,6 @@ public class Styler {
         backgroundSelected = Color.parseColor(props.get("backgroundSelected").toString());
         backgroundChecked = Color.parseColor(props.get("backgroundChecked").toString());
         borderWidth = toFloat(props.get("borderWidth"));
-        MLog.d(TAG, "border " + borderWidth);
         borderColor = Color.parseColor(props.get("borderColor").toString());
         borderRadius = toFloat(props.get("borderRadius"));
         textColor = Color.parseColor(props.get("textColor").toString());
@@ -185,6 +193,7 @@ public class Styler {
         textFont = props.get("textFont").toString();
         textStyle = props.get("textStyle").toString();
         textTransform = props.get("textTransform").toString();
+        textAlign = props.get("textAlign").toString();
         padding = toFloat(props.get("padding"));
 
         hintColor = Color.parseColor(props.get("hintColor").toString());
@@ -217,6 +226,9 @@ public class Styler {
         matrixCellBorderSize = toFloat(props.get("matrixCellBorderSize"));
         matrixCellBorderColor = Color.parseColor(props.get("matrixCellBorderColor").toString());
         matrixCellBorderRadius = toFloat(props.get("matrixCellBorderRadius"));
+
+        plotColor = Color.parseColor(props.get("plotColor").toString());
+        plotWidth = toFloat(props.get("plotWidth"));
 
         // mView.setVisibility(visibility);
         mView.setAlpha(opacity);
@@ -284,6 +296,21 @@ public class Styler {
                     break;
             }
             v.textStyle(tStyle);
+
+            int tAlignment = TEXT_ALIGNMENT_TEXT_START;
+            switch (textAlign) {
+                case "left":
+                    tAlignment = Gravity.LEFT;
+                    break;
+                case "center":
+                    tAlignment = Gravity.CENTER;
+                    break;
+
+                case "right":
+                    tAlignment = Gravity.RIGHT;
+                    break;
+            }
+            v.textAlign(tAlignment);
         }
 
     }

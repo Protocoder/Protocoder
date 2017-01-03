@@ -38,9 +38,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.protocoder.R;
+import org.protocoder.gui.AboutActivity;
 import org.protocoder.gui.LicenseActivity;
 import org.protocoder.helpers.ProtoSettingsHelper;
-import org.protocoderrunner.base.BaseNotification;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class SettingsFragment extends PreferenceFragment {
@@ -202,6 +202,15 @@ public class SettingsFragment extends PreferenceFragment {
             @Override
             public boolean onPreferenceClick(Preference arg0) {
                 startActivity(new Intent(getActivity(), LicenseActivity.class));
+                return true;
+            }
+        });
+
+        Preference btnShowAbout = findPreference("app_about");
+        btnShowAbout.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference arg0) {
+                startActivity(new Intent(getActivity(), AboutActivity.class));
                 return true;
             }
         });

@@ -20,10 +20,7 @@
 
 package org.protocoder.server;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.res.AssetManager;
 
 import com.google.gson.Gson;
@@ -38,7 +35,6 @@ import org.protocoder.server.model.ProtoFile;
 import org.protocoder.server.networkexchangeobjects.NEOProject;
 import org.protocoderrunner.base.utils.FileIO;
 import org.protocoderrunner.base.utils.MLog;
-import org.protocoderrunner.models.Folder;
 import org.protocoderrunner.models.Project;
 
 import java.io.File;

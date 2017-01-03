@@ -43,6 +43,7 @@ public class PWebView extends WebView implements PViewMethodsInterface {
         super(appRunner.getAppContext());
         mAppRunner = appRunner;
         styler = new Styler(appRunner, this, props);
+        // styler.apply();
 
         this.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         WebSettings webSettings = this.getSettings();
@@ -72,7 +73,7 @@ public class PWebView extends WebView implements PViewMethodsInterface {
 
         WebViewClient webViewClient = new CustomWebViewClient();
         this.setWebViewClient(webViewClient);
-        this.addJavascriptInterface(new PApp(mAppRunner), "app");
+        this.addJavascriptInterface(mAppRunner.pApp, "app");
     }
 
     public void loadData(String content) {

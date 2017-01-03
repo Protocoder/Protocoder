@@ -4,6 +4,13 @@
  * Use DataBase queries to add and retrieve content
  */
 
+ui.addTitle(app.name)
+
+var txt = ui.addText('stored and loaded data: \n\n', 0.1, 0.15, 0.8, 0.5)
+txt.props.background = '#000000'
+txt.props.padding = 20
+txt.props.textSize = 15
+
 // opens the db if exists otherwise creates one
 var db = fileio.openSqlLite('mydb.db')
 
@@ -20,9 +27,9 @@ var columns = ['type', 'color']
 var c = db.query('veggies', columns)
 
 // go through results
-console.log('we got ' + c.getCount() + ' results'); 
+txt.append('we got ' + c.getCount() + ' results \n\n');
 while (c.moveToNext()) {
-  console.log(c.getString(0) + " " + c.getString(1))
+  txt.append(c.getString(0) + " " + c.getString(1) + '\n')
 }
 
 db.close()

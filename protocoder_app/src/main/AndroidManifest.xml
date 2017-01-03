@@ -96,6 +96,16 @@
             android:label="License" >
         </activity>
         <activity
+            android:name=".gui.HelpActivity"
+            android:theme="@style/ProtocoderAppTheme"
+            android:label="Help" >
+        </activity>
+        <activity
+            android:name=".gui.AboutActivity"
+            android:theme="@style/ProtocoderAppTheme"
+            android:label="About" >
+        </activity>
+        <activity
             android:name=".gui.InfoScriptActivity"
             android:theme="@style/ProtocoderAppTheme"
             android:label="InfoScript" >

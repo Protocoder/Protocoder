@@ -24,8 +24,8 @@ import android.graphics.Color;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.protocoderrunner.apprunner.AppRunner;
 import org.protocoderrunner.api.ProtoBase;
+import org.protocoderrunner.apprunner.AppRunner;
 
 import java.net.UnknownHostException;
 

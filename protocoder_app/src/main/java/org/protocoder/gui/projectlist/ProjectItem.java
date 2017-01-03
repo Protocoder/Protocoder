@@ -57,15 +57,16 @@ public class ProjectItem extends LinearLayout {
     private static final String TAG = ProjectItem.class.getSimpleName();
     //private final ProjectListFragment mPlf;
     private View mItemView;
-
     // private Context c;
     private final Context c;
+
     private String t;
     private boolean highlighted = false;
     private Project mProject;
+    private TextView txtProjectIcon;
     private TextView textViewName;
     private ImageView mMenuButton;
-    private final ImageView imageView;
+    private final ImageView customIcon;
 
     public ProjectItem(Context context, boolean listMode) {
         super(context);
@@ -75,13 +76,14 @@ public class ProjectItem extends LinearLayout {
 
         if (listMode) {
             this.mItemView = inflater.inflate(R.layout.projectlist_item_list, this, true);
+            this.txtProjectIcon = (TextView) findViewById(R.id.txtProjectIcon);
         } else {
             this.mItemView = inflater.inflate(R.layout.projectlist_item_grid, this, true);
         }
 
         FrameLayout fl = (FrameLayout) findViewById(R.id.viewProjectItemBackground);
         textViewName = (TextView) mItemView.findViewById(R.id.customViewText);
-        imageView = (ImageView) mItemView.findViewById(R.id.customViewImage);
+        customIcon = (ImageView) mItemView.findViewById(R.id.iconImg);
 
         this.setOnClickListener(new OnClickListener() {
             @Override
@@ -99,8 +101,10 @@ public class ProjectItem extends LinearLayout {
                     @Override
                     public void run() {
 
-                        Events.ProjectEvent evt = new Events.ProjectEvent(Events.PROJECT_RUN, mProject);
-                        EventBus.getDefault().post(evt);
+                        // Events.ProjectEvent evt = new Events.ProjectEvent(Events.PROJECT_RUN, mProject);
+                        // EventBus.getDefault().post(evt);
+
+                        ProtoAppHelper.launchScript(getContext(), mProject);
                         // getActivity().overridePendingTransition(R.anim.splash_slide_in_anim_set,
                         //        R.anim.splash_slide_out_anim_set);
                     }
@@ -115,15 +119,18 @@ public class ProjectItem extends LinearLayout {
 
     }
 
+    // TODO
     public void setImage(int resId) {
-        imageView.setImageResource(resId);
+      //  customIcon.setImageResource(resId);
 
-        // drawText(imageView, t);
+        // drawText(customIcon, t);
     }
 
     public void setImage(Bitmap bmp) {
-        imageView.setImageBitmap(bmp);
-
+        MLog.d(TAG, "setting image in cuak cuak " + customIcon);
+        customIcon.setVisibility(View.VISIBLE);
+        customIcon.setImageBitmap(bmp);
+        txtProjectIcon.setVisibility(View.INVISIBLE);
     }
 
     public void setText(String text) {
@@ -179,7 +186,7 @@ public class ProjectItem extends LinearLayout {
             }
         });
 
-        //imageView.setOnCreateContextMenuListener();
+        //customIcon.setOnCreateContextMenuListener();
         mMenuButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -206,12 +213,13 @@ public class ProjectItem extends LinearLayout {
                 int itemId = menuItem.getItemId();
 
                 if (itemId == R.id.menu_project_list_run) {
-                    EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_RUN, mProject));
+                    // EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_RUN, mProject));
+                    ProtoAppHelper.launchScript(getContext(), mProject);
                     return true;
                 } else if (itemId == R.id.menu_project_list_edit) {
-                    // ProtoAppHelper.launchEditor(getContext(), mProject);
+                    ProtoAppHelper.launchEditor(getContext(), mProject);
 
-                    EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_EDIT, mProject));
+                    // EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_EDIT, mProject));
                     return true;
                 } else if (itemId == R.id.menu_project_list_delete) {
                     DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -278,19 +286,29 @@ public class ProjectItem extends LinearLayout {
 
     public void setProjectInfo(Project p) {
         mProject = p;
+
+        if (p.getName().length() > 2) {
+            setIcon(p.getName().substring(0, 2));
+        } else {
+            setIcon(p.getName().substring(0, 1));
+        }
         setText(p.getName());
         setTag(p.getName());
 
         File f = new File(p.getFullPathForFile("icon.png"));
-        setImage(R.drawable.primarycolor_rounded_rect);
+        // setImage(R.drawable.primarycolor_rounded_rect);
 
         if (f.exists()) {
             BitmapFactory.Options bmOptions = new BitmapFactory.Options();
             Bitmap bitmap = BitmapFactory.decodeFile(f.getPath(), bmOptions);
-            bitmap = Bitmap.createScaledBitmap(bitmap, 32, 32, true);
+            bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
 
             setImage(bitmap);
         }
         setMenu();
+    }
+
+    public void setIcon(String text) {
+        this.txtProjectIcon.setText(text);
     }
 }

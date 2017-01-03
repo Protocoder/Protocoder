@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="protocoder_gradient_begin">#415A71</color>
-    <color name="protocoder_gradient_end">#716938</color>
     <color name="blacktransparent20">#20000000</color>
-
 
     <!-- legacy stuff -->
     <color name="red">#ff0000</color>
@@ -25,7 +22,6 @@
     <drawable name="actionbar_highlight">#00777777</drawable>
     <color name="title">#777777</color>
 
-    
     <color name="project_user_color">#FF33b5e5</color>
     <color name="project_example_color">#FFffbb33</color>
 

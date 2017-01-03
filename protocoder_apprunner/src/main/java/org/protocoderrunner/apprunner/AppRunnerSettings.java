@@ -38,6 +38,7 @@ public class AppRunnerSettings {
     public static final String LIBRARIES_FOLDER = "libraries";
     public static int MIN_SUPPORTED_VERSION = Build.VERSION_CODES.ICE_CREAM_SANDWICH;
     public static int animGeneralSpeed = 500;
+    public static int SERVER_PORT;
 
     public String id;
 

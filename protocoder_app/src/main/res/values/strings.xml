@@ -5,8 +5,10 @@
     <string name="activity_name">\\\\\\\</string>
     <string name="runner_name">\\\\\ AppRunner</string>
     <string name="connect_message">Click to connect</string>
-    <string name="connection_message_wifi">Connected to a WIFI network\nIn your computer\'s web browser type this IP address to start coding</string>
-    <string name="connection_message_other">Start coding using the WebIDE connecting this device and your computer to the same WIFI network</string>
+    <string name="connection_message_connected">Point the web browser in your computer to</string>
+    <string name="connection_message_wifi">Connected to WIFI. Point your computer\'s web browser to this address</string>
+    <string name="connection_message_tethering">This device is configured as a WIFI Hotspot. Point your computer\'s web browser to this address</string>
+    <string name="connection_message_not_connected">To use the WebIDE, this device and your computer must be connected to the same network</string>
     <string name="menu_settings">Settings</string>
     <string name="BT_Home">Connect</string>
     <string name="title_activity_launcher">LauncherActivity</string>
@@ -42,6 +44,7 @@
     <!-- Menu items -->
     <string name="menu_label_new">New</string>
     <string name="menu_label_about">About</string>
+    <string name="menu_label_help">Help</string>
     <string name="menu_label_start_server">Start server</string>
     <string name="menu_label_stop_server">Stop server</string>
     <string name="menu_label_settings">Settings</string>
@@ -54,15 +57,16 @@
     <string name="about_special_thanks">Special thanks to José Juan Sánchez Hernández, Maciej Górski, bq.com, Ali Javidan, Gopi Palaniappan, Alan Sien and the MWM Crew :)</string>
 
     <!-- Welcome -->
-    <string name="welcome_activity_name">\\\\\\\ Welcome</string>
+    <string name="welcome_activity_name">Welcome</string>
     <string name="welcome_title">Good to see you.</string>
-    <string name="welcome_body">Protocoder makes simple and fast to experiment creatively with mobile devices. \n\nYou can create projects using this device or using the self-hosted WebIDE through your computer.</string>
+    <string name="welcome_body">Protocoder makes it simple and fast to experiment creatively with mobile devices. \n\nYou can create projects using this device or using the self-hosted WebIDE through your computer.</string>
     <string name="welcome_accept">Let\'s go.</string>
 
     <string name="editor_activity_name">Editor</string>
 
     <!-- Settings screen -->
-    <string name="setting_about">About</string>
+    <string name="setting_about_title">About</string>
+    <string name="setting_about_description">About this project and the people behind</string>
     <string name="setting_opensource_title">Open Source Licenses</string>
     <string name="setting_opensource_description">License Details for open source software</string>
 
@@ -80,7 +84,7 @@
     <string name="setting_new_version_description">Protocoder will download (only Wifi) and notify when there is a new version</string>
 
     <string name="setting_send_usage_log_title">Send Usage and Crash log</string>
-    <string name="setting_send_usage_log_description">Only anoymious information will be send to improve the app quality</string>
+    <string name="setting_send_usage_log_description">Only anonymous information will be send to improve the app quality</string>
     <string name="setting_launch_script_on_app_launch_title">Script Launch</string>
     <string name="setting_launch_script_on_app_launch_description">A project will be launched when Protocoder starts</string>
 
@@ -88,7 +92,7 @@
     <string name="setting_enable_servers_on_start_title">Start server on app launch</string>
     <string name="setting_enable_servers_on_start_description">The servers will start automatically when Protocoder is launched</string>
     <string name="setting_reinstall_title">Reinstall examples</string>
-    <string name="setting_reinstall_description">Ovewrite all the examples with the default ones</string>
+    <string name="setting_reinstall_description">Overwrite all the examples with the default ones</string>
     <string name="settings_activity_name">Settings</string>
     <string name="setting_options_title">Normal</string>
     <string name="setting_show_html5_mode_title">WebIDE as main interface</string>
