@@ -1,3 +1,6 @@
+# :mega: :mega: UPDATE :mega: :mega:
+# Protocoder is now PHONK, check the website [https://phonk.app](https://phonk.app) and the [new repo](https://github.com/victordiaz/phonk). Thanks!
+
 Protocoder
 ==========
 [![Build Status](https://travis-ci.org/Protocoder/Protocoder.svg?branch=develop)](https://travis-ci.org/Protocoder/Protocoder)
